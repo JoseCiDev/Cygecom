@@ -21,11 +21,15 @@ return new class extends Migration
             $table->string('state');
             $table->string('country');
             $table->string('complement')->nullable();
-            // $table->unsignedBigInteger('supplier_id')->nullable();
-            // $table->foreign('supplier_id')->references('id')->on('suppliers');
-            // $table->unsignedBigInteger('person_id')->nullable();
-            // $table->foreign('person_id')->references('id')->on('persons');
+
+            $table->unsignedBigInteger('supplier_id')->nullable();
+            $table->foreign('supplier_id')->references('id')->on('suppliers');
+
+            $table->unsignedBigInteger('person_id')->nullable();
+            $table->foreign('person_id')->references('id')->on('people');
+
             $table->timestamps();
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 
@@ -34,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('addresses');
     }
 };
