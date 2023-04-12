@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -22,7 +23,8 @@ return new class extends Migration
             // $table->foreign('orders_requests_id')->references('id')->on('orders_requests');
             $table->foreignId('file_order_request_id')->constrained('orders_requests')->onDelete('cascade');
 
-            $table->timestamps();
+            $table->timestamp('created_at')->nullable()->default(DB::raw('NOW()'));
+            $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
         });
     }

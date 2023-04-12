@@ -23,7 +23,24 @@
                             <label for="document_number" class="col-md-4 col-form-label text-md-end">{{ __('CPF/CNPJ') }}</label>
                             <div class="col-md-6"><input id="document_number" type="text" class="form-control" name="document_number" required></div>
                         </div>
-
+                        <div class="row mb-3">
+                            <label for="phone" class="col-md-4 col-form-label text-md-end">{{ __('Telefone/Celular') }}</label>
+                            <div class="col-md-6">
+                                <input id="phone" type="text" class="form-control mb-3" name="phone" required>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="phone_type" id="personal" value="personal" checked>
+                                    <label class="form-check-label" for="personal">
+                                        Pessoal
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="phone_type" id="commercial" value="commercial">
+                                    <label class="form-check-label" for="commercial">
+                                        Comercial
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                         <hr>
 
                         <div class="row mb-3">
@@ -31,8 +48,8 @@
                             <div class="col-md-6"><input id="country" type="text" class="form-control" name="country" required></div>
                         </div>
                         <div class="row mb-3">
-                            <label for="postal-code" class="col-md-4 col-form-label text-md-end">{{ __('CEP') }}</label>
-                            <div class="col-md-6"><input id="postal-code" type="text" class="form-control" name="postal-code" required></div>
+                            <label for="postal_code" class="col-md-4 col-form-label text-md-end">{{ __('CEP') }}</label>
+                            <div class="col-md-6"><input id="postal_code" type="text" class="form-control" name="postal_code" required></div>
                         </div>
                         <div class="row mb-3">
                             <label for="state" class="col-md-4 col-form-label text-md-end">{{ __('Estado/UF') }}</label>
@@ -51,12 +68,12 @@
                             <div class="col-md-6"><input id="street" type="text" class="form-control" name="street" required></div>
                         </div>
                         <div class="row mb-3">
-                            <label for="street-number" class="col-md-4 col-form-label text-md-end">{{ __('Número') }}</label>
-                            <div class="col-md-6"><input id="street-number" type="number" class="form-control" name="street-number" required></div>
+                            <label for="street_number" class="col-md-4 col-form-label text-md-end">{{ __('Número') }}</label>
+                            <div class="col-md-6"><input id="street_number" type="number" class="form-control" name="street_number" required></div>
                         </div>
                         <div class="row mb-3">
                             <label for="complement" class="col-md-4 col-form-label text-md-end">{{ __('Complemento') }}</label>
-                            <div class="col-md-6"><input id="complement" type="number" class="form-control" name="complement" required></div>
+                            <div class="col-md-6"><input id="complement" type="text" class="form-control" name="complement"></div>
                         </div>
 
                         <div class="row mb-0">

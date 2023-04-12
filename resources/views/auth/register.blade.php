@@ -4,14 +4,18 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            @if (session('person_id'))
+                <h5>Pessoa cadastrada com sucesso!</h5>
+                <h5>Registre e vincule um usuário a pessoa.</h5>
+                <h5>person_Id: {{session('person_id')}}</h5>
+            @endif
             <div class="card">
                 <div class="card-header">{{ __('Registrar usuário') }}</div>
-
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
 
-                        <div class="row mb-3">
+                        {{-- <div class="row mb-3">
                             <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Nome') }}</label>
 
                             <div class="col-md-6">
@@ -23,7 +27,7 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="row mb-3">
                             <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('E-mail') }}</label>
@@ -60,6 +64,29 @@
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
                         </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-center gap-5 mb-3">
+                            <div class="form-check">
+                                <label class="form-check-label" for="profile_admin">Administrador</label>
+                                <input class="form-check-input" type="radio" name="profile_type" id="profile_admin" value="admin" checked>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label" for="personal">Padrão</label>
+                                <input class="form-check-input" type="radio" name="profile_type" id="profile_normal" value="normal">
+                            </div>
+                        </div> 
+                        
+                        <div class="row mb-3">
+                            <label for="approver_user_id" class="col-md-4 col-form-label text-md-end">{{ __('Usuário aprovador') }}</label>
+                            <div class="col-md-6"><input id="approver_user_id" type="number" class="form-control" name="approver_user_id" min="0"></div>
+                        </div>    
+
+                        <div class="row mb-3">
+                            <label for="approve_limit" class="col-md-4 col-form-label text-md-end">{{ __('Limite de aprovação') }}</label>
+                            <div class="col-md-6"><input id="approve_limit" type="number" class="form-control" name="approve_limit" min="1"></div>
+                        </div>    
 
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->id();
             // $table->string('name'); // Avaliar remoção
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable(); // Avaliar remoção
+            // $table->timestamp('email_verified_at')->nullable(); // Avaliar remoção
             $table->string('password');
 
             $table->unsignedBigInteger('profile_id')->index();
@@ -27,9 +28,10 @@ return new class extends Migration
             $table->unsignedBigInteger('approver_user_id')->nullable();
             $table->foreign('approver_user_id')->references('id')->on('users');
 
-            $table->decimal('approve_limit');
+            $table->decimal('approve_limit')->nullable();
 
-            $table->timestamps();
+            $table->timestamp('created_at')->nullable()->default(DB::raw('NOW()'));
+            $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
         });
     }

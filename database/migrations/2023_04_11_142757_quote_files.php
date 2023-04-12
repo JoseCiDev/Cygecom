@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -21,7 +22,8 @@ return new class extends Migration
             $table->unsignedBigInteger('purchase_quote_id')->index();
             $table->foreign('purchase_quote_id')->references('id')->on('purchase_quotes');
 
-            $table->timestamps();
+            $table->timestamp('created_at')->nullable()->default(DB::raw('NOW()'));
+            $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
         });
     }
