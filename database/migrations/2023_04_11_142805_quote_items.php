@@ -13,19 +13,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('quote_items', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
 
             $table->string('name');
-            $table->string('definite_quantity');
-            $table->decimal('unit_price');
-            $table->decimal('quantity');
+            $table->enum('definite_quantity', ['kg', 'g', 'l', 'ml', 'und']);
+            $table->decimal('unit_price', 14, 2);
+            $table->decimal('quantity', 14, 2);
 
-            $table->foreignId('purchase_quote_id')->constrained('purchase_quotes')->onDelete('cascade');
+            // $table->foreignId('purchase_quote_id')->constrained('purchase_quotes')->onDelete('cascade'); // Método mais resumido e menos flexível
+            $table->unsignedInteger('purchase_quote_id');
+            $table->foreign('purchase_quote_id')->references('id')->on('purchase_quotes')->onDelete('cascade');
 
-            $table->decimal('description')->nullable();
-            $table->timestamp('created_at')->nullable()->default(DB::raw('NOW()'));
-            $table->timestamp('updated_at')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+
+            $table->string('description')->nullable();
+            $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

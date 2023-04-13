@@ -13,21 +13,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders_requests', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
 
-            // $table->string('status'); // Avaliar enum
-            // $table->string('priority'); // Avaliar enum
             $table->enum('status', ['pending', 'processing', 'completed']);
             $table->enum('priority', ['very low', 'low', 'medium', 'high', 'very high']);
 
             $table->string('description');
 
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
 
-            $table->timestamp('created_at')->nullable()->default(DB::raw('NOW()'));
-            $table->timestamp('updated_at')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

@@ -13,18 +13,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('quote_files', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
 
             $table->string('path');
-            $table->string('type'); // Avaliar enum
-            // $table->enum('type', ['pdf', 'doc', 'png'])->index();
+            $table->string('type');
 
-            $table->unsignedBigInteger('purchase_quote_id')->index();
+            $table->unsignedInteger('purchase_quote_id')->index();
             $table->foreign('purchase_quote_id')->references('id')->on('purchase_quotes');
 
-            $table->timestamp('created_at')->nullable()->default(DB::raw('NOW()'));
-            $table->timestamp('updated_at')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

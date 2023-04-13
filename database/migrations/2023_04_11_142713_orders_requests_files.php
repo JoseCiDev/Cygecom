@@ -13,19 +13,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders_requests_files', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
 
             $table->string('path');
-            $table->string('type'); // Avaliar enum
-            // $table->enum('type', ['value1', 'value2', 'value3']);
+            $table->string('type');
 
-            // $table->unsignedBigInteger('orders_requests_id');
-            // $table->foreign('orders_requests_id')->references('id')->on('orders_requests');
-            $table->foreignId('file_order_request_id')->constrained('orders_requests')->onDelete('cascade');
+            // $table->foreignId('file_order_request_id')->constrained('orders_requests')->onDelete('cascade'); // Método mais resumido e menos flexível
+            $table->unsignedInteger('file_order_request_id');
+            $table->foreign('file_order_request_id')->references('id')->on('orders_requests')->onDelete('cascade');
 
-            $table->timestamp('created_at')->nullable()->default(DB::raw('NOW()'));
-            $table->timestamp('updated_at')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

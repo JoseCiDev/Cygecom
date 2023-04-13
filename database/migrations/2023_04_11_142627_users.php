@@ -13,26 +13,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            // $table->string('name'); // Avaliar remoção
+            $table->increments('id');
             $table->string('email')->unique();
-            // $table->timestamp('email_verified_at')->nullable(); // Avaliar remoção
             $table->string('password');
 
-            $table->unsignedBigInteger('profile_id')->index();
+            $table->unsignedInteger('profile_id')->index();
             $table->foreign('profile_id')->references('id')->on('user_profiles');
 
-            $table->unsignedBigInteger('person_id')->index();
+            $table->unsignedInteger('person_id')->index();
             $table->foreign('person_id')->references('id')->on('people');
 
-            $table->unsignedBigInteger('approver_user_id')->nullable();
+            $table->unsignedInteger('approver_user_id')->nullable();
             $table->foreign('approver_user_id')->references('id')->on('users');
 
-            $table->decimal('approve_limit')->nullable();
+            $table->decimal('approve_limit', 14, 2)->nullable();
 
-            $table->timestamp('created_at')->nullable()->default(DB::raw('NOW()'));
-            $table->timestamp('updated_at')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

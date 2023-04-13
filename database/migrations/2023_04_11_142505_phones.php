@@ -13,19 +13,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('phones', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('number', 15)->index();
             $table->enum('phone_type', ['personal', 'commercial'])->nullable();
 
-            $table->unsignedBigInteger('person_id')->nullable();
+            $table->unsignedInteger('person_id')->nullable();
             $table->foreign('person_id')->references('id')->on('people');
 
-            $table->unsignedBigInteger('supplier_id')->nullable();
+            $table->unsignedInteger('supplier_id')->nullable();
             $table->foreign('supplier_id')->references('id')->on('suppliers');
 
-            $table->timestamp('created_at')->nullable()->default(DB::raw('NOW()'));
-            $table->timestamp('updated_at')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

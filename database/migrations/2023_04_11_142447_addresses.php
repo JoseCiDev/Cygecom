@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('addresses', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('street');
             $table->string('street_number');
             $table->string('neighborhood');
@@ -23,15 +23,15 @@ return new class extends Migration
             $table->string('country');
             $table->string('complement')->nullable();
 
-            $table->unsignedBigInteger('supplier_id')->nullable();
+            $table->unsignedInteger('supplier_id')->nullable();
             $table->foreign('supplier_id')->references('id')->on('suppliers');
 
-            $table->unsignedBigInteger('person_id')->nullable();
+            $table->unsignedInteger('person_id')->nullable();
             $table->foreign('person_id')->references('id')->on('people');
 
-            $table->timestamp('created_at')->nullable()->default(DB::raw('NOW()'));
-            $table->timestamp('updated_at')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('deleted_at')->nullable();
         });
     }
 

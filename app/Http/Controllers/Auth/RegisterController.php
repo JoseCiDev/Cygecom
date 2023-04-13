@@ -65,12 +65,10 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        // $profileId = DB::table('user_profiles')->where('profile_name', $data['profile_type'])->get('id')->all();
         $profileId = DB::table('user_profiles')->where('profile_name', $data['profile_type'])->pluck('id')->first();
         $personId = session('person_id');
 
         $data = [
-            // 'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'profile_id' => $profileId,
@@ -78,10 +76,6 @@ class RegisterController extends Controller
             'approver_user_id' => $data['approver_user_id'],
             'approve_limit' => $data['approve_limit']
         ];
-
-        // echo "<br><br><br><br><br>";
-        // echo "<pre>";
-        // var_dump($data);
 
         return User::create($data);
     }
