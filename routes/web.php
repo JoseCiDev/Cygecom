@@ -14,13 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::get('/registerPersonView', [App\Http\Controllers\PersonController::class, 'registerPersonView'])->name('registerPersonView');
-Route::post('/registerPerson', [App\Http\Controllers\PersonController::class, 'registerPerson'])->name('registerPerson');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/registerPersonView', [App\Http\Controllers\PersonController::class, 'registerPersonView'])->name('registerPersonView');
+    Route::post('/registerPerson', [App\Http\Controllers\PersonController::class, 'registerPerson'])->name('registerPerson');
+});

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\DB;
@@ -24,24 +23,7 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
-
-    /**
-     * Where to redirect users after registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest');
-    }
-
+    protected $redirectTo = '/';
     /**
      * Get a validator for an incoming registration request.
      *
@@ -51,9 +33,8 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            // 'name' => ['required', 'string', 'max:255'],
-            // 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            // 'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
@@ -68,15 +49,16 @@ class RegisterController extends Controller
         $profileId = DB::table('user_profiles')->where('profile_name', $data['profile_type'])->pluck('id')->first();
         $personId = session('person_id');
 
-        $data = [
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'profile_id' => $profileId,
-            'person_id' => $personId,
-            'approver_user_id' => $data['approver_user_id'],
-            'approve_limit' => $data['approve_limit']
-        ];
+        $user = new User();
 
-        return User::create($data);
+        $user->email = $data['email'];
+        $user->password = Hash::make($data['password']);
+        $user->profile_id = $profileId;
+        $user->person_id = $personId;
+        $user->approver_user_id = $data['approver_user_id'];
+        $user->approve_limit = $data['approve_limit'];
+
+        $user->save();
+        return $user->first();
     }
 }
