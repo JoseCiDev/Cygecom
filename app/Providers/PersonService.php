@@ -2,19 +2,17 @@
 
 namespace App\Providers;
 
+use App\Http\Validators\PersonValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
 class PersonService extends ServiceProvider
 {
     public function registerPerson(Request $request): int
     {
-        $data = $request->input();
-        unset($data['_token']);
-
-        $validator = (new PersonValidator())->validate($data);
+        $data = $request->except('_token');
+        $validator = PersonValidator::registerPersonValidate($data);
         if ($validator->fails()) {
             throw new \Exception($validator->errors()->first());
         }
@@ -68,26 +66,5 @@ class PersonService extends ServiceProvider
             'person_id' => $personId,
         ];
         DB::table('phones')->insert($phones);
-    }
-}
-
-class PersonValidator
-{
-    public function validate(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'birthdate' => ['required', 'date'],
-            'street' => ['required', 'string'],
-            'street_number' => ['required', 'string'],
-            'neighborhood' => ['required', 'string'],
-            'postal_code' => ['required', 'string'],
-            'city' => ['required', 'string'],
-            'state' => ['required', 'string'],
-            'country' => ['required', 'string'],
-            'document_number' => ['required', 'string'],
-            'phone' => ['required', 'string'],
-            'phone_type' => ['required', 'string'],
-        ]);
     }
 }
