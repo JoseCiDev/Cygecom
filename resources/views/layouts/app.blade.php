@@ -9,75 +9,537 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+	<link rel="stylesheet" href="{{ asset('css/main.css') }}">
 
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<!-- jQuery UI -->
+	<link rel="stylesheet" href="css/plugins/jquery-ui/jquery-ui.min.css">
+	<!-- PageGuide -->
+	<link rel="stylesheet" href="css/plugins/pageguide/pageguide.css">
+	<!-- Fullcalendar -->
+	<link rel="stylesheet" href="css/plugins/fullcalendar/fullcalendar.css">
+	<link rel="stylesheet" href="css/plugins/fullcalendar/fullcalendar.print.css" media="print">
+	<!-- chosen -->
+	<link rel="stylesheet" href="css/plugins/chosen/chosen.css">
+	<!-- select2 -->
+	<link rel="stylesheet" href="css/plugins/select2/select2.css">
+	<!-- icheck -->
+	<link rel="stylesheet" href="css/plugins/icheck/all.css">
+	<!-- Theme CSS -->
+	<link rel="stylesheet" href="css/style.css">
+	<!-- Color CSS -->
+	<link rel="stylesheet" href="css/themes.css">
+
+	<!-- jQuery -->
+	<script src="js/jquery.min.js"></script>
+
+
+	<!-- Nice Scroll -->
+	<script src="js/plugins/nicescroll/jquery.nicescroll.min.js"></script>
+	<!-- jQuery UI -->
+	<script src="js/plugins/jquery-ui/jquery-ui.js"></script>
+	<!-- Touch enable for jquery UI -->
+	<script src="js/plugins/touch-punch/jquery.touch-punch.min.js"></script>
+	<!-- slimScroll -->
+	<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<!-- Bootstrap -->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- vmap -->
+	<script src="js/plugins/vmap/jquery.vmap.min.js"></script>
+	<script src="js/plugins/vmap/jquery.vmap.world.js"></script>
+	<script src="js/plugins/vmap/jquery.vmap.sampledata.js"></script>
+	<!-- Bootbox -->
+	<script src="js/plugins/bootbox/jquery.bootbox.js"></script>
+	<!-- Flot -->
+	<script src="js/plugins/flot/jquery.flot.min.js"></script>
+	<script src="js/plugins/flot/jquery.flot.bar.order.min.js"></script>
+	<script src="js/plugins/flot/jquery.flot.pie.min.js"></script>
+	<script src="js/plugins/flot/jquery.flot.resize.min.js"></script>
+	<!-- imagesLoaded -->
+	<script src="js/plugins/imagesLoaded/jquery.imagesloaded.min.js"></script>
+	<!-- PageGuide -->
+	<script src="js/plugins/pageguide/jquery.pageguide.js"></script>
+	<!-- FullCalendar -->
+	<script src="js/plugins/fullcalendar/moment.min.js"></script>
+	<script src="js/plugins/fullcalendar/fullcalendar.min.js"></script>
+	<!-- Chosen -->
+	<script src="js/plugins/chosen/chosen.jquery.min.js"></script>
+	<!-- select2 -->
+	<script src="js/plugins/select2/select2.min.js"></script>
+	<!-- icheck -->
+	<script src="js/plugins/icheck/jquery.icheck.min.js"></script>
+
+	<!-- Theme framework -->
+	<script src="js/eakroko.min.js"></script>
+	<!-- Theme scripts -->
+	<script src="js/application.min.js"></script>
+	<!-- Just for demonstration -->
+	<script src="js/demonstration.min.js"></script>
+
+	<!--[if lte IE 9]>
+		<script src="js/plugins/placeholder/jquery.placeholder.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				$('input, textarea').placeholder();
+			});
+		</script>
+		<![endif]-->
+
+	<!-- Favicon -->
+	{{-- <link rel="shortcut icon" href="img/favicon.ico" /> --}}
+	<!-- Apple devices Homescreen icon -->
+	<link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-precomposed.png" />
 
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <div>
+			<div id="navigation">
+				<div class="container-fluid">
+					<a href="#" id="brand">GECOM</a>
+					<a href="#" class="toggle-nav" rel="tooltip" data-placement="bottom" title="Toggle navigation">
+						<i class="fa fa-bars"></i>
+					</a>
+					<ul class='main-nav'>
+						<li>
+							<a href="index-2.html">
+								<span>Dashboard</span>
+							</a>
+						</li>
+						<li>
+							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+								<span>Forms</span>
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="#">Basic forms</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+								<span>Components</span>
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="#">Timeline</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+								<span>Tables</span>
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="tables-basic.html">Basic tables</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+								<span>Plugins</span>
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="plugins-charts.html">Charts</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<div class="user">
+						<ul class="icon-nav">
+							<li class='dropdown'>
+								<a href="#" class='dropdown-toggle' data-toggle="dropdown">
+									<i class="fa fa-envelope"></i>
+									<span class="label label-lightred">4</span>
+								</a>
+								<ul class="dropdown-menu pull-right message-ul">
+									<li>
+										<a href="#">
+											<img src="img/demo/user-1.jpg" alt="">
+											<div class="details">
+												<div class="name">Jane Doe</div>
+												<div class="message">
+													Lorem ipsum Commodo quis nisi ...
+												</div>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<img src="img/demo/user-2.jpg" alt="">
+											<div class="details">
+												<div class="name">John Doe</div>
+												<div class="message">
+													Ut ad laboris est anim ut ...
+												</div>
+											</div>
+											<div class="count">
+												<i class="fa fa-comment"></i>
+												<span>3</span>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<img src="img/demo/user-3.jpg" alt="">
+											<div class="details">
+												<div class="name">Bob Doe</div>
+												<div class="message">
+													Excepteur Duis magna dolor!
+												</div>
+											</div>
+										</a>
+									</li>
+									<li>
+										<a href="components-messages.html" class='more-messages'>Go to Message center
+											<i class="fa fa-arrow-right"></i>
+										</a>
+									</li>
+								</ul>
+							</li>
+		
+							<li class="dropdown sett">
+								<a href="#" class='dropdown-toggle' data-toggle="dropdown">
+									<i class="fa fa-cog"></i>
+								</a>
+								<ul class="dropdown-menu pull-right theme-settings">
+									<li>
+										<span>Layout-width</span>
+										<div class="version-toggle">
+											<a href="#" class='set-fixed'>Fixed</a>
+											<a href="#" class="active set-fluid">Fluid</a>
+										</div>
+									</li>
+									<li>
+										<span>Topbar</span>
+										<div class="topbar-toggle">
+											<a href="#" class='set-topbar-fixed'>Fixed</a>
+											<a href="#" class="active set-topbar-default">Default</a>
+										</div>
+									</li>
+									<li>
+										<span>Sidebar</span>
+										<div class="sidebar-toggle">
+											<a href="#" class='set-sidebar-fixed'>Fixed</a>
+											<a href="#" class="active set-sidebar-default">Default</a>
+										</div>
+									</li>
+								</ul>
+							</li>
+							<li class='dropdown colo'>
+								<a href="#" class='dropdown-toggle' data-toggle="dropdown">
+									<i class="fa fa-tint"></i>
+								</a>
+								<ul class="dropdown-menu pull-right theme-colors">
+									<li class="subtitle">
+										Predefined colors
+									</li>
+									<li>
+										<span class='red'></span>
+										<span class='orange'></span>
+										<span class='green'></span>
+										<span class="brown"></span>
+										<span class="blue"></span>
+										<span class='lime'></span>
+										<span class="teal"></span>
+										<span class="purple"></span>
+										<span class="pink"></span>
+										<span class="magenta"></span>
+										<span class="grey"></span>
+										<span class="darkblue"></span>
+										<span class="lightred"></span>
+										<span class="lightgrey"></span>
+										<span class="satblue"></span>
+										<span class="satgreen"></span>
+									</li>
+								</ul>
+							</li>
+							<li class='dropdown language-select'>
+								<a href="#" class='dropdown-toggle' data-toggle="dropdown">
+									<img src="img/demo/flags/us.gif" alt="">
+									<span>US</span>
+								</a>
+								<ul class="dropdown-menu pull-right">
+									<li>
+										<a href="#">
+											<img src="img/demo/flags/br.gif" alt="">
+											<span>Brasil</span>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<img src="img/demo/flags/de.gif" alt="">
+											<span>Deutschland</span>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<img src="img/demo/flags/es.gif" alt="">
+											<span>España</span>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<img src="img/demo/flags/fr.gif" alt="">
+											<span>France</span>
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<div class="dropdown">
+							<a href="#" class='dropdown-toggle' data-toggle="dropdown"> Person id: {{ auth()->user()->person_id }}
+								<img src="img/demo/user-avatar.jpg" alt="">
+							</a>
+							<ul class="dropdown-menu pull-right">
+								<li>
+									<a href="more-userprofile.html">Edit profile</a>
+								</li>
+								<li>
+									<a href="#">Account settings</a>
+								</li>
+								<li>
+									<a href="more-login.html">Sign out</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="container-fluid" id="content">
+				<div id="left">
+					<form action="http://www.eakroko.de/flat/search-results.html" method="GET" class='search-form'>
+						<div class="search-pane">
+							<input type="text" name="search" placeholder="Search here...">
+							<button type="submit">
+								<i class="fa fa-search"></i>
+							</button>
+						</div>
+					</form>
+					<div class="subnav">
+						<div class="subnav-title">
+							<a href="#" class='toggle-subnav'>
+								<i class="fa fa-angle-down"></i>
+								<span>Content</span>
+							</a>
+						</div>
+						<ul class="subnav-menu">
+							<li class='dropdown'>
+								<a href="#" data-toggle="dropdown">Articles</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="#">Action #1</a>
+									</li>
+									<li>
+										<a href="#">Antoher Link</a>
+									</li>
+									<li class='dropdown-submenu'>
+										<a href="#" data-toggle="dropdown" class='dropdown-toggle'>Go to level 3</a>
+										<ul class="dropdown-menu">
+											<li>
+												<a href="#">This is level 3</a>
+											</li>
+											<li>
+												<a href="#">Unlimited levels</a>
+											</li>
+											<li>
+												<a href="#">Easy to use</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<a href="#">News</a>
+							</li>
+							<li>
+								<a href="#">Pages</a>
+							</li>
+							<li>
+								<a href="#">Comments</a>
+							</li>
+						</ul>
+					</div>
+					<div class="subnav">
+						<div class="subnav-title">
+							<a href="#" class='toggle-subnav'>
+								<i class="fa fa-angle-down"></i>
+								<span>Plugins</span>
+							</a>
+						</div>
+						<ul class="subnav-menu">
+							<li>
+								<a href="#">Cache manager</a>
+							</li>
+							<li class='dropdown'>
+								<a href="#" data-toggle="dropdown">Import manager</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="#">Action #1</a>
+									</li>
+									<li>
+										<a href="#">Antoher Link</a>
+									</li>
+									<li class='dropdown-submenu'>
+										<a href="#" data-toggle="dropdown" class='dropdown-toggle'>Go to level 3</a>
+										<ul class="dropdown-menu">
+											<li>
+												<a href="#">This is level 3</a>
+											</li>
+											<li>
+												<a href="#">Unlimited levels</a>
+											</li>
+											<li>
+												<a href="#">Easy to use</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<a href="#">Contact form generator</a>
+							</li>
+							<li>
+								<a href="#">SEO optimization</a>
+							</li>
+						</ul>
+					</div>
+					<div class="subnav">
+						<div class="subnav-title">
+							<a href="#" class='toggle-subnav'>
+								<i class="fa fa-angle-down"></i>
+								<span>Settings</span>
+							</a>
+						</div>
+						<ul class="subnav-menu">
+							<li>
+								<a href="#">Theme settings</a>
+							</li>
+							<li class='dropdown'>
+								<a href="#" data-toggle="dropdown">Page settings</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="#">Action #1</a>
+									</li>
+									<li>
+										<a href="#">Antoher Link</a>
+									</li>
+									<li class='dropdown-submenu'>
+										<a href="#" data-toggle="dropdown" class='dropdown-toggle'>Go to level 3</a>
+										<ul class="dropdown-menu">
+											<li>
+												<a href="#">This is level 3</a>
+											</li>
+											<li>
+												<a href="#">Unlimited levels</a>
+											</li>
+											<li>
+												<a href="#">Easy to use</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<a href="#">Security settings</a>
+							</li>
+						</ul>
+					</div>
+					<div class="subnav subnav-hidden">
+						<div class="subnav-title">
+							<a href="#" class='toggle-subnav'>
+								<i class="fa fa-angle-right"></i>
+								<span>Default hidden</span>
+							</a>
+						</div>
+						<ul class="subnav-menu">
+							<li>
+								<a href="#">Menu</a>
+							</li>
+							<li class='dropdown'>
+								<a href="#" data-toggle="dropdown">With submenu</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="#">Action #1</a>
+									</li>
+									<li>
+										<a href="#">Antoher Link</a>
+									</li>
+									<li class='dropdown-submenu'>
+										<a href="#" data-toggle="dropdown" class='dropdown-toggle'>More stuff</a>
+										<ul class="dropdown-menu">
+											<li>
+												<a href="#">This is level 3</a>
+											</li>
+											<li>
+												<a href="#">Easy to use</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<a href="#">Security settings</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div id="main">
+					<div class="container-fluid">
+						<div class="page-header">
+							<div class="pull-left">
+								<h1>Página principal</h1>
+							</div>
+						</div>
+						{{-- <div class="breadcrumbs">
+							<ul>
+								<li>
+									<a href="">Home</a>
+									<i class="fa fa-angle-right"></i>
+								</li>
+								<li>
+									<a href="">Components</a>
+									<i class="fa fa-angle-right"></i>
+								</li>
+								<li>
+									<a href="">Bootstrap elements</a>
+								</li>
+							</ul>
+							<div class="close-bread">
+								<a href="#">
+									<i class="fa fa-times"></i>
+								</a>
+							</div>
+						</div> --}}
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="box">
+									<div class="box-title">
+										<h3>
+											<i class="fa fa-bars"></i>
+											Requerimentos recentes
+										</h3>
+									</div>
+								</div>
+							</div>
+						</div>
+						<main class="py-4">
+							@yield('content')
+						</main>
+					</div>
+				</div>
+			</div>
+		</div>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    {{-- <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a> --}}
-                                    <a class="nav-link" href="{{ route('registerPersonView') }}">{{ __('Registrar Pessoa') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+       
     </div>
 </body>
 </html>
