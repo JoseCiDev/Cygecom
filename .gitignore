@@ -67,3 +67,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+#plugins do flat
+public/font
+public/img
