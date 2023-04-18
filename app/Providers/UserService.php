@@ -2,34 +2,42 @@
 
 namespace App\Providers;
 
-use App\Http\Validators\PersonValidator;
-use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\ServiceProvider;
 
-class PersonService extends ServiceProvider
+class UserService extends ServiceProvider
 {
-    public function registerPerson(Request $request): int
+    public function registerUser(array $request)
     {
-        $data = $request->except('_token');
-        $validator = PersonValidator::registerPersonValidate($data);
-        if ($validator->fails()) {
-            throw new \Exception($validator->errors()->first());
-        }
+        $user = DB::transaction(function () use ($request) {
+            $personId = $this->insertGetIdPerson($request);
+            $this->registerAddress($personId, $request);
+            $this->registerIdentificationDocument($personId, $request);
+            $this->registerPhone($personId, $request);
 
-        $personId = DB::transaction(function () use ($data) {
-            $personId = DB::table('people')->insertGetId([
-                'name' => $data['name'],
-                'birthdate' => $data['birthdate'],
-            ]);
+            $user = new User();
+            $user->email = $request['email'];
+            $user->password = Hash::make($request['password']);
+            $user->profile_id = $this->getProfileId($request);
+            $user->person_id = $personId;
+            $user->approver_user_id = $request['approver_user_id'];
+            $user->approve_limit = $request['approve_limit'];
+            $user->save();
 
-            $this->registerAddress($personId, $data);
-            $this->registerIdentificationDocument($personId, $data);
-            $this->registerPhone($personId, $data);
-
-            return $personId;
+            return $user;
         });
 
+        return $user;
+    }
+
+    private function insertGetIdPerson($request)
+    {
+        $personId = DB::table('people')->insertGetId([
+            'name' => $request['name'],
+            'birthdate' => $request['birthdate'],
+        ]);
         return $personId;
     }
 
@@ -66,5 +74,11 @@ class PersonService extends ServiceProvider
             'person_id' => $personId,
         ];
         DB::table('phones')->insert($phones);
+    }
+
+    protected function getProfileId($data)
+    {
+        $profileId = DB::table('user_profiles')->where('profile_name', $data['profile_type'])->pluck('id')->first();
+        return $profileId;
     }
 }

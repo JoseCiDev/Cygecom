@@ -18,6 +18,9 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    Route::get('/registerPersonView', [App\Http\Controllers\PersonController::class, 'registerPersonView'])->name('registerPersonView');
-    Route::post('/registerPerson', [App\Http\Controllers\PersonController::class, 'registerPerson'])->name('registerPerson');
+
+    Route::middleware(['check_profile'])->group(function () {
+        Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+        Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
+    });
 });

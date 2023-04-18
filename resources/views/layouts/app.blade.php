@@ -108,20 +108,19 @@
 								<span>Painel</span>
 							</a>
 						</li>
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Cadastro</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="{{ route('registerPersonView') }}">Pessoas</a>
-								</li>
-								<li>
-									<a href="{{ route('register') }}">Usuários</a>
-								</li>
-							</ul>
-						</li>
+						@if (auth()->user()->profile->profile_name === 'admin')
+							<li>
+								<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+									<span>Cadastro</span>
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="{{ route('register') }}">Registrar usuário</a>
+									</li>
+								</ul>
+							</li>
+						@endif
 					</ul>
 					<div class="user">
 						<ul class="icon-nav">
