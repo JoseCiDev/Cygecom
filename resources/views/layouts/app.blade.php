@@ -296,7 +296,9 @@
 							</li>
 						</ul>
 						<div class="dropdown">
-							<a href="#" class='dropdown-toggle' data-toggle="dropdown"> Person id: {{ auth()->user()->person_id }}
+							<a href="#" class='dropdown-toggle' data-toggle="dropdown"> 
+								{{ auth()->user()->person->name }} |
+								Perfil: {{ auth()->user()->profile->profile_name }}
 								<img src="img/demo/user-avatar.jpg" alt="">
 							</a>
 							<ul class="dropdown-menu pull-right">
@@ -307,7 +309,10 @@
 									<a href="#">Account settings</a>
 								</li>
 								<li>
-									<a href="more-login.html">Sign out</a>
+									<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+									 	{{ __('Sair') }}
+								 	</a>
+								 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
 								</li>
 							</ul>
 						</div>
