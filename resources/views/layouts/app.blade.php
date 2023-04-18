@@ -105,50 +105,20 @@
 					<ul class='main-nav'>
 						<li>
 							<a href="index-2.html">
-								<span>Dashboard</span>
+								<span>Painel</span>
 							</a>
 						</li>
 						<li>
 							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Forms</span>
+								<span>Cadastro</span>
 								<span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
 								<li>
-									<a href="#">Basic forms</a>
+									<a href="{{ route('registerPersonView') }}">Pessoas</a>
 								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Components</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
 								<li>
-									<a href="#">Timeline</a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Tables</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="tables-basic.html">Basic tables</a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Plugins</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="plugins-charts.html">Charts</a>
+									<a href="{{ route('register') }}">Usuários</a>
 								</li>
 							</ul>
 						</li>
@@ -231,66 +201,6 @@
 											<a href="#" class='set-sidebar-fixed'>Fixed</a>
 											<a href="#" class="active set-sidebar-default">Default</a>
 										</div>
-									</li>
-								</ul>
-							</li>
-							<li class='dropdown colo'>
-								<a href="#" class='dropdown-toggle' data-toggle="dropdown">
-									<i class="fa fa-tint"></i>
-								</a>
-								<ul class="dropdown-menu pull-right theme-colors">
-									<li class="subtitle">
-										Predefined colors
-									</li>
-									<li>
-										<span class='red'></span>
-										<span class='orange'></span>
-										<span class='green'></span>
-										<span class="brown"></span>
-										<span class="blue"></span>
-										<span class='lime'></span>
-										<span class="teal"></span>
-										<span class="purple"></span>
-										<span class="pink"></span>
-										<span class="magenta"></span>
-										<span class="grey"></span>
-										<span class="darkblue"></span>
-										<span class="lightred"></span>
-										<span class="lightgrey"></span>
-										<span class="satblue"></span>
-										<span class="satgreen"></span>
-									</li>
-								</ul>
-							</li>
-							<li class='dropdown language-select'>
-								<a href="#" class='dropdown-toggle' data-toggle="dropdown">
-									<img src="img/demo/flags/us.gif" alt="">
-									<span>US</span>
-								</a>
-								<ul class="dropdown-menu pull-right">
-									<li>
-										<a href="#">
-											<img src="img/demo/flags/br.gif" alt="">
-											<span>Brasil</span>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<img src="img/demo/flags/de.gif" alt="">
-											<span>Deutschland</span>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<img src="img/demo/flags/es.gif" alt="">
-											<span>España</span>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<img src="img/demo/flags/fr.gif" alt="">
-											<span>France</span>
-										</a>
 									</li>
 								</ul>
 							</li>
@@ -494,11 +404,6 @@
 				</div>
 				<div id="main">
 					<div class="container-fluid">
-						<div class="page-header">
-							<div class="pull-left">
-								<h1>Página principal</h1>
-							</div>
-						</div>
 						{{-- <div class="breadcrumbs">
 							<ul>
 								<li>
@@ -519,18 +424,6 @@
 								</a>
 							</div>
 						</div> --}}
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="box">
-									<div class="box-title">
-										<h3>
-											<i class="fa fa-bars"></i>
-											Requerimentos recentes
-										</h3>
-									</div>
-								</div>
-							</div>
-						</div>
 						<main class="py-4">
 							@yield('content')
 						</main>
