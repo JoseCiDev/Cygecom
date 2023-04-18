@@ -47,7 +47,7 @@
 
 </head>
 
-<body class='login'>
+<body class='login theme-darkblue'>
 	<div class="wrapper">
 		<h1>
 			<a href="#">
