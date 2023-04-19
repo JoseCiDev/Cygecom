@@ -105,61 +105,19 @@
 								<span>Dashboard</span>
 							</a>
 						</li>
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Usuários</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="{{ route('register') }}">Cadastro</a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Req. Compras</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="#"> --- </a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Cotações</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="#"> --- </a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Ordem de Compras</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="#"> --- </a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Integração Sênior</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="#"> --- </a>
-								</li>
-							</ul>
-						</li>
+						@if (auth()->user()->profile->profile_name === 'admin')
+							<li>
+								<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+									<span>Cadastro</span>
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="{{ route('register') }}">Registrar usuário</a>
+									</li>
+								</ul>
+							</li>
+						@endif
 					</ul>
 					<div class="user">
 						<ul class="icon-nav">

@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Providers\PersonService;
+use App\Providers\UserService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,8 +12,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(PersonService::class, function ($app) {
-            return new PersonService($app);
+        $this->app->singleton(UserService::class, function ($app) {
+            return new UserService($app);
         });
     }
 
