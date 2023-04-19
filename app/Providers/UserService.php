@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Http\Validators\PersonValidator;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\ServiceProvider;
@@ -28,7 +30,6 @@ class UserService extends ServiceProvider
 
             return $user;
         });
-
         return $user;
     }
 
@@ -76,9 +77,54 @@ class UserService extends ServiceProvider
         DB::table('phones')->insert($phones);
     }
 
+    public function updateTableWhereId($table, $where, $id, $data)
+    {
+        $validator = $this->validator($data);
+        if ($validator->fails()) {
+            throw new \Exception($validator->errors()->first());
+        }
+
+        $data['updated_at'] = Carbon::now()->setTimezone('America/Sao_Paulo');
+
+        if ($this->isProfileTypeUpdate($data)) {
+            $data['profile_id'] = $this->getIdOfProfileType($data['profile_name']);
+            unset($data['profile_name']);
+        }
+
+        if ($this->isPasswordUpdate($data)) {
+            $data['password'] = Hash::make($data['password']);
+            unset($data['password_confirmation']);
+        }
+
+        return DB::table($table)->where($where, $id)->update($data);
+    }
+
     protected function getProfileId($data)
     {
         $profileId = DB::table('user_profiles')->where('profile_name', $data['profile_type'])->pluck('id')->first();
         return $profileId;
+    }
+    protected function isProfileTypeUpdate($data)
+    {
+        return isset($data['profile_name']) && $data['profile_name'] !== null;
+    }
+    protected function isPasswordUpdate($data)
+    {
+        return isset($data['password']) && $data['password'] !== null;
+    }
+
+    protected function getIdOfProfileType($profile_name_value)
+    {
+        return DB::table('user_profiles')->where('profile_name', $profile_name_value)->value('id');
+    }
+
+    protected function validator(array $data)
+    {
+        return PersonValidator::updateValidator($data);
+    }
+
+    protected function isAdmin()
+    {
+        return auth()->user()->profile->profile_name === 'admin';
     }
 }
