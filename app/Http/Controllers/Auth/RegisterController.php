@@ -33,7 +33,8 @@ class RegisterController extends Controller
 
     protected function validator(array $data)
     {
-        return PersonValidator::registerValidator($data);
+        $personValidator = new PersonValidator;
+        return $personValidator->registerValidator($data);
     }
 
     public function showRegistrationForm()
