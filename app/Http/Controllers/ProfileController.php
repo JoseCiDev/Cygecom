@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Validators\PersonValidator;
 use App\Providers\UserService;
 use Illuminate\Http\Request;
 
@@ -21,10 +22,7 @@ class ProfileController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $data = $request->validate([
-            'updateAction' => 'required',
-        ]);
-
+        $data = $this->validRequest($request);
         $data = $this->removeToken($request);
         $data = $this->removeNullData($data);
         if (!$this->existDataContent($data)) return redirect(route('profile'));
@@ -69,5 +67,14 @@ class ProfileController extends Controller
     protected function existDataContent($data)
     {
         return count($data) > 0;
+    }
+
+    protected function validRequest(Request $request)
+    {
+        $personValidator = new PersonValidator;
+        $rules = $personValidator->rules;
+        $rules['updateAction'] = 'required';
+        $messages = $personValidator->rulesMessages;
+        return $request->validate($rules, $messages);
     }
 }
