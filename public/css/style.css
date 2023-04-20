@@ -4597,7 +4597,7 @@ label, input, button, select, textarea {
 #main {
   *zoom: 1;
   background: #fff;
-  margin-left: 200px;
+  /*margin-left: 200px;*/
   overflow: visible;
   padding-bottom: 30px;
 }

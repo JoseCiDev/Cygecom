@@ -95,7 +95,6 @@
 </head>
 <body>
     <div id="app">
-        <div>
 			<div id="navigation">
 				<div class="container-fluid">
 					<a href="/" id="brand">GECOM</a>
@@ -107,17 +106,57 @@
 						</li>
 						@if (auth()->user()->profile->profile_name === 'admin')
 							<li>
-								<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-									<span>Cadastro</span>
-									<span class="caret"></span>
+								<a href="{{ route('register') }}">
+									<span>Usuários</span>
 								</a>
-								<ul class="dropdown-menu">
-									<li>
-										<a href="{{ route('register') }}">Registrar usuário</a>
-									</li>
-								</ul>
 							</li>
 						@endif
+						<li>
+							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+								<span>Req. Compras</span>
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href=""> --- </a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+								<span>Cotações</span>
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href=""> --- </a>
+								</li>
+							</ul>
+						</li>
+						@if (auth()->user()->profile->profile_name === 'admin')
+						<li>
+							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+								<span>Ordens de Compra</span>
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href=""> --- </a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+								<span>Integração Sênior</span>
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href=""> --- </a>
+								</li>
+							</ul>
+						</li>
+					@endif
 					</ul>
 					<div class="user">
 						<ul class="icon-nav">
@@ -166,8 +205,14 @@
 					</div>
 				</div>
 			</div>
+			<div id="main-content-container">
 				<div id="main">
-					<div class="container-fluid">
+					<div class="container">
+						<div class="page-header">
+							<div>
+								<h1 class="pull-left">@yield('title') </h1>
+							</div>
+						</div>
 						<main class="py-4">
 							@yield('content')
 						</main>
@@ -175,8 +220,7 @@
 				</div>
 			</div>
 		</div>
-
-       
     </div>
 </body>
+
 </html>
