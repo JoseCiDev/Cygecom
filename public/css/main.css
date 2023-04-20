@@ -6,3 +6,9 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
+.user-item-list{
+    border: 1px solid;
+    margin-bottom: 5px;
+    padding: 10px 0;
+}

@@ -14,5 +14,9 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['check_profile'])->group(function () {
         Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
         Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
+
+        Route::get('/users', [App\Http\Controllers\ManagerController::class, 'showUsers'])->name('users');
+        Route::get('/users/{id}', [App\Http\Controllers\ManagerController::class, 'showUser'])->name('user');
+        Route::post('/users/{id}', [App\Http\Controllers\ManagerController::class, 'index']);
     });
 });

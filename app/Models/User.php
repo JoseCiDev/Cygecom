@@ -10,6 +10,11 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approver_user_id');
+    }
+
     public function person()
     {
         return $this->belongsTo(Person::class);
