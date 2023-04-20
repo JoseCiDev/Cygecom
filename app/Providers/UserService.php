@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\ServiceProvider;
@@ -28,8 +29,24 @@ class UserService extends ServiceProvider
 
             return $user;
         });
-
         return $user;
+    }
+
+    public function updateTableWhereId($table, $where, $id, $data)
+    {
+        $data['updated_at'] = Carbon::now()->setTimezone('America/Sao_Paulo');
+
+        if ($this->isProfileTypeUpdate($data)) {
+            $data['profile_id'] = $this->getIdOfProfileType($data['profile_name']);
+            unset($data['profile_name']);
+        }
+
+        if ($this->isPasswordUpdate($data)) {
+            $data['password'] = Hash::make($data['password']);
+            unset($data['password_confirmation']);
+        }
+
+        return DB::table($table)->where($where, $id)->update($data);
     }
 
     private function insertGetIdPerson($request)
@@ -76,9 +93,27 @@ class UserService extends ServiceProvider
         DB::table('phones')->insert($phones);
     }
 
-    protected function getProfileId($data)
+    private function getProfileId($data)
     {
         $profileId = DB::table('user_profiles')->where('profile_name', $data['profile_type'])->pluck('id')->first();
         return $profileId;
+    }
+    private function isProfileTypeUpdate($data)
+    {
+        return isset($data['profile_name']) && $data['profile_name'] !== null;
+    }
+    private function isPasswordUpdate($data)
+    {
+        return isset($data['password']) && $data['password'] !== null;
+    }
+
+    private function getIdOfProfileType($profile_name_value)
+    {
+        return DB::table('user_profiles')->where('profile_name', $profile_name_value)->value('id');
+    }
+
+    protected function isAdmin()
+    {
+        return auth()->user()->profile->profile_name === 'admin';
     }
 }

@@ -13,4 +13,16 @@ class Person extends Model
     {
         return $this->hasOne(User::class);
     }
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
+    public function phone()
+    {
+        return $this->hasOne(Phone::class);
+    }
+    public function identification()
+    {
+        return $this->hasOne(IdentificationDocuments::class);
+    }
 }
