@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Http\Validators\PersonValidator;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\ServiceProvider;
@@ -47,6 +49,23 @@ class UserService extends ServiceProvider
         }
 
         return DB::table($table)->where($where, $id)->update($data);
+    }
+
+
+    public function removeToken($request)
+    {
+        return $request->except('_token');
+    }
+    public function removeNullData($data)
+    {
+        return  array_filter($data, function ($value) {
+            return $value !== null;
+        });
+    }
+
+    public function existDataContent($data)
+    {
+        return count($data) > 0;
     }
 
     private function insertGetIdPerson($request)

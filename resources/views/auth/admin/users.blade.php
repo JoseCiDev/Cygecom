@@ -12,9 +12,6 @@
                 </h3>
             </div>
             <div class="box-content">
-                {{-- <pre>
-                {{var_dump($users[0])}}
-                </pre> --}}
                 @foreach ($users as $user)
                    <div class="row bg-info user-item-list">
                         <div class="col-md-3">

@@ -16,7 +16,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
 
         Route::get('/users', [App\Http\Controllers\ManagerController::class, 'showUsers'])->name('users');
-        Route::get('/users/{id}', [App\Http\Controllers\ManagerController::class, 'showUser'])->name('user');
-        Route::post('/users/{id}', [App\Http\Controllers\ManagerController::class, 'index']);
+        Route::get('/users/{id}', [App\Http\Controllers\ManagerController::class, 'showUser']);
+
+        Route::post('/users/{id}', [App\Http\Controllers\ManagerController::class, 'userUpdate'])->name('userUpdate');
     });
 });
