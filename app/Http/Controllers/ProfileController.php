@@ -25,9 +25,12 @@ class ProfileController extends Controller
         $data = $this->validRequest($request);
         $data = $this->removeToken($request);
         $data = $this->removeNullData($data);
-        if (!$this->existDataContent($data)) return redirect(route('profile'));
 
-        $user_id = auth()->user()->id;
+        if (!$this->existDataContent($data)) {
+            return redirect(route('profile'));
+        }
+
+        $user_id   = auth()->user()->id;
         $person_id = auth()->user()->person_id;
 
         $updateAction = $data['updateAction'];
@@ -36,20 +39,26 @@ class ProfileController extends Controller
         switch ($updateAction) {
             case 'address':
                 $this->userService->updateTableWhereId('addresses', 'person_id', $user_id, $data);
+
                 break;
             case 'person':
                 $this->userService->updateTableWhereId('people', 'id', $person_id, $data);
+
                 break;
             case 'identification':
                 $this->userService->updateTableWhereId('identification_documents', 'person_id', $user_id, $data);
+
                 break;
             case 'phone':
                 $this->userService->updateTableWhereId('phones', 'person_id', $user_id, $data);
+
                 break;
             case 'user':
                 $this->userService->updateTableWhereId('users', 'id', $user_id, $data);
+
                 break;
         }
+
         return redirect(route('profile'));
     }
 
@@ -71,10 +80,11 @@ class ProfileController extends Controller
 
     protected function validRequest(Request $request)
     {
-        $personValidator = new PersonValidator;
-        $rules = $personValidator->rules;
+        $personValidator       = new PersonValidator();
+        $rules                 = $personValidator->rules;
         $rules['updateAction'] = 'required';
-        $messages = $personValidator->rulesMessages;
+        $messages              = $personValidator->rulesMessages;
+
         return $request->validate($rules, $messages);
     }
 }

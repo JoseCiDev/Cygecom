@@ -10,6 +10,9 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
     public function person()
     {
         return $this->belongsTo(Person::class);
@@ -19,8 +22,6 @@ class User extends Authenticatable
     {
         return $this->belongsTo(UserProfile::class, 'profile_id');
     }
-
-    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.

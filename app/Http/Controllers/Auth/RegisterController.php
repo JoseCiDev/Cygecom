@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
+    use RegistersUsers;
+
     private $userService;
 
     public function __construct(UserService $userService)
@@ -16,12 +18,12 @@ class RegisterController extends Controller
         $this->userService = $userService;
     }
 
-    use RegistersUsers;
     protected $redirectTo = '/';
 
     protected function create(array $data)
     {
         $validator = $this->validator($data);
+
         if ($validator->fails()) {
             throw new \Exception($validator->errors()->first());
         }
@@ -33,7 +35,8 @@ class RegisterController extends Controller
 
     protected function validator(array $data)
     {
-        $personValidator = new PersonValidator;
+        $personValidator = new PersonValidator();
+
         return $personValidator->registerValidator($data);
     }
 
