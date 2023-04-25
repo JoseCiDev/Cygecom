@@ -31,7 +31,7 @@
                             <p>Atualizado em: {{ \Carbon\Carbon::parse($user['created_at'])->format('d/m/Y H:i:s') }}</p>
                         </div>
                         <div  class="col-md-1">
-                            <a href="{{ url('users/' . $user['id']) }}" class="btn btn-inverse btn--icon">
+                            <a href="{{route('user', ['id'=>$user['id']])}}" class="btn btn-inverse btn--icon">
                                 <i class="fa fa-cog"></i>Configurar usuário
                             </a>
                         </div>
