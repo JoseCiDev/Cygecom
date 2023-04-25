@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use App\Http\Validators\PersonValidator;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\ServiceProvider;
@@ -66,6 +64,11 @@ class UserService extends ServiceProvider
     public function existDataContent($data)
     {
         return count($data) > 0;
+    }
+
+    public function getUserById($id)
+    {
+        return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver'])->where('id', $id)->first();
     }
 
     private function insertGetIdPerson($request)

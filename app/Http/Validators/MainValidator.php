@@ -130,20 +130,24 @@ class MainValidator
 
     public $rulesForUpdate = [
         'name' => ['string', 'max:255'],
-        'email' => ['string', 'email', 'max:255'],
-        'password' => ['string', 'min:8', 'confirmed'],
+        'email' => ['sometimes', 'string', 'email', 'max:255'],
+        'password' => ['sometimes', 'string', 'min:8', 'confirmed'],
+        'password_confirmation' => ['sometimes', 'required_with:password', 'same:password'],
         'profile_type' => ['string', 'max:255'],
+        'approver_user_id' => ['sometimes', 'numeric', 'min:1'],
+        'approve_limit' => ['sometimes', 'numeric', 'min:0'],
         'birthdate' => ['date'],
-        'street' => ['string'],
-        'street_number' => ['string'],
-        'neighborhood' => ['string'],
-        'postal_code' => ['string'],
-        'city' => ['string'],
-        'state' => ['string'],
-        'country' => ['string'],
         'document_number' => ['string'],
         'phone' => ['string'],
         'phone_type' => ['string'],
+        'postal_code' => ['string'],
+        'country' => ['string'],
+        'state' => ['string'],
+        'city' => ['string'],
+        'neighborhood' => ['string'],
+        'street' => ['string'],
+        'street_number' => ['string'],
+        'complement' => ['sometimes', 'string'],
     ];
 
     public $rulesForUpdateMessages = [
@@ -154,12 +158,14 @@ class MainValidator
         'email.email' => 'O campo :attribute deve ser um endereço de e-mail válido.',
         'email.max' => 'O campo :attribute deve ter no máximo :max caracteres.',
 
-        // 'password.string' => 'O campo :attribute deve ser uma string.',
+        'password.string' => 'O campo :attribute deve ser uma string.',
         'password.min' => 'O campo :attribute deve ter pelo menos :min caracteres.',
         'password.confirmed' => 'Os campos de senha não correspondem.',
 
         'profile_type.string' => 'O campo :attribute deve ser uma string.',
         'profile_type.max' => 'O campo :attribute deve ter no máximo :max caracteres.',
+
+        'approver_user_id.number' => 'O campo :attribute deve ser :number.',
 
         'birthdate.date' => 'O campo :attribute deve ser uma data válida.',
 
@@ -182,7 +188,7 @@ class MainValidator
         return $validator;
     }
 
-    public function validateUpdateProfile(Request $request)
+    public function validateUpdate(Request $request)
     {
         $rules = $this->rules;
         $messages = $this->rulesMessages;

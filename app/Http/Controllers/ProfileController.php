@@ -22,7 +22,7 @@ class ProfileController extends Controller
 
     public function updateProfile(Request $request, UserService $userService, MainValidator $mainValidator)
     {
-        $data = $mainValidator->validateUpdateProfile($request);
+        $data = $mainValidator->validateUpdate($request);
         $data = $userService->removeToken($request);
         $data = $userService->removeNullData($data);
         if (!$userService->existDataContent($data)) return redirect(route('profile'));
