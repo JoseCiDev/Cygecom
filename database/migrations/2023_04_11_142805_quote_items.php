@@ -2,11 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\{DB, Schema};
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -23,7 +21,6 @@ return new class extends Migration
             // $table->foreignId('purchase_quote_id')->constrained('purchase_quotes')->onDelete('cascade'); // Método mais resumido e menos flexível
             $table->unsignedInteger('purchase_quote_id');
             $table->foreign('purchase_quote_id')->references('id')->on('purchase_quotes')->onDelete('cascade');
-
 
             $table->string('description')->nullable();
             $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
