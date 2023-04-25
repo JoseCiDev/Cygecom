@@ -25,4 +25,9 @@ class Person extends Model
     {
         return $this->hasOne(IdentificationDocuments::class);
     }
+
+    protected $fillable = [
+        'name',
+        'birthdate',
+    ];
 }

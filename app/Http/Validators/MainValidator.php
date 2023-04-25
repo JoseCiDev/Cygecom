@@ -2,9 +2,10 @@
 
 namespace App\Http\Validators;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PersonValidator
+class MainValidator
 {
     public $requiredRules = [
         'name'            => ['required', 'string', 'max:255'],
@@ -127,10 +128,78 @@ class PersonValidator
         'phone.string'      => 'O campo :attribute deve ser uma string.',
         'phone_type.string' => 'O campo :attribute deve ser uma string.',
     ];
+
+    public $rulesForUpdate = [
+        'name' => ['string', 'max:255'],
+        'email' => ['sometimes', 'string', 'email', 'max:255'],
+        'password' => ['sometimes', 'string', 'min:8', 'confirmed'],
+        'password_confirmation' => ['sometimes', 'required_with:password', 'same:password'],
+        'profile_type' => ['string', 'max:255'],
+        'approver_user_id' => ['sometimes', 'numeric', 'min:1'],
+        'approve_limit' => ['sometimes', 'numeric', 'min:0'],
+        'birthdate' => ['date'],
+        'document_number' => ['string'],
+        'phone' => ['string'],
+        'phone_type' => ['string'],
+        'postal_code' => ['string'],
+        'country' => ['string'],
+        'state' => ['string'],
+        'city' => ['string'],
+        'neighborhood' => ['string'],
+        'street' => ['string'],
+        'street_number' => ['string'],
+        'complement' => ['sometimes', 'string'],
+    ];
+
+    public $rulesForUpdateMessages = [
+        'name.string' => 'O campo :attribute deve ser uma string.',
+        'name.max' => 'O campo :attribute deve ter no máximo :max caracteres.',
+
+        'email.string' => 'O campo :attribute deve ser uma string.',
+        'email.email' => 'O campo :attribute deve ser um endereço de e-mail válido.',
+        'email.max' => 'O campo :attribute deve ter no máximo :max caracteres.',
+
+        'password.string' => 'O campo :attribute deve ser uma string.',
+        'password.min' => 'O campo :attribute deve ter pelo menos :min caracteres.',
+        'password.confirmed' => 'Os campos de senha não correspondem.',
+
+        'profile_type.string' => 'O campo :attribute deve ser uma string.',
+        'profile_type.max' => 'O campo :attribute deve ter no máximo :max caracteres.',
+
+        'approver_user_id.number' => 'O campo :attribute deve ser :number.',
+
+        'birthdate.date' => 'O campo :attribute deve ser uma data válida.',
+
+        'street.string' => 'O campo :attribute deve ser uma string.',
+        'street_number.string' => 'O campo :attribute deve ser uma string.',
+        'neighborhood.string' => 'O campo :attribute deve ser uma string.',
+        'postal_code.string' => 'O campo :attribute deve ser uma string.',
+        'city.string' => 'O campo :attribute deve ser uma string.',
+        'state.string' => 'O campo :attribute deve ser uma string.',
+        'country.string' => 'O campo :attribute deve ser uma string.',
+
+        'document_number.string' => 'O campo :attribute deve ser uma string.',
+
+        'phone.string' => 'O campo :attribute deve ser uma string.',
+        'phone_type.string' => 'O campo :attribute deve ser uma string.'
+    ];
     public function registerValidator(array $data)
     {
         $validator = Validator::make($data, $this->requiredRules, $this->requiredRulesMessages);
 
         return $validator;
+    }
+
+    public function validateUpdate(Request $request)
+    {
+        $rules = $this->rules;
+        $messages = $this->rulesMessages;
+        return $request->validate($rules, $messages);
+    }
+    public function validateUpdateUserRequest(Request $request)
+    {
+        $rules = $this->rulesForUpdate;
+        $messages = $this->rulesForUpdateMessages;
+        return $request->validate($rules, $messages);
     }
 }

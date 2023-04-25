@@ -13,4 +13,8 @@ class IdentificationDocuments extends Model
     {
         return $this->belongsTo(Person::class);
     }
+
+    protected $fillable = [
+        'identification',
+    ];
 }

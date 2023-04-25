@@ -49,6 +49,28 @@ class UserService extends ServiceProvider
         return DB::table($table)->where($where, $id)->update($data);
     }
 
+
+    public function removeToken($request)
+    {
+        return $request->except('_token');
+    }
+    public function removeNullData($data)
+    {
+        return  array_filter($data, function ($value) {
+            return $value !== null;
+        });
+    }
+
+    public function existDataContent($data)
+    {
+        return count($data) > 0;
+    }
+
+    public function getUserById($id)
+    {
+        return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver'])->where('id', $id)->first();
+    }
+
     private function insertGetIdPerson($request)
     {
         $personId = DB::table('people')->insertGetId([

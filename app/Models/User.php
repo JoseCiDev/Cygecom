@@ -13,6 +13,12 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
+
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approver_user_id');
+    }
+
     public function person()
     {
         return $this->belongsTo(Person::class);

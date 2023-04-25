@@ -13,4 +13,8 @@ class Phone extends Model
     {
         return $this->belongsTo(Person::class);
     }
+    protected $fillable = [
+        'number',
+        'phone_type',
+    ];
 }
