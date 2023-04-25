@@ -10,6 +10,10 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
+
     public function approver()
     {
         return $this->belongsTo(User::class, 'approver_user_id');
@@ -24,8 +28,6 @@ class User extends Authenticatable
     {
         return $this->belongsTo(UserProfile::class, 'profile_id');
     }
-
-    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.

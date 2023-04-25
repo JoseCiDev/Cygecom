@@ -2,11 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\{DB, Schema};
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -21,7 +19,6 @@ return new class extends Migration
             // $table->foreignId('supplier_id')->constrained('suppliers'); // Método mais resumido e menos flexível
             $table->unsignedInteger('supplier_id');
             $table->foreign('supplier_id')->references('id')->on('suppliers');
-
 
             // $table->foreignId('quote_order_request_id')->constrained('orders_requests'); // Método mais resumido e menos flexível
             $table->unsignedInteger('quote_order_request_id');
