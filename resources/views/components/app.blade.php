@@ -93,132 +93,46 @@
 
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
 </head>
+
 <body>
     <div id="app">
+			{{-- NAVBAR --}}
 			<div id="navigation">
 				<div class="container-fluid">
-					<a href="/" id="brand">GECOM</a>
+					<x-navbar.logo/>
 					<ul class='main-nav'>
-						<li>
-							<a href="">
-								<span>Dashboard</span>
-							</a>
-						</li>
+						<x-navbar.menu-item route="home" title="Dashboard"/>
 						@if (auth()->user()->profile->profile_name === 'admin')
-							<li>
-								<a href="{{ route('register') }}">
-									<span>Usuários</span>
-								</a>
-							</li>
+
+							<x-navbar.menu-item route="users" title="Usuários"/>
+
 						@endif
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Req. Compras</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href=""> --- </a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Cotações</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href=""> --- </a>
-								</li>
-							</ul>
-						</li>
+
+						<x-navbar.menu-item-dropdown route="home" title="Req. Compras"/>
+						<x-navbar.menu-item-dropdown route="home" title="Cotações"/>
+
 						@if (auth()->user()->profile->profile_name === 'admin')
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Ordens de Compra</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href=""> --- </a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-								<span>Integração Sênior</span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href=""> --- </a>
-								</li>
-							</ul>
-						</li>
-					@endif
+
+							<x-navbar.menu-item-dropdown route="home" title="Ordens de Compra"/>
+							<x-navbar.menu-item-dropdown route="home" title="Integração Sênior"/>
+
+						@endif
 					</ul>
-					<div class="user">
-						<ul class="icon-nav">
-							<li class='dropdown'>
-								<a href="#" class='dropdown-toggle' data-toggle="dropdown">
-									<i class="fa fa-bell"></i>
-									<span class="label label-lightred">4</span>
-								</a>
-								<ul class="dropdown-menu pull-right message-ul">
-									<li>
-										<a href="#">
-											Notificação Número 1
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											Notificação Número 2
-										</a>
-									</li>
-									<li>
-										<a href="components-messages.html" class='more-messages'>Todas as notificações
-											<i class="fa fa-arrow-right"></i>
-										</a>
-									</li>
-								</ul>
-							</li>
-						</ul>
-						<div class="dropdown">
-							<a href="#" class='dropdown-toggle' data-toggle="dropdown"> 
-								{{ auth()->user()->person->name }} |
-								Perfil: {{ auth()->user()->profile->profile_name }}
-								<img src="img/demo/default-user.png" alt="" width="30"> 
-							</a>
-							<ul class="dropdown-menu pull-right">
-								<li>
-									<a href="#">Configurações da conta</a>
-								</li>
-								<li>
-									<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-									 	{{ __('Sair') }}
-								 	</a>
-								 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
-								</li>
-							</ul>
-						</div>
-					</div>
+					<x-navbar.user>
+						<x-navbar.notification/>
+					</x-navbar.user>
 				</div>
 			</div>
-			<div id="main-content-container">
-				<div id="main">
-					<div class="container">
-						<div class="page-header">
-							<div>
-								<h1 class="pull-left">@yield('title') </h1>
-							</div>
-						</div>
-						<main class="py-4">
-							@yield('content')
-						</main>
-					</div>
-				</div>
-			</div>
+            <div id="main-content-container">
+                <div id="main">
+                    <div class="container">
+                        <div class="page-header">
+                            {{ $title }}
+                        </div>
+                        {{ $slot }}
+                    </div>
+                </div>
+            </div>
 		</div>
     </div>
 </body>

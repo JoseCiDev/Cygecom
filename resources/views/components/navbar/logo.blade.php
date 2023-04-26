@@ -1,0 +1,1 @@
+<a href="/" id="brand">GECOM</a>

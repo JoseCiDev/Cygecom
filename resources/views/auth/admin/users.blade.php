@@ -1,19 +1,17 @@
-@extends('layouts.app')
-
-@section('content')
-
-<div>
+<x-app>
+    <x-slot name="title">
+        <h1>Usuários</h1>
+    </x-slot>
     <div class="container">
-        <h1>Gerenciamento de usuários</h1>
         <div class="box box-color box-bordered colored">
             <div class="box-title">
                 <h3>
-                    <i class="fa fa-th"></i>Lista de usuários
+                    Lista de usuários
                 </h3>
             </div>
             <div class="box-content">
                 @foreach ($users as $user)
-                   <div class="row bg-info user-item-list">
+                <div class="row bg-info user-item-list">
                         <div class="col-md-3">
                             <p>ID: {{$user['id']}} | <i class="fa fa-envelope"></i> - {{$user['email']}}</p>
                             <p>Pessoa: {{$user['person']['name']}}</p>
@@ -35,10 +33,9 @@
                                 <i class="fa fa-cog"></i>Configurar usuário
                             </a>
                         </div>
-                   </div>
+                </div>
                 @endforeach
             </div>
         </div>
     </div>  
-</div>
-@endsection
+</x-app>
