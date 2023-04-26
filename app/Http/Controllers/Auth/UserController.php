@@ -2,45 +2,34 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Contracts\UserControllerInterface;
 use App\Http\Controllers\Controller;
-use App\Http\Validators\MainValidator;
 use App\Models\User;
-use App\Models\UserProfile;
 use App\Providers\UserService;
+use App\Providers\ValidatorService;
+use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Termwind\Components\Dd;
 
-class UserController extends Controller
+class UserController extends Controller implements UserControllerInterface
 {
     private $userService;
+    private $validatorService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, ValidatorService $validatorService)
     {
         $this->userService = $userService;
+        $this->validatorService = $validatorService;
     }
 
     use RegistersUsers;
     protected $redirectTo = '/users';
 
-    protected function create(array $data)
+    public function create(array $data)
     {
-        $validator = $this->validator($data);
-        if ($validator->fails()) {
-            throw new \Exception($validator->errors()->first());
-        }
-
+        $this->validator($data);
         $user = $this->userService->registerUser($data);
-
         return $user->first();
-    }
-
-    protected function validator(array $data)
-    {
-        $mainValidator = new MainValidator;
-        return $mainValidator->registerValidator($data);
     }
 
     public function showRegistrationForm()
@@ -59,63 +48,32 @@ class UserController extends Controller
         return view('auth.admin.user', ['user' => $user]);
     }
 
-    public function userUpdate(Request $request, $id, UserService $userService, MainValidator $mainValidator)
+    public function userUpdate(Request $request, int $id)
     {
-        $data = $mainValidator->validateUpdateUserRequest($request);
-        if (count($data) <= 0) {
-            return redirect(route('users'));
-        }
+        $isAdmin = auth()->user()->profile->profile_name === "admin";
+        $isOwnId = $id === auth()->user()->id;
 
-        DB::beginTransaction();
+        if (!$isAdmin && !$isOwnId) {
+            return redirect()->route('profile');
+        }
 
         try {
-            $user = $userService->getUserById($id);
+            $data = $request->all();
+            $this->validatorService->updateValidator($id, $data);
+            $this->userService->userUpdate($data, $id);
 
-            $user->fill([
-                'email' => isset($data['email']) ? $data['email'] : $user->email,
-                'password' => isset($data['password']) ? Hash::make($data['password']) : $user->password,
-                'profile_id' => isset($data['profile_type']) ? UserProfile::firstWhere('profile_name', $data['profile_type'])->id : $user->profile_id,
-                'approver_user_id' => isset($data['approver_user_id']) ? User::where('id', $data['approver_user_id'])->value('id') : $user->approver_user_id,
-                'approve_limit' => $data['approve_limit'] ?? $user->approve_limit,
-            ]);
-
-            $user->person->fill([
-                'name' => $data['name'] ?? $user->person->name,
-                'birthdate' => $data['birthdate'] ?? $user->person->birthdate,
-            ]);
-
-            $user->person->address->fill([
-                'street' => $data['street'] ?? $user->person->address->street,
-                'street_number' => $data['street_number'] ?? $user->person->address->street_number,
-                'neighborhood' => $data['neighborhood'] ?? $user->person->address->neighborhood,
-                'postal_code' => $data['postal_code'] ?? $user->person->address->postal_code,
-                'city' => $data['city'] ?? $user->person->address->city,
-                'state' => $data['state'] ?? $user->person->address->state,
-                'country' => $data['country'] ?? $user->person->address->country,
-                'complement' => $data['complement'] ?? $user->person->address->complement,
-            ]);
-
-            $user->person->phone->fill([
-                'number' => $data['phone'] ?? $user->person->phone->number,
-                'phone_type' => $data['phone_type'] ?? $user->person->phone->phone_type,
-            ]);
-
-            $user->person->identification->fill([
-                'identification' => $data['document_number'] ?? $user->person->identification->identification,
-            ]);
-
-            $user->save();
-            $user->person->save();
-            $user->person->address->save();
-            $user->person->phone->save();
-            $user->person->identification->save();
-
-            DB::commit();
-        } catch (\Exception $error) {
-            DB::rollback();
-            throw $error;
+            if (auth()->user()->id === $id) {
+                return redirect()->route('profile');
+            }
+            return redirect()->route('user', ['id' => $id]);
+        } catch (Exception $error) {
+            return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
         }
+    }
 
-        return redirect()->route('users', ['id' => $user->id]);
+    protected function validator(array $data)
+    {
+        $validator = $this->validatorService->registerValidator($data);
+        return $validator;
     }
 }

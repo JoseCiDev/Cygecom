@@ -14,13 +14,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(UserService::class, function ($app) {
             return new UserService($app);
         });
-    }
-
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        //
+        $this->app->singleton(ValidatorService::class, function ($app) {
+            return new ValidatorService($app);
+        });
     }
 }
