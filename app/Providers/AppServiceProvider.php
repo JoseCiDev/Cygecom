@@ -15,12 +15,4 @@ class AppServiceProvider extends ServiceProvider
             return new UserService($app);
         });
     }
-
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        //
-    }
 }
