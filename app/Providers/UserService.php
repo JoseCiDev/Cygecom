@@ -2,13 +2,26 @@
 
 namespace App\Providers;
 
+use App\Contracts\UserServiceInterface;
+use App\Models\Address;
+use App\Models\IdentificationDocuments;
+use App\Models\Person;
+use App\Models\Phone;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Models\UserProfile;
+use Exception;
 use Illuminate\Support\Facades\{DB, Hash};
 use Illuminate\Support\ServiceProvider;
 
-class UserService extends ServiceProvider
+
+
+class UserService extends ServiceProvider implements UserServiceInterface
 {
+    public function getUserById($id): User
+    {
+        return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver'])->where('id', $id)->first();
+    }
+
     public function registerUser(array $request)
     {
         $user = DB::transaction(function () use ($request) {
@@ -17,13 +30,13 @@ class UserService extends ServiceProvider
             $this->registerIdentificationDocument($personId, $request);
             $this->registerPhone($personId, $request);
 
-            $user                   = new User();
-            $user->email            = $request['email'];
-            $user->password         = Hash::make($request['password']);
-            $user->profile_id       = $this->getProfileId($request);
-            $user->person_id        = $personId;
+            $user = new User();
+            $user->email = $request['email'];
+            $user->password = Hash::make($request['password']);
+            $user->profile_id = $this->getProfileId($request);
+            $user->person_id = $personId;
             $user->approver_user_id = $request['approver_user_id'];
-            $user->approve_limit    = $request['approve_limit'];
+            $user->approve_limit = $request['approve_limit'];
             $user->save();
 
             return $user;
@@ -32,45 +45,68 @@ class UserService extends ServiceProvider
         return $user;
     }
 
-    public function updateTableWhereId($table, $where, $id, $data)
+    public function userUpdate(array $data, int $userId)
     {
-        $data['updated_at'] = Carbon::now()->setTimezone('America/Sao_Paulo');
+        DB::beginTransaction();
 
-        if ($this->isProfileTypeUpdate($data)) {
-            $data['profile_id'] = $this->getIdOfProfileType($data['profile_name']);
-            unset($data['profile_name']);
+        try {
+            $user = $this->getUserById($userId);
+            $person = $user->person;
+            $address = $user->person->address;
+            $phone = $user->person->phone;
+            $identification = $user->person->identification;
+
+            $this->saveUser($user, $data);
+            $this->savePerson($person, $data);
+            $this->saveAddress($address, $data);
+            $this->savePhone($phone, $data);
+            $this->saveIdentification($identification, $data);
+
+            DB::commit();
+        } catch (Exception $error) {
+            DB::rollback();
+            throw $error;
         }
-
-        if ($this->isPasswordUpdate($data)) {
-            $data['password'] = Hash::make($data['password']);
-            unset($data['password_confirmation']);
-        }
-
-        return DB::table($table)->where($where, $id)->update($data);
     }
 
-
-    public function removeToken($request)
+    /**     
+     * Funções auxiliares para atualizar usuário: 
+     */
+    private function saveUser(User $user, array $data)
     {
-        return $request->except('_token');
-    }
-    public function removeNullData($data)
-    {
-        return  array_filter($data, function ($value) {
-            return $value !== null;
-        });
-    }
-
-    public function existDataContent($data)
-    {
-        return count($data) > 0;
+        $user->update([
+            'email' => $data['email'] ?? $user->email,
+            'password' => isset($data['password']) ? Hash::make($data['password']) : $user->password,
+            'profile_id' => isset($data['profile_type']) ? UserProfile::firstWhere('profile_name', $data['profile_type'])->id : $user->profile_id,
+            'approver_user_id' => isset($data['approver_user_id']) ? User::where('id', $data['approver_user_id'])->value('id') : $user->approver_user_id,
+            'approve_limit' => $data['approve_limit'] ?? $user->approve_limit,
+        ]);
     }
 
-    public function getUserById($id)
+    private function savePerson(Person $person, array $data)
     {
-        return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver'])->where('id', $id)->first();
+        $person->update($data);
     }
 
+    private function saveAddress(Address $address, array $data)
+    {
+        $address->update($data);
+    }
+
+    private function savePhone(Phone $phone, array $data)
+    {
+        $phone->update($data);
+    }
+
+    private function saveIdentification(IdentificationDocuments $identification, array $data)
+    {
+        $identification->update($data);
+    }
+
+
+    /**     
+     * Funções auxiliares para criação de usuário: 
+     */
     private function insertGetIdPerson($request)
     {
         $personId = DB::table('people')->insertGetId([
@@ -119,25 +155,6 @@ class UserService extends ServiceProvider
     private function getProfileId($data)
     {
         $profileId = DB::table('user_profiles')->where('profile_name', $data['profile_type'])->pluck('id')->first();
-
         return $profileId;
-    }
-    private function isProfileTypeUpdate($data)
-    {
-        return isset($data['profile_name']) && $data['profile_name'] !== null;
-    }
-    private function isPasswordUpdate($data)
-    {
-        return isset($data['password']) && $data['password'] !== null;
-    }
-
-    private function getIdOfProfileType($profile_name_value)
-    {
-        return DB::table('user_profiles')->where('profile_name', $profile_name_value)->value('id');
-    }
-
-    protected function isAdmin()
-    {
-        return auth()->user()->profile->profile_name === 'admin';
     }
 }
