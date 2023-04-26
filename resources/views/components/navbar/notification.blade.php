@@ -1,5 +1,3 @@
-
-
 <ul class="icon-nav">
     <li class='dropdown'>
         <a href="#" class='dropdown-toggle' data-toggle="dropdown">

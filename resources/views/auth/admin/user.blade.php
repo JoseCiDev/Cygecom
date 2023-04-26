@@ -1,4 +1,4 @@
-    <x-app>
+<x-app>
 
     <x-slot name="title">
         <h1>Usuário ...</h1>
