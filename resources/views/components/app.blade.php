@@ -133,13 +133,18 @@
 					</x-navbar.user>
 				</div>
 			</div>
+
             <div id="main-content-container">
                 <div id="main">
                     <div class="container">
                         <div class="page-header">
                             {{ $title }}
                         </div>
+						
+						<x-alert/>
+
                         {{ $slot }}
+
                     </div>
                 </div>
             </div>
