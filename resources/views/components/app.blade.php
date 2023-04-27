@@ -9,12 +9,12 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-	<link rel="stylesheet" href="{{ asset('css/main.css') }}">
-
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 	<!-- jQuery UI -->
 	<link rel="stylesheet" href="{{asset('css/plugins/jquery-ui/jquery-ui.min.css')}}">
+	<!-- dataTables -->
+	<link rel="stylesheet" href="{{asset('css/plugins/datatable/TableTools.css')}}">
 	<!-- PageGuide -->
 	<link rel="stylesheet" href="{{asset('css/plugins/pageguide/pageguide.css')}}">
 	<!-- Fullcalendar -->
@@ -30,6 +30,10 @@
 	<link rel="stylesheet" href="{{asset('css/style.css')}}">
 	<!-- Color CSS -->
 	<link rel="stylesheet" href="{{asset('css/themes.css')}}">
+
+	<link rel="{{asset('apple-touch-icon-precomposed')}}" href="{{asset('img/apple-touch-icon-precomposed.png')}}" />
+
+    <link rel="stylesheet" href="{{asset('css/main.css')}}">
 
 	<!-- jQuery -->
 	<script src="{{asset('js/jquery.min.js')}}"></script>
@@ -87,11 +91,17 @@
 		<![endif]-->
 
 	<!-- Favicon -->
-	{{-- <link rel="shortcut icon" href="img/favicon.ico" /> --}}
+	<link rel="shortcut icon" href="{{asset('img/favicon.ico')}}" />
 	<!-- Apple devices Homescreen icon -->
-	<link rel="{{asset('apple-touch-icon-precomposed')}}" href="img/apple-touch-icon-precomposed.png" />
 
-    <link rel="stylesheet" href="{{asset('css/main.css')}}">
+	<!-- New DataTables -->
+	<script src="{{asset('js/plugins/momentjs/jquery.moment.min.js')}}"></script>
+	<script src="{{asset('js/plugins/momentjs/moment-range.min.js')}}"></script>
+	<script src="{{asset('js/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+	<script src="{{asset('js/plugins/datatables/extensions/dataTables.tableTools.min.js')}}"></script>
+	<script src="{{asset('js/plugins/datatables/extensions/dataTables.colReorder.min.js')}}"></script>
+	<script src="{{asset('js/plugins/datatables/extensions/dataTables.colVis.min.js')}}"></script>
+	<script src="{{asset('js/plugins/datatables/extensions/dataTables.scroller.min.js')}}"></script>
 </head>
 
 <body>
