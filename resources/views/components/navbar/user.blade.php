@@ -2,9 +2,8 @@
     {{ $slot }}
     <div class="dropdown">
         <a href="#" class='dropdown-toggle' data-toggle="dropdown"> 
-            {{ auth()->user()->person->name }} |
-            Perfil: {{ auth()->user()->profile->profile_name }}
-            <img src="{{ asset('img/demo/default-user.png') }}" alt="" width="30"> 
+            <i class="fa fa-user"></i>
+            {{ auth()->user()->person->name }}
         </a>
         <ul class="dropdown-menu pull-right">
             <li>
