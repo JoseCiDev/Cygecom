@@ -136,7 +136,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
     private function registerIdentificationDocument(int $personId, array $data): void
     {
         $identification_documents = [
-            'identification' => $data['document_number'],
+            'identification' => $data['identification'],
             'person_id'      => $personId,
         ];
         DB::table('identification_documents')->insert($identification_documents);
