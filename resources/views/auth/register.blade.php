@@ -4,8 +4,6 @@
         <h1>Cadastro</h1>
     </x-slot>
 
-    <x-breadcrumb :current-route-name="Route::currentRouteName()"/>
-
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-color box-bordered colored">
@@ -22,34 +20,38 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                        <label for="name" class="control-label">Nome</label>
+                                        <label for="name" class="control-label"><sup style="color:red">*</sup>Nome</label>
                                         <input type="text" name="name" id="name" placeholder="Nome Completo" class="form-control" required>
+                                        @error('name')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="birthdate" class="control-label">Data de nascimento</label>
                                         <input type="date" name="birthdate" id="birthdate" placeholder="Data de nascimento" class="form-control" required>
+                                        @error('birthdate')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                        <label for="document_number" class="control-label">Nº CPF</label>
-                                        <input type="text" name="document_number" id="document_number" placeholder="000.000.000-00" class="form-control" required>
+                                        <label for="identification" class="control-label"><sup style="color:red">*</sup>Nº CPF</label>
+                                        <input type="text" name="identification" id="identification" placeholder="000.000.000-00" class="form-control" required>
+                                        @error('identification')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                        <label for="phone" class="control-label">Telefone/Celular</label>
-                                        <input type="text" name="phone" id="phone" placeholder="(DDD) 0000-0000" class="form-control">
+                                        <label for="number" class="control-label"><sup style="color:red">*</sup>Telefone/Celular</label>
+                                        <input type="text" name="number" id="number" placeholder="(DDD) 0000-0000" class="form-control">
+                                        
                                         <input class="form-check-input" type="radio" name="phone_type" id="personal" value="personal" checked>
-                                        <label class="form-check-label" for="personal">
-                                            Pessoal
-                                        </label>
+                                        <label class="form-check-label" for="personal">Pessoal</label>
+                                        
                                         <input class="form-check-input" type="radio" name="phone_type" id="commercial" value="commercial">
-                                        <label class="form-check-label" for="commercial">
-                                            Comercial
-                                        </label>
+                                        <label class="form-check-label" for="commercial">Comercial</label>
+
+                                        @error('number') <p><strong>{{ $message }}</strong></p> @enderror
+                                        @error('phone_type') <p><strong>{{ $message }}</strong></p> @enderror
                                     </div>
                                 </div>
                             </div>
@@ -66,6 +68,7 @@
                                     <div class="form-group">
                                         <label for="postal_code" class="control-label">CEP</label>
                                         <input type="text" name="postal_code" id="postal_code" placeholder="00.000-000" class="form-control" required>
+                                        @error('postal_code') <p><strong>{{ $message }}</strong></p> @enderror
                                     </div>
                                 </div>
                                 {{-- PAÍS --}}
@@ -73,6 +76,7 @@
                                     <div class="form-group">
                                         <label for="country" class="control-label">País</label>
                                         <input type="text" name="country" id="country" placeholder="País" class="form-control" required>
+                                        @error('country')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 {{-- ESTADO UF --}}
@@ -80,6 +84,7 @@
                                     <div class="form-group">
                                         <label for="state" class="control-label">Estado/UF</label>
                                         <input type="text" name="state" id="state" placeholder="UF" class="form-control" required>
+                                        @error('state')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 {{-- CIDADE --}}
@@ -87,6 +92,7 @@
                                     <div class="form-group">
                                         <label for="city" class="control-label">Cidade</label>
                                         <input type="text" name="city" id="city" placeholder="Cidade" class="form-control" required>
+                                        @error('city')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 {{-- BAIRRO --}}
@@ -94,6 +100,7 @@
                                     <div class="form-group">
                                         <label for="neighborhood" class="control-label">Bairro</label>
                                         <input type="text" name="neighborhood" id="neighborhood" placeholder="Bairro" class="form-control" required>
+                                        @error('neighborhood')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 {{-- RUA --}}
@@ -101,6 +108,7 @@
                                     <div class="form-group">
                                         <label for="street" class="control-label">Rua</label>
                                         <input type="text" name="street" id="street" placeholder="Rua/Avenida/Servidão" class="form-control" required>
+                                        @error('street')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 {{-- NUMERO --}}
@@ -108,6 +116,7 @@
                                     <div class="form-group">
                                         <label for="street_number" class="control-label">Número</label>
                                         <input type="number" name="street_number" id="street_number" placeholder="Nº" class="form-control" required>
+                                        @error('street_number')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 {{-- COMPLEMENTO --}}
@@ -115,6 +124,7 @@
                                     <div class="form-group">
                                         <label for="complement" class="control-label">Complemento</label>
                                         <input type="text" name="complement" id="complement" placeholder="ex: casa" class="form-control">
+                                        @error('complement')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                             </div>
@@ -129,32 +139,25 @@
                                 {{-- E-MAIL --}}
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                        <label for="email" class="control-label">E-mail</label>
+                                        <label for="email" class="control-label"><sup style="color:red">*</sup>E-mail</label>
                                         <input type="email" name="email" id="email" placeholder="user_email@essentia.com.br" class="form-control @error('email') is-invalid @enderror" required autocomplete="email">
-                                        @error('email')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
+                                        @error('email')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 {{-- SENHA --}}
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                        <label for="password" class="control-label">Senha</label>
+                                        <label for="password" class="control-label"><sup style="color:red">*</sup>Senha</label>
                                         <input type="password" name="password" id="password" placeholder="Deve conter ao menos 8 digitos" class="form-control @error('password') is-invalid @enderror" required autocomplete="new-password">
+                                        @error('password')<strong>{{ $message }}</strong>@enderror
                                     </div>
-                                    @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
                                 </div>
                                 {{-- CONFIRMAR SENHA --}}
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                        <label for="password-confirm" class="control-label">Confirmar Senha</label>
+                                        <label for="password-confirm" class="control-label"><sup style="color:red">*</sup>Confirmar Senha</label>
                                         <input type="password" name="password_confirmation" id="password-confirm" placeholder="Digite novamente a senha" class="form-control" required autocomplete="new-password">
+                                        @error('password_confirmation')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 {{-- USUÁRIO APROVADOR --}}
@@ -162,6 +165,7 @@
                                     <div class="form-group">
                                         <label for="approver_user_id" class="control-label">Usuário Aprovador</label>
                                         <input type="number" name="approver_user_id" id="approver_user_id" placeholder="ID usuário aprovador" class="form-control">
+                                        @error('approver_user_id')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 {{-- LIMITE DE APROVAÇÃO --}}
@@ -169,16 +173,18 @@
                                     <div class="form-group">
                                         <label for="approve_limit" class="control-label">Limite de Aprovação</label>
                                         <input type="number" name="approve_limit" id="approve_limit" placeholder="Valor máximo de aprovação" class="form-control">
+                                        @error('approve_limit')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 {{-- PERFIL DE USUÁRIO --}}
                                 <div class="col-sm-4">
                                     <h5>Perfil de Usuário</h5>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="profile_type" id="profile_admin" value="admin" checked>
+                                        <input class="form-check-input" type="radio" name="profile_type" id="profile_admin" value="admin">
                                         <label class="form-check-label" for="profile_admin">Administrador</label>
-                                        <input class="form-check-input" type="radio" name="profile_type" id="profile_normal" value="normal">
+                                        <input class="form-check-input" type="radio" name="profile_type" id="profile_normal" value="normal" checked>
                                         <label class="form-check-label" for="personal">Padrão</label>
+                                        @error('approve_limit') <p><strong>{{ $message }}</strong></p> @enderror
                                     </div>
                                 </div>
                             </div>

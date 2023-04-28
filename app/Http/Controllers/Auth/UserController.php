@@ -60,7 +60,12 @@ class UserController extends Controller implements UserControllerInterface
 
         try {
             $data = $request->all();
-            $this->validatorService->updateValidator($id, $data);
+
+            $validator = $this->validatorService->updateValidator($id, $data);
+            if ($validator->fails()) {
+                return back()->withErrors($validator->errors()->getMessages())->withInput();
+            }
+
             $this->userService->userUpdate($data, $id);
 
             if (auth()->user()->id === $id) {

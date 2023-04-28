@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Providers\UserService;
+
 class ProfileController extends Controller
 {
-    public function showProfile()
+    public function showProfile(UserService $userService)
     {
-        return view('profile');
+        $user = $userService->getUserById(auth()->user()->id);
+        return view('profile', ['user' => $user]);
     }
 }
