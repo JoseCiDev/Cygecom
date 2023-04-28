@@ -145,7 +145,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
     private function registerPhone(int $personId, array $data): void
     {
         $phones = [
-            'number'     => $data['phone'],
+            'number'     => $data['number'],
             'phone_type' => $data['phone_type'],
             'person_id'  => $personId,
         ];
