@@ -31,11 +31,11 @@
                     <label for="number" class="control-label">Telefone/Celular</label>
                     <input id="" type="text" class="form-control mb-3 @error('number') is-invalid @enderror" name="number" value="{{$phone['number']}}" placeholder="(DDD) 00000-0000">
                     @error('number') <strong>{{ $message }}</strong>@enderror
-                    
+
                     <input  @if ($phone['phone_type'] === "personal") {{"checked"}} @endif
                     class="form-check-input" type="radio" name="phone_type" id="personal" value="personal" >
                     <label class="form-check-label" for="personal">Pessoal</label>
-                    
+
                     <input @if ($phone['phone_type'] === "commercial") {{"checked"}} @endif
                     class="form-check-input" type="radio" name="phone_type" id="commercial" value="commercial">
                     <label class="form-check-label" for="commercial">Comercial</label>
@@ -148,8 +148,8 @@
                     @error('password-confirm')<strong>{{ $message }}</strong>@enderror
                 </div>
             </div>
-            
-            @if ($profile['profile_name'] === 'admin')
+
+            @if ($profile['name'] === 'admin')
                 {{-- USUÁRIO APROVADOR --}}
                 <div class="col-sm-3">
                     <div class="form-group">
@@ -171,11 +171,11 @@
                 <div class="col-sm-4">
                     <h5>Perfil de Usuário</h5>
                     <div class="form-check">
-                        <input @if ($profile['profile_name'] === "admin") {{"checked"}}@endif
+                        <input @if ($profile['name'] === "admin") {{"checked"}}@endif
                             class="form-check-input" type="radio" name="profile_type" id="profile_admin" value="admin">
                         <label class="form-check-label" for="profile_admin">Administrador</label>
 
-                        <input @if ($profile['profile_name'] === "normal") {{"checked"}} @endif
+                        <input @if ($profile['name'] === "normal") {{"checked"}} @endif
                             class="form-check-input" type="radio" name="profile_type" id="profile_normal" value="normal">
                         <label class="form-check-label" for="personal">Padrão</label>
                     </div>
@@ -183,10 +183,10 @@
             @endif
 
         </div>
-    </div>   
+    </div>
     {{-- BTNs --}}
     <div class="form-actions pull-right">
         <button type="submit" class="btn btn-primary">Atualizar usuário</button>
         <a href="{{ url()->previous() }}" class="btn">Cancelar</a>
-    </div> 
+    </div>
 </form>

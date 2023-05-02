@@ -5,24 +5,25 @@ namespace App\Http\Controllers\Auth;
 use App\Contracts\UserControllerInterface;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Providers\UserService;
-use App\Providers\ValidatorService;
+use App\Providers\{UserService, ValidatorService};
 use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 
 class UserController extends Controller implements UserControllerInterface
 {
+    use RegistersUsers;
+
     private $userService;
+
     private $validatorService;
 
     public function __construct(UserService $userService, ValidatorService $validatorService)
     {
-        $this->userService = $userService;
+        $this->userService      = $userService;
         $this->validatorService = $validatorService;
     }
 
-    use RegistersUsers;
     protected $redirectTo = '/users';
 
     public function create(array $data)
@@ -30,6 +31,7 @@ class UserController extends Controller implements UserControllerInterface
         $this->validator($data);
         $user = $this->userService->registerUser($data);
         session()->flash('success', "Usuário cadastrado com sucesso! E-mail: $user->email");
+
         return $user->first();
     }
 
@@ -46,12 +48,13 @@ class UserController extends Controller implements UserControllerInterface
     public function showUser($id)
     {
         $user = User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver'])->where('id', $id)->first()->toArray();
+
         return view('auth.admin.user', ['user' => $user]);
     }
 
     public function userUpdate(Request $request, int $id)
     {
-        $isAdmin = auth()->user()->profile->profile_name === "admin";
+        $isAdmin = auth()->user()->profile->name === "admin";
         $isOwnId = $id === auth()->user()->id;
 
         if (!$isAdmin && !$isOwnId) {
@@ -62,6 +65,7 @@ class UserController extends Controller implements UserControllerInterface
             $data = $request->all();
 
             $validator = $this->validatorService->updateValidator($id, $data);
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors()->getMessages())->withInput();
             }
@@ -70,10 +74,12 @@ class UserController extends Controller implements UserControllerInterface
 
             if (auth()->user()->id === $id) {
                 session()->flash('success', "Seu usuário foi atualizado com sucesso!");
+
                 return redirect()->route('profile');
             }
 
             session()->flash('success', "Usuário atualizado com sucesso!");
+
             return redirect()->route('user', ['id' => $id]);
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
@@ -83,6 +89,7 @@ class UserController extends Controller implements UserControllerInterface
     protected function validator(array $data)
     {
         $validator = $this->validatorService->registerValidator($data);
+
         return $validator;
     }
 }
