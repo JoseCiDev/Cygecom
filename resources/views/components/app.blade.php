@@ -143,6 +143,8 @@
 						
 						<x-alert/>
 
+						<x-breadcrumb/>
+
                         {{ $slot }}
 
                     </div>

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Error;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
@@ -21,8 +22,8 @@ class ValidatorService extends ServiceProvider
         'city'            => ['required', 'string'],
         'state'           => ['required', 'string'],
         'country'         => ['required', 'string'],
-        'document_number' => ['required', 'string'],
-        'phone'           => ['required', 'string'],
+        'identification' => ['required', 'string'],
+        'number'           => ['required', 'string'],
         'phone_type'      => ['required', 'string'],
     ];
 
@@ -70,11 +71,11 @@ class ValidatorService extends ServiceProvider
         'country.required' => ':attribute é obrigatório.',
         'country.string'   => ':attribute deve ser string.',
 
-        'document_number.required' => ':attribute é obrigatório.',
-        'document_number.string'   => ':attribute deve ser string.',
+        'identification.required' => ':attribute é obrigatório.',
+        'identification.string'   => ':attribute deve ser string.',
 
-        'phone.required' => ':attribute é obrigatório.',
-        'phone.string'   => ':attribute deve ser string.',
+        'number.required' => ':attribute é obrigatório.',
+        'number.string'   => ':attribute deve ser string.',
 
         'phone_type.required' => ':attribute é obrigatório.',
         'phone_type.string'   => ':attribute deve ser string.',
@@ -89,8 +90,8 @@ class ValidatorService extends ServiceProvider
         'approver_user_id' => ['nullable', 'numeric', 'min:1', 'exists:users,id'],
         'approve_limit' => ['nullable', 'numeric', 'min:0'],
         'birthdate' => ['nullable', 'date'],
-        'document_number' => ['nullable', 'string', 'max:20'],
-        'phone' => ['nullable', 'string', 'max:20'],
+        'identification' => ['nullable', 'string', 'max:20'],
+        'number' => ['nullable', 'string', 'max:20'],
         'phone_type' => ['nullable', 'string', 'max:20'],
         'postal_code' => ['nullable', 'string', 'max:20'],
         'country' => ['nullable', 'string', 'max:255'],
@@ -114,6 +115,8 @@ class ValidatorService extends ServiceProvider
         'password.min' => 'O campo :attribute deve ter pelo menos :min caracteres.',
         'password.confirmed' => 'Os campos de senha não correspondem.',
 
+        'password_confirmation' => 'O campo de confirmação de senha é obrigatório ao preencher senha.',
+
         'profile_type.string' => 'O campo :attribute deve ser uma string.',
         'profile_type.max' => 'O campo :attribute deve ter no máximo :max caracteres.',
 
@@ -129,9 +132,9 @@ class ValidatorService extends ServiceProvider
         'state.string' => 'O campo :attribute deve ser uma string.',
         'country.string' => 'O campo :attribute deve ser uma string.',
 
-        'document_number.string' => 'O campo :attribute deve ser uma string.',
+        'identification.string' => 'O campo :attribute deve ser uma string.',
 
-        'phone.string' => 'O campo :attribute deve ser uma string.',
+        'number.string' => 'O campo :attribute deve ser uma string.',
         'phone_type.string' => 'O campo :attribute deve ser uma string.'
     ];
 
@@ -151,11 +154,11 @@ class ValidatorService extends ServiceProvider
         $messages = $this->rulesForUpdateMessages;
         $rules['email'] = ['nullable', 'email', 'max:255', 'unique:users,email,' . $id];
 
-        try {
-            $validator = Validator::make($data, $rules, $messages);
-            return $validator;
-        } catch (Exception $error) {
-            return back()->withErrors($error->getMessage())->withInput();
-        }
+        $validator = Validator::make($data, $rules, $messages);
+        return $validator;
+        // if ($validator->fails()) {
+        // return back()->withErrors($validator->errors()->getMessages())->withInput();
+        // return $validator->errors()->getMessages();
+        // }
     }
 }
