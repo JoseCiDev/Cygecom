@@ -16,5 +16,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/users', [App\Http\Controllers\Auth\UserController::class, 'showUsers'])->name('users');
         Route::get('/users/{id}', [App\Http\Controllers\Auth\UserController::class, 'showUser'])->name('user');
+
+        Route::get('/email', [App\Http\Controllers\EmailController::class, 'index'])->name('email');
+        Route::post('/email', [App\Http\Controllers\EmailController::class, 'store']);
     });
 });
