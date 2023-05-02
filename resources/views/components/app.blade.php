@@ -112,7 +112,7 @@
 					<x-navbar.logo/>
 					<ul class='main-nav'>
 						<x-navbar.menu-item route="home" title="Dashboard"/>
-						@if (auth()->user()->profile->profile_name === 'admin')
+						@if (auth()->user()->profile->name === 'admin')
 
 							<x-navbar.menu-item route="users" title="Usuários"/>
 
@@ -121,7 +121,7 @@
 						<x-navbar.menu-item-dropdown route="home" title="Req. Compras"/>
 						<x-navbar.menu-item-dropdown route="home" title="Cotações"/>
 
-						@if (auth()->user()->profile->profile_name === 'admin')
+						@if (auth()->user()->profile->name === 'admin')
 
 							<x-navbar.menu-item-dropdown route="home" title="Ordens de Compra"/>
 							<x-navbar.menu-item-dropdown route="home" title="Integração Sênior"/>
@@ -140,7 +140,7 @@
                         <div class="page-header">
                             {{ $title }}
                         </div>
-						
+
 						<x-alert/>
 
 						<x-breadcrumb/>
