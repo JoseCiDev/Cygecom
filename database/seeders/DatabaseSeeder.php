@@ -43,8 +43,8 @@ class DatabaseSeeder extends Seeder
             'person_id'  => $personId,
         ]);
 
-        $adminId = DB::table('user_profiles')->insertGetId(['profile_name' => 'admin']);
-        DB::table('user_profiles')->insert(['profile_name' => 'normal']);
+        $adminId = DB::table('user_profiles')->insertGetId(['name' => 'admin']);
+        DB::table('user_profiles')->insert(['name' => 'normal']);
 
         DB::table('users')->insert([
             'email'      => 'admin@essentia.com.br',
