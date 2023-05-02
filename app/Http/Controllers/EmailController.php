@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailController extends Controller
 {
-    /**
-     * Send a generic email to the specified user.
-     */
     public function store(Request $request): RedirectResponse
     {
         $recipients = $request->input('recipients');
