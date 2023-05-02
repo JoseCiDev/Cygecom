@@ -22,6 +22,11 @@ class UserService extends ServiceProvider implements UserServiceInterface
         return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver'])->where('id', $id)->first();
     }
 
+    public function getUsers()
+    {
+        return User::with('person', 'profile')->get()->toArray();
+    }
+
     public function registerUser(array $request)
     {
         $user = DB::transaction(function () use ($request) {

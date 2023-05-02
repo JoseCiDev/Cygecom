@@ -40,7 +40,7 @@ class UserController extends Controller implements UserControllerInterface
 
     public function showUsers()
     {
-        $users = User::with('person', 'profile')->get()->toArray();
+        $users = $this->userService->getUsers();
         return view('auth.admin.users', ['users' => $users]);
     }
     public function showUser($id)
