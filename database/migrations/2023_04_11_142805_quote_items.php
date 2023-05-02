@@ -5,9 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
 return new class () extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('quote_items', function (Blueprint $table) {
@@ -18,7 +15,6 @@ return new class () extends Migration {
             $table->decimal('unit_price', 14, 2);
             $table->decimal('quantity', 14, 2);
 
-            // $table->foreignId('purchase_quote_id')->constrained('purchase_quotes')->onDelete('cascade'); // Método mais resumido e menos flexível
             $table->unsignedInteger('purchase_quote_id');
             $table->foreign('purchase_quote_id')->references('id')->on('purchase_quotes')->onDelete('cascade');
 
@@ -26,12 +22,14 @@ return new class () extends Migration {
             $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
+
+            $table->unsignedInteger('deleted_by')->nullable();
+            $table->foreign('deleted_by')->references('id')->on('users')->onDelete('no action');
+            $table->unsignedInteger('updated_by')->nullable();
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('no action');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('quote_items');
