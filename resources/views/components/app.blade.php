@@ -38,9 +38,13 @@
 	<!-- jQuery -->
 	<script src="{{asset('js/jquery.min.js')}}"></script>
 
+    <!-- Masked inputs -->
+	<script src="{{asset('js/plugins/maskedinput/jquery.maskedinput.min.js')}}"></script>
 
-	<!-- Nice Scroll -->
-	{{-- <script src="js/plugins/nicescroll/jquery.nicescroll.min.js"></script> --}}
+    <!-- Validation -->
+	<script src="{{asset('js/plugins/validation/jquery.validate.min.js')}}"></script>
+	<script src="{{asset('js/plugins/validation/additional-methods.min.js')}}"></script>
+
 	<!-- jQuery UI -->
 	<script src="{{asset('js/plugins/jquery-ui/jquery-ui.js')}}"></script>
 	<!-- Touch enable for jquery UI -->
@@ -55,6 +59,8 @@
 	<script src="{{asset('js/plugins/vmap/jquery.vmap.sampledata.js')}}"></script>
 	<!-- Bootbox -->
 	<script src="{{asset('js/plugins/bootbox/jquery.bootbox.js')}}"></script>
+    <!-- Bootbox -->
+	<script src="{{asset('js/plugins/form/jquery.form.min.js')}}"></script>
 	<!-- Flot -->
 	<script src="{{asset('js/plugins/flot/jquery.flot.min.js')}}"></script>
 	<script src="{{asset('js/plugins/flot/jquery.flot.bar.order.min.js')}}"></script>
@@ -80,15 +86,6 @@
 	<script src="{{asset('js/application.min.js')}}"></script>
 	<!-- Just for demonstration -->
 	<script src="{{asset('js/demonstration.min.js')}}"></script>
-
-	<!--[if lte IE 9]>
-		<script src="js/plugins/placeholder/jquery.placeholder.min.js"></script>
-		<script>
-			$(document).ready(function() {
-				$('input, textarea').placeholder();
-			});
-		</script>
-		<![endif]-->
 
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="{{asset('img/favicon.ico')}}" />
@@ -140,11 +137,8 @@
                         <div class="page-header">
                             {{ $title }}
                         </div>
-
-						<x-alert/>
-
 						<x-breadcrumb/>
-
+                        <x-alert/>
                         {{ $slot }}
 
                     </div>
