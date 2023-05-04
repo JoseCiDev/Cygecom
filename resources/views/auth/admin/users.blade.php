@@ -15,7 +15,7 @@
                                 <h3 class="pull-left">Lista de usuários</h3>
                             </div>
                             <div class="col-md-6">
-                                <a href="{{route('register')}}" class="btn pull-right" style="margin-right: 15px">Registrar novo usuário</a>
+                                <a href="{{route('register')}}" class="btn pull-right btn-large" style="margin-right: 15px">Novo usuário</a>
                             </div>
                         </div>
                     </div>

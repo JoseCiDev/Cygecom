@@ -148,17 +148,18 @@ $(document).ready(function () {
 
 	// masked input
 	if ($('.mask_date').length > 0) {
-		$(".mask_date").mask("9999/99/99");
+		$(".mask_date").mask("99/99/9999");
 	}
 	if ($('.mask_phone').length > 0) {
-		$(".mask_phone").mask("(999) 999-9999");
+		$(".mask_phone").mask("(99) 9999-9999");
 	}
-	if ($('.mask_serialNumber').length > 0) {
-		$(".mask_serialNumber").mask("9999-9999-99");
+    if ($('.mask_cpf').length > 0) {
+		$(".mask_cpf").mask("999.999.999-99");
 	}
-	if ($('.mask_productNumber').length > 0) {
-		$(".mask_productNumber").mask("aaa-9999-a");
+    if ($('.mask_cep').length > 0) {
+		$(".mask_cep").mask("99.999-999");
 	}
+
 	// tag-input
 	if ($(".tagsinput").length > 0) {
 		$('.tagsinput').each(function (e) {

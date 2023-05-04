@@ -1,6 +1,6 @@
 <x-app>
     <x-slot name="title">
-        <h1>Informações de perfil</h1>
+        <h1>Perfil</h1>
     </x-slot>
 
     <div class="row">

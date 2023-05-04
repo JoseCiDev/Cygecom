@@ -11,7 +11,7 @@
                     <h3 style="color: white; margin-top: 5px">Cadastrar Novo</h3>
                 </div>
                 <div class="box-content">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="{{ route('register') }}" class="form-validate" id="bb">
                         @csrf
 
                         {{-- DADOS PESSOAIS --}}
@@ -21,37 +21,38 @@
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="name" class="control-label"><sup style="color:red">*</sup>Nome</label>
-                                        <input type="text" name="name" id="name" placeholder="Nome Completo" class="form-control" required>
-                                        @error('name')<strong>{{ $message }}</strong>@enderror
+                                        <input type="text" name="name" id="name" placeholder="Nome Completo" class="form-control" data-rule-required="true" data-rule-minlength="2" aria-required="true">
+                                        @error('name')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="birthdate" class="control-label">Data de nascimento</label>
-                                        <input type="date" name="birthdate" id="birthdate" placeholder="Data de nascimento" class="form-control" required>
-                                        @error('birthdate')<strong>{{ $message }}</strong>@enderror
+                                        <input type="date" name="birthdate" id="birthdate" placeholder="Data de nascimento" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="identification" class="control-label"><sup style="color:red">*</sup>Nº CPF</label>
-                                        <input type="text" name="identification" id="identification" placeholder="000.000.000-00" class="form-control" required>
-                                        @error('identification')<strong>{{ $message }}</strong>@enderror
+                                        <input type="text" name="identification" id="identification" data-rule-required="true" placeholder="000.000.000-00" class="form-control mask_cpf">
+                                        @error('identification')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="number" class="control-label"><sup style="color:red">*</sup>Telefone/Celular</label>
-                                        <input type="text" name="number" id="number" placeholder="(DDD) 0000-0000" class="form-control">
-                                        
-                                        <input class="form-check-input" type="radio" name="phone_type" id="personal" value="personal" checked>
-                                        <label class="form-check-label" for="personal">Pessoal</label>
-                                        
-                                        <input class="form-check-input" type="radio" name="phone_type" id="commercial" value="commercial">
-                                        <label class="form-check-label" for="commercial">Comercial</label>
+                                        <input type="text" name="number" id="number" placeholder="(00) 0000-0000" class="form-control mask_phone" data-rule-required="true">
+                                        @error('number') <span class="text-danger">{{ $message }}</span>@enderror
 
-                                        @error('number') <p><strong>{{ $message }}</strong></p> @enderror
-                                        @error('phone_type') <p><strong>{{ $message }}</strong></p> @enderror
+                                        <div class="form-group" style="margin: 5px 0px -10px 0px;">
+                                            <input class="icheck-me" type="radio" name="phone_type" id="personal" value="personal" data-skin="minimal">
+                                            <label class="form-check-label" for="personal">Pessoal</label>
+                                            <input class="icheck-me" type="radio" name="phone_type" id="commercial" value="commercial" data-skin="minimal" checked>
+                                            <label class="form-check-label" for="commercial">Comercial</label>
+                                        </div>
+
+
+                                        @error('phone_type') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +68,7 @@
                                 <div class="col-sm-2">
                                     <div class="form-group">
                                         <label for="postal_code" class="control-label">CEP</label>
-                                        <input type="text" name="postal_code" id="postal_code" placeholder="00.000-000" class="form-control" required>
+                                        <input type="text" name="postal_code" id="postal_code" placeholder="00.000-000" class="form-control mask_cep">
                                         @error('postal_code') <p><strong>{{ $message }}</strong></p> @enderror
                                     </div>
                                 </div>
@@ -75,7 +76,7 @@
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="country" class="control-label">País</label>
-                                        <input type="text" name="country" id="country" placeholder="País" class="form-control" required>
+                                        <input type="text" name="country" id="country" placeholder="País" class="form-control">
                                         @error('country')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
@@ -83,7 +84,7 @@
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="state" class="control-label">Estado/UF</label>
-                                        <input type="text" name="state" id="state" placeholder="UF" class="form-control" required>
+                                        <input type="text" name="state" id="state" placeholder="UF" class="form-control">
                                         @error('state')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
@@ -91,7 +92,7 @@
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="city" class="control-label">Cidade</label>
-                                        <input type="text" name="city" id="city" placeholder="Cidade" class="form-control" required>
+                                        <input type="text" name="city" id="city" placeholder="Cidade" class="form-control">
                                         @error('city')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
@@ -99,7 +100,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="neighborhood" class="control-label">Bairro</label>
-                                        <input type="text" name="neighborhood" id="neighborhood" placeholder="Bairro" class="form-control" required>
+                                        <input type="text" name="neighborhood" id="neighborhood" placeholder="Bairro" class="form-control">
                                         @error('neighborhood')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
@@ -107,7 +108,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="street" class="control-label">Rua</label>
-                                        <input type="text" name="street" id="street" placeholder="Rua/Avenida/Servidão" class="form-control" required>
+                                        <input type="text" name="street" id="street" placeholder="Rua/Avenida/Servidão" class="form-control">
                                         @error('street')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
@@ -115,7 +116,7 @@
                                 <div class="col-sm-1">
                                     <div class="form-group">
                                         <label for="street_number" class="control-label">Número</label>
-                                        <input type="number" name="street_number" id="street_number" placeholder="Nº" class="form-control" required>
+                                        <input type="number" name="street_number" id="street_number" placeholder="Nº" class="form-control">
                                         @error('street_number')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
@@ -140,16 +141,16 @@
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="email" class="control-label"><sup style="color:red">*</sup>E-mail</label>
-                                        <input type="email" name="email" id="email" placeholder="user_email@essentia.com.br" class="form-control @error('email') is-invalid @enderror" required autocomplete="email">
-                                        @error('email')<strong>{{ $message }}</strong>@enderror
+                                        <input type="email" name="email" id="email" placeholder="user_email@essentia.com.br" class="form-control @error('email') is-invalid @enderror" data-rule-required="true" data-rule-email="true">
+                                        @error('email')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
                                 {{-- SENHA --}}
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="password" class="control-label"><sup style="color:red">*</sup>Senha</label>
-                                        <input type="password" name="password" id="password" placeholder="Deve conter ao menos 8 digitos" class="form-control @error('password') is-invalid @enderror" required autocomplete="new-password">
-                                        @error('password')<strong>{{ $message }}</strong>@enderror
+                                        <input type="password" name="password" id="password" placeholder="Deve conter ao menos 8 digitos" class="form-control @error('password') is-invalid @enderror" data-rule-required="true" data-rule-minlength="8" autocomplete="new-password">
+                                        @error('password')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
                                 {{-- CONFIRMAR SENHA --}}
@@ -157,11 +158,24 @@
                                     <div class="form-group">
                                         <label for="password-confirm" class="control-label"><sup style="color:red">*</sup>Confirmar Senha</label>
                                         <input type="password" name="password_confirmation" id="password-confirm" placeholder="Digite novamente a senha" class="form-control" required autocomplete="new-password">
-                                        @error('password_confirmation')<strong>{{ $message }}</strong>@enderror
+                                        @error('password_confirmation')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
-                                {{-- USUÁRIO APROVADOR --}}
+                                {{-- PERFIL DE USUÁRIO --}}
                                 <div class="col-sm-3">
+                                    <label for="form-check" style="margin-bottom: 12px;">Perfil de Usuário</label>
+                                    <div class="form-check">
+                                        <input class="icheck-me" type="radio" name="profile_type" id="profile_admin" value="admin" data-skin="minimal">
+                                        <label class="form-check-label" for="profile_admin">Administrador</label>
+                                        <input class="icheck-me" type="radio" name="profile_type" id="profile_normal" value="normal" data-skin="minimal" checked>
+                                        <label class="form-check-label" for="personal">Padrão</label>
+                                        @error('approve_limit') <p><strong>{{ $message }}</strong></p> @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row"></div>
+                                {{-- USUÁRIO APROVADOR --}}
+                                <div class="col-sm-3" style="padding-left: 0px">
                                     <div class="form-group">
                                         <label for="approver_user_id" class="control-label">Usuário Aprovador</label>
                                         <input type="number" name="approver_user_id" id="approver_user_id" placeholder="ID usuário aprovador" class="form-control">
@@ -176,24 +190,13 @@
                                         @error('approve_limit')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
-                                {{-- PERFIL DE USUÁRIO --}}
-                                <div class="col-sm-4">
-                                    <h5>Perfil de Usuário</h5>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="profile_type" id="profile_admin" value="admin">
-                                        <label class="form-check-label" for="profile_admin">Administrador</label>
-                                        <input class="form-check-input" type="radio" name="profile_type" id="profile_normal" value="normal" checked>
-                                        <label class="form-check-label" for="personal">Padrão</label>
-                                        @error('approve_limit') <p><strong>{{ $message }}</strong></p> @enderror
-                                    </div>
-                                </div>
                             </div>
-                        </div>   
+                        </div>
                         {{-- BTNs --}}
                         <div class="form-actions pull-right">
                             <button type="submit" class="btn btn-primary">Salvar</button>
                             <a href="{{ url()->previous() }}" class="btn">Cancelar</a>
-                        </div> 
+                        </div>
                     </form>
                 </div>
             </div>
