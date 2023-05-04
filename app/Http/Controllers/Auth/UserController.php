@@ -30,7 +30,7 @@ class UserController extends Controller implements UserControllerInterface
     {
         $this->validator($data);
         $user = $this->userService->registerUser($data);
-        session()->flash('success', "Usuário cadastrado com sucesso! E-mail: $user->email");
+        session()->flash('success', "Usuário cadastrado com sucesso!");
 
         return $user->first();
     }
@@ -80,7 +80,7 @@ class UserController extends Controller implements UserControllerInterface
 
             session()->flash('success', "Usuário atualizado com sucesso!");
 
-            return redirect()->route('user', ['id' => $id]);
+            return redirect()->route('users');
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
         }
