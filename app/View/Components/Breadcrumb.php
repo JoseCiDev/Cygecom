@@ -33,6 +33,10 @@ class Breadcrumb extends Component
         'email' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'email', 'label' => 'Envio de e-mail']
+        ],
+        'products' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'products', 'label' => 'Produtos']
         ]
     ];
 

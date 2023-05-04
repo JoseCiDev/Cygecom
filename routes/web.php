@@ -19,5 +19,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/email', [App\Http\Controllers\EmailController::class, 'index'])->name('email');
         Route::post('/email', [App\Http\Controllers\EmailController::class, 'store']);
+
+        Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products');
     });
 });
