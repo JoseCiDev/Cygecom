@@ -82,6 +82,25 @@ class ValidatorService extends ServiceProvider
         'birthdate.date' => 'Data inválida',
     ];
 
+    public $rulesForProduct = [
+        'description' => ['required', 'string', 'max:255', 'min:3'],
+        'unit_price' => ['nullable', 'numeric', 'min:0'],
+        'product_categorie_id' => ['nullable', 'numeric', 'min:1'],
+        'updated_by' => ['nullable', 'numeric', 'min:1'],
+    ];
+
+    public $messagesForProduct = [
+        'description.required' => 'A descrição é obrigatória',
+        'description.min' => 'A descrição deve possuir pelo menos :min caracteres.',
+        'description.max' => 'A descrição deve possuir no máximo :max caracteres.',
+
+        'unit_price.number' => 'O preço unitário aceita apenas números.',
+        'unit_price.min' => 'O preço unitário não aceita valores negativos.',
+
+        'updated_by.numeric' => 'O ID do usuário que atualizou o produto deve ser numérico.',
+        'updated_by.min' => 'O ID do usuário que atualizou o produto não pode ser negativo.',
+    ];
+
     public function registerValidator(array $data)
     {
         try {
@@ -102,9 +121,13 @@ class ValidatorService extends ServiceProvider
         $validator = Validator::make($data, $rules, $messages);
 
         return $validator;
-        // if ($validator->fails()) {
-        // return back()->withErrors($validator->errors()->getMessages())->withInput();
-        // return $validator->errors()->getMessages();
-        // }
+    }
+
+    public function productValidator($data)
+    {
+        $rules = $this->rulesForProduct;
+        $messages = $this->messagesForProduct;
+        $validator = Validator::make($data, $rules, $messages);
+        return $validator;
     }
 }
