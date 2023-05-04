@@ -17,5 +17,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ValidatorService::class, function ($app) {
             return new ValidatorService($app);
         });
+        $this->app->singleton(ProductService::class, function ($app) {
+            return new ProductService($app);
+        });
     }
 }
