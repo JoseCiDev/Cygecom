@@ -37,12 +37,13 @@ class UserController extends Controller implements UserControllerInterface
 
     public function showRegistrationForm()
     {
-        return view('auth.register');
+        return view('auth.admin.register');
     }
 
     public function showUsers()
     {
         $users = $this->userService->getUsers();
+
         return view('auth.admin.users', ['users' => $users]);
     }
     public function showUser($id)

@@ -1,7 +1,7 @@
 <x-app>
 
     <x-slot name="title">
-        <h1>Usuário {{$user['id']}} - {{$user['person']['name']}}</h1>
+        <h1>Cadastro</h1>
     </x-slot>
 
     <div class="row">
@@ -11,7 +11,7 @@
                     <h3 style="color: white; margin-top: 5px">Editar usuário</h3>
                 </div>
                 <div class="box-content">
-                    <x-form.user.create-update action="userUpdate" :user="$user"/>
+                    <x-form.user.create-update action="register"/>
                 </div>
             </div>
         </div>
