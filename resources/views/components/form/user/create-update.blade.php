@@ -304,12 +304,22 @@
                     <label for="approve_limit" class="control-label">
                         Limite de Aprovação
                     </label>
-                    <input
-                    id="limitSlider"
-                    type="range" style="accent-color: #204e81;"
-                    step="5000" min="0" max="100000" value="0"
-                    class="no-validation">
-                    <span id="rangeValue">até R$ 0</span>
+                    @if (isset($user))
+                        <input
+                            id="approve_limit"
+                            name="approve_limit"
+                            type="range" style="accent-color: #204e81;"
+                            step="5000" min="0" max="100000"
+                            value="{{ $user['approve_limit'] }}" class="no-validation">
+                    @else
+                        <input
+                            id="approve_limit"
+                            name="approve_limit"
+                            type="range" style="accent-color: #204e81;"
+                            step="5000" min="0" max="100000"
+                            value="0" class="no-validation">
+                    @endif
+                    <span id="rangeValue">até R$ {{ isset($user) ? $user['approve_limit'] : '0' }}</span>
                 </div>
             </div>
         </div>
@@ -326,17 +336,16 @@
 {{-- SLIDER JS --}}
 <script>
     $(() => {
-        const range = $('#limitSlider');
+        const range = $('#approve_limit');
         const rangeValue = $('#rangeValue');
-        range.attr('step', '5000'); // define o step inicial como 5000
+        const hiddenInput = $('#approve_limit');
+        range.attr('step', '5000');
         range.on('input', function() {
             const val = parseInt(range.val());
             const step = val > 50000 ? 10000 : 5000;
-            // se o valor selecionado for maior que 50000
-            range.attr({
-                step
-            });
+            range.attr({ step });
             rangeValue.text('até R$ ' + val.toLocaleString('pt-BR'));
+            hiddenInput.val(val); // atualiza o valor do input hidden
         });
     });
 </script>
