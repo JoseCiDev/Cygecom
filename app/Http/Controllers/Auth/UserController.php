@@ -37,7 +37,7 @@ class UserController extends Controller implements UserControllerInterface
 
     public function showRegistrationForm()
     {
-        $approvers = $this->getApprovers();
+        $approvers = $this->getApprovers('register');
 
         return view('auth.admin.register', ['approvers' => $approvers]);
     }
@@ -58,7 +58,7 @@ class UserController extends Controller implements UserControllerInterface
             'profile', 'approver',
         ])->where('id', $id)->whereNull('deleted_at')->first()->toArray();
 
-        $approvers = $this->getApprovers();
+        $approvers = $this->getApprovers('userUpdate', $id);
 
         return view('auth.admin.user', ['user' => $user, 'approvers' => $approvers]);
     }
@@ -97,11 +97,18 @@ class UserController extends Controller implements UserControllerInterface
         }
     }
 
-    private function getApprovers()
+    // -- ver a questão do service -- \\
+    private function getApprovers($action, int $id = null)
     {
-        return User::with([
-            'person',
-        ])->where('profile_id', 1)->whereNull('deleted_at')->get();
+        $query = User::with(['person'])
+        ->where('profile_id', 1)
+        ->whereNull('deleted_at');
+
+        if ($action === 'userUpdate' && $id !== null) {
+            $query->where('id', '!=', $id);
+        }
+
+        return $query->get();
     }
 
     protected function validator(array $data)

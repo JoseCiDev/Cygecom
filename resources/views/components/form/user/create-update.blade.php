@@ -24,7 +24,9 @@
                     class="form-control"
                     data-rule-required="true"
                     data-rule-minlength="2"
-                    value="{{ $user['person']['name'] ?? '' }}">
+                    @if (isset($user))
+                        value="{{ $user['person']['name']}}"
+                    @endif >
                     @error('name')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -38,7 +40,9 @@
                     id="birthdate"
                     placeholder="Data de nascimento"
                     class="form-control"
-                    value="{{ $user['person']['birthdate'] ?? '' }}">
+                    @if (isset($user))
+                        value="{{ $user['person']['birthdate'] }}"
+                    @endif >
                 </div>
             </div>
             {{-- DOCUMENTO --}}
@@ -52,7 +56,9 @@
                     data-rule-required="true"
                     placeholder="000.000.000-00"
                     class="form-control mask_cpf"
-                    value="{{ $identification['identification'] ?? ''}}">
+                    @if (isset($user))
+                        value="{{ $user['person']['identification']['identification'] }}"
+                    @endif >
                     @error('identification')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -67,18 +73,35 @@
                     placeholder="(00) 0000-0000"
                     class="form-control mask_phone"
                     data-rule-required="true"
-                    value="{{ $phone['number'] ?? ''}}">
+                    @if (isset($user))
+                        value="{{ $user['person']['phone']['number'] }}"
+                    @endif >
                     @error('number') <span class="text-danger">{{ $message }}</span>@enderror
                     <div class="form-group" style="margin: 5px 0px -10px 0px;">
                         {{-- PESSOAL --}}
                         <input
-                        {{-- @if ($phone['phone_type'] === "personal") {{"checked"}} @endif --}}
-                        class="icheck-me" type="radio" name="phone_type" id="personal" value="personal" data-skin="minimal">
+                        @if(isset($user))
+                            @if ($user['person']['phone']['phone_type']  === "personal") {{"checked"}} @endif
+                        @endif
+                            class="icheck-me"
+                            type="radio"
+                            name="phone_type"
+                            id="personal"
+                            value="personal"
+                            data-skin="minimal">
                         <label class="form-check-label" for="personal">Pessoal</label>
                         {{-- COMERCIAL --}}
                         <input
-                        {{-- @if ($phone['phone_type'] === "commercial") {{"checked"}} @endif --}}
-                        class="icheck-me" type="radio" name="phone_type" id="commercial" value="commercial" data-skin="minimal" checked>
+                        @if(isset($user))
+                            @if ($user['person']['phone']['phone_type'] === "commercial") {{"checked"}} @endif
+                        @endif
+                        class="icheck-me"
+                        type="radio"
+                        name="phone_type"
+                        id="commercial"
+                        value="commercial"
+                        data-skin="minimal"
+                        @if(!isset($user)) checked @endif >
                         <label class="form-check-label" for="commercial">Comercial</label>
                     </div>
                     @error('phone_type') <span class="text-danger">{{ $message }}</span> @enderror
@@ -101,7 +124,9 @@
                     id="postal_code"
                     placeholder="00.000-000"
                     class="form-control mask_cep"
-                    value="{{$address['postal_code'] ?? ''}}">
+                    @if(isset($user))
+                        value="{{ $user['person']['address']['postal_code'] }}"
+                    @endif >
                     @error('postal_code') <p><strong>{{ $message }}</strong></p> @enderror
                 </div>
             </div>
@@ -115,7 +140,9 @@
                     id="country"
                     placeholder="País"
                     class="form-control"
-                    value="{{$address['country'] ?? ''}}">
+                    @if(isset($user))
+                        value="{{ $user['person']['address']['country'] }}"
+                    @endif >
                     @error('country')<strong>{{ $message }}</strong>@enderror
                 </div>
             </div>
@@ -129,7 +156,9 @@
                     id="state"
                     placeholder="UF"
                     class="form-control"
-                    value="{{$address['state'] ?? ''}}">
+                    @if(isset($user))
+                        value="{{ $user['person']['address']['state'] }}"
+                    @endif >
                     @error('state')<strong>{{ $message }}</strong>@enderror
                 </div>
             </div>
@@ -143,7 +172,9 @@
                     id="city"
                     placeholder="Cidade"
                     class="form-control"
-                    value="{{$address['city'] ?? ''}}">
+                    @if(isset($user))
+                        value="{{ $user['person']['address']['city'] }}"
+                    @endif >
                     @error('city')<strong>{{ $message }}</strong>@enderror
                 </div>
             </div>
@@ -157,7 +188,9 @@
                     id="neighborhood"
                     placeholder="Bairro"
                     class="form-control"
-                    value="{{$address['neighborhood'] ?? ''}}">
+                    @if(isset($user))
+                        value="{{ $user['person']['address']['neighborhood'] }}"
+                    @endif >
                     @error('neighborhood')<strong>{{ $message }}</strong>@enderror
                 </div>
             </div>
@@ -171,7 +204,9 @@
                     id="street"
                     placeholder="Rua/Avenida/Servidão"
                     class="form-control"
-                    value="{{$address['street'] ?? ''}}">
+                    @if(isset($user))
+                        value="{{ $user['person']['address']['street'] }}"
+                    @endif >
                     @error('street')<strong>{{ $message }}</strong>@enderror
                 </div>
             </div>
@@ -185,7 +220,9 @@
                     id="street_number"
                     placeholder="Nº"
                     class="form-control"
-                    value="{{$address['street_number'] ?? ''}}">
+                    @if(isset($user))
+                        value="{{ $user['person']['address']['street_number'] }}"
+                    @endif >
                     @error('street_number')<strong>{{ $message }}</strong>@enderror
                 </div>
             </div>
@@ -199,7 +236,9 @@
                     id="complement"
                     placeholder="ex: casa"
                     class="form-control"
-                    value="{{$address['complement'] ?? ''}}">
+                    @if(isset($user))
+                        value="{{ $user['person']['address']['complement'] }}"
+                    @endif >
                     @error('complement')<strong>{{ $message }}</strong>@enderror
                 </div>
             </div>
@@ -219,7 +258,9 @@
                     name="email"
                     id="email"
                     placeholder="user_email@essentia.com.br"
-                    value="{{$user['email'] ?? ''}}"
+                    @if(isset($user))
+                        value="{{ $user['email'] }}"
+                    @endif
                     class="form-control
                     @error('email') is-invalid @enderror" data-rule-required="true" data-rule-email="true">
                     @error('email')<span class="text-danger">{{ $message }}</span>@enderror
@@ -234,8 +275,14 @@
                     name="password"
                     id="password"
                     placeholder="Deve conter ao menos 8 digitos"
-                    class="form-control @error('password') is-invalid @enderror"
-                    data-rule-required="true" data-rule-minlength="8" autocomplete="new-password">
+                    @if(!isset($user))
+                        data-rule-required="true"
+                        data-rule-minlength="8"
+                        class="form-control no-validation @error('password') is-invalid @enderror"
+                    @else
+                        class="form-control no-validation @error('password') is-invalid @enderror"
+                    @endif
+                    autocomplete="new-password">
                     @error('password')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -243,7 +290,18 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label for="password-confirm" class="control-label"><sup style="color:red">*</sup>Confirmar Senha</label>
-                    <input type="password" name="password_confirmation" id="password-confirm" placeholder="Digite novamente a senha" class="form-control" required autocomplete="new-password">
+                    <input
+                    type="password"
+                    name="password_confirmation"
+                    id="password-confirm"
+                    placeholder="Digite novamente a senha"
+                    @if(!isset($user))
+                        class="form-control"
+                        required
+                    @else
+                        class="form-control no-validation"
+                    @endif
+                    autocomplete="new-password">
                     @error('password_confirmation')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -310,7 +368,8 @@
                             name="approve_limit"
                             type="range" style="accent-color: #204e81;"
                             step="5000" min="0" max="100000"
-                            value="{{ $user['approve_limit'] }}" class="no-validation">
+                            value="{{ $user['approve_limit'] }}"
+                            class="no-validation">
                     @else
                         <input
                             id="approve_limit"
