@@ -37,19 +37,30 @@ class UserController extends Controller implements UserControllerInterface
 
     public function showRegistrationForm()
     {
-        return view('auth.register');
+        $approvers = $this->getApprovers('register');
+
+        return view('auth.admin.register', ['approvers' => $approvers]);
     }
 
     public function showUsers()
     {
         $users = $this->userService->getUsers();
+
         return view('auth.admin.users', ['users' => $users]);
     }
     public function showUser($id)
     {
-        $user = User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver'])->where('id', $id)->first()->toArray();
+        $user = User::with([
+            'person',
+            'person.address',
+            'person.phone',
+            'person.identification',
+            'profile', 'approver',
+        ])->where('id', $id)->whereNull('deleted_at')->first()->toArray();
 
-        return view('auth.admin.user', ['user' => $user]);
+        $approvers = $this->getApprovers('userUpdate', $id);
+
+        return view('auth.admin.user', ['user' => $user, 'approvers' => $approvers]);
     }
 
     public function userUpdate(Request $request, int $id)
@@ -84,6 +95,14 @@ class UserController extends Controller implements UserControllerInterface
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
         }
+    }
+
+    // -- ver a questão do service -- \\
+    private function getApprovers($action, int $id = null)
+    {
+        $query = $this->userService->getApprovers($action, $id = null);
+
+        return $query;
     }
 
     protected function validator(array $data)

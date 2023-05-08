@@ -15,9 +15,28 @@ class UserService extends ServiceProvider implements UserServiceInterface
         return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver'])->where('id', $id)->first();
     }
 
+    // retorna todos os usuarios menos o logado
     public function getUsers()
     {
-        return User::with('person', 'profile')->get()->toArray();
+        $loggedId = auth()->user()->id;
+
+        return User::with('person', 'profile')
+                   ->where('id', '<>', $loggedId)
+                   ->get()
+                   ->toArray();
+    }
+
+    public function getApprovers($action, int $id = null)
+    {
+        $query = User::with(['person'])
+        ->where('profile_id', 1)
+        ->whereNull('deleted_at');
+
+        if ($action === 'userUpdate' && $id !== null) {
+            $query->where('id', '!=', $id);
+        }
+
+        return $query->get();
     }
 
     public function registerUser(array $request)

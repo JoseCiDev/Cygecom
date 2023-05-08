@@ -32,7 +32,7 @@ class ValidatorService extends ServiceProvider
         'password.confirmed' => 'As senhas não são iguais.',
 
         'profile_type.required' => '"Tipo de usuário" é obrigatório.',
-        'profile_type.max'      => ':attribute deve ter no máximo :max',
+        'profile_type.max'      => '"Tipo de usuário" deve ter no máximo :max',
 
         'birthdate.date' => 'Data inválida',
 
@@ -64,20 +64,16 @@ class ValidatorService extends ServiceProvider
     ];
 
     public $rulesForUpdateMessages = [
-        'name.max' => 'Este campo deve ter no máximo :max caracteres.',
+        'name.max' => '"Nome" deve ter no máximo :max caracteres.',
 
         'email.email'  => 'Endereço de e-mail inválido.',
-        'email.max'    => 'Este campo deve ter no máximo :max caracteres.',
+        'email.max'    => '"E-mail" deve ter no máximo :max caracteres.',
         'email.unique' => 'Insira um e-mail que não esteja em uso',
 
-        'password.min'       => 'Este campo deve ter pelo menos :min caracteres.',
+        'password.min'       => '"Senha" deve ter pelo menos :min caracteres.',
         'password.confirmed' => 'As senhas não correspondem.',
 
-        'password_confirmation' => 'Campo obrigatório',
-
-        'profile_type.max' => 'Este campo deve ter no máximo :max caracteres.',
-
-        'approver_user_id.number' => 'O campo :attribute deve ser :number.',
+        'password_confirmation' => 'Confirmação de senha necessária',
 
         'birthdate.date' => 'Data inválida',
     ];
