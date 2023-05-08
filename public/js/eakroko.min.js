@@ -360,6 +360,7 @@ $(document).ready(function () {
 		$('.form-validate').each(function () {
 			var id = $(this).attr('id');
 			$("#" + id).validate({
+                ignore: ".no-validation",
 				errorElement  : 'span',
 				errorClass    : 'help-block has-error',
 				errorPlacement: function (error, element) {
