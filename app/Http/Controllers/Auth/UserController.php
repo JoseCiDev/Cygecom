@@ -100,15 +100,9 @@ class UserController extends Controller implements UserControllerInterface
     // -- ver a questão do service -- \\
     private function getApprovers($action, int $id = null)
     {
-        $query = User::with(['person'])
-        ->where('profile_id', 1)
-        ->whereNull('deleted_at');
+        $query = $this->userService->getApprovers($action, $id = null);
 
-        if ($action === 'userUpdate' && $id !== null) {
-            $query->where('id', '!=', $id);
-        }
-
-        return $query->get();
+        return $query;
     }
 
     protected function validator(array $data)
