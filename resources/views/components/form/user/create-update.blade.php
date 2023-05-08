@@ -4,7 +4,7 @@
     <form method="POST" action="{{ route($action, $user['id']) }}" class="form-validate" id="bb">
 @else
     {{-- if hasn't -> register --}}
-    <form method="POST" action="{{ route('register') }}" class="form-validate" id="bb">
+    <form method="POST" action="{{ route('register') }}" class="form-validate" id="xpto">
 @endif
     @csrf
 
@@ -251,9 +251,14 @@
             <div class="col-sm-3">
                 <label for="form-check" style="margin-bottom: 12px;">Perfil de Usuário</label>
                 <div class="form-check">
-                    <input class="icheck-me" type="radio" name="profile_type" id="profile_admin" value="admin" data-skin="minimal">
+                    {{-- ADMIN --}}
+                    <input @if (isset($user) && $user['profile']['name'] === "admin") {{"checked"}}@endif
+                    class="icheck-me" type="radio" name="profile_type" id="profile_admin" value="admin" data-skin="minimal">
                     <label class="form-check-label" for="profile_admin">Administrador</label>
-                    <input class="icheck-me" type="radio" name="profile_type" id="profile_normal" value="normal" data-skin="minimal" checked>
+                    {{-- PADRÃO --}}
+                    <input @if (isset($user) && $user['profile']['name'] === "normal") {{"checked"}} @endif
+                    class="icheck-me" type="radio" name="profile_type" id="profile_normal" value="normal" data-skin="minimal"
+                    @if (!isset($user)) checked @endif>
                     <label class="form-check-label" for="personal">Padrão</label>
                     @error('approve_limit') <p><strong>{{ $message }}</strong></p> @enderror
                 </div>
@@ -265,40 +270,46 @@
                 <div class="form-group" style="margin-left: -12px;">
                     <label for="centro-de-custo" class="control-label"><sup style="color:red">*</sup>Centro de Custo</label>
                     <select name="select" id="select" class='chosen-select form-control'>
-                        {{-- VALORES FIXADOS PARA TESTE --}}
-                        <option value="0">Escolha uma opção ou digite</option>
-                        <option value="1">Digital</option>
-                        <option value="2">Suprimentos</option>
-                        <option value="3">Farmácia</option>
-                        <option value="4">RH</option>
-                        <option value="5">Tributário</option>
-                        <option value="6">Marketing</option>
-                        <option value="7">Manutenção</option>
+                        {{-- @foreach($approvers as $approver)
+                            <option>{{ $approver['id'] }}</option>
+                        @endforeach --}}
                     </select>
                 </div>
             </div>
             {{-- USUÁRIO APROVADOR --}}
             <div class="col-sm-3">
                 <label for="approver_user_id" class="control-label">Usuário aprovador</label>
-                <select name="approver_user_id" id="approver_user_id" class='chosen-select form-control' >
-                    {{-- VALORES FIXADOS PARA TESTE --}}
-                    <option value="0">Escolha uma opção ou digite</option>
-                    <option value="1">Renan</option>
-                    <option value="2">Hudson</option>
-                    <option value="3">Thiago</option>
-                    <option value="4">Fernando</option>
-                </select>
+                @if (isset($user))
+                    <select name="approver_user_id" id="approver_user_id" class='chosen-select form-control' >
+                        @foreach($approvers as $approver)
+                            <option value="{{ $approver['id'] }}"
+                                {{ $user['approver_user_id'] == $approver['id'] ? 'selected' : '' }}>
+                                {{ $approver['person']['name'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                @else
+                    <select name="approver_user_id" id="approver_user_id" class='chosen-select form-control' >
+                        @foreach($approvers as $approver)
+                            <option value="{{ $approver['id'] }}">
+                                {{ $approver['person']['name'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                @endif
             </div>
             {{-- LIMITE DE APROVAÇÃO --}}
             <div class="col-sm-5">
                 <div class="form-group">
-                    <label for="approve_limit" class="control-label" style="margin-bottom: 12px;">
-                        Limite de Aprovação (R$)
+                    <label for="approve_limit" class="control-label">
+                        Limite de Aprovação
                     </label>
-                    <div class="slider" data-step="5000" data-min="0" data-max="50000" style="margin-left: 5px;">
-                        <div class="amount"></div>
-                        <div class="slide"></div>
-                    </div>
+                    <input
+                    id="limitSlider"
+                    type="range" style="accent-color: #204e81;"
+                    step="5000" min="0" max="100000" value="0"
+                    class="no-validation">
+                    <span id="rangeValue">até R$ 0</span>
                 </div>
             </div>
         </div>
@@ -312,11 +323,20 @@
 </form>
 
 
-{{--
-APPROVER LIMIT
-
-<label for="approve_limit" class="control-label">Limite de Aprovação</label>
-<input type="number" name="approve_limit" id="approve_limit" placeholder="Valor máximo de aprovação" class="form-control">
-@error('approve_limit')<strong>{{ $message }}</strong>@enderror
-
---}}
+{{-- SLIDER JS --}}
+<script>
+    $(() => {
+        const range = $('#limitSlider');
+        const rangeValue = $('#rangeValue');
+        range.attr('step', '5000'); // define o step inicial como 5000
+        range.on('input', function() {
+            const val = parseInt(range.val());
+            const step = val > 50000 ? 10000 : 5000;
+            // se o valor selecionado for maior que 50000
+            range.attr({
+                step
+            });
+            rangeValue.text('até R$ ' + val.toLocaleString('pt-BR'));
+        });
+    });
+</script>

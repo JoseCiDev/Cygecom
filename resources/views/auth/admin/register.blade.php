@@ -11,7 +11,7 @@
                     <h3 style="color: white; margin-top: 5px">Editar usuário</h3>
                 </div>
                 <div class="box-content">
-                    <x-form.user.create-update action="register"/>
+                    <x-form.user.create-update action="register" :approvers="$approvers"/>
                 </div>
             </div>
         </div>
