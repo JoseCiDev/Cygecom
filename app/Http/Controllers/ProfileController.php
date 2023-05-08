@@ -6,9 +6,18 @@ use App\Providers\UserService;
 
 class ProfileController extends Controller
 {
-    public function showProfile(UserService $userService)
+    protected $userService;
+
+    public function __construct(UserService $userService)
     {
-        $user = $userService->getUserById(auth()->user()->id);
-        return view('profile', ['user' => $user]);
+        $this->userService = $userService;
+    }
+
+    public function showProfile()
+    {
+        $user      = $this->userService->getUserById(auth()->user()->id);
+        $approvers = $this->userService->getApprovers('userUpdate', $user->id);
+
+        return view('profile', compact('user', 'approvers'));
     }
 }
