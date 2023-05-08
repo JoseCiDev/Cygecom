@@ -22,7 +22,7 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label for="identification" class="control-label">Nº CPF</label>
-                    <input id="identification" type="text" class="form-control @error('identification') is-invalid @enderror" name="identification" value="{{$identification['identification']}}" placeholder="000.000.000-00">
+                    <input id="identification" type="text" class="form-control @error('identification') is-invalid @enderror" name="identification" value="{{$person['identification']}}" placeholder="000.000.000-00">
                     @error('name') <strong>{{ $message }}</strong>@enderror
                 </div>
             </div>
@@ -181,9 +181,9 @@
                     </div>
                 </div>
             @endif
-
         </div>
     </div>
+
     {{-- BTNs --}}
     <div class="form-actions pull-right">
         <button type="submit" class="btn btn-primary">Atualizar usuário</button>
