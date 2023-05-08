@@ -13,4 +13,16 @@ class Product extends Model
     {
         return $this->belongsTo(ProductCategorie::class, 'product_categorie_id');
     }
+
+    public function updaterUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    protected $fillable = [
+        'description',
+        'unit_price',
+        'product_categorie_id',
+        'updated_by',
+    ];
 }

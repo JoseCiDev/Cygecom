@@ -21,5 +21,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/email', [App\Http\Controllers\EmailController::class, 'store']);
 
         Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products');
+        Route::get('/products/register', [App\Http\Controllers\ProductController::class, 'form'])->name('productRegister');
+        Route::post('/products/register', [App\Http\Controllers\ProductController::class, 'register']);
+
+        Route::get('/products/product/{id}', [App\Http\Controllers\ProductController::class, 'product'])->name('product');
+        Route::post('/products/product/{id}', [App\Http\Controllers\ProductController::class, 'update'])->name('updateProduct');
+        Route::post('/products/delete/{id}', [App\Http\Controllers\ProductController::class, 'delete'])->name('deleteProduct');
     });
 });

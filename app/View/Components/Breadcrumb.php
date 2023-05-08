@@ -37,6 +37,16 @@ class Breadcrumb extends Component
         'products' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'products', 'label' => 'Produtos']
+        ],
+        'productRegister' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'products', 'label' => 'Produtos'],
+            ['route' => 'productRegister', 'label' => 'Registrar produto']
+        ],
+        'product' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'products', 'label' => 'Produtos'],
+            ['route' => 'product', 'label' => 'Produto']
         ]
     ];
 
