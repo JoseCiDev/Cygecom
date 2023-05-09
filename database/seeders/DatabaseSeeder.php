@@ -19,6 +19,12 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        // popula centro de custo
+        $this->call([
+            PopulateCostCenters::class,
+        ]);
+
         $personId = DB::table('people')->insertGetId(['name' => 'Administrador']);
 
         DB::table('addresses')->insert([
@@ -577,7 +583,7 @@ class DatabaseSeeder extends Seeder
                 ['description' => "Béquer 5L Vidro boro 3.3; graduado c/ marcação de 5L; forma baixa; Bico vertedor; Calibrado", 'product_categorie_id' => 2, 'unit_price' => 852.6],
                 ['description' => "Béquer 10L Vidro boro 3.3; graduado c/ marcação de 10L; forma baixa; Bico vertedor; Calibrado", 'product_categorie_id' => 2, 'unit_price' => 1919.55],
                 ['description' => 'Béquer 500mL Vidro boro 3.3; graduado ; forma baixa; Bico vertedor; Calibrado; Cor AMARELO (NA CAPACIDADE TOTAL, MARCADOR DA GRADUAÇÃO TEM SOMENTE NA COR AMBAR, COM O VIDRO INCOLOR)', 'product_categorie_id' => 2, 'unit_price' => 852.6],
-                ['description' =>  'Béquer 5L Vidro boro 3.3; graduado ; forma baixa; Bico vertedor; Calibrado; Cor AMARELO - (NA CAPACIDADE TOTAL, MARCADOR DA GRADUAÇÃO TEM SOMENTE NA COR AMBAR, COM O VIDRO INCOLOR)', 'product_categorie_id' => 2, 'unit_price' => 1919.55],
+                ['description' => 'Béquer 5L Vidro boro 3.3; graduado ; forma baixa; Bico vertedor; Calibrado; Cor AMARELO - (NA CAPACIDADE TOTAL, MARCADOR DA GRADUAÇÃO TEM SOMENTE NA COR AMBAR, COM O VIDRO INCOLOR)', 'product_categorie_id' => 2, 'unit_price' => 1919.55],
                 ['description' => "Papel Grau cirurgico hormônios (roxo) 250x100- (NIVALDO JÁ MANDOU COTAÇÃO EM OUTRO E-MAIL)", 'product_categorie_id' => 2, 'unit_price' => null],
                 ['description' => "Papel Grau cirurgico hormônios (roxo) 150x100 - (NIVALDO JÁ MANDOU COTAÇÃO EM OUTRO E-MAIL)", 'product_categorie_id' => 2, 'unit_price' => null],
                 ['description' => "Funil; Plástico PP; Autoclavavel; Haste longa; capacidade 500mL", 'product_categorie_id' => 2, 'unit_price' => 76.95],
@@ -626,7 +632,7 @@ class DatabaseSeeder extends Seeder
                 ['description' => "Garra Para Bureta Giratória Com Mufla 60 Mm - MET-112C", 'product_categorie_id' => 2, 'unit_price' => 49.6],
                 ['description' => "Proveta graduada - Calibrada - capacidade de 50mL", 'product_categorie_id' => 2, 'unit_price' => 71.5],
                 ['description' => "Proveta graduada - Calibrada - capacidade de 100mL", 'product_categorie_id' => 2, 'unit_price' => 72.5],
-                ['description' => "Kit Filtração à vacuo - Vidro boro 3.3 250/300 com frasco erelnmeyer 500mL - Frasco com boca esmirilhada para formação de vácuo.",  'product_categorie_id' => 2,  'unit_price' => 1860,],
+                ['description' => "Kit Filtração à vacuo - Vidro boro 3.3 250/300 com frasco erelnmeyer 500mL - Frasco com boca esmirilhada para formação de vácuo.",  'product_categorie_id' => 2,  'unit_price' => 1860, ],
                 ['description' => 'Kit Filtração à vácuo - Vidro boro 3.3 - Somente a parte de cima (Funil com base de vidro e adaptador para vácuo, tipo placa porosa + copo com capacidade de 300mL). Ver obs.', 'product_categorie_id' => 2, 'unit_price' => 1395],
                 ['description' => "Escova Para Limpeza De Vidrarias - Modelo 2250", 'product_categorie_id' => 2, 'unit_price' => 16.11],
                 ['description' => "Escova Para Limpeza De Vidrarias - Modelo 2260", 'product_categorie_id' => 2, 'unit_price' => 16.11],
@@ -681,7 +687,7 @@ class DatabaseSeeder extends Seeder
                 ['description' => "Gral de vidro com pistilo laborglas", 'product_categorie_id' => 3],
                 ['description' => "Vidro Relógio lapidado 40mm", 'product_categorie_id' => 3],
                 ['description' => "Vidro Relógio lapidado 100mm", 'product_categorie_id' => 3],
-                ['description' => "Vidro Relógio lapidado 120mm", 'product_categorie_id' => 3]
+                ['description' => "Vidro Relógio lapidado 120mm", 'product_categorie_id' => 3],
             ]
         );
 
