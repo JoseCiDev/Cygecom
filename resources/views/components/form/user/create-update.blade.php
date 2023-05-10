@@ -405,16 +405,24 @@
 
 {{-- SLIDER JS --}}
 <script>
-    $(() => {
-        const range = $('#approve_limit');
+    function formatRangeValue(val) {
         const rangeValue = $('#rangeValue');
+        rangeValue.text('até R$ ' + val.toLocaleString('pt-BR'));
+    }
+    $(function() {
+        const range = $('#approve_limit');
         const hiddenInput = $('#approve_limit');
         range.attr('step', '5000');
+        const val = parseInt(range.val());
+        const step = val > 50000 ? 10000 : 5000;
+        range.attr({ step });
+        formatRangeValue(val);
+        hiddenInput.val(val); // atualiza o valor do input hidden
         range.on('input', function() {
             const val = parseInt(range.val());
             const step = val > 50000 ? 10000 : 5000;
             range.attr({ step });
-            rangeValue.text('até R$ ' + val.toLocaleString('pt-BR'));
+            formatRangeValue(val);
             hiddenInput.val(val); // atualiza o valor do input hidden
         });
     });
