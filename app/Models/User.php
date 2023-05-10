@@ -47,6 +47,7 @@ class User extends Authenticatable
         'person_id',
         'approver_user_id',
         'approve_limit',
+        'cost_center_id',
     ];
 
     /**

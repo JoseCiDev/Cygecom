@@ -21,6 +21,11 @@ class CostCenter extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
     public static function getAll()
     {
         return self::all();
