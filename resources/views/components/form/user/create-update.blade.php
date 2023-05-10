@@ -328,6 +328,7 @@
                 <label for="cost_center_id" class="control-label"><sup style="color:red">*</sup>Setor</label>
                 @if (isset($user))
                     <select name="cost_center_id" id="cost_center_id" class='chosen-select form-control' >
+                        <option value="" disabled selected>Selecione uma opção/option>
                         @foreach($costCenters as $costCenter)
                             <option value="{{ $costCenter->id }}"
                                 {{ $user['cost_center_id'] == $costCenter->id ? 'selected' : '' }}>
@@ -337,6 +338,7 @@
                     </select>
                 @else
                     <select name="cost_center_id" id="cost_center_id" class='chosen-select form-control' >
+                        <option value="" disabled selected>Selecione uma opção </option>
                         @foreach($costCenters as $costCenter)
                             <option value="{{ $costCenter->id  }}">
                                 {{ $costCenter->name }}
@@ -349,7 +351,8 @@
             <div class="col-sm-3">
                 <label for="approver_user_id" class="control-label">Usuário aprovador</label>
                 @if (isset($user))
-                    <select name="approver_user_id" id="approver_user_id" class='chosen-select form-control' >
+                    <select name="approver_user_id" id="approver_user_id" class="chosen-select form-control" >
+                        <option value="" disabled selected>Selecione uma opção </option>
                         @foreach($approvers as $approver)
                             <option value="{{ $approver['id'] }}"
                                 {{ $user['approver_user_id'] == $approver['id'] ? 'selected' : '' }}>
@@ -358,7 +361,8 @@
                         @endforeach
                     </select>
                 @else
-                    <select name="approver_user_id" id="approver_user_id" class='chosen-select form-control' >
+                    <select name="approver_user_id" id="approver_user_id" class="chosen-select form-control" >
+                        <option value="" disabled selected>Selecione uma opção </option>
                         @foreach($approvers as $approver)
                             <option value="{{ $approver['id'] }}">
                                 {{ $approver['person']['name'] }}

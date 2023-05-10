@@ -60,9 +60,9 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user->password         = Hash::make($request['password']);
             $user->profile_id       = $this->getProfileId($request);
             $user->person_id        = $personId;
-            $user->approver_user_id = $request['approver_user_id'];
+            $user->approver_user_id = $request['approver_user_id'] ?? null;
             $user->approve_limit    = $request['approve_limit'];
-            $user->cost_center_id   = $request['cost_center_id'];
+            $user->cost_center_id   = $request['cost_center_id'] ?? null;
             $user->save();
 
             return $user;
