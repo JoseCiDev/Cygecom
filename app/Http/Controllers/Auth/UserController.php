@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Contracts\UserControllerInterface;
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\{CostCenter, User};
 use App\Providers\{UserService, ValidatorService};
 use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -37,9 +37,10 @@ class UserController extends Controller implements UserControllerInterface
 
     public function showRegistrationForm()
     {
-        $approvers = $this->getApprovers('register');
+        $approvers   = $this->getApprovers('register');
+        $costCenters = $this->getCostCenters();
 
-        return view('auth.admin.register', ['approvers' => $approvers]);
+        return view('auth.admin.register', ['approvers' => $approvers, 'costCenters' => $costCenters]);
     }
 
     public function showUsers()
@@ -55,12 +56,18 @@ class UserController extends Controller implements UserControllerInterface
             'person.address',
             'person.phone',
             'person.identification',
-            'profile', 'approver',
+            'profile',
+            'approver',
+            'costCenter',
         ])->where('id', $id)->whereNull('deleted_at')->first()->toArray();
 
+        // pega aprovadores para pupular select
         $approvers = $this->getApprovers('userUpdate', $id);
 
-        return view('auth.admin.user', ['user' => $user, 'approvers' => $approvers]);
+        // pega centros de custo (setores) para pupular select
+        $costCenters = $this->getCostCenters();
+
+        return view('auth.admin.user', ['user' => $user, 'approvers' => $approvers, 'costCenters' => $costCenters]);
     }
 
     public function userUpdate(Request $request, int $id)
@@ -103,6 +110,12 @@ class UserController extends Controller implements UserControllerInterface
         $query = $this->userService->getApprovers($action, $id = null);
 
         return $query;
+    }
+
+    // -- ver a questão do service -- //
+    public function getCostCenters()
+    {
+        return $this->userService->getCostCenters();
     }
 
     protected function validator(array $data)

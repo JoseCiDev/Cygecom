@@ -322,23 +322,37 @@
                 </div>
             </div>
         </div>
-        <div class="row"></div>
+        <div class="row">
             {{-- CENTRO DE CUSTO --}}
             <div class="col-sm-3">
-                <div class="form-group" style="margin-left: -12px;">
-                    <label for="centro-de-custo" class="control-label"><sup style="color:red">*</sup>Centro de Custo</label>
-                    <select name="select" id="select" class='chosen-select form-control'>
-                        {{-- @foreach($approvers as $approver)
-                            <option>{{ $approver['id'] }}</option>
-                        @endforeach --}}
+                <label for="cost_center_id" class="control-label"><sup style="color:red">*</sup>Setor</label>
+                @if (isset($user))
+                    <select name="cost_center_id" id="cost_center_id" class='chosen-select form-control' >
+                        <option value="" disabled selected>Selecione uma opção/option>
+                        @foreach($costCenters as $costCenter)
+                            <option value="{{ $costCenter->id }}"
+                                {{ $user['cost_center_id'] == $costCenter->id ? 'selected' : '' }}>
+                                {{ $costCenter->name }}
+                            </option>
+                        @endforeach
                     </select>
-                </div>
+                @else
+                    <select name="cost_center_id" id="cost_center_id" class='chosen-select form-control' >
+                        <option value="" disabled selected>Selecione uma opção </option>
+                        @foreach($costCenters as $costCenter)
+                            <option value="{{ $costCenter->id  }}">
+                                {{ $costCenter->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                @endif
             </div>
             {{-- USUÁRIO APROVADOR --}}
             <div class="col-sm-3">
                 <label for="approver_user_id" class="control-label">Usuário aprovador</label>
                 @if (isset($user))
-                    <select name="approver_user_id" id="approver_user_id" class='chosen-select form-control' >
+                    <select name="approver_user_id" id="approver_user_id" class="chosen-select form-control" >
+                        <option value="" disabled selected>Selecione uma opção </option>
                         @foreach($approvers as $approver)
                             <option value="{{ $approver['id'] }}"
                                 {{ $user['approver_user_id'] == $approver['id'] ? 'selected' : '' }}>
@@ -347,7 +361,8 @@
                         @endforeach
                     </select>
                 @else
-                    <select name="approver_user_id" id="approver_user_id" class='chosen-select form-control' >
+                    <select name="approver_user_id" id="approver_user_id" class="chosen-select form-control" >
+                        <option value="" disabled selected>Selecione uma opção </option>
                         @foreach($approvers as $approver)
                             <option value="{{ $approver['id'] }}">
                                 {{ $approver['person']['name'] }}
@@ -394,16 +409,24 @@
 
 {{-- SLIDER JS --}}
 <script>
-    $(() => {
-        const range = $('#approve_limit');
+    function formatRangeValue(val) {
         const rangeValue = $('#rangeValue');
+        rangeValue.text('até R$ ' + val.toLocaleString('pt-BR'));
+    }
+    $(function() {
+        const range = $('#approve_limit');
         const hiddenInput = $('#approve_limit');
         range.attr('step', '5000');
+        const val = parseInt(range.val());
+        const step = val > 50000 ? 10000 : 5000;
+        range.attr({ step });
+        formatRangeValue(val);
+        hiddenInput.val(val); // atualiza o valor do input hidden
         range.on('input', function() {
             const val = parseInt(range.val());
             const step = val > 50000 ? 10000 : 5000;
             range.attr({ step });
-            rangeValue.text('até R$ ' + val.toLocaleString('pt-BR'));
+            formatRangeValue(val);
             hiddenInput.val(val); // atualiza o valor do input hidden
         });
     });

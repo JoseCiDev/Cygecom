@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Contracts\UserServiceInterface;
+use App\Models\CostCenter;
 use App\Models\{Address, IdentificationDocuments, Person, Phone, User, UserProfile};
 use Exception;
 use Illuminate\Support\Facades\{DB, Hash};
@@ -12,7 +13,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
 {
     public function getUserById($id): User
     {
-        return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver'])->where('id', $id)->first();
+        return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver', 'costCenter'])->where('id', $id)->first();
     }
 
     // retorna todos os usuarios menos o logado
@@ -26,6 +27,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
                    ->toArray();
     }
 
+    // retorna todos os aprovadores verificando action (rota)
     public function getApprovers($action, int $id = null)
     {
         $query = User::with(['person'])
@@ -37,6 +39,12 @@ class UserService extends ServiceProvider implements UserServiceInterface
         }
 
         return $query->get();
+    }
+
+    // retorna todos os centros de custo disponíveis
+    public function getCostCenters()
+    {
+        return CostCenter::all();
     }
 
     public function registerUser(array $request)
@@ -52,8 +60,9 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user->password         = Hash::make($request['password']);
             $user->profile_id       = $this->getProfileId($request);
             $user->person_id        = $personId;
-            $user->approver_user_id = $request['approver_user_id'];
+            $user->approver_user_id = $request['approver_user_id'] ?? null;
             $user->approve_limit    = $request['approve_limit'];
+            $user->cost_center_id   = $request['cost_center_id'] ?? null;
             $user->save();
 
             return $user;
@@ -98,6 +107,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             'profile_id'       => isset($data['profile_type']) ? UserProfile::firstWhere('name', $data['profile_type'])->id : $user->profile_id,
             'approver_user_id' => isset($data['approver_user_id']) ? User::where('id', $data['approver_user_id'])->value('id') : $user->approver_user_id,
             'approve_limit'    => $data['approve_limit'] ?? $user->approve_limit,
+            'cost_center_id'   => isset($data['cost_center_id']) ? CostCenter::where('id', $data['cost_center_id'])->value('id') : $user->cost_center_id,
         ]);
     }
 
@@ -174,5 +184,14 @@ class UserService extends ServiceProvider implements UserServiceInterface
         $profileId = DB::table('user_profiles')->where('name', $data['profile_type'])->pluck('id')->first();
 
         return $profileId;
+    }
+
+    private function getCostCenterId($data)
+    {
+        $costCenterId = isset($data['cost_center_id']) ?
+            DB::table('cost_centers')->where('name', $data['cost_center_id'])->pluck('id')->first() :
+            null;
+
+        return $costCenterId;
     }
 }
