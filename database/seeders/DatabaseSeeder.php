@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('addresses')->insert([
             'street'        => 'default',
-            'street_number' => 'default',
+            'street_number' => 1,
             'neighborhood'  => 'default',
             'postal_code'   => 'default',
             'city'          => 'default',
@@ -52,11 +52,14 @@ class DatabaseSeeder extends Seeder
         $adminId = DB::table('user_profiles')->insertGetId(['name' => 'admin']);
         DB::table('user_profiles')->insert(['name' => 'normal']);
 
+        $costCenterId = DB::table('cost_centers')->insertGetId(['name' => 'Suprimentos']);
+
         DB::table('users')->insert([
-            'email'      => 'admin@essentia.com.br',
-            'password'   => '$2y$10$ZV1gao3lgBrZZkuK6fqaFu3aSKBuzyVsJ0ny8QQCH5THPweL1fHKS',
-            'profile_id' => $adminId,
-            'person_id'  => $personId,
+            'email'          => 'admin@essentia.com.br',
+            'password'       => '$2y$10$ZV1gao3lgBrZZkuK6fqaFu3aSKBuzyVsJ0ny8QQCH5THPweL1fHKS',
+            'profile_id'     => $adminId,
+            'person_id'      => $personId,
+            'cost_center_id' => $costCenterId,
         ]);
 
         DB::table('product_categories')->insert([

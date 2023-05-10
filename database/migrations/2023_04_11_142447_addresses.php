@@ -9,13 +9,13 @@ return new class () extends Migration {
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('street');
-            $table->string('street_number');
-            $table->string('neighborhood');
-            $table->string('postal_code');
-            $table->string('city');
-            $table->string('state');
-            $table->string('country');
+            $table->string('street')->nullable();
+            $table->string('street_number')->nullable();
+            $table->string('neighborhood')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
             $table->string('complement')->nullable();
 
             $table->unsignedInteger('supplier_id')->nullable();
