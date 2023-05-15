@@ -11,45 +11,46 @@ use Illuminate\Support\ServiceProvider;
 
 class UserService extends ServiceProvider implements UserServiceInterface
 {
-    public function getUserById($id): User
+    public function getUserById(int $id): User
     {
         return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver', 'costCenter'])->where('id', $id)->first();
     }
 
-    // retorna todos os usuarios menos o logado
-    public function getUsers()
+    /**
+     * @return array Retorna um array com todos usuários, exceto logado.
+     */
+    public function getUsers(): array
     {
         $loggedId = auth()->user()->id;
-
-        return User::with('person', 'profile')
-                   ->where('id', '<>', $loggedId)
-                   ->get()
-                   ->toArray();
+        return User::with('person', 'profile')->where('id', '!=', $loggedId)->get()->toArray();
     }
 
-    // retorna todos os aprovadores verificando action (rota)
-    public function getApprovers($action, int $id = null)
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection retorna potenciais usuários aprovadores, exceto logado
+     */
+    public function getApprovers(string $action, int $id = null)
     {
-        $query = User::with(['person'])
-        ->where('profile_id', 1)
-        ->whereNull('deleted_at');
+        $isUserUpdate = $action === 'userUpdate';
+        $query = User::with(['person'])->where('profile_id', 1)->whereNull('deleted_at');
 
-        if ($action === 'userUpdate' && $id !== null) {
+        if ($isUserUpdate && $id !== null) {
             $query->where('id', '!=', $id);
         }
 
         return $query->get();
     }
 
-    // retorna todos os centros de custo disponíveis
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection retorna todos os centros de custo disponíveis
+     */
     public function getCostCenters()
     {
         return CostCenter::all();
     }
 
-    public function registerUser(array $request)
+    public function registerUser(array $request): User
     {
-        $user = DB::transaction(function () use ($request) {
+        return DB::transaction(function () use ($request) {
             $personId = $this->insertGetIdPerson($request);
             $this->registerAddress($personId, $request);
             $this->registerIdentificationDocument($personId, $request);
@@ -64,11 +65,8 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user->approve_limit    = $request['approve_limit'];
             $user->cost_center_id   = $request['cost_center_id'] ?? null;
             $user->save();
-
             return $user;
         });
-
-        return $user;
     }
 
     public function userUpdate(array $data, int $userId)
@@ -91,7 +89,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
             DB::commit();
         } catch (Exception $error) {
             DB::rollback();
-
             throw $error;
         }
     }
@@ -134,7 +131,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
     /**
      * Funções auxiliares para criação de usuário:
      */
-    private function insertGetIdPerson($request)
+    private function insertGetIdPerson(array $request)
     {
         $personId = DB::table('people')->insertGetId([
             'name'      => $request['name'],
@@ -179,7 +176,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
         DB::table('phones')->insert($phones);
     }
 
-    private function getProfileId($data)
+    private function getProfileId(array $data)
     {
         $profileId = DB::table('user_profiles')->where('name', $data['profile_type'])->pluck('id')->first();
 

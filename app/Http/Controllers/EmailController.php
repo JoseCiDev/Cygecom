@@ -9,7 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
-class EmailController extends Controller
+class EmailController extends Controller implements EmailControllerInterface
 {
     public function store(Request $request): RedirectResponse
     {

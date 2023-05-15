@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Contracts\ProductControllerInterface;
 use App\Providers\ProductService;
 use App\Providers\ValidatorService;
 use Exception;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class ProductController extends Controller implements ProductControllerInterface
 {
     private $productService;
     private $validatorService;

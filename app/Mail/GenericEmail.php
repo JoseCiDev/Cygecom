@@ -13,9 +13,11 @@ class GenericEmail extends Mailable
 
     protected $body;
     /**
-     * Create a new message instance.
+     * @param array $recipients Lista de e-mails que irão receber o e-mail
+     * @param string $subject Assunto do e-mail
+     * @param string $body Mensagem do e-mail
      */
-    public function __construct($recipients, $subject, $body)
+    public function __construct(array $recipients, string $subject, string $body)
     {
         $this->body = $body;
 

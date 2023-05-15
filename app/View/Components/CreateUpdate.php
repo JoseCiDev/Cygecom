@@ -11,7 +11,7 @@ class CreateUpdate extends Component
     public $action;
 
     public $user;
-    public function __construct($action, $user = null)
+    public function __construct(string $action, array $user = null)
     {
         $this->action = $action;
         $this->user   = $user;
