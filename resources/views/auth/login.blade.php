@@ -49,54 +49,26 @@
 
 <body class='login theme-darkblue'>
 	<div class="wrapper">
-		<h1>
-			<a href="#">
-                GECOM
-				{{-- <img src="#" alt="" class='retina-ready' width="59" height="49">FLAT</a> --}}
-		</h1>
+		<h1 style="color: #ffffff">GECOM</h1>
 		<div class="login-body">
 			<h2>Dados de acesso</h2>
+			<x-alert/>
 			<form method="POST" action="{{ route('login') }}">
                 @csrf
 				<div class="form-group">
 					<div class="email controls">
 						<input type="email" name='email' placeholder="Email" class='form-control' @error('email') is-invalid @enderror name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                        @error('email')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="pw controls">
 						<input type="password" name="password" placeholder="Senha" class='form-control' @error('password') is-invalid @enderror name="password" required autocomplete="current-password">
-
-                        @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
 					</div>
 				</div>
 				<div class="submit" style="padding-bottom: 10px;">
 					<input type="submit" value="Entrar" class='btn btn-primary'>
 				</div>
+			</form>
 		</div>
 	</div>
-	<script type="text/javascript">
-	var _gaq = _gaq || [];
-	_gaq.push(['_setAccount', 'UA-38620714-4']);
-	_gaq.push(['_trackPageview']);
-
-	(function() {
-		var ga = document.createElement('script');
-		ga.type = 'text/javascript';
-		ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0];
-		s.parentNode.insertBefore(ga, s);
-	})();
-	</script>
 </body>

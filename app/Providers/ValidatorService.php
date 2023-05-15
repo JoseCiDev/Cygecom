@@ -2,11 +2,12 @@
 
 namespace App\Providers;
 
+use App\Contracts\ValidatorServiceInterface;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
-class ValidatorService extends ServiceProvider
+class ValidatorService extends ServiceProvider implements ValidatorServiceInterface
 {
     public $requiredRules = [
         'name'           => ['required', 'string', 'max:255'],
@@ -101,14 +102,13 @@ class ValidatorService extends ServiceProvider
     {
         try {
             $validator = Validator::make($data, $this->requiredRules, $this->requiredRulesMessages);
-
             return $validator;
         } catch (Exception $error) {
             return back()->withErrors($error->getMessage())->withInput();
         }
     }
 
-    public function updateValidator($id, $data)
+    public function updateValidator(int $id, array $data)
     {
         $rules          = $this->rulesForUpdate;
         $messages       = $this->rulesForUpdateMessages;
@@ -119,7 +119,7 @@ class ValidatorService extends ServiceProvider
         return $validator;
     }
 
-    public function productValidator($data)
+    public function productValidator(array $data)
     {
         $rules = $this->rulesForProduct;
         $messages = $this->messagesForProduct;

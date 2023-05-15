@@ -27,9 +27,6 @@
                             data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                             <thead>
                                 <tr>
-                                    <th class='with-checkbox'>
-                                        <input type="checkbox" name="check_all" class="dataTable-checkall">
-                                    </th>
                                     <th class="col-md-3">Usuário</th>
                                     <th class="col-md-3">E-mail</th>
                                     <th class='hidden-350 col-md-2'>Perfil</th>
@@ -41,9 +38,6 @@
 
                                 @foreach ($users as $user)
                                 <tr>
-                                    <td class="with-checkbox">
-                                        <input type="checkbox" name="check" value="1">
-                                    </td>
                                     <td>{{$user['person']['name']}}</td>
                                     <td >{{$user['email']}}</td>
                                     <td class='hidden-350'>{{$user['profile']['name']}}</td>

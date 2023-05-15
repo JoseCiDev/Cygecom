@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Contracts\UserControllerInterface;
 use App\Http\Controllers\Controller;
-use App\Models\{CostCenter, User};
+use App\Models\User;
 use App\Providers\{UserService, ValidatorService};
 use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -25,28 +25,41 @@ class UserController extends Controller implements UserControllerInterface
     }
 
     protected $redirectTo = '/users';
-
-    public function create(array $data)
+    /**
+     * @param array $data Recebe $data pelo trait RegistersUsers do método register: $request->all();
+     * @return User|string Retorna usuário logado para manter autenticação, podendo retornar os erros no redirect;
+     */
+    public function create(array $data): User|string
     {
-        $this->validator($data);
-        $user = $this->userService->registerUser($data);
-        session()->flash('success', "Usuário cadastrado com sucesso!");
+        try {
+            $this->validator($data);
+            $user = $this->userService->registerUser($data);
 
-        return $user->first();
+            if ($user instanceof User) {
+                session()->flash('success', "Usuário cadastrado com sucesso!");
+                return $user->first();
+            } else {
+                throw new Exception("Ocorreu um erro ao criar o usuário.");
+            }
+        } catch (Exception $error) {
+            redirect()
+                ->back()
+                ->withInput()
+                ->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
+            return auth()->user();
+        }
     }
 
     public function showRegistrationForm()
     {
         $approvers   = $this->getApprovers('register');
         $costCenters = $this->getCostCenters();
-
         return view('auth.admin.register', ['approvers' => $approvers, 'costCenters' => $costCenters]);
     }
 
     public function showUsers()
     {
         $users = $this->userService->getUsers();
-
         return view('auth.admin.users', ['users' => $users]);
     }
     public function showUser($id)
@@ -61,10 +74,7 @@ class UserController extends Controller implements UserControllerInterface
             'costCenter',
         ])->where('id', $id)->whereNull('deleted_at')->first()->toArray();
 
-        // pega aprovadores para pupular select
         $approvers = $this->getApprovers('userUpdate', $id);
-
-        // pega centros de custo (setores) para pupular select
         $costCenters = $this->getCostCenters();
 
         return view('auth.admin.user', ['user' => $user, 'approvers' => $approvers, 'costCenters' => $costCenters]);
@@ -92,7 +102,6 @@ class UserController extends Controller implements UserControllerInterface
 
             if (auth()->user()->id === $id) {
                 session()->flash('success', "Seu usuário foi atualizado com sucesso!");
-
                 return redirect()->route('profile');
             }
 
@@ -121,7 +130,6 @@ class UserController extends Controller implements UserControllerInterface
     protected function validator(array $data)
     {
         $validator = $this->validatorService->registerValidator($data);
-
         return $validator;
     }
 }
