@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\EmailControllerInterface;
 use App\Http\Controllers\Controller;
 use App\Mail\GenericEmail;
 use App\Providers\UserService;
