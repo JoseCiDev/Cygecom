@@ -6,17 +6,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-color box-bordered colored">
-                <div class="box-title">
-                    <h3 style="color: white; margin-top: 5px">Atualizar seu perfil</h3>
-                </div>
-                <div class="box-content">
-                    <x-form.user.create-update
-                        action="userUpdate"
-                        :user="$user"
-                        :approvers="$approvers"
-                        :costCenters="$costCenters"
-                    />
-                </div>
+                <x-form.user.create-update action="userUpdate"  :user="$user" :approvers="$approvers" :costCenters="$costCenters" />
             </div>
         </div>
     </div>
