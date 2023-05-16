@@ -13,6 +13,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['isAdmin'])->group(function () {
         Route::get('/user/register', [App\Http\Controllers\Auth\UserController::class, 'showRegistrationForm'])->name('register');
         Route::post('/user/register', [App\Http\Controllers\Auth\UserController::class, 'register']);
+        Route::post('/user/delete/{id}', [App\Http\Controllers\Auth\UserController::class, 'delete']);
 
         Route::get('/users', [App\Http\Controllers\Auth\UserController::class, 'showUsers'])->name('users');
         Route::get('/users/{id}', [App\Http\Controllers\Auth\UserController::class, 'showUser'])->name('user');
@@ -26,6 +27,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/products/product/{id}', [App\Http\Controllers\ProductController::class, 'product'])->name('product');
         Route::post('/products/product/{id}', [App\Http\Controllers\ProductController::class, 'update'])->name('updateProduct');
-        Route::post('/products/delete/{id}', [App\Http\Controllers\ProductController::class, 'delete'])->name('deleteProduct');
+        Route::post('/products/delete/{id}', [App\Http\Controllers\ProductController::class, 'delete']);
     });
 });

@@ -34,18 +34,10 @@ class UserController extends Controller implements UserControllerInterface
         try {
             $this->validator($data);
             $user = $this->userService->registerUser($data);
-
-            if ($user instanceof User) {
-                session()->flash('success', "Usuário cadastrado com sucesso!");
-                return $user->first();
-            } else {
-                throw new Exception("Ocorreu um erro ao criar o usuário.");
-            }
+            session()->flash('success', "Usuário cadastrado com sucesso!");
+            return $user->first();
         } catch (Exception $error) {
-            redirect()
-                ->back()
-                ->withInput()
-                ->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
+            redirect()->back()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
             return auth()->user();
         }
     }
@@ -113,6 +105,18 @@ class UserController extends Controller implements UserControllerInterface
         }
     }
 
+    public function delete(int $id)
+    {
+        try {
+            $this->userService->deleteUser($id);
+        } catch (Exception $error) {
+            return redirect()->back()->withInput()->withErrors(['Não foi deletar o registro no banco de dados.', $error->getMessage()]);
+        }
+
+        session()->flash('success', "Usuário deletado com sucesso!");
+        return redirect()->route('users');
+    }
+
     // -- ver a questão do service -- \\
     private function getApprovers($action, int $id = null)
     {
@@ -127,6 +131,10 @@ class UserController extends Controller implements UserControllerInterface
         return $this->userService->getCostCenters();
     }
 
+    /**
+     * @abstract função necessária para sobreescrever validator padrão;
+     * @param array $data Recebe array da request para validação;
+     */
     protected function validator(array $data)
     {
         $validator = $this->validatorService->registerValidator($data);

@@ -44,7 +44,7 @@
                                     <td class='hidden-1024'>{{\Carbon\Carbon::parse($user['created_at'])->format('d/m/Y - H:m:s')}}</td>
                                     <td class='hidden-480'>
                                         <a href="{{route('user' , ['id' => $user['id']])}}" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
-                                        <button data-route="users" data-name="{{$user['person']['name']}}" data-id="{{$user['id']}}" rel="tooltip" title="Excluir"
+                                        <button data-route="user" data-name="{{$user['person']['name']}}" data-id="{{$user['id']}}" rel="tooltip" title="Excluir"
                                                 class="btn" data-toggle="modal" data-target="#modal"  >
                                                 <i class="fa fa-times"></i>
                                         </button>
