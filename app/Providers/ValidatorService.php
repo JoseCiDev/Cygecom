@@ -17,6 +17,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'identification' => ['required', 'string'],
         'number'         => ['required', 'string'],
         'phone_type'     => ['required', 'string'],
+        'cost_center_id'     => ['required', 'string'],
     ];
 
     public $requiredRulesMessages = [
@@ -40,6 +41,8 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'identification.required' => '"CPF" é obrigatório.',
 
         'number.required' => '"Telefone/Celular" é obrigatório.',
+
+        'cost_center_id.required' => 'Centro de custo é obrigatório'
     ];
 
     public $rulesForUpdate = [
