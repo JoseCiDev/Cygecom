@@ -1,8 +1,21 @@
 <div class="box-title">
-    <h3 style="color: white; margin-top: 5px">
-        @if (isset($user)) Atualizar usuário
-        @else Editar usuário @endif
-    </h3>
+    <div class="row">
+        <div class="col-md-6">
+            <h3 style="color: white; margin-top: 5px">
+                @if (isset($user)) Atualizar usuário
+                @else Editar usuário @endif
+            </h3>
+        </div>   
+        @if (isset($user) && auth()->user()->id !== $user['id'])
+            <div class="col-md-6 pull-right">
+                <x-modalDelete/>
+                <button data-route="user" data-name="{{$user['person']['name']}}" data-id="{{$user['id']}}" data-toggle="modal" data-target="#modal"
+                    rel="tooltip" title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
+                    Excluir usuário
+                </button>
+            </div>
+        @endif
+    </div>
 </div>
 <div class="box-content">
     @if (isset($user))
