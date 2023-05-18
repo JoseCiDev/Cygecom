@@ -25,9 +25,14 @@ class Person extends Model
     {
         return $this->hasOne(IdentificationDocuments::class);
     }
+    public function costCenter()
+    {
+        return $this->belongsTo(CostCenter::class, 'cost_center_id');
+    }
 
     protected $fillable = [
         'name',
         'birthdate',
+        'cost_center_id'
     ];
 }

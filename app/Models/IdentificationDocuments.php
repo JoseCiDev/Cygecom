@@ -16,5 +16,6 @@ class IdentificationDocuments extends Model
 
     protected $fillable = [
         'identification',
+        'type',
     ];
 }

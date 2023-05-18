@@ -14,7 +14,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
 {
     public function getUserById(int $id): User
     {
-        return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver', 'costCenter'])->where('id', $id)->first();
+        return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver', 'person.costCenter'])->where('id', $id)->first();
     }
 
     /**
@@ -64,7 +64,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user->person_id = $person->id;
             $user->approver_user_id = $request['approver_user_id'] ?? null;
             $user->approve_limit = $request['approve_limit'];
-            $user->cost_center_id = $request['cost_center_id'];
             $user->save();
 
             return $user;
@@ -113,7 +112,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
             'profile_id'       => isset($data['profile_type']) ? UserProfile::firstWhere('name', $data['profile_type'])->id : $user->profile_id,
             'approver_user_id' => isset($data['approver_user_id']) ? User::where('id', $data['approver_user_id'])->value('id') : $user->approver_user_id,
             'approve_limit'    => $data['approve_limit'] ?? $user->approve_limit,
-            'cost_center_id'   => isset($data['cost_center_id']) ? CostCenter::where('id', $data['cost_center_id'])->value('id') : $user->cost_center_id,
         ]);
     }
 

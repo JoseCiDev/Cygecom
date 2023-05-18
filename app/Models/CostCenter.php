@@ -11,23 +11,13 @@ class CostCenter extends Model
 
     protected $fillable = ['name', 'deleted_by', 'updated_by'];
 
-    public function deletedBy()
+    public function person()
     {
-        return $this->belongsTo(User::class, 'deleted_by');
+        return $this->hasMany(Person::class);
     }
 
-    public function updatedBy()
+    public function company()
     {
-        return $this->belongsTo(User::class, 'updated_by');
-    }
-
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
-
-    public static function getAll()
-    {
-        return self::all();
+        return $this->belongsTo(Company::class, 'company_id');
     }
 }
