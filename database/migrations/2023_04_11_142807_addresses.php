@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up(): void
     {
         Schema::create('addresses', function (Blueprint $table) {
@@ -23,6 +24,9 @@ return new class () extends Migration {
 
             $table->unsignedInteger('person_id')->nullable();
             $table->foreign('person_id')->references('id')->on('people');
+
+            $table->unsignedInteger('companies_id')->nullable();
+            $table->foreign('companies_id')->references('id')->on('companies');
 
             $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();

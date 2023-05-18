@@ -11,7 +11,8 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('description');
+            $table->string('name');
+            $table->string('description')->nullable();
 
             $table->unsignedInteger('product_categorie_id')->nullable();
             $table->foreign('product_categorie_id')->references('id')->on('product_categories');

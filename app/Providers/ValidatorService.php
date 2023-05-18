@@ -83,16 +83,17 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
     ];
 
     public $rulesForProduct = [
-        'description' => ['required', 'string', 'max:255', 'min:3'],
+        'name' => ['required', 'string', 'max:255', 'min:3'],
+        'description' => ['nullable', 'string', 'max:255'],
         'unit_price' => ['nullable', 'numeric', 'min:0'],
         'product_categorie_id' => ['nullable', 'numeric', 'min:1'],
         'updated_by' => ['nullable', 'numeric', 'min:1'],
     ];
 
     public $messagesForProduct = [
-        'description.required' => 'A descrição é obrigatória',
-        'description.min' => 'A descrição deve possuir pelo menos :min caracteres.',
-        'description.max' => 'A descrição deve possuir no máximo :max caracteres.',
+        'name.required' => 'O nome é obrigatório',
+        'name.min' => 'O nome deve possuir pelo menos :min caracteres.',
+        'name.max' => 'O nome deve possuir no máximo :max caracteres.',
 
         'unit_price.number' => 'O preço unitário aceita apenas números.',
         'unit_price.min' => 'O preço unitário não aceita valores negativos.',

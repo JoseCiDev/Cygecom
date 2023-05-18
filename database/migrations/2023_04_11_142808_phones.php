@@ -4,19 +4,23 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up(): void
     {
-        Schema::create('identification_documents', function (Blueprint $table) {
+        Schema::create('phones', function (Blueprint $table) {
             $table->increments('id');
-
-            $table->string('identification')->index();
+            $table->string('number', 15)->index();
+            $table->enum('phone_type', ['personal', 'commercial'])->nullable();
 
             $table->unsignedInteger('person_id')->nullable();
             $table->foreign('person_id')->references('id')->on('people');
 
             $table->unsignedInteger('supplier_id')->nullable();
             $table->foreign('supplier_id')->references('id')->on('suppliers');
+
+            $table->unsignedInteger('companies_id')->nullable();
+            $table->foreign('companies_id')->references('id')->on('companies');
 
             $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
@@ -26,6 +30,6 @@ return new class () extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('identification_documents');
+        Schema::dropIfExists('phones');
     }
 };

@@ -54,17 +54,17 @@ class UserController extends Controller implements UserControllerInterface
         $users = $this->userService->getUsers();
         return view('auth.admin.users', ['users' => $users]);
     }
-    public function showUser($id)
+    public function showUser(int $id)
     {
         $user = User::with([
             'person',
             'person.address',
             'person.phone',
             'person.identification',
+            'person.costCenter',
             'profile',
             'approver',
-            'costCenter',
-        ])->where('id', $id)->whereNull('deleted_at')->first()->toArray();
+        ])->where('id', $id)->whereNull('deleted_at')->first();
 
         $approvers = $this->getApprovers('userUpdate', $id);
         $costCenters = $this->getCostCenters();

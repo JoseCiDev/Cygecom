@@ -2,14 +2,21 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up(): void
     {
         Schema::create('cost_centers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+
+            $table->unsignedInteger('company_id');
+            $table->foreign('company_id')->references('id')->on('companies');
+
+            $table->string('senior_code')->nullable();
 
             $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();

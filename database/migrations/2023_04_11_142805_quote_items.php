@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up(): void
     {
         Schema::create('quote_items', function (Blueprint $table) {
@@ -17,6 +18,12 @@ return new class () extends Migration {
 
             $table->unsignedInteger('purchase_quote_id');
             $table->foreign('purchase_quote_id')->references('id')->on('purchase_quotes')->onDelete('cascade');
+
+            $table->unsignedInteger('product_categories_id')->nullable();
+            $table->foreign('product_categories_id')->references('id')->on('product_categories')->onDelete('cascade');
+
+            $table->unsignedInteger('product_id')->nullable();
+            $table->foreign('product_id')->references('id')->on('products');
 
             $table->string('description')->nullable();
             $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
