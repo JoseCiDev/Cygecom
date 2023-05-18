@@ -342,16 +342,14 @@
                     </div>
                 </div>
                 <div class="row">
-                    {{-- CENTRO DE CUSTO --}}
                     <div class="col-sm-3">
                         <label for="cost_center_id" class="control-label"><sup style="color:red">*</sup>Setor</label>
                         @if (isset($user))
-                            <select name="cost_center_id" id="cost_center_id" class='chosen-select form-control @error('cost_center_id') is-invalid @enderror' required data-rule-required="true" data-rule-email="true">
-                                <option value="" disabled selected>Selecione uma opção/option>
+                            <select name="cost_center_id" id="cost_center_id" class='chosen-select form-control @error('cost_center_id') is-invalid @enderror' required data-rule-required="true">
+                                <option value="" disabled {{ isset($user->person->costCenter) ? '' : 'selected' }}>Selecione uma opção</option>
                                 @foreach($costCenters as $costCenter)
-                                    <option value="{{ $costCenter->id }}"
-                                        {{ $user['cost_center_id'] == $costCenter->id ? 'selected' : '' }}>
-                                        {{ $costCenter->name }}
+                                    <option value="{{ $costCenter->id }}" {{ isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id ? 'selected' : '' }}>
+                                        {{ $costCenter->name  }}
                                     </option>
                                 @endforeach
                             </select>

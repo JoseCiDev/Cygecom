@@ -14,7 +14,7 @@
                             <h3 style="color: white; margin-top: 5px" class="pull-left">Atualizar produto</h3>
                         </div>
                         <div class="col-md-6 pull-right">
-                            <button data-route="products" data-name="{{$product->description}}" data-id="{{$product->id}}" data-toggle="modal" data-target="#modal"
+                            <button data-route="products" data-name="{{$product->name}}" data-id="{{$product->id}}" data-toggle="modal" data-target="#modal"
                                 rel="tooltip" title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
                                 Excluir produto
                             </button>
@@ -28,9 +28,9 @@
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="form-group">
-                                    <label for="description" class="control-label"><sup style="color:red">*</sup>Nome/Descrição</label>
-                                    <input type="text" name="description" id="description" placeholder="Exemplo: Becker de Vidro 250ml" class="form-control" value="{{$product->description}}"> 
-                                    @error('description')<strong>{{ $message }}</strong>@enderror
+                                    <label for="name" class="control-label"><sup style="color:red">*</sup>Nome</label>
+                                    <input type="text" name="name" id="name" placeholder="Exemplo: Becker de Vidro 250ml" class="form-control" value="{{$product->name}}"> 
+                                    @error('name')<strong>{{ $message }}</strong>@enderror
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -50,7 +50,7 @@
                                         <select name="product_categorie_id" id="product_categorie_id" class='chosen-select form-control'>
                                             <option value="">Categoria</option>
                                             @foreach ($categories as $categorie)
-                                                <option value="{{$categorie->id}}" @if ($product->categorie->id === $categorie->id) selected @endif >
+                                                <option value="{{$categorie->id}}" @if (isset($product->categorie) && $product->categorie->id === $categorie->id) selected @endif >
                                                     {{$categorie->name}}
                                                 </option>
                                             @endforeach
@@ -58,6 +58,15 @@
                                     </div>
                                 </div>
                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label for="description" class="control-label">Descrição</label>
+                                    <textarea name="description" id="description" placeholder="Descrição do produto..." class="form-control">{{$product->description}}</textarea>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">

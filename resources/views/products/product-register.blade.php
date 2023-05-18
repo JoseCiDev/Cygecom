@@ -17,9 +17,9 @@
                             <div class="row">
                                 <div class="col-md-7">
                                     <div class="form-group">
-                                        <label for="description" class="control-label"><sup style="color:red">*</sup>Nome/Descrição</label>
-                                        <input type="text" name="description" id="description" placeholder="Exemplo: Becker de Vidro 250ml" class="form-control" required>
-                                        @error('description')<strong>{{ $message }}</strong>@enderror
+                                        <label for="name" class="control-label"><sup style="color:red">*</sup>Nome/Descrição</label>
+                                        <input type="text" name="name" id="name" placeholder="Exemplo: Becker de Vidro 250ml" class="form-control" required>
+                                        @error('name')<strong>{{ $message }}</strong>@enderror
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -45,6 +45,15 @@
                                         </div>
                                     </div>
                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label for="description" class="control-label">Descrição</label>
+                                        <textarea name="description" id="description" placeholder="Descrição do produto..." class="form-control"></textarea>
+                                        @error('description')<strong>{{ $message }}</strong>@enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

@@ -38,13 +38,13 @@
 
                                 @foreach ($products as $product)
                                 <tr>
-                                    <td>{{$product->description}}</td>
+                                    <td>{{$product->name}}</td>
                                     <td >{{$product->categorie->name ?? "Não definida"}}</td>
                                     <td class='hidden-1024'><strong>{{$product->unit_price}}</strong></td>
                                     <td class='hidden-350'>{{\Carbon\Carbon::parse($product->updated_at)->format('d/m/Y - H:m:s')}}</td>
                                     <td class='hidden-480'>
                                         <a href="{{route('product', ['id' => $product->id])}}" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
-                                        <button data-route="products" data-name="{{$product->description}}" data-id="{{$product->id}}" rel="tooltip" title="Excluir"
+                                        <button data-route="products" data-name="{{$product->name}}" data-id="{{$product->id}}" rel="tooltip" title="Excluir"
                                                 class="btn" data-toggle="modal" data-target="#modal"  ><i class="fa fa-times"></i>
                                         </button>
                                     </td>
