@@ -13,8 +13,8 @@ return new class() extends Migration
             $table->increments('id');
             $table->string('name');
 
-            $table->unsignedInteger('companies_id');
-            $table->foreign('companies_id')->references('id')->on('companies');
+            $table->unsignedInteger('company_id');
+            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('senior_code')->nullable();
 
