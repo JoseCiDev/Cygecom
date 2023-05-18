@@ -3,8 +3,7 @@
 namespace App\Contracts;
 
 use App\Models\User;
-use App\Providers\UserService;
-use App\Providers\ValidatorService;
+use App\Providers\{UserService, ValidatorService};
 use Illuminate\Http\Request;
 
 interface UserControllerInterface

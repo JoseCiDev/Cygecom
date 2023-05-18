@@ -19,6 +19,7 @@ class ProfileController extends Controller implements ProfileControllerInterface
         $user        = $this->userService->getUserById(auth()->user()->id);
         $approvers   = $this->userService->getApprovers('userUpdate', $user->id);
         $costCenters = $this->userService->getCostCenters();
+
         return view('profile', compact('user', 'approvers', 'costCenters'));
     }
 }

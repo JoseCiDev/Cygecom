@@ -33,6 +33,6 @@ class Person extends Model
     protected $fillable = [
         'name',
         'birthdate',
-        'cost_center_id'
+        'cost_center_id',
     ];
 }

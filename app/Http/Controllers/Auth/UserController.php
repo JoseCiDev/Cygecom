@@ -35,9 +35,11 @@ class UserController extends Controller implements UserControllerInterface
             $this->validator($data);
             $user = $this->userService->registerUser($data);
             session()->flash('success', "Usuário cadastrado com sucesso!");
+
             return $user->first();
         } catch (Exception $error) {
             redirect()->back()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
+
             return auth()->user();
         }
     }
@@ -46,12 +48,14 @@ class UserController extends Controller implements UserControllerInterface
     {
         $approvers   = $this->getApprovers('register');
         $costCenters = $this->getCostCenters();
+
         return view('auth.admin.register', ['approvers' => $approvers, 'costCenters' => $costCenters]);
     }
 
     public function showUsers()
     {
         $users = $this->userService->getUsers();
+
         return view('auth.admin.users', ['users' => $users]);
     }
     public function showUser(int $id)
@@ -66,7 +70,7 @@ class UserController extends Controller implements UserControllerInterface
             'approver',
         ])->where('id', $id)->whereNull('deleted_at')->first();
 
-        $approvers = $this->getApprovers('userUpdate', $id);
+        $approvers   = $this->getApprovers('userUpdate', $id);
         $costCenters = $this->getCostCenters();
 
         return view('auth.admin.user', ['user' => $user, 'approvers' => $approvers, 'costCenters' => $costCenters]);
@@ -94,6 +98,7 @@ class UserController extends Controller implements UserControllerInterface
 
             if (auth()->user()->id === $id) {
                 session()->flash('success', "Seu usuário foi atualizado com sucesso!");
+
                 return redirect()->route('profile');
             }
 
@@ -114,6 +119,7 @@ class UserController extends Controller implements UserControllerInterface
         }
 
         session()->flash('success', "Usuário deletado com sucesso!");
+
         return redirect()->route('users');
     }
 
@@ -138,6 +144,7 @@ class UserController extends Controller implements UserControllerInterface
     protected function validator(array $data)
     {
         $validator = $this->validatorService->registerValidator($data);
+
         return $validator;
     }
 }

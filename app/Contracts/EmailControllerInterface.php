@@ -3,8 +3,7 @@
 namespace App\Contracts;
 
 use App\Providers\UserService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\{RedirectResponse, Request};
 
 interface EmailControllerInterface
 {

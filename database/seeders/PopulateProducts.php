@@ -574,7 +574,7 @@ class PopulateProducts extends Seeder
                 ['name' => "Garra Para Bureta Giratória Com Mufla 60 Mm - MET-112C", 'product_categorie_id' => 2, 'unit_price' => 49.6],
                 ['name' => "Proveta graduada - Calibrada - capacidade de 50mL", 'product_categorie_id' => 2, 'unit_price' => 71.5],
                 ['name' => "Proveta graduada - Calibrada - capacidade de 100mL", 'product_categorie_id' => 2, 'unit_price' => 72.5],
-                ['name' => "Kit Filtração à vacuo - Vidro boro 3.3 250/300 com frasco erelnmeyer 500mL - Frasco com boca esmirilhada para formação de vácuo.",  'product_categorie_id' => 2,  'unit_price' => 1860,],
+                ['name' => "Kit Filtração à vacuo - Vidro boro 3.3 250/300 com frasco erelnmeyer 500mL - Frasco com boca esmirilhada para formação de vácuo.",  'product_categorie_id' => 2,  'unit_price' => 1860, ],
                 ['name' => 'Kit Filtração à vácuo - Vidro boro 3.3 - Somente a parte de cima (Funil com base de vidro e adaptador para vácuo, tipo placa porosa + copo com capacidade de 300mL). Ver obs.', 'product_categorie_id' => 2, 'unit_price' => 1395],
                 ['name' => "Escova Para Limpeza De Vidrarias - Modelo 2250", 'product_categorie_id' => 2, 'unit_price' => 16.11],
                 ['name' => "Escova Para Limpeza De Vidrarias - Modelo 2260", 'product_categorie_id' => 2, 'unit_price' => 16.11],

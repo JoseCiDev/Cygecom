@@ -23,6 +23,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
     public function getUsers()
     {
         $loggedId = auth()->user()->id;
+
         return User::with('person', 'profile')->where('id', '!=', $loggedId)->whereNull('deleted_at')->get();
     }
 
@@ -32,7 +33,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
     public function getApprovers(string $action, int $id = null)
     {
         $isUserUpdate = $action === 'userUpdate';
-        $query = User::with(['person'])->where('profile_id', 1)->whereNull('deleted_at');
+        $query        = User::with(['person'])->where('profile_id', 1)->whereNull('deleted_at');
 
         if ($isUserUpdate && $id !== null) {
             $query->where('id', '!=', $id);
@@ -57,13 +58,13 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $this->createIdentificationDocument($person, $request);
             $this->createPhone($person, $request);
 
-            $user = new User();
-            $user->email = $request['email'];
-            $user->password = Hash::make($request['password']);
-            $user->profile_id = $this->getProfileId($request);
-            $user->person_id = $person->id;
+            $user                   = new User();
+            $user->email            = $request['email'];
+            $user->password         = Hash::make($request['password']);
+            $user->profile_id       = $this->getProfileId($request);
+            $user->person_id        = $person->id;
             $user->approver_user_id = $request['approver_user_id'] ?? null;
-            $user->approve_limit = $request['approve_limit'];
+            $user->approve_limit    = $request['approve_limit'];
             $user->save();
 
             return $user;
@@ -90,12 +91,13 @@ class UserService extends ServiceProvider implements UserServiceInterface
             DB::commit();
         } catch (Exception $error) {
             DB::rollback();
+
             throw $error;
         }
     }
     public function deleteUser(int $id)
     {
-        $user = User::find($id);
+        $user             = User::find($id);
         $user->deleted_at = Carbon::now();
         $user->deleted_by = auth()->user()->id;
         $user->save();

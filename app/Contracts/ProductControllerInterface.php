@@ -2,8 +2,7 @@
 
 namespace App\Contracts;
 
-use App\Providers\ProductService;
-use App\Providers\ValidatorService;
+use App\Providers\{ProductService, ValidatorService};
 use Illuminate\Http\Request;
 
 interface ProductControllerInterface

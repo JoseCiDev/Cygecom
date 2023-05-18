@@ -9,7 +9,8 @@ use Illuminate\Queue\SerializesModels;
 
 class GenericEmail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     protected $body;
     /**
@@ -34,6 +35,7 @@ class GenericEmail extends Mailable
     public function content(): Content
     {
         $html = view('mails.generic', ['body' => $this->body])->render();
+
         return new Content(
             html: $html,
         );

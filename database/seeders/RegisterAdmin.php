@@ -24,7 +24,7 @@ class RegisterAdmin extends Seeder
 
         DB::table('identification_documents')->insert([
             'identification' => '01234567812',
-            'type' => 'cpf',
+            'type'           => 'cpf',
             'person_id'      => $personId,
         ]);
 
@@ -35,10 +35,10 @@ class RegisterAdmin extends Seeder
         ]);
 
         DB::table('users')->insert([
-            'email'          => 'admin@essentia.com.br',
-            'password'       => '$2y$10$ZV1gao3lgBrZZkuK6fqaFu3aSKBuzyVsJ0ny8QQCH5THPweL1fHKS',
-            'profile_id'     => 1,
-            'person_id'      => $personId,
+            'email'      => 'admin@essentia.com.br',
+            'password'   => '$2y$10$ZV1gao3lgBrZZkuK6fqaFu3aSKBuzyVsJ0ny8QQCH5THPweL1fHKS',
+            'profile_id' => 1,
+            'person_id'  => $personId,
         ]);
     }
 }
