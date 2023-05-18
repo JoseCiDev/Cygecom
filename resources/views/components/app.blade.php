@@ -40,11 +40,6 @@
 
     <!-- Masked inputs -->
 	<script src="{{asset('js/plugins/maskedinput/jquery.maskedinput.min.js')}}"></script>
-
-    <!-- Validation -->
-	<script src="{{asset('js/plugins/validation/jquery.validate.min.js')}}"></script>
-	<script src="{{asset('js/plugins/validation/additional-methods.min.js')}}"></script>
-
 	<!-- jQuery UI -->
 	<script src="{{asset('js/plugins/jquery-ui/jquery-ui.js')}}"></script>
 	<!-- Touch enable for jquery UI -->
@@ -77,8 +72,13 @@
 	<script src="{{asset('js/plugins/chosen/chosen.jquery.min.js')}}"></script>
 	<!-- select2 -->
 	<script src="{{asset('js/plugins/select2/select2.min.js')}}"></script>
+    <!-- multi select -->
+	<link rel="stylesheet" href="{{asset('css/plugins/multiselect/multi-select.css')}}">
 	<!-- icheck -->
 	<script src="{{asset('js/plugins/icheck/jquery.icheck.min.js')}}"></script>
+
+    <!-- MultiSelect -->
+	<script src="{{ asset('js/plugins/multiselect/jquery.multi-select.js') }}"></script>
 
 	<!-- Theme framework -->
 	<script src="{{asset('js/eakroko.min.js')}}"></script>
@@ -90,6 +90,10 @@
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="{{asset('img/favicon.ico')}}" />
 	<!-- Apple devices Homescreen icon -->
+
+    <!-- Validation -->
+	<script src="{{asset('js/plugins/validation/jquery.validate.min.js')}}"></script>
+	<script src="{{asset('js/plugins/validation/additional-methods.min.js')}}"></script>
 
 	<!-- New DataTables -->
 	<script src="{{asset('js/plugins/momentjs/jquery.moment.min.js')}}"></script>
@@ -108,20 +112,20 @@
 				<div class="container-fluid">
 					<x-navbar.logo/>
 					<ul class='main-nav'>
-						<x-navbar.menu-item route="home" title="Dashboard"/>
+						<x-navbar.menu-item route="home" title="DASHBOARD"/>
 						@if (auth()->user()->profile->name === 'admin')
 
-							<x-navbar.menu-item route="users" title="Usuários"/>
+							<x-navbar.menu-item route="users" title="USUÁRIOS"/>
 
 						@endif
 
-						<x-navbar.menu-item-dropdown route="home" title="Req. Compras"/>
-						<x-navbar.menu-item-dropdown route="home" title="Cotações"/>
+						<x-navbar.menu-item route="requests" title="SOLICITAÇÕES"/>
+						<x-navbar.menu-item route="home" title="COTAÇÕES"/>
 
 						@if (auth()->user()->profile->name === 'admin')
 
-							<x-navbar.menu-item-dropdown route="home" title="Ordens de Compra"/>
-							<x-navbar.menu-item-dropdown route="home" title="Integração Sênior"/>
+							<x-navbar.menu-item-dropdown route="home" title="ORDENS DE COMPRA"/>
+							<x-navbar.menu-item-dropdown route="home" title="INTEGRAÇÃO SÊNIOR"/>
 
 						@endif
 					</ul>
