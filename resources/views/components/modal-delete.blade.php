@@ -30,6 +30,8 @@
         let action = '#'
         if(route === 'products') {
             action = `/products/delete/${id}`
+        } else if (route === 'user') {
+            action = `/user/delete/${id}` 
         }
 
         modal.find('.name').text(name);

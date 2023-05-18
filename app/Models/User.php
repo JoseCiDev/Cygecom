@@ -29,25 +29,18 @@ class User extends Authenticatable
         return $this->belongsTo(UserProfile::class, 'profile_id');
     }
 
-    public function costCenter()
-    {
-        return $this->belongsTo(CostCenter::class);
-    }
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        // 'name',
         'email',
         'password',
         'profile_id',
         'person_id',
         'approver_user_id',
         'approve_limit',
-        'cost_center_id',
     ];
 
     /**

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\ProfileControllerInterface;
 use App\Providers\UserService;
 
-class ProfileController extends Controller
+class ProfileController extends Controller implements ProfileControllerInterface
 {
     protected $userService;
 

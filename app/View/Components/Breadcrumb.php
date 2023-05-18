@@ -9,7 +9,7 @@ class Breadcrumb extends Component
 {
     public $items;
 
-    private $itemsMap = [
+    private array $itemsMap = [
         'users' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'users', 'label' => 'Usuários'],

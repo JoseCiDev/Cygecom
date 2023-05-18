@@ -2,11 +2,12 @@
 
 namespace App\Providers;
 
+use App\Contracts\ValidatorServiceInterface;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
-class ValidatorService extends ServiceProvider
+class ValidatorService extends ServiceProvider implements ValidatorServiceInterface
 {
     public $requiredRules = [
         'name'           => ['required', 'string', 'max:255'],
@@ -16,6 +17,7 @@ class ValidatorService extends ServiceProvider
         'identification' => ['required', 'string'],
         'number'         => ['required', 'string'],
         'phone_type'     => ['required', 'string'],
+        'cost_center_id' => ['required', 'string'],
     ];
 
     public $requiredRulesMessages = [
@@ -39,6 +41,8 @@ class ValidatorService extends ServiceProvider
         'identification.required' => '"CPF" é obrigatório.',
 
         'number.required' => '"Telefone/Celular" é obrigatório.',
+
+        'cost_center_id.required' => 'Centro de custo é obrigatório',
     ];
 
     public $rulesForUpdate = [
@@ -79,22 +83,23 @@ class ValidatorService extends ServiceProvider
     ];
 
     public $rulesForProduct = [
-        'description' => ['required', 'string', 'max:255', 'min:3'],
-        'unit_price' => ['nullable', 'numeric', 'min:0'],
+        'name'                 => ['required', 'string', 'max:255', 'min:3'],
+        'description'          => ['nullable', 'string', 'max:255'],
+        'unit_price'           => ['nullable', 'numeric', 'min:0'],
         'product_categorie_id' => ['nullable', 'numeric', 'min:1'],
-        'updated_by' => ['nullable', 'numeric', 'min:1'],
+        'updated_by'           => ['nullable', 'numeric', 'min:1'],
     ];
 
     public $messagesForProduct = [
-        'description.required' => 'A descrição é obrigatória',
-        'description.min' => 'A descrição deve possuir pelo menos :min caracteres.',
-        'description.max' => 'A descrição deve possuir no máximo :max caracteres.',
+        'name.required' => 'O nome é obrigatório',
+        'name.min'      => 'O nome deve possuir pelo menos :min caracteres.',
+        'name.max'      => 'O nome deve possuir no máximo :max caracteres.',
 
         'unit_price.number' => 'O preço unitário aceita apenas números.',
-        'unit_price.min' => 'O preço unitário não aceita valores negativos.',
+        'unit_price.min'    => 'O preço unitário não aceita valores negativos.',
 
         'updated_by.numeric' => 'O ID do usuário que atualizou o produto deve ser numérico.',
-        'updated_by.min' => 'O ID do usuário que atualizou o produto não pode ser negativo.',
+        'updated_by.min'     => 'O ID do usuário que atualizou o produto não pode ser negativo.',
     ];
 
     public function registerValidator(array $data)
@@ -108,7 +113,7 @@ class ValidatorService extends ServiceProvider
         }
     }
 
-    public function updateValidator($id, $data)
+    public function updateValidator(int $id, array $data)
     {
         $rules          = $this->rulesForUpdate;
         $messages       = $this->rulesForUpdateMessages;
@@ -119,11 +124,12 @@ class ValidatorService extends ServiceProvider
         return $validator;
     }
 
-    public function productValidator($data)
+    public function productValidator(array $data)
     {
-        $rules = $this->rulesForProduct;
-        $messages = $this->messagesForProduct;
+        $rules     = $this->rulesForProduct;
+        $messages  = $this->messagesForProduct;
         $validator = Validator::make($data, $rules, $messages);
+
         return $validator;
     }
 }

@@ -5,70 +5,70 @@ namespace App\Providers;
 use App\Contracts\UserServiceInterface;
 use App\Models\CostCenter;
 use App\Models\{Address, IdentificationDocuments, Person, Phone, User, UserProfile};
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\{DB, Hash};
 use Illuminate\Support\ServiceProvider;
 
 class UserService extends ServiceProvider implements UserServiceInterface
 {
-    public function getUserById($id): User
+    public function getUserById(int $id): User
     {
-        return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver', 'costCenter'])->where('id', $id)->first();
+        return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver', 'person.costCenter'])->where('id', $id)->first();
     }
 
-    // retorna todos os usuarios menos o logado
+    /**
+     * @return array Retorna um array com todos usuários, exceto logado.
+     */
     public function getUsers()
     {
         $loggedId = auth()->user()->id;
 
-        return User::with('person', 'profile')
-                   ->where('id', '<>', $loggedId)
-                   ->get()
-                   ->toArray();
+        return User::with('person', 'profile')->where('id', '!=', $loggedId)->whereNull('deleted_at')->get();
     }
 
-    // retorna todos os aprovadores verificando action (rota)
-    public function getApprovers($action, int $id = null)
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection retorna potenciais usuários aprovadores, exceto logado
+     */
+    public function getApprovers(string $action, int $id = null)
     {
-        $query = User::with(['person'])
-        ->where('profile_id', 1)
-        ->whereNull('deleted_at');
+        $isUserUpdate = $action === 'userUpdate';
+        $query        = User::with(['person'])->where('profile_id', 1)->whereNull('deleted_at');
 
-        if ($action === 'userUpdate' && $id !== null) {
+        if ($isUserUpdate && $id !== null) {
             $query->where('id', '!=', $id);
         }
 
         return $query->get();
     }
 
-    // retorna todos os centros de custo disponíveis
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection retorna todos os centros de custo disponíveis
+     */
     public function getCostCenters()
     {
         return CostCenter::all();
     }
 
-    public function registerUser(array $request)
+    public function registerUser(array $request): User
     {
-        $user = DB::transaction(function () use ($request) {
-            $personId = $this->insertGetIdPerson($request);
-            $this->registerAddress($personId, $request);
-            $this->registerIdentificationDocument($personId, $request);
-            $this->registerPhone($personId, $request);
+        return DB::transaction(function () use ($request) {
+            $person = $this->createPerson($request);
+            $this->createAddress($person, $request);
+            $this->createIdentificationDocument($person, $request);
+            $this->createPhone($person, $request);
 
             $user                   = new User();
             $user->email            = $request['email'];
             $user->password         = Hash::make($request['password']);
             $user->profile_id       = $this->getProfileId($request);
-            $user->person_id        = $personId;
+            $user->person_id        = $person->id;
             $user->approver_user_id = $request['approver_user_id'] ?? null;
             $user->approve_limit    = $request['approve_limit'];
-            $user->cost_center_id   = $request['cost_center_id'] ?? null;
             $user->save();
 
             return $user;
         });
-
-        return $user;
     }
 
     public function userUpdate(array $data, int $userId)
@@ -95,6 +95,13 @@ class UserService extends ServiceProvider implements UserServiceInterface
             throw $error;
         }
     }
+    public function deleteUser(int $id)
+    {
+        $user             = User::find($id);
+        $user->deleted_at = Carbon::now();
+        $user->deleted_by = auth()->user()->id;
+        $user->save();
+    }
 
     /**
      * Funções auxiliares para atualizar usuário:
@@ -107,7 +114,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
             'profile_id'       => isset($data['profile_type']) ? UserProfile::firstWhere('name', $data['profile_type'])->id : $user->profile_id,
             'approver_user_id' => isset($data['approver_user_id']) ? User::where('id', $data['approver_user_id'])->value('id') : $user->approver_user_id,
             'approve_limit'    => $data['approve_limit'] ?? $user->approve_limit,
-            'cost_center_id'   => isset($data['cost_center_id']) ? CostCenter::where('id', $data['cost_center_id'])->value('id') : $user->cost_center_id,
         ]);
     }
 
@@ -134,52 +140,29 @@ class UserService extends ServiceProvider implements UserServiceInterface
     /**
      * Funções auxiliares para criação de usuário:
      */
-    private function insertGetIdPerson($request)
+    private function createPerson(array $request): Person
     {
-        $personId = DB::table('people')->insertGetId([
-            'name'      => $request['name'],
-            'birthdate' => $request['birthdate'],
-        ]);
-
-        return $personId;
+        return Person::create($request);
     }
 
-    private function registerAddress(int $personId, array $data): void
+    private function createAddress(Person $person, array $request): void
     {
-        $addresses = [
-            'street'        => $data['street'],
-            'street_number' => $data['street_number'],
-            'neighborhood'  => $data['neighborhood'],
-            'postal_code'   => $data['postal_code'],
-            'city'          => $data['city'],
-            'state'         => $data['state'],
-            'country'       => $data['country'],
-            'person_id'     => $personId,
-            'complement'    => $data['complement'],
-        ];
-        DB::table('addresses')->insert($addresses);
+        $address = new Address($request);
+        $person->address()->save($address);
     }
 
-    private function registerIdentificationDocument(int $personId, array $data): void
+    private function createIdentificationDocument(Person $person, array $request): void
     {
-        $identification_documents = [
-            'identification' => $data['identification'],
-            'person_id'      => $personId,
-        ];
-        DB::table('identification_documents')->insert($identification_documents);
+        $identificationDocument = new IdentificationDocuments($request);
+        $person->identification()->save($identificationDocument);
     }
 
-    private function registerPhone(int $personId, array $data): void
+    private function createPhone(Person $person, array $request): void
     {
-        $phones = [
-            'number'     => $data['number'],
-            'phone_type' => $data['phone_type'],
-            'person_id'  => $personId,
-        ];
-        DB::table('phones')->insert($phones);
+        $phone = new Phone($request);
+        $person->phone()->save($phone);
     }
-
-    private function getProfileId($data)
+    private function getProfileId(array $data)
     {
         $profileId = DB::table('user_profiles')->where('name', $data['profile_type'])->pluck('id')->first();
 

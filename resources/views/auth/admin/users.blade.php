@@ -27,9 +27,6 @@
                             data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                             <thead>
                                 <tr>
-                                    <th class='with-checkbox'>
-                                        <input type="checkbox" name="check_all" class="dataTable-checkall">
-                                    </th>
                                     <th class="col-md-3">Usuário</th>
                                     <th class="col-md-3">E-mail</th>
                                     <th class='hidden-350 col-md-2'>Perfil</th>
@@ -41,16 +38,13 @@
 
                                 @foreach ($users as $user)
                                 <tr>
-                                    <td class="with-checkbox">
-                                        <input type="checkbox" name="check" value="1">
-                                    </td>
                                     <td>{{$user['person']['name']}}</td>
                                     <td >{{$user['email']}}</td>
                                     <td class='hidden-350'>{{$user['profile']['name']}}</td>
                                     <td class='hidden-1024'>{{\Carbon\Carbon::parse($user['created_at'])->format('d/m/Y - H:m:s')}}</td>
                                     <td class='hidden-480'>
                                         <a href="{{route('user' , ['id' => $user['id']])}}" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
-                                        <button data-route="users" data-name="{{$user['person']['name']}}" data-id="{{$user['id']}}" rel="tooltip" title="Excluir"
+                                        <button data-route="user" data-name="{{$user['person']['name']}}" data-id="{{$user['id']}}" rel="tooltip" title="Excluir"
                                                 class="btn" data-toggle="modal" data-target="#modal"  >
                                                 <i class="fa fa-times"></i>
                                         </button>

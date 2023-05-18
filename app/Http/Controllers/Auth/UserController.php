@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Contracts\UserControllerInterface;
 use App\Http\Controllers\Controller;
-use App\Models\{CostCenter, User};
+use App\Models\User;
 use App\Providers\{UserService, ValidatorService};
 use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -25,14 +25,23 @@ class UserController extends Controller implements UserControllerInterface
     }
 
     protected $redirectTo = '/users';
-
-    public function create(array $data)
+    /**
+     * @param array $data Recebe $data pelo trait RegistersUsers do método register: $request->all();
+     * @return User|string Retorna usuário logado para manter autenticação, podendo retornar os erros no redirect;
+     */
+    public function create(array $data): User|string
     {
-        $this->validator($data);
-        $user = $this->userService->registerUser($data);
-        session()->flash('success', "Usuário cadastrado com sucesso!");
+        try {
+            $this->validator($data);
+            $user = $this->userService->registerUser($data);
+            session()->flash('success', "Usuário cadastrado com sucesso!");
 
-        return $user->first();
+            return $user->first();
+        } catch (Exception $error) {
+            redirect()->back()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
+
+            return auth()->user();
+        }
     }
 
     public function showRegistrationForm()
@@ -49,22 +58,19 @@ class UserController extends Controller implements UserControllerInterface
 
         return view('auth.admin.users', ['users' => $users]);
     }
-    public function showUser($id)
+    public function showUser(int $id)
     {
         $user = User::with([
             'person',
             'person.address',
             'person.phone',
             'person.identification',
+            'person.costCenter',
             'profile',
             'approver',
-            'costCenter',
-        ])->where('id', $id)->whereNull('deleted_at')->first()->toArray();
+        ])->where('id', $id)->whereNull('deleted_at')->first();
 
-        // pega aprovadores para pupular select
-        $approvers = $this->getApprovers('userUpdate', $id);
-
-        // pega centros de custo (setores) para pupular select
+        $approvers   = $this->getApprovers('userUpdate', $id);
         $costCenters = $this->getCostCenters();
 
         return view('auth.admin.user', ['user' => $user, 'approvers' => $approvers, 'costCenters' => $costCenters]);
@@ -104,6 +110,19 @@ class UserController extends Controller implements UserControllerInterface
         }
     }
 
+    public function delete(int $id)
+    {
+        try {
+            $this->userService->deleteUser($id);
+        } catch (Exception $error) {
+            return redirect()->back()->withInput()->withErrors(['Não foi deletar o registro no banco de dados.', $error->getMessage()]);
+        }
+
+        session()->flash('success', "Usuário deletado com sucesso!");
+
+        return redirect()->route('users');
+    }
+
     // -- ver a questão do service -- \\
     private function getApprovers($action, int $id = null)
     {
@@ -118,6 +137,10 @@ class UserController extends Controller implements UserControllerInterface
         return $this->userService->getCostCenters();
     }
 
+    /**
+     * @abstract função necessária para sobreescrever validator padrão;
+     * @param array $data Recebe array da request para validação;
+     */
     protected function validator(array $data)
     {
         $validator = $this->validatorService->registerValidator($data);

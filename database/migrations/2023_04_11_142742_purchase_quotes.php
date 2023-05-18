@@ -11,12 +11,13 @@ return new class () extends Migration {
             $table->increments('id');
 
             $table->string('description');
+            $table->integer('quantity')->default(1);
             $table->enum('status', ['pending', 'processing', 'approved', 'declined']);
 
             $table->unsignedInteger('supplier_id');
             $table->foreign('supplier_id')->references('id')->on('suppliers');
 
-            $table->unsignedInteger('quote_order_request_id');
+            $table->unsignedInteger('quote_order_request_id')->nullable();
             $table->foreign('quote_order_request_id')->references('id')->on('orders_requests');
 
             $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
