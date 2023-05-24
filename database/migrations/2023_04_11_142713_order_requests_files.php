@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\{DB, Schema};
 return new class () extends Migration {
     public function up(): void
     {
-        Schema::create('orders_requests_files', function (Blueprint $table) {
+        Schema::create('order_requests_files', function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('path');
