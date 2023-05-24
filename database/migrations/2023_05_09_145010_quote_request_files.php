@@ -2,18 +2,22 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\{DB, Schema};
 
-return new class extends Migration
+return new class() extends Migration
 {
     public function up(): void
     {
-        Schema::create('product_categories', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
+        Schema::create('quote_request_files', function (Blueprint $table) {
+            $table->unsignedInteger('id')->autoIncrement();
 
-            $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->string('path');
+            $table->string('type');
+
+            $table->unsignedInteger('quote_request_id');
+            $table->foreign('quote_request_id')->references('id')->on('quote_requests');
+
+            $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
 
@@ -27,6 +31,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('product_categories');
+        Schema::dropIfExists('quote_request_files');
     }
 };

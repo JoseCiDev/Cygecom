@@ -4,26 +4,25 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->string('description')->nullable();
+        Schema::create('quote_files', function (Blueprint $table) {
+            $table->unsignedInteger('id')->autoIncrement();
 
-            $table->unsignedInteger('product_categorie_id')->nullable();
-            $table->foreign('product_categorie_id')->references('id')->on('product_categories');
+            $table->string('path');
+            $table->string('type');
 
-            $table->decimal('unit_price', 14, 2)->nullable();
+            $table->unsignedInteger('purchase_quote_id')->index();
+            $table->foreign('purchase_quote_id')->references('id')->on('purchase_quotes');
 
-            $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
 
             $table->unsignedInteger('deleted_by')->nullable();
             $table->foreign('deleted_by')->references('id')->on('users');
-
             $table->unsignedInteger('updated_by')->nullable();
             $table->foreign('updated_by')->references('id')->on('users');
         });
@@ -31,6 +30,6 @@ return new class () extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('quote_files');
     }
 };
