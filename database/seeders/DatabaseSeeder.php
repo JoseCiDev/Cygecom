@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            RegisterDefaultAddress::class,
             PopulateCompanies::class,
             PopulateCostCenters::class,
             PopulateUserProfiles::class,
