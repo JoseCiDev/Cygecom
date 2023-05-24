@@ -8,11 +8,11 @@ return new class() extends Migration
 {
     public function up(): void
     {
-        Schema::create('orders_requests', function (Blueprint $table) {
+        Schema::create('order_requests', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->enum('status', ['pending', 'processing', 'completed']);
-            $table->enum('priority', ['very low', 'low', 'medium', 'high', 'very high']);
+            $table->enum('status', ['pending', 'processing', 'completed'])->default('pending');
+            $table->enum('priority', ['very_low', 'low', 'medium', 'high', 'very_high']);
 
             $table->string('description');
 

@@ -21,7 +21,7 @@ return new class () extends Migration {
             $table->unsignedInteger('approver_user_id')->nullable();
             $table->foreign('approver_user_id')->references('id')->on('users');
 
-            $table->decimal('approve_limit', 14, 2)->nullable();
+            $table->decimal('approve_limit', 14, 2)->nullable()->default(0);
 
             $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
