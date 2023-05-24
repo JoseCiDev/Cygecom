@@ -13,21 +13,21 @@ class Person extends Model
     {
         return $this->hasOne(User::class);
     }
-    public function address()
-    {
-        return $this->hasOne(Address::class);
-    }
     public function phone()
     {
-        return $this->hasOne(Phone::class);
-    }
-    public function identification()
-    {
-        return $this->hasOne(IdentificationDocuments::class);
+        return $this->hasMany(Phone::class);
     }
     public function costCenter()
     {
         return $this->belongsTo(CostCenter::class, 'cost_center_id');
+    }
+    public function deleted_by()
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
+    }
+    public function updated_by()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     protected $fillable = [
