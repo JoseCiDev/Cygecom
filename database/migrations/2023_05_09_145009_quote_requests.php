@@ -13,8 +13,9 @@ return new class() extends Migration
 
             $table->enum('status', ['pending', 'processing', 'completed'])->default('pending');
             $table->enum('priority', ['very low', 'low', 'medium', 'high', 'very high'])->default('very low');
-            $table->boolean('is_supplies_quote');
-            $table->boolean('is_comex');
+            $table->boolean('is_supplies_quote')->default(false);
+            $table->boolean('is_comex')->default(false);
+            $table->boolean('is_service')->default(false);
             $table->text('local_description');
 
             $table->unsignedInteger('user_id');

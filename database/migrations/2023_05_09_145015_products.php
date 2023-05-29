@@ -11,7 +11,6 @@ return new class() extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->string('name');
-            $table->string('definite_quantity', 20)->default('und');
             $table->decimal('unit_price', 14, 2)->nullable();
 
             $table->text('description')->nullable();

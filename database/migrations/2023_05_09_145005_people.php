@@ -13,7 +13,7 @@ return new class() extends Migration
             $table->string('name');
             $table->string('cpf_cnpj');
 
-            $table->unsignedInteger('cost_center_id')->unique();
+            $table->unsignedInteger('cost_center_id');
             $table->foreign('cost_center_id')->references('id')->on('cost_centers');
 
             $table->date('birthdate')->nullable();

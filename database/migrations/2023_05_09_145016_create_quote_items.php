@@ -13,10 +13,10 @@ return new class extends Migration
             $table->unsignedInteger('id')->autoIncrement();
             $table->integer('quantity')->default(1);
 
-            $table->unsignedInteger('purchase_quote_id')->unique();
+            $table->unsignedInteger('purchase_quote_id');
             $table->foreign('purchase_quote_id')->references('id')->on('purchase_quotes');
 
-            $table->unsignedInteger('product_id')->unique();
+            $table->unsignedInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));

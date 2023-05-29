@@ -14,13 +14,13 @@ return new class() extends Migration
             $table->string('password');
             $table->boolean('is_buyer')->default(false);
 
-            $table->unsignedInteger('profile_id')->unique();
+            $table->unsignedInteger('profile_id');
             $table->foreign('profile_id')->references('id')->on('user_profiles');
 
             $table->unsignedInteger('person_id')->unique();
             $table->foreign('person_id')->references('id')->on('people');
 
-            $table->unsignedInteger('approver_user_id')->nullable()->unique();
+            $table->unsignedInteger('approver_user_id')->nullable();
             $table->foreign('approver_user_id')->references('id')->on('users');
 
             $table->decimal('approve_limit', 14, 2)->nullable()->default(null);
