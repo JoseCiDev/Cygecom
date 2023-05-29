@@ -9,15 +9,15 @@ class QuoteRequest extends Model
 {
     use HasFactory;
 
-    public function purchase_quote()
+    public function purchaseQuote()
     {
         return $this->hasMany(PurchaseQuote::class);
     }
-    public function quote_request_file()
+    public function quoteRequestFile()
     {
         return $this->hasMany(QuoteRequestFile::class);
     }
-    public function cost_center_apportionment()
+    public function costCenterApportionment()
     {
         return $this->hasMany(CostCenterApportionment::class);
     }
@@ -27,11 +27,11 @@ class QuoteRequest extends Model
         return $this->belongsToMany(User::class, 'user_id');
     }
 
-    public function deleted_by()
+    public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
-    public function updated_by()
+    public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by');
     }

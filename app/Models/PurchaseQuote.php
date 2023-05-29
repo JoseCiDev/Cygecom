@@ -9,11 +9,11 @@ class PurchaseQuote extends Model
 {
     use HasFactory;
 
-    public function quote_file()
+    public function quoteFile()
     {
         return $this->hasMany(QuoteFile::class);
     }
-    public function quote_item()
+    public function quoteItem()
     {
         return $this->hasMany(QuoteItem::class);
     }
@@ -22,7 +22,7 @@ class PurchaseQuote extends Model
         return $this->hasMany(Service::class);
     }
 
-    public function quote_request()
+    public function quoteRequest()
     {
         return $this->belongsTo(QuoteRequest::class);
     }
@@ -30,11 +30,11 @@ class PurchaseQuote extends Model
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
-    public function deleted_by()
+    public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
-    public function updated_by()
+    public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by');
     }

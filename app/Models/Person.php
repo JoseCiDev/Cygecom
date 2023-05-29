@@ -21,17 +21,18 @@ class Person extends Model
     {
         return $this->belongsTo(CostCenter::class, 'cost_center_id');
     }
-    public function deleted_by()
+    public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
-    public function updated_by()
+    public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
 
     protected $fillable = [
         'name',
+        'cpf_cnpj',
         'birthdate',
         'cost_center_id',
     ];

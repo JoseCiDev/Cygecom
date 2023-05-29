@@ -19,11 +19,11 @@ class Supplier extends Model
         return $this->hasMany(Phone::class);
     }
 
-    public function deleted_by()
+    public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
-    public function updated_by()
+    public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by');
     }

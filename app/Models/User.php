@@ -28,25 +28,25 @@ class User extends Authenticatable
         return $this->belongsTo(UserProfile::class, 'profile_id');
     }
 
-    public function quote_request()
+    public function quoteRequest()
     {
         return $this->hasMany(QuoteRequest::class);
     }
 
-    public function deleted_by()
+    public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
-    public function updated_by()
+    public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    public function deleted_many()
+    public function deletedMany()
     {
         return $this->hasMany(User::class);
     }
-    public function updated_many()
+    public function updatedMany()
     {
         return $this->hasMany(User::class);
     }
@@ -59,6 +59,7 @@ class User extends Authenticatable
     protected $fillable = [
         'email',
         'password',
+        'is_buyer',
         'profile_id',
         'person_id',
         'approver_user_id',

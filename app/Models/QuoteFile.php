@@ -9,15 +9,15 @@ class QuoteFile extends Model
 {
     use HasFactory;
 
-    public function purchase_quote()
+    public function purchaseQuote()
     {
         return $this->belongsTo(PurchaseQuote::class, 'purchase_quote_id');
     }
-    public function deleted_by()
+    public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
-    public function updated_by()
+    public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by');
     }

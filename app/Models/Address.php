@@ -9,7 +9,7 @@ class Address extends Model
 {
     use HasFactory;
 
-    public function cost_center()
+    public function costCenter()
     {
         return $this->hasOne(CostCenter::class);
     }
@@ -18,11 +18,11 @@ class Address extends Model
         return $this->hasOne(Supplier::class);
     }
 
-    public function deleted_by()
+    public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
-    public function updated_by()
+    public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
