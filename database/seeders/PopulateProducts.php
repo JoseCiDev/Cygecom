@@ -396,7 +396,7 @@ class PopulateProducts extends Seeder
             ]
         );
 
-        // Add products withou unit price INJETAVEIS HKM ID 2
+        // Add products without unit price INJETAVEIS HKM ID 2
         DB::table('products')->insert(
             [
                 ['name' => "Frasco reagente 5L, Graduado, GL45 com tampa azul - incolor", 'product_categorie_id' => 2],

@@ -82,8 +82,6 @@ class PopulateCostCenters extends Seeder
             ['name' => 'Visitação', 'company_id' => 1, 'address_id' => 1],
         ];
 
-        foreach ($costCenters as $costCenter) {
-            DB::table('cost_centers')->insert($costCenter);
-        }
+        DB::table('cost_centers')->insert($costCenters);
     }
 }

@@ -31,8 +31,6 @@ class PopulateCompanies extends Seeder
             ['corporate_name' => 'INP MATRIZ SP - CLÍNICA', 'cnpj' => '12.345.678/0001-00'],
         ];
 
-        foreach ($companies as $company) {
-            DB::table('companies')->insert($company);
-        }
+        DB::table('companies')->insert($companies);
     }
 }
