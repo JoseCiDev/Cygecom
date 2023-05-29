@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,12 +20,35 @@ class User extends Authenticatable
 
     public function person()
     {
-        return $this->belongsTo(Person::class);
+        return $this->belongsTo(Person::class, 'person_id');
     }
 
     public function profile()
     {
         return $this->belongsTo(UserProfile::class, 'profile_id');
+    }
+
+    public function quoteRequest()
+    {
+        return $this->hasMany(QuoteRequest::class);
+    }
+
+    public function deletedByUser()
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
+    }
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function deletedMany()
+    {
+        return $this->hasMany(User::class);
+    }
+    public function updatedMany()
+    {
+        return $this->hasMany(User::class);
     }
 
     /**
@@ -37,6 +59,7 @@ class User extends Authenticatable
     protected $fillable = [
         'email',
         'password',
+        'is_buyer',
         'profile_id',
         'person_id',
         'approver_user_id',

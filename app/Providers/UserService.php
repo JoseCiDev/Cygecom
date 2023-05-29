@@ -14,7 +14,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
 {
     public function getUserById(int $id): User
     {
-        return User::with(['person', 'person.address', 'person.phone', 'person.identification', 'profile', 'approver', 'person.costCenter'])->where('id', $id)->first();
+        return User::with(['person', 'person.phone', 'profile', 'approver', 'person.costCenter', 'deletedByUser', 'updatedByUser'])->where('id', $id)->first();
     }
 
     /**
@@ -54,8 +54,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
     {
         return DB::transaction(function () use ($request) {
             $person = $this->createPerson($request);
-            $this->createAddress($person, $request);
-            $this->createIdentificationDocument($person, $request);
             $this->createPhone($person, $request);
 
             $user                   = new User();
@@ -78,15 +76,11 @@ class UserService extends ServiceProvider implements UserServiceInterface
         try {
             $user           = $this->getUserById($userId);
             $person         = $user->person;
-            $address        = $user->person->address;
-            $phone          = $user->person->phone;
-            $identification = $user->person->identification;
+            $phone          = $user->person->phone[0];
 
             $this->saveUser($user, $data);
             $this->savePerson($person, $data);
-            $this->saveAddress($address, $data);
             $this->savePhone($phone, $data);
-            $this->saveIdentification($identification, $data);
 
             DB::commit();
         } catch (Exception $error) {
@@ -132,10 +126,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
         $phone->update($data);
     }
 
-    private function saveIdentification(IdentificationDocuments $identification, array $data)
-    {
-        $identification->update($data);
-    }
 
     /**
      * Funções auxiliares para criação de usuário:
@@ -151,11 +141,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
         $person->address()->save($address);
     }
 
-    private function createIdentificationDocument(Person $person, array $request): void
-    {
-        $identificationDocument = new IdentificationDocuments($request);
-        $person->identification()->save($identificationDocument);
-    }
 
     private function createPhone(Person $person, array $request): void
     {
@@ -167,14 +152,5 @@ class UserService extends ServiceProvider implements UserServiceInterface
         $profileId = DB::table('user_profiles')->where('name', $data['profile_type'])->pluck('id')->first();
 
         return $profileId;
-    }
-
-    private function getCostCenterId($data)
-    {
-        $costCenterId = isset($data['cost_center_id']) ?
-            DB::table('cost_centers')->where('name', $data['cost_center_id'])->pluck('id')->first() :
-            null;
-
-        return $costCenterId;
     }
 }

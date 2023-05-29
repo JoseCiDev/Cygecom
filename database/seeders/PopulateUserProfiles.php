@@ -10,8 +10,8 @@ class PopulateUserProfiles extends Seeder
     public function run(): void
     {
         DB::table('user_profiles')->insert([
-            ['name' => 'admin'],
-            ['name' => 'normal'],
+            ['name' => 'admin', 'isAdmin' => true],
+            ['name' => 'normal',  'isAdmin' => false],
         ]);
     }
 }

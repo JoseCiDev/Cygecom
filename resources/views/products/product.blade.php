@@ -72,15 +72,15 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <span>Criado em:</span>
-                                <p class="form-control">{{$product->created_at}}</p>
+                                <p class="form-control">{{$product->created_at->format('d/m/Y H:i:s')}}</p>
                            </div>
                            <div class="col-md-3">
                                 <span>Atualizado em:</span>
-                                <p class="form-control">{{$product->updated_at}}</p>
+                                <p class="form-control">{{ isset($product->updated_at) ? $product->updated_at->format('d/m/Y H:i:s') : '00/00/0000'}} </p>
                            </div>
                            <div class="col-md-3">
                                 <span>Atualizado por:</span>
-                                <p class="form-control">{{$product->updaterUser->person->name ?? ''}}</p>
+                                <p class="form-control">{{$product->updated_by_user->email ?? 'Sem atualizações...'}}</p>
                            </div>
                         </div>
 

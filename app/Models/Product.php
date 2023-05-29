@@ -13,8 +13,16 @@ class Product extends Model
     {
         return $this->belongsTo(ProductCategorie::class, 'product_categorie_id');
     }
+    public function quoteItem()
+    {
+        return $this->hasOne(QuoteItem::class);
+    }
 
-    public function updaterUser()
+    public function deletedByUser()
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
+    }
+    public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by');
     }

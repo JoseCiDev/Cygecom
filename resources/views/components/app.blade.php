@@ -113,7 +113,7 @@
 					<x-navbar.logo/>
 					<ul class='main-nav'>
 						<x-navbar.menu-item route="home" title="DASHBOARD"/>
-						@if (auth()->user()->profile->name === 'admin')
+						@if (auth()->user()->profile->isAdmin)
 
 							<x-navbar.menu-item route="users" title="USUÁRIOS"/>
 
@@ -122,7 +122,7 @@
 						<x-navbar.menu-item route="requests" title="SOLICITAÇÕES"/>
 						<x-navbar.menu-item route="home" title="COTAÇÕES"/>
 
-						@if (auth()->user()->profile->name === 'admin')
+						@if (auth()->user()->profile->isAdmin)
 
 							<x-navbar.menu-item-dropdown route="home" title="ORDENS DE COMPRA"/>
 							<x-navbar.menu-item-dropdown route="home" title="INTEGRAÇÃO SÊNIOR"/>

@@ -5,19 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Address extends Model
+class QuoteItem extends Model
 {
     use HasFactory;
 
-    public function costCenter()
+    public function purchaseQuote()
     {
-        return $this->hasOne(CostCenter::class);
+        return $this->belongsTo(PurchaseQuote::class, 'purchase_quote_id');
     }
-    public function supplier()
+    public function product()
     {
-        return $this->hasOne(Supplier::class);
+        return $this->belongsToMany(Product::class, 'product_id');
     }
-
     public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
@@ -26,15 +25,4 @@ class Address extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
-
-    protected $fillable = [
-        'street',
-        'street_number',
-        'neighborhood',
-        'postal_code',
-        'city',
-        'state',
-        'country',
-        'complement',
-    ];
 }
