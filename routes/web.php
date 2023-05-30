@@ -13,6 +13,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/requests', [App\Http\Controllers\OrderRequestController::class, 'index'])->name('requests');
     Route::get('/request/register', [App\Http\Controllers\OrderRequestController::class, 'showRegistrationForm'])->name('requestRegister');
 
+    Route::get('/quotations', [App\Http\Controllers\QuoteController::class, 'index'])->name('quotations');
+    Route::get('/quotation/register', [App\Http\Controllers\QuoteController::class, 'showRegistrationForm'])->name('quotationRegister');
+
+    Route::get('/suppliers', [App\Http\Controllers\SupplierController::class, 'index'])->name('suppliers');
+    Route::get('/supplier/register', [App\Http\Controllers\SupplierController::class, 'showRegistrationForm'])->name('supplierRegister');
+
     Route::middleware(['isAdmin'])->group(function () {
         Route::get('/user/register', [App\Http\Controllers\Auth\UserController::class, 'showRegistrationForm'])->name('register');
         Route::post('/user/register', [App\Http\Controllers\Auth\UserController::class, 'register']);
