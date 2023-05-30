@@ -19,6 +19,10 @@ return new class extends Migration
             $table->unsignedInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
 
+            $table->string('model')->nullable();
+            $table->string('color')->nullable();
+            $table->string('size')->nullable();
+
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();

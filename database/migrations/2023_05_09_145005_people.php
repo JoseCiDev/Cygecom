@@ -11,7 +11,7 @@ return new class() extends Migration
         Schema::create('people', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->string('name');
-            $table->string('cpf_cnpj');
+            $table->string('cpf_cnpj', 20)->unique();
 
             $table->unsignedInteger('cost_center_id');
             $table->foreign('cost_center_id')->references('id')->on('cost_centers');

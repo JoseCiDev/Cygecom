@@ -27,6 +27,8 @@ return new class() extends Migration
 
             $table->unsignedInteger('updated_by')->nullable();
             $table->foreign('updated_by')->references('id')->on('users');
+
+            $table->unique(['name', 'product_categorie_id']);
         });
     }
 

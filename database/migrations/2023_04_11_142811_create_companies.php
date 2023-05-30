@@ -10,8 +10,8 @@ return new class() extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
-            $table->string('corporate_name');
-            $table->string('cnpj');
+            $table->string('corporate_name')->unique();
+            $table->string('cnpj', 20)->unique();
 
             $table->string('name')->nullable();
             $table->text('description')->nullable();
