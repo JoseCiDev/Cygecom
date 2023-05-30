@@ -20,4 +20,9 @@ class CostCenter extends Model
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
+
+    public function address()
+    {
+        return $this->belongsTo(Address::class, 'address_id');
+    }
 }

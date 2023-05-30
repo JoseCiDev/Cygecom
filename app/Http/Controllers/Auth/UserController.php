@@ -62,9 +62,7 @@ class UserController extends Controller implements UserControllerInterface
     {
         $user = User::with([
             'person',
-            'person.address',
             'person.phone',
-            'person.identification',
             'person.costCenter',
             'profile',
             'approver',
@@ -78,7 +76,7 @@ class UserController extends Controller implements UserControllerInterface
 
     public function userUpdate(Request $request, int $id)
     {
-        $isAdmin = auth()->user()->profile->name === "admin";
+        $isAdmin = auth()->user()->profile->isAdmin;
         $isOwnId = $id === auth()->user()->id;
 
         if (!$isAdmin && !$isOwnId) {
@@ -123,7 +121,6 @@ class UserController extends Controller implements UserControllerInterface
         return redirect()->route('users');
     }
 
-    // -- ver a questão do service -- \\
     private function getApprovers($action, int $id = null)
     {
         $query = $this->userService->getApprovers($action, $id = null);
@@ -131,7 +128,6 @@ class UserController extends Controller implements UserControllerInterface
         return $query;
     }
 
-    // -- ver a questão do service -- //
     public function getCostCenters()
     {
         return $this->userService->getCostCenters();
@@ -141,7 +137,7 @@ class UserController extends Controller implements UserControllerInterface
      * @abstract função necessária para sobreescrever validator padrão;
      * @param array $data Recebe array da request para validação;
      */
-    protected function validator(array $data)
+    private function validator(array $data)
     {
         $validator = $this->validatorService->registerValidator($data);
 

@@ -9,7 +9,7 @@ class IsAdmin
 {
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->check() && auth()->user()->profile->name === 'admin') {
+        if (auth()->check() && auth()->user()->profile->isAdmin) {
             return $next($request);
         }
 

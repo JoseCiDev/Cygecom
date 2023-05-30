@@ -13,4 +13,13 @@ class ProductCategorie extends Model
     {
         return $this->hasOne(Product::class);
     }
+
+    public function deletedByUser()
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
+    }
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 }

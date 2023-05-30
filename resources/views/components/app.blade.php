@@ -114,7 +114,7 @@
 					<ul class='main-nav'>
 						<x-navbar.menu-item route="home" title="DASHBOARD"/>
 
-                        @if (auth()->user()->profile->name === 'admin')
+                        @if (auth()->user()->profile->isAdmin)
                         <li>
                             <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
                                 <span>CADASTROS</span>
@@ -164,7 +164,7 @@
                             </ul>
                         </li>
 
-						@if (auth()->user()->profile->name === 'admin')
+						@if (auth()->user()->profile->isAdmin)
 							<x-navbar.menu-item route="home" title="INTEGRAÇÃO SÊNIOR"/>
 						@endif
 					</ul>

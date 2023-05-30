@@ -9,9 +9,22 @@ class Address extends Model
 {
     use HasFactory;
 
-    public function person()
+    public function costCenter()
     {
-        return $this->belongsTo(Person::class);
+        return $this->hasOne(CostCenter::class);
+    }
+    public function supplier()
+    {
+        return $this->hasOne(Supplier::class);
+    }
+
+    public function deletedByUser()
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
+    }
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     protected $fillable = [

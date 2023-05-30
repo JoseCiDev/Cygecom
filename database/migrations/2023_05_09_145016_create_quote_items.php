@@ -9,11 +9,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('product_categories', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
+        Schema::create('quote_items', function (Blueprint $table) {
+            $table->unsignedInteger('id')->autoIncrement();
+            $table->integer('quantity')->default(1);
 
-            $table->dateTime('created_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->unsignedInteger('purchase_quote_id');
+            $table->foreign('purchase_quote_id')->references('id')->on('purchase_quotes');
+
+            $table->unsignedInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products');
+
+            $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
 
@@ -27,6 +33,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('product_categories');
+        Schema::dropIfExists('quote_items');
     }
 };

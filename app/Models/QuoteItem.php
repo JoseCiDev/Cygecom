@@ -5,23 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Phone extends Model
+class QuoteItem extends Model
 {
     use HasFactory;
 
-    public function person()
+    public function purchaseQuote()
     {
-        return $this->belongsToMany(Person::class);
+        return $this->belongsTo(PurchaseQuote::class, 'purchase_quote_id');
     }
-    public function supplier()
+    public function product()
     {
-        return $this->belongsToMany(Supplier::class);
+        return $this->belongsToMany(Product::class, 'product_id');
     }
-    public function costCenter()
-    {
-        return $this->belongsTo(CostCenter::class);
-    }
-
     public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
@@ -30,9 +25,4 @@ class Phone extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
-
-    protected $fillable = [
-        'number',
-        'phone_type',
-    ];
 }
