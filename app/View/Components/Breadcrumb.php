@@ -58,6 +58,24 @@ class Breadcrumb extends Component
             ['route' => 'requests', 'label' => 'Solicitações'],
             ['route' => 'requestRegister', 'label' => 'Nova solicitação'],
         ],
+        'quotations' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'quotations', 'label' => 'Cotações'],
+        ],
+        'quotationRegister' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'quotations', 'label' => 'Cotações'],
+            ['route' => 'quotationRegister', 'label' => 'Nova Cotação'],
+        ],
+        'suppliers' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'suppliers', 'label' => 'Fornecedores'],
+        ],
+        'supplierRegister' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'suppliers', 'label' => 'Fornecedores'],
+            ['route' => 'supplierRegister', 'label' => 'Novo Fornecedor'],
+        ],
     ];
 
     public function __construct()
