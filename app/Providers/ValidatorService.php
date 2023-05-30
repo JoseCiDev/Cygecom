@@ -14,11 +14,11 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'email'          => ['required', 'string', 'email', 'max:255', 'unique:users'],
         'password'       => ['required', 'string', 'min:8', 'confirmed'],
         'profile_type'   => ['required', 'string', 'max:255'],
-        'cpf_cnpj' => ['required', 'string'],
+        'cpf_cnpj'       => ['required', 'string'],
         'number'         => ['required', 'string'],
         'phone_type'     => ['required', 'string'],
         'cost_center_id' => ['required', 'string'],
-        'is_buyer' => ['nullable', 'boolean']
+        'is_buyer'       => ['nullable', 'boolean'],
     ];
 
     public $requiredRulesMessages = [
@@ -45,7 +45,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
 
         'cost_center_id.required' => 'Centro de custo é obrigatório',
 
-        'is_buyer.boolean' => 'A pessoa de ter o campo "é comprador" como verdadeiro ou false.'
+        'is_buyer.boolean' => 'A pessoa de ter o campo "é comprador" como verdadeiro ou false.',
     ];
 
     public $rulesForUpdate = [

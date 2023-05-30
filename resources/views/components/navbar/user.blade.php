@@ -1,8 +1,8 @@
 <div class="user">
     {{ $slot }}
     <div class="dropdown">
-        <a href="#" class='dropdown-toggle' data-toggle="dropdown"> 
-            <i class="fa fa-user"></i>
+        <a href="#" class='dropdown-toggle' data-toggle="dropdown">
+            <img src="{{ asset('img/demo/default-user.png') }}" alt="" width="30">
             {{ auth()->user()->person->name }}
         </a>
         <ul class="dropdown-menu pull-right">

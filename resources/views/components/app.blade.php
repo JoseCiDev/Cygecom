@@ -113,20 +113,59 @@
 					<x-navbar.logo/>
 					<ul class='main-nav'>
 						<x-navbar.menu-item route="home" title="DASHBOARD"/>
+
+                        @if (auth()->user()->profile->isAdmin)
+                        <li>
+                            <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+                                <span>CADASTROS</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ route('users') }}">Usuários</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('suppliers') }}">Fornecedores</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('products') }}">Produtos</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+                                <span>SOLICITAÇÕES</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ route('requests') }}">Minhas Solicitações</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('requests') }}">Solicitações Gerais</a>
+                                </li>
+                            </ul>
+                        </li>
+                        @endif
+
+                        <li>
+                            <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+                                <span>COTAÇÕES</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ route('quotations') }}">Minhas Cotações</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('quotations') }}">Cotações Gerais</a>
+                                </li>
+                            </ul>
+                        </li>
+
 						@if (auth()->user()->profile->isAdmin)
-
-							<x-navbar.menu-item route="users" title="USUÁRIOS"/>
-
-						@endif
-
-						<x-navbar.menu-item route="requests" title="SOLICITAÇÕES"/>
-						<x-navbar.menu-item route="home" title="COTAÇÕES"/>
-
-						@if (auth()->user()->profile->isAdmin)
-
-							<x-navbar.menu-item-dropdown route="home" title="ORDENS DE COMPRA"/>
-							<x-navbar.menu-item-dropdown route="home" title="INTEGRAÇÃO SÊNIOR"/>
-
+							<x-navbar.menu-item route="home" title="INTEGRAÇÃO SÊNIOR"/>
 						@endif
 					</ul>
 					<x-navbar.user>

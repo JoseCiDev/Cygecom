@@ -1,6 +1,6 @@
 <x-app>
     <x-slot name="title">
-        <h1>Página Principal</h1>
+        <h1>Produtos</h1>
     </x-slot>
 
     <x-modalDelete/>
@@ -12,7 +12,7 @@
                     <div class="box-title">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="pull-left">Lista de produtos</h3>
+                                <h3 class="pull-left">Todos os produtos</h3>
                             </div>
                             <div class="col-md-6">
                                 <a href="{{route('productRegister')}}" class="btn pull-right" style="margin-right: 15px">Registrar novo produto</a>

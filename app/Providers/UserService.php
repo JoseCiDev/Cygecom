@@ -74,9 +74,9 @@ class UserService extends ServiceProvider implements UserServiceInterface
         DB::beginTransaction();
 
         try {
-            $user           = $this->getUserById($userId);
-            $person         = $user->person;
-            $phone          = $user->person->phone[0];
+            $user   = $this->getUserById($userId);
+            $person = $user->person;
+            $phone  = $user->person->phone[0];
 
             $this->saveUser($user, $data);
             $this->savePerson($person, $data);
@@ -126,7 +126,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
         $phone->update($data);
     }
 
-
     /**
      * Funções auxiliares para criação de usuário:
      */
@@ -140,7 +139,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
         $address = new Address($request);
         $person->address()->save($address);
     }
-
 
     private function createPhone(Person $person, array $request): void
     {

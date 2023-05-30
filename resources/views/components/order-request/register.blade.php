@@ -60,19 +60,25 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2">
+                    <div class="col-md-2">
                         <div class="form-group">
-                            <label for="rateio1" class="control-label">Rateio(%)</label>
-                            <input
-                            ame="rateio1" type="number"
-                            step="1" placeholder="0.00%" class="form-control" maxlength="5" min="0" max="100">
+                            <label for="unit_price" class="control-label"><sup style="color:red">*</sup>Rateio</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">%</span>
+                                <input type="number" name="unit_price" id="unit_price_percentage" placeholder="0.00" class="form-control" min="0">
+                                @error('unit_price') <p><strong>{{ $message }}</strong></p> @enderror
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-sm-2">
+                    <div class="col-md-2">
                         <div class="form-group">
-                            <label for="rateio2" class="control-label">Rateio(R$)</label>
-                            <input name="rateio2" type="number" step="1" placeholder="R$0.000,00" class="form-control" >
+                            <label for="unit_price" class="control-label"><sup style="color:red">*</sup>Rateio</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">R$</span>
+                                <input type="number" name="unit_price" id="unit_price_currency" placeholder="0.00" class="form-control" min="0">
+                                @error('unit_price') <p><strong>{{ $message }}</strong></p> @enderror
+                            </div>
                         </div>
                     </div>
 
@@ -83,9 +89,11 @@
                     </div>
 
                     {{-- ADICIONAR CNPJ --}}
-                    <div class="col-sm-2">
-                        <div class="form-actions pull-right" style="margin-top:6px;">
-                            <a class="btn btn-primary add-cnpj-btn">+ ADICIONAR</a>
+                    <div class="col-sm-1">
+                        <div class="form-actions pull-right" style="margin-top:10px;">
+                            <a class="btn btn-primary add-cnpj-btn">
+                                <i class="glyphicon glyphicon-plus"></i>
+                            </a>
                         </div>
                     </div>
 
@@ -197,10 +205,14 @@
                     </div>
 
                     {{-- BTNs --}}
-                    <a href="" class="btn" style="margin-top:15px;">FAZER COTAÇÃO</a>
+
                     <div class="form-actions pull-right" style="margin-top:50px;">
-                        <button type="submit" class="btn btn-primary">Salvar</button>
-                        <a href="" class="btn">Cancelar</a>
+                        <a  href="{{ route('quotationRegister') }}" target="_blank" class="btn btn-primary" style="margin-right:10px;">
+                            SALVAR E COTAR
+                            <i style="margin-left:5px;" class="glyphicon glyphicon-new-window"></i>
+                        </a>
+                        <button type="submit" class="btn btn-primary">SALVAR</button>
+                        <a href="{{ url()->previous() }}" class="btn">CANCELAR</a>
                     </div>
 
                 </div>
@@ -210,16 +222,16 @@
 
 </x-app>
 
-{{-- ADD +1 CNPJ --}}
+{{-- ADD +1 CENTRO DE CUSTO --}}
 <script>
     $(document).ready(function() {
         let cnpjCount = 1;
         $(document).on('click', '.add-cnpj-btn', function() {
-            const cnpjRow = $(this).closest('.cnpj-row');
+            const cnpjRow = $('.cnpj-row').last();
             const clonedRow = cnpjRow.clone();
             clonedRow.find('.add-cnpj-btn').remove();
             clonedRow.find('.col-sm-1').removeAttr('hidden');
-            clonedRow.find(":text").val("");
+            clonedRow.find("input, select").val("");
             clonedRow.find('.select2-container').remove();
             // clonedRow.find('.select2-me').attr('id', 's2-' + cnpjCount).select2();
             clonedRow.find('.select2-me').each(function() {
@@ -238,6 +250,7 @@
     });
 </script>
 
+{{-- SERVICES / PRODUCTS --}}
 <script>
     $(document).ready(function() {
         $('.radio_request').change(function() {
@@ -254,6 +267,7 @@
     });
 </script>
 
+{{-- QUOTED_BY --}}
 <script>
     $(document).ready(function() {
     $('#quoted_by').change(function() {
@@ -268,3 +282,39 @@
     });
 });
 </script>
+
+{{-- SE COTADO POR SUPRIMENTOS, DESC REQURIED --}}
+<script>
+    $(document).ready(function() {
+        $('.radio_request').change(function() {
+          if ($(this).val() === 'quoted_by_suprimentos') {
+            $('#description').addClass('required');
+          } else {
+            $('#description').removeClass('required');
+          }
+        });
+      });
+</script>
+
+{{-- desabilita um dos "rateios" qnd outro estiver preenchido --}}
+<script>
+    $(document).ready(function() {
+        // se percentual preenchido
+      $('#unit_price_percentage').on('input', function() {
+        if ($(this).val()) {
+          $('#unit_price_currency').prop('disabled', true);
+        } else {
+          $('#unit_price_currency').prop('disabled', false);
+        }
+      });
+
+      // se moeda
+      $('#unit_price_currency').on('input', function() {
+        if ($(this).val()) {
+          $('#unit_price_percentage').prop('disabled', true);
+        } else {
+          $('#unit_price_percentage').prop('disabled', false);
+        }
+      });
+    });
+  </script>

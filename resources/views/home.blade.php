@@ -13,11 +13,10 @@
                             </div>
                         @endif
                         <h1>Bem-vindo!</h1>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam quos id modi soluta repellat, quo porro nobis aut alias dignissimos, asperiores deleniti sunt provident veritatis unde. Rerum impedit doloremque vero!</p>
-                      
+                        <p>Este é o portal de gerenciamento de compras dao grupo Essentia!</p>
                         {{-- Para acesso rápido --}}
-                        @if (auth()->user()->profile->isAdmin)
-                            <a class="btn btn-primary" href="{{route('products')}}">Produtos</a>
+                        @if (auth()->user()->profile->name === 'admin')
+                            <p>TESTE E-MAIL</p>
                             <a class="btn btn-primary" href="{{route('email')}}">E-mail</a>
                         @endif
 
