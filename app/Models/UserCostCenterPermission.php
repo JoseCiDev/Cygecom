@@ -9,9 +9,9 @@ class UserCostCenterPermission extends Model
 {
     use HasFactory;
 
-    public function profile()
+    public function user()
     {
-        return $this->belongsTo(UserProfile::class, 'profile_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function costCenter()
