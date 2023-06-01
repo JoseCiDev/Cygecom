@@ -4,13 +4,18 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up(): void
     {
-        Schema::create('phones', function (Blueprint $table) {
+        Schema::create('quote_request_files', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
-            $table->string('number', 15);
-            $table->enum('phone_type', ['personal', 'commercial'])->nullable();
+
+            $table->string('path');
+            $table->string('type');
+
+            $table->unsignedInteger('quote_request_id');
+            $table->foreign('quote_request_id')->references('id')->on('quote_requests');
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
@@ -20,6 +25,6 @@ return new class () extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('phones');
+        Schema::dropIfExists('quote_request_files');
     }
 };

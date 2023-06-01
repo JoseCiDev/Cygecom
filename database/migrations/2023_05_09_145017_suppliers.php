@@ -13,24 +13,28 @@ return new class() extends Migration
             $table->string('corporate_name')->unique();
             $table->string('cpf_cnpj', 20)->unique();
             $table->enum('entity_type', ['PF', 'PJ'])->default('PJ');
-            $table->boolean('is_service_provider')->default(true);
-            $table->boolean('is_raw_material_provider')->default(false);
-            $table->boolean('is_national_market')->default(true);
-            $table->boolean('it_foreign_market')->default(false);
+            $table->string('supplier_indication')->default('M'); // M: Matéria prima; S: Serviço; A: Ambos
+            $table->string('market_type')->default('nacional'); // nacional; exterior; prospect(prospecção)
             $table->boolean('is_qualified')->default(false);
 
             $table->unsignedInteger('address_id')->unique();
             $table->foreign('address_id')->references('id')->on('addresses');
 
+            $table->unsignedInteger('phone_id')->unique();
+            $table->foreign('phone_id')->references('id')->on('phones');
+
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->string('state_registration')->nullable();
-            $table->string('company_representative')->nullable();
+            $table->string('representative')->nullable();
             $table->string('email')->nullable();
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
+
+            $table->string('supplier_type_callisto')->nullable();
+            $table->string('payment_type_callisto')->nullable();
         });
     }
 
