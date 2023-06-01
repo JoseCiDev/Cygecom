@@ -1,8 +1,8 @@
 <x-app>
     <x-slot name="title">
-        <h1>Novo Fornecedor</h1>
+        <h1>Editar Fornecedor</h1>
     </x-slot>
-
+    
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-color box-bordered">
@@ -14,10 +14,9 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="box-content">
-                    <x-SupplierForm />
                 
+                <div class="box-content">
+                    <x-SupplierForm :id="$id" :supplier="$supplier"/>
                     <span>(<span style="color:red"><strong>*</strong></span>) É obrigatório</span>
                 </div>
             </div>
