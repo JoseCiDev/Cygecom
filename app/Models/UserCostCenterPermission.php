@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class UserCostCenterPermission extends Model
+{
+    use HasFactory;
+
+    public function profile()
+    {
+        return $this->belongsTo(UserProfile::class, 'profile_id');
+    }
+
+    public function costCenter()
+    {
+        return $this->belongsTo(CostCenter::class, 'cost_center_id');
+    }
+
+    protected $table = 'user_cost_center_permissions';
+    protected $fillable = [
+        'profile_id',
+        'cost_center_id',
+    ];
+}
