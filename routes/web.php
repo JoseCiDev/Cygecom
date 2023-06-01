@@ -16,9 +16,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/quotations', [App\Http\Controllers\QuoteController::class, 'index'])->name('quotations');
     Route::get('/quotation/register', [App\Http\Controllers\QuoteController::class, 'showRegistrationForm'])->name('quotationRegister');
 
-    Route::get('/suppliers', [App\Http\Controllers\SupplierController::class, 'index'])->name('suppliers');
-    Route::get('/supplier/register', [App\Http\Controllers\SupplierController::class, 'showRegistrationForm'])->name('supplierRegister');
-
     Route::middleware(['isAdmin'])->group(function () {
         Route::get('/user/register', [App\Http\Controllers\Auth\UserController::class, 'showRegistrationForm'])->name('register');
         Route::post('/user/register', [App\Http\Controllers\Auth\UserController::class, 'register']);
@@ -37,5 +34,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/products/product/{id}', [App\Http\Controllers\ProductController::class, 'product'])->name('product');
         Route::post('/products/product/{id}', [App\Http\Controllers\ProductController::class, 'update'])->name('updateProduct');
         Route::post('/products/delete/{id}', [App\Http\Controllers\ProductController::class, 'delete']);
+
+        Route::get('/suppliers', [App\Http\Controllers\SupplierController::class, 'index'])->name('suppliers');
+        Route::get('/suppliers/view/{id}', [App\Http\Controllers\SupplierController::class, 'supplier'])->name('supplier');
+        Route::get('/suppliers/register', [App\Http\Controllers\SupplierController::class, 'showRegistrationForm'])->name('supplierRegister');
+
+        Route::post('/suppliers/register', [App\Http\Controllers\SupplierController::class, 'register']);
+        Route::post('/suppliers/delete/{id}', [App\Http\Controllers\SupplierController::class, 'delete']);
+        Route::post('/suppliers/update/{id}', [App\Http\Controllers\SupplierController::class, 'update'])->name('supplierUpdate');
     });
 });

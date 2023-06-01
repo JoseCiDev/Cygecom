@@ -93,14 +93,14 @@
                             class="form-control mask_phone"
                             data-rule-required="true"
                             @if (isset($user))
-                                value="{{ $user['person']['phone'][0]['number'] }}"
+                                value="{{ $user['person']['phone']['number'] }}"
                             @endif >
                             @error('number') <span class="text-danger">{{ $message }}</span>@enderror
                             <div class="form-group" style="margin: 5px 0px -10px 0px;">
                                 {{-- PESSOAL --}}
                                 <input
                                 @if(isset($user))
-                                    @if ($user['person']['phone'][0]['phone_type']  === "personal") {{"checked"}} @endif
+                                    @if ($user['person']['phone']['phone_type']  === "personal") {{"checked"}} @endif
                                 @endif
                                     class="icheck-me"
                                     type="radio"
@@ -112,7 +112,7 @@
                                 {{-- COMERCIAL --}}
                                 <input
                                 @if(isset($user))
-                                    @if ($user['person']['phone'][0]['phone_type'] === "commercial") {{"checked"}} @endif
+                                    @if ($user['person']['phone']['phone_type'] === "commercial") {{"checked"}} @endif
                                 @endif
                                 class="icheck-me"
                                 type="radio"

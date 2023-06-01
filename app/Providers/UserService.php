@@ -53,16 +53,17 @@ class UserService extends ServiceProvider implements UserServiceInterface
     public function registerUser(array $request): User
     {
         return DB::transaction(function () use ($request) {
+            $phoneId = $this->createPhone($request);
+            $request['phone_id'] = $phoneId;
             $person = $this->createPerson($request);
-            $this->createPhone($person, $request);
 
-            $user                   = new User();
-            $user->email            = $request['email'];
-            $user->password         = Hash::make($request['password']);
-            $user->profile_id       = $this->getProfileId($request);
-            $user->person_id        = $person->id;
+            $user = new User();
+            $user->email = $request['email'];
+            $user->password = Hash::make($request['password']);
+            $user->profile_id = $this->getProfileId($request);
+            $user->person_id = $person->id;
             $user->approver_user_id = $request['approver_user_id'] ?? null;
-            $user->approve_limit    = $request['approve_limit'];
+            $user->approve_limit = $request['approve_limit'];
             $user->save();
 
             return $user;
@@ -74,9 +75,9 @@ class UserService extends ServiceProvider implements UserServiceInterface
         DB::beginTransaction();
 
         try {
-            $user   = $this->getUserById($userId);
+            $user = $this->getUserById($userId);
             $person = $user->person;
-            $phone  = $user->person->phone[0];
+            $phone = $user->person->phone;
 
             $this->saveUser($user, $data);
             $this->savePerson($person, $data);
@@ -140,10 +141,12 @@ class UserService extends ServiceProvider implements UserServiceInterface
         $person->address()->save($address);
     }
 
-    private function createPhone(Person $person, array $request): void
+    private function createPhone(array $request): int
     {
         $phone = new Phone($request);
-        $person->phone()->save($phone);
+        $phone->save();
+
+        return $phone->id;
     }
     private function getProfileId(array $data)
     {

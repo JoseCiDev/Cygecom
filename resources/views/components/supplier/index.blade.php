@@ -24,61 +24,42 @@
 
                         <table
                             class="table table-hover table-nomargin table-bordered dataTable"
-                            data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
+                            data-nosort="0" data-checkall="all">
                             <thead>
                                 <tr>
-                                    <th class="col-md-1">CNPJ</th>
-                                    <th class="col-md-3">Razão Social</th>
-                                    <th class="col-md-2">Tipo</th>
-                                    <th class="col-md-4">E-mail</th>
-                                    <th class='hidden-350 col-md-2'>Situação</th>
-                                    <th class='hidden-1024 col-md-1'>Criado em</th>
-                                    <th class='hidden-480 col-md-1' >Ações</th>
+                                    <th class="col-md-1">CNPJ/CPF</th>
+                                    <th class="col-md-1">Razão Social</th>
+                                    <th class="col-md-2">Nome Fantasia</th>
+                                    <th class="col-md-2">Indicação</th>
+                                    <th class="col-md-1">Mercado</th>
+                                    <th class='col-md-1'>Situação</th>
+                                    <th class='col-md-1' >Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($suppliers as $supplier)
                                 <tr>
-                                    <td>12.345.678/0001-01</td>
-                                    <td>FORNECEDOR 01</td>
-                                    <td>Serviços</td>
-                                    <td>fornecedor01@empresa.com.br</td>
-                                    <td class='hidden-350 col-md-2'>Qualificado</td>
-                                    <td class='hidden-1024 col-md-1'>10/05/2023</td>
-                                    <td class='hidden-480'>
-                                        <a href="" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
-                                        <button class="btn">
-                                                <i class="fa fa-times"></i>
+                                    <td>{{$supplier->cpf_cnpj}}</td>
+                                    <td>{{$supplier->corporate_name}}</td>
+                                    <td>{{$supplier->name ?? '---'}}</td>
+                                    <td>
+                                        <strong>
+                                            @if ($supplier->supplier_indication === "M") Matéria-Prima
+                                            @elseif ($supplier->supplier_indication === "S") Serviço
+                                            @else Ambos    
+                                            @endif
+                                        </strong>
+                                    </td>
+                                    <td><strong>{{$supplier->market_type}}</strong></td>
+                                    <td>{{$supplier->is_qualified ? 'Qualificado' : 'Em análise'}}</td>
+                                    <td align="center">
+                                        <a href="{{route('supplier', ['id' => $supplier->id])}}" class="btn" rel="tooltip" title="Editar"><i class="fa fa-edit"></i></a>
+                                        <button data-route="supplier" data-name="{{$supplier->corporate_name}}" data-id="{{$supplier->id}}" rel="tooltip" title="Excluir"
+                                                class="btn" data-toggle="modal" data-target="#modal"  ><i class="fa fa-times"></i>
                                         </button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>12.345.678/0002-02</td>
-                                    <td>FORNECEDOR 02</td>
-                                    <td>Serviços</td>
-                                    <td>fornecedor02@empresa.com.br</td>
-                                    <td class='hidden-350 col-md-2'>Qualificado</td>
-                                    <td class='hidden-1024 col-md-1'>10/04/2023</td>
-                                    <td class='hidden-480'>
-                                        <a href="" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
-                                        <button class="btn">
-                                                <i class="fa fa-times"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>12.345.678/0003-03</td>
-                                    <td>FORNECEDOR 03</td>
-                                    <td>Produtos</td>
-                                    <td>fornecedor03@empresa.com.br</td>
-                                    <td class='hidden-350 col-md-2'>Não Qualificado</td>
-                                    <td class='hidden-1024 col-md-1'>10/03/2023</td>
-                                    <td class='hidden-480'>
-                                        <a href="" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
-                                        <button class="btn">
-                                                <i class="fa fa-times"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                @endforeach
                         </table>
                     </div>
                 </div>

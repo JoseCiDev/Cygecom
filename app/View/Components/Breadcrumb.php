@@ -71,6 +71,11 @@ class Breadcrumb extends Component
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'suppliers', 'label' => 'Fornecedores'],
         ],
+        'supplier' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'suppliers', 'label' => 'Fornecedores'],
+            ['route' => 'supplier', 'label' => 'Fornecedor'],
+        ],
         'supplierRegister' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'suppliers', 'label' => 'Fornecedores'],

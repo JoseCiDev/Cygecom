@@ -13,11 +13,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RegisterDefaultAddress::class,
+            PopulateDefaultPhone::class,
             PopulateCompanies::class,
-            PopulateCostCenters::class,
             PopulateUserProfiles::class,
             PopulateProductCategories::class,
             PopulateProducts::class,
+            PopulateCostCenters::class,
             RegisterAdmin::class,
         ]);
     }
