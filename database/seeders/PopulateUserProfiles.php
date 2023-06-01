@@ -12,6 +12,8 @@ class PopulateUserProfiles extends Seeder
         DB::table('user_profiles')->insert([
             ['name' => 'admin', 'isAdmin' => true],
             ['name' => 'normal',  'isAdmin' => false],
+            ['name' => 'suprimentosNutrition',  'isAdmin' => false],
+            ['name' => 'suprimentosPharma',  'isAdmin' => false],
         ]);
     }
 }
