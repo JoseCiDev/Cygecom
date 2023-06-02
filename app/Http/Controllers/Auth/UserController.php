@@ -26,6 +26,7 @@ class UserController extends Controller implements UserControllerInterface
 
     protected $redirectTo = '/users';
     /**
+     * @abstract Responsável por registrar usuário, junto com suas relações: Phone, People e UserCostCenterPermission
      * @param array $data Recebe $data pelo trait RegistersUsers do método register: $request->all();
      * @return User|string Retorna usuário logado para manter autenticação, podendo retornar os erros no redirect;
      */
@@ -66,6 +67,7 @@ class UserController extends Controller implements UserControllerInterface
             'person.costCenter',
             'profile',
             'approver',
+            'userCostCenterPermission.costCenter'
         ])->where('id', $id)->whereNull('deleted_at')->first();
 
         $approvers   = $this->getApprovers('userUpdate', $id);

@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use App\Contracts\UserServiceInterface;
 use App\Models\CostCenter;
-use App\Models\{Address, IdentificationDocuments, Person, Phone, User, UserProfile};
+use App\Models\{Person, Phone, User, UserCostCenterPermission, UserProfile};
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\{DB, Hash};
@@ -66,6 +66,11 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user->approve_limit = $request['approve_limit'];
             $user->save();
 
+            if (auth()->user()->profile->isAdmin) {
+                $costCenterPermissions = $request['user_cost_center_permissions'];
+                $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
+            }
+
             return $user;
         });
     }
@@ -82,6 +87,11 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $this->saveUser($user, $data);
             $this->savePerson($person, $data);
             $this->savePhone($phone, $data);
+
+            if (auth()->user()->profile->isAdmin) {
+                $costCenterPermissions = $data['user_cost_center_permissions'];
+                $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
+            }
 
             DB::commit();
         } catch (Exception $error) {
@@ -117,14 +127,26 @@ class UserService extends ServiceProvider implements UserServiceInterface
         $person->update($data);
     }
 
-    private function saveAddress(Address $address, array $data)
-    {
-        $address->update($data);
-    }
-
     private function savePhone(Phone $phone, array $data)
     {
         $phone->update($data);
+    }
+
+    /**
+     * @param array $data Contêm valores inteiros que representam os cost_center_id's 
+     * @abstract Responsável por criar ou remover relações de usuário com centro de custo
+     */
+    private function saveUserCostCenterPermissions(array $data, int $userId): void
+    {
+        $existingPermissions = UserCostCenterPermission::where('user_id', $userId)->pluck('cost_center_id')->toArray();
+        $newPermissions = array_diff($data, $existingPermissions);
+        $removedPermissions = array_diff($existingPermissions, $data);
+
+        foreach ($newPermissions as $costCenterId) {
+            UserCostCenterPermission::create(['user_id' => $userId, 'cost_center_id' => $costCenterId]);
+        }
+
+        UserCostCenterPermission::whereIn('cost_center_id', $removedPermissions)->where('user_id', $userId)->delete();
     }
 
     /**
@@ -133,12 +155,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
     private function createPerson(array $request): Person
     {
         return Person::create($request);
-    }
-
-    private function createAddress(Person $person, array $request): void
-    {
-        $address = new Address($request);
-        $person->address()->save($address);
     }
 
     private function createPhone(array $request): int
