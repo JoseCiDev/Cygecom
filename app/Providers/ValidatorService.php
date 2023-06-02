@@ -19,6 +19,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'phone_type'     => ['required', 'string'],
         'cost_center_id' => ['required', 'string'],
         'is_buyer'       => ['nullable', 'boolean'],
+        "user_cost_center_permissions" => ['nullable', 'array']
     ];
 
     public $requiredRulesMessages = [
@@ -46,6 +47,8 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'cost_center_id.required' => 'Centro de custo é obrigatório',
 
         'is_buyer.boolean' => 'A pessoa de ter o campo "é comprador" como verdadeiro ou false.',
+
+        "user_cost_center_permissions.array" => "O campo permissões do centro de custo do usuário deve ser um array.",
     ];
 
     public $rulesForUpdate = [
@@ -68,6 +71,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'street'                => ['nullable', 'string', 'max:255'],
         'street_number'         => ['nullable', 'string'],
         'complement'            => ['nullable', 'string', 'max:255'],
+        "user_cost_center_permissions" => ['nullable', 'array']
     ];
 
     public $rulesForUpdateMessages = [
@@ -83,6 +87,8 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'password_confirmation' => 'Confirmação de senha necessária',
 
         'birthdate.date' => 'Data inválida',
+
+        "user_cost_center_permissions.array" => "O campo permissões do centro de custo do usuário deve ser um array.",
     ];
 
     public $rulesForProduct = [
