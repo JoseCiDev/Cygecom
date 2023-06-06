@@ -4,14 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
-return new class() extends Migration
-{
+return new class () extends Migration {
     public function up(): void
     {
         Schema::create('purchase_quotes', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
 
-            $table->text('description');
             $table->integer('quantity')->default(1);
             $table->enum('status', ['pending', 'processing', 'approved', 'declined']);
 
