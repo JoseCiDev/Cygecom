@@ -12,7 +12,6 @@ return new class() extends Migration
             $table->unsignedInteger('id')->autoIncrement();
 
             $table->string('path');
-            $table->string('type');
 
             $table->unsignedInteger('quote_request_id');
             $table->foreign('quote_request_id')->references('id')->on('quote_requests');
