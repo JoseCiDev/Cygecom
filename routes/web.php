@@ -8,10 +8,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'showProfile'])->name('profile');
+
     Route::post('/users/{id}', [App\Http\Controllers\Auth\UserController::class, 'userUpdate'])->name('userUpdate');
 
-    Route::get('/requests', [App\Http\Controllers\OrderRequestController::class, 'index'])->name('requests');
-    Route::get('/request/register', [App\Http\Controllers\OrderRequestController::class, 'showRegistrationForm'])->name('requestRegister');
+    Route::get('/requests/own', [App\Http\Controllers\QuoteRequestController::class, 'ownRequests'])->name('requests.own');
+    Route::get('/request/register', [App\Http\Controllers\QuoteRequestController::class, 'form'])->name('request.register');
+    Route::get('/request/view/{id}', [App\Http\Controllers\QuoteRequestController::class, 'edit'])->name('request.edit');
+
+    Route::post('/request/register', [App\Http\Controllers\QuoteRequestController::class, 'register']);
+    Route::post('/request/delete/{id}', [App\Http\Controllers\QuoteRequestController::class, 'delete'])->name('request.delete');
+    Route::post('/request/update/{id}', [App\Http\Controllers\QuoteRequestController::class, 'update'])->name('request.update');
 
     Route::get('/quotations', [App\Http\Controllers\QuoteController::class, 'index'])->name('quotations');
     Route::get('/quotation/register', [App\Http\Controllers\QuoteController::class, 'showRegistrationForm'])->name('quotationRegister');
@@ -42,5 +48,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/suppliers/register', [App\Http\Controllers\SupplierController::class, 'register']);
         Route::post('/suppliers/delete/{id}', [App\Http\Controllers\SupplierController::class, 'delete']);
         Route::post('/suppliers/update/{id}', [App\Http\Controllers\SupplierController::class, 'update'])->name('supplierUpdate');
+
+        Route::get('/requests', [App\Http\Controllers\QuoteRequestController::class, 'index'])->name('requests');
     });
 });
