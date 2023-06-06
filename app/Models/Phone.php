@@ -34,5 +34,8 @@ class Phone extends Model
     protected $fillable = [
         'number',
         'phone_type',
+        'updated_by',
+        'deleted_by',
+        'deleted_at'
     ];
 }

@@ -36,5 +36,8 @@ class Person extends Model
         'birthdate',
         'cost_center_id',
         'phone_id',
+        'updated_by',
+        'deleted_by',
+        'deleted_at'
     ];
 }
