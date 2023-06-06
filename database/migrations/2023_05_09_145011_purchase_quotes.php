@@ -16,7 +16,7 @@ return new class () extends Migration {
             $table->unsignedInteger('supplier_id');
             $table->foreign('supplier_id')->references('id')->on('suppliers');
 
-            $table->unsignedInteger('quote_request_id')->nullable();
+            $table->unsignedInteger('quote_request_id');
             $table->foreign('quote_request_id')->references('id')->on('quote_requests');
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
