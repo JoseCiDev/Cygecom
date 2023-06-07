@@ -132,22 +132,20 @@
                                 </li>
                             </ul>
                         </li>
-
+						@endif
                         <li>
                             <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
                                 <span>SOLICITAÇÕES</span>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li>
-                                    <a href="{{ route('requests') }}">Minhas Solicitações</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('requests') }}">Solicitações Gerais</a>
-                                </li>
+                                <li><a href="{{ route('requests.own') }}">Minhas Solicitações</a></li>
+                                <li><a href="{{ route('request.register') }}">Nova Solicitação</a></li>
+                                @if (auth()->user()->profile->isAdmin)
+									<li><a href="{{ route('requests') }}">Solicitações Gerais</a></li>
+								@endif
                             </ul>
                         </li>
-                        @endif
 
                         <li>
                             <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
@@ -188,6 +186,28 @@
             </div>
 		</div>
     </div>
+
+	<script>
+		$(() => {
+			$('#DataTables_Table_0').DataTable({
+				"language": {
+				"lengthMenu": "Mostrar _MENU_ registros",
+				"zeroRecords": "Nenhum registro encontrado",
+				"info": "Mostrando página _PAGE_ de _PAGES_",
+				"infoEmpty": "Nenhum registro disponível",
+				"infoFiltered": "(filtrado de _MAX_ registros no total)",
+				"search": "Buscar:",
+				"paginate": {
+					"first": "Primeiro",
+					"last": "Último",
+					"next": "Próximo",
+					"previous": "Anterior"
+				}
+			},
+			"destroy": true
+			});
+		})
+	</script>
 </body>
 
 </html>
