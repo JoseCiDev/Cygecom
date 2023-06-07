@@ -5,17 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class QuoteRequestFile extends Model
 {
     use HasFactory;
 
-    public function categorie()
+    public function quoteRequest()
     {
-        return $this->belongsTo(ProductCategorie::class, 'product_categorie_id');
-    }
-    public function quoteItem()
-    {
-        return $this->hasOne(QuoteItem::class);
+        return $this->belongsTo(QuoteRequest::class);
     }
 
     public function deletedByUser()
@@ -28,10 +24,8 @@ class Product extends Model
     }
 
     protected $fillable = [
-        'name',
-        'description',
-        'unit_price',
-        'product_categorie_id',
+        'path',
+        'quote_request_id',
         'updated_by',
         'deleted_by',
         'deleted_at'

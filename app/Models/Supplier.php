@@ -44,5 +44,8 @@ class Supplier extends Model
         'representative',
         'supplier_type_callisto',
         'payment_type_callisto',
+        'updated_by',
+        'deleted_by',
+        'deleted_at'
     ];
 }

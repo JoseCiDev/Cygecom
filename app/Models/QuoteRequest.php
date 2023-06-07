@@ -24,7 +24,7 @@ class QuoteRequest extends Model
 
     public function user()
     {
-        return $this->belongsToMany(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function deletedByUser()
@@ -35,4 +35,18 @@ class QuoteRequest extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    protected $fillable = [
+        'status',
+        'is_supplies_quote',
+        'is_comex',
+        'is_service',
+        'local_description',
+        'user_id',
+        'description',
+        'desired_date',
+        'updated_by',
+        'deleted_by',
+        'deleted_at'
+    ];
 }

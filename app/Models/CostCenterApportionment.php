@@ -5,17 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class CostCenterApportionment extends Model
 {
     use HasFactory;
 
-    public function categorie()
+    public function costCenter()
     {
-        return $this->belongsTo(ProductCategorie::class, 'product_categorie_id');
+        return $this->belongsTo(CostCenter::class, 'cost_center_id');
     }
-    public function quoteItem()
+
+    public function quoteRequest()
     {
-        return $this->hasOne(QuoteItem::class);
+        return $this->belongsTo(QuoteRequest::class, 'quote_request_id');
     }
 
     public function deletedByUser()
@@ -28,10 +29,10 @@ class Product extends Model
     }
 
     protected $fillable = [
-        'name',
-        'description',
-        'unit_price',
-        'product_categorie_id',
+        'apportionment_percentage',
+        'apportionment_value',
+        'quote_request_id',
+        'cost_center_id',
         'updated_by',
         'deleted_by',
         'deleted_at'

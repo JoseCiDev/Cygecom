@@ -53,10 +53,19 @@ class Breadcrumb extends Component
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'requests', 'label' => 'Solicitações'],
         ],
-        'requestRegister' => [
+        'request.register' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'requests', 'label' => 'Solicitações'],
-            ['route' => 'requestRegister', 'label' => 'Nova solicitação'],
+            ['route' => 'request.register', 'label' => 'Nova solicitação'],
+        ],
+        'request.edit' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'requests', 'label' => 'Solicitações'],
+            ['route' => 'request.edit', 'label' => 'Editar solicitação'],
+        ],
+        'requests.own' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'requests.own', 'label' => 'Minhas solicitações'],
         ],
         'quotations' => [
             ['route' => 'home', 'label' => 'Home'],

@@ -24,5 +24,8 @@ class UserCostCenterPermission extends Model
     protected $fillable = [
         'user_id',
         'cost_center_id',
+        'updated_by',
+        'deleted_by',
+        'deleted_at'
     ];
 }

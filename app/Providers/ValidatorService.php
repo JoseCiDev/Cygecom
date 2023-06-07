@@ -201,6 +201,53 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'phone_type.max' => 'O tipo de Telefone deve ter no máximo :max caracteres.',
     ];
 
+    public $rulesForQuoteRequest = [
+        'cost_center_apportionments' => ['required', 'array'],
+        'cost_center_apportionments.cost_center_id' => ['nullable', 'numeric', 'min:1'],
+        'cost_center_apportionments.apportionment_percentage' => ['nullable', 'numeric', 'min:1'],
+        'is_service' => ['required', 'boolean'],
+        'is_supplies_quote' => ['required', 'boolean'],
+        'is_comex' => ['required', 'boolean'],
+        'local_description' => ['required', 'string'],
+        'cost_center_apportionments.apportionment_value' => ['nullable', 'string'],
+        'description' => ['nullable', 'string'],
+        'desired_date' => ['nullable', 'date'],
+        'quote_request_files' => ['nullable', 'array'],
+        'quote_request_files.path' => ['nullable', 'string'],
+    ];
+
+    public $messagesForQuoteRequest = [
+        'cost_center_apportionments.required' => 'O campo de rateio do centro de custo é obrigatório.',
+        'cost_center_apportionments.array' => 'O rateio do centro de custo deve ser um array.',
+
+        'cost_center_apportionments.cost_center_id.numeric' => 'O ID do centro de custo deve ser uma número.',
+        'cost_center_apportionments.cost_center_id.min' => 'O ID do centro de custo deve ser maior que 0.',
+
+        'cost_center_apportionments.apportionment_percentage.numeric' => 'A porcentagem de rateio deve ser uma número.',
+        'cost_center_apportionments.apportionment_percentage.min' => 'A porcentagem de rateio deve ser maior que 0.',
+
+        'is_service.required' => 'O campo de serviço é obrigatório.',
+        'is_service.boolean' => 'O campo de serviço deve ser um booleano.',
+
+        'is_supplies_quote.required' => 'O campo de cotação de suprimentos é obrigatório.',
+        'is_supplies_quote.boolean' => 'O campo de cotação de suprimentos deve ser um booleano.',
+
+        'is_comex.required' => 'O campo de comex é obrigatório.',
+        'is_comex.boolean' => 'O campo de comex deve ser um booleano.',
+
+        'local_description.required' => 'O campo de descrição local é obrigatório.',
+        'local_description.string' => 'A descrição local deve ser uma string.',
+
+        'cost_center_apportionments.apportionment_value.string' => 'O valor do rateio deve ser uma string.',
+
+        'description.string' => 'A descrição deve ser uma string.',
+
+        'desired_date.date' => 'A data desejada deve ser uma data válida.',
+
+        'quote_request_files.array' => 'Os arquivos de solicitação de cotação devem ser um array.',
+        'quote_request_files.path.string' => 'O caminho dos arquivos de solicitação de cotação deve ser uma string.',
+    ];
+
 
     public function registerValidator(array $data)
     {
@@ -237,6 +284,15 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
     {
         $rules = $this->rulesForSupplier;
         $messages  = $this->messagesForSupplier;
+        $validator = Validator::make($data, $rules, $messages);
+
+        return $validator;
+    }
+
+    public function quoteRequest(array $data)
+    {
+        $rules = $this->rulesForQuoteRequest;
+        $messages  = $this->messagesForQuoteRequest;
         $validator = Validator::make($data, $rules, $messages);
 
         return $validator;
