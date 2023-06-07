@@ -13,7 +13,11 @@
                     Excluir solicitação
                 </button>
             </div>
-        @endif
+        @else
+            <div class="col-md-6">
+                <x-LastQuoteRequestSidebar/>
+            </div>
+        @endif    
     </div>
 </div>
 
