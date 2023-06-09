@@ -33,13 +33,13 @@ class QuoteRequestController extends Controller
         return view('components.quote-request.index', ["quoteRequests" => $quoteRequests]);
     }
 
-    public function form(int $id)
+    public function form(int $quoteRequestIdToCopy = null)
     {
         $companies   = Company::all();
         $costCenters = CostCenter::all();
         $params = ["companies" => $companies, "costCenters" => $costCenters];
-        if ($id) {
-            $params['quoteRequestIdToCopy'] = $id;
+        if ($quoteRequestIdToCopy) {
+            $params['quoteRequestIdToCopy'] = $quoteRequestIdToCopy;
         }
 
         return view('components.quote-request.register', $params);

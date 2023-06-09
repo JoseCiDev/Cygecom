@@ -13,13 +13,14 @@ class QuoteRequestForm extends Component
 {
     private $quoteRequestService;
     private $id;
+    private $isCopy;
 
-    public function __construct(QuoteRequestService $quoteRequestService, int $id = null)
+    public function __construct(QuoteRequestService $quoteRequestService, int $id = null, $isCopy = false)
     {
         $this->quoteRequestService = $quoteRequestService;
+        $this->isCopy = $isCopy;
         $this->id = $id;
     }
-
 
     public function render(): View|Closure|string
     {
@@ -30,8 +31,8 @@ class QuoteRequestForm extends Component
         if ($this->id) {
             $params['id'] = $this->id;
             $params['quoteRequest'] = $this->quoteRequestService->quoteRequestById($this->id);
+            $params['isCopy'] = $this->isCopy;
         }
-
         return view('components.quote-request.quote-request-form', $params);
     }
 }

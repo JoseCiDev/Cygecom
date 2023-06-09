@@ -13,16 +13,15 @@
                     Excluir solicitação
                 </button>
             </div>
-        @else
-            <div class="col-md-6">
-                <x-LastQuoteRequestSidebar/>
-            </div>
         @endif    
     </div>
 </div>
 
 <div class="box-content">
-    <form id="request-form" method="POST" action="{{isset($quoteRequest) ? route( 'request.update', ['id' => $id]) : route( 'request.register') }}" class="form-validate">
+    <form class="form-validate" id="request-form" method="POST" 
+            action="@if (isset($quoteRequest) && !$isCopy) {{route( 'request.update', ['id' => $id])}}
+                    @else {{route( 'request.register')}} 
+                @endif">
         @csrf
 
         <div class="row center-block" style="padding-bottom: 10px;">
@@ -100,7 +99,7 @@
                     <div class="form-check" style="display:inline; margin-left:12px;">
                         <input checked class="radio_request" type="radio" id="supplie_quote" name="is_supplies_quote"value="1" servicesdata-skin="minimal">
                         <label class="form-check-label" for="services" style="margin-right">Suprimentos</label>
-                        <input name="is_supplies_quote"value="0" @if (isset($quoteRequest) && !$quoteRequest->is_suppliers_quote) checked @endif
+                        <input name="is_supplies_quote"value="0" @if (isset($quoteRequest) && !$quoteRequest->is_supplies_quote) checked @endif
                                 style="margin-left:12px;" class="radio_request" type="radio" id="user_quote" productsdata-skin="minimal">
                         <label class="form-check-label" for="personal">Eu farei a cotação</label>
                     </div>

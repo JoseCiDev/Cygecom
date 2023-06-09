@@ -35,16 +35,6 @@ class QuoteRequestService extends ServiceProvider
         ])->whereNull('deleted_at')->where('user_id', $id)->get();
     }
 
-    public function lastQuoteRequestsByUserWithDeletes(int $id = null, int $quantity = 5)
-    {
-        $id = $id ?? auth()->user()->id;
-        return QuoteRequest::with([
-            'purchaseQuote', 'user', 'user.person', 'quoteRequestFile',
-            'costCenterApportionment', 'costCenterApportionment.costCenter', 'costCenterApportionment.costCenter.company',
-            'deletedByUser', 'updatedByUser'
-        ])->where('user_id', $id)->orderByDesc('id')->take($quantity)->get();
-    }
-
     public function quoteRequestById(int $id)
     {
         return QuoteRequest::with([
