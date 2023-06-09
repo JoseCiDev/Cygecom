@@ -110,7 +110,7 @@
                 <div class="product-row">
                     <div class="col-sm-8">
                         <div class="form-group">
-                            <label for="description" class="control-label">Descrição</label>
+                            <label for="description" class="control-label"><sup class="description-span" style="color: red;">*</sup>Descrição</label>
                             <textarea name="description" id="description" rows="4" style="resize:none;" placeholder="Ex: Compra de 1 mesa para sala de reunião da HKM."
                                 class="form-control text-area">@if (isset($quoteRequest)) {{$quoteRequest->description}} @endif</textarea>
                         </div>
@@ -176,8 +176,12 @@
         $('input[name="isSaveAndQuote"]').val('1');
         $('#request-form').submit();
       });
+
+      $('input[name="is_supplies_quote"]').change(function() {
+            $('#supplie_quote').is(':checked') ? $('.description-span').show() : $('.description-span').hide()
+        });
     });
-    </script>
+</script>
 
 {{-- ADD +1 CENTRO DE CUSTO --}}
 <script>
