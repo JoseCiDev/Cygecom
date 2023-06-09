@@ -38,13 +38,14 @@ class QuoteRequestController extends Controller
         $companies   = Company::all();
         $costCenters = CostCenter::all();
         $params = ["companies" => $companies, "costCenters" => $costCenters];
+        $isAdmin = auth()->user()->profile->isAdmin;
 
         try {
-            if ($quoteRequestIdToCopy && auth()->user()->profile->isAdmin) {
-                $params['quoteRequestIdToCopy'] = $quoteRequestIdToCopy;
-            } else {
-                $isAuthorized = auth()->user()->quoteRequest->where('id', $quoteRequestIdToCopy)->whereNull('deleted_at')->first();
-                if ($isAuthorized === null) return throw new Exception('Acesso não autorizado para essa solicitação de compra.');
+            if ($quoteRequestIdToCopy) {
+                if (!$isAdmin) {
+                    $isAuthorized = auth()->user()->quoteRequest->where('id', $quoteRequestIdToCopy)->whereNull('deleted_at')->first();
+                    if (!$isAuthorized) return throw new Exception('Acesso não autorizado para essa solicitação de compra.');
+                }
                 $params['quoteRequestIdToCopy'] = $quoteRequestIdToCopy;
             }
             return view('components.quote-request.register', $params);
@@ -55,8 +56,10 @@ class QuoteRequestController extends Controller
 
     public function edit(int $id)
     {
+        $isAdmin = auth()->user()->profile->isAdmin;
+
         try {
-            if (auth()->user()->profile->isAdmin) {
+            if ($isAdmin) {
                 return view('components.quote-request.edit', ["id" => $id]);
             } else {
                 $quoteRequest = auth()->user()->quoteRequest->find($id);
