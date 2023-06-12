@@ -1,3 +1,9 @@
+<style>
+    .cost-center-container{
+        margin-bottom: 10px
+    }
+</style>
+
 <div class="box-title">
     <div class="row">
         <div class="col-md-6">
@@ -27,53 +33,92 @@
         <div class="row center-block" style="padding-bottom: 10px;">
             <h4>CONTRATANTE</h4>
         </div>
-        <div class="row cnpj-row" data-cnpj="1">
 
-            <div class="col-sm-6">
-                <label for="textfield" class="control-label">Centro de custo da despesa</label>
-                <select name="cost_center_apportionments[cost_center_id]" id="cost_center_id" class='chosen-select form-control @error('cost_center_id') is-invalid @enderror' required data-rule-required="true">
-                    @foreach($costCenters as $costCenter)
-                        <option value="{{ $costCenter->id }}" {{ isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id ? 'selected' : '' }}>
-                            {{ $costCenter->name  }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+        {{-- CENTRO DE CUSTOS --}}
+        @if(isset($quoteRequest))
+            @foreach (($quoteRequest->costCenterApportionment) as $index => $apportionment)
+                <div class="row cost-center-container">
+                    <div class="col-sm-6">
+                        <label for="textfield" class="control-label">Centro de custo da despesa</label>
+                        <select name="cost_center_apportionments[{{$index}}][cost_center_id]" id="cost_center_id_{{$index}}" class='chosen-select form-control @error('cost_center_id_{{$index}}') is-invalid @enderror' required data-rule-required="true">
+                            @foreach($costCenters as $costCenter)
+                                @php $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id; @endphp
+                                <option value="{{ $costCenter->id }}" {{ $isApportionmentSelect ? 'selected' : '' }}>
+                                    {{ $costCenter->name  }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-            <div class="col-md-2">
-                <label for="cost_center_apportionments[apportionment_percentage]" class="control-label"><sup style="color:red">*</sup>Rateio</label>
-                <div class="input-group">
-                    <span class="input-group-addon">%</span>
-                    <input type="number" name="cost_center_apportionments[apportionment_percentage]" id="cost_center_apportionments[apportionment_percentage]" placeholder="0.00" class="form-control" min="0">
-                    @error('cost_center_apportionments[apportionment_percentage]') <p><strong>{{ $message }}</strong></p> @enderror
+                    <div class="col-md-2">
+                        <label for="cost_center_apportionments[{{$index}}][apportionment_percentage]" class="control-label"><sup style="color:red">*</sup>Rateio</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">%</span>
+                            <input type="number" placeholder="0.00" class="form-control" min="0" 
+                                    name="cost_center_apportionments[{{$index}}][apportionment_percentage]" id="cost_center_apportionments[{{$index}}][apportionment_percentage]"
+                                        value="{{$apportionment->apportionment_percentage}}" >
+                            @error('cost_center_apportionments[{{$index}}][apportionment_percentage]') <p><strong>{{ $message }}</strong></p> @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="cost_center_apportionments[{{$index}}][apportionment_value]" class="control-label"><sup style="color:red">*</sup>Rateio</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">R$</span>
+                            <input type="number" name="cost_center_apportionments[{{$index}}][apportionment_value]" id="cost_center_apportionments[{{$index}}][apportionment_value]" placeholder="0.00" class="form-control" min="0">
+                            @error('cost_center_apportionments[{{$index}}][apportionment_value]') <p><strong>{{ $message }}</strong></p> @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-1" style="margin-top: 28px;">
+                        <button class="btn btn-icon btn-small btn-danger delete-cost-center"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <div class="row cost-center-container">
+                <div class="col-sm-6">
+                    <label for="textfield" class="control-label">Centro de custo da despesa</label>
+                    <select name="cost_center_apportionments[0][cost_center_id]" id="cost_center_id_0" class='chosen-select form-control @error('cost_center_id_{{$index}}') is-invalid @enderror' required data-rule-required="true">
+                        @foreach($costCenters as $costCenter)
+                            @php $isUserCostCenter = isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id @endphp
+                            <option value="{{ $costCenter->id }}" {{$isUserCostCenter ? 'selected' : '' }}>
+                                {{ $costCenter->name  }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label"><sup style="color:red">*</sup>Rateio</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">%</span>
+                        <input type="number" placeholder="0.00" class="form-control" min="0" 
+                                name="cost_center_apportionments[0][apportionment_percentage]" id="cost_center_apportionments[0][apportionment_percentage]">
+                        @error('cost_center_apportionments[0][apportionment_percentage]') <p><strong>{{ $message }}</strong></p> @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="cost_center_apportionments[0][apportionment_value]" class="control-label"><sup style="color:red">*</sup>Rateio</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">R$</span>
+                        <input type="number" name="cost_center_apportionments[0][apportionment_value]" id="cost_center_apportionments[0][apportionment_value]" placeholder="0.00" class="form-control" min="0">
+                        @error('cost_center_apportionments[0][apportionment_value]') <p><strong>{{ $message }}</strong></p> @enderror
+                    </div>
+                </div>
+
+                <div class="col-sm-1" style="margin-top: 28px;">
+                    <button class="btn btn-icon btn-small btn-danger delete-cost-center">
+                        <i class="fa fa-trash-o"></i>
+                    </button>
                 </div>
             </div>
+        @endif
 
-            <div class="col-md-2">
-                <label for="cost_center_apportionments[apportionment_value]" class="control-label"><sup style="color:red">*</sup>Rateio</label>
-                <div class="input-group">
-                    <span class="input-group-addon">R$</span>
-                    <input type="number" name="cost_center_apportionments[apportionment_value]" id="cost_center_apportionments[apportionment_value]" placeholder="0.00" class="form-control" min="0">
-                    @error('cost_center_apportionments[apportionment_value]') <p><strong>{{ $message }}</strong></p> @enderror
-                </div>
-            </div>
-
-            <div class="col-sm-1" hidden style="margin-top: 28px;">
-                <button class="btn btn-icon btn-small btn-danger delete-cnpj">
-                    <i class="fa fa-trash-o"></i>
-                </button>
-            </div>
-
-            {{-- ADICIONAR CNPJ --}}
-            <div class="col-sm-1">
-                <div class="form-actions pull-right" style="margin-top:10px;">
-                    <a class="btn btn-primary add-cnpj-btn">
-                        <i class="glyphicon glyphicon-plus"></i>
-                    </a>
-                </div>
-            </div>
-
-        </div>
+        {{-- ADICIONAR CENTRO DE CUSTO --}}
+        <button type="button" class="btn btn-small btn-primary add-cost-center-btn"><i class="glyphicon glyphicon-plus"></i></button>
+        {{-- CENTRO DE CUSTO FIM --}}
 
         <hr>
 
@@ -124,7 +169,7 @@
             <div class="row">
                 <div class="col-sm-6" style="margin-bottom:8px;">
                     <div class="form-group product-input" id="product-input">
-                        <label for="local_description" class="control-label">Local de entrega do produto</label>
+                        <label for="local_description" class="control-label"><sup style="color: red">*</sup>Local de entrega do produto</label>
                         <input name="local_description" value="@if (isset($quoteRequest)) {{$quoteRequest->local_description}} @endif"
                                 type="text" id="local_description" placeholder="Local onde será entregue o(s) produto(s) solicitados" class="form-control" data-rule-required="true" data-rule-minlength="2">
                     </div>
@@ -172,110 +217,79 @@
 
 <script>
     $(document).ready(function() {
-      $('#isSaveAndQuote').click(function() {
-        $('input[name="isSaveAndQuote"]').val('1');
-        $('#request-form').submit();
-      });
+        // Submit quando é salvar e cotar
+        $('#isSaveAndQuote').click(function() {
+            $('input[name="isSaveAndQuote"]').val('1');
+            $('#request-form').submit();
+        });
 
-      $('input[name="is_supplies_quote"]').change(function() {
+        // Verifica quem vai cotar e aplica regra em campo description
+        $('input[name="is_supplies_quote"]').change(function() {
             $('#supplie_quote').is(':checked') ? $('.description-span').show() : $('.description-span').hide()
         });
-    });
-</script>
 
-{{-- ADD +1 CENTRO DE CUSTO --}}
-<script>
-    $(document).ready(function() {
-        let cnpjCount = 1;
-        $(document).on('click', '.add-cnpj-btn', function() {
-            const cnpjRow = $('.cnpj-row').last();
-            const clonedRow = cnpjRow.clone();
-            clonedRow.find('.add-cnpj-btn').remove();
-            clonedRow.find('.col-sm-1').removeAttr('hidden');
-            clonedRow.find("input, select").val("");
-            clonedRow.find('.select2-container').remove();
-            // clonedRow.find('.select2-me').attr('id', 's2-' + cnpjCount).select2();
-            clonedRow.find('.select2-me').each(function() {
-                $(this).attr({
-                    id: Math.random()
-                })
-            }).select2();
-            cnpjRow.after(clonedRow);
-            cnpjCount++;
+        // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
+        $('.cost-center-container input[name$="[apportionment_percentage]"], .cost-center-container input[name$="[apportionment_value]"]').on('input', function() {
+            const selectedInput = $(this);
+            const selectedInputValue = selectedInput.val();
+            const selectedInputType = selectedInput.attr('name').includes('apportionment_percentage') ? 'apportionment_percentage' : 'apportionment_value';
+
+            $('.cost-center-container input[name$="[apportionment_percentage]"], .cost-center-container input[name$="[apportionment_value]"]').not(selectedInput).each(function() {
+                const otherInput = $(this);
+                const otherInputValue = otherInput.val();
+                const otherInputType = otherInput.attr('name').includes('apportionment_percentage') ? 'apportionment_percentage' : 'apportionment_value';
+
+                if (selectedInputValue !== '' || otherInputValue !== '') {
+                    if (otherInputType !== selectedInputType) {
+                        otherInput.prop('disabled', true);
+                    }
+                } else {
+                    otherInput.prop('disabled', false);
+                }
+            });
         });
-        $(document).on('click', '.delete-cnpj', function() {
-            const cnpjRow = $(this).closest('.cnpj-row');
-            cnpjRow.remove();
-            cnpjCount--;
+
+        // {{-- ADD +1 CENTRO DE CUSTO --}}
+        let costCenterCounter = 100;
+        $('.add-cost-center-btn').click(function(e) {
+            let newRow = $('.cost-center-container').first().clone();
+            
+            // Reinicializar o Select2 no select box clonado
+            newRow.find('select.chosen-select').each(function() {
+                let selectElement = $(this);
+                selectElement.next('.select2-container').remove();
+                selectElement.show();
+                // Inicializar o Select2 novamente com as configurações padrão
+                selectElement.select2();
+            });
+
+            // Atualizar os índices dos nomes e IDs dos inputs e selects
+            newRow.find('select[name^="cost_center_apportionments"], input[name^="cost_center_apportionments"]').each(function() {
+                let oldName = $(this).attr('name');
+                let newName = oldName.replace(/\[(\d+)\]/, '[' + costCenterCounter + ']');
+                $(this).attr('name', newName);
+
+                let newId = 'cost_center_id_' + costCenterCounter;
+                $(this).attr('id', newId);
+            });
+
+            // Inserir a nova linha após a última linha cost-center-container
+            $('.cost-center-container').last().after(newRow);
+
+          
+            $lastTabindex = $('.chosen-single[tabindex="-1"]').last()
+            $lastTabindex.remove()
+
+            // Exibir o botão de exclusão na nova linha
+            newRow.find('.delete-cost-center').removeAttr('hidden');
+
+            // Incrementar o contador
+            costCenterCounter++;
+        });
+
+        // Manipulador de evento para o botão "delete-cost-center"
+        $(document).on('click', '.delete-cost-center', function(e) {
+            $(this).closest('.cost-center-container').remove();
         });
     });
 </script>
-
-{{-- SERVICES / PRODUCTS --}}
-<script>
-    $(document).ready(function() {
-        $('.radio_request').change(function() {
-            const selectedValue = $(this).val();
-
-            if (selectedValue === 'services') {
-                $('#service-input').show();
-                $('#product-input').hide();
-            } else if (selectedValue === 'products') {
-                $('#service-input').hide();
-                $('#product-input').show();
-            }
-        });
-    });
-</script>
-
-{{-- QUOTED_BY --}}
-<script>
-    $(document).ready(function() {
-        $('#quoted_by').change(function() {
-        const selectedValue = $(this).val();
-        const descriptionTextarea = $('#description');
-
-        if (selectedValue === 'quoted_by_suprimentos') {
-            descriptionTextarea.prop('required', true);
-        } else if (selectedValue === 'quoted_by_user') {
-            descriptionTextarea.prop('required', false);
-        }
-    });
-});
-</script>
-
-{{-- SE COTADO POR SUPRIMENTOS, DESC REQURIED --}}
-<script>
-    $(document).ready(function() {
-        $('.radio_request').change(function() {
-          if ($(this).val() === 'quoted_by_suprimentos') {
-            $('#description').addClass('required');
-          } else {
-            $('#description').removeClass('required');
-          }
-        });
-      });
-</script>
-
-{{-- desabilita um dos "rateios" qnd outro estiver preenchido --}}
-<script>
-    $(document).ready(function() {
-        // se percentual preenchido
-      $('#unit_price_percentage').on('input', function() {
-        if ($(this).val()) {
-          $('#unit_price_currency').prop('disabled', true);
-        } else {
-          $('#unit_price_currency').prop('disabled', false);
-        }
-      });
-
-      // se moeda
-      $('#unit_price_currency').on('input', function() {
-        if ($(this).val()) {
-          $('#unit_price_percentage').prop('disabled', true);
-        } else {
-          $('#unit_price_percentage').prop('disabled', false);
-        }
-      });
-    });
-  </script>
