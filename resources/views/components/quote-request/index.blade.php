@@ -47,7 +47,8 @@
                                 <td>{{$quoteRequest->desired_date}}</td>
                                 <td>{{$quoteRequest->updated_at}}</td>
                                 <td>
-                                    <a href="{{route('request.edit', ['id' => $quoteRequest->id])}}" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
+                                    <a href="{{route('request.edit', ['id' => $quoteRequest->id])}}" class="btn" rel="tooltip" title="Editar"><i class="fa fa-edit"></i></a>
+                                    <a href="{{route('request.register', ['id' => $quoteRequest->id])}}" rel="tooltip" title="Copiar" class="btn"><i class="fa fa fa-copy"></i></a>
                                     <button data-route="quoteRequests" data-name="{{'Solicitação de compra - ID ' . $quoteRequest->id}}" data-id="{{$quoteRequest->id}}" 
                                                 rel="tooltip" title="Excluir" class="btn" data-toggle="modal" data-target="#modal"  >
                                         <i class="fa fa-times"></i>

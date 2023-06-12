@@ -12,7 +12,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/users/{id}', [App\Http\Controllers\Auth\UserController::class, 'userUpdate'])->name('userUpdate');
 
     Route::get('/requests/own', [App\Http\Controllers\QuoteRequestController::class, 'ownRequests'])->name('requests.own');
-    Route::get('/request/register', [App\Http\Controllers\QuoteRequestController::class, 'form'])->name('request.register');
+    Route::get('/request/register/{id?}', [App\Http\Controllers\QuoteRequestController::class, 'form'])->name('request.register');
     Route::get('/request/view/{id}', [App\Http\Controllers\QuoteRequestController::class, 'edit'])->name('request.edit');
 
     Route::post('/request/register', [App\Http\Controllers\QuoteRequestController::class, 'register']);

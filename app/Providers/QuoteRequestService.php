@@ -103,13 +103,31 @@ class QuoteRequestService extends ServiceProvider
         }
     }
 
+    /**
+     * @abstract Responsável por criar, atualizar ou remover relações de rateios com centro de custo
+     */
     private function saveCostCenterApportionment(int $quoteRequestId, array $data): void
     {
+        $userId = auth()->user()->id;
         $apportionmentData = $data['cost_center_apportionments'];
-        $apportionmentData['quote_request_id'] = $quoteRequestId;
-        $apportionmentData['updated_by'] = auth()->user()->id;
-        CostCenterApportionment::updateOrCreate(['quote_request_id' => $quoteRequestId], $apportionmentData);
+        $existingIds = CostCenterApportionment::where('quote_request_id', $quoteRequestId)->pluck('id')->toArray();
+
+        foreach ($apportionmentData as $apportionment) {
+            $apportionment['quote_request_id'] = $quoteRequestId;
+            $apportionment['updated_by'] = $userId;
+            $existingRecord = CostCenterApportionment::where(['quote_request_id' => $quoteRequestId, 'cost_center_id' => $apportionment['cost_center_id']])->first();
+
+            if ($existingRecord) {
+                $existingRecord->update($apportionment);
+                $existingIds = array_diff($existingIds, [$existingRecord->id]);
+            } else {
+                CostCenterApportionment::create($apportionment);
+            }
+        }
+
+        CostCenterApportionment::whereIn('id', $existingIds)->delete();
     }
+
     private function saveQuoteRequestFile(int $quoteRequestId, array $data): void
     {
         $quoteRequestFile = $data['quote_request_files'];

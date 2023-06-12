@@ -11,7 +11,12 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-color box-bordered colored">
-                <x-QuoteRequestForm />
+                @php
+                    $quoteRequestId = isset($quoteRequestIdToCopy) ? $quoteRequestIdToCopy : null;
+                    $isCopy = isset($quoteRequestIdToCopy) ? true : false;
+                @endphp
+
+                <x-QuoteRequestForm :id="$quoteRequestId" :isCopy="$isCopy" />
             </div>
         </div>
     </div>
