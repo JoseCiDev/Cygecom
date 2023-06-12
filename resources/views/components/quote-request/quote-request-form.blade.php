@@ -51,7 +51,7 @@
                     </div>
 
                     <div class="col-md-2">
-                        <label for="cost_center_apportionments[{{$index}}][apportionment_percentage]" class="control-label"><sup style="color:red">*</sup>Rateio</label>
+                        <label for="cost_center_apportionments[{{$index}}][apportionment_percentage]" class="control-label"><sup style="color:red">*</sup>Rateio (%)</label>
                         <div class="input-group">
                             <span class="input-group-addon">%</span>
                             <input type="number" placeholder="0.00" class="form-control" min="0" 
@@ -62,7 +62,7 @@
                     </div>
 
                     <div class="col-md-2">
-                        <label for="cost_center_apportionments[{{$index}}][apportionment_value]" class="control-label"><sup style="color:red">*</sup>Rateio</label>
+                        <label for="cost_center_apportionments[{{$index}}][apportionment_value]" class="control-label"><sup style="color:red">*</sup>Rateio (R$)</label>
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
                             <input type="number" placeholder="0.00" class="form-control" min="0" 
@@ -92,7 +92,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label"><sup style="color:red">*</sup>Rateio</label>
+                    <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label"><sup style="color:red">*</sup>Rateio (%)</label>
                     <div class="input-group">
                         <span class="input-group-addon">%</span>
                         <input type="number" placeholder="0.00" class="form-control" min="0" 
@@ -102,7 +102,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <label for="cost_center_apportionments[0][apportionment_value]" class="control-label"><sup style="color:red">*</sup>Rateio</label>
+                    <label for="cost_center_apportionments[0][apportionment_value]" class="control-label"><sup style="color:red">*</sup>Rateio (R$)</label>
                     <div class="input-group">
                         <span class="input-group-addon">R$</span>
                         <input type="number" name="cost_center_apportionments[0][apportionment_value]" id="cost_center_apportionments[0][apportionment_value]" placeholder="0.00" class="form-control" min="0">
@@ -253,6 +253,10 @@
 
             $('.cost-center-container input[name$="[apportionment_percentage]"]').not(':disabled').prop('disabled', !hasPercentageInput && hasValueInput);
             $('.cost-center-container input[name$="[apportionment_value]"]').not(':disabled').prop('disabled', !hasValueInput && hasPercentageInput);
+            if (!hasPercentageInput && !hasValueInput) {
+                $('.cost-center-container input[name$="[apportionment_percentage]"]').prop('disabled', false);
+                $('.cost-center-container input[name$="[apportionment_value]"]').prop('disabled', false);
+            } 
         }
         updateApportionmentFields();
 
