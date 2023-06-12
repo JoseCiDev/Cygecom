@@ -25,7 +25,9 @@ class QuoteRequestForm extends Component
     public function render(): View|Closure|string
     {
         $companies = Company::all();
-        $costCenters = CostCenter::all();
+        $userCostCenters = auth()->user()->userCostCenterPermission;
+        $costCenters = CostCenter::whereIn('id', $userCostCenters->pluck('cost_center_id'))->get();
+
         $params = ["companies" => $companies, "costCenters" => $costCenters];
 
         if ($this->id) {
