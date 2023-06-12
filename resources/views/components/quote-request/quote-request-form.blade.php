@@ -65,7 +65,9 @@
                         <label for="cost_center_apportionments[{{$index}}][apportionment_value]" class="control-label"><sup style="color:red">*</sup>Rateio</label>
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
-                            <input type="number" name="cost_center_apportionments[{{$index}}][apportionment_value]" id="cost_center_apportionments[{{$index}}][apportionment_value]" placeholder="0.00" class="form-control" min="0">
+                            <input type="number" placeholder="0.00" class="form-control" min="0" 
+                                    name="cost_center_apportionments[{{$index}}][apportionment_value]" id="cost_center_apportionments[{{$index}}][apportionment_value]" 
+                                    value="{{$apportionment->apportionment_value}}">
                             @error('cost_center_apportionments[{{$index}}][apportionment_value]') <p><strong>{{ $message }}</strong></p> @enderror
                         </div>
                     </div>
@@ -156,7 +158,7 @@
                     <div class="col-sm-8">
                         <div class="form-group">
                             <label for="description" class="control-label"><sup class="description-span" style="color: red;">*</sup>Descrição</label>
-                            <textarea name="description" id="description" rows="4" style="resize:none;" placeholder="Ex: Compra de 1 mesa para sala de reunião da HKM."
+                            <textarea required name="description" id="description" rows="4" style="resize:none;" placeholder="Ex: Compra de 1 mesa para sala de reunião da HKM."
                                 class="form-control text-area">@if (isset($quoteRequest)) {{$quoteRequest->description}} @endif</textarea>
                         </div>
                         <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
@@ -175,7 +177,7 @@
                     </div>
                 </div>
                 <div class="col-sm-6" style="padding-top:30px;">
-                    <label for="form-check" class="control-label" style="padding-right:10px;">Produto importado pelo COMEX?</label>
+                    <label for="form-check" class="control-label" style="padding-right:10px;"><sup style="color: red">*</sup>Produto importado pelo COMEX?</label>
                     <div class="form-check" style="12px; display:inline;">
                         <input name="is_comex" value="1" @if (isset($quoteRequest) && $quoteRequest->is_comex) checked @endif
                                 class="radio-comex" type="radio"  data-skin="minimal">
@@ -225,33 +227,44 @@
 
         // Verifica quem vai cotar e aplica regra em campo description
         $('input[name="is_supplies_quote"]').change(function() {
-            $('#supplie_quote').is(':checked') ? $('.description-span').show() : $('.description-span').hide()
+            if($('#supplie_quote').is(':checked')) {
+                $('#description').prop('required', true)
+                $('.description-span').show()
+            } else {
+                $('#description').prop('required', false)
+                $('.description-span').hide()
+            }
         });
+
+        function checkCostCenterCount() {
+            const costCenterCount = $('.cost-center-container').length;
+            costCenterCount > 1 ? $('.delete-cost-center').prop('disabled', false) : $('.delete-cost-center').prop('disabled', true);
+        }
+        checkCostCenterCount()
+
+        function updateApportionmentFields() {
+            const hasPercentageInput = $('.cost-center-container input[name$="[apportionment_percentage]"]').filter(function() {
+                return $(this).val() !== '';
+            }).length > 0;
+
+            const hasValueInput = $('.cost-center-container input[name$="[apportionment_value]"]').filter(function() {
+                return $(this).val() !== '';
+            }).length > 0;
+
+            $('.cost-center-container input[name$="[apportionment_percentage]"]').not(':disabled').prop('disabled', !hasPercentageInput && hasValueInput);
+            $('.cost-center-container input[name$="[apportionment_value]"]').not(':disabled').prop('disabled', !hasValueInput && hasPercentageInput);
+        }
+        updateApportionmentFields();
 
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
         $('.cost-center-container input[name$="[apportionment_percentage]"], .cost-center-container input[name$="[apportionment_value]"]').on('input', function() {
-            const selectedInput = $(this);
-            const selectedInputValue = selectedInput.val();
-            const selectedInputType = selectedInput.attr('name').includes('apportionment_percentage') ? 'apportionment_percentage' : 'apportionment_value';
-
-            $('.cost-center-container input[name$="[apportionment_percentage]"], .cost-center-container input[name$="[apportionment_value]"]').not(selectedInput).each(function() {
-                const otherInput = $(this);
-                const otherInputValue = otherInput.val();
-                const otherInputType = otherInput.attr('name').includes('apportionment_percentage') ? 'apportionment_percentage' : 'apportionment_value';
-
-                if (selectedInputValue !== '' || otherInputValue !== '') {
-                    if (otherInputType !== selectedInputType) {
-                        otherInput.prop('disabled', true);
-                    }
-                } else {
-                    otherInput.prop('disabled', false);
-                }
-            });
+            updateApportionmentFields();
         });
 
-        // {{-- ADD +1 CENTRO DE CUSTO --}}
+        // Add Centro de Custo
         let costCenterCounter = 100;
         $('.add-cost-center-btn').click(function(e) {
+            updateApportionmentFields();
             let newRow = $('.cost-center-container').first().clone();
             
             // Reinicializar o Select2 no select box clonado
@@ -276,12 +289,13 @@
             // Inserir a nova linha após a última linha cost-center-container
             $('.cost-center-container').last().after(newRow);
 
-          
             $lastTabindex = $('.chosen-single[tabindex="-1"]').last()
             $lastTabindex.remove()
 
             // Exibir o botão de exclusão na nova linha
             newRow.find('.delete-cost-center').removeAttr('hidden');
+
+            checkCostCenterCount()
 
             // Incrementar o contador
             costCenterCounter++;
@@ -290,6 +304,8 @@
         // Manipulador de evento para o botão "delete-cost-center"
         $(document).on('click', '.delete-cost-center', function(e) {
             $(this).closest('.cost-center-container').remove();
+            updateApportionmentFields();
+            checkCostCenterCount()
         });
     });
 </script>
