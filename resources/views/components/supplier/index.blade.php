@@ -51,7 +51,7 @@
                                         </strong>
                                     </td>
                                     <td><strong>{{$supplier->market_type}}</strong></td>
-                                    <td>{{$supplier->is_qualified ? 'Qualificado' : 'Em análise'}}</td>
+                                    <td>{{$supplier->qualification->label()}}</td>
                                     <td align="center">
                                         <a href="{{route('supplier', ['id' => $supplier->id])}}" class="btn" rel="tooltip" title="Editar"><i class="fa fa-edit"></i></a>
                                         <button data-route="supplier" data-name="{{$supplier->corporate_name}}" data-id="{{$supplier->id}}" rel="tooltip" title="Excluir"
