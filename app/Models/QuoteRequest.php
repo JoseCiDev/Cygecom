@@ -42,6 +42,7 @@ class QuoteRequest extends Model
         'is_comex',
         'is_service',
         'local_description',
+        'reason',
         'user_id',
         'description',
         'desired_date',
