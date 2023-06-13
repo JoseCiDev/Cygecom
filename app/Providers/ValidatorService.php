@@ -210,6 +210,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'is_supplies_quote' => ['required', 'boolean'],
         'is_comex' => ['required', 'boolean'],
         'local_description' => ['required', 'string'],
+        'reason' => ['required', 'string'],
         'description' => ['nullable', 'string'],
         'desired_date' => ['nullable', 'date'],
         'quote_request_files' => ['nullable', 'array'],
@@ -241,6 +242,9 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
 
         'local_description.required' => 'A descrição local é obrigatória.',
         'local_description.string' => 'A descrição local deve ser uma string.',
+
+        'reason.required' => 'o motivo da compra é obrigatória.',
+        'reason.string' => 'o motivo da compra deve ser uma string.',
 
         'description.string' => 'A descrição deve ser uma string.',
 
