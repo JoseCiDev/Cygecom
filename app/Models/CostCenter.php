@@ -16,6 +16,11 @@ class CostCenter extends Model
         return $this->hasMany(Person::class);
     }
 
+    public function userCostCenterPermission()
+    {
+        return $this->hasMany(UserCostCenterPermission::class);
+    }
+
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id');
@@ -24,5 +29,10 @@ class CostCenter extends Model
     public function address()
     {
         return $this->belongsTo(Address::class, 'address_id');
+    }
+
+    public function phone()
+    {
+        return $this->belongsTo(Phone::class, 'phone_id');
     }
 }

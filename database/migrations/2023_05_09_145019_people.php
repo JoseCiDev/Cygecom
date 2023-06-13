@@ -16,6 +16,9 @@ return new class() extends Migration
             $table->unsignedInteger('cost_center_id');
             $table->foreign('cost_center_id')->references('id')->on('cost_centers');
 
+            $table->unsignedInteger('phone_id')->unique();
+            $table->foreign('phone_id')->references('id')->on('phones');
+
             $table->date('birthdate')->nullable();
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));

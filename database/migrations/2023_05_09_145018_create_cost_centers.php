@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up(): void
     {
         Schema::create('cost_centers', function (Blueprint $table) {
@@ -16,6 +17,9 @@ return new class () extends Migration {
 
             $table->unsignedInteger('address_id');
             $table->foreign('address_id')->references('id')->on('addresses');
+
+            $table->unsignedInteger('phone_id');
+            $table->foreign('phone_id')->references('id')->on('phones');
 
             $table->string('senior_code')->nullable();
         });

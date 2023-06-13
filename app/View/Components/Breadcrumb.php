@@ -53,10 +53,19 @@ class Breadcrumb extends Component
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'requests', 'label' => 'Solicitações'],
         ],
-        'requestRegister' => [
+        'request.register' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests', 'label' => 'Solicitações'],
-            ['route' => 'requestRegister', 'label' => 'Nova solicitação'],
+            ['route' => 'requests.own', 'label' => 'Minhas Solicitações'],
+            ['route' => 'request.register', 'label' => 'Nova Solicitação'],
+        ],
+        'request.edit' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'requests.own', 'label' => 'Minhas Solicitações'],
+            ['route' => 'request.edit', 'label' => 'Editar Solicitação'],
+        ],
+        'requests.own' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'requests.own', 'label' => 'Minhas Solicitações'],
         ],
         'quotations' => [
             ['route' => 'home', 'label' => 'Home'],
@@ -70,6 +79,11 @@ class Breadcrumb extends Component
         'suppliers' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'suppliers', 'label' => 'Fornecedores'],
+        ],
+        'supplier' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'suppliers', 'label' => 'Fornecedores'],
+            ['route' => 'supplier', 'label' => 'Fornecedor'],
         ],
         'supplierRegister' => [
             ['route' => 'home', 'label' => 'Home'],

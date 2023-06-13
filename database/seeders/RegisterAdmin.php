@@ -9,16 +9,16 @@ class RegisterAdmin extends Seeder
 {
     public function run(): void
     {
+        $phoneId = DB::table('phones')->insertGetId([
+            'number'     => '48912345678',
+            'phone_type' => 'commercial',
+        ]);
+
         $personId = DB::table('people')->insertGetId([
             'name'           => 'Administrador',
             'cpf_cnpj'       => '012.345.678-90',
             'cost_center_id' => 1,
-        ]);
-
-        DB::table('phones')->insert([
-            'number'     => '48912345678',
-            'phone_type' => 'commercial',
-            'person_id'  => $personId,
+            'phone_id' => $phoneId
         ]);
 
         DB::table('users')->insert([

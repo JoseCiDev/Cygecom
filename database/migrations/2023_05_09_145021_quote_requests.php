@@ -16,6 +16,7 @@ return new class() extends Migration
             $table->boolean('is_comex')->default(false);
             $table->boolean('is_service')->default(false);
             $table->text('local_description');
+            $table->text('reason');
 
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
@@ -29,12 +30,6 @@ return new class() extends Migration
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
-
-            $table->unsignedInteger('deleted_by')->nullable();
-            $table->foreign('deleted_by')->references('id')->on('users');
-
-            $table->unsignedInteger('updated_by')->nullable();
-            $table->foreign('updated_by')->references('id')->on('users');
         });
     }
 
