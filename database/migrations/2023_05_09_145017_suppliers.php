@@ -15,7 +15,7 @@ return new class() extends Migration
             $table->enum('entity_type', ['PF', 'PJ'])->default('PJ');
             $table->string('supplier_indication')->default('M'); // M: Matéria prima; S: Serviço; A: Ambos
             $table->string('market_type')->default('nacional'); // nacional; exterior; prospect(prospecção)
-            $table->boolean('is_qualified')->default(false);
+            $table->enum('qualification', ['em_analise', 'qualificado', 'nao_qualificado'])->default('em_analise');
 
             $table->unsignedInteger('address_id')->unique();
             $table->foreign('address_id')->references('id')->on('addresses');
