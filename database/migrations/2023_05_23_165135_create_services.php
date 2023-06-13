@@ -14,7 +14,7 @@ return new class () extends Migration {
             $table->dateTime('end_date');
             $table->decimal('first_payment', 14, 2);
             $table->decimal('recurring_payment', 14, 2);
-            $table->enum('recurrence', ['daily', 'weekly', 'monthly', 'annual']);
+            $table->enum('recurrence', ['UNICO', 'MENSAL', 'ANUAL']);
 
             $table->unsignedInteger('purchase_quote_id');
             $table->foreign('purchase_quote_id')->references('id')->on('purchase_quotes');
