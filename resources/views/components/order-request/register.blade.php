@@ -6,7 +6,9 @@
 
     <div class="alert alert-info alert-dismissable">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        Formulário para preenchimento das informações necessárias para abrir uma requisição de compra. Para cada CNPJ, é possível cadastrar vários produtos de uma mesma categoria. É preciso também informar a quantidade de cada produto. Se preferir, pode ser inserido um link de sugestão de produto.
+        Formulário para preenchimento das informações necessárias para abrir uma requisição de compra. Para cada CNPJ,
+        é possível cadastrar vários produtos de uma mesma categoria. É preciso também informar a quantidade de cada
+        produto. Se preferir, pode ser inserido um link de sugestão de produto.
     </div>
 
     <div class="col-sm-12">
@@ -46,9 +48,12 @@
                             <label for="textfield" class="control-label">Centro de custo da despesa</label>
                             <div class="select">
                                 <select
-                                name="request[][cost_center]"
-                                id="batatinhas"
-                                placeholder="Ex: SMART MATRIZ - Conferência de Saída" class='select2-me' style="width:100%;">
+                                    name="request[][cost_center]"
+                                    id="batatinhas"
+                                    placeholder="Ex: SMART MATRIZ - Conferência de Saída"
+                                    class='select2-me'
+                                    style="width:100%;"
+                                >
                                     <option value="" disalbed></option>
                                     <option value="1" disalbed>INP Filial - CONGRESSO E EVENTOS - 3.3</option>
                                     <option value="2" disalbed>INP Filial - RECURSOS HUMANOS - 4.8</option>
@@ -60,23 +65,39 @@
                         </div>
                     </div>
 
+                    {{-- RATEIO % --}}
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="unit_price" class="control-label"><sup style="color:red">*</sup>Rateio</label>
+                            <label for="unit_price" class="control-label">Rateio</label>
                             <div class="input-group">
                                 <span class="input-group-addon">%</span>
-                                <input type="number" name="unit_price" id="unit_price_percentage" placeholder="0.00" class="form-control" min="0">
+                                <input
+                                    type="number"
+                                    name="unit_price"
+                                    id="unit_price_percentage"
+                                    placeholder="0.00"
+                                    class="form-control"
+                                    min="0"
+                                >
                                 @error('unit_price') <p><strong>{{ $message }}</strong></p> @enderror
                             </div>
                         </div>
                     </div>
 
+                    {{-- RATEIO R$ --}}
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="unit_price" class="control-label"><sup style="color:red">*</sup>Rateio</label>
+                            <label for="unit_price" class="control-label">Rateio</label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
-                                <input type="number" name="unit_price" id="unit_price_currency" placeholder="0.00" class="form-control" min="0">
+                                <input
+                                    type="number"
+                                    name="unit_price"
+                                    id="unit_price_currency"
+                                    placeholder="0.00"
+                                    class="form-control"
+                                    min="0"
+                                >
                                 @error('unit_price') <p><strong>{{ $message }}</strong></p> @enderror
                             </div>
                         </div>
@@ -107,36 +128,67 @@
                     </div>
 
                     <div class="row" style="margin-bottom:10px;">
+
                         {{-- TIPO DE PRODUTO/SERVIÇO --}}
                         <div class="col-sm-4">
-                            <label for="form-check" class="control-label" style="margin-bottom: 12px;">Estou solicitando:</label>
+                            <label for="form-check" class="control-label" style="margin-bottom: 12px;">
+                                Estou solicitando:
+                            </label>
                             <div class="form-check" style="display:inline; margin-left:12px;">
                                 {{-- SERVICES --}}
                                 <input
-                                class="radio_request" id="radio-request" type="radio" name="request[0][request_type]" value="services" servicesdata-skin="minimal"
-                                style="background-color:black;">
+                                    class="radio_request"
+                                    id="radio-request"
+                                    type="radio"
+                                    name="request[0][request_type]"
+                                    value="services"
+                                    servicesdata-skin="minimal"
+                                    style="background-color:black;"
+                                >
                                 <label class="form-check-label" for="services" style="margin-right:15px;">Serviços</label>
                                 {{-- PRODUTOS --}}
                                 <input checked
-                                class="radio_request" id="radio-request" type="radio" name="request[0][request_type]"value="products" productsdata-skin="minimal">
+                                    class="radio_request"
+                                    id="radio-request"
+                                    type="radio"
+                                    name="request[0][request_type]"
+                                    value="products"
+                                    productsdata-skin="minimal"
+                                >
                                 <label class="form-check-label" for="personal">Produtos</label>
                             </div>
                         </div>
+
                         {{-- QUEM IRA COTAR --}}
                         <div class="col-sm-8">
-                            <label for="form-check" class="control-label" style="margin-bottom: 12px;">Cotação será feita por:</label>
+                            <label for="form-check" class="control-label" style="margin-bottom: 12px;">
+                                Cotação será feita por:
+                            </label>
                             <div class="form-check" style="display:inline; margin-left:12px;">
                                 {{-- SUPRIMENTOS --}}
                                 <input checked
-                                class="radio_request" type="radio" id="quoted_by" name="request[0][request"value="quoted_by_suprimentos" servicesdata-skin="minimal"
-                                style="background-color:black;">
+                                    class="radio_request"
+                                    type="radio"
+                                    id="quoted_by"
+                                    name="request[0][request"
+                                    value="quoted_by_suprimentos"
+                                    servicesdata-skin="minimal"
+                                    style="background-color:black;"
+                                >
                                 <label class="form-check-label" for="services" style="margin-right">Suprimentos</label>
                                 {{-- EU FAREI --}}
-                                <input style="margin-left:12px;"
-                                class="radio_request" type="radio" name="request[0][request"value="quoted_by_user" productsdata-skin="minimal">
+                                <input
+                                    style="margin-left:12px;"
+                                    class="radio_request"
+                                    type="radio"
+                                    name="request[0][request"
+                                    value="quoted_by_user"
+                                    productsdata-skin="minimal"
+                                >
                                 <label class="form-check-label" for="personal">Eu farei a cotação</label>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="row" style="margin-bottom:5px;">

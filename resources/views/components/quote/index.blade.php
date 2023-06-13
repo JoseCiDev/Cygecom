@@ -15,7 +15,13 @@
                                 <h3 class="pull-left">Todas as cotações</h3>
                             </div>
                             <div class="col-md-6">
-                                <a href="{{ route('quotationRegister') }}" class="btn pull-right btn-large" style="margin-right: 15px">Nova Cotação</a>
+                                <a
+                                    href="{{ route('quotationRegister') }}"
+                                    class="btn pull-right btn-large"
+                                    style="margin-right: 15px"
+                                >
+                                    Nova Cotação
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -24,7 +30,10 @@
 
                         <table
                             class="table table-hover table-nomargin table-bordered dataTable"
-                            data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
+                            data-column_filter_dateformat="dd-mm-yy"
+                            data-nosort="0"
+                            data-checkall="all"
+                        >
                             <thead>
                                 <tr>
                                     <th class="col-md-1">Nº Solicitação</th>
@@ -45,7 +54,9 @@
                                     <td class='hidden-350 col-md-2'>Finalizada</td>
                                     <td class='hidden-1024 col-md-2'>10/05/2023</td>
                                     <td class='hidden-480'>
-                                        <a href="" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
+                                        <a href="" class="btn" rel="tooltip" title="Edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
                                         <button class="btn">
                                                 <i class="fa fa-times"></i>
                                         </button>
@@ -59,7 +70,9 @@
                                     <td class='hidden-350 col-md-2'>Em andamento</td>
                                     <td class='hidden-1024 col-md-2'>10/04/2023</td>
                                     <td class='hidden-480'>
-                                        <a href="" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
+                                        <a href="" class="btn" rel="tooltip" title="Edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
                                         <button class="btn">
                                                 <i class="fa fa-times"></i>
                                         </button>
@@ -73,7 +86,9 @@
                                     <td class='hidden-350 col-md-2'>Cancelada</td>
                                     <td class='hidden-1024 col-md-2'>10/03/2023</td>
                                     <td class='hidden-480'>
-                                        <a href="" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
+                                        <a href="" class="btn" rel="tooltip" title="Edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
                                         <button class="btn">
                                                 <i class="fa fa-times"></i>
                                         </button>
