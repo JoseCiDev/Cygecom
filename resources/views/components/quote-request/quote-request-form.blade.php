@@ -154,16 +154,25 @@
             </div>
 
             <div class="row" style="margin-bottom:5px;">
-                <div class="product-row">
-                    <div class="col-sm-8">
-                        <div class="form-group">
-                            <label for="description" class="control-label"><sup class="description-span" style="color: red;">*</sup>Descrição</label>
-                            <textarea required name="description" id="description" rows="4" style="resize:none;" placeholder="Ex: Compra de 1 mesa para sala de reunião da HKM."
-                                class="form-control text-area">@if (isset($quoteRequest)) {{$quoteRequest->description}} @endif</textarea>
-                        </div>
-                        <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
-                            <p>* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação. </p>
-                        </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="reason" class="control-label"><sup style="color: red;">*</sup>Motivo da solicitação</label>
+                        <textarea required name="reason" id="reason" rows="4" 
+                            placeholder="Fatores de ex.: Necessidade de reposição de estoque, atender a demanda de um projeto específico, cumprir requisitos regulatórios ou normas de qualidade..."
+                            class="form-control text-area no-resize">@if (isset($quoteRequest)) {{$quoteRequest->reason}} @endif</textarea>
+                    </div>
+                    <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
+                        <p>Por favor, forneça uma breve descrição do motivo pelo qual você está solicitando essa compra.</p>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label for="description" class="control-label"><sup class="description-span" style="color: red;">*</sup>Descrição</label>
+                        <textarea required name="description" id="description" rows="4" placeholder="Ex.: Compra de 1 mesa para sala de reunião da HKM."
+                            class="form-control text-area no-resize">@if (isset($quoteRequest)) {{$quoteRequest->description}} @endif</textarea>
+                    </div>
+                    <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
+                        <p>* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação. </p>
                     </div>
                 </div>
             </div>
