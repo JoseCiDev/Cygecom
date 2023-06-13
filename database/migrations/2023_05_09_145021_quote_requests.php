@@ -16,6 +16,7 @@ return new class() extends Migration
             $table->boolean('is_comex')->default(false);
             $table->boolean('is_service')->default(false);
             $table->text('local_description');
+            $table->text('reason');
 
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
