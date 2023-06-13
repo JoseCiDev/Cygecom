@@ -15,7 +15,7 @@ class Person extends Model
     }
     public function phone()
     {
-        return $this->hasMany(Phone::class);
+        return $this->belongsTo(Phone::class, 'phone_id');
     }
     public function costCenter()
     {
@@ -35,5 +35,9 @@ class Person extends Model
         'cpf_cnpj',
         'birthdate',
         'cost_center_id',
+        'phone_id',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
     ];
 }

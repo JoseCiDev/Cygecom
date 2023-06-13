@@ -11,15 +11,15 @@ class Phone extends Model
 
     public function person()
     {
-        return $this->belongsToMany(Person::class);
+        return $this->hasMany(Person::class);
     }
     public function supplier()
     {
-        return $this->belongsToMany(Supplier::class);
+        return $this->hasMany(Supplier::class);
     }
     public function costCenter()
     {
-        return $this->belongsTo(CostCenter::class);
+        return $this->hasMany(CostCenter::class);
     }
 
     public function deletedByUser()
@@ -34,5 +34,8 @@ class Phone extends Model
     protected $fillable = [
         'number',
         'phone_type',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
     ];
 }

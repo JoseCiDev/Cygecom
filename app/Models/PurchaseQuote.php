@@ -38,4 +38,11 @@ class PurchaseQuote extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    protected $fillable = [
+        'quote_request_id',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+    ];
 }

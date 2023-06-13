@@ -22,11 +22,7 @@ return new class () extends Migration {
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
 
-            $table->unsignedInteger('deleted_by')->nullable();
-            $table->foreign('deleted_by')->references('id')->on('users');
-
-            $table->unsignedInteger('updated_by')->nullable();
-            $table->foreign('updated_by')->references('id')->on('users');
+            $table->unique(['quote_request_id', 'cost_center_id'], 'unique_quote_request_cost_center');
         });
     }
 

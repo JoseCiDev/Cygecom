@@ -93,14 +93,14 @@
                             class="form-control mask_phone"
                             data-rule-required="true"
                             @if (isset($user))
-                                value="{{ $user['person']['phone'][0]['number'] }}"
+                                value="{{ $user['person']['phone']['number'] }}"
                             @endif >
                             @error('number') <span class="text-danger">{{ $message }}</span>@enderror
                             <div class="form-group" style="margin: 5px 0px -10px 0px;">
                                 {{-- PESSOAL --}}
                                 <input
                                 @if(isset($user))
-                                    @if ($user['person']['phone'][0]['phone_type']  === "personal") {{"checked"}} @endif
+                                    @if ($user['person']['phone']['phone_type']  === "personal") {{"checked"}} @endif
                                 @endif
                                     class="icheck-me"
                                     type="radio"
@@ -112,7 +112,7 @@
                                 {{-- COMERCIAL --}}
                                 <input
                                 @if(isset($user))
-                                    @if ($user['person']['phone'][0]['phone_type'] === "commercial") {{"checked"}} @endif
+                                    @if ($user['person']['phone']['phone_type'] === "commercial") {{"checked"}} @endif
                                 @endif
                                 class="icheck-me"
                                 type="radio"
@@ -254,8 +254,27 @@
                             </select>
                         @endif
                     </div>
-                    {{-- LIMITE DE APROVAÇÃO --}}
-                    <div class="col-sm-5">
+                    {{-- CENTRO DE CUSTOS PERMITIDOS --}}
+                    <div class="col-sm-6">
+                        <label for="approver_user_id" class="control-label">Centros de custos permitidos</label>
+                        <div class="form-group">
+                            <select @if (!auth()->user()->profile->isAdmin) disabled @endif
+                                        name="user_cost_center_permissions[]" id="user_cost_center_permissions" multiple="multiple" class="chosen-select form-control" data-placeholder="Selecione um ou mais acessos">
+                                
+                                @foreach ($costCenters as $costCenter)
+                                    <option value="{{ $costCenter->id }}" 
+                                        @if (isset($user) && collect($user->userCostCenterPermission)->contains('costCenter.id', $costCenter->id)) selected @endif>
+                                        {{ $costCenter->name }}
+                                    </option>
+                                @endforeach
+                                
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                     {{-- LIMITE DE APROVAÇÃO --}}
+                     <div class="col-sm-5">
                         <div class="form-group">
                             <label for="approve_limit" class="control-label">
                                 Limite de Aprovação

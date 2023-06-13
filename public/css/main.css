@@ -12,3 +12,11 @@ input[type="number"] {
     margin-bottom: 5px;
     padding: 10px 0;
 }
+
+.border-red {
+    border: 1px solid red;
+}
+
+.no-resize {
+    resize: none;
+}

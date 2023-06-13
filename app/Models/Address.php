@@ -36,5 +36,8 @@ class Address extends Model
         'state',
         'country',
         'complement',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
     ];
 }

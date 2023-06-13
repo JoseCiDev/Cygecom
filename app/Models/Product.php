@@ -33,5 +33,7 @@ class Product extends Model
         'unit_price',
         'product_categorie_id',
         'updated_by',
+        'deleted_by',
+        'deleted_at',
     ];
 }

@@ -28,6 +28,11 @@ class User extends Authenticatable
         return $this->belongsTo(UserProfile::class, 'profile_id');
     }
 
+    public function userCostCenterPermission()
+    {
+        return $this->hasMany(UserCostCenterPermission::class);
+    }
+
     public function quoteRequest()
     {
         return $this->hasMany(QuoteRequest::class);
@@ -64,6 +69,9 @@ class User extends Authenticatable
         'person_id',
         'approver_user_id',
         'approve_limit',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
     ];
 
     /**

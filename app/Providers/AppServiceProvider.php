@@ -21,6 +21,13 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ProductService::class, function ($app) {
             return new ProductService($app);
         });
+        $this->app->singleton(SuppplierService::class, function ($app) {
+            return new SuppplierService($app);
+        });
+
+        $this->app->singleton(QuoteRequestService::class, function ($app) {
+            return new QuoteRequestService($app);
+        });
 
         $this->app->singleton(QuotationService::class, function ($app) {
             return new QuotationService($app);

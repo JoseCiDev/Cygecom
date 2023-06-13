@@ -12,7 +12,6 @@ return new class() extends Migration
             $table->unsignedInteger('id')->autoIncrement();
 
             $table->string('path');
-            $table->string('type');
 
             $table->unsignedInteger('quote_request_id');
             $table->foreign('quote_request_id')->references('id')->on('quote_requests');
@@ -20,12 +19,6 @@ return new class() extends Migration
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
-
-            $table->unsignedInteger('deleted_by')->nullable();
-            $table->foreign('deleted_by')->references('id')->on('users');
-
-            $table->unsignedInteger('updated_by')->nullable();
-            $table->foreign('updated_by')->references('id')->on('users');
         });
     }
 
