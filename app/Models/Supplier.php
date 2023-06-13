@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\SupplierQualificationStatus;
 
 class Supplier extends Model
 {
@@ -34,7 +35,7 @@ class Supplier extends Model
         'entity_type',
         'market_type',
         'supplier_indication',
-        'is_qualified',
+        'qualification',
         'address_id',
         'phone_id',
         'name',
@@ -47,5 +48,9 @@ class Supplier extends Model
         'updated_by',
         'deleted_by',
         'deleted_at'
+    ];
+
+    protected $casts = [
+        'qualification' => SupplierQualificationStatus::class,
     ];
 }
