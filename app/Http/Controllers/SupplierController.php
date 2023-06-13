@@ -3,32 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
-use App\Providers\SuppplierService;
-use App\Providers\ValidatorService;
+use App\Providers\{SuppplierService, ValidatorService};
 use Exception;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
     private $validatorService;
+
     private $supplierService;
 
     public function __construct(ValidatorService $validatorService, SuppplierService $supplierService)
     {
         $this->validatorService = $validatorService;
-        $this->supplierService = $supplierService;
+        $this->supplierService  = $supplierService;
     }
 
     public function index()
     {
         $suppliers = Supplier::with('address', 'phone')->whereNull('deleted_at')->get();
+
         return view('components.supplier.index', ['suppliers' => $suppliers]);
     }
 
     public function supplier(int $id)
     {
-        $supplier    = $this->supplierService->getSupplierById($id);
-        if (!$supplier) return redirect('suppliers')->withErrors("Não possível acessar fornecedor com ID: $id")->withInput();
+        $supplier = $this->supplierService->getSupplierById($id);
+
+        if (!$supplier) {
+            return redirect('suppliers')->withErrors("Não possível acessar fornecedor com ID: $id")->withInput();
+        }
+
         return view('components.supplier.edit', ['supplier' => $supplier, 'id' => $id]);
     }
 
@@ -39,7 +44,7 @@ class SupplierController extends Controller
 
     public function register(Request $request)
     {
-        $data = $request->all();
+        $data      = $request->all();
         $validator = $this->validatorService->supplier($data);
 
         if ($validator->fails()) {
@@ -59,7 +64,7 @@ class SupplierController extends Controller
 
     public function update(Request $request, int $id)
     {
-        $data = $request->all();
+        $data               = $request->all();
         $data['updated_by'] = auth()->user()->id;
 
         $validator = $this->validatorService->supplier($data);

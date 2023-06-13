@@ -47,13 +47,19 @@ class ProductController extends Controller implements ProductControllerInterface
         $validator = $this->validatorService->productValidator($data);
 
         if ($validator->fails()) {
-            return back()->withErrors($validator->errors()->getMessages())->withInput();
+            return back()
+                ->withErrors($validator->errors()
+                ->getMessages())
+                ->withInput();
         }
 
         try {
             $this->productService->registerProduct($data);
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
         }
 
         session()->flash('success', "Produto cadastrado com sucesso!");
@@ -68,13 +74,18 @@ class ProductController extends Controller implements ProductControllerInterface
         $validator          = $this->validatorService->productValidator($data);
 
         if ($validator->fails()) {
-            return back()->withErrors($validator->errors()->getMessages())->withInput();
+            return back()
+                ->withErrors($validator->errors()->getMessages())
+                ->withInput();
         }
 
         try {
             $this->productService->updateProduct($data, $id);
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
         }
 
         session()->flash('success', "Produto atualizado com sucesso!");

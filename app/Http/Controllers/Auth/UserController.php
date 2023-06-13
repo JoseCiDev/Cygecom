@@ -67,7 +67,7 @@ class UserController extends Controller implements UserControllerInterface
             'person.costCenter',
             'profile',
             'approver',
-            'userCostCenterPermission.costCenter'
+            'userCostCenterPermission.costCenter',
         ])->where('id', $id)->whereNull('deleted_at')->first();
 
         $approvers   = $this->getApprovers('userUpdate', $id);

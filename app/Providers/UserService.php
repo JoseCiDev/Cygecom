@@ -53,17 +53,17 @@ class UserService extends ServiceProvider implements UserServiceInterface
     public function registerUser(array $request): User
     {
         return DB::transaction(function () use ($request) {
-            $phoneId = $this->createPhone($request);
+            $phoneId             = $this->createPhone($request);
             $request['phone_id'] = $phoneId;
-            $person = $this->createPerson($request);
+            $person              = $this->createPerson($request);
 
-            $user = new User();
-            $user->email = $request['email'];
-            $user->password = Hash::make($request['password']);
-            $user->profile_id = $this->getProfileId($request);
-            $user->person_id = $person->id;
+            $user                   = new User();
+            $user->email            = $request['email'];
+            $user->password         = Hash::make($request['password']);
+            $user->profile_id       = $this->getProfileId($request);
+            $user->person_id        = $person->id;
             $user->approver_user_id = $request['approver_user_id'] ?? null;
-            $user->approve_limit = $request['approve_limit'];
+            $user->approve_limit    = $request['approve_limit'];
             $user->save();
 
             if (auth()->user()->profile->isAdmin) {
@@ -80,9 +80,9 @@ class UserService extends ServiceProvider implements UserServiceInterface
         DB::beginTransaction();
 
         try {
-            $user = $this->getUserById($userId);
+            $user   = $this->getUserById($userId);
             $person = $user->person;
-            $phone = $user->person->phone;
+            $phone  = $user->person->phone;
 
             $this->saveUser($user, $data);
             $this->savePerson($person, $data);
@@ -133,14 +133,14 @@ class UserService extends ServiceProvider implements UserServiceInterface
     }
 
     /**
-     * @param array $data Contêm valores inteiros que representam os cost_center_id's 
+     * @param array $data Contêm valores inteiros que representam os cost_center_id's
      * @abstract Responsável por criar ou remover relações de usuário com centro de custo
      */
     private function saveUserCostCenterPermissions(array $data, int $userId): void
     {
         $existingPermissions = UserCostCenterPermission::where('user_id', $userId)->pluck('cost_center_id')->toArray();
-        $newPermissions = array_diff($data, $existingPermissions);
-        $removedPermissions = array_diff($existingPermissions, $data);
+        $newPermissions      = array_diff($data, $existingPermissions);
+        $removedPermissions  = array_diff($existingPermissions, $data);
 
         foreach ($newPermissions as $costCenterId) {
             UserCostCenterPermission::create(['user_id' => $userId, 'cost_center_id' => $costCenterId]);

@@ -27,7 +27,10 @@ class ProductService extends ServiceProvider implements ProductServiceInterface
      */
     public function firstProductWithRelations(int $id)
     {
-        return Product::with(['categorie', 'quoteItem', 'updatedByUser'])->where('id', $id)->whereNull('deleted_at')->first();
+        return Product::with(['categorie', 'quoteItem', 'updatedByUser'])
+            ->where('id', $id)
+            ->whereNull('deleted_at')
+            ->first();
     }
 
     public function getCategories()

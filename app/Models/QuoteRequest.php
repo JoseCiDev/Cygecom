@@ -48,6 +48,6 @@ class QuoteRequest extends Model
         'desired_date',
         'updated_by',
         'deleted_by',
-        'deleted_at'
+        'deleted_at',
     ];
 }

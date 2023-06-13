@@ -34,6 +34,6 @@ class Product extends Model
         'product_categorie_id',
         'updated_by',
         'deleted_by',
-        'deleted_at'
+        'deleted_at',
     ];
 }

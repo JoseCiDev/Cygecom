@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserCostCenterPermission extends Model
 {
     use HasFactory;
+
     public $timestamps = false;
 
     public function user()
@@ -21,11 +22,12 @@ class UserCostCenterPermission extends Model
     }
 
     protected $table = 'user_cost_center_permissions';
+
     protected $fillable = [
         'user_id',
         'cost_center_id',
         'updated_by',
         'deleted_by',
-        'deleted_at'
+        'deleted_at',
     ];
 }

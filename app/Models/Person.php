@@ -38,6 +38,6 @@ class Person extends Model
         'phone_id',
         'updated_by',
         'deleted_by',
-        'deleted_at'
+        'deleted_at',
     ];
 }

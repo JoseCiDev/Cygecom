@@ -12,12 +12,12 @@ class PopulateUserCostCenterPermissionDefault extends Seeder
      */
     public function run(): void
     {
-        $userId = 1;
+        $userId        = 1;
         $costCenterIds = range(1, 70);
 
         $userCostCenterPermissions = array_map(function ($costCenterId) use ($userId) {
             return [
-                'user_id' => $userId,
+                'user_id'        => $userId,
                 'cost_center_id' => $costCenterId,
             ];
         }, $costCenterIds);

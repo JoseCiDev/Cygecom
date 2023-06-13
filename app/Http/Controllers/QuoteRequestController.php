@@ -2,34 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
-use App\Models\CostCenter;
-use App\Providers\QuoteRequestService;
-use App\Providers\ValidatorService;
+use App\Models\{Company, CostCenter};
+use App\Providers\{QuoteRequestService, ValidatorService};
 use Exception;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\{RedirectResponse, Request};
 
 class QuoteRequestController extends Controller
 {
     private $validatorService;
+
     private $quoteRequestService;
 
     public function __construct(ValidatorService $validatorService, QuoteRequestService $quoteRequestService)
     {
-        $this->validatorService = $validatorService;
+        $this->validatorService    = $validatorService;
         $this->quoteRequestService = $quoteRequestService;
     }
 
     public function index()
     {
         $quoteRequests = $this->quoteRequestService->quoteRequests();
+
         return view('components.quote-request.index', ["quoteRequests" => $quoteRequests]);
     }
 
     public function ownRequests()
     {
         $quoteRequests = $this->quoteRequestService->quoteRequestsByUser();
+
         return view('components.quote-request.index', ["quoteRequests" => $quoteRequests]);
     }
 
@@ -37,17 +37,21 @@ class QuoteRequestController extends Controller
     {
         $companies   = Company::all();
         $costCenters = CostCenter::all();
-        $params = ["companies" => $companies, "costCenters" => $costCenters];
-        $isAdmin = auth()->user()->profile->isAdmin;
+        $params      = ["companies" => $companies, "costCenters" => $costCenters];
+        $isAdmin     = auth()->user()->profile->isAdmin;
 
         try {
             if ($quoteRequestIdToCopy) {
                 if (!$isAdmin) {
                     $isAuthorized = auth()->user()->quoteRequest->where('id', $quoteRequestIdToCopy)->whereNull('deleted_at')->first();
-                    if (!$isAuthorized) return throw new Exception('Acesso não autorizado para essa solicitação de compra.');
+
+                    if (!$isAuthorized) {
+                        return throw new Exception('Acesso não autorizado para essa solicitação de compra.');
+                    }
                 }
                 $params['quoteRequestIdToCopy'] = $quoteRequestIdToCopy;
             }
+
             return view('components.quote-request.register', $params);
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
@@ -77,9 +81,9 @@ class QuoteRequestController extends Controller
 
     public function register(Request $request): RedirectResponse
     {
-        $route = 'requests';
+        $route   = 'requests';
         $isAdmin = auth()->user()->profile->isAdmin;
-        $data = $request->all();
+        $data    = $request->all();
 
         $validator = $this->validatorService->quoteRequest($data);
 
@@ -98,24 +102,26 @@ class QuoteRequestController extends Controller
         if (!$isAdmin) {
             $route = 'requests.own';
         }
+
         return redirect()->route($route);
     }
 
     public function update(Request $request, int $id): RedirectResponse
     {
-        $route = 'request.edit';
+        $route          = 'request.edit';
         $isSaveAndQuote = (bool)$request->get('isSaveAndQuote');
-        $data = $request->all();
-        $validator = $this->validatorService->quoteRequest($data);
+        $data           = $request->all();
+        $validator      = $this->validatorService->quoteRequest($data);
 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
         }
 
         try {
-            $isAdmin = auth()->user()->profile->isAdmin;
+            $isAdmin      = auth()->user()->profile->isAdmin;
             $quoteRequest = auth()->user()->quoteRequest->find($id);
             $isAuthorized = ($isAdmin || $quoteRequest !== null) && $quoteRequest->deleted_at === null;
+
             if ($isAuthorized) {
                 $this->quoteRequestService->updateQuoteRequest($id, $data);
             } else {
@@ -130,16 +136,19 @@ class QuoteRequestController extends Controller
         }
 
         session()->flash('success', "Solicitação de compra atualizado com sucesso!");
+
         return redirect()->route($route, ['id' => $id]);
     }
 
     public function delete(int $id): RedirectResponse
     {
         $route = 'requests';
+
         try {
-            $isAdmin = auth()->user()->profile->isAdmin;
+            $isAdmin      = auth()->user()->profile->isAdmin;
             $quoteRequest = auth()->user()->quoteRequest->find($id);
             $isAuthorized = ($isAdmin || $quoteRequest !== null) && $quoteRequest->deleted_at === null;
+
             if ($isAuthorized) {
                 $this->quoteRequestService->deleteQuoteRequest($id);
                 $route = 'requests.own';
@@ -148,6 +157,7 @@ class QuoteRequestController extends Controller
             }
 
             session()->flash('success', "Solicitação de compra deletada com sucesso!");
+
             return redirect()->route($route);
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi deletar o registro no banco de dados.', $error->getMessage()]);

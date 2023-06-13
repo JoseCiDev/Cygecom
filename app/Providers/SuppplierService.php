@@ -2,9 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Address;
-use App\Models\Phone;
-use App\Models\Supplier;
+use App\Models\{Address, Phone, Supplier};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -26,11 +24,11 @@ class SuppplierService extends ServiceProvider
     {
         DB::transaction(function () use ($data) {
             $addressId = $this->createAddress($data);
-            $phoneId = $this->createPhone($data);
-            $supplier = new Supplier();
+            $phoneId   = $this->createPhone($data);
+            $supplier  = new Supplier();
             $supplier->fill($data);
             $supplier->address_id = $addressId;
-            $supplier->phone_id = $phoneId;
+            $supplier->phone_id   = $phoneId;
             $supplier->save();
         });
     }
@@ -53,7 +51,7 @@ class SuppplierService extends ServiceProvider
 
     public function deleteSupplier(int $id): void
     {
-        $supplier = Supplier::find($id);
+        $supplier             = Supplier::find($id);
         $supplier->deleted_at = Carbon::now();
         $supplier->deleted_by = auth()->user()->id;
         $supplier->save();
@@ -61,14 +59,16 @@ class SuppplierService extends ServiceProvider
 
     private function createPhone(array $data): int
     {
-        $phone = Phone::create($data);
+        $phone   = Phone::create($data);
         $phoneId = $phone->id;
+
         return $phoneId;
     }
     private function createAddress(array $data): int
     {
-        $address = Address::create($data);
+        $address   = Address::create($data);
         $addressId = $address->id;
+
         return $addressId;
     }
 }

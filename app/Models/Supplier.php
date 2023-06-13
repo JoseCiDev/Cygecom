@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\SupplierQualificationStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\SupplierQualificationStatus;
 
 class Supplier extends Model
 {
@@ -47,7 +47,7 @@ class Supplier extends Model
         'payment_type_callisto',
         'updated_by',
         'deleted_by',
-        'deleted_at'
+        'deleted_at',
     ];
 
     protected $casts = [

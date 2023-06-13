@@ -71,7 +71,7 @@ class User extends Authenticatable
         'approve_limit',
         'updated_by',
         'deleted_by',
-        'deleted_at'
+        'deleted_at',
     ];
 
     /**

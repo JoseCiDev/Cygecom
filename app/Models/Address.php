@@ -38,6 +38,6 @@ class Address extends Model
         'complement',
         'updated_by',
         'deleted_by',
-        'deleted_at'
+        'deleted_at',
     ];
 }

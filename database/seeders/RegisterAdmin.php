@@ -18,7 +18,7 @@ class RegisterAdmin extends Seeder
             'name'           => 'Administrador',
             'cpf_cnpj'       => '012.345.678-90',
             'cost_center_id' => 1,
-            'phone_id' => $phoneId
+            'phone_id'       => $phoneId,
         ]);
 
         DB::table('users')->insert([

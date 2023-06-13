@@ -36,6 +36,6 @@ class Phone extends Model
         'phone_type',
         'updated_by',
         'deleted_by',
-        'deleted_at'
+        'deleted_at',
     ];
 }

@@ -10,10 +10,11 @@ use Illuminate\View\Component;
 class SupplierForm extends Component
 {
     public int|null $id;
+
     public Supplier|null $supplier;
     public function __construct(int|null $id = null, Supplier|null $supplier = null)
     {
-        $this->id = $id;
+        $this->id       = $id;
         $this->supplier = $supplier;
     }
 
