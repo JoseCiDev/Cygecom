@@ -140,7 +140,6 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('requests.own') }}">Minhas Solicitações</a></li>
-                                <li><a href="{{ route('request.register') }}">Nova Solicitação</a></li>
                                 @if (auth()->user()->profile->isAdmin)
 									<li><a href="{{ route('requests') }}">Solicitações Gerais</a></li>
 								@endif
