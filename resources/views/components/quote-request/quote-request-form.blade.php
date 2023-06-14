@@ -10,7 +10,7 @@
             <h3 style="color: white; margin-top: 5px">
                 {{isset($quoteRequest) ? 'Editar solicitação de compra' : 'Criar solicitação de compra' }}
             </h3>
-        </div>   
+        </div>
         @if (isset($quoteRequest))
             <div class="col-md-6 pull-right">
                 <x-modalDelete/>
@@ -19,14 +19,14 @@
                     Excluir solicitação
                 </button>
             </div>
-        @endif    
+        @endif
     </div>
 </div>
 
 <div class="box-content">
-    <form class="form-validate" id="request-form" method="POST" 
+    <form class="form-validate" id="request-form" method="POST"
             action="@if (isset($quoteRequest) && !$isCopy) {{route( 'request.update', ['id' => $id])}}
-                    @else {{route( 'request.register')}} 
+                    @else {{route( 'request.register')}}
                 @endif">
         @csrf
 
@@ -54,7 +54,7 @@
                         <label for="cost_center_apportionments[{{$index}}][apportionment_percentage]" class="control-label"><sup style="color:red">*</sup>Rateio (%)</label>
                         <div class="input-group">
                             <span class="input-group-addon">%</span>
-                            <input type="number" placeholder="0.00" class="form-control" min="0" 
+                            <input type="number" placeholder="0.00" class="form-control" min="0"
                                     name="cost_center_apportionments[{{$index}}][apportionment_percentage]" id="cost_center_apportionments[{{$index}}][apportionment_percentage]"
                                         value="{{$apportionment->apportionment_percentage}}" >
                             @error('cost_center_apportionments[{{$index}}][apportionment_percentage]') <p><strong>{{ $message }}</strong></p> @enderror
@@ -62,13 +62,13 @@
                     </div>
 
                     <div class="col-md-2">
-                        <label for="cost_center_apportionments[{{$index}}][apportionment_value]" class="control-label"><sup style="color:red">*</sup>Rateio (R$)</label>
+                        <label for="cost_center_apportionments[{{$index}}][apportionment_currency]" class="control-label"><sup style="color:red">*</sup>Rateio (R$)</label>
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
-                            <input type="number" placeholder="0.00" class="form-control" min="0" 
-                                    name="cost_center_apportionments[{{$index}}][apportionment_value]" id="cost_center_apportionments[{{$index}}][apportionment_value]" 
-                                    value="{{$apportionment->apportionment_value}}">
-                            @error('cost_center_apportionments[{{$index}}][apportionment_value]') <p><strong>{{ $message }}</strong></p> @enderror
+                            <input type="number" placeholder="0.00" class="form-control" min="0"
+                                    name="cost_center_apportionments[{{$index}}][apportionment_currency]" id="cost_center_apportionments[{{$index}}][apportionment_currency]"
+                                    value="{{$apportionment->apportionment_currency}}">
+                            @error('cost_center_apportionments[{{$index}}][apportionment_currency]') <p><strong>{{ $message }}</strong></p> @enderror
                         </div>
                     </div>
 
@@ -80,11 +80,17 @@
         @else
             <div class="row cost-center-container">
                 <div class="col-sm-6">
-                    <label for="textfield" class="control-label">Centro de custo da despesa</label>
-                    <select name="cost_center_apportionments[0][cost_center_id]" id="cost_center_id_0" class='chosen-select form-control @error('cost_center_id_{{$index}}') is-invalid @enderror' required data-rule-required="true">
+                    <label for="textfield" class="control-label" style="display:block">Centro de custo da despesa</label>
+                    <select
+                        style="width:100%"
+                        name="cost_center_apportionments[0][cost_center_id]"
+                        id="cost_center_id_0" class='chosen-select
+                        @error('cost_center_id_{{$index}}') is-invalid @enderror'
+                        required data-rule-required="true"
+                    >
                         @foreach($costCenters as $costCenter)
                             @php $isUserCostCenter = isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id @endphp
-                            <option value="{{ $costCenter->id }}" {{$isUserCostCenter ? 'selected' : '' }}>
+                            <option value="{{ $costCenter->id }}" {{ $isUserCostCenter ? 'selected' : '' }}>
                                 {{ $costCenter->name  }}
                             </option>
                         @endforeach
@@ -95,18 +101,18 @@
                     <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label"><sup style="color:red">*</sup>Rateio (%)</label>
                     <div class="input-group">
                         <span class="input-group-addon">%</span>
-                        <input type="number" placeholder="0.00" class="form-control" min="0" 
+                        <input type="number" placeholder="0.00" class="form-control" min="0"
                                 name="cost_center_apportionments[0][apportionment_percentage]" id="cost_center_apportionments[0][apportionment_percentage]">
                         @error('cost_center_apportionments[0][apportionment_percentage]') <p><strong>{{ $message }}</strong></p> @enderror
                     </div>
                 </div>
 
                 <div class="col-md-2">
-                    <label for="cost_center_apportionments[0][apportionment_value]" class="control-label"><sup style="color:red">*</sup>Rateio (R$)</label>
+                    <label for="cost_center_apportionments[0][apportionment_currency]" class="control-label"><sup style="color:red">*</sup>Rateio (R$)</label>
                     <div class="input-group">
                         <span class="input-group-addon">R$</span>
-                        <input type="number" name="cost_center_apportionments[0][apportionment_value]" id="cost_center_apportionments[0][apportionment_value]" placeholder="0.00" class="form-control" min="0">
-                        @error('cost_center_apportionments[0][apportionment_value]') <p><strong>{{ $message }}</strong></p> @enderror
+                        <input type="number" name="cost_center_apportionments[0][apportionment_currency]" id="cost_center_apportionments[0][apportionment_currency]" placeholder="0.00" class="form-control" min="0">
+                        @error('cost_center_apportionments[0][apportionment_currency]') <p><strong>{{ $message }}</strong></p> @enderror
                     </div>
                 </div>
 
@@ -157,7 +163,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="reason" class="control-label"><sup style="color: red;">*</sup>Motivo da solicitação</label>
-                        <textarea required name="reason" id="reason" rows="4" 
+                        <textarea required name="reason" id="reason" rows="4"
                             placeholder="Fatores de ex.: Necessidade de reposição de estoque, atender a demanda de um projeto específico, cumprir requisitos regulatórios ou normas de qualidade..."
                             class="form-control text-area no-resize">@if (isset($quoteRequest)) {{$quoteRequest->reason}} @endif</textarea>
                     </div>
@@ -256,21 +262,21 @@
                 return $(this).val() !== '';
             }).length > 0;
 
-            const hasValueInput = $('.cost-center-container input[name$="[apportionment_value]"]').filter(function() {
+            const hasCurrencyInput = $('.cost-center-container input[name$="[apportionment_currency]"]').filter(function() {
                 return $(this).val() !== '';
             }).length > 0;
 
-            $('.cost-center-container input[name$="[apportionment_percentage]"]').not(':disabled').prop('disabled', !hasPercentageInput && hasValueInput);
-            $('.cost-center-container input[name$="[apportionment_value]"]').not(':disabled').prop('disabled', !hasValueInput && hasPercentageInput);
-            if (!hasPercentageInput && !hasValueInput) {
+            $('.cost-center-container input[name$="[apportionment_percentage]"]').not(':disabled').prop('disabled', !hasPercentageInput && hasCurrencyInput);
+            $('.cost-center-container input[name$="[apportionment_currency]"]').not(':disabled').prop('disabled', !hasCurrencyInput && hasPercentageInput);
+            if (!hasPercentageInput && !hasCurrencyInput) {
                 $('.cost-center-container input[name$="[apportionment_percentage]"]').prop('disabled', false);
-                $('.cost-center-container input[name$="[apportionment_value]"]').prop('disabled', false);
-            } 
+                $('.cost-center-container input[name$="[apportionment_currency]"]').prop('disabled', false);
+            }
         }
         updateApportionmentFields();
 
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
-        $('.cost-center-container input[name$="[apportionment_percentage]"], .cost-center-container input[name$="[apportionment_value]"]').on('input', function() {
+        $('.cost-center-container input[name$="[apportionment_percentage]"], .cost-center-container input[name$="[apportionment_currency]"]').on('input', function() {
             updateApportionmentFields();
         });
 
@@ -279,7 +285,7 @@
         $('.add-cost-center-btn').click(function(e) {
             updateApportionmentFields();
             let newRow = $('.cost-center-container').first().clone();
-            
+
             // Reinicializar o Select2 no select box clonado
             newRow.find('select.chosen-select').each(function() {
                 let selectElement = $(this);
