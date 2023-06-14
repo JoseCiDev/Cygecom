@@ -125,7 +125,9 @@
         @endif
 
         {{-- ADICIONAR CENTRO DE CUSTO --}}
-        <button type="button" class="btn btn-small btn-primary add-cost-center-btn"><i class="glyphicon glyphicon-plus"></i></button>
+        <button type="button" class="btn btn-small btn-primary add-cost-center-btn">
+            Adicionar linha
+        </button>
         {{-- CENTRO DE CUSTO FIM --}}
 
         <hr>
@@ -282,49 +284,38 @@
 
         // Add Centro de Custo
         let costCenterCounter = 100;
-        $('.add-cost-center-btn').click(function(e) {
+        $('.add-cost-center-btn').click(function() {
             updateApportionmentFields();
-            let newRow = $('.cost-center-container').first().clone();
+            const newRow = $('.cost-center-container').first().clone();
 
-            // Reinicializar o Select2 no select box clonado
             newRow.find('select.chosen-select').each(function() {
-                let selectElement = $(this);
+                const selectElement = $(this);
                 selectElement.next('.select2-container').remove();
-                selectElement.show();
-                // Inicializar o Select2 novamente com as configurações padrão
                 selectElement.select2();
             });
 
-            // Atualizar os índices dos nomes e IDs dos inputs e selects
             newRow.find('select[name^="cost_center_apportionments"], input[name^="cost_center_apportionments"]').each(function() {
-                let oldName = $(this).attr('name');
-                let newName = oldName.replace(/\[(\d+)\]/, '[' + costCenterCounter + ']');
+                const oldName = $(this).attr('name');
+                const newName = oldName.replace(/\[(\d+)\]/, '[' + costCenterCounter + ']');
                 $(this).attr('name', newName);
-
-                let newId = 'cost_center_id_' + costCenterCounter;
+                const newId = 'cost_center_id_' + costCenterCounter;
                 $(this).attr('id', newId);
             });
 
-            // Inserir a nova linha após a última linha cost-center-container
             $('.cost-center-container').last().after(newRow);
 
-            $lastTabindex = $('.chosen-single[tabindex="-1"]').last()
-            $lastTabindex.remove()
-
-            // Exibir o botão de exclusão na nova linha
             newRow.find('.delete-cost-center').removeAttr('hidden');
 
             checkCostCenterCount()
 
-            // Incrementar o contador
             costCenterCounter++;
         });
 
-        // Manipulador de evento para o botão "delete-cost-center"
-        $(document).on('click', '.delete-cost-center', function(e) {
+        $(document).on('click', '.delete-cost-center', function() {
             $(this).closest('.cost-center-container').remove();
+            costCenterCounter--;
             updateApportionmentFields();
-            checkCostCenterCount()
+            checkCostCenterCount();
         });
     });
 </script>
