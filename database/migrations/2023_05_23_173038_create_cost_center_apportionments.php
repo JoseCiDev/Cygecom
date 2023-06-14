@@ -10,7 +10,7 @@ return new class () extends Migration {
         Schema::create('cost_center_apportionments', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->string('apportionment_percentage', 20)->nullable();
-            $table->decimal('apportionment_value', 14, 2)->nullable();
+            $table->decimal('apportionment_currency', 14, 2)->nullable();
 
             $table->unsignedInteger('quote_request_id');
             $table->foreign('quote_request_id')->references('id')->on('quote_requests');

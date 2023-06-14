@@ -30,7 +30,7 @@ class CostCenterApportionment extends Model
 
     protected $fillable = [
         'apportionment_percentage',
-        'apportionment_value',
+        'apportionment_currency',
         'quote_request_id',
         'cost_center_id',
         'updated_by',

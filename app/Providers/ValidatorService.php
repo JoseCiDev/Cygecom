@@ -204,8 +204,8 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
     public $rulesForQuoteRequest = [
         'cost_center_apportionments'                            => ['required', 'array'],
         'cost_center_apportionments.*.cost_center_id'           => ['required', 'numeric', 'min:1'],
-        'cost_center_apportionments.*.apportionment_percentage' => ['required_without:cost_center_apportionments.*.apportionment_value', 'nullable', 'numeric', 'min:0', 'max:100'],
-        'cost_center_apportionments.*.apportionment_value'      => ['required_without:cost_center_apportionments.*.apportionment_percentage', 'nullable', 'numeric', 'min:0'],
+        'cost_center_apportionments.*.apportionment_percentage' => ['required_without:cost_center_apportionments.*.apportionment_currency', 'nullable', 'numeric', 'min:0', 'max:100'],
+        'cost_center_apportionments.*.apportionment_currency'   => ['required_without:cost_center_apportionments.*.apportionment_percentage', 'nullable', 'numeric', 'min:0'],
         'is_service'                                            => ['required', 'boolean'],
         'is_supplies_quote'                                     => ['required', 'boolean'],
         'is_comex'                                              => ['required', 'boolean'],
@@ -227,9 +227,9 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'cost_center_apportionments.*.apportionment_percentage.numeric'          => 'O percentual de rateio deve ser um número.',
         'cost_center_apportionments.*.apportionment_percentage.min'              => 'O percentual de rateio deve ser no mínimo :min.',
         'cost_center_apportionments.*.apportionment_percentage.max'              => 'O percentual de rateio deve ser no máximo :max.',
-        'cost_center_apportionments.*.apportionment_value.required_without'      => 'Informe o percentual de rateio ou o valor de rateio.',
-        'cost_center_apportionments.*.apportionment_value.numeric'               => 'O valor de rateio deve ser um número.',
-        'cost_center_apportionments.*.apportionment_value.min'                   => 'O valor de rateio deve ser no mínimo :min.',
+        'cost_center_apportionments.*.apportionment_currency.required_without'   => 'Informe o percentual de rateio ou o valor de rateio.',
+        'cost_center_apportionments.*.apportionment_currency.numeric'            => 'O valor de rateio deve ser um número.',
+        'cost_center_apportionments.*.apportionment_currency.min'                => 'O valor de rateio deve ser no mínimo :min.',
 
         'is_service.required' => 'O campo de serviço é obrigatório.',
         'is_service.boolean'  => 'O campo de serviço deve ser um valor booleano.',
