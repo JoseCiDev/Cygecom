@@ -3,7 +3,7 @@
         <h1>Solicitações de Compra/Serviço</h1>
     </x-slot>
     <x-modalDelete/>
-   
+
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-color box-bordered">
@@ -26,14 +26,14 @@
                         data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                         <thead>
                             <tr>
-                                <th class="">ID</th>
-                                <th class="">Solicitante</th>
-                                <th class="">Tipo de cotação</th>
-                                <th class="">Tipo de solicitação</th>
-                                <th class=''>Status</th>
-                                <th class=''>Data desejada</th>
-                                <th class=''>Atualizado em</th>
-                                <th class='' >Opções</th>
+                                <th>ID</th>
+                                <th>Solicitante</th>
+                                <th>Tipo de cotação</th>
+                                <th>Tipo de solicitação</th>
+                                <th>Status</th>
+                                <th>Data desejada</th>
+                                <th>Atualizado em</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,11 +46,32 @@
                                 <td>{{$quoteRequest->status}}</td>
                                 <td>{{$quoteRequest->desired_date}}</td>
                                 <td>{{$quoteRequest->updated_at}}</td>
-                                <td>
-                                    <a href="{{route('request.edit', ['id' => $quoteRequest->id])}}" class="btn" rel="tooltip" title="Editar"><i class="fa fa-edit"></i></a>
-                                    <a href="{{route('request.register', ['id' => $quoteRequest->id])}}" rel="tooltip" title="Copiar" class="btn"><i class="fa fa fa-copy"></i></a>
-                                    <button data-route="quoteRequests" data-name="{{'Solicitação de compra - ID ' . $quoteRequest->id}}" data-id="{{$quoteRequest->id}}" 
-                                                rel="tooltip" title="Excluir" class="btn" data-toggle="modal" data-target="#modal"  >
+
+                                {{-- BTN AÇÕES --}}
+                                <td style="white-space: nowrap;">
+                                    <a href="{{route('request.edit', ['id' => $quoteRequest->id])}}"
+                                        class="btn"
+                                        rel="tooltip"
+                                        title="Editar"
+                                    >
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="{{route('request.register', ['id' => $quoteRequest->id])}}"
+                                        rel="tooltip"
+                                        title="Copiar"
+                                        class="btn"
+                                    >
+                                        <i class="fa fa fa-copy"></i>
+                                    </a>
+                                    <button data-route="quoteRequests"
+                                        data-name="{{'Solicitação de compra - ID ' . $quoteRequest->id}}"
+                                        data-id="{{$quoteRequest->id}}"
+                                        rel="tooltip"
+                                        title="Excluir"
+                                        class="btn"
+                                        data-toggle="modal"
+                                        data-target="#modal"
+                                    >
                                         <i class="fa fa-times"></i>
                                     </button>
                                 </td>
