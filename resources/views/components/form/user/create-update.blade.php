@@ -21,10 +21,8 @@
 </div>
 <div class="box-content">
     @if (isset($user))
-        {{-- if has user -> update --}}
         <form method="POST" action="{{ route($action, $user['id']) }}" class="form-validate" id="form-update">
         @else
-            {{-- if hasn't -> register --}}
             <form method="POST" action="{{ route('register') }}" class="form-validate" id="form-register">
     @endif
     @csrf
@@ -237,7 +235,7 @@
                 @endif
             </div>
             {{-- LIMITE DE APROVAÇÃO --}}
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <div class="form-group">
                     <label for="approve_limit" class="control-label">
                         Limite de Aprovação
@@ -245,22 +243,31 @@
                     @if (isset($user))
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
-                            <input type="number" name="approve_limit"
-                                id="unit-price-currency" placeholder="Ex: 100,00"
-                                class="form-control" min="100" max="500000"
-                                value="{{ $user['approve_limit'] }}"
-                            >
+                            <input type="number" name="approve_limit" id="unit-price-currency"
+                                placeholder="Ex: 100,00" class="form-control approve_limit" min="100"
+                                max="500000" value="{{ $user['approve_limit'] }}" required>
                         </div>
                     @else
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
-                            <input
-                                type="number" name="approve_limit"
-                                id="unit-price-currency" placeholder="Ex: 100,00"
-                                class="form-control" min="100" max="500000"
-                            >
+                            <input type="number" name="approve_limit" id="unit-price-currency"
+                                placeholder="Ex: 100,00" class="form-control approve_limit" min="100"
+                                max="500000" required>
                         </div>
                     @endif
+                    <div class="no-limit"
+                        style="
+                            display: flex;
+                            align-items: center;
+                            gap: 5px;
+                            margin-top: 3px;
+                        ">
+                        <input type="checkbox" id="checkbox-has-no-approve-limit"
+                            class="checkbox-has-no-approve-limit" style="margin:0">
+                        <label for="checkbox-has-no-approve-limit" style="margin:0; font-size: 11px;">
+                            Sem limite de aprovação
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -310,13 +317,16 @@
 
 
 <script>
-    // centro de custo permissao
     $(() => {
         const $btnClearCostCenters = $('.btn-clear-cost-centers');
         const $btnSelectAllCostCenters = $('.btn-select-all-cost-centers');
         const $costCentersPermissions = $('.cost-centers-permissions');
 
-        // clear all
+        const $checkboxHasNoApproveLimit = $('.checkbox-has-no-approve-limit');
+        const $approveLimit = $('.approve_limit');
+
+        // centro de custo permissao
+        //clear all
         $btnClearCostCenters.on('click', function() {
             $costCentersPermissions.val('');
             $costCentersPermissions.val('').trigger("chosen:updated");
@@ -327,6 +337,16 @@
             $costCentersPermissions.find('option').each((_, option) => {
                 $(option).prop('selected', true);
             }).closest('select').trigger('chosen:updated');
+        });
+
+        // checkbox sem limite aprovação
+        $checkboxHasNoApproveLimit.on('click', function() {
+            const isChecked = $(this).is(':checked');
+            if (isChecked) {
+                $(this).data('last-value', $approveLimit.val())
+            }
+            $approveLimit.prop('readonly', isChecked).val(isChecked ? null : $(this).data(
+                'last-value'));
         });
     })
 </script>

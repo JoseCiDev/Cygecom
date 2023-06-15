@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
-return new class() extends Migration
-{
+return new class () extends Migration {
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
@@ -23,7 +22,7 @@ return new class() extends Migration
             $table->unsignedInteger('approver_user_id')->nullable();
             $table->foreign('approver_user_id')->references('id')->on('users');
 
-            $table->decimal('approve_limit', 14, 2)->nullable()->default(null);
+            $table->decimal('approve_limit', 14, 2)->nullable()->default(100);
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
