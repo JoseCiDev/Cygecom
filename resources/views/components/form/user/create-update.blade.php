@@ -183,7 +183,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <label for="cost_center_id" class="control-label"><sup style="color:red">*</sup>Setor</label>
                 @if (isset($user))
                     <select name="cost_center_id" id="cost_center_id"
@@ -237,20 +237,30 @@
                 @endif
             </div>
             {{-- LIMITE DE APROVAÇÃO --}}
-            <div class="col-sm-6">
+            <div class="col-sm-3">
                 <div class="form-group">
                     <label for="approve_limit" class="control-label">
                         Limite de Aprovação
                     </label>
                     @if (isset($user))
-                        <input id="approve_limit" name="approve_limit" type="range" style="accent-color: #204e81;"
-                            step="5000" min="0" max="100000" value="{{ $user['approve_limit'] }}"
-                            class="no-validation">
+                        <div class="input-group">
+                            <span class="input-group-addon">R$</span>
+                            <input type="number" name="approve_limit"
+                                id="unit-price-currency" placeholder="Ex: 100,00"
+                                class="form-control" min="100" max="500000"
+                                value="{{ $user['approve_limit'] }}"
+                            >
+                        </div>
                     @else
-                        <input id="approve_limit" name="approve_limit" type="range" style="accent-color: #204e81;"
-                            step="5000" min="0" max="100000" value="0" class="no-validation">
+                        <div class="input-group">
+                            <span class="input-group-addon">R$</span>
+                            <input
+                                type="number" name="approve_limit"
+                                id="unit-price-currency" placeholder="Ex: 100,00"
+                                class="form-control" min="100" max="500000"
+                            >
+                        </div>
                     @endif
-                    <span id="rangeValue">até R$ {{ isset($user) ? $user['approve_limit'] : '0' }}</span>
                 </div>
             </div>
         </div>
@@ -258,7 +268,8 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
-                    <label for="approver_user_id" id="cost-center-permissions" class="control-label">Centros de custos permitidos</label>
+                    <label for="approver_user_id" id="cost-center-permissions" class="control-label">Centros de
+                        custos permitidos</label>
                     <select @if (!auth()->user()->profile->isAdmin) disabled @endif name="user_cost_center_permissions[]"
                         id="user_cost_center_permissions" multiple="multiple"
                         class="chosen-select form-control cost-centers-permissions"
@@ -273,8 +284,7 @@
             </div>
             <div class="cost-center-options" style="width:70%">
                 <div class="col-sm-2">
-                    <a  href="#cost-center-permissions"
-                        class="btn btn-small btn-primary btn-select-all-cost-centers"
+                    <a href="#cost-center-permissions" class="btn btn-small btn-primary btn-select-all-cost-centers"
                         style="font-size:12px; padding: 2.5px 12px">
                         Selecionar todos
                     </a>
@@ -298,47 +308,22 @@
 </div>
 </div>
 
-{{-- SLIDER JS --}}
-<script>
-    function formatRangeValue(val) {
-        const rangeValue = $('#rangeValue');
-        rangeValue.text('até R$ ' + val.toLocaleString('pt-BR'));
-    }
-    $(function() {
-        const range = $('#approve_limit');
-        const hiddenInput = $('#approve_limit');
-        range.attr('step', '5000');
-        const val = parseInt(range.val());
-        const step = val > 50000 ? 10000 : 5000;
-        range.attr({
-            step
-        });
-        formatRangeValue(val);
-        hiddenInput.val(val); // atualiza o valor do input hidden
-        range.on('input', function() {
-            const val = parseInt(range.val());
-            const step = val > 50000 ? 10000 : 5000;
-            range.attr({
-                step
-            });
-            formatRangeValue(val);
-            hiddenInput.val(val); // atualiza o valor do input hidden
-        });
-    });
 
+<script>
     // centro de custo permissao
     $(() => {
         const $btnClearCostCenters = $('.btn-clear-cost-centers');
         const $btnSelectAllCostCenters = $('.btn-select-all-cost-centers');
         const $costCentersPermissions = $('.cost-centers-permissions');
 
-        // clear all BUTTON
+        // clear all
         $btnClearCostCenters.on('click', function() {
             $costCentersPermissions.val('');
             $costCentersPermissions.val('').trigger("chosen:updated");
         });
 
-        $btnSelectAllCostCenters.on('click', function () {
+        // select all
+        $btnSelectAllCostCenters.on('click', function() {
             $costCentersPermissions.find('option').each((_, option) => {
                 $(option).prop('selected', true);
             }).closest('select').trigger('chosen:updated');
