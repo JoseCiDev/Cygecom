@@ -3,7 +3,8 @@
         <div class="col-md-6">
             <h3 style="color: white; margin-top: 5px">
                 @if (isset($user)) Atualizar usuário
-                @else Editar usuário @endif
+                @else
+                    Editar usuário @endif
             </h3>
         </div>
         @if (isset($user) && auth()->user()->id !== $user['id'])
@@ -257,27 +258,38 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
-                    <label for="approver_user_id" class="control-label">Centros de custos permitidos</label>
-                    <select
-                        @if (!auth()->user()->profile->isAdmin) disabled @endif
-                        name="user_cost_center_permissions[]"
-                        id="user_cost_center_permissions"
-                        multiple="multiple"
-                        class="chosen-select form-control"
+                    <label for="approver_user_id" id="cost-center-permissions" class="control-label">Centros de custos permitidos</label>
+                    <select @if (!auth()->user()->profile->isAdmin) disabled @endif name="user_cost_center_permissions[]"
+                        id="user_cost_center_permissions" multiple="multiple"
+                        class="chosen-select form-control cost-centers-permissions"
                         placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras">
                         @foreach ($costCenters as $costCenter)
-                            <option
-                                value="{{ $costCenter->id }}" @if (isset($user) && collect($user->userCostCenterPermission)->contains('costCenter.id', $costCenter->id)) selected @endif>
+                            <option value="{{ $costCenter->id }}" @if (isset($user) && collect($user->userCostCenterPermission)->contains('costCenter.id', $costCenter->id)) selected @endif>
                                 {{ $costCenter->name }}
                             </option>
                         @endforeach
                     </select>
                 </div>
             </div>
+            <div class="cost-center-options" style="width:70%">
+                <div class="col-sm-2">
+                    <a  href="#cost-center-permissions"
+                        class="btn btn-small btn-primary btn-select-all-cost-centers"
+                        style="font-size:12px; padding: 2.5px 12px">
+                        Selecionar todos
+                    </a>
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-small btn-primary btn-clear-cost-centers"
+                        style="font-size:12px; padding: 2.5px 12px">
+                        Limpar
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    {{-- BTNs --}}
+    {{-- SALVAR/CANCELAR --}}
     <div class="form-actions pull-right">
         <button type="submit" class="btn btn-primary">Salvar</button>
         <a href="{{ route('users') }}" class="btn">Cancelar</a>
@@ -313,4 +325,23 @@
             hiddenInput.val(val); // atualiza o valor do input hidden
         });
     });
+
+    // centro de custo permissao
+    $(() => {
+        const $btnClearCostCenters = $('.btn-clear-cost-centers');
+        const $btnSelectAllCostCenters = $('.btn-select-all-cost-centers');
+        const $costCentersPermissions = $('.cost-centers-permissions');
+
+        // clear all BUTTON
+        $btnClearCostCenters.on('click', function() {
+            $costCentersPermissions.val('');
+            $costCentersPermissions.val('').trigger("chosen:updated");
+        });
+
+        $btnSelectAllCostCenters.on('click', function () {
+            $costCentersPermissions.find('option').each((_, option) => {
+                $(option).prop('selected', true);
+            }).closest('select').trigger('chosen:updated');
+        });
+    })
 </script>
