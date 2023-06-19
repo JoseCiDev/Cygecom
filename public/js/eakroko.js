@@ -381,7 +381,16 @@ $(document).ready(function () {
 				},
 				onfocusout    : function (element) {
 					$(element).valid();
-				}
+				},
+                rules: {
+                    password: {
+                        minlength: 8,
+                    },
+                    password_confirmation: {
+                        minlength: 8,
+                        equalTo: '#password'
+                    }
+                },
 			});
 		});
 	}
