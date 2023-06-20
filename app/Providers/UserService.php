@@ -118,7 +118,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             'password'         => isset($data['password']) ? Hash::make($data['password']) : $user->password,
             'profile_id'       => isset($data['profile_type']) ? UserProfile::firstWhere('name', $data['profile_type'])->id : $user->profile_id,
             'approver_user_id' => isset($data['approver_user_id']) ? User::where('id', $data['approver_user_id'])->value('id') : $user->approver_user_id,
-            'approve_limit'    => $data['approve_limit'] ?? $user->approve_limit,
+            'approve_limit'    => $data['approve_limit'],
         ]);
     }
 
