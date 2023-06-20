@@ -388,7 +388,6 @@
 
         $(document).on('click', '.delete-cost-center', function() {
             $(this).closest('.cost-center-container').remove();
-            costCenterCounter--;
             updateApportionmentFields();
             checkCostCenterCount();
             disableSelectedOptions();

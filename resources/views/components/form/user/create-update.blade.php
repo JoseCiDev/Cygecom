@@ -34,7 +34,7 @@
             {{-- NOME --}}
             <div class="col-sm-3">
                 <div class="form-group">
-                    <label for="name" class="control-label"><sup style="color:red">*</sup>Nome</label>
+                    <label for="name" class="control-label required">Nome</label>
                     <input type="text" name="name" id="name" placeholder="Nome Completo" class="form-control"
                         data-rule-required="true" data-rule-minlength="2"
                         @if (isset($user)) value="{{ $user['person']['name'] }}" @endif>
@@ -47,17 +47,16 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label for="birthdate" class="control-label">Data de nascimento</label>
-                    <input type="date" name="birthdate" id="birthdate" placeholder="Data de nascimento"
-                        class="form-control"
+                    <input type="date" name="birthdate" id="birthdate" class="form-control"
                         @if (isset($user)) value="{{ $user['person']['birthdate'] }}" @endif>
                 </div>
             </div>
             {{-- DOCUMENTO --}}
             <div class="col-sm-3">
                 <div class="form-group">
-                    <label for="cpf_cnpj" class="control-label"><sup style="color:red">*</sup>Nº CPF</label>
-                    <input type="text" name="cpf_cnpj" id="cpf_cnpj" data-rule-required="true"
-                        placeholder="000.000.000-00" class="form-control mask_cpf"
+                    <label for="cpf_cnpj" class="control-label">Nº CPF/CNPJ</label>
+                    <input type="text" name="cpf_cnpj" id="cpf_cnpj" data-rule-required="true" minlength="14"
+                        placeholder="Ex: 000.000.000-00" class="form-control cpf_cnpj"
                         @if (isset($user)) value="{{ $user['person']['cpf_cnpj'] }}" @endif>
                     @error('cpf_cnpj')
                         <span class="text-danger">{{ $message }}</span>
@@ -68,10 +67,10 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label for="number" class="control-label">
-                        <sup style="color:red">*</sup>Telefone/Celular
+                        Telefone/Celular
                     </label>
-                    <input type="text" name="number" id="number" placeholder="(00) 0000-0000"
-                        class="form-control mask_phone" data-rule-required="true"
+                    <input type="text" name="number" id="number" placeholder="Ex: (00) 0000-0000"
+                        class="form-control phone_number" data-rule-required="true" minlength="14"
                         @if (isset($user)) value="{{ $user['person']['phone']['number'] }}" @endif>
                     @error('number')
                         <span class="text-danger">{{ $message }}</span>
@@ -116,7 +115,7 @@
             {{-- E-MAIL --}}
             <div class="col-sm-3">
                 <div class="form-group">
-                    <label for="email" class="control-label"><sup style="color:red">*</sup>E-mail</label>
+                    <label for="email" class="control-label">E-mail</label>
                     <input type="email" name="email" id="email" placeholder="user_email@essentia.com.br"
                         @if (isset($user)) value="{{ $user['email'] }}" @endif
                         class="form-control
@@ -130,14 +129,15 @@
             {{-- SENHA --}}
             <div class="col-sm-3">
                 <div class="form-group">
-                    <label for="password" class="control-label"><sup style="color:red">*</sup>Senha</label>
+                    <label for="password" class="control-label">Senha</label>
                     <input type="password" name="password" id="password"
                         placeholder="Deve conter ao menos 8 digitos"
-                        @if (!isset($user)) data-rule-required="true"
-                                data-rule-minlength="8"
-                                class="form-control no-validation @error('password') is-invalid @enderror"
-                            @else
-                                class="form-control no-validation @error('password') is-invalid @enderror" @endif
+                        @if (!isset($user)) required
+                            data-rule-required="true"
+                            data-rule-minlength="8"
+                            class="form-control @error('password') is-invalid @enderror"
+                        @else
+                            class="form-control @error('password') is-invalid @enderror" @endif
                         autocomplete="new-password">
                     @error('password')
                         <span class="text-danger">{{ $message }}</span>
@@ -147,12 +147,12 @@
             {{-- CONFIRMAR SENHA --}}
             <div class="col-sm-3">
                 <div class="form-group">
-                    <label for="password-confirm" class="control-label"><sup style="color:red">*</sup>Confirmar
+                    <label for="password-confirm" class="control-label">Confirmar
                         Senha</label>
                     <input type="password" name="password_confirmation" id="password-confirm"
                         placeholder="Digite novamente a senha"
                         @if (!isset($user)) class="form-control"
-                                required
+                            data-rule-required="true"
                             @else
                                 class="form-control no-validation" @endif
                         autocomplete="new-password">
@@ -182,11 +182,11 @@
         </div>
         <div class="row">
             <div class="col-sm-4">
-                <label for="cost_center_id" class="control-label"><sup style="color:red">*</sup>Setor</label>
+                <label for="cost_center_id" class="control-label">Setor</label>
                 @if (isset($user))
                     <select name="cost_center_id" id="cost_center_id"
-                        class='chosen-select form-control @error('cost_center_id') is-invalid @enderror' required
-                        data-rule-required="true">
+                        class='chosen-select form-control @error('cost_center_id') is-invalid @enderror'
+                        data-rule-required="true" required>
                         <option value="" disabled {{ isset($user->person->costCenter) ? '' : 'selected' }}>
                             Selecione uma opção</option>
                         @foreach ($costCenters as $costCenter)
@@ -243,16 +243,21 @@
                     @if (isset($user))
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
-                            <input type="number" name="approve_limit" id="unit-price-currency"
-                                placeholder="Ex: 100,00" class="form-control approve_limit" min="100"
-                                max="500000" value="{{ $user['approve_limit'] }}" required>
+                            <input type="text" id="format-approve-limit" placeholder="Ex: 100,00"
+                                class="form-control format-approve-limit" data-rule-required="true"
+                                @if ($user->approve_limit === null) readonly
+                                @else
+                                    value="{{ (float) $user->approve_limit }}" @endif>
+                            <input type="hidden" name="approve_limit" id="approve_limit"
+                                class="approve_limit no-validation">
                         </div>
                     @else
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
-                            <input type="number" name="approve_limit" id="unit-price-currency"
-                                placeholder="Ex: 100,00" class="form-control approve_limit" min="100"
-                                max="500000" required>
+                            <input type="text" id="format-approve-limit" placeholder="Ex: 100,00"
+                                class="form-control format-approve-limit" data-rule-required="true">
+                            <input type="hidden" name="approve_limit" id="approve_limit"
+                                class="approve_limit no-validation">
                         </div>
                     @endif
                     <div class="no-limit"
@@ -263,7 +268,8 @@
                             margin-top: 3px;
                         ">
                         <input type="checkbox" id="checkbox-has-no-approve-limit"
-                            class="checkbox-has-no-approve-limit" style="margin:0">
+                            class="checkbox-has-no-approve-limit" style="margin:0"
+                            @if (isset($user) && $user->approve_limit === null) checked @endif>
                         <label for="checkbox-has-no-approve-limit" style="margin:0; font-size: 11px;">
                             Sem limite de aprovação
                         </label>
@@ -315,18 +321,19 @@
 </div>
 </div>
 
-
 <script>
     $(() => {
         const $btnClearCostCenters = $('.btn-clear-cost-centers');
         const $btnSelectAllCostCenters = $('.btn-select-all-cost-centers');
         const $costCentersPermissions = $('.cost-centers-permissions');
-
         const $checkboxHasNoApproveLimit = $('.checkbox-has-no-approve-limit');
-        const $approveLimit = $('.approve_limit');
+        const $approveLimit = $('.format-approve-limit');
+        const $hiddenApproveLimit = $('.approve_limit');
+        const $identificationDocument = $('.cpf_cnpj');
+        const $phoneNumber = $('.phone_number');
 
         // centro de custo permissao
-        //clear all
+        // clear all
         $btnClearCostCenters.on('click', function() {
             $costCentersPermissions.val('');
             $costCentersPermissions.val('').trigger("chosen:updated");
@@ -342,11 +349,56 @@
         // checkbox sem limite aprovação
         $checkboxHasNoApproveLimit.on('click', function() {
             const isChecked = $(this).is(':checked');
+            $approveLimit.data('rule-required', !isChecked);
+            $approveLimit.valid();
             if (isChecked) {
-                $(this).data('last-value', $approveLimit.val())
+                $(this).data('last-value', $approveLimit.val());
+                $(this).closest('.form-group').removeClass('has-error');
             }
-            $approveLimit.prop('readonly', isChecked).val(isChecked ? null : $(this).data(
-                'last-value'));
+            const currentValue = isChecked ? null : $(this).data('last-value');
+            $approveLimit.prop('readonly', isChecked).val(currentValue).valid();
+            $hiddenApproveLimit.val(currentValue);
+            console.log($hiddenApproveLimit.val());
+        });
+
+        // masks
+        $identificationDocument.imask({
+            mask: [{
+                    mask: '000.000.000-00',
+                },
+                {
+                    mask: '00.000.000/0000-00',
+                }
+            ],
+            minLength: 13
+        });
+        $phoneNumber.imask({
+            mask: [{
+                    mask: '(00) 0000-0000'
+                },
+                {
+                    mask: '(00) 00000-0000'
+                }
+            ]
+        });
+        $approveLimit.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 100,
+            max: 500000,
+        });
+
+        // approve_limit input hidden
+        $approveLimit.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                $('.approve_limit').val(rawValue.toFixed(2));
+            }
         });
     })
 </script>

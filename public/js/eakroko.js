@@ -355,7 +355,7 @@ $(document).ready(function () {
 		});
 	}
 
-	// Validation
+	//Validation
 	if ($('.form-validate').length > 0) {
 		$('.form-validate').each(function () {
 			var id = $(this).attr('id');
@@ -364,11 +364,11 @@ $(document).ready(function () {
 				errorElement  : 'span',
 				errorClass    : 'help-block has-error',
 				errorPlacement: function (error, element) {
-					if (element.parents("label").length > 0) {
-						element.parents("label").after(error);
-					} else {
-						element.after(error);
-					}
+                    if (element.siblings('.input-group-addon').length > 0) {
+                        element.parent().after(error);
+                        return;
+                    }
+					element.after(error);
 				},
 				highlight     : function (label) {
 					$(label).closest('.form-group').removeClass('has-error has-success').addClass('has-error');
@@ -381,7 +381,16 @@ $(document).ready(function () {
 				},
 				onfocusout    : function (element) {
 					$(element).valid();
-				}
+				},
+                rules: {
+                    password: {
+                        minlength: 8,
+                    },
+                    password_confirmation: {
+                        minlength: 8,
+                        equalTo: '#password'
+                    }
+                },
 			});
 		});
 	}
