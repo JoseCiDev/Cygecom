@@ -355,7 +355,7 @@ $(document).ready(function () {
 		});
 	}
 
-	// Validation
+	//Validation
 	if ($('.form-validate').length > 0) {
 		$('.form-validate').each(function () {
 			var id = $(this).attr('id');
