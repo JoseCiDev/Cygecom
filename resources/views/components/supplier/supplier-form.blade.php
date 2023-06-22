@@ -51,42 +51,46 @@
         </div>
         <div class="col-sm-3">
             <div class="form-group">
-                <label class="control-label">Tipo de mercado<sup style="color:red">*</sup></label>
-                <div class="row">
-                    <input @if ($supplier?->market_type === 'nacional') checked @endif class="icheck-me" type="radio"
-                        name="market_type" id="nacional" value="nacional" data-skin="minimal">
-                    <label class="form-check-label" for="nacional">Mercado nacional</label>
-                </div>
-                <div class="row">
-                    <input @if ($supplier?->market_type === 'externo') checked @endif class="icheck-me" type="radio"
-                        name="market_type" id="externo" value="externo" data-skin="minimal">
-                    <label class="form-check-label" for="externo">Mercado externo</label>
-                </div>
-                <div class="row">
-                    <input @if ($supplier?->market_type === 'prospec') checked @endif class="icheck-me" type="radio"
-                        name="market_type" id="prospec" value="prospec" data-skin="minimal">
-                    <label class="form-check-label" for="prospec">Prospecção</label>
-                </div>
+                <label for="market-type" class="control-label">Tipo de mercado</label>
+                <fieldset id="market-type" data-rule-required="true">
+                    <div class="row">
+                        <input @if ($supplier?->market_type === 'nacional') checked @endif class="icheck-me" type="radio"
+                            name="market_type" id="nacional" value="nacional" data-skin="minimal" required>
+                        <label class="form-check-label" for="nacional">Mercado nacional</label>
+                    </div>
+                    <div class="row">
+                        <input @if ($supplier?->market_type === 'externo') checked @endif class="icheck-me" type="radio"
+                            name="market_type" id="externo" value="externo" data-skin="minimal" required>
+                        <label class="form-check-label" for="externo">Mercado externo</label>
+                    </div>
+                    <div class="row">
+                        <input @if ($supplier?->market_type === 'prospec') checked @endif class="icheck-me" type="radio"
+                            name="market_type" id="prospec" value="prospec" data-skin="minimal" required>
+                        <label class="form-check-label" for="prospec">Prospecção</label>
+                    </div>
+                </fieldset>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="form-group">
-                <label class="control-label">Indicação do fornecedor<sup style="color:red">*</sup></label>
-                <div class="row">
-                    <input @if ($supplier?->supplier_indication === 'M') checked @endif class="icheck-me" type="radio"
-                        name="supplier_indication" id="materia-prima" value="M" data-skin="minimal">
-                    <label class="form-check-label" for="materia-prima">Matéria-prima</label>
-                </div>
-                <div class="row">
-                    <input @if ($supplier?->supplier_indication === 'S') checked @endif class="icheck-me" type="radio"
-                        name="supplier_indication" id="servico" value="S" data-skin="minimal">
-                    <label class="form-check-label" for="servico">Serviço</label>
-                </div>
-                <div class="row">
-                    <input @if ($supplier?->supplier_indication === 'A') checked @endif class="icheck-me" type="radio"
-                        name="supplier_indication" id="ambos" value="A" data-skin="minimal">
-                    <label class="form-check-label" for="ambos">Ambos</label>
-                </div>
+                <label for="supplier-indication" class="control-label">Indicação do fornecedor</label>
+                <fieldset id="supplier-indication" data-rule-required="true">
+                    <div class="row">
+                        <input @if ($supplier?->supplier_indication === 'M') checked @endif class="icheck-me" type="radio"
+                            name="supplier_indication" id="materia-prima" value="M" data-skin="minimal" required>
+                        <label class="form-check-label" for="materia-prima">Matéria-prima</label>
+                    </div>
+                    <div class="row">
+                        <input @if ($supplier?->supplier_indication === 'S') checked @endif class="icheck-me" type="radio"
+                            name="supplier_indication" id="servico" value="S" data-skin="minimal" required>
+                        <label class="form-check-label" for="servico">Serviço</label>
+                    </div>
+                    <div class="row">
+                        <input @if ($supplier?->supplier_indication === 'A') checked @endif class="icheck-me" type="radio"
+                            name="supplier_indication" id="ambos" value="A" data-skin="minimal" required>
+                        <label class="form-check-label" for="ambos">Ambos</label>
+                    </div>
+                </fieldset>
             </div>
         </div>
     </div>
