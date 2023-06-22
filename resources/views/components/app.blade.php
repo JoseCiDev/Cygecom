@@ -100,7 +100,7 @@
     <script>
         $(() => {
             // required style
-            $('input[data-rule-required]').each(function () {
+            $('[data-rule-required]').each(function () {
                 const $label = $('label[for="' + $(this).attr('id') + '"]');
                 $label.append('<sup style="color:red">*</sup>');
             });
@@ -110,7 +110,7 @@
     <!-- IMask -->
     <script src="https://unpkg.com/imask"></script>
     <script>
-        $.prototype.imask = function(options) {
+        $.fn.imask = function(options) {
             const element = this[0];
 
             return new IMask(element, options);
