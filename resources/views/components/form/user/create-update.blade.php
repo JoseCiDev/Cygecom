@@ -184,33 +184,36 @@
         </div>
         <div class="row">
             <div class="col-sm-4">
-                <label for="cost_center_id" class="control-label">Setor</label>
-                @if (isset($user))
-                    <select name="cost_center_id" id="cost_center_id"
-                        class='chosen-select form-control @error('cost_center_id') is-invalid @enderror'
-                        data-rule-required="true" required>
-                        <option value="" disabled {{ isset($user->person->costCenter) ? '' : 'selected' }}>
-                            Selecione uma opção</option>
-                        @foreach ($costCenters as $costCenter)
-                            <option value="{{ $costCenter->id }}"
-                                {{ isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id ? 'selected' : '' }}>
-                                {{ $costCenter->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('cost_center_id')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                @else
-                    <select name="cost_center_id" id="cost_center_id" class='chosen-select form-control'>
-                        <option value="" disabled selected>Selecione uma opção </option>
-                        @foreach ($costCenters as $costCenter)
-                            <option value="{{ $costCenter->id }}">
-                                {{ $costCenter->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                @endif
+                <div class="form-group">
+                    <label for="cost_center_id" class="control-label">Setor</label>
+                    @if (isset($user))
+                        <select name="cost_center_id" id="cost_center_id"
+                            class='chosen-select form-control @error('cost_center_id') is-invalid @enderror'
+                            data-rule-required="true" required>
+                            <option value="" disabled {{ isset($user->person->costCenter) ? '' : 'selected' }}>
+                                Selecione uma opção</option>
+                            @foreach ($costCenters as $costCenter)
+                                <option value="{{ $costCenter->id }}"
+                                    {{ isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id ? 'selected' : '' }}>
+                                    {{ $costCenter->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('cost_center_id')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    @else
+                        <select name="cost_center_id" id="cost_center_id" class='chosen-select form-control'
+                            data-rule-required="true">
+                            <option value="" disabled selected>Selecione uma opção </option>
+                            @foreach ($costCenters as $costCenter)
+                                <option value="{{ $costCenter->id }}">
+                                    {{ $costCenter->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    @endif
+                </div>
             </div>
             {{-- USUÁRIO APROVADOR --}}
             <div class="col-sm-3">
@@ -239,7 +242,7 @@
             {{-- LIMITE DE APROVAÇÃO --}}
             <div class="col-sm-2">
                 <div class="form-group">
-                    <label for="approve_limit" class="control-label">
+                    <label for="format-approve-limit" class="control-label">
                         Limite de Aprovação
                     </label>
                     @if (isset($user))
