@@ -100,7 +100,7 @@
     <script>
         $(() => {
             // required style
-            $('input[data-rule-required]').each(function () {
+            $('[data-rule-required]').each(function () {
                 const $label = $('label[for="' + $(this).attr('id') + '"]');
                 $label.append('<sup style="color:red">*</sup>');
             });
