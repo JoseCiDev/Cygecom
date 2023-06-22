@@ -110,7 +110,7 @@
     <!-- IMask -->
     <script src="https://unpkg.com/imask"></script>
     <script>
-        $.prototype.imask = function(options) {
+        $.fn.imask = function(options) {
             const element = this[0];
 
             return new IMask(element, options);

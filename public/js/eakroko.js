@@ -339,7 +339,6 @@ $(document).ready(function () {
 				},
 				highlight     : function (label) {
 					$(label).closest('.form-group').removeClass('has-error has-success').addClass('has-error');
-					console.log('aaa');
 				},
 				success       : function (label) {
 					label.addClass('valid').closest('.form-group').removeClass('has-error has-success').addClass('has-success');

@@ -2,9 +2,11 @@
     <div class="row">
         <div class="col-md-6">
             <h3 style="color: white; margin-top: 5px">
-                @if (isset($user)) Atualizar usuário
+                @if (isset($user))
+                    Editar usuário
                 @else
-                    Editar usuário @endif
+                    Novo usuário
+                @endif
             </h3>
         </div>
         @if (isset($user) && auth()->user()->id !== $user['id'])
@@ -358,7 +360,6 @@
             const currentValue = isChecked ? null : $(this).data('last-value');
             $approveLimit.prop('readonly', isChecked).val(currentValue).valid();
             $hiddenApproveLimit.val(currentValue);
-            console.log($hiddenApproveLimit.val());
         });
 
         // masks
