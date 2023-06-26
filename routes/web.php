@@ -13,7 +13,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/users/{id}', [App\Http\Controllers\Auth\UserController::class, 'userUpdate'])->name('userUpdate');
 
     Route::get('/requests/own', [App\Http\Controllers\QuoteRequestController::class, 'ownRequests'])->name('requests.own');
-    Route::get('/request/register/{id?}', [App\Http\Controllers\QuoteRequestController::class, 'form'])->name('request.register');
+    Route::get('/requests/new', [App\Http\Controllers\QuoteRequestController::class, 'new'])->name('requests.new');
+    Route::get('/request/product/{id?}', [App\Http\Controllers\QuoteRequestController::class, 'product'])->name('request.product');
+    Route::get('/request/service/{id?}', [App\Http\Controllers\QuoteRequestController::class, 'service'])->name('request.service');
+    Route::get('/request/contract/{id?}', [App\Http\Controllers\QuoteRequestController::class, 'contract'])->name('request.contract');
+    //Route::get('/request/register/{id?}', [App\Http\Controllers\QuoteRequestController::class, 'form'])->name('request.register');
     Route::get('/request/view/{id}', [App\Http\Controllers\QuoteRequestController::class, 'edit'])->name('request.edit');
 
     Route::post('/request/register', [App\Http\Controllers\QuoteRequestController::class, 'register']);

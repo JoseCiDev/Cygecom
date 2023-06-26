@@ -33,29 +33,24 @@ class QuoteRequestController extends Controller
         return view('components.quote-request.index', ["quoteRequests" => $quoteRequests]);
     }
 
-    public function form(int $quoteRequestIdToCopy = null)
+    public function new()
     {
-        $companies   = Company::all();
-        $costCenters = CostCenter::all();
-        $params      = ["companies" => $companies, "costCenters" => $costCenters];
-        $isAdmin     = auth()->user()->profile->isAdmin;
+        return view('components.quote-request.new');
+    }
 
-        try {
-            if ($quoteRequestIdToCopy) {
-                if (!$isAdmin) {
-                    $isAuthorized = auth()->user()->quoteRequest->where('id', $quoteRequestIdToCopy)->whereNull('deleted_at')->first();
+    public function product()
+    {
+        return view('components.quote-request.product');
+    }
 
-                    if (!$isAuthorized) {
-                        return throw new Exception('Acesso não autorizado para essa solicitação de compra.');
-                    }
-                }
-                $params['quoteRequestIdToCopy'] = $quoteRequestIdToCopy;
-            }
+    public function service()
+    {
+        return view('components.quote-request.service');
+    }
 
-            return view('components.quote-request.register', $params);
-        } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
-        }
+    public function contract()
+    {
+        return view('components.quote-request.contract');
     }
 
     public function edit(int $id)
