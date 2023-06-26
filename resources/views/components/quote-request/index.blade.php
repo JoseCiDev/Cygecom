@@ -14,7 +14,7 @@
                             <h3 class="pull-left">Todas as solicitações</h3>
                         </div>
                         <div class="col-md-6">
-                            <a href="{{ route('request.register') }}" class="btn pull-right btn-large" style="margin-right: 15px">Nova Solicitação</a>
+                            <a href="{{ route('requests.new') }}" class="btn pull-right btn-large" style="margin-right: 15px">Nova Solicitação</a>
                         </div>
                     </div>
                 </div>
