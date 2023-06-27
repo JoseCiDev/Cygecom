@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Supplier;
 use App\Models\{Company, CostCenter};
 use App\Providers\{QuoteRequestService, ValidatorService};
 use Exception;
@@ -45,7 +46,10 @@ class QuoteRequestController extends Controller
 
     public function service()
     {
-        return view('components.quote-request.service');
+        $costCenters = CostCenter::with('company')->get();
+        $suppliers   = Supplier::whereNull('deleted_at')->get();
+
+        return view('components.quote-request.service', compact('costCenters', 'suppliers'));
     }
 
     public function contract()
