@@ -35,46 +35,41 @@ class Breadcrumb extends Component
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'email', 'label' => 'Envio de e-mail'],
         ],
-        'products' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'products', 'label' => 'Produtos'],
-        ],
-        'productRegister' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'products', 'label' => 'Produtos'],
-            ['route' => 'productRegister', 'label' => 'Registrar produto'],
-        ],
-        'product' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'products', 'label' => 'Produtos'],
-            ['route' => 'product', 'label' => 'Produto'],
-        ],
         'requests' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'requests', 'label' => 'Solicitações'],
-        ],
-        'request.register' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests.own', 'label' => 'Minhas Solicitações'],
-            ['route' => 'request.register', 'label' => 'Nova Solicitação'],
-        ],
-        'request.edit' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests.own', 'label' => 'Minhas Solicitações'],
-            ['route' => 'request.edit', 'label' => 'Editar Solicitação'],
         ],
         'requests.own' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'requests.own', 'label' => 'Minhas Solicitações'],
         ],
-        'quotations' => [
+        'request.links' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'quotations', 'label' => 'Cotações'],
+            ['route' => 'requests.own', 'label' => 'Minhas Solicitações'],
+            ['route' => 'request.links', 'label' => 'Tipos de Solicitações'],
         ],
-        'quotationRegister' => [
+        'request.service.register' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'quotations', 'label' => 'Cotações'],
-            ['route' => 'quotationRegister', 'label' => 'Nova Cotação'],
+            ['route' => 'requests', 'label' => 'Solicitações'],
+            ['route' => 'request.links', 'label' => 'Tipos de Solicitações'],
+            ['route' => 'request.service.register', 'label' => 'Solicitação de Serviço'],
+        ],
+        'request.product.register' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'requests', 'label' => 'Solicitações'],
+            ['route' => 'request.links', 'label' => 'Tipos de Solicitações'],
+            ['route' => 'request.product.register', 'label' => 'Solicitação de Produto(s)'],
+        ],
+        'request.contract.register' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'requests', 'label' => 'Solicitações'],
+            ['route' => 'request.links', 'label' => 'Tipos de Solicitações'],
+            ['route' => 'request.contract.register', 'label' => 'Solicitação de Contrato'],
+        ],
+        'request.edit' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'requests.own', 'label' => 'Minhas Solicitações'],
+            ['route' => 'request.edit', 'label' => 'Editar Solicitação'],
         ],
         'suppliers' => [
             ['route' => 'home', 'label' => 'Home'],
