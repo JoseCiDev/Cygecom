@@ -288,7 +288,7 @@
                 <div class="form-group">
                     <label for="approver_user_id" id="cost-center-permissions" class="control-label">Centros de
                         custos permitidos</label>
-                    <select @if (!auth()->user()->profile->isAdmin) disabled @endif name="user_cost_center_permissions[]"
+                    <select @if (!auth()->user()->profile->is_admin) disabled @endif name="user_cost_center_permissions[]"
                         id="user_cost_center_permissions" multiple="multiple"
                         class="chosen-select form-control cost-centers-permissions"
                         placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras">

@@ -13,6 +13,7 @@ class Address extends Model
     {
         return $this->hasOne(CostCenter::class);
     }
+
     public function supplier()
     {
         return $this->hasOne(Supplier::class);
@@ -22,6 +23,7 @@ class Address extends Model
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
+
     public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by');

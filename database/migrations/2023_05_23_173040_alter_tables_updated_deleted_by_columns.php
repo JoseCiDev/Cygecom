@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     private function addAuditColumns($table)
     {
         $table->unsignedInteger('deleted_by')->nullable();
@@ -31,9 +32,9 @@ return new class () extends Migration {
     public function up()
     {
         $tables = [
-            'addresses', 'suppliers', 'people', 'quote_requests', 'quote_request_files',
-            'purchase_quotes', 'quote_files', 'phones', 'products', 'services',
-            'cost_center_apportionments', 'quote_items',
+            'addresses', 'suppliers', 'people', 'purchase_requests', 'purchase_request_files',
+            'phones', 'services', 'contracts',
+            'cost_center_apportionments', 'contract_installments'
         ];
 
         foreach ($tables as $table) {
@@ -46,9 +47,9 @@ return new class () extends Migration {
     public function down()
     {
         $tables = [
-            'addresses', 'suppliers', 'people', 'quote_requests', 'quote_request_files',
-            'purchase_quotes', 'quote_files', 'phones', 'products', 'services',
-            'cost_center_apportionments', 'quote_items',
+            'addresses', 'suppliers', 'people', 'purchase_requests', 'purchase_request_files',
+            'phones', 'services', 'contracts',
+            'cost_center_apportionments', 'contract_installments'
         ];
 
         foreach ($tables as $table) {

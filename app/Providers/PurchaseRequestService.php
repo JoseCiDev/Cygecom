@@ -1,0 +1,287 @@
+<?php
+
+namespace App\Providers;
+
+use App\Models\{Contract, ContractInstallment, CostCenterApportionment, PurchaseRequest, PurchaseRequestFile, PurchaseRequestProduct, Service, ServicePaymentInfo};
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\ServiceProvider;
+
+class PurchaseRequestService extends ServiceProvider
+{
+    /**
+     * @return mixed Retorna todas solicitações com suas relações, exceto deletados.
+     */
+    public function purchaseRequests()
+    {
+        return PurchaseRequest::with([
+            'user', 'user.person', 'purchaseRequestFile', 'costCenterApportionment', 'costCenterApportionment.costCenter',
+            'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
+            'service', 'service.servicePaymentInfo',
+            'purchaseRequestProduct', 'purchaseRequestProduct.category',
+            'contract', 'contract.installments'
+        ])->whereNull('deleted_at')->get();
+    }
+
+    /**
+     * @return mixed Pelo id do usuário retorna todas solicitações com suas relações, exceto deletados.
+     */
+    public function purchaseRequestsByUser(int $id = null)
+    {
+        $id = $id ?? auth()->user()->id;
+
+        return PurchaseRequest::with([
+            'user', 'user.person', 'purchaseRequestFile', 'costCenterApportionment', 'costCenterApportionment.costCenter',
+            'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
+            'service', 'service.servicePaymentInfo',
+            'purchaseRequestProduct', 'purchaseRequestProduct.category',
+            'contract', 'contract.installments'
+
+        ])->whereNull('deleted_at')->where('user_id', $id)->get();
+    }
+
+    /**
+     * @return mixed Pelo id retorna solicitação com suas relações, exceto deletada.
+     */
+    public function purchaseRequestById(int $id)
+    {
+        return PurchaseRequest::with([
+            'user', 'user.person', 'purchaseRequestFile', 'costCenterApportionment', 'costCenterApportionment.costCenter',
+            'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
+            'service', 'service.servicePaymentInfo',
+            'purchaseRequestProduct', 'purchaseRequestProduct.category',
+            'contract', 'contract.installments'
+        ])->whereNull('deleted_at')->where('id', $id)->first();
+    }
+
+    /**
+     * @abstract Cria apenas entidade solicitação com relação do rateio e arquivo/link. 
+     * Deve ser chamada pelos métodos específicios de serviço, contrato ou produtos.
+     */
+    public function registerPurchaseRequest(array $data)
+    {
+        return DB::transaction(function () use ($data) {
+            $data['user_id'] = auth()->user()->id;
+            $purchaseRequest = PurchaseRequest::create($data);
+
+            $this->saveCostCenterApportionment($purchaseRequest->id, $data);
+            $this->savePurchaseRequestFile($purchaseRequest->id, $data);
+
+            return $purchaseRequest;
+        });
+    }
+
+    /**
+     * @return mixed Retorna solicitação criada.
+     * @abstract Cria solicitação de serviço. 
+     * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveService para salvar serviço.
+     */
+    public function registerServiceRequest(array $data)
+    {
+        return DB::transaction(function () use ($data) {
+            $purchaseRequest = $this->registerPurchaseRequest($data);
+            $this->saveService($purchaseRequest->id, $data);
+            return $purchaseRequest;
+        });
+    }
+
+    /**
+     * @return mixed Retorna solicitação criada.
+     * @abstract Cria solicitação de contrato. 
+     * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveContract para salvar contrato.
+     */
+    public function registerContractRequest(array $data)
+    {
+        return DB::transaction(function () use ($data) {
+            $purchaseRequest = $this->registerPurchaseRequest($data);
+            $this->saveContract($purchaseRequest->id, $data);
+            return $purchaseRequest;
+        });
+    }
+
+    /**
+     * @return mixed Retorna solicitação criada.
+     * @abstract Cria solicitação de produto(s). 
+     * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveProduct para salvar produto(s).
+     */
+    public function registerProductRequest(array $data)
+    {
+        return DB::transaction(function () use ($data) {
+            $purchaseRequest = $this->registerPurchaseRequest($data);
+            $this->saveProducts($purchaseRequest->id, $data);
+            return $purchaseRequest;
+        });
+    }
+
+    /**
+     * @abstract Atualiza apenas entidade solicitação com relação do rateio e arquivo/link. 
+     * Deve ser chamada pelos métodos específicios de serviço, contrato ou produtos.
+     */
+    public function updatePurchaseRequest(int $id, array $data)
+    {
+        return DB::transaction(function () use ($id, $data) {
+            $purchaseRequest             = PurchaseRequest::find($id);
+            $purchaseRequest->updated_by = auth()->user()->id;
+            $purchaseRequest->fill($data);
+            $purchaseRequest->save();
+
+            $this->saveCostCenterApportionment($purchaseRequest->id, $data);
+            $this->savePurchaseRequestFile($purchaseRequest->id, $data);
+
+            return $purchaseRequest;
+        });
+    }
+
+    /**
+     * @abstract Atualiza solicitação de serviço. 
+     * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveService para atualizar serviço.
+     */
+    public function updateServiceRequest(int $id, array $data): void
+    {
+        DB::transaction(function () use ($id, $data) {
+            $purchaseRequest = $this->updatePurchaseRequest($id, $data);
+            $this->saveService($purchaseRequest->id, $data);
+        });
+    }
+
+    /**
+     * @abstract Atualiza solicitação de produto(s). 
+     * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveProduct para atualizar produto(s).
+     */
+    public function updateProductRequest(int $id, array $data)
+    {
+        DB::transaction(function () use ($id, $data) {
+            $purchaseRequest = $this->updatePurchaseRequest($id, $data);
+            $this->saveProducts($purchaseRequest->id, $data);
+        });
+    }
+
+    /**
+     * @abstract Atualiza solicitação de contrato. 
+     * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveContract para atualizar contrato.
+     */
+    public function updateContractRequest(int $id, array $data)
+    {
+        DB::transaction(function () use ($id, $data) {
+            $purchaseRequest = $this->updatePurchaseRequest($id, $data);
+            $this->saveContract($purchaseRequest->id, $data);
+        });
+    }
+
+    /**
+     * @abstract Soft delete em solicitação pelo id
+     */
+    public function deletePurchaseRequest(int $id)
+    {
+        $purchaseRequest             = PurchaseRequest::find($id);
+        $purchaseRequest->deleted_at = Carbon::now();
+        $purchaseRequest->deleted_by = auth()->user()->id;
+        $purchaseRequest->save();
+    }
+
+    /**
+     * @abstract Responsável por criar, atualizar ou remover relações de rateios com centro de custo
+     */
+    private function saveCostCenterApportionment(int $purchaseRequestId, array $data): void
+    {
+        $userId            = auth()->user()->id;
+        $apportionmentData = $data['cost_center_apportionments'];
+        $existingIds       = CostCenterApportionment::where('purchase_request_id', $purchaseRequestId)->pluck('id')->toArray();
+
+        foreach ($apportionmentData as $apportionment) {
+            $apportionment['purchase_request_id'] = $purchaseRequestId;
+            $apportionment['updated_by']       = $userId;
+            $existingRecord                    = CostCenterApportionment::where(['purchase_request_id' => $purchaseRequestId, 'cost_center_id' => $apportionment['cost_center_id']])->first();
+
+            if ($existingRecord) {
+                $existingRecord->update($apportionment);
+                $existingIds = array_diff($existingIds, [$existingRecord->id]);
+            } else {
+                CostCenterApportionment::create($apportionment);
+            }
+        }
+
+        CostCenterApportionment::whereIn('id', $existingIds)->delete();
+    }
+
+    /**
+     * @abstract Responsável por criar ou atualizar purchaseRequestFile. 
+     * Recomendado executar com o método específico registerProductRequest ou updateProductRequest
+     */
+    private function savePurchaseRequestFile(int $purchaseRequestId, array $data): void
+    {
+        $purchaseRequestFile = $data['purchase_request_files'];
+        if (!$purchaseRequestFile['path']) {
+            return;
+        }
+        $purchaseRequestFile['purchase_request_id'] = $purchaseRequestId;
+        $purchaseRequestFile['updated_by']       = auth()->user()->id;
+        PurchaseRequestFile::updateOrCreate(['purchase_request_id' => $purchaseRequestId], $purchaseRequestFile);
+    }
+
+    /**
+     * @abstract Responsável por criar ou atualizar service. 
+     * Recomendado executar com o método específico registerServiceRequest ou updateServiceRequest
+     */
+    private function saveService(int $purchaseRequestId, array $data): void
+    {
+        if (!isset($data['type']) && $data['type'] !== "service") {
+            return;
+        }
+
+        $service = $data['service'];
+        $servicePaymentInfo = $service['service_payment_info'];
+
+        $service['purchase_request_id'] = $purchaseRequestId;
+        $service['updated_by'] = auth()->user()->id;
+
+        $resultService = Service::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $service['supplier_id']], $service);
+        ServicePaymentInfo::updateOrCreate(['service_id' => $resultService->id], $servicePaymentInfo);
+    }
+
+    /**
+     * @abstract Responsável por criar ou atualizar products. 
+     * Recomendado executar com o método específico registerProductRequest ou updateProductRequest
+     */
+    private function saveProducts(int $purchaseRequestId, array $data): void
+    {
+        if (!isset($data['type']) && $data['type'] !== "product") {
+            return;
+        }
+
+        $suppliers = $data['purchase_request_products'];
+
+        foreach ($suppliers as $supplier) {
+            $supplierId = $supplier['supplier_id'];
+            $products = $supplier['products'];
+
+            foreach ($products as $product) {
+                $product['supplier_id'] = $supplierId;
+                $product['purchase_request_id'] = $purchaseRequestId;
+                PurchaseRequestProduct::updateOrCreate(['id' => $product['id']], $product);
+            }
+        }
+    }
+
+    /**
+     * @abstract Responsável por criar ou atualizar contrato. 
+     * Recomendado executar com o método específico registerContractRequest ou updateContractRequest
+     */
+    private function saveContract(int $purchaseRequestId, array $data): void
+    {
+        if (!isset($data['type']) && $data['type'] !== "contract") {
+            return;
+        }
+
+        $contractData = $data['contract'];
+        $contractsInstallmentsData = $contractData['contract_installments'];
+        $supplierId = $contractData['supplier_id'];
+
+        $contract = Contract::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $supplierId], $contractData);
+
+        foreach ($contractsInstallmentsData as $installment) {
+            $installment['contract_id'] = $contract->id;
+            ContractInstallment::updateOrCreate(['id' => $installment['id']], $installment);
+        }
+    }
+}

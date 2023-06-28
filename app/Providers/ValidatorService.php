@@ -9,7 +9,7 @@ use Illuminate\Support\ServiceProvider;
 
 class ValidatorService extends ServiceProvider implements ValidatorServiceInterface
 {
-    public $requiredRules = [
+    public $requiredRulesForUser = [
         'name'                         => ['required', 'string', 'max:255'],
         'email'                        => ['required', 'string', 'email', 'max:255', 'unique:users'],
         'password'                     => ['required', 'string', 'min:8', 'confirmed'],
@@ -22,7 +22,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         "user_cost_center_permissions" => ['nullable', 'array'],
     ];
 
-    public $requiredRulesMessages = [
+    public $requiredRulesForUserMessages = [
         'name.required' => 'Campo "Nome" é obrigatório.',
         'name.max'      => 'Campo "Nome" deve ter no máximo :max caracteres',
 
@@ -51,7 +51,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         "user_cost_center_permissions.array" => "O campo permissões do centro de custo do usuário deve ser um array.",
     ];
 
-    public $rulesForUpdate = [
+    public $rulesForUserUpdate = [
         'name'                         => ['nullable', 'string', 'max:255'],
         'email'                        => ['nullable', 'email', 'max:255', 'unique:users,email'],
         'password'                     => ['nullable', 'string', 'min:8', 'confirmed'],
@@ -63,18 +63,10 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'identification'               => ['nullable', 'string', 'max:20'],
         'number'                       => ['nullable', 'string', 'max:20'],
         'phone_type'                   => ['nullable', 'string', 'max:20'],
-        'postal_code'                  => ['nullable', 'string', 'max:20'],
-        'country'                      => ['nullable', 'string', 'max:255'],
-        'state'                        => ['nullable', 'string', 'max:255'],
-        'city'                         => ['nullable', 'string', 'max:255'],
-        'neighborhood'                 => ['nullable', 'string', 'max:255'],
-        'street'                       => ['nullable', 'string', 'max:255'],
-        'street_number'                => ['nullable', 'string'],
-        'complement'                   => ['nullable', 'string', 'max:255'],
         "user_cost_center_permissions" => ['nullable', 'array'],
     ];
 
-    public $rulesForUpdateMessages = [
+    public $rulesForUserUpdateMessages = [
         'name.max' => '"Nome" deve ter no máximo :max caracteres.',
 
         'email.email'  => 'Endereço de e-mail inválido.',
@@ -89,26 +81,6 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'birthdate.date' => 'Data inválida',
 
         "user_cost_center_permissions.array" => "O campo permissões do centro de custo do usuário deve ser um array.",
-    ];
-
-    public $rulesForProduct = [
-        'name'                 => ['required', 'string', 'max:255', 'min:3'],
-        'description'          => ['nullable', 'string', 'max:255'],
-        'unit_price'           => ['nullable', 'numeric', 'min:0'],
-        'product_categorie_id' => ['nullable', 'numeric', 'min:1'],
-        'updated_by'           => ['nullable', 'numeric', 'min:1'],
-    ];
-
-    public $messagesForProduct = [
-        'name.required' => 'O nome é obrigatório',
-        'name.min'      => 'O nome deve possuir pelo menos :min caracteres.',
-        'name.max'      => 'O nome deve possuir no máximo :max caracteres.',
-
-        'unit_price.number' => 'O preço unitário aceita apenas números.',
-        'unit_price.min'    => 'O preço unitário não aceita valores negativos.',
-
-        'updated_by.numeric' => 'O ID do usuário que atualizou o produto deve ser numérico.',
-        'updated_by.min'     => 'O ID do usuário que atualizou o produto não pode ser negativo.',
     ];
 
     public $rulesForSupplier = [
@@ -199,23 +171,21 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'phone_type.max'      => 'O tipo de Telefone deve ter no máximo :max caracteres.',
     ];
 
-    public $rulesForQuoteRequest = [
+    public $rulesForPurchaseRequest = [
         'cost_center_apportionments'                            => ['required', 'array'],
         'cost_center_apportionments.*.cost_center_id'           => ['required', 'numeric', 'min:1'],
         'cost_center_apportionments.*.apportionment_percentage' => ['required_without:cost_center_apportionments.*.apportionment_currency', 'nullable', 'numeric', 'min:0', 'max:100'],
         'cost_center_apportionments.*.apportionment_currency'   => ['required_without:cost_center_apportionments.*.apportionment_percentage', 'nullable', 'numeric', 'min:0'],
-        'is_service'                                            => ['required', 'boolean'],
-        'is_supplies_quote'                                     => ['required', 'boolean'],
         'is_comex'                                              => ['required', 'boolean'],
         'local_description'                                     => ['required', 'string'],
         'reason'                                                => ['required', 'string'],
         'description'                                           => ['nullable', 'string'],
         'desired_date'                                          => ['nullable', 'date'],
-        'quote_request_files'                                   => ['nullable', 'array'],
-        'quote_request_files.*.path'                            => ['nullable', 'string'],
+        'purchase_request_files'                                   => ['nullable', 'array'],
+        'purchase_request_files.*.path'                            => ['nullable', 'string'],
     ];
 
-    public $messagesForQuoteRequest = [
+    public $messagesForPurchaseRequest = [
         'cost_center_apportionments.required'                                    => 'O campo de rateios de centro de custo é obrigatório.',
         'cost_center_apportionments.array'                                       => 'O campo de rateios de centro de custo deve ser um array.',
         'cost_center_apportionments.*.cost_center_id.required'                   => 'O ID do centro de custo é obrigatório.',
@@ -229,11 +199,8 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'cost_center_apportionments.*.apportionment_currency.numeric'            => 'O valor de rateio deve ser um número.',
         'cost_center_apportionments.*.apportionment_currency.min'                => 'O valor de rateio deve ser no mínimo :min.',
 
-        'is_service.required' => 'O campo de serviço é obrigatório.',
-        'is_service.boolean'  => 'O campo de serviço deve ser um valor booleano.',
-
-        'is_supplies_quote.required' => 'O campo de cotação de suprimentos é obrigatório.',
-        'is_supplies_quote.boolean'  => 'O campo de cotação de suprimentos deve ser um valor booleano.',
+        // 'is_supplies_quote.required' => 'O campo de cotação de suprimentos é obrigatório.',
+        // 'is_supplies_quote.boolean'  => 'O campo de cotação de suprimentos deve ser um valor booleano.',
 
         'is_comex.required' => 'O campo de comex é obrigatório.',
         'is_comex.boolean'  => 'O campo de comex deve ser um valor booleano.',
@@ -248,14 +215,14 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
 
         'desired_date.date' => 'A data desejada deve estar em um formato válido.',
 
-        'quote_request_files.array'         => 'Os arquivos de solicitação de cotação devem ser um array.',
-        'quote_request_files.*.path.string' => 'O caminho do arquivo deve ser uma string.',
+        'purchase_request_files.array'         => 'Os arquivos de solicitação de cotação devem ser um array.',
+        'purchase_request_files.*.path.string' => 'O caminho do arquivo deve ser uma string.',
     ];
 
     public function registerValidator(array $data)
     {
         try {
-            $validator = Validator::make($data, $this->requiredRules, $this->requiredRulesMessages);
+            $validator = Validator::make($data, $this->requiredRulesForUser, $this->requiredRulesForUserMessages);
 
             return $validator;
         } catch (Exception $error) {
@@ -265,19 +232,10 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
 
     public function updateValidator(int $id, array $data)
     {
-        $rules          = $this->rulesForUpdate;
-        $messages       = $this->rulesForUpdateMessages;
+        $rules          = $this->rulesForUserUpdate;
+        $messages       = $this->rulesForUserUpdateMessages;
         $rules['email'] = ['nullable', 'email', 'max:255', 'unique:users,email,' . $id];
 
-        $validator = Validator::make($data, $rules, $messages);
-
-        return $validator;
-    }
-
-    public function productValidator(array $data)
-    {
-        $rules     = $this->rulesForProduct;
-        $messages  = $this->messagesForProduct;
         $validator = Validator::make($data, $rules, $messages);
 
         return $validator;
@@ -292,10 +250,10 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         return $validator;
     }
 
-    public function quoteRequest(array $data)
+    public function purchaseRequest(array $data)
     {
-        $rules     = $this->rulesForQuoteRequest;
-        $messages  = $this->messagesForQuoteRequest;
+        $rules     = $this->rulesForPurchaseRequest;
+        $messages  = $this->messagesForPurchaseRequest;
         $validator = Validator::make($data, $rules, $messages);
 
         return $validator;

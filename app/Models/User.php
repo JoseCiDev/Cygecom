@@ -33,15 +33,16 @@ class User extends Authenticatable
         return $this->hasMany(UserCostCenterPermission::class);
     }
 
-    public function quoteRequest()
+    public function purchaseRequest()
     {
-        return $this->hasMany(QuoteRequest::class);
+        return $this->hasMany(PurchaseRequest::class);
     }
 
     public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
+
     public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by');
@@ -51,6 +52,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(User::class);
     }
+
     public function updatedMany()
     {
         return $this->hasMany(User::class);
