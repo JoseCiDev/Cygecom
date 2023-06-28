@@ -10,6 +10,11 @@ class Supplier extends Model
 {
     use HasFactory;
 
+    public function purchaseRequestProduct()
+    {
+        return $this->belongsTo(PurchaseRequestProduct::class, 'purchase_request_id');
+    }
+
     public function address()
     {
         return $this->belongsTo(Address::class);
@@ -24,6 +29,7 @@ class Supplier extends Model
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
+
     public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by');

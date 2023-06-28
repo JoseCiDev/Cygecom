@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class Contract extends Model
 {
     use HasFactory;
 
-    public function servicePaymentInfo()
+    public function installments()
     {
-        return $this->hasMany(ServicePaymentInfo::class);
+        return $this->hasMany(ContractInstallment::class);
     }
 
     public function purchaseRequest()
@@ -35,12 +35,18 @@ class Service extends Model
     }
 
     protected $fillable = [
+        'name',
+        'is_active',
         'description',
         'payday',
-        'is_finished',
+        'start_date',
+        'end_date',
+        'recurrence',
+        'is_fixed_payment',
         'local_service',
-        'price',
-        'hours_performed',
+        'total_ammount',
+        'quantity_of_installments',
+        'payment_type',
         'purchase_request_id',
         'supplier_id',
         'updated_by',
