@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PurchaseRequestType;
 use App\Models\Company;
 use App\Models\CostCenter;
 use App\Providers\{PurchaseRequestService, ValidatorService};
 use Exception;
 use Illuminate\Http\{RedirectResponse, Request};
 
-class ProductController extends Controller
+class ServiceController extends Controller
 {
     private $validatorService;
 
@@ -20,7 +21,7 @@ class ProductController extends Controller
         $this->purchaseRequestService = $purchaseRequestService;
     }
 
-    public function registerProduct(Request $request): RedirectResponse
+    public function registerService(Request $request): RedirectResponse
     {
         $route   = 'requests';
         $routeParam = [];
@@ -32,19 +33,19 @@ class ProductController extends Controller
         }
 
         try {
-            $purchaseRequest = $this->purchaseRequestService->registerProductRequest($data);
+            $purchaseRequest = $this->purchaseRequestService->registerServiceRequest($data);
             $route = 'request.edit';
             $routeParam = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
         }
 
-        session()->flash('success', "Solicitação de produto(s) criada com sucesso!");
+        session()->flash('success', "Solicitação de serviço criada com sucesso!");
 
         return redirect()->route($route, $routeParam);
     }
 
-    public function productForm(int $purchaseRequestIdToCopy = null)
+    public function serviceForm(int $purchaseRequestIdToCopy = null)
     {
         $companies   = Company::all();
         $costCenters = CostCenter::all();
@@ -57,18 +58,18 @@ class ProductController extends Controller
                     $isAuthorized = auth()->user()->purchaseRequest->where('id', $purchaseRequestIdToCopy)->whereNull('deleted_at')->first();
 
                     if (!$isAuthorized) {
-                        return throw new Exception('Acesso não autorizado para essa solicitação de compra.');
+                        return throw new Exception('Acesso não autorizado para essa solicitação de serviço.');
                     }
                 }
             }
             $params['purchaseRequestIdToCopy'] = $purchaseRequestIdToCopy;
-            return view('components.purchase-request.product', $params);
+            return view('components.purchase-request.service', $params);
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
         }
     }
 
-    public function updateProduct(Request $request, int $id): RedirectResponse
+    public function updateService(Request $request, int $id): RedirectResponse
     {
         $route      = 'request.edit';
         $data       = $request->all();
@@ -84,7 +85,7 @@ class ProductController extends Controller
             $isAuthorized = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
 
             if ($isAuthorized) {
-                $this->purchaseRequestService->updateProductRequest($id, $data);
+                $this->purchaseRequestService->updateServiceRequest($id, $data);
             } else {
                 return throw new Exception('Não foi possível acessar essa solicitação.');
             }
@@ -92,7 +93,7 @@ class ProductController extends Controller
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
         }
 
-        session()->flash('success', "Solicitação de produto(s) atualizado com sucesso!");
+        session()->flash('success', "Solicitação de serviço atualizada com sucesso!");
 
         return redirect()->route($route, ['type' => $purchaseRequest->type, 'id' => $id]);
     }
