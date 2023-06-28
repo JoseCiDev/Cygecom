@@ -66,7 +66,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user->approve_limit    = $request['approve_limit'];
             $user->save();
 
-            if (auth()->user()->profile->isAdmin) {
+            if (auth()->user()->profile->is_admin) {
                 $costCenterPermissions = $request['user_cost_center_permissions'];
                 $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
             }
@@ -88,7 +88,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $this->savePerson($person, $data);
             $this->savePhone($phone, $data);
 
-            if (auth()->user()->profile->isAdmin) {
+            if (auth()->user()->profile->is_admin) {
                 $costCenterPermissions = $data['user_cost_center_permissions'];
                 $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
             }
