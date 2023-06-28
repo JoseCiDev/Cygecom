@@ -67,8 +67,11 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user->save();
 
             if (auth()->user()->profile->is_admin) {
-                $costCenterPermissions = $request['user_cost_center_permissions'];
-                $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
+                $costCenterPermissions = $request['user_cost_center_permissions'] ?? null;
+
+                if ($costCenterPermissions !== null) {
+                    $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
+                }
             }
 
             return $user;
@@ -89,8 +92,11 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $this->savePhone($phone, $data);
 
             if (auth()->user()->profile->is_admin) {
-                $costCenterPermissions = $data['user_cost_center_permissions'];
-                $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
+                $costCenterPermissions = $data['user_cost_center_permissions'] ?? null;
+
+                if ($costCenterPermissions !== null) {
+                    $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
+                }
             }
 
             DB::commit();
@@ -149,9 +155,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
         UserCostCenterPermission::whereIn('cost_center_id', $removedPermissions)->where('user_id', $userId)->delete();
     }
 
-    /**
-     * Funções auxiliares para criação de usuário:
-     */
     private function createPerson(array $request): Person
     {
         return Person::create($request);

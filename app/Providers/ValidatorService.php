@@ -99,7 +99,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'city'          => ['required', 'string', 'max:255'],
         'neighborhood'  => ['required', 'string', 'max:255'],
         'street'        => ['required', 'string', 'max:255'],
-        'street_number' => ['required', 'string', 'max:20'],
+        'street_number' => ['nullable', 'string', 'max:20'],
         'complement'    => ['nullable', 'string', 'max:255'],
 
         'number'     => ['required', 'string', 'max:20'],
@@ -157,9 +157,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'street.string'   => 'A rua deve ser uma string.',
         'street.max'      => 'A rua deve ter no máximo :max caracteres.',
 
-        'street_number.required' => 'O campo Número é obrigatório.',
-        'street_number.string'   => 'O número da rua deve ser uma string.',
-        'street_number.max'      => 'O número da rua deve ter no máximo :max caracteres.',
+        'street_number.max' => 'O número da rua deve ter no máximo :max caracteres.',
 
         'complement.string' => 'O complemento deve ser uma string.',
         'complement.max'    => 'O complemento deve ter no máximo :max caracteres.',

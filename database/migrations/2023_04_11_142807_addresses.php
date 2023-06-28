@@ -10,7 +10,7 @@ return new class () extends Migration {
         Schema::create('addresses', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->string('street');
-            $table->string('street_number');
+            $table->string('street_number')->nullable();
             $table->string('neighborhood');
             $table->string('postal_code');
             $table->string('city');
