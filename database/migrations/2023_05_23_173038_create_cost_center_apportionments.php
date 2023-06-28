@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up(): void
     {
         Schema::create('cost_center_apportionments', function (Blueprint $table) {
@@ -12,8 +13,8 @@ return new class () extends Migration {
             $table->string('apportionment_percentage', 20)->nullable();
             $table->decimal('apportionment_currency', 14, 2)->nullable();
 
-            $table->unsignedInteger('quote_request_id');
-            $table->foreign('quote_request_id')->references('id')->on('quote_requests');
+            $table->unsignedInteger('purchase_request_id');
+            $table->foreign('purchase_request_id')->references('id')->on('purchase_requests');
 
             $table->unsignedInteger('cost_center_id');
             $table->foreign('cost_center_id')->references('id')->on('cost_centers');
@@ -22,7 +23,7 @@ return new class () extends Migration {
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
 
-            $table->unique(['quote_request_id', 'cost_center_id'], 'unique_quote_request_cost_center');
+            $table->unique(['purchase_request_id', 'cost_center_id'], 'unique_purchase_request_cost_center');
         });
     }
 

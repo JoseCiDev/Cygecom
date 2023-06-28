@@ -8,13 +8,13 @@ return new class() extends Migration
 {
     public function up(): void
     {
-        Schema::create('quote_request_files', function (Blueprint $table) {
+        Schema::create('purchase_request_files', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
 
             $table->string('path');
 
-            $table->unsignedInteger('quote_request_id');
-            $table->foreign('quote_request_id')->references('id')->on('quote_requests');
+            $table->unsignedInteger('purchase_request_id');
+            $table->foreign('purchase_request_id')->references('id')->on('purchase_requests');
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
@@ -24,6 +24,6 @@ return new class() extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('quote_request_files');
+        Schema::dropIfExists('purchase_request_files');
     }
 };

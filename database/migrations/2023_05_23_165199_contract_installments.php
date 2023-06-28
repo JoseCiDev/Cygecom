@@ -8,23 +8,25 @@ return new class() extends Migration
 {
     public function up(): void
     {
-        Schema::create('quote_files', function (Blueprint $table) {
+        Schema::create('contract_installments', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
+            $table->decimal('value', 14, 2);
+            $table->date('payday');
 
-            $table->string('path');
-            $table->string('type');
-
-            $table->unsignedInteger('purchase_quote_id')->index();
-            $table->foreign('purchase_quote_id')->references('id')->on('purchase_quotes');
+            $table->text('description')->nullable();
+            $table->text('hours_performed')->nullable();
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
+
+            $table->unsignedInteger('contract_id');
+            $table->foreign('contract_id')->references('id')->on('contracts');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('quote_files');
+        Schema::dropIfExists('contract_installments');
     }
 };
