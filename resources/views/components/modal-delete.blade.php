@@ -34,7 +34,7 @@
             action = `/user/delete/${id}` 
         } else if (route === 'supplier') {
             action = `/suppliers/delete/${id}`
-        } else if (route === 'quoteRequests') {
+        } else if (route === 'purchaseRequests') {
             action =`/request/delete/${id}`
         }
 
