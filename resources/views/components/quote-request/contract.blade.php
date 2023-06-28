@@ -4,6 +4,8 @@
         <h1>Solicitar Contrato de Prestação de Serviço</h1>
     </x-slot>
 
+    <x-modal-edit-installment/>
+
     <style>
         .cost-center-container {
             margin-bottom: 10px
@@ -317,8 +319,40 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label for="payday" class="control-label">Dia de pagamento</label>
-                            <input type="date" name="desired_date" id="payday" class="form-control payday"
-                                value="{{ isset($quoteRequest) && $quoteRequest->desired_date ? $quoteRequest->desired_date : '' }}">
+                            <select name="recurrence" id="recurrence" class='select2-me'
+                                style="width:100%; padding-top:2px;" data-placeholder="Pagamento do serviço">
+                                <option value=""></option>
+                                <option value="1">01</option>
+                                <option value="2">02</option>
+                                <option value="3">03</option>
+                                <option value="4">04</option>
+                                <option value="5">05</option>
+                                <option value="6">06</option>
+                                <option value="7">07</option>
+                                <option value="8">08</option>
+                                <option value="9">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                                <option value="26">26</option>
+                                <option value="27">27</option>
+                                <option value="28">28</option>
+                                <option value="29">29</option>
+                                <option value="30">30</option>
+                            </select>
                         </div>
                     </div>
 
@@ -368,65 +402,68 @@
                     </div>
                 </div>
                 <div class="row">
-					<div class="col-sm-12">
-						<div class="box">
-							<div class="box-content nopadding">
-								<table class="table table-hover table-nomargin table-striped">
-									<thead>
-										<tr>
-											<th class="col-sm-2">VENCIMENTO</th>
-											<th class="col-sm-2">VALOR</th>
-											<th class='col-sm-5 hidden-350'>OBSERVAÇÃO</th>
-											<th class='col-sm-2 hidden-1024'>STATUS</th>
+                    <div class="col-sm-12">
+                        <div class="box">
+                            <div class="box-content nopadding">
+                                <table class="table table-hover table-nomargin table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-sm-2">VENCIMENTO</th>
+                                            <th class="col-sm-2">VALOR</th>
+                                            <th class='col-sm-5 hidden-350'>OBSERVAÇÃO</th>
+                                            <th class='col-sm-2 hidden-1024'>STATUS</th>
                                             <th class='col-sm-1 hidden-480'>AÇÕES</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>20/05/2023</td>
-											<td>R$ 1.500,00</td>
-											<td class='hidden-350'>Pago com atraso de 3 dias devido a xpto</td>
-											<td class='hidden-1024'>Pago</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>20/05/2023</td>
+                                            <td>R$ 1.500,00</td>
+                                            <td class='hidden-350'>Pago com atraso de 3 dias devido a xpto</td>
+                                            <td class='hidden-1024'>Pago</td>
                                             <td class="hidden-480">
-                                                <a href="#" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
-                                                <button data-route="user" rel="tooltip" title="Excluir"
-                                                        class="btn" data-toggle="modal" data-target="#modal"  >
-                                                        <i class="fa fa-times"></i>
+                                                <button data-route="user" rel="tooltip" title="Editar Parcela"
+                                                    class="btn" data-toggle="modal" data-target="#modal-edit-installment">
+                                                    <i class="fa fa-edit"></i>
                                                 </button>
+                                                <a href="#" class="btn" rel="tooltip" title="Excluir"><i
+                                                        class="fa fa-times"></i></a>
                                             </td>
-										</tr>
-										<tr>
-											<td>05/08/2023</td>
-											<td>R$ 1.500,00</td>
-											<td class='hidden-350'>--</td>
-											<td class='hidden-1024'>Em atraso</td>
-											<td class='hidden-480'>
-                                                <a href="#" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
-                                                <button data-route="user" rel="tooltip" title="Excluir"
-                                                        class="btn" data-toggle="modal" data-target="#modal"  >
-                                                        <i class="fa fa-times"></i>
+                                        </tr>
+                                        <tr>
+                                            <td>05/08/2023</td>
+                                            <td>R$ 1.500,00</td>
+                                            <td class='hidden-350'>--</td>
+                                            <td class='hidden-1024'>Em atraso</td>
+                                            <td class="hidden-480">
+                                                <button data-route="user" rel="tooltip" title="Editar Parcela"
+                                                    class="btn" data-toggle="modal" data-target="#modal-edit-installment">
+                                                    <i class="fa fa-edit"></i>
                                                 </button>
+                                                <a href="#" class="btn" rel="tooltip" title="Excluir"><i
+                                                        class="fa fa-times"></i></a>
                                             </td>
-										</tr>
-										<tr>
-											<td>12/12/2023</td>
-											<td>R$ 1.500,00</td>
-											<td class='hidden-350'>--</td>
-											<td class='hidden-1024'>Pendente</td>
-											<td class='hidden-480'>
-                                                <a href="#" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
-                                                <button data-route="user" rel="tooltip" title="Excluir"
-                                                        class="btn" data-toggle="modal" data-target="#modal"  >
-                                                        <i class="fa fa-times"></i>
+                                        </tr>
+                                        <tr>
+                                            <td>12/12/2023</td>
+                                            <td>R$ 1.500,00</td>
+                                            <td class='hidden-350'>--</td>
+                                            <td class='hidden-1024'>Pendente</td>
+                                            <td class="hidden-480">
+                                                <button data-route="user" rel="tooltip" title="Editar Parcela"
+                                                    class="btn" data-toggle="modal" data-target="#modal-edit-installment">
+                                                    <i class="fa fa-edit"></i>
                                                 </button>
+                                                <a href="#" class="btn" rel="tooltip" title="Excluir"><i
+                                                        class="fa fa-times"></i></a>
                                             </td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="form-actions pull-right" style="margin-top:30px;">
