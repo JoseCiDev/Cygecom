@@ -4,11 +4,28 @@
         <h1>Solicitar Contrato de Prestação de Serviço</h1>
     </x-slot>
 
-    <x-modal-edit-installment/>
+    <x-modal-edit-installment />
 
     <style>
+        [contenteditable] {
+            outline: 0px solid transparent;
+        }
+
+        #contract-title {
+            border: none;
+        }
+
+        #contract-title::placeholder {
+            font-size: 16px;
+        }
+
+        #contract-title {
+            font-size: 20px;
+            padding-left: 0px;
+        }
+
         .cost-center-container {
-            margin-bottom: 10px
+            margin-bottom: 10px;
         }
 
         h4 {
@@ -20,6 +37,17 @@
         action="@if (isset($quoteRequest) && !$isCopy) {{ route('request.update', ['id' => $id]) }}
                     @else {{ route('requests.new') }} @endif">
         @csrf
+
+        <div class="row contract-title-container" style="margin-bottom:10px; margin-top:20px;">
+            <div class="col-sm-8 contract-title">
+                <div class="form-group">
+                    <label for="contract-title" class="control-label">Nome do contrato: </label>
+                    <input type="text" id="contract-title" name="contract_title"
+                        placeholder="Digite aqui um nome para este contrato..." class="form-control"
+                        data-rule-required="true" minlength="15">
+                </div>
+            </div>
+        </div>
 
         <div class="row center-block" style="padding-bottom: 10px;">
             <h4>CONTRATANTE</h4>
@@ -163,9 +191,11 @@
             <div class="row" style="margin-bottom:5px;">
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label for="reason" class="control-label">Motivo da
-                            solicitação</label>
-                        <textarea required name="reason" id="reason" rows="4" placeholder="Ex: conserto de ar condicionado"
+                        <label for="reason" class="control-label">
+                            Motivo da solicitação
+                        </label>
+                        <textarea required name="reason" id="reason" rows="4"
+                            placeholder="Ex: Ar condicionado da sala de reuniões do atrium apresenta defeitos de funcionamento"
                             class="form-control text-area no-resize">{{ $quoteRequest->reason ?? null }}</textarea>
                     </div>
                     <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
@@ -263,6 +293,20 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    {{-- HORAS TRABALHADAS --}}
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label for="hours-performed" class="control-label">Horas trabalhadas</label>
+                            <div class="input-group">
+                                <input type="number" name="hours_performed" id="hours-performed"
+                                    placeholder="Ex: 100" class="form-control" min="0">
+                                <span class="input-group-addon">horas</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <hr>
 
                 <div class="row center-block" style="padding-bottom: 10px;">
@@ -272,35 +316,44 @@
                 <div class="row">
                     <div class="col-sm-6" style="margin-bottom:15px;">
                         <label for="form-check" class="control-label" style="padding-right:10px;">
-                            Contrato de valor total variável?
+                            Valor do contrato será:
                         </label>
                         <div class="form-check" style="12px; display:inline;">
+                            {{-- FIXO --}}
                             <input name="is_fixed_value" value="1" class="radio-is-fixed-value" type="radio"
+                                data-skin="minimal" checked>
+                            <label class="form-check-label" for="services" style="margin-right:15px;">FIXO</label>
+                            {{-- VARIAVEL --}}
+                            <input name="is_fixed_value" value="0" class="radio-is-fixed-value" type="radio"
                                 data-skin="minimal">
-                            <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
-                            <input name="is_fixed_value"value="0" class="radio-is-fixed-value" type="radio"
-                                data-skin="minimal">
-                            <label class="form-check-label" for="">Não</label>
+                            <label class="form-check-label" for="">VARIÁVEL</label>
                         </div>
                         <div class="small" style="color:rgb(85, 85, 85);">
-                            <p>(Em caso do contrato conter valores variáveis de parcela).</p>
+                            <p>(Se o valor final do contrato não estiver difinido, será VARIÁVEL).</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
                     {{-- TOTAL --}}
-                    <div class="col-sm-2" hidden>
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="ammount" class="control-label">Valor total (R$)</label>
-                            <input type="text" id="amount" placeholder="R$0,00 " class="form-control amount">
+                            <label for="amount" class="control-label">Valor total contrato</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">R$</span>
+                                <input type="number" name="amount" id="amount" placeholder="0.00"
+                                    class="form-control" min="0">
+                                @error('unit_price')
+                                    <p><strong>{{ $message }}</strong></p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
                     {{-- DATA INICIO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="payday" class="control-label">Data inicío</label>
+                            <label for="payday" class="control-label">Vigência - Data início</label>
                             <input type="date" name="desired_date" id="payday" class="form-control payday"
                                 value="{{ isset($quoteRequest) && $quoteRequest->desired_date ? $quoteRequest->desired_date : '' }}">
                         </div>
@@ -309,7 +362,7 @@
                     {{-- DATA FIM --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="payday" class="control-label">Data fim</label>
+                            <label for="payday" class="control-label">Vigência - Data fim</label>
                             <input type="date" name="desired_date" id="payday" class="form-control payday"
                                 value="{{ isset($quoteRequest) && $quoteRequest->desired_date ? $quoteRequest->desired_date : '' }}">
                         </div>
@@ -321,6 +374,7 @@
                             <label for="payday" class="control-label">Dia de pagamento</label>
                             <select name="recurrence" id="recurrence" class='select2-me'
                                 style="width:100%; padding-top:2px;" data-placeholder="Pagamento do serviço">
+                                {{-- primeira iteração -> usar loop->first() --}}
                                 <option value=""></option>
                                 <option value="1">01</option>
                                 <option value="2">02</option>
@@ -374,15 +428,17 @@
 
                     {{-- FORMA DE PAGAMENTO --}}
                     <div class="service-row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <div class="form-group">
                                 <label for="payment-method" class="control-label">Forma de pagamento</label>
                                 <select name="payment_method" id="payment-method" class='select2-me payment-method'
                                     style="width:100%; padding-top:2px;" data-placeholder="Escolha uma forma">
                                     <option value=""></option>
                                     <option value="1">PIX</option>
+                                    <option value="2">DEPÓSITO BANCÁRIO</option>
                                     <option value="3">BOLETO</option>
-                                    <option value="4">CARTÃO CORPORATIVO</option>
+                                    <option value="4">CARTÃO CRÉDITO</option>
+                                    <option value="5">CARTÃO DÉBITO</option>
                                 </select>
                             </div>
                         </div>
@@ -395,10 +451,13 @@
                         <i class="fa fa-dollar"></i>
                         Parcelas deste contrato
                     </h4>
-                    <div class="col-sm-6">
-                        <a href="#" class="btn btn-success pull-right btn-small">
+                    <div class="col-sm-6 btn-add-installment" hidden>
+                        <button class="btn btn-success pull-right btn-small"
+                        data-route="user" rel="tooltip" title="Adicionar Parcela"
+                        data-toggle="modal" data-target="#modal-edit-installment"
+                        >
                             + Adicionar parcela
-                        </a>
+                        </button>
                     </div>
                 </div>
                 <div class="row">
@@ -416,48 +475,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>20/05/2023</td>
-                                            <td>R$ 1.500,00</td>
-                                            <td class='hidden-350'>Pago com atraso de 3 dias devido a xpto</td>
-                                            <td class='hidden-1024'>Pago</td>
-                                            <td class="hidden-480">
-                                                <button data-route="user" rel="tooltip" title="Editar Parcela"
-                                                    class="btn" data-toggle="modal" data-target="#modal-edit-installment">
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-                                                <a href="#" class="btn" rel="tooltip" title="Excluir"><i
-                                                        class="fa fa-times"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>05/08/2023</td>
-                                            <td>R$ 1.500,00</td>
-                                            <td class='hidden-350'>--</td>
-                                            <td class='hidden-1024'>Em atraso</td>
-                                            <td class="hidden-480">
-                                                <button data-route="user" rel="tooltip" title="Editar Parcela"
-                                                    class="btn" data-toggle="modal" data-target="#modal-edit-installment">
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-                                                <a href="#" class="btn" rel="tooltip" title="Excluir"><i
-                                                        class="fa fa-times"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>12/12/2023</td>
-                                            <td>R$ 1.500,00</td>
-                                            <td class='hidden-350'>--</td>
-                                            <td class='hidden-1024'>Pendente</td>
-                                            <td class="hidden-480">
-                                                <button data-route="user" rel="tooltip" title="Editar Parcela"
-                                                    class="btn" data-toggle="modal" data-target="#modal-edit-installment">
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-                                                <a href="#" class="btn" rel="tooltip" title="Excluir"><i
-                                                        class="fa fa-times"></i></a>
-                                            </td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -472,7 +489,7 @@
                     Enviar solicitação
                     <i style="margin-left:5px;" class="glyphicon glyphicon-new-window"></i>
                 </button>
-                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="submit" class="btn btn-primary">Salvar alterações</button>
                 <a href="{{ url()->previous() }}" class="btn">Cancelar</a>
             </div>
 
@@ -609,5 +626,29 @@
             $lastProduct.after($newProductRow);
         });
 
+        // hide and show btn add parcela
+        const $radioIsFixedValue = $('input[name="is_fixed_value"]');
+        const $btnAddInstallment = $('.btn-add-installment');
+
+        $radioIsFixedValue.on('change', function() {
+            const isFixedValue = $(this).val() === "1";
+            $btnAddInstallment.attr('hidden', isFixedValue);
+        });
+
+        // add parcelas calculo
+        function calcNumberOfInstallments() {
+
+        }
+
+        // dataTable config
+        const $table = $('.table-striped').DataTable({
+            paging: false,
+            info: false,
+            searching: false,
+            language: {
+                emptyTable: "",
+                zeroRecords: ""
+            }
+        });
     });
 </script>
