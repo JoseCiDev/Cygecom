@@ -23,5 +23,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(PurchaseRequestService::class, function ($app) {
             return new PurchaseRequestService($app);
         });
+
+        $this->app->singleton(CSVImporter::class, function ($app) {
+            return new CSVImporter($app);
+        });
     }
 }
