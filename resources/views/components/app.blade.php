@@ -111,9 +111,10 @@
     <script src="https://unpkg.com/imask"></script>
     <script>
         $.fn.imask = function(options) {
-            const element = this[0];
-
-            return new IMask(element, options);
+            return this.each(function() {
+                const element = this;
+                new IMask(element, options);
+            });
         }
     </script>
 
