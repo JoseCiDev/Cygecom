@@ -3,7 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="modal-label">Editar Parcela<strong class="name"></strong></h4>
+                <h4 class="modal-title" id="modal-label">Adicionar Parcela<strong class="name"></strong></h4>
             </div>
             <form id="modal-edit-installment" method="POST" action="">
                 @csrf
