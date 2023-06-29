@@ -1,1 +1,3 @@
 *.sqlite*
+seeders/import/csv/*.csv
+seeders/import/data/*.php

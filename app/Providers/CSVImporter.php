@@ -21,10 +21,10 @@ class CSVImporter extends ServiceProvider
     }
 
     /**
-     * @param string $outputPath Caminho do arquivo de saída.
-     * @abstract Responsável por ler o arquivo CSV e gerar o arquivo PHP com o array de dados.
+     * @param string|null $outputPath Caminho do arquivo de saída.
+     * @abstract Responsável por ler o arquivo CSV e retornar o array de dados. Opcional: Gerar o arquivo PHP do caminho de saída com o array de dados.
      */
-    public function generateArrayFile(string $outputPath): void
+    public function generateArrayFile(string|null $outputPath = null)
     {
         $file = fopen($this->csvPath, 'r'); // Abre CSV com modo leitura ('r')
 
@@ -34,16 +34,20 @@ class CSVImporter extends ServiceProvider
 
             while (($row = fgetcsv($file)) !== false) {
                 if (count($columns) === count($row)) {
-                    $data[] = array_combine($columns, $row); // Cria um novo array associativo combinando os cabeçalhos e os valores da linha
+                    $trimmedRow = array_map('trim', $row); // Aplica o trim() em todos os valores da linha
+                    $data[] = array_combine($columns, $trimmedRow); // Cria um novo array associativo combinando os cabeçalhos e os valores da linha
                 }
             }
 
             fclose($file);
 
-            $exportData = var_export($data, true);
-            $output = "<?php\n\nreturn " . $exportData . ";\n";
+            if ($outputPath) {
+                $exportData = var_export($data, true);
+                $output = "<?php\n\nreturn " . $exportData . ";\n";
+                file_put_contents($outputPath, $output);
+            }
 
-            file_put_contents($outputPath, $output);
+            return $data;
         }
     }
 }
