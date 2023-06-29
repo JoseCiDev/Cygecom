@@ -49,6 +49,8 @@ class Supplier extends Model
         'state_registration',
         'email',
         'representative',
+        'callisto_code',
+        'senior_code',
         'supplier_type_callisto',
         'payment_type_callisto',
         'updated_by',

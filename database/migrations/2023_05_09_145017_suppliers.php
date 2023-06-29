@@ -28,6 +28,8 @@ return new class() extends Migration
             $table->string('state_registration')->nullable();
             $table->string('representative')->nullable();
             $table->string('email')->nullable();
+            $table->string('callisto_code')->nullable();
+            $table->string('senior_code')->nullable();
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
