@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Address;
+use App\Models\Phone;
 use App\Models\Supplier;
-use App\Providers\CSVImporter;
 use ErrorException;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -15,37 +16,30 @@ class PopulateSuppliers extends Seeder
      */
     public function run(): void
     {
-        // $csvPath = base_path('database/seeders/import/csv/cadastro-fornecedores-callisto.csv');
-        // $outputPath = base_path('database/seeders/import/data/suppliers-callisto.php');
+        $suppliersData = require('database/seeders/import/data/suppliers.php');
 
-        // $csvPath = base_path('database/seeders/import/csv/Fornecedor-HKM-filtrado.csv');
-        // $outputPath = base_path('database/seeders/import/data/suppliers-hkm.php');
+        if ($suppliersData) {
+            DB::transaction(function () use ($suppliersData) {
+                foreach ($suppliersData as $data) {
+                    $phoneData = ['number' => $data['phone[number]']];
+                    $phone = Phone::create($phoneData);
 
-        // $csvImporter = new CSVImporter($csvPath);
-        // $csvImporter->generateArrayFile($outputPath);
+                    $address = new Address;
+                    $fillableData = array_intersect_key($data, array_flip($address->getFillable()));
+                    $address->fill($fillableData);
+                    $address->save();
 
-        $requireSuppliersCallistoData = require('database/seeders/import/data/suppliers-callisto.php');
-        $requireSuppliersHkmData = require('database/seeders/import/data/suppliers-hkm.php');
+                    $data['phone_id'] = $phone->id;
+                    $data['address_id'] = $address->id;
 
-        foreach ($requireSuppliersCallistoData as $value) {
-            $supplier = new Supplier;
-            $supplier->cpf_cnpj = trim($value['cpf_cnpj']);
-            $supplier->name = trim($value['name']);
-            $supplier->corporate_name = trim($value['corporate_name']);
-            $supplier->state_registration = trim($value['state_registration']);
-            dd($value, $supplier->toArray());
+                    $supplier = new Supplier;
+                    $fillableData = array_intersect_key($data, array_flip($supplier->getFillable()));
+                    $supplier->fill($fillableData);
+                    $supplier->save();
+
+                    dd($supplier->toArray());
+                }
+            });
         }
-
-        foreach ($requireSuppliersHkmData as $value) {
-            $supplier = new Supplier;
-            $supplier->cpf_cnpj = trim($value['cpf_cnpj']);
-            $supplier->name = trim($value['name']);
-            $supplier->corporate_name = trim($value['corporate_name']);
-            $supplier->email = trim($value['email']);
-            dd($value, $supplier->toArray());
-        }
-
-        // DB::table('suppliers')->insert($requireSuppliersCallistoData);
-        // DB::table('suppliers')->insert($requireSuppliersHkmData);
     }
 }
