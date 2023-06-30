@@ -33,6 +33,9 @@ return new class() extends Migration
 
             $table->unsignedInteger('supplier_id');
             $table->foreign('supplier_id')->references('id')->on('suppliers');
+
+            $table->unsignedInteger('payment_info_id')->nullable();
+            $table->foreign('payment_info_id')->references('id')->on('payment_infos');
         });
     }
 

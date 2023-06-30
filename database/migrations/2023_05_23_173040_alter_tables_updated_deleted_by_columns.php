@@ -33,7 +33,7 @@ return new class() extends Migration
     {
         $tables = [
             'addresses', 'suppliers', 'people', 'purchase_requests', 'purchase_request_files',
-            'phones', 'services', 'contracts',
+            'phones', 'services', 'contracts', 'payment_infos',
             'cost_center_apportionments', 'contract_installments'
         ];
 
@@ -48,7 +48,7 @@ return new class() extends Migration
     {
         $tables = [
             'addresses', 'suppliers', 'people', 'purchase_requests', 'purchase_request_files',
-            'phones', 'services', 'contracts',
+            'phones', 'services', 'contracts', 'payment_infos',
             'cost_center_apportionments', 'contract_installments'
         ];
 

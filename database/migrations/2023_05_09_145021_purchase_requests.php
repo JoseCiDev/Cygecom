@@ -14,12 +14,12 @@ return new class() extends Migration
             $table->enum('status', ['pending', 'approved', 'disapproved'])->default('pending');
             $table->enum('type', ['service', 'contract', 'product']);
             $table->boolean('is_comex')->default(false);
+            $table->boolean('is_supplies_contract')->default(false);
             $table->text('description');
             $table->text('local_description');
             $table->text('reason');
 
             $table->text('observation')->nullable();
-            $table->boolean('is_supplies_quote')->nullable();
             $table->date('desired_date')->nullable();
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
