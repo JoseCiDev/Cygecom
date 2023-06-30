@@ -14,6 +14,11 @@ class Contract extends Model
         return $this->hasMany(ContractInstallment::class);
     }
 
+    public function paymentInfo()
+    {
+        return $this->belongsTo(PaymentInfo::class, 'payment_info_id');
+    }
+
     public function purchaseRequest()
     {
         return $this->belongsTo(PurchaseRequest::class, 'purchase_request_id');
@@ -49,6 +54,7 @@ class Contract extends Model
         'payment_type',
         'purchase_request_id',
         'supplier_id',
+        'payment_info_id',
         'updated_by',
         'deleted_by',
         'deleted_at',

@@ -56,6 +56,7 @@ class PurchaseRequest extends Model
         'is_supplies_quote',
         'is_comex',
         'local_description',
+        'is_supplies_contract',
         'reason',
         'user_id',
         'description',
