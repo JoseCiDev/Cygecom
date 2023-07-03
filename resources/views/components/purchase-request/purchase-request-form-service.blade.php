@@ -251,19 +251,43 @@
                         id="purchase_request_files[path]" data-rule-url="true" class="form-control">
                 </div>
             </div>
-
-             {{-- SERVIÇO --}}
-             <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="observation" class="control-label"> Observação </label>
-                        <textarea name="observation" rows="4" placeholder="Observação" class="form-control text-area no-resize"></textarea>
-                    </div>
+            <div class="row">
+               <div class="col-sm-4">
+                   <div class="form-group">
+                       <label for="observation" class="control-label"> Observação </label>
+                       <textarea name="observation" rows="4" placeholder="Observação" class="form-control text-area no-resize"></textarea>
+                   </div>
+               </div>
+           </div>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 15px">
+                    <input type="checkbox" name="is_supplies_contract" value="1" @checked(isset($purchaseRequest) && (bool)$purchaseRequest->is_supplies_contract)>
+                    <label for="is_supplies_contract" class="control-label">É contratação por suprimentos</label>
                 </div>
             </div>
 
+            <hr>
+             {{-- SERVIÇO --}}
              <div class="row">
-               
+                <div class="col-md-6" style="margin-top: 15px">
+                    <input type="checkbox" name="service[is_prepaid]" value="1" @checked(isset($purchaseRequest->service[0]) && $purchaseRequest->service[0]->is_prepaid)>
+                    <label for="service[is_prepaid]" class="control-label">É pagamento antecipado</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 15px">
+                    <input type="checkbox" name="service[already_provided]" value="1" @checked(isset($purchaseRequest->service[0]) && $purchaseRequest->service[0]->already_provided)>
+                    <label for="service[already_provided]" class="control-label">Seviço já foi executado</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 15px">
+                    <input type="checkbox" name="service[is_finished]" value="1" @checked(isset($purchaseRequest->service[0]) && $purchaseRequest->service[0]->is_finished)>
+                    <label for="service[is_finished]" class="control-label">Contratação de serviço finalizado</label>
+                </div>
+            </div>
+
+             <div class="row" style="margin-top: 15px">
                 <div class="col-sm-6 form-group">
                     <label style="display:block;" for="service[supplier_id]" class="control-label"><sup style="color:red">*</sup>Fornecedor (CNPJ - RAZÃO SOCIAL)</label>
                     <select name="service[supplier_id]" class='select2-me' data-rule-required="true" data-placeholder="Escolha uma fornecedor" style="width:100%;" >
@@ -274,7 +298,28 @@
                         @endforeach
                     </select>
                 </div>
-              
+            </div>
+
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 15px">
+                    <div><label for="service[seller]" class="control-label">Vendedor/Atendente</label></div>
+                    <input type="text" name="service[seller]" value="@if (isset($purchaseRequest->service[0])){{$purchaseRequest->service[0]->seller}}@endif">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 15px">
+                    <div class="form-group">
+                        <label for="service[phone]" class="control-label">Telefone</label>
+                        <input value="@if (isset($purchaseRequest->service[0])){{$purchaseRequest->service[0]->phone}}@endif" type="text" name="service[phone]">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 15px">
+                    <div><label for="service[email]" class="control-label">E-mail:</label></div>
+                    <input type="service[email]" name="service[email]" placeholder="user_email@essentia.com.br"
+                        value="@if (isset($purchaseRequest->service[0])){{$purchaseRequest->service[0]->email}}@endif">
+                </div>
             </div>
 
             <div class="row">
@@ -289,13 +334,6 @@
                 <div class="col-md-6" style="margin-top: 15px">
                     <div><label for="service[payday]" class="control-label">Data de pagamento</label></div>
                     <input type="date" name="service[payday]" value="@if(isset($purchaseRequest->service[0])){{$purchaseRequest->service[0]->payday}}@endif">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6" style="margin-top: 15px">
-                    <input type="checkbox" name="service[is_finished]" value="1" @checked(isset($purchaseRequest->service[0]) && $purchaseRequest->service[0]->is_finished)>
-                    <label for="service[is_finished]" class="control-label">Serviço finalizado</label>
                 </div>
             </div>
 
@@ -326,17 +364,23 @@
             </div>
             <hr>
             <div class="row">
+                <div class="col-md-6" style="margin-top: 15px">
+                    <div><label for="service[payment_info][id]" class="control-label">ID de payment_info</label></div>
+                    <input type="text" name="service[payment_info][id]" readonly value="@if (isset($purchaseRequest->service[0]->paymentInfo)){{$purchaseRequest->service[0]->paymentInfo->id}}@endif">
+                </div>
+            </div>
+            <div class="row">
                  <div class="col-md-6" style="margin-top: 15px">
-                    <div><label for="service[service_payment_info][payment_type]" class="control-label">Tipo de pagamento</label></div>
-                    <input type="text" name="service[service_payment_info][payment_type]" value="@if (isset($purchaseRequest->service[0]->servicePaymentInfo[0])){{$purchaseRequest->service[0]->servicePaymentInfo[0]->payment_type}}@endif">
+                    <div><label for="service[payment_info][payment_type]" class="control-label">Tipo de pagamento</label></div>
+                    <input type="text" name="service[payment_info][payment_type]" value="@if (isset($purchaseRequest->service[0]->paymentInfo)){{$purchaseRequest->service[0]->paymentInfo->payment_type}}@endif">
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6" style="margin-top: 15px">
-                    <div><label for="service[service_payment_info][payment_type]" class="control-label">Informação/Descrição do pagamento</label></div>
-                    <input type="text" name="service[service_payment_info][description]" ,
-                        value="@if (isset($purchaseRequest->service[0]->servicePaymentInfo[0])){{$purchaseRequest->service[0]->servicePaymentInfo[0]->description}}@endif">
+                    <div><label for="service[payment_info][payment_type]" class="control-label">Informação/Descrição do pagamento</label></div>
+                    <input type="text" name="service[payment_info][description]" ,
+                        value="@if (isset($purchaseRequest->service[0]->paymentInfo)){{$purchaseRequest->service[0]->paymentInfo->description}}@endif">
                 </div>
             </div>
              {{-- END SERVIÇO --}}

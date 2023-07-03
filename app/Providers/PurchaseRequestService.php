@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\{Contract, ContractInstallment, CostCenterApportionment, PurchaseRequest, PurchaseRequestFile, PurchaseRequestProduct, Service, ServicePaymentInfo};
+use App\Models\{Contract, ContractInstallment, CostCenterApportionment, PurchaseRequest, PurchaseRequestFile, PurchaseRequestProduct, Service, PaymentInfo};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -17,7 +17,7 @@ class PurchaseRequestService extends ServiceProvider
         return PurchaseRequest::with([
             'user', 'user.person', 'purchaseRequestFile', 'costCenterApportionment', 'costCenterApportionment.costCenter',
             'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
-            'service', 'service.servicePaymentInfo',
+            'service', 'service.paymentInfo',
             'purchaseRequestProduct', 'purchaseRequestProduct.category',
             'contract', 'contract.installments'
         ])->whereNull('deleted_at')->get();
@@ -33,7 +33,7 @@ class PurchaseRequestService extends ServiceProvider
         return PurchaseRequest::with([
             'user', 'user.person', 'purchaseRequestFile', 'costCenterApportionment', 'costCenterApportionment.costCenter',
             'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
-            'service', 'service.servicePaymentInfo',
+            'service', 'service.paymentInfo',
             'purchaseRequestProduct', 'purchaseRequestProduct.category',
             'contract', 'contract.installments'
 
@@ -48,7 +48,7 @@ class PurchaseRequestService extends ServiceProvider
         return PurchaseRequest::with([
             'user', 'user.person', 'purchaseRequestFile', 'costCenterApportionment', 'costCenterApportionment.costCenter',
             'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
-            'service', 'service.servicePaymentInfo',
+            'service', 'service.paymentInfo',
             'purchaseRequestProduct', 'purchaseRequestProduct.category',
             'contract', 'contract.installments'
         ])->whereNull('deleted_at')->where('id', $id)->first();
@@ -230,13 +230,15 @@ class PurchaseRequestService extends ServiceProvider
         }
 
         $service = $data['service'];
-        $servicePaymentInfo = $service['service_payment_info'];
+        $paymentInfo = $service['payment_info'];
 
         $service['purchase_request_id'] = $purchaseRequestId;
         $service['updated_by'] = auth()->user()->id;
 
-        $resultService = Service::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $service['supplier_id']], $service);
-        ServicePaymentInfo::updateOrCreate(['service_id' => $resultService->id], $servicePaymentInfo);
+        $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfo['id']], $paymentInfo);
+        $service['payment_info_id'] = $paymentInfoResponse->id;
+
+        Service::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $service['supplier_id']], $service);
     }
 
     /**
@@ -275,7 +277,13 @@ class PurchaseRequestService extends ServiceProvider
 
         $contractData = $data['contract'];
         $contractsInstallmentsData = $contractData['contract_installments'];
+        $paymentInfoData = $contractData['payment_info'];
         $supplierId = $contractData['supplier_id'];
+
+        if (count($paymentInfoData) > 0) {
+            $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
+            $contractData['payment_info_id'] = $paymentInfoResponse->id;
+        }
 
         $contract = Contract::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $supplierId], $contractData);
 

@@ -11,8 +11,9 @@ return new class() extends Migration
         Schema::create('contract_installments', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->decimal('value', 14, 2);
-            $table->date('payday');
+            $table->boolean('already_provided')->default(false);
 
+            $table->date('payment_day')->nullable();
             $table->text('description')->nullable();
             $table->text('hours_performed')->nullable();
 

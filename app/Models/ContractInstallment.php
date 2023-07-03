@@ -26,10 +26,10 @@ class ContractInstallment extends Model
 
     protected $fillable = [
         'value',
-        'payday',
+        'payment_day',
         'description',
         'hours_performed',
-        'start_date',
+        'already_provided',
         'contract_id',
         'updated_by',
         'deleted_by',

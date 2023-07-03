@@ -4,8 +4,6 @@
     }
 </style>
 
-{{-- {{dd(isset($purchaseRequest) && (bool)$purchaseRequest->is_comex)}} --}}
-
 <div class="box-title">
     <div class="row">
         <div class="col-md-6">
@@ -255,27 +253,48 @@
             </div>
 
             <div class="row">
-               
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="observation" class="control-label"> Observação </label>
+                        <textarea name="observation" rows="4" placeholder="Observação" class="form-control text-area no-resize">@if (isset($purchaseRequest) && $purchaseRequest->observation){{$purchaseRequest->observation}}@endif</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 15px">
+                    <input type="checkbox" name="is_supplies_contract" value="1" @checked(isset($purchaseRequest) && (bool)$purchaseRequest->is_supplies_contract)>
+                    <label for="is_supplies_contract" class="control-label">É contratação por suprimentos</label>
+                </div>
+            </div>
+
+            <hr>
+            {{-- CONTRATO --}}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="checkbox" name="contract[is_prepaid]" value="1" @checked(isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->is_prepaid)>
+                    <label for="contract[is_prepaid]" class="control-label">É pagamento antecipado</label>
+                </div>
+            </div>
+   
+            <div class="row" style="margin-top: 15px">
                 <div class="col-sm-6 form-group">
                     <label style="display:block;" for="contract[supplier_id]" class="control-label"><sup style="color:red">*</sup>Fornecedor (CNPJ - RAZÃO SOCIAL)</label>
                     <select name="contract[supplier_id]" class='select2-me' data-rule-required="true" data-placeholder="Escolha uma fornecedor" style="width:100%;" >
                         <option value=""></option>
                         @foreach ($suppliers as $supplier)
-                            @php $supplierSelected = isset($purchaseRequest->service[0]) && $purchaseRequest->service[0]->supplier_id === $supplier->id; @endphp
+                            @php $supplierSelected = isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->supplier_id === $supplier->id; @endphp
                             <option value="{{ $supplier->id }}" @selected($supplierSelected)>{{ "$supplier->cpf_cnpj - $supplier->corporate_name" }}</option>
                         @endforeach
                     </select>
                 </div>
-              
             </div>
 
             <div class="row">
                 <div class="col-md-6" style="margin-top: 15px">
                     <div class="form-group">
                         <label class="control-label">Nome do contrato</label>
-                        <input type="text" name="contract[name]"
-                            {{-- value="{{ isset($purchaseRequest) && $purchaseRequest->desired_date ? $purchaseRequest->desired_date : '' }}" --}}
-                            >
+                        <input type="text" name="contract[name]" value="@if (isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->name) {{$purchaseRequest->contract[0]->name}}@endif" >
                     </div>
                 </div>
             </div>
@@ -283,9 +302,8 @@
                 <div class="col-md-6" style="margin-top: 15px">
                     <div class="form-group">
                         <label class="control-label">É um contrato ativo?</label>
-                        <input disabled type="checkbox" name="contract[is_active]" value="1"
-                            {{-- value="{{ isset($purchaseRequest) && $purchaseRequest->desired_date ? $purchaseRequest->desired_date : '' }}" --}}
-                            >
+                        @php $isActiveIsChecked = (isset($purchaseRequest->contract[0]) && (bool)$purchaseRequest->contract[0]->is_active) || (bool)isset($purchaseRequest->contract[0]) === false @endphp
+                        <input type="checkbox" name="contract[is_active]" value="1" @checked($isActiveIsChecked)>
                     </div>
                 </div>
             </div>
@@ -294,7 +312,7 @@
                     <div class="form-group">
                         <label class="control-label">Descrição do contrato</label>
                         <textarea name="contract[description]" rows="4" placeholder="Descrição contrato" 
-                            class="form-control text-area no-resize"></textarea>
+                            class="form-control text-area no-resize">@if (isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->description){{ $purchaseRequest->contract[0]->description}}@endif</textarea>
                     </div>
                 </div>
             </div>
@@ -303,7 +321,7 @@
                     <div class="form-group">
                         <label class="control-label">Dia do pagamento</label>
                         <input type="date" name="contract[payday]"
-                            {{-- value="{{ isset($purchaseRequest) && $purchaseRequest->desired_date ? $purchaseRequest->desired_date : '' }}" --}}
+                            value="@if (isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->payday){{ $purchaseRequest->contract[0]->payday}}@endif"
                             >
                     </div>
                 </div>
@@ -313,7 +331,7 @@
                     <div class="form-group">
                         <label class="control-label">Início do contrato</label>
                         <input type="date" name="contract[start_date]"
-                            {{-- value="{{ isset($purchaseRequest) && $purchaseRequest->desired_date ? $purchaseRequest->desired_date : '' }}" --}}
+                            value="@if (isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->start_date){{$purchaseRequest->contract[0]->start_date}}@endif"
                             >
                     </div>
                 </div>
@@ -323,7 +341,7 @@
                     <div class="form-group">
                         <label class="control-label">Fim do contrato</label>
                         <input type="date" name="contract[end_date]"
-                            {{-- value="{{ isset($purchaseRequest) && $purchaseRequest->desired_date ? $purchaseRequest->desired_date : '' }}" --}}
+                            value="@if (isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->end_date){{$purchaseRequest->contract[0]->end_date}}@endif"
                             >
                     </div>
                 </div>
@@ -345,9 +363,8 @@
                 <div class="col-md-6" style="margin-top: 15px" style="margin-top: 15px">
                     <div class="form-group">
                         <label class="control-label">É pagamento fixo? <small>Valor das parcelas não mudam.</small></label>
-                        <input type="checkbox" name="contract[is_fixed_payment]" value="1"
-                            {{-- value="{{ isset($purchaseRequest) && $purchaseRequest->desired_date ? $purchaseRequest->desired_date : '' }}" --}}
-                            >
+                        @php $isFixedPayment = isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->is_fixed_payment @endphp
+                        <input type="checkbox" name="contract[is_fixed_payment]" value="1" @checked($isFixedPayment)>
                     </div>
                 </div>
             </div>
@@ -355,7 +372,7 @@
                 <div class="col-md-6" style="margin-top: 15px">
                     <div class="form-group">
                         <label class="control-label">Local do serviço</label>
-                        <input type="text" name="contract[local_service]">
+                        <input type="text" name="contract[local_service]" value="@if (isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->local_service){{$purchaseRequest->contract[0]->local_service}}@endif">
                     </div>
                 </div>
             </div>
@@ -365,26 +382,41 @@
                     <div class="input-group">
                         <span class="input-group-addon">R$</span>
                         <input type="number" placeholder="0.00" class="form-control" min="0"
-                            name="contract[total_ammount]" >
+                            name="contract[total_ammount]" value="@if (isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->total_ammount){{$purchaseRequest->contract[0]->total_ammount}}@endif">
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6" style="margin-top: 15px">
+                    <div><label for="service[payment_info][id]" class="control-label">ID de payment_info</label></div>
+                    <input type="text" name="contract[payment_info][id]" readonly value="@if (isset($purchaseRequest->contract[0]->paymentInfo)){{$purchaseRequest->contract[0]->paymentInfo->id}}@endif">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 15px">
                     <label class="control-label">Tipo de pagamento:</label>
-                    <input type="text" class="form-control" name="contract[payment_type]" >
+                    <input type="text" class="form-control" name="contract[payment_info][payment_type]" value="@if (isset($purchaseRequest->contract[0]->paymentInfo)){{$purchaseRequest->contract[0]->paymentInfo->payment_type}}@endif">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 15px">
+                    <div><label for="service[payment_info][payment_type]" class="control-label">Informação/Descrição do pagamento</label></div>
+                    <input type="text" name="contract[payment_info][description]" ,
+                        value="@if (isset($purchaseRequest->contract[0]->paymentInfo)){{$purchaseRequest->contract[0]->paymentInfo->description}}@endif">
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6" style="margin-top: 15px">
                     <label class="control-label">Quantidade de parcelas:</label>
-                    <input type="number" class="form-control" name="contract[quantity_of_installments]" >
+                    <input type="number" class="form-control" name="contract[quantity_of_installments]" value="@if (isset($purchaseRequest->contract[0])){{$purchaseRequest->contract[0]->quantity_of_installments}}@endif">
                 </div>
             </div>
 
             {{-- PARCELAS --}}
             <div class="row" style="margin-top: 15px">
                 <div class="col-md-2" style="border: 1px solid red">
+                    <input type="checkbox" name="contract[contract_installments][0][already_provided]" value="1">
+                    <label class="control-label">Serviço já executado</label>
                     <input type="hidden" name="contract[contract_installments][0][id]" value="">
                     <label class="control-label">Parcela</label>
                     <div class="input-group">
@@ -408,6 +440,8 @@
                     </div>
                 </div>
                 <div class="col-md-2" style="border: 1px solid red">
+                    <input type="checkbox" name="contract[contract_installments][1][already_provided]" value="1">
+                    <label class="control-label">Serviço já executado</label>
                     <input type="hidden" name="contract[contract_installments][1][id]" value="">
                     <label class="control-label">Parcela</label>
                     <div class="input-group">
@@ -431,6 +465,8 @@
                     </div>
                 </div>
                 <div class="col-md-2" style="border: 1px solid red">
+                    <input type="checkbox" name="contract[contract_installments][2][already_provided]" value="1">
+                    <label class="control-label">Serviço já executado</label>
                     <input type="hidden" name="contract[contract_installments][2][id]" value="">
                     <label class="control-label">Parcela</label>
                     <div class="input-group">
@@ -454,6 +490,8 @@
                     </div>
                 </div>
                 <div class="col-md-2" style="border: 1px solid red">
+                    <input type="checkbox" name="contract[contract_installments][3][already_provided]" value="1">
+                    <label class="control-label">Serviço já executado</label>
                     <input type="hidden" name="contract[contract_installments][3][id]" value="">
                     <label class="control-label">Parcela</label>
                     <div class="input-group">
@@ -477,6 +515,8 @@
                     </div>
                 </div>
                 <div class="col-md-2" style="border: 1px solid red">
+                    <input type="checkbox" name="contract[contract_installments][4][already_provided]" value="1">
+                    <label class="control-label">Serviço já executado</label>
                     <input type="hidden" name="contract[contract_installments][4][id]" value="">
                     <label class="control-label">Parcela</label>
                     <div class="input-group">
@@ -500,6 +540,8 @@
                     </div>
                 </div>
                 <div class="col-md-2" style="border: 1px solid red">
+                    <input type="checkbox" name="contract[contract_installments][5][already_provided]" value="1">
+                    <label class="control-label">Serviço já executado</label>
                     <input type="hidden" name="contract[contract_installments][5][id]" value="">
                     <label class="control-label">Parcela</label>
                     <div class="input-group">
@@ -523,6 +565,8 @@
                     </div>
                 </div>
                 <div class="col-md-2" style="border: 1px solid red">
+                    <input type="checkbox" name="contract[contract_installments][6][already_provided]" value="1">
+                    <label class="control-label">Serviço já executado</label>
                     <input type="hidden" name="contract[contract_installments][6][id]" value="">
                     <label class="control-label">Parcela</label>
                     <div class="input-group">
@@ -546,6 +590,8 @@
                     </div>
                 </div>
                 <div class="col-md-2" style="border: 1px solid red">
+                    <input type="checkbox" name="contract[contract_installments][7][already_provided]" value="1">
+                    <label class="control-label">Serviço já executado</label>
                     <input type="hidden" name="contract[contract_installments][7][id]" value="">
                     <label class="control-label">Parcela</label>
                     <div class="input-group">
@@ -569,6 +615,8 @@
                     </div>
                 </div>
                 <div class="col-md-2" style="border: 1px solid red">
+                    <input type="checkbox" name="contract[contract_installments][8][already_provided]" value="1">
+                    <label class="control-label">Serviço já executado</label>
                     <input type="hidden" name="contract[contract_installments][8][id]" value="">
                     <label class="control-label">Parcela</label>
                     <div class="input-group">
@@ -592,6 +640,8 @@
                     </div>
                 </div>
                 <div class="col-md-2" style="border: 1px solid red">
+                    <input type="checkbox" name="contract[contract_installments][9][already_provided]" value="1">
+                    <label class="control-label">Serviço já executado</label>
                     <input type="hidden" name="contract[contract_installments][9][id]" value="">
                     <label class="control-label">Parcela</label>
                     <div class="input-group">
@@ -615,6 +665,8 @@
                     </div>
                 </div>
                 <div class="col-md-2" style="border: 1px solid red">
+                    <input type="checkbox" name="contract[contract_installments][10][already_provided]" value="1">
+                    <label class="control-label">Serviço já executado</label>
                     <input type="hidden" name="contract[contract_installments][10][id]" value="">
                     <label class="control-label">Parcela</label>
                     <div class="input-group">
@@ -638,6 +690,8 @@
                     </div>
                 </div>
                 <div class="col-md-2" style="border: 1px solid red">
+                    <input type="checkbox" name="contract[contract_installments][11][already_provided]" value="1">
+                    <label class="control-label">Serviço já executado</label>
                     <input type="hidden" name="contract[contract_installments][11][id]" value="">
                     <label class="control-label">Parcela</label>
                     <div class="input-group">
@@ -662,6 +716,8 @@
                 </div>
             </div>
             {{-- END PARCELAS --}}
+
+            {{-- END CONTRATO --}}
 
              <div class="form-actions pull-right" style="margin-top:50px;">
                 <button type="submit" class="btn btn-primary">Salvar</button>

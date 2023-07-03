@@ -14,8 +14,10 @@ return new class() extends Migration
             $table->date('payday');
             $table->text('local_service');
             $table->decimal('price', 14, 2);
+            $table->boolean('already_provided')->default(false);
+            $table->boolean('is_finished')->default(false);
+            $table->boolean('is_prepaid')->default(false);
 
-            $table->boolean('is_finished')->nullable()->default(false);
             $table->string('hours_performed')->nullable();
             $table->string('seller')->nullable();
             $table->string('phone')->nullable();
@@ -30,6 +32,9 @@ return new class() extends Migration
 
             $table->unsignedInteger('supplier_id');
             $table->foreign('supplier_id')->references('id')->on('suppliers');
+
+            $table->unsignedInteger('payment_info_id')->nullable();
+            $table->foreign('payment_info_id')->references('id')->on('payment_infos');
         });
     }
 
