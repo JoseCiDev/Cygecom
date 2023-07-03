@@ -277,7 +277,13 @@ class PurchaseRequestService extends ServiceProvider
 
         $contractData = $data['contract'];
         $contractsInstallmentsData = $contractData['contract_installments'];
+        $paymentInfoData = $contractData['payment_info'];
         $supplierId = $contractData['supplier_id'];
+
+        if (count($paymentInfoData) > 0) {
+            $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
+            $contractData['payment_info_id'] = $paymentInfoResponse->id;
+        }
 
         $contract = Contract::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $supplierId], $contractData);
 

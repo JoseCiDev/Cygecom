@@ -60,6 +60,7 @@ class PurchaseRequest extends Model
         'reason',
         'user_id',
         'description',
+        'observation',
         'desired_date',
         'updated_by',
         'deleted_by',

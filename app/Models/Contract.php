@@ -51,7 +51,6 @@ class Contract extends Model
         'local_service',
         'total_ammount',
         'quantity_of_installments',
-        'payment_type',
         'purchase_request_id',
         'supplier_id',
         'payment_info_id',
