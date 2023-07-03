@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Supplier;
-use App\Models\{Company, CostCenter};
+use App\Models\{Company, CostCenter, Supplier};
 use App\Providers\{QuoteRequestService, ValidatorService};
 use Exception;
 use Illuminate\Http\{RedirectResponse, Request};

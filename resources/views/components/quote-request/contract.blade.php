@@ -4,8 +4,6 @@
         <h1>Solicitar Contrato de Prestação de Serviço</h1>
     </x-slot>
 
-    <x-modal-edit-installment />
-
     <style>
         [contenteditable] {
             outline: 0px solid transparent;
@@ -342,7 +340,7 @@
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
                                 <input type="number" name="amount" id="amount" placeholder="0.00"
-                                    class="form-control" min="0">
+                                    class="form-control amount" min="0">
                                 @error('unit_price')
                                     <p><strong>{{ $message }}</strong></p>
                                 @enderror
@@ -353,8 +351,8 @@
                     {{-- DATA INICIO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="payday" class="control-label">Vigência - Data início</label>
-                            <input type="date" name="desired_date" id="payday" class="form-control payday"
+                            <label for="start-date" class="control-label">Vigência - Data início</label>
+                            <input type="date" name="start_date" id="start-date" class="form-control start-date"
                                 value="{{ isset($quoteRequest) && $quoteRequest->desired_date ? $quoteRequest->desired_date : '' }}">
                         </div>
                     </div>
@@ -362,8 +360,8 @@
                     {{-- DATA FIM --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="payday" class="control-label">Vigência - Data fim</label>
-                            <input type="date" name="desired_date" id="payday" class="form-control payday"
+                            <label for="end-date" class="control-label">Vigência - Data fim</label>
+                            <input type="date" name="end_date" id="end-date" class="form-control end-date"
                                 value="{{ isset($quoteRequest) && $quoteRequest->desired_date ? $quoteRequest->desired_date : '' }}">
                         </div>
                     </div>
@@ -371,42 +369,9 @@
                     {{-- DATA PAGAMENTO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="payday" class="control-label">Dia de pagamento</label>
-                            <select name="recurrence" id="recurrence" class='select2-me'
-                                style="width:100%; padding-top:2px;" data-placeholder="Pagamento do serviço">
-                                {{-- primeira iteração -> usar loop->first() --}}
-                                <option value=""></option>
-                                <option value="1">01</option>
-                                <option value="2">02</option>
-                                <option value="3">03</option>
-                                <option value="4">04</option>
-                                <option value="5">05</option>
-                                <option value="6">06</option>
-                                <option value="7">07</option>
-                                <option value="8">08</option>
-                                <option value="9">09</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                                <option value="13">13</option>
-                                <option value="14">14</option>
-                                <option value="15">15</option>
-                                <option value="16">16</option>
-                                <option value="17">17</option>
-                                <option value="18">18</option>
-                                <option value="19">19</option>
-                                <option value="20">20</option>
-                                <option value="21">21</option>
-                                <option value="22">22</option>
-                                <option value="23">23</option>
-                                <option value="24">24</option>
-                                <option value="25">25</option>
-                                <option value="26">26</option>
-                                <option value="27">27</option>
-                                <option value="28">28</option>
-                                <option value="29">29</option>
-                                <option value="30">30</option>
-                            </select>
+                            <label for="pay-day" class="control-label">Dia de pagamento</label>
+                            <input type="text" name="payday" class="form-control pay-day" id="pay-day"
+                                placeholder="Ex: 15">
                         </div>
                     </div>
 
@@ -415,12 +380,12 @@
                         <div class="col-sm-2">
                             <div class="form-group">
                                 <label for="recurrence" class="control-label">Recorrência</label>
-                                <select name="recurrence" id="recurrence" class='select2-me'
+                                <select name="recurrence" id="recurrence" class='select2-me recurrence'
                                     style="width:100%; padding-top:2px;" data-placeholder="Pagamento do serviço">
                                     <option value=""></option>
                                     <option value="1">ÚNICA</option>
-                                    <option value="3">MENSAL</option>
-                                    <option value="4">ANUAL</option>
+                                    <option value="2">MENSAL</option>
+                                    <option value="3">ANUAL</option>
                                 </select>
                             </div>
                         </div>
@@ -452,10 +417,8 @@
                         Parcelas deste contrato
                     </h4>
                     <div class="col-sm-6 btn-add-installment" hidden>
-                        <button class="btn btn-success pull-right btn-small"
-                        data-route="user" rel="tooltip" title="Adicionar Parcela"
-                        data-toggle="modal" data-target="#modal-edit-installment"
-                        >
+                        <button type="button" class="btn btn-success pull-right btn-small" data-route="user"
+                            rel="tooltip" title="Adicionar Parcela">
                             + Adicionar parcela
                         </button>
                     </div>
@@ -492,9 +455,10 @@
                 <button type="submit" class="btn btn-primary">Salvar alterações</button>
                 <a href="{{ url()->previous() }}" class="btn">Cancelar</a>
             </div>
-
         </div>
     </form>
+
+    <x-modal-add-installment />
 
 </x-app>
 
@@ -626,6 +590,55 @@
             $lastProduct.after($newProductRow);
         });
 
+        // add parcelas na table
+        const $inputStartDate = $('.start-date');
+        const $inputEndDate = $('.end-date');
+        const $payDay = $('.pay-day');
+        const $recurrence = $('#recurrence');
+        const $amount = $('.amount');
+
+        function calculateMonthsPassed(startDate, endDate) {
+            const startYear = startDate.getFullYear();
+            const startMonth = startDate.getMonth();
+            const endYear = endDate.getFullYear();
+            const endMonth = endDate.getMonth();
+
+            const months = (endYear - startYear) * 12 + (endMonth - startMonth);
+
+            return months;
+        }
+
+        function calculateNumberOfInstallments() {
+            const startDate = new Date($inputStartDate.val());
+            const endDate = new Date($inputEndDate.val());
+            const isUniqueRecurrence = $recurrence.find(':selected').val() === "1";
+            const monthsPassed = calculateMonthsPassed(startDate, endDate);
+            if (monthsPassed >= 1) {
+                const numberOfInstallments = isUniqueRecurrence ? 1 : monthsPassed;
+                return numberOfInstallments;
+            }
+
+            return;
+        }
+
+        // dataTable config
+        const $installmentsTable = $('.table-striped').DataTable({
+            paging: false,
+            info: false,
+            searching: false,
+            language: {
+                emptyTable: "",
+                zeroRecords: ""
+            },
+            order: [
+                [4, 'asc']
+            ],
+            createdRow: function(row, data, dataIndex) {
+                const hiddenFormattedDate = $(row).data('hidden-date');
+                $(row).attr('data-hidden-date', hiddenFormattedDate);
+            }
+        });
+
         // hide and show btn add parcela
         const $radioIsFixedValue = $('input[name="is_fixed_value"]');
         const $btnAddInstallment = $('.btn-add-installment');
@@ -633,22 +646,107 @@
         $radioIsFixedValue.on('change', function() {
             const isFixedValue = $(this).val() === "1";
             $btnAddInstallment.attr('hidden', isFixedValue);
-        });
+            $installmentsTable.clear().draw();
+            $inputsForInstallmentEvents =
+                $recurrence
+                    .add($amount)
+                    .add($payDay)
+                    .add($inputStartDate)
+                    .add($inputEndDate)
+            if (isFixedValue) {
+                addFixedInstallmentsEvent($inputsForInstallmentEvents); // adiciona os eventos automaticos de parcelas fixas
+            } else {
+                $inputsForInstallmentEvents.off('change'); // remove os eventos de parcela fixa
+            }
+        }).first().trigger('change');
 
-        // add parcelas calculo
-        function calcNumberOfInstallments() {
+        // declaracao dos botoes edit e delete do datatable
+        const editButton =
+            '<button data-route="user" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment" data-toggle="modal" data-target="#modal-add-installment"><i class="fa fa-edit"></i></button>';
+        const deleteButton =
+            '<a href="#" class="btn" style="margin-left:5px" rel="tooltip" title="Excluir"><i class="fa fa-times"></i></a>';
+        const buttonsHTML = editButton + deleteButton;
 
+        function generateInstallments(numberOfInstallments) {
+            const startDate = new Date($inputStartDate.val());
+            const payDay = $payDay.val();
+            const amount = $amount.val() / numberOfInstallments;
+
+            const installmentsData = [];
+
+            for (let i = 1; i <= numberOfInstallments; i++) {
+                const installmentDate = new Date(startDate.getFullYear(), startDate.getMonth() + i, payDay);
+                const formattedDate = installmentDate.toLocaleDateString('pt-BR');
+                const hiddenFormattedDate = installmentDate.toISOString();
+
+                const installmentData = [
+                    formattedDate,
+                    amount,
+                    "Parcela " + i + "/" + numberOfInstallments,
+                    "Em aberto",
+                    buttonsHTML,
+                    installmentDate
+                ];
+
+                installmentsData.push(installmentData);
+            }
+
+            for (const installmentData of installmentsData) {
+                const rowNode = $installmentsTable.row.add(installmentData).node();
+                $(rowNode).children('td').eq(0).attr('data-hidden-date', installmentData[5]);
+            }
+
+            $installmentsTable.draw();
         }
 
-        // dataTable config
-        const $table = $('.table-striped').DataTable({
-            paging: false,
-            info: false,
-            searching: false,
-            language: {
-                emptyTable: "",
-                zeroRecords: ""
-            }
+        // gerar parcelas a partir do change de varios inputs
+        function addFixedInstallmentsEvent($inputsForInstallmentEvents) {
+            $inputsForInstallmentEvents.on('change', function() {
+                const changeableInputs = [
+                    $recurrence.val(),
+                    $amount.val(),
+                    $payDay.val(),
+                    $inputStartDate.val(),
+                    $inputEndDate.val()
+                ];
+                if (!changeableInputs.every(Boolean)) {
+                    return;
+                }
+                const numberOfInstallments = calculateNumberOfInstallments();
+                $installmentsTable.clear();
+                generateInstallments(numberOfInstallments);
+            });
+        }
+
+        // add nova parcela btn - modal
+        $('.btn-add-installment').on('click', function() {
+            $('#modal-add-installment').modal('show');
+        });
+
+        // form modal add installment
+        $('#form-modal-add-installment').on('submit', function(e) {
+            e.preventDefault();
+            const expireDate = new Date($('#expire-date').val());
+            const expireDateFormatted = expireDate.toLocaleDateString('pt-BR');
+            const hiddenFormattedDate = expireDate.toISOString();
+            const value = $('#value').val();
+            const status = $('#status').find(':selected').text();
+            const observation = $('#observation').val();
+
+            const installmentModalData = [
+                expireDateFormatted,
+                value,
+                observation,
+                status,
+                buttonsHTML,
+                hiddenFormattedDate
+            ];
+
+            $installmentsTable.row.add(installmentModalData);
+            $installmentsTable.draw()
+
+            this.reset(); // reset modal form
+            $('#modal-add-installment').modal('hide');
         });
     });
 </script>
