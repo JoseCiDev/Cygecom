@@ -14,15 +14,15 @@ return new class() extends Migration
             $table->boolean('is_active')->default(true);
             $table->text('description');
             $table->date('payday');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->enum('recurrence', ['unique', 'monthly', 'yearly'])->default('monthly');
             $table->boolean('is_fixed_payment')->default(false);
+            $table->boolean('is_prepaid')->default(false);
             $table->text('local_service');
 
             $table->decimal('total_ammount', 14, 2)->nullable();
             $table->integer('quantity_of_installments')->nullable();
-            $table->string('payment_type')->nullable();
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
