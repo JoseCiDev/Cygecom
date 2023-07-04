@@ -50,10 +50,24 @@ class QuoteRequestController extends Controller
 
     public function contract()
     {
-        $costCenters = CostCenter::with('company')->get();
-        $suppliers   = Supplier::whereNull('deleted_at')->get();
+        $costCenters  = CostCenter::with('company')->get();
+        $suppliers    = Supplier::whereNull('deleted_at')->get();
+        $statusValues = [
+            [
+                'id'          => 1,
+                'description' => 'PAGO',
+            ],
+            [
+                'id'          => 2,
+                'description' => 'EM ATRASO',
+            ],
+            [
+                'id'          => 3,
+                'description' => 'PENDENTE',
+            ],
+        ];
 
-        return view('components.quote-request.contract', compact('costCenters', 'suppliers'));
+        return view('components.quote-request.contract', compact('costCenters', 'suppliers', 'statusValues'));
     }
 
     public function edit(int $id)

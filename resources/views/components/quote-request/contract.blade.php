@@ -36,13 +36,29 @@
                     @else {{ route('requests.new') }} @endif">
         @csrf
 
-        <div class="row contract-title-container" style="margin-bottom:10px; margin-top:20px;">
+        <div class="row contract-title-container" style="margin-bottom:10px; margin-top:18px;">
             <div class="col-sm-8 contract-title">
                 <div class="form-group">
                     <label for="contract-title" class="control-label">Nome do contrato: </label>
                     <input type="text" id="contract-title" name="contract_title"
                         placeholder="Digite aqui um nome para este contrato..." class="form-control"
                         data-rule-required="true" minlength="15">
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom:10px; margin-top:5px;">
+            <div class="col-sm-4">
+                <label for="form-check" class="control-label" style="padding-right:10px;">
+                    Quem está responsável por esta contratação?
+                </label>
+                <div class="form-check">
+                    <input name="is_comex" value="1" @if (isset($quoteRequest) && $quoteRequest->is_comex) checked @endif
+                        class="radio-comex" type="radio" data-skin="minimal">
+                    <label class="form-check-label" for="services" style="margin-right:15px;">Eu mesmo(a)</label>
+                    <input name="is_comex"value="0" @if (isset($quoteRequest) && !$quoteRequest->is_comex) checked @endif
+                        class="radio-comex" type="radio" data-skin="minimal">
+                    <label class="form-check-label" for="">Suprimentos</label>
                 </div>
             </div>
         </div>
@@ -237,6 +253,30 @@
                             value="{{ isset($quoteRequest) && $quoteRequest->desired_date ? $quoteRequest->desired_date : '' }}">
                     </div>
                 </div>
+
+                <div class="col-sm-4">
+                    <label for="form-check" class="control-label" style="padding-right:10px;">
+                        Contrato se enquadra na categoria COMEX?
+                    </label>
+                    <div class="form-check" style="12px; margin-top:4px;">
+                        <input name="is_comex" value="1" @if (isset($quoteRequest) && $quoteRequest->is_comex) checked @endif
+                            class="radio-comex" type="radio" data-skin="minimal">
+                        <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
+                        <input name="is_comex"value="0" @if (isset($quoteRequest) && !$quoteRequest->is_comex) checked @endif
+                            class="radio-comex" type="radio" data-skin="minimal">
+                        <label class="form-check-label" for="">Não</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-8">
+                    <label for="quote_request_files[path]" class="control-label">
+                        Link de sugestão</label>
+                    <input type="text" placeholder="Adicone um link válido" name="quote_request_files[path]"
+                        id="quote_request_files[path]" data-rule-url="true" class="form-control">
+                </div>
             </div>
 
             <hr>
@@ -253,7 +293,7 @@
                             <label for="supplier" class="control-label">Fornecedor (CNPJ - RAZÃO
                                 SOCIAL)</label>
                             <select name="suppliers[0][id]" id="supplier" class='select2-me select-supplier'
-                                style="width:100%;" data-placeholder="Escolha uma produto">
+                                style="width:100%;" data-placeholder="Encontre o fornecedor desejado">
                                 <option value=""></option>
                                 @foreach ($suppliers as $supplier)
                                     <option value="{{ $supplier['id'] }}">
@@ -291,8 +331,7 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    {{-- HORAS TRABALHADAS --}}
+                {{-- <div class="row">
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label for="hours-performed" class="control-label">Horas trabalhadas</label>
@@ -303,7 +342,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <hr>
 
@@ -311,8 +350,8 @@
                     <h4>PAGAMENTO</h4>
                 </div>
 
-                <div class="row">
-                    <div class="col-sm-6" style="margin-bottom:15px;">
+                <div class="row" style="margin-bottom:20px;">
+                    <div class="col-sm-4">
                         <label for="form-check" class="control-label" style="padding-right:10px;">
                             Valor do contrato será:
                         </label>
@@ -330,13 +369,11 @@
                             <p>(Se o valor final do contrato não estiver difinido, será VARIÁVEL).</p>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    {{-- TOTAL --}}
-                    <div class="col-sm-2">
+                    {{-- VALOR TOTAL --}}
+                    <div class="col-sm-2" style="margin-top:-10px;">
                         <div class="form-group">
-                            <label for="amount" class="control-label">Valor total contrato</label>
+                            <label for="amount" class="control-label">Valor total do contrato</label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
                                 <input type="number" name="amount" id="amount" placeholder="0.00"
@@ -347,6 +384,9 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
 
                     {{-- DATA INICIO --}}
                     <div class="col-sm-2">
@@ -381,7 +421,7 @@
                             <div class="form-group">
                                 <label for="recurrence" class="control-label">Recorrência</label>
                                 <select name="recurrence" id="recurrence" class='select2-me recurrence'
-                                    style="width:100%; padding-top:2px;" data-placeholder="Pagamento do serviço">
+                                    style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                     <option value=""></option>
                                     <option value="1">ÚNICA</option>
                                     <option value="2">MENSAL</option>
@@ -391,13 +431,26 @@
                         </div>
                     </div>
 
+                    {{-- CONDIÇÃO DE PAGAMENTO --}}
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label for="payment-method" class="control-label">Condição de pagamento</label>
+                            <select name="payment_method" id="payment-method" class='select2-me payment-method'
+                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
+                                <option value=""></option>
+                                <option value="1">Antecipado</option>
+                                <option value="2">Normal</option>
+                            </select>
+                        </div>
+                    </div>
+
                     {{-- FORMA DE PAGAMENTO --}}
                     <div class="service-row">
                         <div class="col-sm-2">
                             <div class="form-group">
                                 <label for="payment-method" class="control-label">Forma de pagamento</label>
                                 <select name="payment_method" id="payment-method" class='select2-me payment-method'
-                                    style="width:100%; padding-top:2px;" data-placeholder="Escolha uma forma">
+                                    style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                     <option value=""></option>
                                     <option value="1">PIX</option>
                                     <option value="2">DEPÓSITO BANCÁRIO</option>
@@ -417,8 +470,8 @@
                         Parcelas deste contrato
                     </h4>
                     <div class="col-sm-6 btn-add-installment" hidden>
-                        <button type="button" class="btn btn-success pull-right btn-small" data-route="user"
-                            rel="tooltip" title="Adicionar Parcela">
+                        <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
+                            data-route="user" rel="tooltip" title="Adicionar Parcela">
                             + Adicionar parcela
                         </button>
                     </div>
@@ -460,6 +513,8 @@
 
     <x-modal-add-installment />
 
+    <x-modal-edit-installment :statusValues="$statusValues" />
+
 </x-app>
 
 <script>
@@ -483,6 +538,11 @@
             }
         });
 
+        function calculateApportionment() {
+            const maxApportionmentPercentage = 100;
+            // ...
+        }
+
         function disableSelectedOptions() {
             const selectedValues = $.map($('.cost-center-container select'), (self) => {
                 return $(self).val();
@@ -502,7 +562,7 @@
             costCenterCount > 1 ? $('.delete-cost-center').prop('disabled', false) : $('.delete-cost-center')
                 .prop('disabled', true);
         }
-        checkCostCenterCount()
+        checkCostCenterCount();
 
         function updateApportionmentFields() {
             const hasPercentageInput = $costCenterPercentage.filter(function() {
@@ -649,28 +709,28 @@
             $installmentsTable.clear().draw();
             $inputsForInstallmentEvents =
                 $recurrence
-                    .add($amount)
-                    .add($payDay)
-                    .add($inputStartDate)
-                    .add($inputEndDate)
+                .add($amount)
+                .add($payDay)
+                .add($inputStartDate)
+                .add($inputEndDate)
             if (isFixedValue) {
-                addFixedInstallmentsEvent($inputsForInstallmentEvents); // adiciona os eventos automaticos de parcelas fixas
+                addFixedInstallmentsEvent($inputsForInstallmentEvents);
             } else {
-                $inputsForInstallmentEvents.off('change'); // remove os eventos de parcela fixa
+                $inputsForInstallmentEvents.off('change');
             }
         }).first().trigger('change');
 
         // declaracao dos botoes edit e delete do datatable
         const editButton =
-            '<button data-route="user" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment" data-toggle="modal" data-target="#modal-add-installment"><i class="fa fa-edit"></i></button>';
+            '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
         const deleteButton =
-            '<a href="#" class="btn" style="margin-left:5px" rel="tooltip" title="Excluir"><i class="fa fa-times"></i></a>';
+            '<button href="#" class="btn btn-delete-installment" style="margin-left:5px" title="Excluir"><i class="fa fa-times"></i></button>';
         const buttonsHTML = editButton + deleteButton;
 
         function generateInstallments(numberOfInstallments) {
             const startDate = new Date($inputStartDate.val());
             const payDay = $payDay.val();
-            const amount = $amount.val() / numberOfInstallments;
+            const amount = ($amount.val() / numberOfInstallments).toFixed(2);
 
             const installmentsData = [];
 
@@ -683,7 +743,7 @@
                     formattedDate,
                     amount,
                     "Parcela " + i + "/" + numberOfInstallments,
-                    "Em aberto",
+                    "PENDENTE",
                     buttonsHTML,
                     installmentDate
                 ];
@@ -718,7 +778,14 @@
             });
         }
 
-        // add nova parcela btn - modal
+        function resetModal() {
+            $('#form-modal-edit-installment')[0].reset();
+            $('#edit-status').val('').trigger('change');
+
+            $('#form-modal-add-installment')[0].reset();
+            $('#edit-status').val('').trigger('change');
+        }
+
         $('.btn-add-installment').on('click', function() {
             $('#modal-add-installment').modal('show');
         });
@@ -726,9 +793,18 @@
         // form modal add installment
         $('#form-modal-add-installment').on('submit', function(e) {
             e.preventDefault();
+
+            $('#edit-status').select2({
+                maximumSelectionLength: 1
+            });
+
             const expireDate = new Date($('#expire-date').val());
-            const expireDateFormatted = expireDate.toLocaleDateString('pt-BR');
-            const hiddenFormattedDate = expireDate.toISOString();
+            const expireDateFormatted = expireDate.toLocaleDateString('pt-BR', {
+                timeZone: 'UTC'
+            });
+            const hiddenFormattedDate = expireDate.toLocaleDateString('sv', {
+                timeZone: 'UTC'
+            });
             const value = $('#value').val();
             const status = $('#status').find(':selected').text();
             const observation = $('#observation').val();
@@ -745,8 +821,75 @@
             $installmentsTable.row.add(installmentModalData);
             $installmentsTable.draw()
 
-            this.reset(); // reset modal form
+            resetModal();
+            //$(this).find('select').select2();
             $('#modal-add-installment').modal('hide');
         });
+
+        $('.table-striped tbody').on('click', 'tr', function(event) {
+            event.preventDefault();
+
+            if ($(event.target).closest('.btn-delete-installment').length) {
+                const row = $(this);
+                const installmentId = row.data('id');
+                $installmentsTable.row(row).remove().draw();
+            } else if ($(event.target).closest('.btn-edit-installment').length) {
+                const rowData = $installmentsTable.row(this).data();
+                openModalForEdit(rowData);
+                selectedRowIndex = $installmentsTable.row(this).index();
+            }
+        });
+
+        const statusValues = @json($statusValues);
+
+        let selectedRowIndex = null;
+
+        // modal edit installment
+        function openModalForEdit(rowData) {
+            $('#modal-edit-installment').modal('show');
+
+            const expireDate = $('#edit-expire-date');
+            const value = $('#edit-value');
+            const status = $('#edit-status');
+            const observation = $('#edit-observation');
+
+            const formattedDate = new Date(rowData[0].split('/').reverse().join('-'));
+            expireDate.val(formattedDate.toISOString().split('T')[0]);
+
+            value.val(rowData[1]);
+            observation.text(rowData[2]);
+
+            status.select2('val', statusValues.find((status) => status.description === rowData[3]).id);
+
+            $('#form-modal-edit-installment').on('submit', function(event) {
+                event.preventDefault();
+
+                const expireDate = new Date($('#edit-expire-date').val());
+                const value = $('#edit-value').val();
+                const status = $('#edit-status').find(':selected').text();
+                const observation = $('#edit-observation').val();
+
+                const expireDateFormatted = expireDate.toLocaleDateString('pt-BR', {
+                    timeZone: 'UTC'
+                });
+                const hiddenFormattedDate = expireDate.toLocaleDateString('sv', {
+                    timeZone: 'UTC'
+                });
+
+                if (selectedRowIndex !== null) {
+                    $installmentsTable.cell(selectedRowIndex, 0).data(expireDateFormatted);
+                    $installmentsTable.cell(selectedRowIndex, 1).data(value);
+                    $installmentsTable.cell(selectedRowIndex, 2).data(observation);
+                    $installmentsTable.cell(selectedRowIndex, 3).data(status);
+                    $installmentsTable.cell(selectedRowIndex, 4).data(buttonsHTML);
+                    $installmentsTable.draw();
+                }
+
+                selectedRowIndex = null;
+
+                resetModal();
+                $('#modal-edit-installment').modal('hide');
+            });
+        }
     });
 </script>
