@@ -1,7 +1,7 @@
 <x-app>
 
     <x-slot name="title">
-        <h1>Solicitar Contrato de Prestação de Serviço</h1>
+        <h1>Solicitar Novo Contrato</h1>
     </x-slot>
 
     <style>
@@ -53,12 +53,10 @@
                     Quem está responsável por esta contratação?
                 </label>
                 <div class="form-check">
-                    <input name="is_comex" value="1" @if (isset($quoteRequest) && $quoteRequest->is_comex) checked @endif
-                        class="radio-comex" type="radio" data-skin="minimal">
+                    <input name="x" value="1" class="radio-who-wants" type="radio">
                     <label class="form-check-label" for="services" style="margin-right:15px;">Eu mesmo(a)</label>
-                    <input name="is_comex"value="0" @if (isset($quoteRequest) && !$quoteRequest->is_comex) checked @endif
-                        class="radio-comex" type="radio" data-skin="minimal">
-                    <label class="form-check-label" for="">Suprimentos</label>
+                    <input checked name="x"value="0" class="radio-who-wants" type="radio">
+                    <label class="form-check-label" for="who-wants">Suprimentos</label>
                 </div>
             </div>
         </div>
@@ -330,22 +328,11 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {{-- <div class="row">
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="hours-performed" class="control-label">Horas trabalhadas</label>
-                            <div class="input-group">
-                                <input type="number" name="hours_performed" id="hours-performed"
-                                    placeholder="Ex: 100" class="form-control" min="0">
-                                <span class="input-group-addon">horas</span>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
+            <hr>
 
-                <hr>
-
+            <div class="payment-block">
                 <div class="row center-block" style="padding-bottom: 10px;">
                     <h4>PAGAMENTO</h4>
                 </div>
@@ -538,11 +525,6 @@
             }
         });
 
-        function calculateApportionment() {
-            const maxApportionmentPercentage = 100;
-            // ...
-        }
-
         function disableSelectedOptions() {
             const selectedValues = $.map($('.cost-center-container select'), (self) => {
                 return $(self).val();
@@ -627,6 +609,25 @@
             const hasSupplier = $(this).val() === "1";
             $suppliersBlock.attr('hidden', !hasSupplier);
         });
+
+        // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
+        const $radioIsContractedBySupplies = $('.radio-who-wants');
+        const $paymentBlock = $('.payment-block');
+
+        $radioIsContractedBySupplies.on('change', function() {
+            const isContractedBySupplies = $(this).val() === "1";
+            const $elementsToDisable = $suppliersBlock.add($paymentBlock);
+
+            $elementsToDisable
+                .find('input')
+                .prop('disabled', !isContractedBySupplies);
+
+            $elementsToDisable
+                .find('select')
+                .prop('disabled', !isContractedBySupplies)
+                .trigger('change.select2');
+
+        }).trigger('change');
 
         // add product
         const $productRowTemplate = $(".full-product-line").last()
