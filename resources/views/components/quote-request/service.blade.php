@@ -8,6 +8,7 @@
         .cost-center-container {
             margin-bottom: 10px
         }
+
         h4 {
             font-size: 20px;
         }
@@ -17,6 +18,20 @@
         action="@if (isset($quoteRequest) && !$isCopy) {{ route('request.update', ['id' => $id]) }}
                     @else {{ route('requests.new') }} @endif">
         @csrf
+
+        <div class="row" style="margin-bottom:10px; margin-top:5px;">
+            <div class="col-sm-4">
+                <label for="form-check" class="control-label" style="padding-right:10px;">
+                    Quem está responsável por esta contratação?
+                </label>
+                <div class="form-check">
+                    <input name="x" value="1" class="radio-who-wants" type="radio">
+                    <label class="form-check-label" for="services" style="margin-right:15px;">Eu mesmo(a)</label>
+                    <input checked name="x"value="0" class="radio-who-wants" type="radio">
+                    <label class="form-check-label" for="who-wants">Suprimentos</label>
+                </div>
+            </div>
+        </div>
 
         <div class="row center-block" style="padding-bottom: 10px;">
             <h4>CONTRATANTE</h4>
@@ -274,9 +289,11 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <hr>
+            <hr>
 
+            <div class="payment-block">
                 <div class="row center-block" style="padding-bottom: 10px;">
                     <h4>PAGAMENTO</h4>
                 </div>
@@ -476,6 +493,29 @@
             const hasSupplier = $(this).val() === "1";
             $suppliersBlock.attr('hidden', !hasSupplier);
         });
+
+        // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
+        const $radioIsContractedBySupplies = $('.radio-who-wants');
+        const $paymentBlock = $('.payment-block');
+
+        $radioIsContractedBySupplies.on('change', function() {
+            const isContractedBySupplies = $(this).val() === "1";
+            const $elementsToDisable = $suppliersBlock.add($paymentBlock);
+
+            $elementsToDisable
+                .find('input')
+                .prop('disabled', !isContractedBySupplies);
+
+            $elementsToDisable
+                .find('select')
+                .prop('disabled', !isContractedBySupplies)
+                .trigger('change.select2');
+
+            $elementsToDisable
+                .find('textarea')
+                .prop('disabled', !isContractedBySupplies);
+
+        }).trigger('change');
 
         // add product
         const $productRowTemplate = $(".full-product-line").last()
