@@ -269,10 +269,11 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-8 link-util">
                     <label for="quote_request_files[path]" class="control-label">
-                        Link de sugestão</label>
-                    <input type="text" placeholder="Adicone um link válido" name="quote_request_files[path]"
+                        Link útil</label>
+                    <input type="text" placeholder="Ex: Contrato disponibilizado pelo fornecedor"
+                        name="quote_request_files[path]"
                         id="quote_request_files[path]" data-rule-url="true" class="form-control">
                 </div>
             </div>
@@ -601,33 +602,6 @@
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
 
-        // tem fornecedor? sim / não
-        const $inputHasSupplier = $('input[name="has_supplier"]')
-        const $suppliersBlock = $('.suppliers-block');
-
-        $inputHasSupplier.on('change', function() {
-            const hasSupplier = $(this).val() === "1";
-            $suppliersBlock.attr('hidden', !hasSupplier);
-        });
-
-        // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
-        const $radioIsContractedBySupplies = $('.radio-who-wants');
-        const $paymentBlock = $('.payment-block');
-
-        $radioIsContractedBySupplies.on('change', function() {
-            const isContractedBySupplies = $(this).val() === "1";
-            const $elementsToDisable = $suppliersBlock.add($paymentBlock);
-
-            $elementsToDisable
-                .find('input')
-                .prop('disabled', !isContractedBySupplies);
-
-            $elementsToDisable
-                .find('select')
-                .prop('disabled', !isContractedBySupplies)
-                .trigger('change.select2');
-
-        }).trigger('change');
 
         // add product
         const $productRowTemplate = $(".full-product-line").last()
@@ -720,6 +694,35 @@
                 $inputsForInstallmentEvents.off('change');
             }
         }).first().trigger('change');
+
+
+        // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
+        const $radioIsContractedBySupplies = $('.radio-who-wants');
+        const $paymentBlock = $('.payment-block');
+        const $suppliersBlock = $('.suppliers-block');
+        const $linkUtil = $('.link-util');
+
+        $radioIsContractedBySupplies.on('change', function() {
+            const isContractedBySupplies = $(this).val() === "1";
+            const $elementsToDisable = $suppliersBlock.add($paymentBlock);
+
+            $elementsToDisable
+                .find('input')
+                .prop('disabled', !isContractedBySupplies);
+
+            $elementsToDisable
+                .find('select')
+                .prop('disabled', !isContractedBySupplies)
+                .trigger('change.select2');
+
+            // esconde link util caso SUPRIMENTOS
+            $linkUtil.prop('hidden', !isContractedBySupplies);
+
+            $installmentsTable.clear().draw();
+            $radioIsFixedValue.first().prop('checked', true);
+            $btnAddInstallment.attr('hidden', true);
+        }).trigger('change');
+
 
         // declaracao dos botoes edit e delete do datatable
         const editButton =
