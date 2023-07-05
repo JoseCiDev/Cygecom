@@ -14,8 +14,7 @@
                                 <label for="edit-expire-date" class="control-label">Vencimento</label>
                                 <input
                                     type="date" name="expire_date"
-                                    id="edit-expire-date" class="form-control edit-expire-date"
-                                    data-rule-required="true">
+                                    id="edit-expire-date" class="form-control edit-expire-date">
                             </div>
                         </div>
                         {{-- VALOR --}}

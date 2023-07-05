@@ -273,8 +273,8 @@
                     <label for="quote_request_files[path]" class="control-label">
                         Link útil</label>
                     <input type="text" placeholder="Ex: Contrato disponibilizado pelo fornecedor"
-                        name="quote_request_files[path]"
-                        id="quote_request_files[path]" data-rule-url="true" class="form-control">
+                        name="quote_request_files[path]" id="quote_request_files[path]" data-rule-url="true"
+                        class="form-control">
                 </div>
             </div>
 
@@ -394,12 +394,12 @@
                         </div>
                     </div>
 
-                    {{-- DATA PAGAMENTO --}}
+                    {{-- DATA FIM --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="pay-day" class="control-label">Dia de pagamento</label>
-                            <input type="text" name="payday" class="form-control pay-day" id="pay-day"
-                                placeholder="Ex: 15">
+                            <label for="payment-date" class="control-label">Data de pagamento</label>
+                            <input type="date" name="payment_date" id="payment-date"
+                                class="form-control payment-date">
                         </div>
                     </div>
 
@@ -426,8 +426,8 @@
                             <select name="payment_method" id="payment-method" class='select2-me payment-method'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="1">Antecipado</option>
-                                <option value="2">Normal</option>
+                                <option value="1">Pagamento antecipado</option>
+                                <option value="2">Pagamento após execução</option>
                             </select>
                         </div>
                     </div>
@@ -628,7 +628,6 @@
         // add parcelas na table
         const $inputStartDate = $('.start-date');
         const $inputEndDate = $('.end-date');
-        const $payDay = $('.pay-day');
         const $recurrence = $('#recurrence');
         const $amount = $('.amount');
 
@@ -685,7 +684,6 @@
             $inputsForInstallmentEvents =
                 $recurrence
                 .add($amount)
-                .add($payDay)
                 .add($inputStartDate)
                 .add($inputEndDate)
             if (isFixedValue) {
@@ -733,18 +731,17 @@
 
         function generateInstallments(numberOfInstallments) {
             const startDate = new Date($inputStartDate.val());
-            const payDay = $payDay.val();
             const amount = ($amount.val() / numberOfInstallments).toFixed(2);
 
             const installmentsData = [];
 
             for (let i = 1; i <= numberOfInstallments; i++) {
-                const installmentDate = new Date(startDate.getFullYear(), startDate.getMonth() + i, payDay);
+                const installmentDate = new Date();
                 const formattedDate = installmentDate.toLocaleDateString('pt-BR');
                 const hiddenFormattedDate = installmentDate.toISOString();
 
                 const installmentData = [
-                    formattedDate,
+                    "--",
                     amount,
                     "Parcela " + i + "/" + numberOfInstallments,
                     "PENDENTE",
@@ -769,7 +766,6 @@
                 const changeableInputs = [
                     $recurrence.val(),
                     $amount.val(),
-                    $payDay.val(),
                     $inputStartDate.val(),
                     $inputEndDate.val()
                 ];
@@ -826,7 +822,6 @@
             $installmentsTable.draw()
 
             resetModal();
-            //$(this).find('select').select2();
             $('#modal-add-installment').modal('hide');
         });
 
@@ -857,8 +852,11 @@
             const status = $('#edit-status');
             const observation = $('#edit-observation');
 
-            const formattedDate = new Date(rowData[0].split('/').reverse().join('-'));
-            expireDate.val(formattedDate.toISOString().split('T')[0]);
+            if (rowData[0] !== "--") {
+                const formattedDate = new Date(rowData[0].split('/').reverse().join('-'));
+                expireDate.val(formattedDate.toISOString().split('T')[0]);
+            }
+
 
             value.val(rowData[1]);
             observation.text(rowData[2]);
@@ -868,17 +866,27 @@
             $('#form-modal-edit-installment').on('submit', function(event) {
                 event.preventDefault();
 
-                const expireDate = new Date($('#edit-expire-date').val());
+                const expireDateInput = $('#edit-expire-date').val();
+                let expireDate;
+                let expireDateFormatted;
+
+                if (expireDateInput !== '') {
+                    expireDate = new Date(expireDateInput);
+                    expireDateFormatted = expireDate.toLocaleDateString('pt-BR', {
+                        timeZone: 'UTC'
+                    });
+                    const hiddenFormattedDate = expireDate.toLocaleDateString('sv', {
+                    timeZone: 'UTC'
+                });
+                } else {
+                    expireDateFormatted = '--';
+                }
+
                 const value = $('#edit-value').val();
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
 
-                const expireDateFormatted = expireDate.toLocaleDateString('pt-BR', {
-                    timeZone: 'UTC'
-                });
-                const hiddenFormattedDate = expireDate.toLocaleDateString('sv', {
-                    timeZone: 'UTC'
-                });
+
 
                 if (selectedRowIndex !== null) {
                     $installmentsTable.cell(selectedRowIndex, 0).data(expireDateFormatted);
@@ -894,6 +902,7 @@
                 resetModal();
                 $('#modal-edit-installment').modal('hide');
             });
+
         }
     });
 </script>
