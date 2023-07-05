@@ -235,6 +235,20 @@
                             value="{{ isset($quoteRequest) && $quoteRequest->desired_date ? $quoteRequest->desired_date : '' }}">
                     </div>
                 </div>
+
+                <div class="col-sm-4">
+                    <label for="form-check" class="control-label" style="padding-right:10px;">
+                        Serviço se enquadra na categoria COMEX?
+                    </label>
+                    <div class="form-check" style="12px; margin-top:4px;">
+                        <input name="is_comex" value="1" class="radio-comex" type="radio"
+                            data-skin="minimal">
+                        <label class="form-check-label" style="margin-right:15px;">Sim</label>
+                        <input name="is_comex"value="0" class="radio-comex" type="radio"
+                            data-skin="minimal">
+                        <label class="form-check-label">Não</label>
+                    </div>
+                </div>
             </div>
 
             <hr>
@@ -503,17 +517,15 @@
             const $elementsToDisable = $suppliersBlock.add($paymentBlock);
 
             $elementsToDisable
-                .find('input')
-                .prop('disabled', !isContractedBySupplies);
+                .find('input, textarea')
+                .prop('disabled', !isContractedBySupplies)
+                .val('');
 
             $elementsToDisable
                 .find('select')
                 .prop('disabled', !isContractedBySupplies)
-                .trigger('change.select2');
-
-            $elementsToDisable
-                .find('textarea')
-                .prop('disabled', !isContractedBySupplies);
+                .trigger('change.select2')
+                .find('option').val('');
 
         }).trigger('change');
 
