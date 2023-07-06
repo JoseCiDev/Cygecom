@@ -10,7 +10,7 @@ return new class () extends Migration {
         Schema::create('user_profiles', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->string('name')->unique();
-            $table->boolean('isAdmin')->default(false);
+            $table->boolean('is_admin')->default(false);
         });
     }
 

@@ -5,23 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Person extends Model
+class PurchaseRequestFile extends Model
 {
     use HasFactory;
 
-    public function user()
+    public function purchaseRequest()
     {
-        return $this->hasOne(User::class);
-    }
-
-    public function phone()
-    {
-        return $this->belongsTo(Phone::class, 'phone_id');
-    }
-
-    public function costCenter()
-    {
-        return $this->belongsTo(CostCenter::class, 'cost_center_id');
+        return $this->belongsTo(PurchaseRequest::class);
     }
 
     public function deletedByUser()
@@ -35,11 +25,8 @@ class Person extends Model
     }
 
     protected $fillable = [
-        'name',
-        'cpf_cnpj',
-        'birthdate',
-        'cost_center_id',
-        'phone_id',
+        'path',
+        'purchase_request_id',
         'updated_by',
         'deleted_by',
         'deleted_at',

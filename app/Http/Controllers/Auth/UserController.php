@@ -78,7 +78,7 @@ class UserController extends Controller implements UserControllerInterface
 
     public function userUpdate(Request $request, int $id)
     {
-        $isAdmin = auth()->user()->profile->isAdmin;
+        $isAdmin = auth()->user()->profile->is_admin;
         $isOwnId = $id === auth()->user()->id;
 
         if (!$isAdmin && !$isOwnId) {

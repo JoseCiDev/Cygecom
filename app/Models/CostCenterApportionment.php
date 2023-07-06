@@ -14,15 +14,16 @@ class CostCenterApportionment extends Model
         return $this->belongsTo(CostCenter::class, 'cost_center_id');
     }
 
-    public function quoteRequest()
+    public function purchaseRequest()
     {
-        return $this->belongsTo(QuoteRequest::class, 'quote_request_id');
+        return $this->belongsTo(PurchaseRequest::class, 'purchase_request_id');
     }
 
     public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
+
     public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by');
@@ -31,7 +32,7 @@ class CostCenterApportionment extends Model
     protected $fillable = [
         'apportionment_percentage',
         'apportionment_currency',
-        'quote_request_id',
+        'purchase_request_id',
         'cost_center_id',
         'updated_by',
         'deleted_by',

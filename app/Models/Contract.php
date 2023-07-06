@@ -5,9 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class Contract extends Model
 {
     use HasFactory;
+
+    public function installments()
+    {
+        return $this->hasMany(ContractInstallment::class);
+    }
 
     public function paymentInfo()
     {
@@ -35,17 +40,17 @@ class Service extends Model
     }
 
     protected $fillable = [
+        'name',
+        'is_active',
         'description',
         'payday',
-        'is_prepaid',
-        'is_finished',
-        'already_provided',
+        'start_date',
+        'end_date',
+        'recurrence',
+        'is_fixed_payment',
         'local_service',
-        'price',
-        'hours_performed',
-        'seller',
-        'email',
-        'phone',
+        'total_ammount',
+        'quantity_of_installments',
         'purchase_request_id',
         'supplier_id',
         'payment_info_id',
