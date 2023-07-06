@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Providers\{ProductService, UserService, ValidatorService};
-use App\Services\QuotationService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -18,19 +16,12 @@ class AppServiceProvider extends ServiceProvider
             return new ValidatorService($app);
         });
 
-        $this->app->singleton(ProductService::class, function ($app) {
-            return new ProductService($app);
-        });
         $this->app->singleton(SuppplierService::class, function ($app) {
             return new SuppplierService($app);
         });
 
-        $this->app->singleton(QuoteRequestService::class, function ($app) {
-            return new QuoteRequestService($app);
-        });
-
-        $this->app->singleton(QuotationService::class, function ($app) {
-            return new QuotationService($app);
+        $this->app->singleton(PurchaseRequestService::class, function ($app) {
+            return new PurchaseRequestService($app);
         });
     }
 }

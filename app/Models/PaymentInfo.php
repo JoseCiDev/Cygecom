@@ -5,23 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Person extends Model
+class PaymentInfo extends Model
 {
     use HasFactory;
 
-    public function user()
+    public function contract()
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(Service::class);
     }
 
-    public function phone()
+    public function service()
     {
-        return $this->belongsTo(Phone::class, 'phone_id');
-    }
-
-    public function costCenter()
-    {
-        return $this->belongsTo(CostCenter::class, 'cost_center_id');
+        return $this->hasOne(Service::class);
     }
 
     public function deletedByUser()
@@ -35,13 +30,10 @@ class Person extends Model
     }
 
     protected $fillable = [
-        'name',
-        'cpf_cnpj',
-        'birthdate',
-        'cost_center_id',
-        'phone_id',
+        'payment_type',
+        'description',
+        'service_id',
         'updated_by',
         'deleted_by',
-        'deleted_at',
     ];
 }

@@ -31,9 +31,9 @@ return new class () extends Migration {
     public function up()
     {
         $tables = [
-            'addresses', 'suppliers', 'people', 'quote_requests', 'quote_request_files',
-            'purchase_quotes', 'quote_files', 'phones', 'products', 'services',
-            'cost_center_apportionments', 'quote_items',
+            'addresses', 'suppliers', 'people', 'purchase_requests', 'purchase_request_files',
+            'phones', 'services', 'contracts', 'payment_infos',
+            'cost_center_apportionments', 'contract_installments',
         ];
 
         foreach ($tables as $table) {
@@ -46,9 +46,9 @@ return new class () extends Migration {
     public function down()
     {
         $tables = [
-            'addresses', 'suppliers', 'people', 'quote_requests', 'quote_request_files',
-            'purchase_quotes', 'quote_files', 'phones', 'products', 'services',
-            'cost_center_apportionments', 'quote_items',
+            'addresses', 'suppliers', 'people', 'purchase_requests', 'purchase_request_files',
+            'phones', 'services', 'contracts', 'payment_infos',
+            'cost_center_apportionments', 'contract_installments',
         ];
 
         foreach ($tables as $table) {

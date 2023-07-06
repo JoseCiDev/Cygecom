@@ -137,7 +137,7 @@
                 <ul class='main-nav'>
                     <x-navbar.menu-item route="home" title="DASHBOARD" />
 
-                    @if (auth()->user()->profile->isAdmin)
+                    @if (auth()->user()->profile->is_admin)
                         <li>
                             <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
                                 <span>CADASTROS</span>
@@ -150,9 +150,6 @@
                                 <li>
                                     <a href="{{ route('suppliers') }}">Fornecedores</a>
                                 </li>
-                                <li>
-                                    <a href="{{ route('products') }}">Produtos</a>
-                                </li>
                             </ul>
                         </li>
                     @endif
@@ -163,30 +160,11 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ route('requests.own') }}">Minhas Solicitações</a></li>
-                            @if (auth()->user()->profile->isAdmin)
+                            @if (auth()->user()->profile->is_admin)
                                 <li><a href="{{ route('requests') }}">Solicitações Gerais</a></li>
                             @endif
                         </ul>
                     </li>
-
-                    <li>
-                        <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
-                            <span>COTAÇÕES</span>
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="{{ route('quotations') }}">Minhas Cotações</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('quotations') }}">Cotações Gerais</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    @if (auth()->user()->profile->isAdmin)
-                        <x-navbar.menu-item route="home" title="INTEGRAÇÃO SÊNIOR" />
-                    @endif
                 </ul>
                 <x-navbar.user>
                     <x-navbar.notification />
