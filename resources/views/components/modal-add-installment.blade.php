@@ -25,7 +25,7 @@
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
                                 <input type="number" placeholder="0.00" class="form-control" min="0"
-                                    name="value" id="value">
+                                    name="value" id="value" data-rule-required="true">
                             </div>
                         </div>
                         {{-- STATUS --}}
@@ -33,7 +33,8 @@
                             <div class="form-group">
                                 <label for="status" class="control-label">Status</label>
                                 <select name="status" id="status" class='select2-me'
-                                    style="width:100%; padding-top:2px;" data-placeholder="Pagamento do serviço">
+                                    style="width:100%; padding-top:2px;" data-placeholder="Pagamento do serviço"
+                                    data-rule-required="true">
                                     <option value=""></option>
                                     <option value="1">PAGO</option>
                                     <option value="3">EM ATRASO</option>
@@ -47,7 +48,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="observation" class="control-label">Observação</label>
-                                <textarea required name="observation" id="observation" rows="3"
+                                <textarea name="observation" id="observation" rows="3"
                                     placeholder="Ex: Pago com atraso de 3 dias devido a xpto" class="form-control text-area no-resize"></textarea>
                             </div>
                         </div>
@@ -65,4 +66,3 @@
         </div>
     </div>
 </div>
-

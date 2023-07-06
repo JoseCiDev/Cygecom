@@ -54,7 +54,7 @@
                 </label>
                 <div class="form-check">
                     <input name="x" value="1" class="radio-who-wants" type="radio">
-                    <label class="form-check-label" for="services" style="margin-right:15px;">Eu mesmo(a)</label>
+                    <label class="form-check-label" for="services" style="margin-right:15px;">Área solicitante</label>
                     <input checked name="x"value="0" class="radio-who-wants" type="radio">
                     <label class="form-check-label" for="who-wants">Suprimentos</label>
                 </div>
@@ -387,10 +387,23 @@
 
                     {{-- DATA FIM --}}
                     <div class="col-sm-2">
-                        <div class="form-group">
+                        <div class="form-group" style="margin-bottom:0px;">
                             <label for="end-date" class="control-label">Vigência - Data fim</label>
                             <input type="date" name="end_date" id="end-date" class="form-control end-date"
                                 value="{{ isset($quoteRequest) && $quoteRequest->desired_date ? $quoteRequest->desired_date : '' }}">
+                        </div>
+                        <div class="no-limit"
+                            style="
+                            display: flex;
+                            align-items: center;
+                            gap: 5px;
+                            margin-top:4px;
+                        ">
+                            <input type="checkbox" id="checkbox-has-no-end-date" class="checkbox-has-no-end-date"
+                                style="margin:0">
+                            <label for="checkbox-has-no-end-date" style="margin:0; font-size: 11px;">
+                                Vigência indeterminada
+                            </label>
                         </div>
                     </div>
 
@@ -457,7 +470,7 @@
                         <i class="fa fa-dollar"></i>
                         Parcelas deste contrato
                     </h4>
-                    <div class="col-sm-6 btn-add-installment" hidden>
+                    <div class="col-sm-6 div-btn-add-installment" hidden>
                         <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
                             data-route="user" rel="tooltip" title="Adicionar Parcela">
                             + Adicionar parcela
@@ -675,7 +688,9 @@
 
         // hide and show btn add parcela
         const $radioIsFixedValue = $('input[name="is_fixed_value"]');
+        const $divBtnAddInstallment = $('.div-btn-add-installment');
         const $btnAddInstallment = $('.btn-add-installment');
+        const $checkboxHasNoEndDate = $('.checkbox-has-no-end-date');
 
         $radioIsFixedValue.on('change', function() {
             const isFixedValue = $(this).val() === "1";
@@ -692,6 +707,21 @@
                 $inputsForInstallmentEvents.off('change');
             }
         }).first().trigger('change');
+
+        // show btn add installment quando VIGENCIA INDETERMINADA
+        $checkboxHasNoEndDate.on('click', function() {
+            hasNoEndDate = $(this).is(':checked');
+            $divBtnAddInstallment.attr('hidden', !hasNoEndDate);
+
+            if (hasNoEndDate) {
+                $(this).data('last-value', $inputEndDate.val());
+            }
+
+            const currentValue = hasNoEndDate ? null : $(this).data('last-value');
+            $inputEndDate.prop('readonly', hasNoEndDate);
+
+            $installmentsTable.clear().draw();
+        });
 
 
         // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
@@ -778,14 +808,6 @@
             });
         }
 
-        function resetModal() {
-            $('#form-modal-edit-installment')[0].reset();
-            $('#edit-status').val('').trigger('change');
-
-            $('#form-modal-add-installment')[0].reset();
-            $('#edit-status').val('').trigger('change');
-        }
-
         $('.btn-add-installment').on('click', function() {
             $('#modal-add-installment').modal('show');
         });
@@ -793,6 +815,12 @@
         // form modal add installment
         $('#form-modal-add-installment').on('submit', function(e) {
             e.preventDefault();
+
+            const isValid = $(this).valid();
+
+            if (!isValid) {
+                return;
+            }
 
             $('#edit-status').select2({
                 maximumSelectionLength: 1
@@ -821,7 +849,9 @@
             $installmentsTable.row.add(installmentModalData);
             $installmentsTable.draw()
 
-            resetModal();
+            $(this).find('input, select').val('');
+            $(this).find('textarea').val('');
+
             $('#modal-add-installment').modal('hide');
         });
 
@@ -857,9 +887,8 @@
                 expireDate.val(formattedDate.toISOString().split('T')[0]);
             }
 
-
             value.val(rowData[1]);
-            observation.text(rowData[2]);
+            observation.val(rowData[2]);
 
             status.select2('val', statusValues.find((status) => status.description === rowData[3]).id);
 
@@ -876,8 +905,8 @@
                         timeZone: 'UTC'
                     });
                     const hiddenFormattedDate = expireDate.toLocaleDateString('sv', {
-                    timeZone: 'UTC'
-                });
+                        timeZone: 'UTC'
+                    });
                 } else {
                     expireDateFormatted = '--';
                 }
@@ -885,8 +914,6 @@
                 const value = $('#edit-value').val();
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
-
-
 
                 if (selectedRowIndex !== null) {
                     $installmentsTable.cell(selectedRowIndex, 0).data(expireDateFormatted);
@@ -899,7 +926,9 @@
 
                 selectedRowIndex = null;
 
-                resetModal();
+                $(this).find('input, select').val('');
+                $(this).find('textarea').val('');
+
                 $('#modal-edit-installment').modal('hide');
             });
 
