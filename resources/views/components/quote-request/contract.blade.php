@@ -694,7 +694,7 @@
 
         $radioIsFixedValue.on('change', function() {
             const isFixedValue = $(this).val() === "1";
-            $btnAddInstallment.attr('hidden', isFixedValue);
+            $divBtnAddInstallment.attr('hidden', isFixedValue);
             $installmentsTable.clear().draw();
             $inputsForInstallmentEvents =
                 $recurrence
@@ -718,7 +718,7 @@
             }
 
             const currentValue = hasNoEndDate ? null : $(this).data('last-value');
-            $inputEndDate.prop('readonly', hasNoEndDate);
+            $inputEndDate.prop('readonly', hasNoEndDate).val(currentValue);
 
             $installmentsTable.clear().draw();
         });
