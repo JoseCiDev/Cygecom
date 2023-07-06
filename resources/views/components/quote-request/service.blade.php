@@ -25,10 +25,12 @@
                     Quem está responsável por esta contratação?
                 </label>
                 <div class="form-check">
-                    <input name="x" value="1" class="radio-who-wants" type="radio">
-                    <label class="form-check-label" for="services" style="margin-right:15px;">Eu mesmo(a)</label>
-                    <input checked name="x"value="0" class="radio-who-wants" type="radio">
-                    <label class="form-check-label" for="who-wants">Suprimentos</label>
+                    <input name="x" value="1" class="radio-who-wants" type="radio" id="is-contracted-by-area">
+                    <label class="form-check-label" for="is-contracted-by-area" style="margin-right:15px;">
+                        Área solicitante
+                    </label>
+                    <input checked name="x"value="0" class="radio-who-wants" type="radio" id="is-contracted-by-supplies">
+                    <label class="form-check-label" for="is-contracted-by-supplies">Suprimentos</label>
                 </div>
             </div>
         </div>
@@ -251,6 +253,23 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-sm-8 link-util">
+                    <div class="form-group">
+                        <label for="quote_request_files[path]" class="control-label">
+                            Link</label>
+                        <input type="text" placeholder="Ex: Insira uma URL válida"
+                            name="quote_request_files[path]" id="quote_request_files[path]" data-rule-url="true"
+                            class="form-control">
+                    </div>
+                    <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px;">
+                        <p>* Link para informações pertinentes ao serviço solicitado.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
             <hr>
 
             {{-- BLOCO FORNECEDOR --}}
@@ -266,7 +285,7 @@
                                 SOCIAL)</label>
                             <select name="suppliers[0][id]" id="supplier" class='select2-me select-supplier'
                                 data-rule-required="false" style="width:100%;"
-                                data-placeholder="Escolha uma produto">
+                                data-placeholder="Selecione um fornecedor">
                                 <option value=""></option>
                                 @foreach ($suppliers as $supplier)
                                     <option value="{{ $supplier['id'] }}">
@@ -313,19 +332,31 @@
                 </div>
 
                 <div class="row">
-                    {{-- TOTAL --}}
+                    {{-- VALOR TOTAL --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="ammount" class="control-label">Valor total (R$)</label>
-                            <input type="text" id="amount" placeholder="R$0,00 " class="form-control amount">
+                            <label for="amount" class="control-label">Valor total do serviço</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">R$</span>
+                                <input type="number" name="amount" id="amount" placeholder="0.00"
+                                    class="form-control amount" min="0">
+                                @error('unit_price')
+                                    <p><strong>{{ $message }}</strong></p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-2">
+
+                    {{-- CONDIÇÃO DE PAGAMENTO --}}
+                    <div class="col-sm-3">
                         <div class="form-group">
-                            <label for="payday" class="control-label">Data pagamento</label>
-                            <input type="date" name="desired_date" id="payday" data-rule-required="false"
-                                class="form-control payday"
-                                value="{{ isset($quoteRequest) && $quoteRequest->desired_date ? $quoteRequest->desired_date : '' }}">
+                            <label for="payment-method" class="control-label">Condição de pagamento</label>
+                            <select name="payment_method" id="payment-method" class='select2-me payment-method'
+                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
+                                <option value=""></option>
+                                <option value="1">Pagamento antecipado</option>
+                                <option value="2">Pagamento após execução</option>
+                            </select>
                         </div>
                     </div>
 
@@ -335,29 +366,67 @@
                             <div class="form-group">
                                 <label for="payment-method" class="control-label">Forma de pagamento</label>
                                 <select name="payment_method" id="payment-method" class='select2-me payment-method'
-                                    data-rule-required="false" style="width:100%; padding-top:2px;"
-                                    data-placeholder="Escolha uma forma">
+                                    style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                     <option value=""></option>
                                     <option value="1">PIX</option>
+                                    <option value="2">DEPÓSITO BANCÁRIO</option>
                                     <option value="3">BOLETO</option>
-                                    <option value="4">CARTÃO CORPORATIVO</option>
+                                    <option value="4">CARTÃO CRÉDITO</option>
+                                    <option value="5">CARTÃO DÉBITO</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-sm-5">
+                    {{-- Nº PARCELAS --}}
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="payment-info" class="control-label">Dados de pagamento</label>
-                            <textarea name="payment_info" id="payment-info" rows="3"
-                                placeholder="Ex.: Chave pix (CNPJ): 00.000.000/0000-00. Pagamento online." data-rule-required="false"
-                                class="form-control text-area no-resize payment-info">{{ $quoteRequest->description ?? null }}</textarea>
+                            <label for="installments-number" class="control-label">Nº Parcelas</label>
+                            <select name="installments_number" class='select2-me' id="installments-number"
+                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
+                                <option value=""></option>
+                                <option value="1">1x</option>
+                                <option value="2">2x</option>
+                                <option value="3">3x</option>
+                                <option value="4">4x </option>
+                                <option value="5">5x</option>
+                                <option value="6">6x</option>
+                            </select>
                         </div>
-                        <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px;">
-                            <p>
-                                * Este campo precisa conter todas as informações utilizadas para pagamento do
-                                fornecedor.
-                            </p>
+                    </div>
+                </div>
+
+                {{-- TABLE PARCELAS --}}
+                <div class="row" style="display:flex; align-items:center; margin-top:15px; margin-bottom:5px;">
+                    <h4 class="col-sm-6">
+                        <i class="fa fa-dollar"></i>
+                        Parcelas deste serviço
+                    </h4>
+                    <div class="col-sm-6 btn-add-installment" hidden>
+                        <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
+                            data-route="user" rel="tooltip" title="Adicionar Parcela">
+                            + Adicionar parcela
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box">
+                            <div class="box-content nopadding">
+                                <table class="table table-hover table-nomargin table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-sm-2">VENCIMENTO</th>
+                                            <th class="col-sm-2">VALOR</th>
+                                            <th class='col-sm-5 hidden-350'>OBSERVAÇÃO</th>
+                                            <th class='col-sm-2 hidden-1024'>STATUS</th>
+                                            <th class='col-sm-1 hidden-480'>AÇÕES</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -375,6 +444,8 @@
 
         </div>
     </form>
+
+    <x-modal-edit-service-installment :statusValues="$statusValues" />
 
 </x-app>
 
@@ -475,42 +546,35 @@
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
 
-        // muda campos required para serviço já prestado
-        const $inputIsFinished = $('input[name="is_finished"]')
+
         const $selectSupplier = $('.select-supplier');
         const $amount = $('.amount');
-        const $payday = $('.payday');
         const $paymentMethod = $('.payment-method');
         const $paymentInfo = $('.payment-info');
-        const elementsToChangeRequired = [
-            $selectSupplier, $amount, $payday, $paymentMethod, $paymentInfo
-        ];
 
-        $inputIsFinished.on('click', function() {
-            const isFinished = $(this).is(':checked');
-            elementsToChangeRequired.forEach(function(element) {
-                elementLast = element.last();
-                elementLast.data('rule-required', isFinished);
-                elementLast.valid();
-                elementLast.removeClass('has error')
-                if (!isFinished) {
-                    elementLast.closest('.form-group').removeClass('has-error');
-                }
-            });
-        });
-
-        // tem fornecedor? sim / não
-        const $inputHasSupplier = $('input[name="has_supplier"]')
-        const $suppliersBlock = $('.suppliers-block');
-
-        $inputHasSupplier.on('change', function() {
-            const hasSupplier = $(this).val() === "1";
-            $suppliersBlock.attr('hidden', !hasSupplier);
+        // dataTable config - parcelas
+        const $installmentsTable = $('.table-striped').DataTable({
+            paging: false,
+            info: false,
+            searching: false,
+            language: {
+                emptyTable: "",
+                zeroRecords: ""
+            },
+            order: [
+                [4, 'asc']
+            ],
+            createdRow: function(row, data, dataIndex) {
+                const hiddenFormattedDate = $(row).data('hidden-date');
+                $(row).attr('data-hidden-date', hiddenFormattedDate);
+            }
         });
 
         // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
         const $radioIsContractedBySupplies = $('.radio-who-wants');
+        const $suppliersBlock = $('.suppliers-block');
         const $paymentBlock = $('.payment-block');
+        const $linkUtil = $('.link-util');
 
         $radioIsContractedBySupplies.on('change', function() {
             const isContractedBySupplies = $(this).val() === "1";
@@ -523,33 +587,161 @@
 
             $elementsToDisable
                 .find('select')
+                .val('')
                 .prop('disabled', !isContractedBySupplies)
-                .trigger('change.select2')
-                .find('option').val('');
+                .trigger('change.select2');
 
+            // esconde link caso SUPRIMENTOS
+            $linkUtil.prop('hidden', !isContractedBySupplies);
+
+            $installmentsTable.clear().draw();
         }).trigger('change');
 
-        // add product
-        const $productRowTemplate = $(".full-product-line").last()
-        $(document).on('click', '.delete-product', function() {
-            $(this).parent().parent().remove();
-            $(this).parent().parent().parent().remove();
+        const $inputInstallmentsNumber = $('#installments-number');
+
+        const editButton =
+            '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
+
+        function generateInstallments(numberOfInstallments) {
+            const installmentValue = ($amount.val() / numberOfInstallments).toFixed(2);
+
+            const installmentsData = [];
+
+            for (let i = 1; i <= numberOfInstallments; i++) {
+                const installmentDate = new Date();
+                const formattedDate = installmentDate.toLocaleDateString('pt-BR');
+                const hiddenFormattedDate = installmentDate.toISOString();
+
+                const installmentData = [
+                    "--",
+                    installmentValue,
+                    "Parcela " + i + "/" + numberOfInstallments,
+                    "PENDENTE",
+                    editButton,
+                    installmentDate
+                ];
+
+                installmentsData.push(installmentData);
+            }
+
+            for (const installmentData of installmentsData) {
+                const rowNode = $installmentsTable.row.add(installmentData).node();
+                $(rowNode).children('td').eq(0).attr('data-hidden-date', installmentData[5]);
+            }
+
+            $installmentsTable.draw();
+        }
+
+        let selectedRowIndex = null;
+
+        $('.table-striped tbody').on('click', 'tr', function(event) {
+            event.preventDefault();
+
+            if ($(event.target).closest('.btn-edit-installment').length) {
+                const rowData = $installmentsTable.row(this).data();
+                selectedRowIndex = $installmentsTable.row(this).index();
+                openModalForEdit(rowData);
+            }
         });
 
-        $(document).on('click', ".add-product", function() {
-            const $containerCnpj = $(this).parentsUntil("[data-cnpj]").last();
-            const $products = $containerCnpj.find("[data-product]")
-            const $lastProduct = $products.last();
-            const $firstProduct = $products.first();
-            let productCount = $lastProduct.data("product") + 1;
-            const $newProductRow = $productRowTemplate.clone();
-            $newProductRow.data('product', productCount);
-            $newProductRow.find(":text").val("");
-            $newProductRow.find('.select2-container').remove();
-            $newProductRow.find('.select2-me').attr('id', 's2-' + productCount).select2();
-            $newProductRow.find('h4').text('Produto ' + (productCount));
-            $lastProduct.after($newProductRow);
-        });
+        const statusValues = @json($statusValues);
 
+        // modal edit installment
+        function openModalForEdit(rowData) {
+            $('#modal-edit-service-installment').modal('show');
+
+            const expireDate = $('#edit-expire-date');
+            const value = $('#edit-value');
+            const status = $('#edit-status');
+            const observation = $('#edit-observation');
+
+            const disabled = selectedRowIndex !== 0;
+            value.prop({disabled});
+
+            if (rowData[0] !== "--") {
+                const formattedDate = new Date(rowData[0].split('/').reverse().join('-'));
+                expireDate.val(formattedDate.toISOString().split('T')[0]);
+            }
+
+            value.val(rowData[1]);
+            observation.val(rowData[2]);
+
+            status.select2('val', statusValues.find((status) => status.description === rowData[3]).id);
+
+            $('#form-modal-edit-service-installment').one('submit', function(event) {
+                event.preventDefault();
+
+                const expireDateInput = $('#edit-expire-date').val();
+                let expireDateFormatted;
+
+                if (expireDateInput !== '') {
+                    const expireDate = new Date(expireDateInput);
+                    expireDateFormatted = expireDate.toLocaleDateString('pt-BR', {
+                        timeZone: 'UTC'
+                    });
+                    const hiddenFormattedDate = expireDate.toLocaleDateString('sv', {
+                        timeZone: 'UTC'
+                    });
+                } else {
+                    expireDateFormatted = '--';
+                }
+
+                const value = $('#edit-value').val();
+                const status = $('#edit-status').find(':selected').text();
+                const observation = $('#edit-observation').val();
+
+                // insere valores editados na tabela
+                if (selectedRowIndex !== null) {
+                    $installmentsTable.cell(selectedRowIndex, 0).data(expireDateFormatted);
+                    $installmentsTable.cell(selectedRowIndex, 1).data(value);
+                    $installmentsTable.cell(selectedRowIndex, 2).data(observation);
+                    $installmentsTable.cell(selectedRowIndex, 3).data(status);
+                    $installmentsTable.cell(selectedRowIndex, 4).data(editButton);
+                    $installmentsTable.draw();
+
+                    if (selectedRowIndex === 0) {
+                        const amount = parseFloat($amount.val());
+                        const rows = $installmentsTable.rows().data();
+                        const selectedRowData = rows[selectedRowIndex];
+                        const selectedValue = parseFloat(selectedRowData[1]);
+
+                        // Recalcula o valor das parcelas restantes
+                        const recalculatedValue = (amount - selectedValue) / (rows.length - 1);
+
+                        rows.each(function(rowData, index) {
+                            if (index !== selectedRowIndex) {
+                                $installmentsTable.cell(index, 1).data(recalculatedValue
+                                    .toFixed(2));
+                            }
+                        });
+
+                        $installmentsTable.draw();
+                    }
+                }
+
+                selectedRowIndex = null;
+
+                // limpa valores dos inputs (será repopulado na abertura do modal)
+                $(this).find('input, select').val('');
+                $(this).find('textarea').val('');
+
+                $('#modal-edit-service-installment').modal('hide');
+            });
+        }
+
+        // gerar parcelas a partir do change de varios inputs
+        $amount.add($inputInstallmentsNumber).on('change', function() {
+            const changeableInputs = [
+                $amount.val(),
+                $inputInstallmentsNumber.val()
+            ];
+
+            if (!changeableInputs.every(Boolean)) {
+                return;
+            }
+            const numberOfInstallments = $inputInstallmentsNumber.val();
+            $installmentsTable.clear();
+            generateInstallments(numberOfInstallments);
+        });
     });
 </script>
