@@ -32,7 +32,7 @@ class PurchaseRequest extends Model
 
     public function purchaseRequestProduct()
     {
-        return $this->belongsTo(PurchaseRequestProduct::class, 'purchase_request_id');
+        return $this->hasMany(PurchaseRequestProduct::class);
     }
 
     public function user()
