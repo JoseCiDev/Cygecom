@@ -164,6 +164,20 @@
                             @endif
                         </ul>
                     </li>
+                    @if (auth()->user()->profile->is_admin || auth()->user()->profile->name === 'suprimentosNutrition' || auth()->user()->profile->name === 'suprimentosPharma')
+                        <li>
+                            <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+                                <span>SUPRIMENTOS</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ route('supplies.index') }}">Introdução</a></li>
+                                <li><a href="{{ route('supplies.product') }}">Produtos</a></li>
+                                <li><a href="{{ route('supplies.service') }}">Serviços</a></li>
+                                <li><a href="{{ route('supplies.contract') }}">Contratos</a></li>
+                            </ul>
+                        </li>
+                    @endif
                 </ul>
                 <x-navbar.user>
                     <x-navbar.notification />
@@ -171,19 +185,16 @@
             </div>
         </div>
 
-        <div id="main-content-container">
-            <div id="main">
-                <div class="container">
-                    <div class="page-header">
-                        {{ $title }}
-                    </div>
-                    <x-breadcrumb />
-                    <x-alert />
-                    {{ $slot }}
+        <div id="main">
+            <div class="container-fluid">
+                <div class="page-header">
+                    {{ $title }}
                 </div>
+                <x-breadcrumb />
+                <x-alert />
+                {{ $slot }}
             </div>
         </div>
-    </div>
     </div>
 
     <script>
