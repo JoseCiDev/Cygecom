@@ -7,6 +7,13 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+    Route::middleware(['profile:suprimentosNutrition'])->group(function () {
+        Route::get('/supplies/index', [App\Http\Controllers\SuppliesController::class, 'index'])->name('supplies.index');
+        Route::get('/supplies/service', [App\Http\Controllers\SuppliesController::class, 'service'])->name('supplies.service');
+        Route::get('/supplies/product', [App\Http\Controllers\SuppliesController::class, 'product'])->name('supplies.product');
+        Route::get('/supplies/contract', [App\Http\Controllers\SuppliesController::class, 'contract'])->name('supplies.contract');
+    });
+
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'showProfile'])->name('profile');
 
     Route::post('/users/{id}', [App\Http\Controllers\Auth\UserController::class, 'userUpdate'])->name('userUpdate');
@@ -30,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/request/delete/{id}', [App\Http\Controllers\PurchaseRequestController::class, 'delete'])->name('request.delete');
 
-    Route::middleware(['isAdmin'])->group(function () {
+    Route::middleware(['profile:admin'])->group(function () {
         Route::get('/user/register', [App\Http\Controllers\Auth\UserController::class, 'showRegistrationForm'])->name('register');
         Route::post('/user/register', [App\Http\Controllers\Auth\UserController::class, 'register']);
         Route::post('/user/delete/{id}', [App\Http\Controllers\Auth\UserController::class, 'delete']);
