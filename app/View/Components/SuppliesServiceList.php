@@ -23,6 +23,6 @@ class SuppliesServiceList extends Component
             }
         });
 
-        return view('components.supplies.supplies-service-list', ['serviceList' => $serviceList]);
+        return view('components.supplies.service-content.supplies-service-list', ['serviceList' => $serviceList]);
     }
 }

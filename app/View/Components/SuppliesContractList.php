@@ -23,6 +23,6 @@ class SuppliesContractList extends Component
             }
         });
 
-        return view('components.supplies.supplies-contract-list', ['contractList' => $contractList]);
+        return view('components.supplies.contract-content.supplies-contract-list', ['contractList' => $contractList]);
     }
 }

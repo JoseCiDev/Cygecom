@@ -23,7 +23,6 @@
                             <th class="col-sm-1">Tipo de quitação</th>
                             <th class="col-sm-1">Progresso</th>
                             <th class="col-sm-1">Contratação por</th>
-                            <th class="col-sm-3">Motivo</th>
                             <th class="col-sm-1">Data desejada</th>
                             <th class="col-sm-1">Atualizado em</th>
                             <th class="col-sm-1">Ações</th>
@@ -38,10 +37,8 @@
                                 <td>{{$service->service->first()->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
                                 <td>{{$service->service->first()->already_provided ? 'Executado' : 'Não executado'}}</td>
                                 <td>{{$service->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
-                                <td>{{$service->reason}}</td>
                                 <td>{{ \Carbon\Carbon::parse($service->desired_date)->format('d/m/Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($service->updated_at)->format('d/m/Y h:m:s') }}</td>
-
                                 {{-- BTN AÇÕES --}}
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button 
@@ -50,12 +47,19 @@
                                         data-request="{{json_encode($service)}}"
                                         rel="tooltip"
                                         title="Analisar"
-                                        class="btn btn-primary btn-analisar"
+                                        class="btn btn-primary"
                                         data-toggle="modal"
                                         data-target="#modal-supplies"
                                     >
                                         <i class="fa fa-search"></i> Analisar
                                     </button>
+                                    <a href="{{route('supplies.service.detail', ['id' => $service->id])}}"
+                                        class="btn btn-link"
+                                        rel="tooltip"
+                                        title="Abrir"
+                                    >
+                                        <i class="fa fa-external-link"></i> Abrir
+                                    </a>
                                     <a href="{{route('request.edit', ['type'=> $service->type, 'id' => $service->id])}}"
                                         class="btn"
                                         rel="tooltip"
@@ -79,7 +83,7 @@
                                         data-id="{{$service->id}}"
                                         rel="tooltip"
                                         title="Excluir"
-                                        class="btn"
+                                        class="btn btn-danger"
                                         data-toggle="modal"
                                         data-target="#modal"
                                     >

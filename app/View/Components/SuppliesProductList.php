@@ -23,6 +23,6 @@ class SuppliesProductList extends Component
             }
         });
 
-        return view('components.supplies.supplies-product-list', ['productList' => $productList]);
+        return view('components.supplies.product-content.supplies-product-list', ['productList' => $productList]);
     }
 }
