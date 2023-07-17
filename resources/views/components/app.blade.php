@@ -32,10 +32,11 @@
     <!-- Color CSS -->
     <link rel="stylesheet" href="{{ asset('css/themes.css') }}">
 
-    <link rel="{{ asset('apple-touch-icon-precomposed') }}"
-        href="{{ asset('img/apple-touch-icon-precomposed.png') }}" />
+    <link rel="{{ asset('apple-touch-icon-precomposed') }}" href="{{ asset('img/apple-touch-icon-precomposed.png') }}" />
 
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/supplies.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/modal-supplies.css') }}">
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>

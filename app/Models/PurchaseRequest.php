@@ -17,12 +17,12 @@ class PurchaseRequest extends Model
 
     public function service()
     {
-        return $this->hasMany(Service::class);
+        return $this->hasOne(Service::class);
     }
 
     public function contract()
     {
-        return $this->hasMany(Contract::class);
+        return $this->hasOne(Contract::class);
     }
 
     public function costCenterApportionment()
