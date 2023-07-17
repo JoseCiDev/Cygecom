@@ -34,6 +34,11 @@ class SuppliesController extends Controller
         $serviceComexQtd = $typesGrouped->get('Serviço', collect())->where('is_comex', true)->count();
         $productComexQtd = $typesGrouped->get('Produto', collect())->where('is_comex', true)->count();
 
+        $today = \Carbon\Carbon::today()->format('Y-m-d');
+        $contractDesiredTodayQtd = $typesGrouped->get('Contrato', collect())->where('desired_date', $today)->count();
+        $serviceDesiredTodayQtd = $typesGrouped->get('Serviço', collect())->where('desired_date', $today)->count();
+        $productDesiredTodayQtd = $typesGrouped->get('Produto', collect())->where('desired_date', $today)->count();
+
         $params = [
             'purchaseRequests' => $purchaseRequests,
             'contractQtd' => $contractQtd,
@@ -44,7 +49,10 @@ class SuppliesController extends Controller
             'productAcquiredBySuppliesQtd' => $productAcquiredBySuppliesQtd,
             'contractComexQtd' => $contractComexQtd,
             'serviceComexQtd' => $serviceComexQtd,
-            'productComexQtd' => $productComexQtd
+            'productComexQtd' => $productComexQtd,
+            'contractDesiredTodayQtd' => $contractDesiredTodayQtd,
+            'serviceDesiredTodayQtd' => $serviceDesiredTodayQtd,
+            'productDesiredTodayQtd' => $productDesiredTodayQtd,
         ];
         return view('components.supplies.index', $params);
     }
