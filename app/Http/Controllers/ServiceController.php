@@ -97,4 +97,17 @@ class ServiceController extends Controller
 
         return redirect()->route($route, ['type' => $purchaseRequest->type, 'id' => $id]);
     }
+
+    public function serviceDetails(int $id)
+    {
+        try {
+            $service = $this->purchaseRequestService->purchaseRequestById($id);
+            if (!$service) {
+                return throw new Exception('Não foi possível acessar essa solicitação.');
+            }
+            return view('components.supplies.service-content.service-details', ['service' => $service]);
+        } catch (Exception $error) {
+            return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
+        }
+    }
 }
