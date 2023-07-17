@@ -5,9 +5,9 @@
                 <h4 class="modal-title" id="modal-label"><strong class="name"></strong></h4>
             </div>
             <div class="modal-body">
-                <p>Aqui consta informações detalhadas da solicitação</p>
+                <h3>Aqui consta informações detalhadas da solicitação:</h3>
                 <div class="modal-body-dynamic">
-                    <ul class="modal-body-dynamic-list"></ul>
+                    <div class="modal-body-dynamic-list"></div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -29,11 +29,70 @@
 
         modal.find('.name').text(name);
 
+        const liElementInterface = entry => {
+            const dateFormatter = (date, execeptionMessage) => date ? new Date(date).toLocaleDateString('pt-br') : (execeptionMessage || '---');
+            const booleanFormatter = (value, truthyMessage, falsyMessage) => value ? (truthyMessage || 'Verdadeiro' ) : (falsyMessage || 'Falso');
+
+            const mappedEntries = {
+                id: {label: 'Solicitação nº'},
+                status: {label: 'Status'},
+                type: {label: 'Tipo de solicitação' },
+                description: {label: 'Descrição' },
+                local_description: {label: 'Local' },
+                reason: {label: 'Motivo' },
+                observation: {label: 'Observação' },
+
+                desired_date: {
+                    label: 'Data desejada',
+                    content: dateFormatter(entry[1]) 
+                },
+                created_at: {
+                    label: 'Criado em',
+                    content: dateFormatter(entry[1]) 
+                },
+                updated_at: {
+                    label: 'Atualizado em',
+                    content: dateFormatter(entry[1]) 
+                },
+                is_comex: {
+                    label: 'É comex', 
+                    content: booleanFormatter(entry[1], 'Sim', 'Não') 
+                },
+                is_supplies_contract: {
+                    label: 'É contratação por suprimentos', 
+                    content: booleanFormatter(entry[1], 'Sim', 'Não')
+                },
+                user: {
+                    label: 'Usuário criador',
+                    content: `<ul>
+                                <li>Nome: ${entry[1]?.person?.name}</li>
+                                <li>E-mail: ${entry[1]?.email}</li>
+                            </ul>`
+                 },
+                updated_by_user: {
+                    label: 'Usuário atualizador',
+                    content: entry[1]?.email
+                },
+                purchase_request_file: {
+                    label: 'Link',
+                    content: `<a href="${entry[1] ? entry[1][0]?.path : '#'}" target="_blank">Ir para o link</a>`
+                },
+            }
+
+            const result = mappedEntries[entry[0]]
+            if(result) {
+                result.content ??= entry[1]
+                return result
+            }
+        }
+
         const request = button.data('request');
         const response = Object.entries(request)
-        response.forEach(element => {
-            list.append(`<li>${element[0]}: ${element[1]}</li>`)
+        response.forEach((element) => {
+            const formattedElement = liElementInterface(element)
+            if(formattedElement) {
+                list.append(`<div class="modal-body-dynamic-list-item">${formattedElement.label}: ${formattedElement.content ??= '---'}</div>`)
+            }
         })
-
     });
 </script>
