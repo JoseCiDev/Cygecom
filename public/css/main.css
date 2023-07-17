@@ -20,3 +20,7 @@ input[type="number"] {
 .no-resize {
     resize: none;
 }
+
+.container-fluid {
+    padding: 0 50px;
+}
