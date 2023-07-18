@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
-use App\Models\CostCenter;
+use App\Models\{Company, CostCenter};
 use App\Providers\{PurchaseRequestService, ValidatorService};
 use Exception;
 use Illuminate\Http\{RedirectResponse, Request};
@@ -16,25 +15,26 @@ class ContractController extends Controller
 
     public function __construct(ValidatorService $validatorService, PurchaseRequestService $purchaseRequestService)
     {
-        $this->validatorService    = $validatorService;
+        $this->validatorService       = $validatorService;
         $this->purchaseRequestService = $purchaseRequestService;
     }
 
     public function registerContract(Request $request): RedirectResponse
     {
-        $route   = 'requests';
+        $route      = 'requests';
         $routeParam = [];
-        $data    = $request->all();
+        $data       = $request->all();
 
         $validator = $this->validatorService->purchaseRequest($data);
+
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
         }
 
         try {
             $purchaseRequest = $this->purchaseRequestService->registerContractRequest($data);
-            $route = 'request.edit';
-            $routeParam = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
+            $route           = 'request.edit';
+            $routeParam      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
         }
@@ -48,8 +48,13 @@ class ContractController extends Controller
     {
         $companies   = Company::all();
         $costCenters = CostCenter::all();
-        $params      = ["companies" => $companies, "costCenters" => $costCenters];
-        $isAdmin     = auth()->user()->profile->is_admin;
+
+        $params = [
+            "companies"   => $companies,
+            "costCenters" => $costCenters,
+        ];
+
+        $isAdmin = auth()->user()->profile->is_admin;
 
         try {
             if ($purchaseRequestIdToCopy) {
@@ -57,11 +62,12 @@ class ContractController extends Controller
                     $isAuthorized = auth()->user()->purchaseRequest->where('id', $purchaseRequestIdToCopy)->whereNull('deleted_at')->first();
 
                     if (!$isAuthorized) {
-                        return throw new Exception('Acesso não autorizado para essa solicitação de contrato.');
+                        throw new Exception('Acesso não autorizado para essa solicitação de contrato.');
                     }
                 }
             }
             $params['purchaseRequestIdToCopy'] = $purchaseRequestIdToCopy;
+
             return view('components.purchase-request.contract', $params);
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
@@ -70,23 +76,23 @@ class ContractController extends Controller
 
     public function updateContract(Request $request, int $id): RedirectResponse
     {
-        $route      = 'request.edit';
-        $data       = $request->all();
-        $validator  = $this->validatorService->purchaseRequest($data);
+        $route     = 'request.edit';
+        $data      = $request->all();
+        $validator = $this->validatorService->purchaseRequest($data);
 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
         }
 
         try {
-            $isAdmin      = auth()->user()->profile->is_admin;
+            $isAdmin         = auth()->user()->profile->is_admin;
             $purchaseRequest = auth()->user()->purchaseRequest->find($id);
-            $isAuthorized = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
+            $isAuthorized    = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
 
             if ($isAuthorized) {
                 $this->purchaseRequestService->updateContractRequest($id, $data);
             } else {
-                return throw new Exception('Não foi possível acessar essa solicitação.');
+                throw new Exception('Não foi possível acessar essa solicitação.');
             }
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);

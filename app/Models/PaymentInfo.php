@@ -30,9 +30,7 @@ class PaymentInfo extends Model
     }
 
     protected $fillable = [
-        'payment_type',
-        'description',
-        'service_id',
+        'payment_method',
         'updated_by',
         'deleted_by',
     ];

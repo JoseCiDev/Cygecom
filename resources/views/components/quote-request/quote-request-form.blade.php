@@ -27,7 +27,7 @@
 <div class="box-content">
     <form class="form-validate" id="request-form" method="POST"
         action="@if (isset($quoteRequest) && !$isCopy) {{ route('request.update', ['id' => $id]) }}
-                    @else {{ route('request.register') }} @endif">
+                    @else {{ route('requests.new') }} @endif">
         @csrf
 
         <div class="row center-block" style="padding-bottom: 10px;">

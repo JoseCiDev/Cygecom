@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\{Contract, ContractInstallment, CostCenterApportionment, PurchaseRequest, PurchaseRequestFile, PurchaseRequestProduct, Service, PaymentInfo};
+use App\Models\{Contract, ContractInstallment, CostCenterApportionment, PaymentInfo, PurchaseRequest, PurchaseRequestFile, PurchaseRequestProduct, Service};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -17,9 +17,9 @@ class PurchaseRequestService extends ServiceProvider
         return PurchaseRequest::with([
             'user.person.costCenter', 'purchaseRequestFile',
             'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
-            'service.paymentInfo',
-            'purchaseRequestProduct.category',
-            'contract.installments'
+            'service', 'service.paymentInfo',
+            'purchaseRequestProduct', 'purchaseRequestProduct.category',
+            'contract', 'contract.installments',
         ])->whereNull('deleted_at')->get();
     }
 
@@ -33,9 +33,10 @@ class PurchaseRequestService extends ServiceProvider
         return PurchaseRequest::with([
             'user.person.costCenter', 'purchaseRequestFile',
             'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
-            'service.paymentInfo',
-            'purchaseRequestProduct.category',
-            'contract.installments'
+            'service', 'service.paymentInfo',
+            'purchaseRequestProduct', 'purchaseRequestProduct.category',
+            'contract', 'contract.installments',
+
         ])->whereNull('deleted_at')->where('user_id', $id)->get();
     }
 
@@ -47,14 +48,14 @@ class PurchaseRequestService extends ServiceProvider
         return PurchaseRequest::with([
             'user.person.costCenter', 'purchaseRequestFile',
             'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
-            'service.paymentInfo',
-            'purchaseRequestProduct.category',
-            'contract.installments'
+            'service', 'service.paymentInfo',
+            'purchaseRequestProduct', 'purchaseRequestProduct.category',
+            'contract', 'contract.installments',
         ])->whereNull('deleted_at')->where('id', $id)->first();
     }
 
     /**
-     * @abstract Cria apenas entidade solicitação com relação do rateio e arquivo/link. 
+     * @abstract Cria apenas entidade solicitação com relação do rateio e arquivo/link.
      * Deve ser chamada pelos métodos específicios de serviço, contrato ou produtos.
      */
     public function registerPurchaseRequest(array $data)
@@ -72,7 +73,7 @@ class PurchaseRequestService extends ServiceProvider
 
     /**
      * @return mixed Retorna solicitação criada.
-     * @abstract Cria solicitação de serviço. 
+     * @abstract Cria solicitação de serviço.
      * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveService para salvar serviço.
      */
     public function registerServiceRequest(array $data)
@@ -80,13 +81,14 @@ class PurchaseRequestService extends ServiceProvider
         return DB::transaction(function () use ($data) {
             $purchaseRequest = $this->registerPurchaseRequest($data);
             $this->saveService($purchaseRequest->id, $data);
+
             return $purchaseRequest;
         });
     }
 
     /**
      * @return mixed Retorna solicitação criada.
-     * @abstract Cria solicitação de contrato. 
+     * @abstract Cria solicitação de contrato.
      * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveContract para salvar contrato.
      */
     public function registerContractRequest(array $data)
@@ -94,13 +96,14 @@ class PurchaseRequestService extends ServiceProvider
         return DB::transaction(function () use ($data) {
             $purchaseRequest = $this->registerPurchaseRequest($data);
             $this->saveContract($purchaseRequest->id, $data);
+
             return $purchaseRequest;
         });
     }
 
     /**
      * @return mixed Retorna solicitação criada.
-     * @abstract Cria solicitação de produto(s). 
+     * @abstract Cria solicitação de produto(s).
      * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveProduct para salvar produto(s).
      */
     public function registerProductRequest(array $data)
@@ -108,12 +111,13 @@ class PurchaseRequestService extends ServiceProvider
         return DB::transaction(function () use ($data) {
             $purchaseRequest = $this->registerPurchaseRequest($data);
             $this->saveProducts($purchaseRequest->id, $data);
+
             return $purchaseRequest;
         });
     }
 
     /**
-     * @abstract Atualiza apenas entidade solicitação com relação do rateio e arquivo/link. 
+     * @abstract Atualiza apenas entidade solicitação com relação do rateio e arquivo/link.
      * Deve ser chamada pelos métodos específicios de serviço, contrato ou produtos.
      */
     public function updatePurchaseRequest(int $id, array $data)
@@ -132,7 +136,7 @@ class PurchaseRequestService extends ServiceProvider
     }
 
     /**
-     * @abstract Atualiza solicitação de serviço. 
+     * @abstract Atualiza solicitação de serviço.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveService para atualizar serviço.
      */
     public function updateServiceRequest(int $id, array $data): void
@@ -144,7 +148,7 @@ class PurchaseRequestService extends ServiceProvider
     }
 
     /**
-     * @abstract Atualiza solicitação de produto(s). 
+     * @abstract Atualiza solicitação de produto(s).
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveProduct para atualizar produto(s).
      */
     public function updateProductRequest(int $id, array $data)
@@ -156,7 +160,7 @@ class PurchaseRequestService extends ServiceProvider
     }
 
     /**
-     * @abstract Atualiza solicitação de contrato. 
+     * @abstract Atualiza solicitação de contrato.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveContract para atualizar contrato.
      */
     public function updateContractRequest(int $id, array $data)
@@ -189,8 +193,8 @@ class PurchaseRequestService extends ServiceProvider
 
         foreach ($apportionmentData as $apportionment) {
             $apportionment['purchase_request_id'] = $purchaseRequestId;
-            $apportionment['updated_by'] = $userId;
-            $existingRecord = CostCenterApportionment::where(['purchase_request_id' => $purchaseRequestId, 'cost_center_id' => $apportionment['cost_center_id']])->first();
+            $apportionment['updated_by']          = $userId;
+            $existingRecord                       = CostCenterApportionment::where(['purchase_request_id' => $purchaseRequestId, 'cost_center_id' => $apportionment['cost_center_id']])->first();
 
             if ($existingRecord) {
                 $existingRecord->update($apportionment);
@@ -204,22 +208,23 @@ class PurchaseRequestService extends ServiceProvider
     }
 
     /**
-     * @abstract Responsável por criar ou atualizar purchaseRequestFile. 
+     * @abstract Responsável por criar ou atualizar purchaseRequestFile.
      * Recomendado executar com o método específico registerProductRequest ou updateProductRequest
      */
     private function savePurchaseRequestFile(int $purchaseRequestId, array $data): void
     {
         $purchaseRequestFile = $data['purchase_request_files'];
+
         if (!$purchaseRequestFile['path']) {
             return;
         }
         $purchaseRequestFile['purchase_request_id'] = $purchaseRequestId;
-        $purchaseRequestFile['updated_by'] = auth()->user()->id;
+        $purchaseRequestFile['updated_by']          = auth()->user()->id;
         PurchaseRequestFile::updateOrCreate(['purchase_request_id' => $purchaseRequestId], $purchaseRequestFile);
     }
 
     /**
-     * @abstract Responsável por criar ou atualizar service. 
+     * @abstract Responsável por criar ou atualizar service.
      * Recomendado executar com o método específico registerServiceRequest ou updateServiceRequest
      */
     private function saveService(int $purchaseRequestId, array $data): void
@@ -228,20 +233,20 @@ class PurchaseRequestService extends ServiceProvider
             return;
         }
 
-        $service = $data['service'];
+        $service     = $data['service'];
         $paymentInfo = $service['payment_info'];
 
         $service['purchase_request_id'] = $purchaseRequestId;
-        $service['updated_by'] = auth()->user()->id;
+        $service['updated_by']          = auth()->user()->id;
 
-        $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfo['id']], $paymentInfo);
+        $paymentInfoResponse        = PaymentInfo::updateOrCreate(['id' => $paymentInfo['id']], $paymentInfo);
         $service['payment_info_id'] = $paymentInfoResponse->id;
 
         Service::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $service['supplier_id']], $service);
     }
 
     /**
-     * @abstract Responsável por criar ou atualizar products. 
+     * @abstract Responsável por criar ou atualizar products.
      * Recomendado executar com o método específico registerProductRequest ou updateProductRequest
      */
     private function saveProducts(int $purchaseRequestId, array $data): void
@@ -254,10 +259,10 @@ class PurchaseRequestService extends ServiceProvider
 
         foreach ($suppliers as $supplier) {
             $supplierId = $supplier['supplier_id'];
-            $products = $supplier['products'];
+            $products   = $supplier['products'];
 
             foreach ($products as $product) {
-                $product['supplier_id'] = $supplierId;
+                $product['supplier_id']         = $supplierId;
                 $product['purchase_request_id'] = $purchaseRequestId;
                 PurchaseRequestProduct::updateOrCreate(['id' => $product['id']], $product);
             }
@@ -265,7 +270,7 @@ class PurchaseRequestService extends ServiceProvider
     }
 
     /**
-     * @abstract Responsável por criar ou atualizar contrato. 
+     * @abstract Responsável por criar ou atualizar contrato.
      * Recomendado executar com o método específico registerContractRequest ou updateContractRequest
      */
     private function saveContract(int $purchaseRequestId, array $data): void
@@ -274,13 +279,13 @@ class PurchaseRequestService extends ServiceProvider
             return;
         }
 
-        $contractData = $data['contract'];
+        $contractData              = $data['contract'];
         $contractsInstallmentsData = $contractData['contract_installments'];
-        $paymentInfoData = $contractData['payment_info'];
-        $supplierId = $contractData['supplier_id'];
+        $paymentInfoData           = $contractData['payment_info'];
+        $supplierId                = $contractData['supplier_id'];
 
         if (count($paymentInfoData) > 0) {
-            $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
+            $paymentInfoResponse             = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
             $contractData['payment_info_id'] = $paymentInfoResponse->id;
         }
 

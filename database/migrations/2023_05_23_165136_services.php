@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
-return new class() extends Migration
-{
+return new class () extends Migration {
     public function up(): void
     {
         Schema::create('services', function (Blueprint $table) {
@@ -30,7 +29,7 @@ return new class() extends Migration
             $table->unsignedInteger('purchase_request_id');
             $table->foreign('purchase_request_id')->references('id')->on('purchase_requests');
 
-            $table->unsignedInteger('supplier_id');
+            $table->unsignedInteger('supplier_id')->nullable();
             $table->foreign('supplier_id')->references('id')->on('suppliers');
 
             $table->unsignedInteger('payment_info_id')->nullable();
