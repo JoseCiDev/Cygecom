@@ -14,27 +14,26 @@ return new class() extends Migration
             $table->string('cpf_cnpj', 20)->unique();
             $table->enum('entity_type', ['PF', 'PJ'])->default('PJ');
             $table->string('supplier_indication')->default('M'); // M: Matéria prima; S: Serviço; A: Ambos
-            $table->string('market_type')->default('nacional'); // nacional; exterior; prospect(prospecção)
             $table->enum('qualification', ['em_analise', 'qualificado', 'nao_qualificado'])->default('em_analise');
 
-            $table->unsignedInteger('address_id')->unique();
-            $table->foreign('address_id')->references('id')->on('addresses');
-
-            $table->unsignedInteger('phone_id')->unique();
-            $table->foreign('phone_id')->references('id')->on('phones');
-
+            $table->string('market_type')->default('nacional')->nullable(); // nacional; exterior; prospect(prospecção)
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->string('state_registration')->nullable();
             $table->string('representative')->nullable();
             $table->string('email')->nullable();
+            $table->string('supplier_type_callisto')->nullable();
+            $table->string('payment_type_callisto')->nullable();
+
+            $table->unsignedInteger('address_id')->unique()->nullable();
+            $table->foreign('address_id')->references('id')->on('addresses');
+
+            $table->unsignedInteger('phone_id')->unique()->nullable();
+            $table->foreign('phone_id')->references('id')->on('phones');
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
             $table->dateTime('deleted_at')->nullable();
-
-            $table->string('supplier_type_callisto')->nullable();
-            $table->string('payment_type_callisto')->nullable();
         });
     }
 

@@ -1,74 +1,62 @@
-@php
-    $issetPurchaseRequest = isset($purchaseRequest);
-    $purchaseRequest ??= null;
-    $contractInstallments = $purchaseRequest?->contract[0]?->installments;
-@endphp
+<x-app>
 
-<style>
-    #contract-title {
-        border: none;
-    }
+    <x-slot name="title">
+        <h1>Solicitar Novo Contrato</h1>
+    </x-slot>
 
-    #contract-title::placeholder {
-        font-size: 16px;
-    }
+    <style>
+        [contenteditable] {
+            outline: 0px solid transparent;
+        }
 
-    #contract-title {
-        font-size: 20px;
-        padding-left: 0px;
-    }
+        #contract-title {
+            border: none;
+        }
 
-    .cost-center-container {
-        margin-bottom: 10px;
-    }
+        #contract-title::placeholder {
+            font-size: 16px;
+        }
 
-    h4 {
-        font-size: 20px;
-    }
-</style>
+        #contract-title {
+            font-size: 20px;
+            padding-left: 0px;
+        }
 
-<div class="row">
+        .cost-center-container {
+            margin-bottom: 10px;
+        }
 
-    <div class="col-sm-6">
-        <h2>
-            {{ isset($purchaseRequest) ? 'Editar solicitação' : 'Nova solicitação' }}
-        </h2>
-    </div>
-
-    @if (isset($purchaseRequest))
-        <div class="col-sm-6 pull-right">
-            <x-modalDelete />
-            <button data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - ID ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip" title="Excluir"
-                class="btn btn-danger pull-right" style="margin-right: 15px">
-                Excluir solicitação
-            </button>
-        </div>
-    @endif
-
-</div>
-
-<hr style="margin-top:5px; margin-bottom:30px;">
-
-<div class="box-content">
+        h4 {
+            font-size: 20px;
+        }
+    </style>
 
     <form class="form-validate" id="request-form" method="POST"
-        action="@if (isset($purchaseRequest) && !$isCopy) {{ route('request.contract.update', ['type' => $purchaseRequest->type, 'id' => $id]) }}
-                @else {{ route('request.contract.register') }} @endif">
-
+        action="@if (isset($quoteRequest) && !$isCopy) {{ route('request.update', ['id' => $id]) }}
+                    @else {{ route('requests.new') }} @endif">
         @csrf
 
-        <input type="hidden" name="type" value="contract">
-
-        {{-- NOME CONTRATO --}}
-        <div class="row contract-title-container" style="margin-bottom:5px; margin-top:18px;">
+        <div class="row contract-title-container" style="margin-bottom:10px; margin-top:18px;">
             <div class="col-sm-8 contract-title">
                 <div class="form-group">
                     <label for="contract-title" class="control-label">Nome do contrato: </label>
-                    <input type="text" id="contract-title" name="contract[name]"
+                    <input type="text" id="contract-title" name="contract_title"
                         placeholder="Digite aqui um nome para este contrato..." class="form-control"
-                        data-rule-required="true" minlength="15"
-                        value="@if (isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->name) {{ $purchaseRequest->contract[0]->name }} @endif">
+                        data-rule-required="true" minlength="15">
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom:10px; margin-top:5px;">
+            <div class="col-sm-4">
+                <label for="form-check" class="control-label" style="padding-right:10px;">
+                    Quem está responsável por esta contratação?
+                </label>
+                <div class="form-check">
+                    <input name="x" value="1" class="radio-who-wants" type="radio">
+                    <label class="form-check-label" for="services" style="margin-right:15px;">Área solicitante</label>
+                    <input checked name="x"value="0" class="radio-who-wants" type="radio">
+                    <label class="form-check-label" for="who-wants">Suprimentos</label>
                 </div>
             </div>
         </div>
@@ -78,15 +66,15 @@
         </div>
 
         {{-- CENTRO DE CUSTOS --}}
-        @if (isset($purchaseRequest))
-            @foreach ($purchaseRequest->costCenterApportionment as $index => $apportionment)
+        @if (isset($quoteRequest))
+            @foreach ($quoteRequest->costCenterApportionment as $index => $apportionment)
                 <div class="row cost-center-container">
                     <div class="col-sm-6">
                         <label style="display:block;" for="textfield" class="control-label">Centro de custo da
                             despesa</label>
                         <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
                             class='select2-me @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                            required data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
+                            data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
                             <option value=""></option>
                             @foreach ($costCenters as $costCenter)
                                 @php
@@ -99,10 +87,9 @@
                         </select>
                     </div>
 
-                    <div class="col-sm-2">
+                    <div class="col-md-2">
                         <label for="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                            class="control-label">
-                            Rateio (%)
+                            class="control-label">Rateio (%)
                         </label>
                         <div class="input-group">
                             <span class="input-group-addon">%</span>
@@ -116,10 +103,9 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2">
+                    <div class="col-md-2">
                         <label for="cost_center_apportionments[{{ $index }}][apportionment_currency]"
-                            class="control-label">
-                            Rateio (R$)
+                            class="control-label">Rateio (R$)
                         </label>
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
@@ -164,7 +150,7 @@
                     </select>
                 </div>
 
-                <div class="col-sm-2">
+                <div class="col-md-2">
                     <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label">
                         Rateio (%)
                     </label>
@@ -179,7 +165,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-2">
+                <div class="col-md-2">
                     <label for="cost_center_apportionments[0][apportionment_currency]" class="control-label">
                         Rateio (R$)
                     </label>
@@ -209,33 +195,12 @@
 
         <hr>
 
-        <div class="full-product-line product-form">
+        <div class="full-product-line product-form" data-product="1">
             <div class="row center-block" style="padding-bottom: 10px;">
-                <h4>DADOS DA SOLICITAÇÃO</h4>
-            </div>
-
-            <div class="row" style="margin-bottom:15px; margin-top:5px;">
-
-                <div class="col-sm-4">
-                    <label for="form-check" class="control-label" style="padding-right:10px;">
-                        Quem está responsável por esta contratação?
-                    </label>
-                    <div class="form-check">
-                        <input name="is_supplies_contract"value="1" class="radio-who-wants"
-                            id="is-supplies-contract" type="radio" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
-                        <label class="form-check-label" for="is-supplies-contract">Suprimentos</label>
-
-                        <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio"
-                            id="is-area-contract" style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
-                        <label class="form-check-label" for="is-area-contract"> Área solicitante</label>
-                    </div>
-                </div>
-
+                <h4>DETALHES DA SOLICITAÇÃO</h4>
             </div>
 
             <div class="row" style="margin-bottom:5px;">
-
-                {{-- MOTIVO --}}
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="reason" class="control-label">
@@ -243,7 +208,7 @@
                         </label>
                         <textarea required name="reason" id="reason" rows="4"
                             placeholder="Ex: Ar condicionado da sala de reuniões do atrium apresenta defeitos de funcionamento"
-                            class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
+                            class="form-control text-area no-resize">{{ $quoteRequest->reason ?? null }}</textarea>
                     </div>
                     <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
                         <p>* Por favor, forneça uma breve descrição do motivo pelo qual você está solicitando esta
@@ -251,35 +216,31 @@
                         </p>
                     </div>
                 </div>
-
-                {{-- DESCRICAO --}}
                 <div class="col-sm-8">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
                         <textarea required name="description" id="description" rows="4"
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
-                            class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
+                            class="form-control text-area no-resize">{{ $quoteRequest->description ?? null }}</textarea>
                     </div>
                     <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
                         <p>* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação.
                         </p>
                     </div>
                 </div>
-
             </div>
 
             <div class="row">
-
-                {{-- LOCAL --}}
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="local-description" class="control-label">
-                            Local de entrega do produto
+                <div class="col-sm-6" style="margin-bottom:8px;">
+                    <div class="form-group product-input" id="product-input">
+                        <label for="local-description" class="control-label local-description">
+                            Local de execução do serviço
                         </label>
-                        <input name="local_description" value="{{ $purchaseRequest->local_description ?? null }}"
+                        <input name="local_description"
+                            value="@if (isset($quoteRequest)) {{ $quoteRequest->local_description }} @endif"
                             type="text" id="local-description"
                             placeholder="Ex: HKM - Av. Gentil Reinaldo Cordioli, 161 - Jardim Eldorado"
-                            class="form-control" data-rule-required="true" data-rule-minlength="2" required>
+                            class="form-control local-description" data-rule-required="true" data-rule-minlength="2">
                     </div>
                 </div>
 
@@ -287,21 +248,20 @@
                     <div class="form-group">
                         <label for="desired-date" class="control-label">Data desejada</label>
                         <input type="date" name="desired_date" id="desired-date" class="form-control"
-                            value="{{ $purchaseRequest->desired_date ?? null }}">
+                            value="{{ isset($quoteRequest) && $quoteRequest->desired_date ? $quoteRequest->desired_date : '' }}">
                     </div>
                 </div>
 
-                {{-- COMEX --}}
                 <div class="col-sm-4">
                     <label for="form-check" class="control-label" style="padding-right:10px;">
                         Contrato se enquadra na categoria COMEX?
                     </label>
                     <div class="form-check" style="12px; margin-top:4px;">
-                        <input name="is_comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
-                            type="radio" data-skin="minimal">
+                        <input name="is_comex" value="1" @if (isset($quoteRequest) && $quoteRequest->is_comex) checked @endif
+                            class="radio-comex" type="radio" data-skin="minimal">
                         <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
-                        <input name="is_comex"value="0" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) class="radio-comex"
-                            type="radio" data-skin="minimal">
+                        <input name="is_comex"value="0" @if (isset($quoteRequest) && !$quoteRequest->is_comex) checked @endif
+                            class="radio-comex" type="radio" data-skin="minimal">
                         <label class="form-check-label" for="">Não</label>
                     </div>
                 </div>
@@ -309,82 +269,65 @@
             </div>
 
             <div class="row">
-
-                {{-- LINK --}}
-                <div class="col-sm-6 link-util">
-                    <label for="purchase-request-files[path]" class="control-label">Link</label>
-                    <input
-                        value="{{ isset($purchaseRequest->purchaseRequestFile[0]) && $purchaseRequest->purchaseRequestFile[0]->path ? $purchaseRequest->purchaseRequestFile[0]->path : '' }}"
-                        type="text"
-                        placeholder="Adicone um link válido. Ex: Contrato disponibilizado pelo fornecedor"
-                        name="purchase_request_files[path]" id="purchase-request-files[path]" class="form-control">
+                <div class="col-sm-8 link-util">
+                    <label for="quote_request_files[path]" class="control-label">
+                        Link útil</label>
+                    <input type="text" placeholder="Ex: Contrato disponibilizado pelo fornecedor"
+                        name="quote_request_files[path]" id="quote_request_files[path]" data-rule-url="true"
+                        class="form-control">
                 </div>
-
-                {{-- OBSERVACAO --}}
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="observation" class="control-label">
-                            Observações
-                        </label>
-                        <textarea name="observation" id="observation" rows="2"
-                            placeholder="Informações complementares desta solicitação"
-                            class="form-control text-area no-resize">{{ $purchaseRequest->observation ?? null }}</textarea>
-                    </div>
-                </div>
-
             </div>
 
+            <hr>
+
+            {{-- BLOCO FORNECEDOR --}}
             <div class="suppliers-block">
-                <div class="row center-block" style="padding-bottom: 5px;">
+                <div class="row center-block" style="padding-bottom: 10px;">
                     <h4>INFORMAÇÕES DO FORNECEDOR</h4>
                 </div>
-                <div class="row" style="margin-top: 15px">
-
-                    {{-- FORNECEDOR (CNPJ/RAZAO SOCIAL --}}
-                    <div class="col-sm-4 form-group">
-                        <label style="display:block;" for="contract[supplier_id]" class="control-label">
-                            Fornecedor (CNPJ - RAZÃO SOCIAL)
-                        </label>
-                        <select name="contract[supplier_id]" class='select2-me'
-                            data-placeholder="Escolha uma fornecedor" style="width:100%;">
-                            <option value=""></option>
-                            @foreach ($suppliers as $supplier)
-                                @php $supplierSelected = isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->supplier_id === $supplier->id; @endphp
-                                <option value="{{ $supplier->id }}" @selected($supplierSelected)>
-                                    {{ "$supplier->cpf_cnpj - $supplier->corporate_name" }}</option>
-                            @endforeach
-                        </select>
+                <div class="row">
+                    {{-- CNPJ/NOME FORNECEDOR --}}
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="supplier" class="control-label">Fornecedor (CNPJ - RAZÃO
+                                SOCIAL)</label>
+                            <select name="suppliers[0][id]" id="supplier" class='select2-me select-supplier'
+                                style="width:100%;" data-placeholder="Encontre o fornecedor desejado">
+                                <option value=""></option>
+                                @foreach ($suppliers as $supplier)
+                                    <option value="{{ $supplier['id'] }}">
+                                        {{ $supplier['corporate_name'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-
                     {{-- VENDEDOR/ATENDENTE --}}
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="attendant" class="control-label">Vendedor/Atendente</label>
-                            <input type="text" id="attendant" name=""
+                            <input type="text" id="attendant" name="suppliers[0][attendant]"
                                 placeholder="Pessoa responsável pela cotação" class="form-control"
                                 data-rule-minlength="2">
                         </div>
                     </div>
-
                     {{-- TELEFONE --}}
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label for="phone-number" class="control-label">Telefone</label>
-                            <input type="text" name="" id="phone-number" placeholder="(00) 0000-0000"
-                                class="form-control mask_phone">
+                            <input type="text" name="suppliers[0][phone_number]" id="phone-number"
+                                placeholder="(00) 0000-0000" class="form-control mask_phone">
                         </div>
                     </div>
-
                     {{-- E-MAIL --}}
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="email" class="control-label">E-mail</label>
-                            <input type="text" name="" id="email"
+                            <input type="text" name="suppliers[0][email]" id="email"
                                 placeholder="user_email@vendedor.com.br" class="form-control"
                                 data-rule-minlength="2">
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -395,20 +338,19 @@
                     <h4>PAGAMENTO</h4>
                 </div>
 
-                <div class="row" style="margin-bottom: 20px;">
+                <div class="row" style="margin-bottom:20px;">
                     <div class="col-sm-4">
                         <label for="form-check" class="control-label" style="padding-right:10px;">
                             Valor do contrato será:
                         </label>
-                        @php $isFixedPayment = isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->is_fixed_payment @endphp
                         <div class="form-check" style="12px; display:inline;">
                             {{-- FIXO --}}
-                            <input name="contract[is_fixed_payment]" value="1" class="radio-is-fixed-value"
-                                type="radio" data-skin="minimal" @checked($isFixedPayment)>
+                            <input name="is_fixed_value" value="1" class="radio-is-fixed-value" type="radio"
+                                data-skin="minimal" checked>
                             <label class="form-check-label" for="services" style="margin-right:15px;">FIXO</label>
                             {{-- VARIAVEL --}}
-                            <input name="contract[is_fixed_payment]" value="0" class="radio-is-fixed-value"
-                                type="radio" data-skin="minimal" @checked($isFixedPayment)>
+                            <input name="is_fixed_value" value="0" class="radio-is-fixed-value" type="radio"
+                                data-skin="minimal">
                             <label class="form-check-label" for="">VARIÁVEL</label>
                         </div>
                         <div class="small" style="color:rgb(85, 85, 85);">
@@ -416,40 +358,47 @@
                         </div>
                     </div>
 
+                    {{-- VALOR TOTAL --}}
                     <div class="col-sm-2" style="margin-top:-10px;">
-                        <label class="control-label">Valor total do contrato: </label>
-                        <div class="input-group">
-                            <span class="input-group-addon">R$</span>
-                            <input type="number" placeholder="0.00" class="form-control amount" min="0"
-                                name="contract[amount]" id="amount"
-                                value="{{ $purchaseRequest->contract[0]->amount ?? null }}">
+                        <div class="form-group">
+                            <label for="amount" class="control-label">Valor total do contrato</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">R$</span>
+                                <input type="number" name="amount" id="amount" placeholder="0.00"
+                                    class="form-control amount" min="0">
+                                @error('unit_price')
+                                    <p><strong>{{ $message }}</strong></p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
 
+                    {{-- DATA INICIO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label class="control-label">Vigência - data inicío</label>
-                            <input type="date" name="contract[start_date]" class="form-control start-date"
-                                value="{{ $purchaseRequest->contract[0]->start_date ?? null }}">
+                            <label for="start-date" class="control-label">Vigência - Data início</label>
+                            <input type="date" name="start_date" id="start-date" class="form-control start-date"
+                                value="{{ isset($quoteRequest) && $quoteRequest->desired_date ? $quoteRequest->desired_date : '' }}">
                         </div>
                     </div>
 
+                    {{-- DATA FIM --}}
                     <div class="col-sm-2">
                         <div class="form-group" style="margin-bottom:0px;">
-                            <label class="control-label">Vigência - data fim</label>
-                            <input type="date" name="contract[end_date]" class="form-control end-date"
-                                value="{{ $purchaseRequest->contract[0]->end_date ?? null }}">
+                            <label for="end-date" class="control-label">Vigência - Data fim</label>
+                            <input type="date" name="end_date" id="end-date" class="form-control end-date"
+                                value="{{ isset($quoteRequest) && $quoteRequest->desired_date ? $quoteRequest->desired_date : '' }}">
                         </div>
-                        <div class="no-end-date"
+                        <div class="no-limit"
                             style="
-                                display: flex;
-                                align-items: center;
-                                gap: 5px;
-                                margin-top:4px;
-                            ">
+                            display: flex;
+                            align-items: center;
+                            gap: 5px;
+                            margin-top:4px;
+                        ">
                             <input type="checkbox" id="checkbox-has-no-end-date" class="checkbox-has-no-end-date"
                                 style="margin:0">
                             <label for="checkbox-has-no-end-date" style="margin:0; font-size: 11px;">
@@ -458,74 +407,59 @@
                         </div>
                     </div>
 
+                    {{-- DATA FIM --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label class="control-label">Dia de vencimento</label>
-                            <input type="number" name="contract[payday]" class="form-control"
-                                value="{{ $purchaseRequest->contract[0]->payday ?? null }}">
+                            <label for="payment-date" class="control-label">Data de pagamento</label>
+                            <input type="date" name="payment_date" id="payment-date"
+                                class="form-control payment-date">
                         </div>
                     </div>
 
                     {{-- RECORRENCIA --}}
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="recurrence" class="control-label">Recorrência</label>
-                            @php
-                                $recurrence = isset($purchaseRequest->contract[0]) ? $purchaseRequest->contract[0]->recurrence : null;
-                            @endphp
-                            <select name="recurrence" id="recurrence" class="select2-me recurrence"
-                                style="width: 100%; padding-top: 2px;" data-placeholder="Escolha uma opção">
-                                <option value=""></option>
-                                <option value="unique" {{ $recurrence === 'unique' ? 'selected' : '' }}>ÚNICA</option>
-                                <option value="monthly" {{ $recurrence === 'monthly' ? 'selected' : '' }}>MENSAL
-                                </option>
-                                <option value="yearly" {{ $recurrence === 'yearly' ? 'selected' : '' }}>ANUAL</option>
-                            </select>
+                    <div class="service-row">
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="recurrence" class="control-label">Recorrência</label>
+                                <select name="recurrence" id="recurrence" class='select2-me recurrence'
+                                    style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
+                                    <option value=""></option>
+                                    <option value="1">ÚNICA</option>
+                                    <option value="2">MENSAL</option>
+                                    <option value="3">ANUAL</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-
-
-                    {{-- FORMA DE PAGAMENTO --}}
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="payment-method" class="control-label">Forma de pagamento</label>
-                            @php
-                                $paymentMethod = null;
-                                if (isset($purchaseRequest->contract[0]) && isset($purchaseRequest->contract[0]->paymentInfo)) {
-                                    $paymentMethod = $purchaseRequest->contract[0]->paymentInfo->payment_method;
-                                }
-                            @endphp
-                            <select name="contract[payment_info][payment_method]" id="payment-method"
-                                class='select2-me payment-method' style="width:100%; padding-top:2px;"
-                                data-placeholder="Escolha uma opção">
-                                <option value=""></option>
-                                <option value="PIX" {{ $paymentMethod === 'PIX' ? 'selected' : '' }}>PIX</option>
-                                <option value="DEPÓSITO BANCÁRIO"
-                                    {{ $paymentMethod === 'DEPÓSITO BANCÁRIO' ? 'selected' : '' }}>DEPÓSITO BANCÁRIO
-                                </option>
-                                <option value="BOLETO" {{ $paymentMethod === 'BOLETO' ? 'selected' : '' }}>BOLETO
-                                </option>
-                                <option value="CARTÃO CRÉDITO"
-                                    {{ $paymentMethod === 'CARTÃO CRÉDITO' ? 'selected' : '' }}>CARTÃO CRÉDITO</option>
-                                <option value="CARTÃO DÉBITO"
-                                    {{ $paymentMethod === 'CARTÃO DÉBITO' ? 'selected' : '' }}>CARTÃO DÉBITO</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <input type="hidden" value="" name="contract[payment_info][id]">
 
                     {{-- CONDIÇÃO DE PAGAMENTO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="contract[is_prepaid]" class="control-label">Condição de pagamento</label>
-                            <select name="contract[is_prepaid]" id="contract[is_prepaid]"
-                                class='select2-me contract[is_prepaid]' style="width:100%; padding-top:2px;"
-                                data-placeholder="Escolha uma opção">
+                            <label for="payment-method" class="control-label">Condição de pagamento</label>
+                            <select name="payment_method" id="payment-method" class='select2-me payment-method'
+                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="1" @selected(isset($purchaseRequest->contract[0]) && (bool) $purchaseRequest->contract[0]->is_prepaid)>Pagamento antecipado</option>
-                                <option value="0" @selected(isset($purchaseRequest->contract[0]) && !(bool) $purchaseRequest->contract[0]->is_prepaid)>Pagamento após execução</option>
+                                <option value="1">Pagamento antecipado</option>
+                                <option value="2">Pagamento após execução</option>
                             </select>
+                        </div>
+                    </div>
+
+                    {{-- FORMA DE PAGAMENTO --}}
+                    <div class="service-row">
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="payment-method" class="control-label">Forma de pagamento</label>
+                                <select name="payment_method" id="payment-method" class='select2-me payment-method'
+                                    style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
+                                    <option value=""></option>
+                                    <option value="1">PIX</option>
+                                    <option value="2">DEPÓSITO BANCÁRIO</option>
+                                    <option value="3">BOLETO</option>
+                                    <option value="4">CARTÃO CRÉDITO</option>
+                                    <option value="5">CARTÃO DÉBITO</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -543,37 +477,36 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="box">
                             <div class="box-content nopadding">
-
-                                <table class="table table-hover table-nomargin table-striped"
-                                    id="installments-table-striped">
+                                <table class="table table-hover table-nomargin table-striped">
                                     <thead>
                                         <tr>
                                             <th class="col-sm-2">VENCIMENTO</th>
                                             <th class="col-sm-2">VALOR</th>
-                                            <th class='col-sm-5'>OBSERVAÇÃO</th>
-                                            <th class='col-sm-2'>STATUS</th>
-                                            <th class='col-sm-1'>AÇÕES</th>
+                                            <th class='col-sm-5 hidden-350'>OBSERVAÇÃO</th>
+                                            <th class='col-sm-2 hidden-1024'>STATUS</th>
+                                            <th class='col-sm-1 hidden-480'>AÇÕES</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
                                 </table>
-
-                                <div class="hidden-installments-inputs-container">
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="form-actions pull-right" style="margin-top:50px;">
-                <button type="submit" class="btn btn-primary">Salvar</button>
+            <div class="form-actions pull-right" style="margin-top:30px;">
+                <input type="hidden" name="isSaveAndQuote" value="0">
+                <button type="button" class="btn btn-primary" id="isSaveAndQuote">
+                    Enviar solicitação
+                    <i style="margin-left:5px;" class="glyphicon glyphicon-new-window"></i>
+                </button>
+                <button type="submit" class="btn btn-primary">Salvar alterações</button>
                 <a href="{{ url()->previous() }}" class="btn">Cancelar</a>
             </div>
         </div>
@@ -583,12 +516,28 @@
 
     <x-modal-edit-installment :statusValues="$statusValues" />
 
-</div>
+</x-app>
 
 <script>
     $(document).ready(function() {
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
+
+        $('#isSaveAndQuote').click(function() {
+            $('input[name="isSaveAndQuote"]').val('1');
+            $('#request-form').submit();
+        });
+
+        // Verifica quem vai cotar e aplica regra em campo description
+        $('input[name="is_supplies_quote"]').change(function() {
+            if ($('#supplie_quote').is(':checked')) {
+                $('#description').prop('required', true)
+                $('.description-span').show()
+            } else {
+                $('#description').prop('required', false)
+                $('.description-span').hide()
+            }
+        });
 
         function disableSelectedOptions() {
             const selectedValues = $.map($('.cost-center-container select'), (self) => {
@@ -666,6 +615,29 @@
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
 
+
+        // add product
+        const $productRowTemplate = $(".full-product-line").last()
+        $(document).on('click', '.delete-product', function() {
+            $(this).parent().parent().remove();
+            $(this).parent().parent().parent().remove();
+        });
+
+        $(document).on('click', ".add-product", function() {
+            const $containerCnpj = $(this).parentsUntil("[data-cnpj]").last();
+            const $products = $containerCnpj.find("[data-product]")
+            const $lastProduct = $products.last();
+            const $firstProduct = $products.first();
+            let productCount = $lastProduct.data("product") + 1;
+            const $newProductRow = $productRowTemplate.clone();
+            $newProductRow.data('product', productCount);
+            $newProductRow.find(":text").val("");
+            $newProductRow.find('.select2-container').remove();
+            $newProductRow.find('.select2-me').attr('id', 's2-' + productCount).select2();
+            $newProductRow.find('h4').text('Produto ' + (productCount));
+            $lastProduct.after($newProductRow);
+        });
+
         // add parcelas na table
         const $inputStartDate = $('.start-date');
         const $inputEndDate = $('.end-date');
@@ -686,7 +658,7 @@
         function calculateNumberOfInstallments() {
             const startDate = new Date($inputStartDate.val());
             const endDate = new Date($inputEndDate.val());
-            const isUniqueRecurrence = $recurrence.find(':selected').val() === "unique";
+            const isUniqueRecurrence = $recurrence.find(':selected').val() === "1";
             const monthsPassed = calculateMonthsPassed(startDate, endDate);
             if (monthsPassed >= 1) {
                 const numberOfInstallments = isUniqueRecurrence ? 1 : monthsPassed;
@@ -696,49 +668,8 @@
             return;
         }
 
-        // function calculateNumberOfInstallmentsToSend() {
-
-        // }
-
-        const purchaseRequest = @json($purchaseRequest);
-
         // dataTable config
-        const $installmentsTable = $('#installments-table-striped').DataTable({
-            defer: true,
-            data: purchaseRequest?.contract[0]?.installments || [],
-            columns: [
-                {
-                    data: "expire_date",
-                    render: function(data, type, row, meta) {
-                        if (!data) {
-                            return "";
-                        }
-                        const formattedDate = moment(data, "YYYY/MM/DD").format("DD/MM/YYYY");
-                        return formattedDate || null;
-                    }
-                },
-                {
-                    data: "value",
-                },
-                {
-                    data: "observation",
-                },
-                {
-                    data: "status",
-                },
-                {
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        const actions = [
-                            "<button type='button' rel='tooltip' title='Editar Parcela' class='btn btn-edit-installment'><i class='fa fa-edit'></i></button>",
-                            "<button type='button' class='btn btn-delete-installment' style='margin-left:5px' title='Excluir'><i class='fa fa-times'></i></button>"
-                        ];
-
-                        return actions.join('');
-                    }
-                }
-            ],
-            orderable: false,
+        const $installmentsTable = $('.table-striped').DataTable({
             paging: false,
             info: false,
             searching: false,
@@ -747,129 +678,16 @@
                 zeroRecords: ""
             },
             order: [
-                [0, 'desc']
+                [4, 'asc']
             ],
-            // createdRow: function(row, data, dataIndex) {
-            //     const hiddenFormattedDate = $(row).data('hidden-date');
-            //     $(row).attr('data-hidden-date', hiddenFormattedDate);
-            // }
+            createdRow: function(row, data, dataIndex) {
+                const hiddenFormattedDate = $(row).data('hidden-date');
+                $(row).attr('data-hidden-date', hiddenFormattedDate);
+            }
         });
 
-        function fillHiddenInputsWithRowData() {
-            const tableData = $installmentsTable.data();
-            const hiddenInputsContainer = $('.hidden-installments-inputs-container');
-
-            hiddenInputsContainer.empty();
-
-            if (tableData.length > 0) {
-                tableData.each(function(rowData, index) {
-                    const expireDate = rowData.expire_date;
-
-                    const value = rowData.value;
-                    const observation = rowData.observation;
-                    const status = rowData.status;
-
-                    const idInput = document.createElement('input');
-                    idInput.type = 'number';
-                    idInput.name = 'contract[contract_installments][' + index + '][id]';
-                    idInput.value = purchaseRequest?.contract[0]?.installments[index].id || "";
-                    idInput.hidden = true;
-
-                    const expireDateInput = document.createElement('input');
-                    expireDateInput.type = 'date';
-                    expireDateInput.name = 'contract[contract_installments][' + index +
-                        '][expire_date]';
-                    expireDateInput.value = expireDate;
-                    expireDateInput.hidden = true;
-
-                    const valueInput = document.createElement('input');
-                    valueInput.type = 'number';
-                    valueInput.name = 'contract[contract_installments][' + index + '][value]';
-                    valueInput.value = value;
-                    valueInput.hidden = true;
-
-                    const observationInput = document.createElement('input');
-                    observationInput.type = 'text';
-                    observationInput.name = 'contract[contract_installments][' + index +
-                        '][observation]';
-                    observationInput.value = observation;
-                    observationInput.hidden = true;
-
-                    const statusInput = document.createElement('input');
-                    statusInput.type = 'text';
-                    statusInput.name = 'contract[contract_installments][' + index + '][status]';
-                    statusInput.value = status;
-                    statusInput.hidden = true;
-
-                    hiddenInputsContainer.append(
-                        idInput,
-                        expireDateInput,
-                        valueInput,
-                        observationInput,
-                        statusInput,
-                    );
-                });
-            } else {
-                const idInput = document.createElement('input');
-                idInput.type = 'text';
-                idInput.name = 'contract[contract_installments][0][id]';
-                idInput.value = purchaseRequest?.contract[0]?.installments[index].id || "";
-                idInput.hidden = true;
-
-                const expireDateInput = document.createElement('input');
-                expireDateInput.type = 'text';
-                expireDateInput.name = 'contract[contract_installments][0][expire_date]';
-                expireDateInput.value = "";
-                expireDateInput.hidden = true;
-
-                const valueInput = document.createElement('input');
-                valueInput.type = 'text';
-                valueInput.name = 'contract[contract_installments][0][value]';
-                valueInput.value = "";
-                valueInput.hidden = true;
-
-                const observationInput = document.createElement('input');
-                observationInput.type = 'text';
-                observationInput.name = 'contract[contract_installments][0][observation]';
-                observationInput.value = "";
-                observationInput.hidden = true;
-
-                const statusInput = document.createElement('input');
-                statusInput.type = 'text';
-                statusInput.name = 'contract[contract_installments][0][status]';
-                statusInput.value = "";
-                statusInput.hidden = true;
-
-                hiddenInputsContainer.append(
-                    idInput,
-                    expireDateInput,
-                    valueInput,
-                    observationInput,
-                    statusInput,
-                );
-            }
-        }
-
-        function deleteHiddenInputs(row) {
-            const index = $installmentsTable.row(row).index();
-            $('input[name^="contract[contract_installments][' + index + ']"]').remove();
-        }
-
-        function updateHiddenInputIndex() {
-            $('input[name^="contract[contract_installments]"]').each(function() {
-                const currentName = $(this).attr('name');
-                const newIndex = currentName.replace(/\[(\d+)\]/, function(match, index) {
-                    const currentIndex = parseInt(index);
-                    return '[' + (currentIndex - 1) + ']';
-                });
-                $(this).attr('name', newIndex);
-            });
-        }
-
-        fillHiddenInputsWithRowData();
-
         // hide and show btn add parcela
-        const $radioIsFixedValue = $('.radio-is-fixed-value');
+        const $radioIsFixedValue = $('input[name="is_fixed_value"]');
         const $divBtnAddInstallment = $('.div-btn-add-installment');
         const $btnAddInstallment = $('.btn-add-installment');
         const $checkboxHasNoEndDate = $('.checkbox-has-no-end-date');
@@ -877,7 +695,7 @@
         $radioIsFixedValue.on('change', function() {
             const isFixedValue = $(this).val() === "1";
             $divBtnAddInstallment.attr('hidden', isFixedValue);
-            //$installmentsTable.clear().draw();
+            $installmentsTable.clear().draw();
             $inputsForInstallmentEvents =
                 $recurrence
                 .add($amount)
@@ -912,25 +730,26 @@
         const $suppliersBlock = $('.suppliers-block');
         const $linkUtil = $('.link-util');
 
-        $radioIsContractedBySupplies.on('click', function() {
+        $radioIsContractedBySupplies.on('change', function() {
             const isContractedBySupplies = $(this).val() === "1";
             const $elementsToDisable = $suppliersBlock.add($paymentBlock);
 
             $elementsToDisable
                 .find('input')
-                .prop('readonly', isContractedBySupplies);
+                .prop('disabled', !isContractedBySupplies);
 
             $elementsToDisable
-                .select2('readonly', isContractedBySupplies)
+                .find('select')
+                .prop('disabled', !isContractedBySupplies)
                 .trigger('change.select2');
 
             // esconde link util caso SUPRIMENTOS
-            $linkUtil.prop('hidden', isContractedBySupplies);
+            $linkUtil.prop('hidden', !isContractedBySupplies);
 
-            //$installmentsTable.clear().draw();
+            $installmentsTable.clear().draw();
             $radioIsFixedValue.first().prop('checked', true);
-            $divBtnAddInstallment.attr('hidden', true);
-        }).trigger('click');
+            $btnAddInstallment.attr('hidden', true);
+        }).trigger('change');
 
 
         // declaracao dos botoes edit e delete do datatable
@@ -942,32 +761,31 @@
 
         function generateInstallments(numberOfInstallments) {
             const startDate = new Date($inputStartDate.val());
-            const totalAmount = ($amount.val() / numberOfInstallments).toFixed(2);
+            const amount = ($amount.val() / numberOfInstallments).toFixed(2);
 
             const installmentsData = [];
 
             for (let i = 1; i <= numberOfInstallments; i++) {
                 const installmentDate = new Date();
                 const formattedDate = installmentDate.toLocaleDateString('pt-BR');
-                //const hiddenFormattedDate = installmentDate.toISOString();
+                const hiddenFormattedDate = installmentDate.toISOString();
 
-                const installmentData = {
-                    expire_date: "",
-                    value: totalAmount,
-                    observation: "Parcela " + i + "/" + numberOfInstallments,
-                    status: "PENDENTE",
-                    // hiddenFormattedDate
-                };
+                const installmentData = [
+                    "--",
+                    amount,
+                    "Parcela " + i + "/" + numberOfInstallments,
+                    "PENDENTE",
+                    buttonsHTML,
+                    installmentDate
+                ];
 
                 installmentsData.push(installmentData);
             }
 
             for (const installmentData of installmentsData) {
                 const rowNode = $installmentsTable.row.add(installmentData).node();
-                $(rowNode).children('td').eq(0).attr('hidden', installmentData[4]);
+                $(rowNode).children('td').eq(0).attr('data-hidden-date', installmentData[5]);
             }
-
-            fillHiddenInputsWithRowData();
 
             $installmentsTable.draw();
         }
@@ -995,8 +813,8 @@
         });
 
         // form modal add installment
-        $('#form-modal-add-installment').on('submit', function(event) {
-            event.preventDefault();
+        $('#form-modal-add-installment').on('submit', function(e) {
+            e.preventDefault();
 
             const isValid = $(this).valid();
 
@@ -1012,22 +830,24 @@
             const expireDateFormatted = expireDate.toLocaleDateString('pt-BR', {
                 timeZone: 'UTC'
             });
+            const hiddenFormattedDate = expireDate.toLocaleDateString('sv', {
+                timeZone: 'UTC'
+            });
             const value = $('#value').val();
             const status = $('#status').find(':selected').text();
             const observation = $('#observation').val();
 
-            const installmentModalData = {
+            const installmentModalData = [
                 expireDateFormatted,
                 value,
                 observation,
                 status,
-                //hiddenFormattedDate
-            };
+                buttonsHTML,
+                hiddenFormattedDate
+            ];
 
             $installmentsTable.row.add(installmentModalData);
-            $installmentsTable.draw();
-
-            fillHiddenInputsWithRowData();
+            $installmentsTable.draw()
 
             $(this).find('input, select').val('');
             $(this).find('textarea').val('');
@@ -1035,18 +855,13 @@
             $('#modal-add-installment').modal('hide');
         });
 
-        $('#installments-table-striped tbody').on('click', 'tr', function(event) {
+        $('.table-striped tbody').on('click', 'tr', function(event) {
             event.preventDefault();
 
             if ($(event.target).closest('.btn-delete-installment').length) {
                 const row = $(this);
                 const installmentId = row.data('id');
-
-                deleteHiddenInputs(row);
-                updateHiddenInputIndex();
-
                 $installmentsTable.row(row).remove().draw();
-
             } else if ($(event.target).closest('.btn-edit-installment').length) {
                 const rowData = $installmentsTable.row(this).data();
                 openModalForEdit(rowData);
@@ -1067,42 +882,56 @@
             const status = $('#edit-status');
             const observation = $('#edit-observation');
 
-            if (rowData.expire_date) {
-                const formattedDate = new Date(rowData.expire_date.split('/').reverse().join('-'));
+            if (rowData[0] !== "--") {
+                const formattedDate = new Date(rowData[0].split('/').reverse().join('-'));
                 expireDate.val(formattedDate.toISOString().split('T')[0]);
             }
 
-            value.val(rowData.value);
-            observation.val(rowData.observation);
+            value.val(rowData[1]);
+            observation.val(rowData[2]);
 
-            status.select2('val', statusValues.find((status) => status.description === rowData.status).id);
+            status.select2('val', statusValues.find((status) => status.description === rowData[3]).id);
 
             $('#form-modal-edit-installment').on('submit', function(event) {
                 event.preventDefault();
 
                 const expireDateInput = $('#edit-expire-date').val();
+                let expireDate;
+                let expireDateFormatted;
+
+                if (expireDateInput !== '') {
+                    expireDate = new Date(expireDateInput);
+                    expireDateFormatted = expireDate.toLocaleDateString('pt-BR', {
+                        timeZone: 'UTC'
+                    });
+                    const hiddenFormattedDate = expireDate.toLocaleDateString('sv', {
+                        timeZone: 'UTC'
+                    });
+                } else {
+                    expireDateFormatted = '--';
+                }
 
                 const value = $('#edit-value').val();
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
 
                 if (selectedRowIndex !== null) {
-                    $installmentsTable.cell(selectedRowIndex, 0).data(expireDateInput);
+                    $installmentsTable.cell(selectedRowIndex, 0).data(expireDateFormatted);
                     $installmentsTable.cell(selectedRowIndex, 1).data(value);
                     $installmentsTable.cell(selectedRowIndex, 2).data(observation);
                     $installmentsTable.cell(selectedRowIndex, 3).data(status);
+                    $installmentsTable.cell(selectedRowIndex, 4).data(buttonsHTML);
                     $installmentsTable.draw();
                 }
 
                 selectedRowIndex = null;
-
-                fillHiddenInputsWithRowData();
 
                 $(this).find('input, select').val('');
                 $(this).find('textarea').val('');
 
                 $('#modal-edit-installment').modal('hide');
             });
+
         }
     });
 </script>

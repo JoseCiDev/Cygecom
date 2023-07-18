@@ -28,7 +28,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Solicitante</th>
-                                <th>Tipo de cotação</th>
+                                <th>Contratação por</th>
                                 <th>Tipo de solicitação</th>
                                 <th>Status</th>
                                 <th>Data desejada</th>
@@ -41,7 +41,7 @@
                                 <tr>
                                     <td>{{$purchaseRequest->id}}</td>
                                     <td>{{$purchaseRequest->user->person->name}}</td>
-                                    <td>{{$purchaseRequest->is_supplies_quote ? 'Suprimentos' : 'Pessoal'}}</td>
+                                    <td>{{$purchaseRequest->is_supplies_quote ? 'Suprimentos' : 'Área Solicitante'}}</td>
                                     <td>{{$purchaseRequest->type->label()}}</td>
                                     <td>{{$purchaseRequest->status->label()}}</td>
                                     <td>{{$purchaseRequest->desired_date}}</td>

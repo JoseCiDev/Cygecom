@@ -57,7 +57,7 @@ class ServiceController extends Controller
                     $isAuthorized = auth()->user()->purchaseRequest->where('id', $purchaseRequestIdToCopy)->whereNull('deleted_at')->first();
 
                     if (!$isAuthorized) {
-                        return throw new Exception('Acesso não autorizado para essa solicitação de serviço.');
+                        throw new Exception('Acesso não autorizado para essa solicitação de serviço.');
                     }
                 }
             }
@@ -87,7 +87,7 @@ class ServiceController extends Controller
             if ($isAuthorized) {
                 $this->purchaseRequestService->updateServiceRequest($id, $data);
             } else {
-                return throw new Exception('Não foi possível acessar essa solicitação.');
+                throw new Exception('Não foi possível acessar essa solicitação.');
             }
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
@@ -96,5 +96,18 @@ class ServiceController extends Controller
         session()->flash('success', "Solicitação de serviço atualizada com sucesso!");
 
         return redirect()->route($route, ['type' => $purchaseRequest->type, 'id' => $id]);
+    }
+
+    public function serviceDetails(int $id)
+    {
+        try {
+            $service = $this->purchaseRequestService->purchaseRequestById($id);
+            if (!$service) {
+                return throw new Exception('Não foi possível acessar essa solicitação.');
+            }
+            return view('components.supplies.service-content.service-details', ['service' => $service]);
+        } catch (Exception $error) {
+            return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
+        }
     }
 }

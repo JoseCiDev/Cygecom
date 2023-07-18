@@ -57,7 +57,7 @@ class ProductController extends Controller
                     $isAuthorized = auth()->user()->purchaseRequest->where('id', $purchaseRequestIdToCopy)->whereNull('deleted_at')->first();
 
                     if (!$isAuthorized) {
-                        return throw new Exception('Acesso não autorizado para essa solicitação de compra.');
+                        throw new Exception('Acesso não autorizado para essa solicitação de compra.');
                     }
                 }
             }
@@ -87,7 +87,7 @@ class ProductController extends Controller
             if ($isAuthorized) {
                 $this->purchaseRequestService->updateProductRequest($id, $data);
             } else {
-                return throw new Exception('Não foi possível acessar essa solicitação.');
+                throw new Exception('Não foi possível acessar essa solicitação.');
             }
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
@@ -96,5 +96,18 @@ class ProductController extends Controller
         session()->flash('success', "Solicitação de produto(s) atualizado com sucesso!");
 
         return redirect()->route($route, ['type' => $purchaseRequest->type, 'id' => $id]);
+    }
+
+    public function productDetails(int $id)
+    {
+        try {
+            $product = $this->purchaseRequestService->purchaseRequestById($id);
+            if (!$product) {
+                return throw new Exception('Não foi possível acessar essa solicitação.');
+            }
+            return view('components.supplies.product-content.product-details', ['product' => $product]);
+        } catch (Exception $error) {
+            return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
+        }
     }
 }

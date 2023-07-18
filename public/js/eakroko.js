@@ -341,7 +341,7 @@ $(document).ready(function () {
 					$(label).closest('.form-group').removeClass('has-error has-success').addClass('has-error');
 				},
 				success       : function (label) {
-					label.addClass('valid').closest('.form-group').removeClass('has-error has-success').addClass('has-success');
+					label.addClass('valid').closest('.form-group').removeClass('has-error has-success');
 				}
 			},
 			formOptions      : {

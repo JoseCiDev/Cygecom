@@ -15,7 +15,7 @@ class PurchaseRequestService extends ServiceProvider
     public function purchaseRequests()
     {
         return PurchaseRequest::with([
-            'user', 'user.person', 'purchaseRequestFile', 'costCenterApportionment', 'costCenterApportionment.costCenter',
+            'user.person.costCenter', 'purchaseRequestFile',
             'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
             'service', 'service.paymentInfo',
             'purchaseRequestProduct', 'purchaseRequestProduct.category',
@@ -31,7 +31,7 @@ class PurchaseRequestService extends ServiceProvider
         $id = $id ?? auth()->user()->id;
 
         return PurchaseRequest::with([
-            'user', 'user.person', 'purchaseRequestFile', 'costCenterApportionment', 'costCenterApportionment.costCenter',
+            'user.person.costCenter', 'purchaseRequestFile',
             'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
             'service', 'service.paymentInfo',
             'purchaseRequestProduct', 'purchaseRequestProduct.category',
@@ -46,7 +46,7 @@ class PurchaseRequestService extends ServiceProvider
     public function purchaseRequestById(int $id)
     {
         return PurchaseRequest::with([
-            'user', 'user.person', 'purchaseRequestFile', 'costCenterApportionment', 'costCenterApportionment.costCenter',
+            'user.person.costCenter', 'purchaseRequestFile',
             'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
             'service', 'service.paymentInfo',
             'purchaseRequestProduct', 'purchaseRequestProduct.category',
@@ -123,7 +123,7 @@ class PurchaseRequestService extends ServiceProvider
     public function updatePurchaseRequest(int $id, array $data)
     {
         return DB::transaction(function () use ($id, $data) {
-            $purchaseRequest             = PurchaseRequest::find($id);
+            $purchaseRequest = PurchaseRequest::find($id);
             $purchaseRequest->updated_by = auth()->user()->id;
             $purchaseRequest->fill($data);
             $purchaseRequest->save();
@@ -176,7 +176,7 @@ class PurchaseRequestService extends ServiceProvider
      */
     public function deletePurchaseRequest(int $id)
     {
-        $purchaseRequest             = PurchaseRequest::find($id);
+        $purchaseRequest = PurchaseRequest::find($id);
         $purchaseRequest->deleted_at = Carbon::now();
         $purchaseRequest->deleted_by = auth()->user()->id;
         $purchaseRequest->save();
@@ -187,9 +187,9 @@ class PurchaseRequestService extends ServiceProvider
      */
     private function saveCostCenterApportionment(int $purchaseRequestId, array $data): void
     {
-        $userId            = auth()->user()->id;
+        $userId = auth()->user()->id;
         $apportionmentData = $data['cost_center_apportionments'];
-        $existingIds       = CostCenterApportionment::where('purchase_request_id', $purchaseRequestId)->pluck('id')->toArray();
+        $existingIds   = CostCenterApportionment::where('purchase_request_id', $purchaseRequestId)->pluck('id')->toArray();
 
         foreach ($apportionmentData as $apportionment) {
             $apportionment['purchase_request_id'] = $purchaseRequestId;
