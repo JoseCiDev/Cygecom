@@ -48,8 +48,13 @@ class ContractController extends Controller
     {
         $companies   = Company::all();
         $costCenters = CostCenter::all();
-        $params      = ["companies" => $companies, "costCenters" => $costCenters];
-        $isAdmin     = auth()->user()->profile->is_admin;
+
+        $params = [
+            "companies"   => $companies,
+            "costCenters" => $costCenters,
+        ];
+
+        $isAdmin = auth()->user()->profile->is_admin;
 
         try {
             if ($purchaseRequestIdToCopy) {
@@ -57,7 +62,7 @@ class ContractController extends Controller
                     $isAuthorized = auth()->user()->purchaseRequest->where('id', $purchaseRequestIdToCopy)->whereNull('deleted_at')->first();
 
                     if (!$isAuthorized) {
-                        return throw new Exception('Acesso não autorizado para essa solicitação de contrato.');
+                        throw new Exception('Acesso não autorizado para essa solicitação de contrato.');
                     }
                 }
             }
@@ -87,7 +92,7 @@ class ContractController extends Controller
             if ($isAuthorized) {
                 $this->purchaseRequestService->updateContractRequest($id, $data);
             } else {
-                return throw new Exception('Não foi possível acessar essa solicitação.');
+                throw new Exception('Não foi possível acessar essa solicitação.');
             }
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);

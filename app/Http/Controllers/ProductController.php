@@ -57,7 +57,7 @@ class ProductController extends Controller
                     $isAuthorized = auth()->user()->purchaseRequest->where('id', $purchaseRequestIdToCopy)->whereNull('deleted_at')->first();
 
                     if (!$isAuthorized) {
-                        return throw new Exception('Acesso não autorizado para essa solicitação de compra.');
+                        throw new Exception('Acesso não autorizado para essa solicitação de compra.');
                     }
                 }
             }
@@ -87,7 +87,7 @@ class ProductController extends Controller
             if ($isAuthorized) {
                 $this->purchaseRequestService->updateProductRequest($id, $data);
             } else {
-                return throw new Exception('Não foi possível acessar essa solicitação.');
+                throw new Exception('Não foi possível acessar essa solicitação.');
             }
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);

@@ -46,8 +46,8 @@ class PurchaseRequestController extends Controller
             } else {
                 $puchaseRequest = auth()->user()->puchaseRequest->find($id);
 
-                if ($puchaseRequest === null) {
-                    return throw new Exception('Não foi possível acessar essa solicitação.');
+                if ($puchaseRequest->isEmpty()) {
+                    throw new Exception('Não foi possível acessar essa solicitação.');
                 }
 
                 return view('components.purchase-request.edit', ["type" => $type, "id" => $puchaseRequest->id]);
@@ -70,7 +70,7 @@ class PurchaseRequestController extends Controller
                 $this->purchaseRequestService->deletePurchaseRequest($id);
                 $route = 'requests.own';
             } else {
-                return throw new Exception('Não foi possível acessar essa solicitação.');
+                throw new Exception('Não foi possível acessar essa solicitação.');
             }
 
             session()->flash('success', "Solicitação deletada com sucesso!");
