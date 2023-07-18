@@ -97,4 +97,17 @@ class ProductController extends Controller
 
         return redirect()->route($route, ['type' => $purchaseRequest->type, 'id' => $id]);
     }
+
+    public function productDetails(int $id)
+    {
+        try {
+            $product = $this->purchaseRequestService->purchaseRequestById($id);
+            if (!$product) {
+                return throw new Exception('Não foi possível acessar essa solicitação.');
+            }
+            return view('components.supplies.product-content.product-details', ['product' => $product]);
+        } catch (Exception $error) {
+            return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
+        }
+    }
 }

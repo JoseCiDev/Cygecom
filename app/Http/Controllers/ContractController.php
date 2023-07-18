@@ -102,4 +102,17 @@ class ContractController extends Controller
 
         return redirect()->route($route, ['type' => $purchaseRequest->type, 'id' => $id]);
     }
+
+    public function contractDetails(int $id)
+    {
+        try {
+            $contract = $this->purchaseRequestService->purchaseRequestById($id);
+            if (!$contract) {
+                return throw new Exception('Não foi possível acessar essa solicitação.');
+            }
+            return view('components.supplies.contract-content.contract-details', ['contract' => $contract]);
+        } catch (Exception $error) {
+            return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
+        }
+    }
 }
