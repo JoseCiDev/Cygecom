@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Exception;
 use Illuminate\Support\ServiceProvider;
 
 class CSVImporter extends ServiceProvider
@@ -13,41 +14,43 @@ class CSVImporter extends ServiceProvider
      * $csvImporter = new CSVImporter($csvPath);
      * $csvImporter->generateArrayFile($outputPath);
      */
-    protected string $csvPath;
-
-    public function __construct(string $csvPath)
+    public function __construct(private string $csvPath)
     {
-        $this->csvPath = $csvPath;
     }
 
     /**
      * @param string|null $outputPath Caminho do arquivo de saída.
      * @abstract Responsável por ler o arquivo CSV e retornar o array de dados. Opcional: Gerar o arquivo PHP do caminho de saída com o array de dados.
      */
-    public function generateArrayFile(string|null $outputPath = null)
+    public function generateArrayFile(?string $outputPath = null): array
     {
-        $file = fopen($this->csvPath, 'r'); // Abre CSV com modo leitura ('r')
-
-        if ($file) {
-            $columns = fgetcsv($file); // Lê 1ªlinha/colunas do CSV 
-            $data = [];
-
-            while (($row = fgetcsv($file)) !== false) {
-                if (count($columns) === count($row)) {
-                    $trimmedRow = array_map('trim', $row); // Aplica o trim() em todos os valores da linha
-                    $data[] = array_combine($columns, $trimmedRow); // Cria um novo array associativo combinando os cabeçalhos e os valores da linha
-                }
-            }
-
-            fclose($file);
-
-            if ($outputPath) {
-                $exportData = var_export($data, true);
-                $output = "<?php\n\nreturn " . $exportData . ";\n";
-                file_put_contents($outputPath, $output);
-            }
-
-            return $data;
+        $file = fopen($this->csvPath, 'r');
+        if (!$file) {
+            throw new Exception('Falha ao abrir o arquivo CSV.');
         }
+
+        $columns = fgetcsv($file);
+        $data = [];
+
+        while (($row = fgetcsv($file)) !== false) {
+            if (count($row) !== count($columns)) {
+                continue;
+            }
+
+            $trimmedRow = array_map('trim', $row);
+            $combinedData = array_combine($columns, $trimmedRow);
+
+            $data[] = $combinedData;
+        }
+
+        fclose($file);
+
+        if ($outputPath) {
+            $exportData = var_export($data, true);
+            $output = "<?php\n\nreturn " . $exportData . ";\n";
+            file_put_contents($outputPath, $output);
+        }
+
+        return $data;
     }
 }

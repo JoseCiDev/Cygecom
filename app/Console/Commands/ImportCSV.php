@@ -11,12 +11,12 @@ class ImportCSV extends Command
      * Nome e assinatura do comando com o caminho do arquivo csv de entrada
      * @var string
      */
-    protected $signature = 'csv-import {csv-path}'; // Defina o nome do seu comando aqui
+    protected $signature = 'csv-import {csv-path}';
 
     /**
      * @var string
      */
-    protected $description = 'Lê um arquivo CSV, gera um array de dados, e executa um insert no banco de dados. É opcional passar um caminho de arquivo de saída para salvar o retorno do array';
+    protected $description = 'Lê um arquivo CSV e gera um array de dados. É opcional passar um caminho de arquivo de saída para salvar o retorno do array';
 
     /**
      * Execute the console command.
