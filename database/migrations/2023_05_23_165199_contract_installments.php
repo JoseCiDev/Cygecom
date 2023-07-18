@@ -9,12 +9,12 @@ return new class () extends Migration {
     {
         Schema::create('contract_installments', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
-            $table->decimal('value', 14, 2);
+            $table->decimal('value', 14, 2)->nullable();
             $table->boolean('already_provided')->default(false);
 
-            $table->date('payment_day')->nullable();
-            $table->text('description')->nullable();
-            $table->text('hours_performed')->nullable();
+            $table->date('expire_date')->nullable();
+            $table->text('observation')->nullable();
+            $table->text('status')->nullable();
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
