@@ -49,7 +49,7 @@ class ImportCSV extends Command
         $response = $filterSupplierArray->filter($dataImported);
 
         $exportData = var_export($response, true);
-        $output = "<?php\n\nreturn " . $exportData . ";\n";
+        $output = "<?php\n\nreturn " . str_replace(["\n", "  "], "", $exportData) . ";";
         $outputPath = dirname($filePath) . "/data/$type.php";
         file_put_contents($outputPath, $output);
 
