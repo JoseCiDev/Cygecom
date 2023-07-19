@@ -1,6 +1,1 @@
 *.sqlite*
-seeders/import/csv/*.csv
-seeders/import/csv/*.csv#
-seeders/import/csv/*.xlsx
-seeders/import/csv/*.xlsx#
-seeders/import/data/*.php
