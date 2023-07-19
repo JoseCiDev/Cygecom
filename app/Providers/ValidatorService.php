@@ -86,24 +86,26 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
     public $rulesForSupplier = [
         "cpf_cnpj"            => ['required', 'string', 'min:11'],
         "entity_type"         => ['required', 'string', 'in:PF,PJ'],
-        "supplier_indication" => ['required', 'string', 'in:M,S,A'],
+        "supplier_indication" => ['required', 'string'],
         "market_type"         => ['required', 'string'],
-        "corporate_name"      => ['required', 'string', 'max:255'],
+        "corporate_name"      => ['required', 'string', 'max:255', 'unique:suppliers'],
         "name"                => ['nullable', 'string', 'max:255'],
         "email"               => ['nullable', 'email'],
         "representative"      => ['nullable', 'string'],
+        "senior_code"         => ['nullable', 'string'],
+        "callisto_code"         => ['nullable', 'string'],
 
-        'postal_code'   => ['required', 'string', 'max:20'],
-        'country'       => ['required', 'string', 'max:255'],
+        'postal_code'   => ['required', 'string', 'max:20', 'min:7'],
+        'country'       => ['required', 'string', 'max:255', 'min:3'],
         'state'         => ['required', 'string', 'max:255'],
-        'city'          => ['required', 'string', 'max:255'],
+        'city'          => ['required', 'string', 'max:255', 'min:3'],
         'neighborhood'  => ['required', 'string', 'max:255'],
-        'street'        => ['required', 'string', 'max:255'],
-        'street_number' => ['nullable', 'string', 'max:20'],
+        'street'        => ['required', 'string', 'max:255', 'min:1'],
+        'street_number' => ['nullable', 'string', 'max:20', 'min:0'],
         'complement'    => ['nullable', 'string', 'max:255'],
 
-        'number'     => ['required', 'string', 'max:20'],
-        'phone_type' => ['required', 'string', 'max:20'],
+        'number'     => ['nullable', 'string', 'max:20', 'min:8'],
+        'phone_type' => ['nullable', 'string', 'max:20'],
     ];
 
     public $messagesForSupplier = [
@@ -117,11 +119,11 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
 
         'supplier_indication.required' => 'O campo Indicação do Fonecedor é obrigatório.',
         'supplier_indication.string'   => 'O Indicação do Fonecedor deve ser uma string.',
-        'supplier_indication.in'       => 'O Indicação do Fonecedor deve ser "M", "S" ou "A".',
 
         'market_type.required' => 'O campo Tipo de Mercado é obrigatório.',
         'market_type.string'   => 'O Tipo de Mercado deve ser uma string.',
 
+        'corporate_name.unique' => 'O campo Razão Social deve ser único.',
         'corporate_name.required' => 'O campo Razão Social é obrigatório.',
         'corporate_name.string'   => 'A Razão Social deve ser uma string.',
         'corporate_name.max'      => 'A Razão Social deve ter no máximo :max caracteres.',
@@ -136,10 +138,12 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'postal_code.required' => 'O campo CEP é obrigatório.',
         'postal_code.string'   => 'O CEP deve ser uma string.',
         'postal_code.max'      => 'O CEP deve ter no máximo :max caracteres.',
+        'postal_code.min'      => 'O CEP deve ter no mínimo :min caracteres.',
 
         'country.required' => 'O campo País é obrigatório.',
         'country.string'   => 'O país deve ser uma string.',
         'country.max'      => 'O país deve ter no máximo :max caracteres.',
+        'country.min'      => 'O país deve ter no mínimo :min caracteres.',
 
         'state.required' => 'O campo Estado é obrigatório.',
         'state.string'   => 'O estado deve ser uma string.',
@@ -148,6 +152,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'city.required' => 'O campo Cidade é obrigatório.',
         'city.string'   => 'A cidade deve ser uma string.',
         'city.max'      => 'A cidade deve ter no máximo :max caracteres.',
+        'city.min'      => 'A cidade deve ter no mínimo :min caracteres.',
 
         'neighborhood.required' => 'O campo Bairro é obrigatório.',
         'neighborhood.string'   => 'O bairro deve ser uma string.',
@@ -156,8 +161,10 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'street.required' => 'O campo Rua é obrigatório.',
         'street.string'   => 'A rua deve ser uma string.',
         'street.max'      => 'A rua deve ter no máximo :max caracteres.',
+        'street.min'      => 'A rua deve ter no minimo :min caracteres.',
 
         'street_number.max' => 'O número da rua deve ter no máximo :max caracteres.',
+        'street_number.min' => 'O número da rua deve ter no mínimo :min caracteres.',
 
         'complement.string' => 'O complemento deve ser uma string.',
         'complement.max'    => 'O complemento deve ter no máximo :max caracteres.',
@@ -165,6 +172,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'number.required' => 'O campo Telefone é obrigatório.',
         'number.string'   => 'O número de Telefone deve ser uma string.',
         'number.max'      => 'O número de Telefone deve ter no máximo :max caracteres.',
+        'number.min'      => 'O número de Telefone deve ter no mínimo :min caracteres.',
 
         'phone_type.required' => 'O campo Tipo de Telefone é obrigatório.',
         'phone_type.string'   => 'O tipo de Telefone deve ser uma string.',
