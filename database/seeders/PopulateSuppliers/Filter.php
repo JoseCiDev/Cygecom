@@ -1,48 +1,29 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Database\Seeders\PopulateSuppliers;
 
 use App\Providers\ValidatorService;
-use Illuminate\Console\Command;
+use Exception;
 
-class FilterSupplierArray extends Command
+class Filter
 {
     public function __construct(private ValidatorService $validatorService)
     {
-        parent::__construct();
     }
 
-    /**
-     * Nome e assinatura do comando com o caminho do arquivo php de entrada
-     * @var string
-     */
-    protected $signature = 'filter-array-supplier {php-file-path}';
-
-    /**
-     * @var string
-     */
-    protected $description = 'Importa um arquivo php que retorna um array de fornecedores e cria um novo arquivo php que retorna um novo array filtrado.';
-
-    /**
-     * Execute the console command.
-     *
-     */
-    public function handle()
+    public function filter($suppliers)
     {
-        $phpFilePath = $this->argument('php-file-path');
-        $suppliers = require $phpFilePath;
-
         $filteredSuppliers = [];
         $existingCorporateNames = [];
 
-        if (!is_array($suppliers) && empty($suppliers)) {
-            return $this->error('O array de fornecedores está vazio ou não foi encontrado no arquivo importado.');
+        if (!is_array($suppliers) || empty($suppliers)) {
+            throw new Exception('O array de fornecedores está vazio ou não foi encontrado no arquivo importado.');
         }
 
         foreach ($suppliers as $supplier) {
             $isValidCnpj = $this->validateCnpj($supplier['cpf_cnpj']);
-            $validator = $this->validatorService->supplier($supplier);
             $isDuplicate = in_array($supplier['corporate_name'], $existingCorporateNames);
+            $validator = $this->validatorService->supplier($supplier);
             if (!$isValidCnpj || $isDuplicate || $validator->fails()) {
                 continue;
             }
@@ -53,14 +34,7 @@ class FilterSupplierArray extends Command
             $existingCorporateNames[] = $supplier['corporate_name'];
         }
 
-        preg_match('/\/([^\/]+)\.[^.]+$/', $phpFilePath, $matches);
-        $fileName = 'filtered-' . $matches[1] . time() . rand() . '.php';
-        $outputFilePath = "database/seeders/import/data/$fileName";
-
-        $outputContent = "<?php\n\nreturn " . var_export($filteredSuppliers, true) . ";\n";
-        file_put_contents($outputFilePath, $outputContent);
-
-        $this->info("Novo arquivo PHP criado com sucesso! Verifique em $outputFilePath");
+        return $filteredSuppliers;
     }
 
     private function validateCnpj(string $cnpj): bool
