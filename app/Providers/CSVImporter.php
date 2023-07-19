@@ -10,19 +10,17 @@ class CSVImporter extends ServiceProvider
     /**
      * @abstract Exemplo de utilização:
      * $csvPath = base_path('database/seeders/import/csv/cadastro-fornecedores-callisto.csv');
-     * $outputPath = base_path('database/seeders/import/data/suppliers-hkm.php');
      * $csvImporter = new CSVImporter($csvPath);
-     * $csvImporter->generateArrayFile($outputPath);
+     * $csvImporter->generateArrayFile();
      */
     public function __construct(private string $csvPath)
     {
     }
 
     /**
-     * @param string|null $outputPath Caminho do arquivo de saída.
-     * @abstract Responsável por ler o arquivo CSV e retornar o array de dados. Opcional: Gerar o arquivo PHP do caminho de saída com o array de dados.
+     * @abstract Responsável por ler o arquivo CSV e retornar o array de dados.
      */
-    public function generateArrayFile(?string $outputPath = null): array
+    public function generateArrayFile(): array
     {
         $file = fopen($this->csvPath, 'r');
         if (!$file) {
@@ -44,12 +42,6 @@ class CSVImporter extends ServiceProvider
         }
 
         fclose($file);
-
-        if ($outputPath) {
-            $exportData = var_export($data, true);
-            $output = "<?php\n\nreturn " . $exportData . ";\n";
-            file_put_contents($outputPath, $output);
-        }
 
         return $data;
     }
