@@ -48,11 +48,24 @@ class ImportCSV extends Command
         $filterSupplierArray = new $outputs[$type]($this->validatorService);
         $response = $filterSupplierArray->filter($dataImported);
 
-        $exportData = var_export($response, true);
+        $exportData = $this->varexport($response);
         $output = "<?php\n\nreturn " . str_replace(["\n", "  "], "", $exportData) . ";";
         $outputPath = dirname($filePath) . "/data/$type.php";
         file_put_contents($outputPath, $output);
 
         $this->info("Comando executado com sucesso! Verifique o diretório seeders/data o arquivo $outputPath");
+    }
+
+    function varexport($expression)
+    {
+        $export = var_export($expression, true);
+        $patterns = [
+            "/array \(/" => '[',
+            "/^([ ]*)\)(,?)$/m" => '$1]$2',
+            "/=>[ ]?\n[ ]+\[/" => '=> [',
+            "/([ ]*)(\'[^\']+\') => ([\[\'])/" => '$1$2 => $3',
+        ];
+        $export = preg_replace(array_keys($patterns), array_values($patterns), $export);
+        return $export;
     }
 }
