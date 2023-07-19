@@ -23,9 +23,11 @@ class PopulateSuppliers extends Seeder
      */
     public function run(): void
     {
-        $suppliersData = require('database/seeders/import/data/suppliers.php');
+        $output = __DIR__ . "/PopulateSuppliers/data/suppliers.php";
+        $existSuppliersData = file_exists($output);
 
-        if ($suppliersData) {
+        if ($existSuppliersData) {
+            $suppliersData = require($output);
             DB::transaction(function () use ($suppliersData) {
                 try {
                     foreach ($suppliersData as $data) {
