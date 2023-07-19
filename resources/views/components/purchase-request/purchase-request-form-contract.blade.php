@@ -1,7 +1,7 @@
 @php
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
-    $contractInstallments = $purchaseRequest?->contract[0]?->installments;
+    $contractInstallments = $purchaseRequest?->contract?->installments;
 @endphp
 
 <style>
@@ -68,7 +68,7 @@
                     <input type="text" id="contract-title" name="contract[name]"
                         placeholder="Digite aqui um nome para este contrato..." class="form-control"
                         data-rule-required="true" minlength="15"
-                        value="@if (isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->name) {{ $purchaseRequest->contract[0]->name }} @endif">
+                        value="@if (isset($purchaseRequest->contract) && $purchaseRequest->contract->name) {{ $purchaseRequest->contract->name }} @endif">
                 </div>
             </div>
         </div>
@@ -349,7 +349,7 @@
                             data-placeholder="Escolha uma fornecedor" style="width:100%;">
                             <option value=""></option>
                             @foreach ($suppliers as $supplier)
-                                @php $supplierSelected = isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->supplier_id === $supplier->id; @endphp
+                                @php $supplierSelected = isset($purchaseRequest->contract) && $purchaseRequest->contract->supplier_id === $supplier->id; @endphp
                                 <option value="{{ $supplier->id }}" @selected($supplierSelected)>
                                     {{ "$supplier->cpf_cnpj - $supplier->corporate_name" }}</option>
                             @endforeach
@@ -360,7 +360,7 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="attendant" class="control-label">Vendedor/Atendente</label>
-                            <input type="text" id="attendant" name=""
+                            <input type="text" id="attendant" name="contract[seller]"
                                 placeholder="Pessoa responsável pela cotação" class="form-control"
                                 data-rule-minlength="2">
                         </div>
@@ -370,7 +370,7 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label for="phone-number" class="control-label">Telefone</label>
-                            <input type="text" name="" id="phone-number" placeholder="(00) 0000-0000"
+                            <input type="text" name="contract[phone]" id="phone-number" placeholder="(00) 0000-0000"
                                 class="form-control mask_phone">
                         </div>
                     </div>
@@ -379,7 +379,7 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="email" class="control-label">E-mail</label>
-                            <input type="text" name="" id="email"
+                            <input type="text" name="contract[email]" id="email"
                                 placeholder="user_email@vendedor.com.br" class="form-control"
                                 data-rule-minlength="2">
                         </div>
@@ -400,7 +400,7 @@
                         <label for="form-check" class="control-label" style="padding-right:10px;">
                             Valor do contrato será:
                         </label>
-                        @php $isFixedPayment = isset($purchaseRequest->contract[0]) && $purchaseRequest->contract[0]->is_fixed_payment @endphp
+                        @php $isFixedPayment = isset($purchaseRequest->contract) && $purchaseRequest->contract->is_fixed_payment @endphp
                         <div class="form-check" style="12px; display:inline;">
                             {{-- FIXO --}}
                             <input name="contract[is_fixed_payment]" value="1" class="radio-is-fixed-value"
@@ -422,7 +422,7 @@
                             <span class="input-group-addon">R$</span>
                             <input type="number" placeholder="0.00" class="form-control amount" min="0"
                                 name="contract[amount]" id="amount"
-                                value="{{ $purchaseRequest->contract[0]->amount ?? null }}">
+                                value="{{ $purchaseRequest->contract->amount ?? null }}">
                         </div>
                     </div>
                 </div>
@@ -433,7 +433,7 @@
                         <div class="form-group">
                             <label class="control-label">Vigência - data inicío</label>
                             <input type="date" name="contract[start_date]" class="form-control start-date"
-                                value="{{ $purchaseRequest->contract[0]->start_date ?? null }}">
+                                value="{{ $purchaseRequest->contract->start_date ?? null }}">
                         </div>
                     </div>
 
@@ -441,7 +441,7 @@
                         <div class="form-group" style="margin-bottom:0px;">
                             <label class="control-label">Vigência - data fim</label>
                             <input type="date" name="contract[end_date]" class="form-control end-date"
-                                value="{{ $purchaseRequest->contract[0]->end_date ?? null }}">
+                                value="{{ $purchaseRequest->contract->end_date ?? null }}">
                         </div>
                         <div class="no-end-date"
                             style="
@@ -462,7 +462,7 @@
                         <div class="form-group">
                             <label class="control-label">Dia de vencimento</label>
                             <input type="number" name="contract[payday]" class="form-control"
-                                value="{{ $purchaseRequest->contract[0]->payday ?? null }}">
+                                value="{{ $purchaseRequest->contract->payday ?? null }}">
                         </div>
                     </div>
 
@@ -471,7 +471,7 @@
                         <div class="form-group">
                             <label for="recurrence" class="control-label">Recorrência</label>
                             @php
-                                $recurrence = isset($purchaseRequest->contract[0]) ? $purchaseRequest->contract[0]->recurrence : null;
+                                $recurrence = isset($purchaseRequest->contract) ? $purchaseRequest->contract->recurrence : null;
                             @endphp
                             <select name="recurrence" id="recurrence" class="select2-me recurrence"
                                 style="width: 100%; padding-top: 2px;" data-placeholder="Escolha uma opção">
@@ -491,8 +491,8 @@
                             <label for="payment-method" class="control-label">Forma de pagamento</label>
                             @php
                                 $paymentMethod = null;
-                                if (isset($purchaseRequest->contract[0]) && isset($purchaseRequest->contract[0]->paymentInfo)) {
-                                    $paymentMethod = $purchaseRequest->contract[0]->paymentInfo->payment_method;
+                                if (isset($purchaseRequest->contract) && isset($purchaseRequest->contract->paymentInfo)) {
+                                    $paymentMethod = $purchaseRequest->contract->paymentInfo->payment_method;
                                 }
                             @endphp
                             <select name="contract[payment_info][payment_method]" id="payment-method"
@@ -523,8 +523,8 @@
                                 class='select2-me contract[is_prepaid]' style="width:100%; padding-top:2px;"
                                 data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="1" @selected(isset($purchaseRequest->contract[0]) && (bool) $purchaseRequest->contract[0]->is_prepaid)>Pagamento antecipado</option>
-                                <option value="0" @selected(isset($purchaseRequest->contract[0]) && !(bool) $purchaseRequest->contract[0]->is_prepaid)>Pagamento após execução</option>
+                                <option value="1" @selected(isset($purchaseRequest->contract) && (bool) $purchaseRequest->contract->is_prepaid)>Pagamento antecipado</option>
+                                <option value="0" @selected(isset($purchaseRequest->contract) && !(bool) $purchaseRequest->contract->is_prepaid)>Pagamento após execução</option>
                             </select>
                         </div>
                     </div>
@@ -705,7 +705,7 @@
         // dataTable config
         const $installmentsTable = $('#installments-table-striped').DataTable({
             defer: true,
-            data: purchaseRequest?.contract[0]?.installments || [],
+            data: purchaseRequest?.contract?.installments || [],
             columns: [
                 {
                     data: "expire_date",
@@ -772,7 +772,7 @@
                     const idInput = document.createElement('input');
                     idInput.type = 'number';
                     idInput.name = 'contract[contract_installments][' + index + '][id]';
-                    idInput.value = purchaseRequest?.contract[0]?.installments[index].id || "";
+                    idInput.value = purchaseRequest?.contract?.installments[index].id || "";
                     idInput.hidden = true;
 
                     const expireDateInput = document.createElement('input');
@@ -813,7 +813,7 @@
                 const idInput = document.createElement('input');
                 idInput.type = 'text';
                 idInput.name = 'contract[contract_installments][0][id]';
-                idInput.value = purchaseRequest?.contract[0]?.installments[index].id || "";
+                idInput.value = purchaseRequest?.contract?.installments[index].id || "";
                 idInput.hidden = true;
 
                 const expireDateInput = document.createElement('input');
