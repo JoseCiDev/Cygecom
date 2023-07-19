@@ -25,11 +25,11 @@ class ContractInstallment extends Model
     }
 
     protected $fillable = [
+        'expire_date',
         'value',
-        'payday',
-        'description',
-        'hours_performed',
-        'start_date',
+        'observation',
+        'status',
+        'already_provided',
         'contract_id',
         'updated_by',
         'deleted_by',

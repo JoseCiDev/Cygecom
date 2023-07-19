@@ -6,8 +6,8 @@ use App\Contracts\EnumInterface;
 
 enum PurchaseRequestType: string implements EnumInterface
 {
-    case SERVICE      = 'service';
-    case PRODUCT     = 'product';
+    case SERVICE  = 'service';
+    case PRODUCT  = 'product';
     case CONTRACT = 'contract';
 
     public function label(): string
@@ -18,10 +18,10 @@ enum PurchaseRequestType: string implements EnumInterface
     public static function getLabel($value): string
     {
         return match ($value) {
-            self::SERVICE      => 'Serviço',
-            self::PRODUCT     => 'Produto',
+            self::SERVICE  => 'Serviço',
+            self::PRODUCT  => 'Produto',
             self::CONTRACT => 'Contrato',
-            default               => '---',
+            default        => '---',
         };
     }
 }

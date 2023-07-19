@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PurchaseRequestType;
-use App\Models\{Company, CostCenter};
-use App\Providers\{PurchaseRequestService, ValidatorService};
+use App\Providers\PurchaseRequestService;
 use Exception;
-use Illuminate\Http\{RedirectResponse, Request};
+use Illuminate\Http\RedirectResponse;
 
 class PurchaseRequestController extends Controller
 {
@@ -39,17 +38,18 @@ class PurchaseRequestController extends Controller
     public function edit(PurchaseRequestType $type, int $id)
     {
         $isAdmin = auth()->user()->profile->is_admin;
+
         try {
             if ($isAdmin) {
                 return view('components.purchase-request.edit', ["type" => $type, "id" => $id]);
             } else {
-                $puchaseRequest = auth()->user()->puchaseRequest->find($id);
+                $purchaseRequest = auth()->user()->purchaseRequest->find($id);
 
-                if ($puchaseRequest === null) {
-                    return throw new Exception('Não foi possível acessar essa solicitação.');
+                if ($purchaseRequest->isEmpty()) {
+                    throw new Exception('Não foi possível acessar essa solicitação.');
                 }
 
-                return view('components.purchase-request.edit', ["type" => $type, "id" => $puchaseRequest->id]);
+                return view('components.purchase-request.edit', ["type" => $type, "id" => $purchaseRequest->id]);
             }
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
@@ -61,15 +61,15 @@ class PurchaseRequestController extends Controller
         $route = 'requests';
 
         try {
-            $isAdmin      = auth()->user()->profile->is_admin;
+            $isAdmin         = auth()->user()->profile->is_admin;
             $purchaseRequest = auth()->user()->purchaseRequest->find($id);
-            $isAuthorized = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
+            $isAuthorized    = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
 
             if ($isAuthorized) {
                 $this->purchaseRequestService->deletePurchaseRequest($id);
                 $route = 'requests.own';
             } else {
-                return throw new Exception('Não foi possível acessar essa solicitação.');
+                throw new Exception('Não foi possível acessar essa solicitação.');
             }
 
             session()->flash('success', "Solicitação deletada com sucesso!");

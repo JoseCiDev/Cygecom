@@ -14,6 +14,11 @@ class Contract extends Model
         return $this->hasMany(ContractInstallment::class);
     }
 
+    public function paymentInfo()
+    {
+        return $this->belongsTo(PaymentInfo::class, 'payment_info_id');
+    }
+
     public function purchaseRequest()
     {
         return $this->belongsTo(PurchaseRequest::class, 'purchase_request_id');
@@ -37,18 +42,17 @@ class Contract extends Model
     protected $fillable = [
         'name',
         'is_active',
-        'description',
         'payday',
         'start_date',
         'end_date',
         'recurrence',
         'is_fixed_payment',
-        'local_service',
-        'total_ammount',
+        'is_prepaid',
+        'amount',
         'quantity_of_installments',
-        'payment_type',
         'purchase_request_id',
         'supplier_id',
+        'payment_info_id',
         'updated_by',
         'deleted_by',
         'deleted_at',

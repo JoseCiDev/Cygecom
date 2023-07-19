@@ -251,9 +251,6 @@
                         id="purchase_request_files[path]" data-rule-url="true" class="form-control">
                 </div>
             </div>
-
-            {{-- FORM PRODUTO --}}
-
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
@@ -262,6 +259,15 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 15px">
+                    <input type="checkbox" name="is_supplies_contract" value="1" @checked(isset($purchaseRequest) && (bool)$purchaseRequest->is_supplies_contract)>
+                    <label for="is_supplies_contract" class="control-label">É contratação por suprimentos</label>
+                </div>
+            </div>
+            
+            {{-- FORM PRODUTO --}}
+
 
             {{-- FORNECEDOR 1 --}}
             <div class="box box-color box-bordered colored">
@@ -306,7 +312,7 @@
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for="product-category" class="control-label">Categoria</label>
-                                            <select name="purchase_request_products[0][products][0][product_category]" id="product-category" class='select2-me' style="width:100%;" data-placeholder="Escolha uma produto">
+                                            <select name="purchase_request_products[0][products][0][product_category_id]" id="product-category" class='select2-me' style="width:100%;" data-placeholder="Escolha uma produto">
                                                 <option value=""></option>
                                                 @foreach ($productCategories as $productCategory)
                                                     <option value={{ $productCategory->id }}> {{ $productCategory->name }} </option>
@@ -333,8 +339,23 @@
                                     </div>
 
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                       <div> <label for="">Cor</label></div>
+                                        <input type="text" name="purchase_request_products[0][products][0][color]">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div><label for="">Tamanho</label></div>
+                                        <input type="text" name="purchase_request_products[0][products][0][size]">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div><label for="">Modelo</label></div>
+                                        <input type="text" name="purchase_request_products[0][products][0][model]">
+                                    </div>
+                                </div>
                             </div>
                             {{-- END PRODUTO 1 --}}
+                            <hr>
                             {{-- PRODUTO 2 --}}
                             <div class="full-product-line product-form" data-product="1">
                                 <div class="row product-row">
@@ -348,7 +369,7 @@
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for="product-category" class="control-label">Categoria</label>
-                                            <select name="purchase_request_products[0][products][1][product_category]" id="product-category" class='select2-me' style="width:100%;" data-placeholder="Escolha uma produto">
+                                            <select name="purchase_request_products[0][products][1][product_category_id]" id="product-category" class='select2-me' style="width:100%;" data-placeholder="Escolha uma produto">
                                                 <option value=""></option>
                                                 @foreach ($productCategories as $productCategory)
                                                     <option value={{ $productCategory->id }}> {{ $productCategory->name }} </option>
@@ -373,7 +394,20 @@
                                                 type="number" placeholder="00" class="form-control">
                                         </div>
                                     </div>
-
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                           <div> <label for="">Cor</label></div>
+                                            <input type="text" name="purchase_request_products[0][products][1][color]">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div><label for="">Tamanho</label></div>
+                                            <input type="text" name="purchase_request_products[0][products][1][size]">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div><label for="">Modelo</label></div>
+                                            <input type="text" name="purchase_request_products[0][products][1][model]">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             {{-- END PRODUTO 2 --}}
@@ -427,7 +461,7 @@
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for="product-category" class="control-label">Categoria</label>
-                                            <select name="purchase_request_products[1][products][0][product_category]" id="product-category" class='select2-me' style="width:100%;" data-placeholder="Escolha uma produto">
+                                            <select name="purchase_request_products[1][products][0][product_category_id]" id="product-category" class='select2-me' style="width:100%;" data-placeholder="Escolha uma produto">
                                                 <option value=""></option>
                                                 @foreach ($productCategories as $productCategory)
                                                     <option value={{ $productCategory->id }}> {{ $productCategory->name }} </option>
@@ -452,10 +486,24 @@
                                                 type="number" placeholder="00" class="form-control">
                                         </div>
                                     </div>
-
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                           <div> <label for="">Cor</label></div>
+                                            <input type="text" name="purchase_request_products[1][products][0][color]">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div><label for="">Tamanho</label></div>
+                                            <input type="text" name="purchase_request_products[1][products][0][size]">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div><label for="">Modelo</label></div>
+                                            <input type="text" name="purchase_request_products[1][products][0][model]">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             {{-- END PRODUTO 1 --}}
+                            <hr>
                             {{-- PRODUTO 2 --}}
                             <div class="full-product-line product-form" data-product="1">
                                 <div class="row product-row">
@@ -469,7 +517,7 @@
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for="product-category" class="control-label">Categoria</label>
-                                            <select name="purchase_request_products[1][products][1][product_category]" id="product-category" class='select2-me' style="width:100%;" data-placeholder="Escolha uma produto">
+                                            <select name="purchase_request_products[1][products][1][product_category_id]" id="product-category" class='select2-me' style="width:100%;" data-placeholder="Escolha uma produto">
                                                 <option value=""></option>
                                                 @foreach ($productCategories as $productCategory)
                                                     <option value={{ $productCategory->id }}> {{ $productCategory->name }} </option>
@@ -494,7 +542,20 @@
                                                 type="number" placeholder="00" class="form-control">
                                         </div>
                                     </div>
-
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                           <div> <label for="">Cor</label></div>
+                                            <input type="text" name="purchase_request_products[1][products][1][color]">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div><label for="">Tamanho</label></div>
+                                            <input type="text" name="purchase_request_products[1][products][1][size]">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div><label for="">Modelo</label></div>
+                                            <input type="text" name="purchase_request_products[1][products][1][model]">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             {{-- END PRODUTO 2 --}}

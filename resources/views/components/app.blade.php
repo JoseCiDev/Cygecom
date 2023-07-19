@@ -32,10 +32,11 @@
     <!-- Color CSS -->
     <link rel="stylesheet" href="{{ asset('css/themes.css') }}">
 
-    <link rel="{{ asset('apple-touch-icon-precomposed') }}"
-        href="{{ asset('img/apple-touch-icon-precomposed.png') }}" />
+    <link rel="{{ asset('apple-touch-icon-precomposed') }}" href="{{ asset('img/apple-touch-icon-precomposed.png') }}" />
 
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/supplies.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/modal-supplies.css') }}">
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -97,6 +98,13 @@
     <script src="{{ asset('js/plugins/validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('js/plugins/validation/additional-methods.min.js') }}"></script>
 
+    <!-- MOMENT JS -->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"
+        integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg==" crossorigin="anonymous"
+        referrerpolicy="no-referrer">
+    </script>
+
     <script>
         $(() => {
             // required style
@@ -111,9 +119,10 @@
     <script src="https://unpkg.com/imask"></script>
     <script>
         $.fn.imask = function(options) {
-            const element = this[0];
-
-            return new IMask(element, options);
+            return this.each(function() {
+                const element = this;
+                new IMask(element, options);
+            });
         }
     </script>
 
@@ -164,6 +173,20 @@
                             @endif
                         </ul>
                     </li>
+                    @if (auth()->user()->profile->is_admin || auth()->user()->profile->name === 'suprimentosNutrition' || auth()->user()->profile->name === 'suprimentosPharma')
+                        <li>
+                            <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+                                <span>SUPRIMENTOS</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ route('supplies.index') }}">Introdução</a></li>
+                                <li><a href="{{ route('supplies.product') }}">Produtos</a></li>
+                                <li><a href="{{ route('supplies.service') }}">Serviços</a></li>
+                                <li><a href="{{ route('supplies.contract') }}">Contratos</a></li>
+                            </ul>
+                        </li>
+                    @endif
                 </ul>
                 <x-navbar.user>
                     <x-navbar.notification />
@@ -171,19 +194,16 @@
             </div>
         </div>
 
-        <div id="main-content-container">
-            <div id="main">
-                <div class="container">
-                    <div class="page-header">
-                        {{ $title }}
-                    </div>
-                    <x-breadcrumb />
-                    <x-alert />
-                    {{ $slot }}
+        <div id="main">
+            <div class="container-fluid">
+                <div class="page-header">
+                    {{ $title }}
                 </div>
+                <x-breadcrumb />
+                <x-alert />
+                {{ $slot }}
             </div>
         </div>
-    </div>
     </div>
 
     <script>

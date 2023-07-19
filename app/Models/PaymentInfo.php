@@ -5,13 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ServicePaymentInfo extends Model
+class PaymentInfo extends Model
 {
     use HasFactory;
 
+    public function contract()
+    {
+        return $this->hasOne(Service::class);
+    }
+
     public function service()
     {
-        return $this->belongsTo(Service::class, 'service_id');
+        return $this->hasOne(Service::class);
     }
 
     public function deletedByUser()
@@ -25,9 +30,7 @@ class ServicePaymentInfo extends Model
     }
 
     protected $fillable = [
-        'payment_type',
-        'description',
-        'service_id',
+        'payment_method',
         'updated_by',
         'deleted_by',
     ];

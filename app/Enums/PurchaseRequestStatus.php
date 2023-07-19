@@ -6,8 +6,8 @@ use App\Contracts\EnumInterface;
 
 enum PurchaseRequestStatus: string implements EnumInterface
 {
-    case PENDING      = 'pending';
-    case APPROVED     = 'approved';
+    case PENDING     = 'pending';
+    case APPROVED    = 'approved';
     case DISAPPROVED = 'disapproved';
 
     public function label(): string
@@ -18,10 +18,10 @@ enum PurchaseRequestStatus: string implements EnumInterface
     public static function getLabel($value): string
     {
         return match ($value) {
-            self::PENDING      => 'Pendente',
-            self::APPROVED     => 'Aprovado',
+            self::PENDING     => 'Pendente',
+            self::APPROVED    => 'Aprovado',
             self::DISAPPROVED => 'Desaprovado',
-            default               => '---',
+            default           => '---',
         };
     }
 }

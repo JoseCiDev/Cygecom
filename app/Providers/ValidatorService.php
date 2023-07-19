@@ -185,12 +185,11 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'cost_center_apportionments.*.apportionment_percentage' => ['required_without:cost_center_apportionments.*.apportionment_currency', 'nullable', 'numeric', 'min:0', 'max:100'],
         'cost_center_apportionments.*.apportionment_currency'   => ['required_without:cost_center_apportionments.*.apportionment_percentage', 'nullable', 'numeric', 'min:0'],
         'is_comex'                                              => ['required', 'boolean'],
-        'local_description'                                     => ['required', 'string'],
         'reason'                                                => ['required', 'string'],
         'description'                                           => ['nullable', 'string'],
         'desired_date'                                          => ['nullable', 'date'],
-        'purchase_request_files'                                   => ['nullable', 'array'],
-        'purchase_request_files.*.path'                            => ['nullable', 'string'],
+        'purchase_request_files'                                => ['nullable', 'array'],
+        'purchase_request_files.*.path'                         => ['nullable', 'string'],
     ];
 
     public $messagesForPurchaseRequest = [
@@ -207,14 +206,8 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'cost_center_apportionments.*.apportionment_currency.numeric'            => 'O valor de rateio deve ser um número.',
         'cost_center_apportionments.*.apportionment_currency.min'                => 'O valor de rateio deve ser no mínimo :min.',
 
-        // 'is_supplies_quote.required' => 'O campo de cotação de suprimentos é obrigatório.',
-        // 'is_supplies_quote.boolean'  => 'O campo de cotação de suprimentos deve ser um valor booleano.',
-
         'is_comex.required' => 'O campo de comex é obrigatório.',
         'is_comex.boolean'  => 'O campo de comex deve ser um valor booleano.',
-
-        'local_description.required' => 'A descrição local é obrigatória.',
-        'local_description.string'   => 'A descrição local deve ser uma string.',
 
         'reason.required' => 'o motivo da compra é obrigatória.',
         'reason.string'   => 'o motivo da compra deve ser uma string.',

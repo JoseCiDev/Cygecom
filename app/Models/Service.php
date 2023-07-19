@@ -9,9 +9,9 @@ class Service extends Model
 {
     use HasFactory;
 
-    public function servicePaymentInfo()
+    public function paymentInfo()
     {
-        return $this->hasMany(ServicePaymentInfo::class);
+        return $this->belongsTo(PaymentInfo::class, 'payment_info_id');
     }
 
     public function purchaseRequest()
@@ -37,12 +37,18 @@ class Service extends Model
     protected $fillable = [
         'description',
         'payday',
+        'is_prepaid',
         'is_finished',
+        'already_provided',
         'local_service',
         'price',
         'hours_performed',
+        'seller',
+        'email',
+        'phone',
         'purchase_request_id',
         'supplier_id',
+        'payment_info_id',
         'updated_by',
         'deleted_by',
         'deleted_at',

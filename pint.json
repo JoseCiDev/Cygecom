@@ -64,6 +64,7 @@
                 "require",
                 "require_once"
             ]
-        }
+        },
+        "no_spaces_in_assignment": true
     }
 }

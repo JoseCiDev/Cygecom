@@ -17,12 +17,12 @@ class PurchaseRequest extends Model
 
     public function service()
     {
-        return $this->hasMany(Service::class);
+        return $this->hasOne(Service::class);
     }
 
     public function contract()
     {
-        return $this->hasMany(Contract::class);
+        return $this->hasOne(Contract::class);
     }
 
     public function costCenterApportionment()
@@ -32,7 +32,7 @@ class PurchaseRequest extends Model
 
     public function purchaseRequestProduct()
     {
-        return $this->belongsTo(PurchaseRequestProduct::class, 'purchase_request_id');
+        return $this->hasMany(PurchaseRequestProduct::class);
     }
 
     public function user()
@@ -56,9 +56,11 @@ class PurchaseRequest extends Model
         'is_supplies_quote',
         'is_comex',
         'local_description',
+        'is_supplies_contract',
         'reason',
         'user_id',
         'description',
+        'observation',
         'desired_date',
         'updated_by',
         'deleted_by',
