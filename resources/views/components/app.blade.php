@@ -197,7 +197,7 @@
         <div id="main">
             <div class="container-fluid">
                 <div class="page-header">
-                    {{ $title }}
+                    {{ $title ?? null }}
                 </div>
                 <x-breadcrumb />
                 <x-alert />
