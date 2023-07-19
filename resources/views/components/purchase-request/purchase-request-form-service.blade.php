@@ -948,7 +948,7 @@
             $linkUtil.prop('hidden', isContractedBySupplies);
 
             //$installmentsTable.clear().draw();
-        }).first().trigger('change');
+        }).filter(':checked').trigger('change');
 
         const $inputInstallmentsNumber = $('#installments-number');
 
