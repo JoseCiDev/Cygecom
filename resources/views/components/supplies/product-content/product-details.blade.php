@@ -57,7 +57,7 @@
                                     <hr>
                                     <p>Solicitação criada em: {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</p> 
                                     <p>Solicitação atualizada em: {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}</p>
-                                    <p>Solicitação desejada para: {{$request->desired_date ? \Carbon\Carbon::parse($service->desired_date)->format('d/m/Y') : "---"}}</p>
+                                    <p>Solicitação desejada para: {{$request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : "---"}}</p>
                                 </div>
                             </div>
 
