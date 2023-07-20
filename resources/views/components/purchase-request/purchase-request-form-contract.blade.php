@@ -362,7 +362,8 @@
                             <label for="attendant" class="control-label">Vendedor/Atendente</label>
                             <input type="text" id="attendant" name="contract[seller]"
                                 placeholder="Pessoa responsável pela cotação" class="form-control"
-                                data-rule-minlength="2">
+                                data-rule-minlength="2"
+                                value="{{ $purchaseRequest?->contract?->seller ?? null }}">
                         </div>
                     </div>
 
@@ -371,7 +372,8 @@
                         <div class="form-group">
                             <label for="phone-number" class="control-label">Telefone</label>
                             <input type="text" name="contract[phone]" id="phone-number" placeholder="(00) 0000-0000"
-                                class="form-control mask_phone">
+                                class="form-control mask_phone"
+                                value="{{ $purchaseRequest?->contract?->phone ?? null }}">
                         </div>
                     </div>
 
@@ -381,7 +383,8 @@
                             <label for="email" class="control-label">E-mail</label>
                             <input type="text" name="contract[email]" id="email"
                                 placeholder="user_email@vendedor.com.br" class="form-control"
-                                data-rule-minlength="2">
+                                data-rule-minlength="2"
+                                value="{{ $purchaseRequest?->contract?->email ?? null }}">
                         </div>
                     </div>
 

@@ -16,7 +16,7 @@ class PurchaseRequestFormContract extends Component
 
     private $isCopy;
 
-    public function __construct(PurchaseRequestService $purchaseRequestService, int $id = null, $isCopy = false)
+    public function __construct(PurchaseRequestService $purchaseRequestService, int $id  = null, $isCopy = false)
     {
         $this->purchaseRequestService = $purchaseRequestService;
         $this->isCopy                 = $isCopy;
