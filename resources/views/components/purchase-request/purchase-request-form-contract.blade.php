@@ -27,6 +27,8 @@
     }
 </style>
 
+<x-ModalSupplierRegister />
+
 <div class="row">
 
     <div class="col-sm-6">
@@ -52,9 +54,15 @@
 
 <div class="box-content">
 
+    @php
+        if(isset($purchaseRequest) && !$isCopy) {
+            $route = route('request.contract.update', ['type' => $purchaseRequest->type, 'id' => $id]);
+        }else {
+            $route = route('request.contract.register');
+        }
+    @endphp
     <form class="form-validate" id="request-form" method="POST"
-        action="@if (isset($purchaseRequest) && !$isCopy) {{ route('request.contract.update', ['type' => $purchaseRequest->type, 'id' => $id]) }}
-                @else {{ route('request.contract.register') }} @endif">
+        action="{{$route}}">
 
         @csrf
 
@@ -588,6 +596,7 @@
 
 </div>
 
+<script src="{{ asset('js/modal-supplier-register/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
@@ -1107,5 +1116,17 @@
                 $('#modal-edit-installment').modal('hide');
             });
         }
+
+        // const btnModalSupplierRegister = $("#btn-modal-supplier-register");
+        // const elementsWithSupplierID = $('select[name*="supplier_id"]');
+        // elementsWithSupplierID.each(function () {
+        //     $(this).select2({
+        //         formatNoMatches: function () {
+        //             return `<button onclick="$('#btn-modal-supplier-register').click();" type='button' title='Registrar novo fornecedor' class='btn btn-primary'" >
+        //                         <i class='fa fa-plus'></i> Registar novo fornecedor
+        //                     </button>`
+        //         },
+        //     });
+        // });
     });
 </script>

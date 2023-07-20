@@ -22,6 +22,8 @@ return new class() extends Migration
             $table->string('state_registration')->nullable();
             $table->string('representative')->nullable();
             $table->string('email')->nullable();
+            $table->string('callisto_code')->nullable();
+            $table->string('senior_code')->nullable();
             $table->string('supplier_type_callisto')->nullable();
             $table->string('payment_type_callisto')->nullable();
 

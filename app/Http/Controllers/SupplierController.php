@@ -39,12 +39,12 @@ class SupplierController extends Controller
 
     public function showRegistrationForm()
     {
-        return view('components.supplier.register');
+        return view('components.supplier.form');
     }
 
     public function register(Request $request)
     {
-        $data      = $request->all();
+        $data = $request->all();
         $validator = $this->validatorService->supplier($data);
 
         if ($validator->fails()) {
@@ -60,6 +60,25 @@ class SupplierController extends Controller
         session()->flash('success', "Fornecedor cadastrado com sucesso!");
 
         return redirect()->route('suppliers');
+    }
+
+    public function registerAPI(Request $request)
+    {
+        $data = $request->all();
+
+        $validator = $this->validatorService->supplier($data);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        try {
+            $this->supplierService->registerSupplier($data);
+        } catch (Exception $error) {
+            return response()->json(['error' => 'Não foi possível fazer o registro no banco de dados.'], 500);
+        }
+
+        return response()->json(['message' => 'Fornecedor cadastrado com sucesso!', 'cpf_cnpj' => $data['cpf_cnpj']], 200);
     }
 
     public function update(Request $request, int $id)
