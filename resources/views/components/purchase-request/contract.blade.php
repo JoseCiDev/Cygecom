@@ -8,8 +8,7 @@
         <div class="col-sm-12">
 
                 @php($purchaseRequestId = $purchaseRequestIdToCopy ?? null)
-
-                <x-PurchaseRequestFormContract :id="$purchaseRequestId" :isCopy="!$purchaseRequestId" />
+                <x-PurchaseRequestFormContract :id="$purchaseRequestId" isCopy />
             </div>
         </div>
     </div>

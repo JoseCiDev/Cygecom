@@ -54,9 +54,15 @@
 
 <div class="box-content">
 
+    @php
+        if(isset($purchaseRequest) && !$isCopy) {
+            $route = route('request.contract.update', ['type' => $purchaseRequest->type, 'id' => $id]);
+        }else {
+            $route = route('request.contract.register');
+        }
+    @endphp
     <form class="form-validate" id="request-form" method="POST"
-        action="@if (isset($purchaseRequest) && !$isCopy) {{ route('request.contract.update', ['type' => $purchaseRequest->type, 'id' => $id]) }}
-                @else {{ route('request.contract.register') }} @endif">
+        action="{{$route}}">
 
         @csrf
 
