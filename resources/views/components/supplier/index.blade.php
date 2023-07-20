@@ -15,7 +15,7 @@
                                 <h3 class="pull-left">Todos os fornecedores</h3>
                             </div>
                             <div class="col-md-6">
-                                <a href="{{ route('supplierRegister') }}" class="btn pull-right btn-large" style="margin-right: 15px">Cadastrar novo</a>
+                                <a href="{{ route('supplier.form') }}" class="btn pull-right btn-large" style="margin-right: 15px">Cadastrar novo</a>
                             </div>
                         </div>
                     </div>

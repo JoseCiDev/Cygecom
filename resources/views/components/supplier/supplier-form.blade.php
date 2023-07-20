@@ -4,7 +4,7 @@
     }
 </style>
 
-<form method="POST" action=" {{ $isRegister ? route('supplierRegister') : route('supplierUpdate', ['id' => $id]) }}"
+<form method="POST" action=" {{ $isRegister ? route('supplier.register', ['is_modal' => 'is_modal']) : route('supplier.update', ['id' => $id]) }}"
     class="form-validate" id="supplier-form">
     @csrf
 

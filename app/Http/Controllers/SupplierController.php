@@ -39,12 +39,12 @@ class SupplierController extends Controller
 
     public function showRegistrationForm()
     {
-        return view('components.supplier.register');
+        return view('components.supplier.form');
     }
 
-    public function register(Request $request)
+    public function register(Request $request, $is_modal = null)
     {
-        $data      = $request->all();
+        $data = $request->all();
         $validator = $this->validatorService->supplier($data);
 
         if ($validator->fails()) {
@@ -58,6 +58,10 @@ class SupplierController extends Controller
         }
 
         session()->flash('success', "Fornecedor cadastrado com sucesso!");
+
+        if ($is_modal === 'is_modal') {
+            return back();
+        }
 
         return redirect()->route('suppliers');
     }
