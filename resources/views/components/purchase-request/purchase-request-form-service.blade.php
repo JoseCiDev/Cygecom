@@ -7,7 +7,7 @@
 
 <style>
     .cost-center-container {
-        margin-bottom: 10px
+        margin-bottom: 10px;
     }
 </style>
 
@@ -20,10 +20,9 @@
     @if (isset($purchaseRequest))
         <div class="col-md-6 pull-right">
             <x-modalDelete />
-            <button data-route="purchaseRequests"
-                data-name="{{ 'Solicitação de compra - ID ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
-                title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
+            <button data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - ID ' . $purchaseRequest->id }}"
+                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip" title="Excluir"
+                class="btn btn-danger pull-right" style="margin-right: 15px">
                 Excluir solicitação
             </button>
         </div>
@@ -209,8 +208,8 @@
                             id="already-provided" type="radio" @checked((isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided) || !isset($purchaseRequest))>
                         <label class="form-check-label" for="already-provided">Sim</label>
 
-                        <input name="service[already_provided]" value="0" class="radio-already-provided" type="radio"
-                            id="not-provided" style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided)>
+                        <input name="service[already_provided]" value="0" class="radio-already-provided"
+                            type="radio" id="not-provided" style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided)>
                         <label class="form-check-label" for="not-provided">Não</label>
                     </div>
                 </div>
@@ -225,7 +224,7 @@
                         <label for="reason" class="control-label">
                             Motivo da solicitação
                         </label>
-                        <textarea required name="reason" id="reason" rows="4"
+                        <textarea data-rule-required="true" minlength="20" name="reason" id="reason" rows="4"
                             placeholder="Ex: Ar condicionado da sala de reuniões do atrium apresenta defeitos de funcionamento"
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
@@ -240,7 +239,7 @@
                 <div class="col-sm-8">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
-                        <textarea required name="description" id="description" rows="4"
+                        <textarea data-rule-required="true" minlength="40" name="description" id="description" rows="4"
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
@@ -260,10 +259,11 @@
                         <label for="local-description" class="control-label">
                             Local de prestação do serviço
                         </label>
-                        <input name="local_description" value="{{ $purchaseRequest->local_description ?? null }}"
-                            type="text" id="local-description"
+                        <input data-rule-required="true" minlength="20" name="local_description"
+                            value="{{ $purchaseRequest->local_description ?? null }}" type="text"
+                            id="local-description"
                             placeholder="Ex: HKM - Av. Gentil Reinaldo Cordioli, 161 - Jardim Eldorado"
-                            class="form-control" data-rule-required="true" data-rule-minlength="2" required>
+                            class="form-control">
                     </div>
                 </div>
 
@@ -284,7 +284,7 @@
                         <input name="is_comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
                             type="radio" data-skin="minimal">
                         <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
-                        <input name="is_comex"value="0" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) class="radio-comex"
+                        <input name="is_comex"value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest)) class="radio-comex"
                             type="radio" data-skin="minimal">
                         <label class="form-check-label" for="">Não</label>
                     </div>
@@ -354,7 +354,7 @@
                         <div class="form-group">
                             <label for="phone-number" class="control-label">Telefone</label>
                             <input type="text" name="service[phone]" id="phone-number"
-                                placeholder="(00) 0000-0000" class="form-control mask_phone"
+                                placeholder="(00) 0000-0000" class="form-control" minLength="14"
                                 value="{{ $purchaseRequest?->service?->phone ?? null }}">
                         </div>
                     </div>
@@ -363,8 +363,8 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="email" class="control-label">E-mail</label>
-                            <input type="text" name="service[email]" id="email"
-                                placeholder="user_email@vendedor.com.br" class="form-control" data-rule-minlength="2"
+                            <input type="email" name="service[email]" id="email"
+                                placeholder="user_email@vendedor.com.br" class="form-control" data-rule-email="true"
                                 value="{{ $purchaseRequest?->service?->email ?? null }}">
                         </div>
                     </div>
@@ -374,94 +374,12 @@
 
             <hr>
 
-
-            {{-- <div class="row">
-                <div class="col-md-6" style="margin-top: 15px">
-                    <div><label for="service[payday]" class="control-label">Data de pagamento</label></div>
-                    <input type="date" name="service[payday]"
-                        value="@if (isset($purchaseRequest->service[0])) {{ $purchaseRequest->service[0]->payday }} @endif">
-                </div>
-            </div> --}}
-
-            {{-- <div class="row">
-                <div class="col-md-6" style="margin-top: 15px">
-                    <label for="service[local_service]" class="control-label">Local do serviço</label>
-                    <textarea required name="service[local_service]" rows="4" placeholder="Local do serviço"
-                        class="form-control text-area no-resize">
-@if (isset($purchaseRequest->service[0]))
-{{ $purchaseRequest->service[0]->local_service }}
-@endif
-</textarea>
-                </div>
-            </div> --}}
-
-            {{-- <div class="row">
-                <div class="col-md-6" style="margin-top: 15px">
-                    <label for="" class="control-label"> <sup style="color:red">*</sup>Preço (R$) </label>
-                    <div class="input-group">
-                        <span class="input-group-addon">R$</span>
-                        <input name="service[price]" type="number" placeholder="0.00" class="form-control"
-                            min="0"
-                            value="@if (isset($purchaseRequest->service[0])) {{ $purchaseRequest->service[0]->price }} @endif">
-                    </div>
-                </div>
-            </div> --}}
-
-            {{-- <div class="row">
-                <div class="col-md-6" style="margin-top: 15px">
-                    <div><label for="service[hours_performed]" class="control-label">Horas executadas</label></div>
-                    <input type="text" name="service[hours_performed]"
-                        value="@if (isset($purchaseRequest->service[0])) {{ $purchaseRequest->service[0]->hours_performed }} @endif">
-                </div>
-            </div> --}}
-            {{-- <hr>
-            <div class="row">
-                <div class="col-md-6" style="margin-top: 15px">
-                    <div><label for="service[payment_info][id]" class="control-label">ID de payment_info</label></div>
-                    <input type="text" name="service[payment_info][id]" readonly
-                        value="@if (isset($purchaseRequest->service[0]->paymentInfo)) {{ $purchaseRequest->service[0]->paymentInfo->id }} @endif">
-                </div>
-            </div> --}}
-            {{-- <div class="row">
-                <div class="col-md-6" style="margin-top: 15px">
-                    <div><label for="service[payment_info][payment_type]" class="control-label">Tipo de
-                            pagamento</label></div>
-                    <input type="text" name="service[payment_info][payment_type]"
-                        value="@if (isset($purchaseRequest->service[0]->paymentInfo)) {{ $purchaseRequest->service[0]->paymentInfo->payment_type }} @endif">
-                </div>
-            </div> --}}
-
-            {{-- <div class="row">
-                <div class="col-md-6" style="margin-top: 15px">
-                    <div><label for="service[payment_info][payment_type]" class="control-label">Informação/Descrição
-                            do pagamento</label></div>
-                    <input type="text" name="service[payment_info][description]" ,
-                        value="@if (isset($purchaseRequest->service[0]->paymentInfo)) {{ $purchaseRequest->service[0]->paymentInfo->description }} @endif">
-                </div>
-            </div> --}}
-            {{-- END SERVIÇO --}}
-
-
-
             <div class="payment-block">
                 <div class="row center-block" style="padding-bottom: 10px;">
                     <h4>PAGAMENTO</h4>
                 </div>
 
                 <div class="row">
-                    {{-- VALOR TOTAL --}}
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="amount" class="control-label">Valor total do serviço</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">R$</span>
-                                <input type="number" name="service[price]" id="amount" placeholder="0.00"
-                                    class="form-control amount" min="0"
-                                    value="{{ $purchaseRequest?->service?->price ?? null }}">
-                            </div>
-                        </div>
-                    </div>
-
                     {{-- CONDIÇÃO DE PAGAMENTO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
@@ -473,6 +391,22 @@
                                 <option value="1" @selected(isset($purchaseRequest->service) && (bool) $purchaseRequest->service->is_prepaid)>Pagamento antecipado</option>
                                 <option value="0" @selected(isset($purchaseRequest->service) && !(bool) $purchaseRequest->service->is_prepaid)>Pagamento após execução</option>
                             </select>
+                        </div>
+                    </div>
+
+                    {{-- VALOR TOTAL --}}
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label for="format-amount" class="control-label">Valor total do serviço</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">R$</span>
+                                <input type="text" id="format-amount" placeholder="0.00"
+                                    class="form-control format-amount"
+                                    value="{{ (float) $purchaseRequest?->service?->price ?? null }}">
+                                <input type="hidden" name="service[price]" id="amount"
+                                    class="amount no-validation"
+                                    value="{{ (float) $purchaseRequest?->service?->price ?? null }}">
+                            </div>
                         </div>
                     </div>
 
@@ -577,103 +511,6 @@
     <x-modal-edit-service-installment :statusValues="$statusValues" />
 
 </div>
-{{--
-<script>
-    $(document).ready(function() {
-        const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
-        const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
-
-        // Verifica quem vai cotar e aplica regra em campo description
-        $('input[name="is_supplies_quote"]').change(function() {
-            if ($('#supplie_quote').is(':checked')) {
-                $('#description').prop('required', true)
-                $('.description-span').show()
-            } else {
-                $('#description').prop('required', false)
-                $('.description-span').hide()
-            }
-        });
-
-        function disableSelectedOptions() {
-            const selectedValues = $.map($('.cost-center-container select'), (self) => {
-                return $(self).val();
-            });
-            $('.cost-center-container option').each((_, option) => {
-                const includedValues = selectedValues.includes($(option).prop('value'));
-                const isSelectedOption = $(option).is(':selected');
-                const disabled = includedValues && !isSelectedOption;
-                $(option).prop({
-                    disabled
-                });
-            })
-        }
-
-        function checkCostCenterCount() {
-            const costCenterCount = $('.cost-center-container').length;
-            costCenterCount > 1 ? $('.delete-cost-center').prop('disabled', false) : $('.delete-cost-center')
-                .prop('disabled', true);
-        }
-        checkCostCenterCount()
-
-        function updateApportionmentFields() {
-            const hasPercentageInput = $costCenterPercentage.filter(function() {
-                return $(this).val() !== '';
-            }).length > 0;
-
-            const hasCurrencyInput = $costCenterCurrency.filter(function() {
-                return $(this).val() !== '';
-            }).length > 0;
-
-            $costCenterPercentage.not(':disabled').prop('disabled', !hasPercentageInput && hasCurrencyInput);
-            $costCenterCurrency.not(':disabled').prop('disabled', !hasCurrencyInput && hasPercentageInput);
-
-            if (!hasPercentageInput && !hasCurrencyInput) {
-                $costCenterPercentage.prop('disabled', false);
-                $costCenterCurrency.prop('disabled', false);
-            }
-        }
-        updateApportionmentFields();
-
-        // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
-        $costCenterPercentage.add($costCenterCurrency).on('input', updateApportionmentFields);
-
-        // Add Centro de Custo
-        $('.add-cost-center-btn').click(function() {
-            updateApportionmentFields();
-            const newRow = $('.cost-center-container').last().clone();
-            newRow.find(
-                'select[name^="cost_center_apportionments"], input[name^="cost_center_apportionments"]'
-            ).each(function() {
-                const oldName = $(this).attr('name');
-                const regexNewName = /\[(\d+)\]/;
-                const lastIndex = Number(oldName.match(regexNewName).at(-1));
-                const newName = oldName.replace(regexNewName, `[${lastIndex + 1}]`);
-                $(this).attr('name', newName);
-            });
-
-            newRow.find("input, select").val("");
-            newRow.find('.select2-container').remove();
-            newRow.find('.select2-me').select2();
-
-            $('.cost-center-container').last().after(newRow);
-            newRow.find('.delete-cost-center').removeAttr('hidden');
-            checkCostCenterCount();
-            disableSelectedOptions();
-        });
-
-        $(document).on('click', '.delete-cost-center', function() {
-            $(this).closest('.cost-center-container').remove();
-            updateApportionmentFields();
-            checkCostCenterCount();
-            disableSelectedOptions();
-        });
-
-        $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
-    });
-</script> --}}
-
-
-
 
 
 <script>
@@ -756,10 +593,25 @@
         });
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
+
+
+        const $amount = $('.amount');
+        const $serviceAmount = $('#format-amount');
+        const $phoneNumber = $('#phone-number');
+
+        $serviceAmount.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $amount.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
 
 
         const $selectSupplier = $('.select-supplier');
-        const $amount = $('.amount');
         const $paymentMethod = $('.payment-method');
         const $paymentInfo = $('.payment-info');
 
@@ -869,7 +721,7 @@
                 const idInput = document.createElement('input');
                 idInput.type = 'number';
                 idInput.name = 'service[service_installments][0][id]';
-                idInput.value = purchaseRequest?.service?.installments[0].id || "";
+                idInput.value = purchaseRequest?.service?.installments[0]?.id || "";
                 idInput.hidden = true;
 
                 const expireDateInput = document.createElement('input');
@@ -959,6 +811,7 @@
             const installmentValue = ($amount.val() / numberOfInstallments).toFixed(2);
 
             const installmentsData = [];
+            const rowsData = [];
 
             for (let i = 1; i <= numberOfInstallments; i++) {
                 const installmentDate = new Date();
@@ -974,6 +827,7 @@
                 };
 
                 installmentsData.push(installmentData);
+                rowsData.push(installmentData);
             }
 
             for (const installmentData of installmentsData) {
@@ -983,7 +837,8 @@
 
             fillHiddenInputsWithRowData();
 
-            $installmentsTable.draw();
+            //$installmentsTable.draw();
+            $installmentsTable.clear().rows.add(rowsData).draw();
         }
 
         let selectedRowIndex = null;
@@ -1088,28 +943,26 @@
             $installmentsTable.clear();
             generateInstallments(numberOfInstallments);
         });
+
+        // masks
+        $phoneNumber.imask({
+            mask: [{
+                    mask: '(00) 0000-0000'
+                },
+                {
+                    mask: '(00) 00000-0000'
+                }
+            ]
+        });
+
+        $serviceAmount.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 0,
+            max: 1000000000,
+        });
     });
 </script>
-
-
-
-
-{{-- SERVIÇO --}}
-{{-- <div class="row">
-    <div class="col-md-6" style="margin-top: 15px">
-        <input type="checkbox" name="service[is_prepaid]" value="1" @checked(isset($purchaseRequest->service[0]) && $purchaseRequest->service[0]->is_prepaid)>
-        <label for="service[is_prepaid]" class="control-label">É pagamento antecipado</label>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6" style="margin-top: 15px">
-        <input type="checkbox" name="service[already_provided]" value="1" @checked(isset($purchaseRequest->service[0]) && $purchaseRequest->service[0]->already_provided)>
-        <label for="service[already_provided]" class="control-label">Seviço já foi executado</label>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6" style="margin-top: 15px">
-        <input type="checkbox" name="service[is_finished]" value="1" @checked(isset($purchaseRequest->service[0]) && $purchaseRequest->service[0]->is_finished)>
-        <label for="service[is_finished]" class="control-label">Contratação de serviço finalizado</label>
-    </div>
-</div> --}}
