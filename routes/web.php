@@ -13,5 +13,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'showProfile'])->name('profile');
     Route::post('/users/{id}', [App\Http\Controllers\Auth\UserController::class, 'userUpdate'])->name('userUpdate');
 
-    Route::post('/suppliers/register/{is_modal?}', [App\Http\Controllers\SupplierController::class, 'register'])->name('supplier.register');
+    Route::post('/suppliers/register', [App\Http\Controllers\SupplierController::class, 'register'])->name('supplier.register');
 });
