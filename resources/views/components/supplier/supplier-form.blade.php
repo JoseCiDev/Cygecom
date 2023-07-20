@@ -3,8 +3,11 @@
         margin: 12px 0px;
     }
 </style>
-
-<form method="POST" action=" {{ $isRegister ? route('supplierRegister') : route('supplierUpdate', ['id' => $id]) }}"
+@php
+    if ($isRegister)  $route = route('supplier.register');
+    else $route = route('supplier.update', ['id' => $id]);
+@endphp
+<form method="POST" action="{{$route}}"
     class="form-validate" id="supplier-form">
     @csrf
 
@@ -252,6 +255,9 @@
     </div>
 </form>
 
+@if ($isAPI)
+    <script src="{{ asset('js/modal-supplier-register/submit-to-api.js') }}"></script>
+@endif
 
 <script>
     $(() => {

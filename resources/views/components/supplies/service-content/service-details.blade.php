@@ -42,7 +42,7 @@
                                 <p>Contratação deve ser por: {{$request->is_supplies_contract ? 'Suprimentos' : 'Centro de custo solicitante'}}</p>
                                 <p>COMEX: {{$request->is_comex ? 'Sim' : 'Não'}}</p>
                                 <p>Link de sugestão: 
-                                    @if ($request->PurchaseRequestFile->first()->path) 
+                                    @if ($request->PurchaseRequestFile->first()?->path) 
                                         <a href="{{$request->PurchaseRequestFile->first()->path}}" target="_blank" rel="noopener noreferrer">link</a>
                                     @else
                                     ---

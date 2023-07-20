@@ -4,6 +4,8 @@
     }
 </style>
 
+<x-ModalSupplierRegister />
+
 <div class="box-title">
     <div class="row">
         <div class="col-md-6">
@@ -577,6 +579,7 @@
     </form>
 </div>
 
+<script src="{{ asset('js/modal-supplier-register/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
