@@ -327,7 +327,7 @@ class PurchaseRequestService extends ServiceProvider
 
         $contract = Contract::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $supplierId], $contractData);
 
-        $existingInstallments = ServiceInstallment::where('service_id', $contract->id)->get();
+        $existingInstallments = ContractInstallment::where('contract_id', $contract->id)->get();
 
         $this->updateNumberOfInstallments($existingInstallments, $contractsInstallmentsData);
 
