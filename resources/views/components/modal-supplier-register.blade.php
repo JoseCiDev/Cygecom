@@ -6,7 +6,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <x-SupplierForm />
+                    <x-SupplierForm isAPI />
                 </div>
             </div>
             <div class="modal-footer">
@@ -18,7 +18,7 @@
     </div>
 </div>
 
-<button style="visibility: hidden" id='btn-modal-supplier-register' type='button' rel='tooltip' title='Registrar novo fornecedor' class='btn btn-primary' data-toggle='modal' data-target='#modal-supplier-register' >
+<button style="display: none" id='btn-modal-supplier-register' type='button' rel='tooltip' title='Registrar novo fornecedor' class='btn btn-primary' data-toggle='modal' data-target='#modal-supplier-register' >
     <i class='fa fa-plus'></i> Registar novo fornecedor
 </button>
 

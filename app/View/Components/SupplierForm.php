@@ -12,10 +12,13 @@ class SupplierForm extends Component
     public int|null $id;
 
     public Supplier|null $supplier;
-    public function __construct(int|null $id = null, $supplier = null)
+
+    public string|null $isAPI;
+    public function __construct(int|null $id = null, $supplier = null, $isAPI = false)
     {
         $this->id       = $id;
         $this->supplier = $supplier;
+        $this->isAPI = $isAPI;
     }
 
     public function render(): View|Closure|string
@@ -23,9 +26,8 @@ class SupplierForm extends Component
         if ($this->id && $this->supplier) {
             $params = ['id' => $this->id, "supplier" => $this->supplier, 'isRegister' => false];
         } else {
-            $params = ['isRegister' => true];
+            $params = ['isRegister' => true, 'isAPI' => $this->isAPI];
         }
-
         return view('components.supplier.supplier-form', $params);
     }
 }
