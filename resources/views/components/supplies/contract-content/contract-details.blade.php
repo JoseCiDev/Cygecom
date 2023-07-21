@@ -179,7 +179,7 @@
 
                         <div class="request-details-content">
                             <div class="request-details-content-box">
-                                <h4><i class="fa fa-tags"></i> <strong>Contrato - Informações</strong></h4>
+                                <h4><i class="glyphicon glyphicon-list-alt"></i> <strong>Contrato - Informações</strong></h4>
                                 <div class="tab-content padding">
                                     <div class="row">
                                         <div class="col-md-4">
