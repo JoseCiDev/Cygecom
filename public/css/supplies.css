@@ -33,10 +33,18 @@
     border: 1px solid rgb(221, 221, 221);
 }
 .request-details-content-box-apportionment {
-    display: flex;
-    gap: 10px;
+    padding: 10px;
+    border: 1px solid rgb(174, 174, 174);
 }
-.request-details-content-box p {
+.request-details-content-box-apportionment .row {
+    border-bottom: 1px solid rgb(174, 174, 174);
+    margin: 0 1px;
+}
+.request-details-content-box-apportionment .row div {
+    padding: 10px 15px;
+}
+.request-details-content-box p,
+.request-details-content-box span {
     font-size: 16px;
 }
 .request-details-content-box-contract {
