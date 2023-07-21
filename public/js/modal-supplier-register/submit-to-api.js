@@ -3,6 +3,7 @@ $(() => {
         bootbox.alert({
                 title: "<i class='fa fa-check'></i> Registro feito com sucesso!",
                 message: `<strong>CNPJ:</strong> ${response.cpf_cnpj} <br> ${response.message}`,
+                className: 'bootbox-custom-success'
             });
         
         $("#modal-supplier-register").modal("hide");

@@ -1,0 +1,10 @@
+.bootbox .modal-content  {
+    border-radius: 8px;
+}
+
+.bootbox-custom-success .modal-header {
+    background-color: #dff0d8;
+    color: #3c763d;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
