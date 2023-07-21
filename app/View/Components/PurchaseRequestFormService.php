@@ -29,8 +29,27 @@ class PurchaseRequestFormService extends Component
         $suppliers = Supplier::all();
         $userCostCenters = auth()->user()->userCostCenterPermission;
         $costCenters     = CostCenter::whereIn('id', $userCostCenters->pluck('cost_center_id'))->get();
+        $statusValues    = [
+            [
+                'id'          => 1,
+                'description' => 'PAGO',
+            ],
+            [
+                'id'          => 2,
+                'description' => 'EM ATRASO',
+            ],
+            [
+                'id'          => 3,
+                'description' => 'PENDENTE',
+            ],
+        ];
 
-        $params = ["companies" => $companies, "costCenters" => $costCenters, 'suppliers' => $suppliers];
+        $params = [
+            'companies' => $companies,
+            'costCenters' => $costCenters,
+            'suppliers' => $suppliers,
+            'statusValues' => $statusValues
+        ];
 
         if ($this->id) {
             $params['id']           = $this->id;

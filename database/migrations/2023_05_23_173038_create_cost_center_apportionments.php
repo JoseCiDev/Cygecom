@@ -28,6 +28,6 @@ return new class () extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('cost_center_apportionment');
+        Schema::dropIfExists('cost_center_apportionments');
     }
 };

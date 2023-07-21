@@ -15,3 +15,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/suppliers/register', [App\Http\Controllers\SupplierController::class, 'register'])->name('supplier.register');
 });
+
+Route::fallback(function () {
+    return view('components.errors.404');
+});

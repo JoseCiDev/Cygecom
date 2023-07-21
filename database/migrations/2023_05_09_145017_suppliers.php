@@ -13,7 +13,7 @@ return new class() extends Migration
             $table->string('corporate_name')->unique();
             $table->string('cpf_cnpj', 20)->unique();
             $table->enum('entity_type', ['PF', 'PJ'])->default('PJ');
-            $table->string('supplier_indication')->default('Matéria Prima');
+            $table->string('supplier_indication')->default('Matéria prima'); // M: Matéria prima; S: Serviço; A: Ambos
             $table->enum('qualification', ['em_analise', 'qualificado', 'nao_qualificado'])->default('em_analise');
 
             $table->string('market_type')->default('nacional')->nullable(); // nacional; exterior; prospect(prospecção)

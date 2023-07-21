@@ -46,25 +46,25 @@ class Breadcrumb extends Component
         'request.links' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'requests.own', 'label' => 'Minhas Solicitações'],
-            ['route' => 'request.links', 'label' => 'Tipos de Solicitações'],
+            ['route' => 'request.links', 'label' => 'Nova Solicitação'],
         ],
         'request.service.register' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'requests', 'label' => 'Solicitações'],
-            ['route' => 'request.links', 'label' => 'Tipos de Solicitações'],
-            ['route' => 'request.service.register', 'label' => 'Solicitação de Serviço'],
+            ['route' => 'request.links', 'label' => 'Nova Solicitação'],
+            ['route' => 'request.service.register', 'label' => 'Serviço'],
         ],
         'request.product.register' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'requests', 'label' => 'Solicitações'],
-            ['route' => 'request.links', 'label' => 'Tipos de Solicitações'],
-            ['route' => 'request.product.register', 'label' => 'Solicitação de Produto(s)'],
+            ['route' => 'request.links', 'label' => 'Nova Solicitação'],
+            ['route' => 'request.product.register', 'label' => 'Produto(s)'],
         ],
         'request.contract.register' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'requests', 'label' => 'Solicitações'],
-            ['route' => 'request.links', 'label' => 'Tipos de Solicitações'],
-            ['route' => 'request.contract.register', 'label' => 'Solicitação de Contrato'],
+            ['route' => 'request.links', 'label' => 'Nova Solicitação'],
+            ['route' => 'request.contract.register', 'label' => 'Contrato'],
         ],
         'request.edit' => [
             ['route' => 'home', 'label' => 'Home'],

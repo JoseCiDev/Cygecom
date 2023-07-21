@@ -1,6 +1,7 @@
 @php
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
+    $isCopy ??= null;
     $contractInstallments = $purchaseRequest?->contract?->installments;
 @endphp
 
@@ -370,7 +371,8 @@
                             <label for="attendant" class="control-label">Vendedor/Atendente</label>
                             <input type="text" id="attendant" name="contract[seller]"
                                 placeholder="Pessoa responsável pela cotação" class="form-control"
-                                data-rule-minlength="2">
+                                data-rule-minlength="2"
+                                value="{{ $purchaseRequest?->contract?->seller ?? null }}">
                         </div>
                     </div>
 
@@ -379,7 +381,8 @@
                         <div class="form-group">
                             <label for="phone-number" class="control-label">Telefone</label>
                             <input type="text" name="contract[phone]" id="phone-number" placeholder="(00) 0000-0000"
-                                class="form-control mask_phone">
+                                class="form-control mask_phone"
+                                value="{{ $purchaseRequest?->contract?->phone ?? null }}">
                         </div>
                     </div>
 
@@ -389,7 +392,8 @@
                             <label for="email" class="control-label">E-mail</label>
                             <input type="text" name="contract[email]" id="email"
                                 placeholder="user_email@vendedor.com.br" class="form-control"
-                                data-rule-minlength="2">
+                                data-rule-minlength="2"
+                                value="{{ $purchaseRequest?->contract?->email ?? null }}">
                         </div>
                     </div>
 
@@ -582,7 +586,7 @@
 
             <div class="form-actions pull-right" style="margin-top:50px;">
                 <button type="submit" class="btn btn-primary">Salvar</button>
-                <a href="{{ url()->previous() }}" class="btn">Cancelar</a>
+                <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
             </div>
         </div>
     </form>
@@ -764,6 +768,9 @@
             // }
         });
 
+        const isRequestCopy = @json($isCopy);
+        const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
+
         function fillHiddenInputsWithRowData() {
             const tableData = $installmentsTable.data();
             const hiddenInputsContainer = $('.hidden-installments-inputs-container');
@@ -781,7 +788,7 @@
                     const idInput = document.createElement('input');
                     idInput.type = 'number';
                     idInput.name = 'contract[contract_installments][' + index + '][id]';
-                    idInput.value = purchaseRequest?.contract?.installments[index].id || "";
+                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.contract?.installments[index]?.id : null;
                     idInput.hidden = true;
 
                     const expireDateInput = document.createElement('input');
@@ -822,7 +829,7 @@
                 const idInput = document.createElement('input');
                 idInput.type = 'text';
                 idInput.name = 'contract[contract_installments][0][id]';
-                idInput.value = purchaseRequest?.contract?.installments[index].id || "";
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest.contract.installments[0].id : null;
                 idInput.hidden = true;
 
                 const expireDateInput = document.createElement('input');

@@ -44,8 +44,8 @@
                                     <td>{{$purchaseRequest->is_supplies_quote ? 'Suprimentos' : 'Área Solicitante'}}</td>
                                     <td>{{$purchaseRequest->type->label()}}</td>
                                     <td>{{$purchaseRequest->status->label()}}</td>
-                                    <td>{{$purchaseRequest->desired_date}}</td>
-                                    <td>{{$purchaseRequest->updated_at}}</td>
+                                    <td>{{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($purchaseRequest->updated_at)->format('d/m/Y') }}</td>
 
                                     {{-- BTN AÇÕES --}}
                                     <td style="white-space: nowrap;">

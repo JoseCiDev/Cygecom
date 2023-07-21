@@ -9,6 +9,11 @@ class Service extends Model
 {
     use HasFactory;
 
+    public function installments()
+    {
+        return $this->hasMany(ServiceInstallment::class);
+    }
+
     public function paymentInfo()
     {
         return $this->belongsTo(PaymentInfo::class, 'payment_info_id');
@@ -35,13 +40,12 @@ class Service extends Model
     }
 
     protected $fillable = [
-        'description',
-        'payday',
         'is_prepaid',
         'is_finished',
         'already_provided',
         'local_service',
         'price',
+        'quantity_of_installments',
         'hours_performed',
         'seller',
         'email',

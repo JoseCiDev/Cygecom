@@ -9,15 +9,13 @@ return new class () extends Migration {
     {
         Schema::create('services', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
-            $table->text('description');
-            $table->date('payday');
-            $table->text('local_service');
-            $table->decimal('price', 14, 2);
+            $table->decimal('price', 14, 2)->nullable();
             $table->boolean('already_provided')->default(false);
             $table->boolean('is_finished')->default(false);
             $table->boolean('is_prepaid')->default(false);
+            $table->unsignedInteger('quantity_of_installments')->nullable();
 
-            $table->string('hours_performed')->nullable();
+            $table->string('hours_performed')->nullable()->default(null);
             $table->string('seller')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
