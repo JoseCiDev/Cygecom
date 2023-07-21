@@ -191,38 +191,38 @@
                                         <div class="col-sm-6">
                                             <p>
                                                 <strong>Razão social:</strong>
-                                                {{ $request->service?->Supplier->corporate_name ?? '---' }}
+                                                {{ $request->service->Supplier?->corporate_name ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>Nome fantasia:</strong>
-                                                {{ $request->service?->Supplier->name ?? '---' }}
+                                                {{ $request->service->Supplier?->name ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>CPF/CNPJ:</strong>
-                                                {{ $request->service?->Supplier->cpf_cnpj ?? '---' }}
+                                                {{ $request->service->Supplier?->cpf_cnpj ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>Indicação:</strong>
-                                                {{ $request->service?->Supplier->supplier_indication ?? '---' }}
+                                                {{ $request->service->Supplier?->supplier_indication ?? '---' }}
                                             </p>
                                             
                                         </div>
                                         <div class="col-sm-6">
                                             <p>
                                                 <strong>Qualifacação:</strong>
-                                                {{ $request->service->Supplier->qualification->label() ?? '---' }}
+                                                {{ $request->service->Supplier?->qualification->label() ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>Tipo de mercado:</strong>
-                                                {{ $request->service?->Supplier->market_type ?? '---' }}
+                                                {{ $request->service->Supplier?->market_type ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>Representante:</strong>
-                                                {{ $request->service?->Supplier->representative ?? '---' }}
+                                                {{ $request->service->Supplier?->representative ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>E-mail:</strong>
-                                                {{ $request->service?->Supplier->email ?? '---' }}
+                                                {{ $request->service->Supplier?->email ?? '---' }}
                                             </p>
                                         </div>
                                     </div>
