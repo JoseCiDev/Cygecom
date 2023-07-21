@@ -13,7 +13,7 @@ class CheckProfileMiddleware
      */
     public function handle($request, Closure $next, $profile)
     {
-        $isAdmin = $request->user()->profile->is_admin;
+        $isAdmin = $request->user()->profile->name === 'admin';
 
         if ($isAdmin || $request->user()->profile->name === $profile) {
             return $next($request);

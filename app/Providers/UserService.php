@@ -66,7 +66,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user->approve_limit    = $request['approve_limit'];
             $user->save();
 
-            if (auth()->user()->profile->is_admin) {
+            if (auth()->user()->profile->name === 'admin') {
                 $costCenterPermissions = $request['user_cost_center_permissions'] ?? null;
 
                 if ($costCenterPermissions !== null) {
@@ -91,7 +91,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $this->savePerson($person, $data);
             $this->savePhone($phone, $data);
 
-            if (auth()->user()->profile->is_admin) {
+            if (auth()->user()->profile->name === 'admin') {
                 $costCenterPermissions = $data['user_cost_center_permissions'] ?? null;
 
                 if ($costCenterPermissions !== null) {

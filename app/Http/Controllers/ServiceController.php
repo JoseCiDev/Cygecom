@@ -49,7 +49,7 @@ class ServiceController extends Controller
         $companies   = Company::all();
         $costCenters = CostCenter::all();
         $params      = ["companies" => $companies, "costCenters" => $costCenters];
-        $isAdmin     = auth()->user()->profile->is_admin;
+        $isAdmin     = auth()->user()->profile->name === 'admin';
 
         try {
             if ($purchaseRequestIdToCopy) {
@@ -71,8 +71,8 @@ class ServiceController extends Controller
 
     public function updateService(Request $request, int $id): RedirectResponse
     {
-        $route     = 'request.edit';
-        $data      = $request->all();
+        $route = 'request.edit';
+        $data = $request->all();
         $validator = $this->validatorService->purchaseRequest($data);
 
         if ($validator->fails()) {
@@ -80,9 +80,9 @@ class ServiceController extends Controller
         }
 
         try {
-            $isAdmin         = auth()->user()->profile->is_admin;
+            $isAdmin = auth()->user()->profile->name === 'admin';
             $purchaseRequest = auth()->user()->purchaseRequest->find($id);
-            $isAuthorized    = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
+            $isAuthorized = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
 
             if ($isAuthorized) {
                 $this->purchaseRequestService->updateServiceRequest($id, $data);
