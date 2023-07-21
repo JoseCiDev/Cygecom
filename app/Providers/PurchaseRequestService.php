@@ -255,12 +255,9 @@ class PurchaseRequestService extends ServiceProvider
         $serviceData = $data['service'];
 
         // caso disabled os campos do form define como null
-        $supplierId = $serviceData['supplier_id'] ?? null;
-        $serviceInstallmentsData = $serviceData['service_installments'] ?? [];
+        $serviceInstallmentsData = $serviceData['service_installments'] ?? null;
         $paymentInfoData = $serviceData['payment_info'] ?? null;
-
-        $serviceData['purchase_request_id'] = $purchaseRequestId;
-        $serviceData['updated_by'] = auth()->user()->id;
+        $supplierId = $serviceData['supplier_id'] ?? null;
 
         if (count($paymentInfoData) > 0) {
             $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
