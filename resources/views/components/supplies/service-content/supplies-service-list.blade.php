@@ -42,7 +42,7 @@
                                 {{-- BTN AÇÕES --}}
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button 
-                                        data-name="{{ 'Analisando Solicitação de Serviço - ID ' . $service->id }}"
+                                        data-modal-name="{{ 'Analisando Solicitação de Serviço - ID ' . $service->id }}"
                                         data-id="{{ $service->id }}"
                                         data-request="{{json_encode($service)}}"
                                         rel="tooltip"

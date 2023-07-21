@@ -50,7 +50,7 @@
                                 {{-- BTN AÇÕES --}}
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button 
-                                        data-name="{{ 'Analisando Solicitação de Produto - ID ' . $product->id }}"
+                                        data-modal-name="{{ 'Analisando Solicitação de Produto - ID ' . $product->id }}"
                                         data-id="{{ $product->id }}"
                                         data-request="{{json_encode($product)}}"
                                         rel="tooltip"

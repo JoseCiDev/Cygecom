@@ -48,7 +48,7 @@
                                 {{-- BTN AÇÕES --}}
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button 
-                                        data-name="{{ 'Analisando Solicitação de Contrato - ID ' . $contract->id }}"
+                                        data-modal-name="{{ 'Analisando Solicitação de Contrato - ID ' . $contract->id }}"
                                         data-id="{{ $contract->id }}"
                                         data-request="{{json_encode($contract)}}"
                                         rel="tooltip"

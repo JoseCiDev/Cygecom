@@ -2,12 +2,69 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="modal-label"><strong class="name"></strong></h4>
+                <h3 class="modal-title" id="modal-label">
+                    <strong class="modal-name"></strong>
+                </h3>
             </div>
             <div class="modal-body">
-                <h3>Aqui consta informações detalhadas da solicitação:</h3>
-                <div class="modal-body-dynamic">
-                    <div class="modal-body-dynamic-list"></div>
+                <h4>Aqui consta informações básicas da solicitação:</h4>
+                <div class="request-details-content">
+                    <div class="request-details-content-box">
+                        <div class="tab-content padding">
+                            <h4><i class="fa fa-info"></i> <strong>Informações básicas</strong></h4>
+                            <hr>
+                            <p>
+                                <strong>Status de aprovação:</strong> <span class="status"></span>
+                            </p>
+                            <p>
+                                <strong>Tipo de solicitação:</strong> <span class="type"></span>
+                            </p>
+                            <p>
+                                <strong>Contratação deve ser por:</strong>
+                                <span class="is_supplies_contract"></span>
+                            </p>
+                            <p>
+                                <strong>COMEX:</strong> <span class="is_comex"></span>
+                            </p>
+                            <p>
+                                <strong>Link de sugestão:</strong>
+                                <span class="purchase_request_file"></span>
+                            </p>
+                            <p>
+                                <strong>Solicitação criada em:</strong> <span class="created_at"></span>
+                            </p>
+                            <p>
+                                <strong>Solicitação atualizada em:</strong> <span class="updated_at"></span>
+                            </p>
+                            <p>
+                                <strong>Solicitação desejada para:</strong> <span class="desired_date"></span>
+                            </p>
+                            <hr>
+                            <h4><i class="fa fa-user"></i> <strong>Informações do solicitante</strong></h4>
+                            <hr>
+                            <p><strong>E-mail do solicitante:</strong> <span class="email"></span></p>
+                            <p>
+                                <strong>Autorização para solicitar:</strong>
+                                <span class="is_buyer">TESTE</span>
+                            </p>
+                            <p>
+                                <strong>Aprovação limite:</strong>
+                                <span class="approve_limit"></span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="request-details-content-box">
+                        <div class="tab-content padding">
+                            <h4><i class="fa fa-user"></i> <strong>Motivo e observações</strong></h4>
+                            <hr>
+                            <p>
+                                <strong>Motivo da solicitação:</strong> <span class="reason"></span>
+                            </p>
+                            <p>
+                                <strong>Observação:</strong> <span class="observation"></span>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -17,82 +74,4 @@
     </div>
 </div>
 
-<script>
-    $('#modal-supplies').on('show.bs.modal', function (event) {
-        const list = $('.modal-body-dynamic-list')
-        list.text('')
-
-        const modal = $(this);
-        const button = $(event.relatedTarget);
-        const name = button.data('name');
-        const id = button.data('id');
-
-        modal.find('.name').text(name);
-
-        const liElementInterface = entry => {
-            const dateFormatter = (date, execeptionMessage) => date ? new Date(date).toLocaleDateString('pt-br') : (execeptionMessage || '---');
-            const booleanFormatter = (value, truthyMessage, falsyMessage) => value ? (truthyMessage || 'Verdadeiro' ) : (falsyMessage || 'Falso');
-
-            const mappedEntries = {
-                id: {label: 'Solicitação nº'},
-                status: {label: 'Status'},
-                type: {label: 'Tipo de solicitação' },
-                description: {label: 'Descrição' },
-                local_description: {label: 'Local' },
-                reason: {label: 'Motivo' },
-                observation: {label: 'Observação' },
-
-                desired_date: {
-                    label: 'Data desejada',
-                    content: dateFormatter(entry[1]) 
-                },
-                created_at: {
-                    label: 'Criado em',
-                    content: dateFormatter(entry[1]) 
-                },
-                updated_at: {
-                    label: 'Atualizado em',
-                    content: dateFormatter(entry[1]) 
-                },
-                is_comex: {
-                    label: 'É comex', 
-                    content: booleanFormatter(entry[1], 'Sim', 'Não') 
-                },
-                is_supplies_contract: {
-                    label: 'É contratação por suprimentos', 
-                    content: booleanFormatter(entry[1], 'Sim', 'Não')
-                },
-                user: {
-                    label: 'Usuário criador',
-                    content: `<ul>
-                                <li>Nome: ${entry[1]?.person?.name}</li>
-                                <li>E-mail: ${entry[1]?.email}</li>
-                            </ul>`
-                 },
-                updated_by_user: {
-                    label: 'Usuário atualizador',
-                    content: entry[1]?.email
-                },
-                purchase_request_file: {
-                    label: 'Link',
-                    content: `<a href="${entry[1] ? entry[1][0]?.path : '#'}" target="_blank">Ir para o link</a>`
-                },
-            }
-
-            const result = mappedEntries[entry[0]]
-            if(result) {
-                result.content ??= entry[1]
-                return result
-            }
-        }
-
-        const request = button.data('request');
-        const response = Object.entries(request)
-        response.forEach((element) => {
-            const formattedElement = liElementInterface(element)
-            if(formattedElement) {
-                list.append(`<div class="modal-body-dynamic-list-item">${formattedElement.label}: ${formattedElement.content ??= '---'}</div>`)
-            }
-        })
-    });
-</script>
+<script src="{{asset('js/modal-supplies/show-modal-and-set-mapped-content.js')}}"></script>
