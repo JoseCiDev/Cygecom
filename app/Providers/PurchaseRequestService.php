@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
-use App\Models\{Contract, ContractInstallment, CostCenterApportionment, PaymentInfo, PurchaseRequest, PurchaseRequestFile, PurchaseRequestProduct, Service};
 use Carbon\Carbon;
+use App\Models\ServiceInstallment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
+use App\Models\{Contract, ContractInstallment, CostCenterApportionment, PaymentInfo, PurchaseRequest, PurchaseRequestFile, PurchaseRequestProduct, Service};
 
 class PurchaseRequestService extends ServiceProvider
 {
@@ -15,11 +16,17 @@ class PurchaseRequestService extends ServiceProvider
     public function purchaseRequests()
     {
         return PurchaseRequest::with([
-            'user.person.costCenter', 'purchaseRequestFile',
-            'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
-            'service', 'service.paymentInfo',
-            'purchaseRequestProduct', 'purchaseRequestProduct.category',
-            'contract', 'contract.installments',
+            'user.person.costCenter',
+            'purchaseRequestFile',
+            'costCenterApportionment.costCenter.company',
+            'deletedByUser',
+            'updatedByUser',
+            'service',
+            'service.paymentInfo',
+            'purchaseRequestProduct',
+            'purchaseRequestProduct.category',
+            'contract',
+            'contract.installments',
         ])->whereNull('deleted_at')->get();
     }
 
@@ -31,11 +38,17 @@ class PurchaseRequestService extends ServiceProvider
         $id = $id ?? auth()->user()->id;
 
         return PurchaseRequest::with([
-            'user.person.costCenter', 'purchaseRequestFile',
-            'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
-            'service', 'service.paymentInfo',
-            'purchaseRequestProduct', 'purchaseRequestProduct.category',
-            'contract', 'contract.installments',
+            'user.person.costCenter',
+            'purchaseRequestFile',
+            'costCenterApportionment.costCenter.company',
+            'deletedByUser',
+            'updatedByUser',
+            'service',
+            'service.paymentInfo',
+            'purchaseRequestProduct',
+            'purchaseRequestProduct.category',
+            'contract',
+            'contract.installments',
 
         ])->whereNull('deleted_at')->where('user_id', $id)->get();
     }
@@ -46,11 +59,17 @@ class PurchaseRequestService extends ServiceProvider
     public function purchaseRequestById(int $id)
     {
         return PurchaseRequest::with([
-            'user.person.costCenter', 'purchaseRequestFile',
-            'costCenterApportionment.costCenter.company', 'deletedByUser', 'updatedByUser',
-            'service', 'service.paymentInfo',
-            'purchaseRequestProduct', 'purchaseRequestProduct.category',
-            'contract', 'contract.installments',
+            'user.person.costCenter',
+            'purchaseRequestFile',
+            'costCenterApportionment.costCenter.company',
+            'deletedByUser',
+            'updatedByUser',
+            'service',
+            'service.paymentInfo',
+            'purchaseRequestProduct',
+            'purchaseRequestProduct.category',
+            'contract',
+            'contract.installments',
         ])->whereNull('deleted_at')->where('id', $id)->first();
     }
 
@@ -189,12 +208,12 @@ class PurchaseRequestService extends ServiceProvider
     {
         $userId = auth()->user()->id;
         $apportionmentData = $data['cost_center_apportionments'];
-        $existingIds   = CostCenterApportionment::where('purchase_request_id', $purchaseRequestId)->pluck('id')->toArray();
+        $existingIds = CostCenterApportionment::where('purchase_request_id', $purchaseRequestId)->pluck('id')->toArray();
 
         foreach ($apportionmentData as $apportionment) {
             $apportionment['purchase_request_id'] = $purchaseRequestId;
-            $apportionment['updated_by']          = $userId;
-            $existingRecord                       = CostCenterApportionment::where(['purchase_request_id' => $purchaseRequestId, 'cost_center_id' => $apportionment['cost_center_id']])->first();
+            $apportionment['updated_by'] = $userId;
+            $existingRecord = CostCenterApportionment::where(['purchase_request_id' => $purchaseRequestId, 'cost_center_id' => $apportionment['cost_center_id']])->first();
 
             if ($existingRecord) {
                 $existingRecord->update($apportionment);
@@ -219,7 +238,7 @@ class PurchaseRequestService extends ServiceProvider
             return;
         }
         $purchaseRequestFile['purchase_request_id'] = $purchaseRequestId;
-        $purchaseRequestFile['updated_by']          = auth()->user()->id;
+        $purchaseRequestFile['updated_by'] = auth()->user()->id;
         PurchaseRequestFile::updateOrCreate(['purchase_request_id' => $purchaseRequestId], $purchaseRequestFile);
     }
 
@@ -233,16 +252,28 @@ class PurchaseRequestService extends ServiceProvider
             return;
         }
 
-        $service     = $data['service'];
-        $paymentInfo = $service['payment_info'];
+        $serviceData = $data['service'];
 
-        $service['purchase_request_id'] = $purchaseRequestId;
-        $service['updated_by']          = auth()->user()->id;
+        // caso disabled os campos do form define como null
+        $serviceInstallmentsData = $serviceData['service_installments'] ?? null;
+        $paymentInfoData = $serviceData['payment_info'] ?? null;
+        $supplierId = $serviceData['supplier_id'] ?? null;
 
-        $paymentInfoResponse        = PaymentInfo::updateOrCreate(['id' => $paymentInfo['id']], $paymentInfo);
-        $service['payment_info_id'] = $paymentInfoResponse->id;
+        if (count($paymentInfoData) > 0) {
+            $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
+            $serviceData['payment_info_id'] = $paymentInfoResponse->id;
+        }
 
-        Service::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $service['supplier_id']], $service);
+        $service = Service::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $supplierId], $serviceData);
+
+        $existingInstallments = ServiceInstallment::where('service_id', $service->id)->get();
+
+        $this->updateNumberOfInstallments($existingInstallments, $serviceInstallmentsData);
+
+        foreach ($serviceInstallmentsData as $installment) {
+            $installment['service_id'] = $service->id;
+            ServiceInstallment::updateOrCreate(['id' => $installment['id']], $installment);
+        }
     }
 
     /**
@@ -259,10 +290,10 @@ class PurchaseRequestService extends ServiceProvider
 
         foreach ($suppliers as $supplier) {
             $supplierId = $supplier['supplier_id'];
-            $products   = $supplier['products'];
+            $products = $supplier['products'];
 
             foreach ($products as $product) {
-                $product['supplier_id']         = $supplierId;
+                $product['supplier_id'] = $supplierId;
                 $product['purchase_request_id'] = $purchaseRequestId;
                 PurchaseRequestProduct::updateOrCreate(['id' => $product['id']], $product);
             }
@@ -279,21 +310,42 @@ class PurchaseRequestService extends ServiceProvider
             return;
         }
 
-        $contractData              = $data['contract'];
-        $contractsInstallmentsData = $contractData['contract_installments'];
-        $paymentInfoData           = $contractData['payment_info'];
-        $supplierId                = $contractData['supplier_id'];
+        $contractData = $data['contract'];
+
+        // caso disabled os campos do form define como null
+        $contractsInstallmentsData = $contractData['contract_installments'] ?? null;
+        $paymentInfoData = $contractData['payment_info'] ?? null;
+        $supplierId = $contractData['supplier_id'] ?? null;
 
         if (count($paymentInfoData) > 0) {
-            $paymentInfoResponse             = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
+            $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
             $contractData['payment_info_id'] = $paymentInfoResponse->id;
         }
 
         $contract = Contract::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $supplierId], $contractData);
 
+        $existingInstallments = ContractInstallment::where('contract_id', $contract->id)->get();
+
+        $this->updateNumberOfInstallments($existingInstallments, $contractsInstallmentsData);
+
         foreach ($contractsInstallmentsData as $installment) {
             $installment['contract_id'] = $contract->id;
             ContractInstallment::updateOrCreate(['id' => $installment['id']], $installment);
+        }
+    }
+
+    /**
+     * Deleta registros remanescentes (se houver) ao atualizar número de parcelas
+     *
+     * @param $existingInstallments é uma ocorrência do Model Installment
+     */
+    private function updateNumberOfInstallments($existingInstallments, array $installmentsData): void
+    {
+        if (count($existingInstallments) > count($installmentsData)) {
+            $installmentsToDelete = $existingInstallments->slice(count($installmentsData));
+            foreach ($installmentsToDelete as $installment) {
+                $installment->delete();
+            }
         }
     }
 }

@@ -18,6 +18,10 @@ return new class () extends Migration {
             $table->boolean('is_fixed_payment')->default(false);
             $table->boolean('is_prepaid')->nullable()->deafult(false);
 
+            $table->string('seller')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+
             $table->decimal('amount', 14, 2)->nullable();
             $table->unsignedInteger('quantity_of_installments')->nullable();
 

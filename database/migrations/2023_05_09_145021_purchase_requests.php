@@ -14,7 +14,7 @@ return new class() extends Migration
             $table->enum('status', ['pending', 'approved', 'disapproved'])->default('pending');
             $table->enum('type', ['service', 'contract', 'product']);
             $table->boolean('is_comex')->default(false);
-            $table->boolean('is_supplies_contract')->default(false);
+            $table->boolean('is_supplies_contract')->default(true);
             $table->text('description');
             $table->text('local_description');
             $table->text('reason');

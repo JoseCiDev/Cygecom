@@ -11,7 +11,7 @@
             </h3>
         </div>
         <div class="box-content">
-            <div class="col-sm-12" style="display:flex; margin-top: 20px;">
+            <div class="col-sm-12" style="display:flex; margin-top: 20px; justify-content:center; gap: 50px">
                 <div class="col-sm-4 products" style="display:flex; flex-direction:column; align-items:center">
                     <p class="text-center">
                         Lista de produtos que precisam ser adquiridos ou solicitados a suprimentos. Por exemplo:
@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-sm-4 services" style="display:flex; flex-direction:column; align-items:center">
                     <p class="text-center">
-                        Serviços pontuais, prestados uma vez e com pagamento único. Por exemplo:
+                        Serviços pontuais, prestados uma vez e com pagamento único ou parcelado. Por exemplo:
                         conserto de ar condicionado.
                     </p>
                     <a href="{{ route('request.service.register') }}" class="btn btn-inverse btn-large btn-services">SERVIÇOS</a>
