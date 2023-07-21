@@ -1,28 +1,26 @@
-function showSuccessAlertAndCloseModal(response) {
-    alert(response.message + " / CNPJ " + response.cpf_cnpj);
+$(() => {
+    const showSuccessAlertAndCloseModal = (response) => {
+        bootbox.alert({
+                title: "<i class='fa fa-check'></i> Registro feito com sucesso!",
+                message: `<strong>CNPJ:</strong> ${response.cpf_cnpj} <br> ${response.message}`,
+            });
+        
+        $("#modal-supplier-register").modal("hide");
+        $("#cpf_cnpj").trigger("focus");
 
-    $("#modal-supplier-register").modal("hide");
-    $("#select-element").focus();
-}
+    };
 
-function submitFormToAPI() {
-    const form = $("#supplier-form");
-    const formData = form.serialize();
+    const showFailAlert = (response) => {
+        alert('Não foi possível registrar novo fornecedor. Por favor, verifique novamente os campos do formulário.');
+    };
 
-    $.ajax({
-        url: "/api/suppliers/register",
-        method: "POST",
-        data: formData,
-        success: function (response) {
-            showSuccessAlertAndCloseModal(response);
-        },
-        error: function (error) {
-            console.error(error);
-        },
-    });
-}
+    const submitFormToAPI = (event) => {
+        event.preventDefault();
+        const form = $("#supplier-form");
+        const formData = form.serialize();
 
-$("#supplier-form").submit(function (event) {
-    event.preventDefault();
-    submitFormToAPI();
+        $.post("/api/suppliers/register", formData, showSuccessAlertAndCloseModal).fail(showFailAlert)
+    };
+
+    $("#supplier-form").on("submit", submitFormToAPI);
 });
