@@ -184,6 +184,53 @@
                         </div>
                         <div class="request-details-content">
                             <div class="request-details-content-box">
+                                <h4><i class="fa fa-truck"></i> <strong>Fornecedor</strong></h4>
+                                <hr>
+                                <div class="tab-content">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <p>
+                                                <strong>Razão social:</strong>
+                                                {{ $request->service?->Supplier->corporate_name ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>Nome fantasia:</strong>
+                                                {{ $request->service?->Supplier->name ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>CPF/CNPJ:</strong>
+                                                {{ $request->service?->Supplier->cpf_cnpj ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>Indicação:</strong>
+                                                {{ $request->service?->Supplier->supplier_indication ?? '---' }}
+                                            </p>
+                                            
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <p>
+                                                <strong>Qualifacação:</strong>
+                                                {{ $request->service->Supplier->qualification->label() ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>Tipo de mercado:</strong>
+                                                {{ $request->service?->Supplier->market_type ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>Representante:</strong>
+                                                {{ $request->service?->Supplier->representative ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>E-mail:</strong>
+                                                {{ $request->service?->Supplier->email ?? '---' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="request-details-content">
+                            <div class="request-details-content-box">
                                 <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações</strong></h4>
                                 <div class="tab-content padding">
                                     <p>

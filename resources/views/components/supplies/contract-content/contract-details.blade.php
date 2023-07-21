@@ -176,7 +176,53 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="request-details-content">
+                            <div class="request-details-content-box">
+                                <h4><i class="fa fa-truck"></i> <strong>Fornecedor</strong></h4>
+                                <hr>
+                                <div class="tab-content">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <p>
+                                                <strong>Razão social:</strong>
+                                                {{ $request->contract?->Supplier->corporate_name ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>Nome fantasia:</strong>
+                                                {{ $request->contract?->Supplier->name ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>CPF/CNPJ:</strong>
+                                                {{ $request->contract?->Supplier->cpf_cnpj ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>Indicação:</strong>
+                                                {{ $request->contract?->Supplier->supplier_indication ?? '---' }}
+                                            </p>
+                                            
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <p>
+                                                <strong>Qualifacação:</strong>
+                                                {{ $request->contract->Supplier->qualification->label() ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>Tipo de mercado:</strong>
+                                                {{ $request->contract?->Supplier->market_type ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>Representante:</strong>
+                                                {{ $request->contract?->Supplier->representative ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>E-mail:</strong>
+                                                {{ $request->contract?->Supplier->email ?? '---' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="request-details-content">
                             <div class="request-details-content-box">
                                 <h4><i class="glyphicon glyphicon-list-alt"></i> <strong>Contrato - Informações</strong></h4>
@@ -303,18 +349,17 @@
                                         @foreach ($request->contract->installments as $installmentIndex => $installment)
                                             <div class="request-details-content-box-contract-installment">
                                                 <p>
-                                                    <strong>Parcela nº: {{ $installmentIndex + 1 }}
+                                                    <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
                                                 </p>
                                                 <p>
-                                                    <strong>Valor: {{ $installment->value }}
+                                                    <strong>Valor:</strong> {{ $installment->value }}
                                                 </p>
                                                 <p>
-                                                    <strong>Pago no dia: {{ $installment->payment_day ?? '---' }}
+                                                    <strong>Pago no dia:</strong> {{ $installment->payment_day ?? '---' }}
                                                 </p>
                                                 <p>
-                                                    <strong>Descrição do pagamento:
+                                                    <strong>Descrição do pagamento:</strong> <span>{{ $installment->description ?? '---' }}</span>
                                                 </p>
-                                                <span>{{ $installment->description ?? '---' }}</span>
                                             </div>
                                         @endforeach
                                     </div>

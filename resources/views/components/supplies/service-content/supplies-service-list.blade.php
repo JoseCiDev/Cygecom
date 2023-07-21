@@ -33,13 +33,12 @@
                             <tr>
                                 <td>{{$service->id}}</td>
                                 <td>{{$service->user->person->name}}</td>
-                                <td>{{$service->service->first()->Supplier->cpf_cnpj}}</td>
+                                <td>{{$service->service->first()->Supplier?->cpf_cnpj ?? '---'}}</td>
                                 <td>{{$service->service->first()->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
                                 <td>{{$service->service->first()->already_provided ? 'Executado' : 'Não executado'}}</td>
                                 <td>{{$service->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td>{{ \Carbon\Carbon::parse($service->desired_date)->format('d/m/Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($service->updated_at)->format('d/m/Y h:m:s') }}</td>
-                                {{-- BTN AÇÕES --}}
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button 
                                         data-modal-name="{{ 'Analisando Solicitação de Serviço - ID ' . $service->id }}"
