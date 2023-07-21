@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies.css') }}">
     <link rel="stylesheet" href="{{ asset('css/modal-supplies.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootbox.custom.css') }}">
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -145,7 +146,7 @@
                 <ul class='main-nav'>
                     <x-navbar.menu-item route="home" title="DASHBOARD" />
 
-                    @if (auth()->user()->profile->is_admin)
+                    @if (auth()->user()->profile->name === 'admin')
                         <li>
                             <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
                                 <span>CADASTROS</span>
@@ -168,12 +169,14 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ route('requests.own') }}">Minhas Solicitações</a></li>
-                            @if (auth()->user()->profile->is_admin)
+                            @if (auth()->user()->profile->name === 'admin')
                                 <li><a href="{{ route('requests') }}">Solicitações Gerais</a></li>
                             @endif
                         </ul>
                     </li>
-                    @if (auth()->user()->profile->is_admin || auth()->user()->profile->name === 'suprimentosNutrition' || auth()->user()->profile->name === 'suprimentosPharma')
+                    @if (auth()->user()->profile->name === 'admin' ||
+                            auth()->user()->profile->name === 'suprimentosNutrition' ||
+                            auth()->user()->profile->name === 'suprimentosPharma')
                         <li>
                             <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
                                 <span>SUPRIMENTOS</span>

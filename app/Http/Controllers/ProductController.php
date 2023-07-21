@@ -49,7 +49,7 @@ class ProductController extends Controller
         $companies   = Company::all();
         $costCenters = CostCenter::all();
         $params      = ["companies" => $companies, "costCenters" => $costCenters];
-        $isAdmin     = auth()->user()->profile->is_admin;
+        $isAdmin     = auth()->user()->profile->name === 'admin';
 
         try {
             if ($purchaseRequestIdToCopy) {
@@ -80,7 +80,7 @@ class ProductController extends Controller
         }
 
         try {
-            $isAdmin         = auth()->user()->profile->is_admin;
+            $isAdmin         = auth()->user()->profile->name === 'admin';
             $purchaseRequest = auth()->user()->purchaseRequest->find($id);
             $isAuthorized    = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
 

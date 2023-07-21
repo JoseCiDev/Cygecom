@@ -22,7 +22,7 @@
                         <div class="pricing-tables">
                             <ul class="pricing col-sm-4">
                                 <li class="head">
-                                    <div class="name">Solicitações de produtos</div>
+                                    <div class="name"><i class="fa fa-tags"></i> Solicitações de produtos</div>
                                     <div class="price">
                                         {{ $productQtd  ?? '---'}} <span>solicitações existentes</span>
                                         <a href="{{route('supplies.product')}}" class="btn btn-grey-4">Ir para produtos</a>
@@ -34,7 +34,7 @@
                             </ul>
                             <ul class="pricing green col-sm-4">
                                 <li class="head">
-                                    <div class="name">Solicitações de serviços</div>
+                                    <div class="name"><i class="fa fa-briefcase"></i> Solicitações de serviços</div>
                                     <div class="price">
                                         {{ $serviceQtd  ?? '---'}} <span>solicitações existentes</span>
                                         <a href="{{route('supplies.service')}}" class="btn btn-grey-4">Ir para serviços</a>
@@ -46,7 +46,7 @@
                             </ul>
                             <ul class="pricing red col-sm-4">
                                 <li class="head">
-                                    <div class="name">Solicitações de contratos</div>
+                                    <div class="name"><i class="glyphicon glyphicon-list-alt"></i> Solicitações de contratos</div>
                                     <div class="price">
                                         {{ $contractQtd  ?? '---'}} <span>solicitações existentes</span>
                                         <a href="{{route('supplies.contract')}}" class="btn btn-grey-4">Ir para contratos</a>

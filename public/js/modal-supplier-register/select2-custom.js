@@ -3,7 +3,7 @@ function openSupplierModalAndFocusInput() {
     $("#select2-drop").hide();
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+$(() => {
     const elementsWithSupplierID = document.querySelectorAll(
         'select[name*="supplier_id"]'
     );

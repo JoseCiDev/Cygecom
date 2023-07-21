@@ -1,9 +1,9 @@
 @php
-    if(isset($contract)) {
+    if (isset($contract)) {
         $request = $contract;
-    } else if(isset($product)) {
+    } elseif (isset($product)) {
         $request = $product;
-    } else if(isset($service)) {
+    } elseif (isset($service)) {
         $request = $service;
     } else {
         $request = null;
@@ -15,103 +15,170 @@
         <h1>Página de suprimentos</h1>
     </x-slot>
 
-  <div class="request-details">
+    <div class="request-details">
         <header class="request-details-header">
-            <img class="request-details-header-logo" src="https://s3.amazonaws.com/gupy5/production/companies/32213/career/73435/images/2022-06-29_14-57_logo.jpg" alt="Logo Essentia Group">
-            <h1>Solicitação de produto nº {{$product->id}}</h1>
+            <img class="request-details-header-logo"
+                src="https://s3.amazonaws.com/gupy5/production/companies/32213/career/73435/images/2022-06-29_14-57_logo.jpg"
+                alt="Logo Essentia Group">
+            <h1>Solicitação de produto nº {{ $product->id }}</h1>
             <div>
-                <span>Criado em: {{ \Carbon\Carbon::parse($product->created_at)->format('d/m/Y h:m:s') }}</span> | <span>Atualizado: {{ \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') }}</span>
+                <span>Criado em: {{ \Carbon\Carbon::parse($product->created_at)->format('d/m/Y h:m:s') }}</span> |
+                <span>Atualizado: {{ \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') }}</span>
             </div>
-            <p>Desejado para: {{$product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y') : "---"}}</p>
+            <p>Desejado para:
+                {{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y') : '---' }}
+            </p>
         </header>
         <main>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="box box-bordered">
-                        <div class="box-title"> <h2 class="request-title">Detalhes da solicitação</h2> </div>
+                        <div class="box-title">
+                            <h2 class="request-title">Detalhes da solicitação</h2>
+                        </div>
                         <div class="request-details-content">
 
                             <div class="request-details-content-box">
-                                <p><i class="fa fa-info"></i> Informações básicas</p>
+                                <h4><i class="fa fa-info"></i> <strong>Informações básicas</strong></h4>
                                 <hr>
                                 <div class="tab-content padding">
-                                    <p>Nº da solicitação: {{$request->id}}</p>
-                                    <p>Nº do solicitante: {{$request->user_id}}</p>
-                                    <p>Status de aprovação: {{$request->status->label()}}</p>
-                                    <p>Tipo de solicitação: {{$request->type->label()}}</p>
-                                    <p>Contratação deve ser por: {{$request->is_supplies_contract ? 'Suprimentos' : 'Centro de custo solicitante'}}</p>
-                                    <p>COMEX: {{$request->is_comex ? 'Sim' : 'Não'}}</p>
-                                    <p>Link de sugestão: 
-                                        @if ($request->PurchaseRequestFile->first()?->path) 
-                                            <a href="{{$request->PurchaseRequestFile->first()->path}}" target="_blank" rel="noopener noreferrer">link</a>
+                                    <p><strong>Status de aprovação:</strong> {{ $request->status->label() }}</p>
+                                    <p><strong>Tipo de solicitação:</strong> {{ $request->type->label() }}</p>
+                                    <p><strong>Contratação deve ser por:</strong>
+                                        {{ $request->is_supplies_contract ? 'Suprimentos' : 'Centro de custo solicitante' }}
+                                    </p>
+                                    <p><strong>COMEX:</strong> {{ $request->is_comex ? 'Sim' : 'Não' }}</p>
+                                    <p><strong>Link de sugestão:</strong>
+                                        @if ($request->PurchaseRequestFile->first()?->path)
+                                            <a href="{{ $request->PurchaseRequestFile->first()->path }}" target="_blank"
+                                                rel="noopener noreferrer">link</a>
                                         @else
-                                        ---
+                                            ---
                                         @endif
                                     </p>
-                                    <label>Motivo da solicitação: 
-                                        <textarea class="no-resize" style="display:block" readonly cols="70" rows="6">{{$request->reason}}</textarea>
-                                    </label>
-                                    <label>Observação: 
-                                        <textarea class="no-resize" style="display:block" readonly cols="70" rows="6">{{$request->observation}}</textarea>
-                                    </label>
+                                    <p><strong>Motivo da solicitação:</strong> {{ $request->reason }} </p>
+                                    <p><strong>Observação:</strong> {{ $request->observation }}</p>
                                     <hr>
-                                    <p>Solicitação criada em: {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</p> 
-                                    <p>Solicitação atualizada em: {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}</p>
-                                    <p>Solicitação desejada para: {{$request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : "---"}}</p>
+                                    <p><strong>Solicitação criada em:</strong>
+                                        {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</p>
+                                    <p><strong>Solicitação atualizada em:</strong>
+                                        {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}</p>
+                                    <p><strong>Solicitação desejada para:</strong>
+                                        {{ $request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : '---' }}
+                                    </p>
                                 </div>
                             </div>
 
                             <div class="request-details-content-box">
-                                <p><i class="fa fa-user"></i> Informações do solicitante</p>
+                                <h4><i class="fa fa-user"></i> <strong>Informações do solicitante</strong></h4>
                                 <hr>
                                 <div class="tab-content padding">
-                                    <p>Nº do solicitante: {{$request->user_id}}</p>
-                                    <p>E-mail do solicitante: {{$request->user->email}}</p>
-                                    <p>Nome do solicitante: {{$request->user->person->name}}</p>
-                                    <p>Documento do solicitante: {{$request->user->person->cpf_cnpj}}</p>
-                                    <p>Celular/Telefone: {{$request->user->person->phone->number}}</p>
-                                    <p>Centro de custo do solicitante: {{$request->user->person->costCenter->name}}</p>
-                                    <p>Empresa do centro de custo: {{$request->user->person->costCenter->company->corporate_name}}</p>
+                                    <p><strong>E-mail do solicitante:</strong> {{ $request->user->email }}</p>
+                                    <p><strong>Nome do solicitante:</strong> {{ $request->user->person->name }}</p>
+                                    <p><strong>Documento do solicitante:</strong>
+                                        {{ $request->user->person->cpf_cnpj }}
+                                    </p>
+                                    <p>
+                                        <strong>Celular/Telefone:</strong> {{ $request->user->person->phone->number }}
+                                    </p>
+                                    <p>
+                                        <strong>Centro de custo do solicitante:</strong>
+                                        {{ $request->user->person->costCenter->name }}
+                                    </p>
+                                    <p>
+                                        <strong>Empresa do centro de custo:</strong>
+                                        {{ $request->user->person->costCenter->company->corporate_name }}
+                                    </p>
                                     <hr>
-                                    <p>Perfil do solicitante: {{$request->user->Profile->name}}</p>
-                                    <p>Autorização para solicitar: {{$request->user->is_buyer ? 'Autorizado' : 'Sem autorização'}}</p>
-                                    <p>Aprovação limite: {{$request->user->approver_limit ?? 'Sem limite'}}</p>
-                                    <p>Nº do aprovador: {{$request->user->approver_user_id ?? 'Sem aprovador'}}</p>
+                                    <p><strong>Perfil do solicitante:</strong> {{ $request->user->Profile->name }}</p>
+                                    <p>
+                                        <strong>Autorização para solicitar:</strong>
+                                        {{ $request->user->is_buyer ? 'Autorizado' : 'Sem autorização' }}
+                                    </p>
+                                    <p>
+                                        <strong>Aprovação limite:</strong>
+                                        {{ $request->user->approver_limit ?? 'Sem limite' }}
+                                    </p>
+
+                                    <p>
+                                        <strong>Usuário aprovador:</strong>
+                                        {{ $request->user->approver->person->name ?? 'Sem aprovador' }}
+                                    </p>
+                                    <p>
+                                        <strong>E-mail do aprovador:</strong>
+                                        {{ $request->user->approver->email ?? 'Sem aprovador' }}
+                                    </p>
                                     <hr>
-                                    <p>Usuário criado em: {{ \Carbon\Carbon::parse($request->user->created_at)->format('d/m/Y h:m:s') }}</p> 
-                                    <p>Usuário atualizado em: {{ \Carbon\Carbon::parse($request->user->updated_at)->format('d/m/Y h:m:s') }}</p>
+                                    <p>
+                                        <strong>Usuário criado em:</strong>
+                                        {{ \Carbon\Carbon::parse($request->user->created_at)->format('d/m/Y h:m:s') }}
+                                    </p>
+                                    <p>
+                                        <strong>Usuário atualizado em:</strong>
+                                        {{ \Carbon\Carbon::parse($request->user->updated_at)->format('d/m/Y h:m:s') }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
                         <div class="request-details-content">
                             <div class="request-details-content-box">
-                                <p><i class="fa fa-money"></i> Centro de custo e rateio</p>
+                                <h4><i class="fa fa-money"></i> <strong>Centro de custo e rateio</strong></h4>
                                 <hr>
                                 <div class="tab-content padding">
-                                    <p>Qtd. de centro de custos: {{$request->costCenterApportionment->count()}}</p>
+                                    <div class="request-details-content">
+                                        <div class="request-details-content-box">
+                                            <h4>
+                                                <i class="fa fa-money"></i> <strong>Centro de custo e rateio</strong>
+                                            </h4>
+                                            <hr>
+                                            <p>
+                                                <strong>Quantidade de centro de custos:</strong>
+                                                {{ $request->costCenterApportionment->count() }}
+                                            </p>
 
-                                    <div class="request-details-content-box-apportionment">
-                                        @foreach ($request->costCenterApportionment as $index => $apportionment)
-                                        <div>
-                                            <p>Centro de custo nº {{$index}}</p>
-                                            <ul>
-                                                <p>Porcentagem (%): {{$apportionment->apportionment_percentage ?? '---'}}</p>
-                                                <p>Custo (R$): {{$apportionment->apportionment_currency ?? '---'}}</p>
-                                                <p>Centro de custo: {{$apportionment->costCenter->name}}</p>
-                                                <p>Empresa: {{$apportionment->costCenter->company->corporate_name}}</p>
-                                                <p>CNPJ: {{$apportionment->costCenter->company->cnpj}}</p>
-                                            </ul>
+                                            <div class="tab-content request-details-content-box-apportionment">
+                                                @foreach ($request->costCenterApportionment as $index => $apportionment)
+                                                    <div class="row">
+                                                        <p>Centro de custo nº {{ $index + 1 }}</p>
+                                                        <div class="col-sm-2">
+                                                            <p>
+                                                                <strong>Porcentagem (%):</strong>
+                                                                {{ $apportionment->apportionment_percentage ?? '---' }}
+                                                            </p>
+                                                            <p>
+                                                                <strong>Custo (R$):</strong>
+                                                                {{ $apportionment->apportionment_currency ?? '---' }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-sm-5">
+                                                            <p>
+                                                                <strong>Centro de custo:</strong>
+                                                                {{ $apportionment->costCenter->name }}
+                                                            </p>
+                                                            <p>
+                                                                <strong>CNPJ:</strong>
+                                                                {{ $apportionment->costCenter->company->cnpj }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-sm-5">
+                                                            <p>
+                                                                <strong>Empresa:</strong>
+                                                                {{ $apportionment->costCenter->company->corporate_name }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
-                                        @endforeach
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="request-details-content">
                             <div class="request-details-content-box">
-                                <p><i class="fa fa-tags"></i> Produto(s) - Informações</p>
+                                <h4><i class="fa fa-tags"></i> <strong>Produto(s) - Informações</strong></h4>
                                 <div class="tab-content padding">
                                     @php
                                         $productsGroupedBySupplier = $request->purchaseRequestProduct->groupBy(function ($item) {
@@ -122,51 +189,122 @@
                                     @foreach ($productsGroupedBySupplier as $supplierIndex => $supplierGroup)
                                         <div class="request-supplier-group">
                                             <div class="request-details-content-box-supplier">
-                                                <h4><strong>Fornecedor nº: {{$supplierIndex}}</strong></h4>
+                                                <h4><strong>Fornecedor nº: {{ $supplierIndex }}</strong></h4>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <p>Razão social: {{$supplierGroup->first()->supplier->corporate_name}}</p>
-                                                        <p>Nome fantasia: {{$supplierGroup->first()->supplier->name}}</p>
-                                                        <p>CNPJ/CPF: {{$supplierGroup->first()->supplier->cpf_cnpj}}</p>
-                                                        <p>Tipo de pessoa: {{$supplierGroup->first()->supplier->entity_type}}</p>
-                                                        <p>Indicação do fornecedor: {{$supplierGroup->first()->supplier->supplier_indication}}</p>
-                                                        <p>Tipo de mercado: {{$supplierGroup->first()->supplier->market_type}}</p>
-                                                        <p>Qualificação: {{$supplierGroup->first()->supplier->qualification->label()}}</p>
+                                                        <p>
+                                                            <strong>Razão social:</strong>
+                                                            {{ $supplierGroup->first()->supplier->corporate_name }}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Nome fantasia:</strong>
+                                                            {{ $supplierGroup->first()->supplier->name }}
+                                                        </p>
+                                                        <p>
+                                                            <strong>CNPJ/CPF:
+                                                                {{ $supplierGroup->first()->supplier->cpf_cnpj }}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Tipo de pessoa:</strong>
+                                                            {{ $supplierGroup->first()->supplier->entity_type }}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Indicação do fornecedor:</strong>
+                                                            {{ $supplierGroup->first()->supplier->supplier_indication }}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Tipo de mercado:</strong>
+                                                            {{ $supplierGroup->first()->supplier->market_type }}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Qualificação:</strong>
+                                                            {{ $supplierGroup->first()->supplier->qualification->label() }}
+                                                        </p>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <p>Representante: {{$supplierGroup->first()->supplier->representative}}</p>
-                                                        <p>E-mail: {{$supplierGroup->first()->supplier->email}}</p>
-                                                        <p>Registro estadual: {{$supplierGroup->first()->supplier->state_registration}}</p>
-                                                        <p>Descrição: {{$supplierGroup->first()->supplier->description}}</p>
+                                                        <p>
+                                                            <strong>Representante:</strong>
+                                                            {{ $supplierGroup->first()->supplier->representative ?? '---' }}
+                                                        </p>
+                                                        <p>
+                                                            <strong>E-mail:</strong>
+                                                            {{ $supplierGroup->first()->supplier->email ?? '---' }}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Registro estadual:</strong>
+                                                            {{ $supplierGroup->first()->supplier->state_registration }}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Descrição:</strong>
+                                                            {{ $supplierGroup->first()->supplier->description ?? '---' }}
+                                                        </p>
                                                         <hr>
-                                                        <p>Fornecedor criado em: {{$supplierGroup->first()->supplier->created_at}}</p>
-                                                        <p>Fornecedor atualizado em: {{$supplierGroup->first()->supplier->updated_at}}</p>
+                                                        <p><strong>
+                                                                Fornecedor criado em:</strong>
+                                                            {{ $supplierGroup->first()->supplier->created_at }}</p>
+                                                        <p>
+                                                            <strong>Fornecedor atualizado em:</strong>
+                                                            {{ $supplierGroup->first()->supplier->updated_at }}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="request-details-content-box-products">
                                                 @foreach ($supplierGroup as $index => $productItem)
                                                     <div class="request-details-content-box-products-product">
-                                                        <p>Produto nº {{$index}}:</p>
+                                                        <p><strong>Produto nº {{ $index + 1 }}:</strong></p>
+                                                        <hr>
                                                         <div class="row">
                                                             <div class="col-md-3">
-                                                                <p>Identificação do produto nº: {{$productItem->id}}</p>
-                                                                <p>Nome do produto: {{$productItem->name}}</p>
-                                                                <p>Quantidade: {{$productItem->quantity}}</p>
-                                                                <p>Preço unitário: {{$productItem->unit_price ?? '---'}}</p>
-                                                                <p>Preço total: {{$productItem->unit_price ? ($productItem->unit_price * $productItem->quantity) : 'Indefinido'}}</p>
+                                                                <p>
+                                                                    <strong>Quantidade:</strong>
+                                                                    {{ $productItem->quantity }}
+                                                                </p>
+                                                                <p>
+                                                                    <strong>Preço unitário:</strong>
+                                                                    {{ $productItem->unit_price ?? '---' }}
+                                                                </p>
+                                                                <p>
+                                                                    <strong>Preço total:</strong>
+                                                                    {{ $productItem->unit_price ? $productItem->unit_price * $productItem->quantity : 'Indefinido' }}
+                                                                </p>
+                                                                <hr>
+                                                                <p>
+                                                                    <strong>Produto criado em:</strong>
+                                                                    {{ \Carbon\Carbon::parse($productItem->created_at)->format('d/m/Y h:m:s') }}
+                                                                </p>
+                                                                <p>
+                                                                    <strong>Produto atualizado em:
+                                                                        {{ \Carbon\Carbon::parse($productItem->updated_at)->format('d/m/Y h:m:s') }}
+                                                                </p>
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <p>Modelo do produto: {{$productItem->model ?? '---'}}</p>
-                                                                <p>Cor do produto: {{$productItem->color ?? '---'}}</p>
-                                                                <p>Tamanho e dimensões do produto: {{$productItem->size ?? '---'}}</p>
-                                                                <p>Categoria: {{$productItem->category->name}}</p>
+                                                                <p>
+                                                                    <strong>Modelo do produto:</strong>
+                                                                    {{ $productItem->model ?? '---' }}
+                                                                </p>
+                                                                <p>
+                                                                    <strong>Cor do produto:</strong>
+                                                                    {{ $productItem->color ?? '---' }}
+                                                                </p>
+                                                                <p>
+                                                                    <strong>Tamanho e dimensões do produto:</strong>
+                                                                    {{ $productItem->size ?? '---' }}
+                                                                </p>
+                                                                <p>
+                                                                    <strong>Categoria:</strong>
+                                                                    {{ $productItem->category->name }}
+                                                                </p>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <p>Descrição do produto: {{$productItem->description ?? '---'}}</p>
-                                                                <hr>
-                                                                <p>Produto criado em: {{ \Carbon\Carbon::parse($productItem->created_at)->format('d/m/Y h:m:s') }}</p>
-                                                                <p>Produto atualizado em: {{ \Carbon\Carbon::parse($productItem->updated_at)->format('d/m/Y h:m:s') }}</p>
+                                                                <p>
+                                                                    <strong>Nome do produto:</strong>
+                                                                    {{ $productItem->name }}
+                                                                </p>
+                                                                <p>
+                                                                    <strong>Descrição do produto:</strong>
+                                                                    {{ $productItem->description ?? '---' }}
+                                                                </p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -182,5 +320,5 @@
                 </div>
             </div>
         </main>
-  </div>
+    </div>
 </x-app>

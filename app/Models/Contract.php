@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ContractRecurrence;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -59,5 +60,9 @@ class Contract extends Model
         'updated_by',
         'deleted_by',
         'deleted_at',
+    ];
+
+    protected $casts = [
+        'recurrence' => ContractRecurrence::class,
     ];
 }
