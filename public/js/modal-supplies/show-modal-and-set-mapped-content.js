@@ -15,7 +15,15 @@ $('#modal-supplies').on('show.bs.modal', function(event) {
     const mappedBasicInfoEntries = {
         id: (value) => value,
         status: (value) => {
-            const status = { pending: 'Pendente' }
+            const status = { 
+                pendente: 'Pendente',
+                em_tratativa: 'Aprovado',
+                em_cotacao: 'Desaprovado',
+                aguardando_aprovacao_de_compra: 'Desaprovado',
+                compra_efetuada: 'Compra efetuada',
+                finalizada: 'Finalizada',
+                cancelada: 'Cancelada',
+            }
             return status[value] ?? '---'
         },
         type: (value) => {
