@@ -13,10 +13,24 @@ class CheckProfileMiddleware
      */
     public function handle($request, Closure $next, ...$profiles)
     {
-        $isAdmin = $request->user()->profile->name === 'admin';
+        $currentProfile = $request->user()->profile->name;
+        $suppliesGroup = $request->route('suppliesGroup');
 
-        if ($isAdmin || in_array($request->user()->profile->name, $profiles)) {
+        $isAdmin = $currentProfile === 'admin';
+        if ($isAdmin) {
             return $next($request);
+        }
+
+        if (in_array($currentProfile, $profiles)) {
+            if (!$suppliesGroup) {
+                return $next($request);
+            }
+
+            $isAuthInp = $currentProfile === 'suprimentos_inp' && $suppliesGroup === 'inp';
+            $isAuthHkm = $currentProfile === 'suprimentos_hkm' && $suppliesGroup === 'hkm';
+            if ($suppliesGroup && ($isAuthInp || $isAuthHkm)) {;
+                return $next($request);
+            }
         }
 
         abort(403, 'Acesso não autorizado.');

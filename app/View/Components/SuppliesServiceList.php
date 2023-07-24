@@ -15,7 +15,7 @@ class SuppliesServiceList extends Component
     public function __construct(
         private PurchaseRequestService $purchaseRequestService,
         private SupplierService $supplierService,
-        private CompanyGroup|null $filter
+        private CompanyGroup|null $suppliesGroup
     ) {
     }
 
@@ -29,8 +29,8 @@ class SuppliesServiceList extends Component
             }
         });
 
-        if ($this->filter) {
-            $services = $this->supplierService->filterRequestByCompanyGroup($services, $this->filter);
+        if ($this->suppliesGroup) {
+            $services = $this->supplierService->filterRequestByCompanyGroup($services, $this->suppliesGroup);
         }
 
         return view('components.supplies.service-content.supplies-service-list', ['services' => $services]);

@@ -58,42 +58,42 @@ class SuppliesController extends Controller
         return view('components.supplies.index', $params);
     }
 
-    public function product(string $filter = null)
+    public function product(string $suppliesGroup = null)
     {
-        if ($filter !== null) {
+        if ($suppliesGroup !== null) {
             try {
-                $filter = CompanyGroup::from($filter);
+                $suppliesGroup = CompanyGroup::from($suppliesGroup);
             } catch (\ValueError $error) {
-                return redirect()->back()->withInput()->withErrors("$filter não é um parâmetro válido.");
+                return redirect()->back()->withInput()->withErrors("$suppliesGroup não é um parâmetro válido.");
             }
         }
 
-        return view('components.supplies.product', ['filter' => $filter]);
+        return view('components.supplies.product', ['suppliesGroup' => $suppliesGroup]);
     }
 
-    public function service(string $filter = null)
+    public function service(string $suppliesGroup = null)
     {
-        if ($filter !== null) {
+        if ($suppliesGroup !== null) {
             try {
-                $filter = CompanyGroup::from($filter);
+                $suppliesGroup = CompanyGroup::from($suppliesGroup);
             } catch (\ValueError $error) {
-                return redirect()->back()->withInput()->withErrors("$filter não é um parâmetro válido.");
+                return redirect()->back()->withInput()->withErrors("$suppliesGroup não é um parâmetro válido.");
             }
         }
 
-        return view('components.supplies.service', ['filter' => $filter]);
+        return view('components.supplies.service', ['suppliesGroup' => $suppliesGroup]);
     }
 
-    public function contract(string $filter = null)
+    public function contract(string $suppliesGroup = null)
     {
-        if ($filter !== null) {
+        if ($suppliesGroup !== null) {
             try {
-                $filter = CompanyGroup::from($filter);
+                $suppliesGroup = CompanyGroup::from($suppliesGroup);
             } catch (\ValueError $error) {
-                return redirect()->back()->withInput()->withErrors("$filter não é um parâmetro válido.");
+                return redirect()->back()->withInput()->withErrors("$suppliesGroup não é um parâmetro válido.");
             }
         }
 
-        return view('components.supplies.contract', ['filter' => $filter]);
+        return view('components.supplies.contract', ['suppliesGroup' => $suppliesGroup]);
     }
 }

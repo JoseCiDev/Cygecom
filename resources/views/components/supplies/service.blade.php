@@ -17,6 +17,6 @@
         </div>
     </div>
     
-    <x-SuppliesServiceList :filter="$filter"  />
+    <x-SuppliesServiceList :suppliesGroup="$suppliesGroup"  />
 
 </x-app>

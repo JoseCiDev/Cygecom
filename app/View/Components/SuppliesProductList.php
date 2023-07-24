@@ -14,7 +14,7 @@ class SuppliesProductList extends Component
     public function __construct(
         private PurchaseRequestService $purchaseRequestService,
         private SupplierService $supplierService,
-        private CompanyGroup|null $filter
+        private CompanyGroup|null $suppliesGroup
     ) {
     }
 
@@ -28,8 +28,8 @@ class SuppliesProductList extends Component
             }
         });
 
-        if ($this->filter) {
-            $products = $this->supplierService->filterRequestByCompanyGroup($products, $this->filter);
+        if ($this->suppliesGroup) {
+            $products = $this->supplierService->filterRequestByCompanyGroup($products, $this->suppliesGroup);
         }
 
         return view('components.supplies.product-content.supplies-product-list', ['products' => $products]);
