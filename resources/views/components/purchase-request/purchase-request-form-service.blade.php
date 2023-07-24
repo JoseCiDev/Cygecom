@@ -3,7 +3,7 @@
     $purchaseRequest ??= null;
     $isCopy ??= null;
     $serviceInstallments = $purchaseRequest?->service?->installments;
-    $purchaseRequestServicePrice = $purchaseRequest?->service?->price === null ? null : (float) $purchaseRequest?->service?->price
+    $purchaseRequestServicePrice = $purchaseRequest?->service?->price === null ? null : (float) $purchaseRequest?->service?->price;
 @endphp
 
 
@@ -140,8 +140,8 @@
                     </label>
                     <div class="input-group">
                         <span class="input-group-addon">%</span>
-                        <input type="number" placeholder="0.00" class="form-control" min="0"
-                            name="cost_center_apportionments[0][apportionment_percentage]"
+                        <input type="number" placeholder="0.00" class="form-control apportionment-percentage"
+                            min="0" name="cost_center_apportionments[0][apportionment_percentage]"
                             id="cost_center_apportionments[0][apportionment_percentage]">
                         @error('cost_center_apportionments[0][apportionment_percentage]')
                             <p><strong>{{ $message }}</strong></p>
@@ -353,11 +353,9 @@
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
                                 <input type="text" id="format-amount" placeholder="0.00"
-                                    class="form-control format-amount"
-                                    value="{{ $purchaseRequestServicePrice }}">
+                                    class="form-control format-amount" value="{{ $purchaseRequestServicePrice }}">
                                 <input type="hidden" name="service[price]" id="amount"
-                                    class="amount no-validation"
-                                    value="{{ $purchaseRequestServicePrice }}">
+                                    class="amount no-validation" value="{{ $purchaseRequestServicePrice }}">
                             </div>
                         </div>
                     </div>
@@ -562,6 +560,7 @@
             max: 1000000000,
         });
 
+
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
 
@@ -584,7 +583,7 @@
             costCenterCount > 1 ? $('.delete-cost-center').prop('disabled', false) : $('.delete-cost-center')
                 .prop('disabled', true);
         }
-        checkCostCenterCount()
+        checkCostCenterCount();
 
         function updateApportionmentFields() {
             const hasPercentageInput = $costCenterPercentage.filter(function() {
@@ -604,6 +603,36 @@
             }
         }
         updateApportionmentFields();
+
+        // desabilita botao caso nao tenha sido preenchido cost center corretamente;
+        const $btnAddCostCenter = $('.add-cost-center-btn');
+        const $costCenterSelect = $('.cost-center-container select');
+
+        function toggleCostCenterBtn() {
+            const costCenterContainer = $(this).closest('.cost-center-container');
+
+            const costCenterSelect = costCenterContainer
+                .find('select')
+                .val();
+
+            const costcenterPercentage = costCenterContainer
+                .find('input[name$="[apportionment_percentage]"]')
+                .val()
+
+            const costCenterCurrency = costCenterContainer
+                .find('input[name$="[apportionment_currency]"]')
+                .val()
+
+            const isValidApportionment = costCenterSelect && (costcenterPercentage || costCenterCurrency);
+
+            $btnAddCostCenter.prop('disabled', !isValidApportionment);
+        }
+
+        $(document).on('input change', `${$costCenterSelect.selector}, ${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
+            toggleCostCenterBtn);
+
+        toggleCostCenterBtn();
+
 
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
         $costCenterPercentage.add($costCenterCurrency).on('input', updateApportionmentFields);
@@ -630,6 +659,7 @@
             newRow.find('.delete-cost-center').removeAttr('hidden');
             checkCostCenterCount();
             disableSelectedOptions();
+            toggleCostCenterBtn.bind(this)();
         });
 
         $(document).on('click', '.delete-cost-center', function() {
@@ -637,6 +667,7 @@
             updateApportionmentFields();
             checkCostCenterCount();
             disableSelectedOptions();
+            toggleCostCenterBtn.bind(this)();
         });
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
