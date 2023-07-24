@@ -94,6 +94,11 @@ class Breadcrumb extends Component
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
             ['route' => 'supplies.service', 'label' => 'Solicitações de Serviços'],
         ],
+        'supplies.service.filter' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'supplies.index', 'label' => 'Suprimentos'],
+            ['route' => 'supplies.service.filter', 'label' => 'Solicitações de Serviços'],
+        ],
         'supplies.service.detail' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
@@ -105,6 +110,11 @@ class Breadcrumb extends Component
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
             ['route' => 'supplies.product', 'label' => 'Solicitações de Produtos'],
         ],
+        'supplies.product.filter' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'supplies.index', 'label' => 'Suprimentos'],
+            ['route' => 'supplies.product.filter', 'label' => 'Solicitações de Produtos'],
+        ],
         'supplies.product.detail' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
@@ -115,6 +125,11 @@ class Breadcrumb extends Component
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
             ['route' => 'supplies.contract', 'label' => 'Solicitações de Contratos'],
+        ],
+        'supplies.contract.filter' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'supplies.index', 'label' => 'Suprimentos'],
+            ['route' => 'supplies.contract.filter', 'label' => 'Solicitações de Contratos'],
         ],
         'supplies.contract.detail' => [
             ['route' => 'home', 'label' => 'Home'],
