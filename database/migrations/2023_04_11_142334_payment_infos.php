@@ -11,6 +11,7 @@ return new class() extends Migration
         Schema::create('payment_infos', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->string('payment_method')->nullable();
+            $table->string('description')->nullable();
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->nullable();
