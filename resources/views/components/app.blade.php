@@ -174,9 +174,7 @@
                             @endif
                         </ul>
                     </li>
-                    @if (auth()->user()->profile->name === 'admin' ||
-                            auth()->user()->profile->name === 'suprimentosNutrition' ||
-                            auth()->user()->profile->name === 'suprimentosPharma')
+                    @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_inp' || auth()->user()->profile->name === 'suprimentos_hkm')
                         <li>
                             <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
                                 <span>SUPRIMENTOS</span>
