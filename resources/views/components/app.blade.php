@@ -182,9 +182,11 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('supplies.index') }}">Introdução</a></li>
-                                <li><a href="{{ route('supplies.product') }}">Produtos</a></li>
-                                <li><a href="{{ route('supplies.service') }}">Serviços</a></li>
-                                <li><a href="{{ route('supplies.contract') }}">Contratos</a></li>
+                                @if (auth()->user()->profile->name === 'admin')
+                                    <li><a href="{{ route('supplies.product') }}">Produtos</a></li>
+                                    <li><a href="{{ route('supplies.service') }}">Serviços</a></li>
+                                    <li><a href="{{ route('supplies.contract') }}">Contratos</a></li>
+                                @endif
                             </ul>
                         </li>
                     @endif

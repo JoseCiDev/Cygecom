@@ -29,10 +29,10 @@
                                             <a href="{{route('supplies.product')}}" class="btn btn-grey-4">Todos de produtos</a>
                                         @endif
                                         @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.product', ['filter' => 'hkm'])}}" class="btn btn-grey-4">Produtos HKM</a>
+                                            <a href="{{route('supplies.product.filter', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4">Produtos HKM</a>
                                         @endif
                                         @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_inp')
-                                            <a href="{{route('supplies.product', ['filter' => 'inp'])}}" class="btn btn-grey-4">Produtos INP</a>
+                                            <a href="{{route('supplies.product.filter', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4">Produtos INP</a>
                                         @endif
                                     </div>
                                 </li>
@@ -51,10 +51,10 @@
                                             <a href="{{route('supplies.service')}}" class="btn btn-grey-4">Todos serviços</a>
                                         @endif
                                         @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.service', ['filter' => 'hkm'])}}" class="btn btn-grey-4">Serviços HKM</a>
+                                            <a href="{{route('supplies.service.filter', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4">Serviços HKM</a>
                                         @endif
                                         @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_inp')
-                                            <a href="{{route('supplies.service', ['filter' => 'inp'])}}" class="btn btn-grey-4">Serviços INP</a>
+                                            <a href="{{route('supplies.service.filter', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4">Serviços INP</a>
                                         @endif
                                     </div>
                                 </li>
@@ -73,10 +73,10 @@
                                             <a href="{{route('supplies.contract')}}" class="btn btn-grey-4">Todos de contratos</a>
                                         @endif
                                         @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.contract', ['filter' => 'hkm'])}}" class="btn btn-grey-4">Contratos HKM</a>
+                                            <a href="{{route('supplies.contract.filter', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4">Contratos HKM</a>
                                         @endif
                                         @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_inp')
-                                            <a href="{{route('supplies.contract', ['filter' => 'inp'])}}" class="btn btn-grey-4">Contratos INP</a>
+                                            <a href="{{route('supplies.contract.filter', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4">Contratos INP</a>
                                         @endif
                                     </div>
                                 </li>

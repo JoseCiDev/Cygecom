@@ -21,4 +21,8 @@ Route::middleware(['auth', 'profile:admin'])->group(function () {
     Route::post('/suppliers/update/{id}', [App\Http\Controllers\SupplierController::class, 'update'])->name('supplier.update');
 
     Route::get('/requests', [App\Http\Controllers\PurchaseRequestController::class, 'index'])->name('requests');
+
+    Route::get('/supplies/service', [App\Http\Controllers\SuppliesController::class, 'service'])->name('supplies.service');
+    Route::get('/supplies/product', [App\Http\Controllers\SuppliesController::class, 'product'])->name('supplies.product');
+    Route::get('/supplies/contract', [App\Http\Controllers\SuppliesController::class, 'contract'])->name('supplies.contract');
 });
