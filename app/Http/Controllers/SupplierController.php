@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
-use App\Providers\{SuppplierService, ValidatorService};
+use App\Providers\{SupplierService, ValidatorService};
 use Exception;
 use Illuminate\Http\Request;
 
@@ -13,7 +13,7 @@ class SupplierController extends Controller
 
     private $supplierService;
 
-    public function __construct(ValidatorService $validatorService, SuppplierService $supplierService)
+    public function __construct(ValidatorService $validatorService, SupplierService $supplierService)
     {
         $this->validatorService = $validatorService;
         $this->supplierService  = $supplierService;

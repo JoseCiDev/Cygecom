@@ -16,8 +16,8 @@ class AppServiceProvider extends ServiceProvider
             return new ValidatorService($app);
         });
 
-        $this->app->singleton(SuppplierService::class, function ($app) {
-            return new SuppplierService($app);
+        $this->app->singleton(SupplierService::class, function ($app) {
+            return new SupplierService($app);
         });
 
         $this->app->singleton(PurchaseRequestService::class, function ($app) {

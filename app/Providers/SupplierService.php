@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Enums\CompanyGroup;
 use App\Models\{Address, Phone, Supplier};
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
-class SuppplierService extends ServiceProvider
+class SupplierService extends ServiceProvider
 {
     /**
      * @return Supplier Retorna fornecedor com suas relações, exceto deletados.
@@ -55,6 +57,16 @@ class SuppplierService extends ServiceProvider
         $supplier->deleted_at = Carbon::now();
         $supplier->deleted_by = auth()->user()->id;
         $supplier->save();
+    }
+
+    public function filterRequestByCompanyGroup(Collection $requests, CompanyGroup $companyGroup)
+    {
+        return $requests->filter(function ($item) use ($companyGroup) {
+            $costCenterApportionments = $item->CostCenterApportionment;
+            return $costCenterApportionments->contains(function ($apportionment) use ($companyGroup) {
+                return $apportionment->costCenter->Company->group->value === $companyGroup->value;
+            });
+        });
     }
 
     private function createPhone(array $data): int
