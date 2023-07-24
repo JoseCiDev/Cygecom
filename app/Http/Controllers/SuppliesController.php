@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CompanyGroup;
+use App\Enums\PurchaseRequestType;
 use App\Providers\PurchaseRequestService;
+use App\Providers\SupplierService;
 
 class SuppliesController extends Controller
 {
-    public function __construct(private PurchaseRequestService $purchaseRequestService)
+    public function __construct(private PurchaseRequestService $purchaseRequestService, private SupplierService $supplierService)
     {
         $this->middleware('auth');
     }
@@ -19,56 +22,78 @@ class SuppliesController extends Controller
         $purchaseRequests = $this->purchaseRequestService->purchaseRequests();
 
         $typesGrouped = $purchaseRequests->groupBy(function ($item) {
-            return $item->type->label();
+            return $item->type->value;
         });
 
-        $contractQtd = $typesGrouped->get('Contrato', collect())->count();
-        $serviceQtd = $typesGrouped->get('Serviço', collect())->count();
-        $productQtd = $typesGrouped->get('Produto', collect())->count();
-
-        $contractAcquiredBySuppliesQtd = $typesGrouped->get('Contrato', collect())->where('is_supplies_contract', true)->count();
-        $serviceAcquiredBySuppliesQtd = $typesGrouped->get('Serviço', collect())->where('is_supplies_contract', true)->count();
-        $productAcquiredBySuppliesQtd = $typesGrouped->get('Produto', collect())->where('is_supplies_contract', true)->count();
-
-        $contractComexQtd = $typesGrouped->get('Contrato', collect())->where('is_comex', true)->count();
-        $serviceComexQtd = $typesGrouped->get('Serviço', collect())->where('is_comex', true)->count();
-        $productComexQtd = $typesGrouped->get('Produto', collect())->where('is_comex', true)->count();
+        $contracts = $typesGrouped->get(PurchaseRequestType::CONTRACT->value, collect());
+        $services = $typesGrouped->get(PurchaseRequestType::SERVICE->value, collect());
+        $products = $typesGrouped->get(PurchaseRequestType::PRODUCT->value, collect());
 
         $today = \Carbon\Carbon::today()->format('Y-m-d');
-        $contractDesiredTodayQtd = $typesGrouped->get('Contrato', collect())->where('desired_date', $today)->count();
-        $serviceDesiredTodayQtd = $typesGrouped->get('Serviço', collect())->where('desired_date', $today)->count();
-        $productDesiredTodayQtd = $typesGrouped->get('Produto', collect())->where('desired_date', $today)->count();
 
         $params = [
             'purchaseRequests' => $purchaseRequests,
-            'contractQtd' => $contractQtd,
-            'serviceQtd' => $serviceQtd,
-            'productQtd' => $productQtd,
-            'contractAcquiredBySuppliesQtd' => $contractAcquiredBySuppliesQtd,
-            'serviceAcquiredBySuppliesQtd' => $serviceAcquiredBySuppliesQtd,
-            'productAcquiredBySuppliesQtd' => $productAcquiredBySuppliesQtd,
-            'contractComexQtd' => $contractComexQtd,
-            'serviceComexQtd' => $serviceComexQtd,
-            'productComexQtd' => $productComexQtd,
-            'contractDesiredTodayQtd' => $contractDesiredTodayQtd,
-            'serviceDesiredTodayQtd' => $serviceDesiredTodayQtd,
-            'productDesiredTodayQtd' => $productDesiredTodayQtd,
+            'contractQtd' => $contracts->count(),
+            'serviceQtd' => $services->count(),
+            'productQtd' => $products->count(),
+            'contractAcquiredBySuppliesQtd' => $contracts->where('is_supplies_contract', true)->count(),
+            'serviceAcquiredBySuppliesQtd' => $services->where('is_supplies_contract', true)->count(),
+            'productAcquiredBySuppliesQtd' => $products->where('is_supplies_contract', true)->count(),
+            'contractComexQtd' => $contracts->where('is_comex', true)->count(),
+            'serviceComexQtd' => $services->where('is_comex', true)->count(),
+            'productComexQtd' => $products->where('is_comex', true)->count(),
+            'contractDesiredTodayQtd' => $contracts->where('desired_date', $today)->count(),
+            'serviceDesiredTodayQtd' => $services->where('desired_date', $today)->count(),
+            'productDesiredTodayQtd' => $products->where('desired_date', $today)->count(),
+
+            'productsFromInp' => $this->supplierService->filterRequestByCompanyGroup($products, CompanyGroup::INP),
+            'productsFromHkm' => $this->supplierService->filterRequestByCompanyGroup($products, CompanyGroup::HKM),
+
+            'servicesFromInp' => $this->supplierService->filterRequestByCompanyGroup($services, CompanyGroup::INP),
+            'servicesFromHkm' => $this->supplierService->filterRequestByCompanyGroup($services, CompanyGroup::HKM),
+
+            'contractsFromInp' => $this->supplierService->filterRequestByCompanyGroup($contracts, CompanyGroup::INP),
+            'contractsFromHkm' => $this->supplierService->filterRequestByCompanyGroup($contracts, CompanyGroup::HKM),
         ];
         return view('components.supplies.index', $params);
     }
 
-    public function product()
+    public function product(string $filter = null)
     {
-        return view('components.supplies.product');
+        if ($filter !== null) {
+            try {
+                $filter = CompanyGroup::from($filter);
+            } catch (\ValueError $error) {
+                return redirect()->back()->withInput()->withErrors("$filter não é um parâmetro válido.");
+            }
+        }
+
+        return view('components.supplies.product', ['filter' => $filter]);
     }
 
-    public function service()
+    public function service(string $filter = null)
     {
-        return view('components.supplies.service');
+        if ($filter !== null) {
+            try {
+                $filter = CompanyGroup::from($filter);
+            } catch (\ValueError $error) {
+                return redirect()->back()->withInput()->withErrors("$filter não é um parâmetro válido.");
+            }
+        }
+
+        return view('components.supplies.service', ['filter' => $filter]);
     }
 
-    public function contract()
+    public function contract(string $filter = null)
     {
-        return view('components.supplies.contract');
+        if ($filter !== null) {
+            try {
+                $filter = CompanyGroup::from($filter);
+            } catch (\ValueError $error) {
+                return redirect()->back()->withInput()->withErrors("$filter não é um parâmetro válido.");
+            }
+        }
+
+        return view('components.supplies.contract', ['filter' => $filter]);
     }
 }
