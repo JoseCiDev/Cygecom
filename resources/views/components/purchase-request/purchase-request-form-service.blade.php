@@ -3,6 +3,7 @@
     $purchaseRequest ??= null;
     $isCopy ??= null;
     $serviceInstallments = $purchaseRequest?->service?->installments;
+    $purchaseRequestServicePrice = $purchaseRequest?->service?->price === null ? null : (float) $purchaseRequest?->service?->price
 @endphp
 
 
@@ -201,22 +202,6 @@
                     </div>
                 </div>
 
-                {{-- SERVIÇO JÁ PRESTADO --}}
-                <div class="col-sm-3">
-                    <label for="form-check" class="control-label" style="padding-right:10px;">
-                        Este serviço já foi prestado?
-                    </label>
-                    <div class="form-check">
-                        <input name="service[already_provided]"value="1" class="radio-already-provided"
-                            id="already-provided" type="radio" @checked((isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided) || !isset($purchaseRequest))>
-                        <label class="form-check-label" for="already-provided">Sim</label>
-
-                        <input name="service[already_provided]" value="0" class="radio-already-provided"
-                            type="radio" id="not-provided" style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided)>
-                        <label class="form-check-label" for="not-provided">Não</label>
-                    </div>
-                </div>
-
             </div>
 
             <div class="row" style="margin-bottom:5px;">
@@ -272,9 +257,9 @@
 
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label for="desired-date" class="control-label">Data desejada</label>
+                        <label for="desired-date" class="control-label">Data desejada do serviço</label>
                         <input type="date" name="desired_date" id="desired-date" class="form-control"
-                            value="{{ $purchaseRequest->desired_date ?? null }}">
+                            min="2023-07-24" value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
 
@@ -298,13 +283,12 @@
             <div class="row">
 
                 {{-- LINK --}}
-                <div class="col-sm-6 link-util">
-                    <label for="purchase-request-files[path]" class="control-label">Link</label>
-                    <input
-                        value="{{ isset($purchaseRequest->purchaseRequestFile[0]) && $purchaseRequest->purchaseRequestFile[0]->path ? $purchaseRequest->purchaseRequestFile[0]->path : '' }}"
-                        type="text"
-                        placeholder="Adicone um link válido. Ex: Contrato disponibilizado pelo fornecedor"
-                        name="purchase_request_files[path]" id="purchase-request-files[path]" class="form-control">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="purchase-request-files[path]" class="control-label">Link</label>
+                        <textarea placeholder="Adicone um ou mais links válidos. Ex: Contrato disponibilizado pelo fornecedor" rows="3"
+                            name="purchase_request_files[path]" id="purchase-request-files[path]" class="form-control text-area no-resize">{{ isset($purchaseRequest->purchaseRequestFile[0]) && $purchaseRequest->purchaseRequestFile[0]->path ? $purchaseRequest->purchaseRequestFile[0]->path : '' }}</textarea>
+                    </div>
                 </div>
 
                 {{-- OBSERVACAO --}}
@@ -313,76 +297,41 @@
                         <label for="observation" class="control-label">
                             Observações
                         </label>
-                        <textarea name="observation" id="observation" rows="2"
+                        <textarea name="observation" id="observation" rows="3"
                             placeholder="Informações complementares desta solicitação" class="form-control text-area no-resize">{{ $purchaseRequest->observation ?? null }}</textarea>
                     </div>
                 </div>
 
             </div>
 
-            <div class="suppliers-block">
-                <div class="row center-block" style="padding-bottom: 5px;">
-                    <h4>INFORMAÇÕES DO FORNECEDOR</h4>
-                </div>
-                <div class="row" style="margin-top: 15px">
+            <hr>
 
-                    {{-- FORNECEDOR (CNPJ/RAZAO SOCIAL --}}
-                    <div class="col-sm-4 form-group">
-                        <label style="display:block;" for="service[supplier_id]" class="control-label">
-                            Fornecedor (CNPJ - RAZÃO SOCIAL)
-                        </label>
-                        <select name="service[supplier_id]" class='select2-me'
-                            data-placeholder="Escolha um fornecedor" style="width:100%;">
-                            <option value=""></option>
-                            @foreach ($suppliers as $supplier)
-                                @php $supplierSelected = isset($purchaseRequest->service) && $purchaseRequest->service->supplier_id === $supplier->id; @endphp
-                                <option value="{{ $supplier->id }}" @selected($supplierSelected)>
-                                    {{ "$supplier->cpf_cnpj - $supplier->corporate_name" }}</option>
-                            @endforeach
-                        </select>
+            <div class="row" style="margin-top: 20px; margin-bottom:15px;">
+                {{-- SERVIÇO JÁ PRESTADO --}}
+                <div class="col-sm-3">
+                    <label for="form-check" class="control-label" style="padding-right:10px;">
+                        Este serviço já foi prestado?
+                    </label>
+                    <div class="form-check">
+                        <input name="service[already_provided]" value="1" class="radio-already-provided"
+                            id="already-provided" type="radio" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided)>
+                        <label class="form-check-label" for="already-provided">Sim</label>
+
+                        <input name="service[already_provided]" value="0" class="radio-already-provided"
+                            type="radio" id="not-provided" style="margin-left: 7px;" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided) || !isset($purchaseRequest))>
+                        <label class="form-check-label" for="not-provided">Não</label>
                     </div>
-
-                    {{-- VENDEDOR/ATENDENTE --}}
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="attendant" class="control-label">Vendedor/Atendente</label>
-                            <input type="text" id="attendant" name="service[seller]"
-                                placeholder="Pessoa responsável pela cotação" class="form-control"
-                                data-rule-minlength="2" value="{{ $purchaseRequest?->service?->seller ?? null }}">
-                        </div>
-                    </div>
-
-                    {{-- TELEFONE --}}
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="phone-number" class="control-label">Telefone</label>
-                            <input type="text" name="service[phone]" id="phone-number"
-                                placeholder="(00) 0000-0000" class="form-control" minLength="14"
-                                value="{{ $purchaseRequest?->service?->phone ?? null }}">
-                        </div>
-                    </div>
-
-                    {{-- E-MAIL --}}
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="email" class="control-label">E-mail</label>
-                            <input type="email" name="service[email]" id="email"
-                                placeholder="user_email@vendedor.com.br" class="form-control" data-rule-email="true"
-                                value="{{ $purchaseRequest?->service?->email ?? null }}">
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
-            <hr>
+
 
             <div class="payment-block">
                 <div class="row center-block" style="padding-bottom: 10px;">
                     <h4>PAGAMENTO</h4>
                 </div>
 
-                <div class="row">
+                <div class="row" style="margin-bottom: -50;">
                     {{-- CONDIÇÃO DE PAGAMENTO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
@@ -405,10 +354,10 @@
                                 <span class="input-group-addon">R$</span>
                                 <input type="text" id="format-amount" placeholder="0.00"
                                     class="form-control format-amount"
-                                    value="{{ (float) $purchaseRequest?->service?->price ?? null }}">
+                                    value="{{ $purchaseRequestServicePrice }}">
                                 <input type="hidden" name="service[price]" id="amount"
                                     class="amount no-validation"
-                                    value="{{ (float) $purchaseRequest?->service?->price ?? null }}">
+                                    value="{{ $purchaseRequestServicePrice }}">
                             </div>
                         </div>
                     </div>
@@ -463,10 +412,22 @@
                             </select>
                         </div>
                     </div>
+
+                    {{-- DESCRICAO DADOS PAGAMENTO --}}
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="payment-info-description" class="control-label">
+                                Detalhes do pagamento
+                            </label>
+                            <textarea name="service[payment_info][description]" id="payment-info-description" rows="3"
+                                placeholder="Informações sobre pagamento. Ex: Chave PIX, dados bancários do fornecedor, etc..."
+                                class="form-control text-area no-resize">{{ $purchaseRequest->service->paymentInfo->description ?? null }}</textarea>
+                        </div>
+                    </div>
                 </div>
 
                 {{-- TABLE PARCELAS --}}
-                <div class="row" style="display:flex; align-items:center; margin-top:15px; margin-bottom:5px;">
+                <div class="row" style="display:flex; align-items:center; margin-bottom:5px;">
                     <h4 class="col-sm-6">
                         <i class="fa fa-dollar"></i>
                         Parcelas deste serviço
@@ -504,6 +465,63 @@
                 </div>
             </div>
 
+            <hr>
+
+            <div class="suppliers-block">
+                <div class="row center-block">
+                    <h4>INFORMAÇÕES DO FORNECEDOR</h4>
+                </div>
+                <div class="row" style="margin-top: 10px">
+
+                    {{-- FORNECEDOR (CNPJ/RAZAO SOCIAL --}}
+                    <div class="col-sm-4 form-group">
+                        <label style="display:block;" for="service[supplier_id]" class="control-label">
+                            Fornecedor (CNPJ - RAZÃO SOCIAL)
+                        </label>
+                        <select name="service[supplier_id]" class='select2-me'
+                            data-placeholder="Escolha um fornecedor" style="width:100%;">
+                            <option value=""></option>
+                            @foreach ($suppliers as $supplier)
+                                @php $supplierSelected = isset($purchaseRequest->service) && $purchaseRequest->service->supplier_id === $supplier->id; @endphp
+                                <option value="{{ $supplier->id }}" @selected($supplierSelected)>
+                                    {{ "$supplier->cpf_cnpj - $supplier->corporate_name" }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- VENDEDOR/ATENDENTE --}}
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="attendant" class="control-label">Vendedor/Atendente</label>
+                            <input type="text" id="attendant" name="service[seller]"
+                                placeholder="Pessoa responsável pela cotação" class="form-control"
+                                data-rule-minlength="2" value="{{ $purchaseRequest?->service?->seller ?? null }}">
+                        </div>
+                    </div>
+
+                    {{-- TELEFONE --}}
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label for="phone-number" class="control-label">Telefone</label>
+                            <input type="text" name="service[phone]" id="phone-number"
+                                placeholder="(00) 0000-0000" class="form-control" minLength="14"
+                                value="{{ $purchaseRequest?->service?->phone ?? null }}">
+                        </div>
+                    </div>
+
+                    {{-- E-MAIL --}}
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="email" class="control-label">E-mail</label>
+                            <input type="email" name="service[email]" id="email"
+                                placeholder="user_email@vendedor.com.br" class="form-control" data-rule-email="true"
+                                value="{{ $purchaseRequest?->service?->email ?? null }}">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             <div class="form-actions pull-right" style="margin-top:50px;">
                 <button type="submit" class="btn btn-primary">Salvar</button>
                 <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
@@ -519,6 +537,31 @@
 <script src="{{ asset('js/modal-supplier-register/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
+        const $amount = $('.amount');
+        const $serviceAmount = $('#format-amount');
+        const $phoneNumber = $('#phone-number');
+
+        // masks
+        $phoneNumber.imask({
+            mask: [{
+                    mask: '(00) 0000-0000'
+                },
+                {
+                    mask: '(00) 00000-0000'
+                }
+            ]
+        });
+
+        $serviceAmount.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 0,
+            max: 1000000000,
+        });
+
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
 
@@ -598,10 +641,31 @@
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
 
+        // muda data desejada minima quando serviço já prestado
+        const $desiredDate = $('#desired-date');
+        const $serviceAlreadyProvided = $('.radio-already-provided');
+        const currentDate = moment().format('YYYY-MM-DD');
+        const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
 
-        const $amount = $('.amount');
-        const $serviceAmount = $('#format-amount');
-        const $phoneNumber = $('#phone-number');
+        function desiredDateGreaterThanCurrent() {
+            const desiredDate = $desiredDate.val();
+
+            return desiredDate > currentDate;
+        }
+
+        function changeMinDesiredDate() {
+            const isValidDate = desiredDateGreaterThanCurrent();
+            const serviceAlreadyProvided = $serviceAlreadyProvided.filter(':checked').val() === "1";
+
+            const minDate = serviceAlreadyProvided ? minInitialDate : currentDate;
+
+            $desiredDate.attr('min', minDate);
+        }
+
+        $serviceAlreadyProvided.add($desiredDate).on('change', changeMinDesiredDate);
+        // ---
+
+        // trata valor serviço mascara
 
         $serviceAmount.on('input', function() {
             const formattedValue = $(this).val();
@@ -613,6 +677,7 @@
                 }
             }
         });
+        // ---
 
 
         const $selectSupplier = $('.select-supplier');
@@ -687,7 +752,8 @@
                     const idInput = document.createElement('input');
                     idInput.type = 'number';
                     idInput.name = 'service[service_installments][' + index + '][id]';
-                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]?.id : null;
+                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service
+                        ?.installments[index]?.id : null;
                     idInput.hidden = true;
 
                     const expireDateInput = document.createElement('input');
@@ -728,7 +794,8 @@
                 const idInput = document.createElement('input');
                 idInput.type = 'number';
                 idInput.name = 'service[service_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]?.id : null;
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]
+                    ?.id : null;
                 idInput.hidden = true;
 
                 const expireDateInput = document.createElement('input');
@@ -788,23 +855,29 @@
         const $radioIsContractedBySupplies = $('.radio-who-wants');
         const $suppliersBlock = $('.suppliers-block');
         const $paymentBlock = $('.payment-block');
-        const $linkUtil = $('.link-util');
+
+        const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
+        const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
 
         $radioIsContractedBySupplies.on('change', function() {
             const isContractedBySupplies = $(this).val() === "1";
-            const $elementsToDisable = $suppliersBlock.add($paymentBlock);
 
-            $elementsToDisable
+            // muda label
+            const supplierSelect = $suppliersBlock.find('select.select2-me');
+            const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
+
+            supplierSelect.siblings('label[for="' + supplierSelect.attr('name') + '"]').text(newLabel);
+            supplierSelect.data('rule-required', isContractedBySupplies);
+
+            // desabilita pagamento
+            $paymentBlock
                 .find('input, textarea')
                 .prop('readonly', isContractedBySupplies);
 
-            $elementsToDisable
+            $paymentBlock
                 .find('select')
                 .prop('disabled', isContractedBySupplies)
                 .trigger('change.select2');
-
-            // esconde link caso SUPRIMENTOS
-            $linkUtil.prop('hidden', isContractedBySupplies);
 
             //$installmentsTable.clear().draw();
         }).filter(':checked').trigger('change');
@@ -871,10 +944,10 @@
             const status = $('#edit-status');
             const observation = $('#edit-observation');
 
-            const disabled = selectedRowIndex !== 0;
-            value.prop({
-                disabled
-            });
+            // const disabled = selectedRowIndex !== 0;
+            // value.prop({
+            //     disabled
+            // });
 
             if (rowData.expire_date) {
                 const formattedDate = new Date(rowData.expire_date.split('/').reverse().join('-'));
@@ -904,24 +977,28 @@
                     $installmentsTable.cell(selectedRowIndex, 4).data(editButton);
                     $installmentsTable.draw();
 
-                    if (selectedRowIndex === 0) {
-                        const amount = parseFloat($amount.val());
-                        const rows = $installmentsTable.rows().data();
-                        const selectedRowData = rows[selectedRowIndex];
-                        const selectedValue = parseFloat(selectedRowData.value);
+                    // comentado recalculo de parcelas para facilitar no futuro
 
-                        // Recalcula o valor das parcelas restantes
-                        const recalculatedValue = (amount - selectedValue) / (rows.length - 1);
+                    // if (selectedRowIndex === 0) {
+                    //     const amount = parseFloat($amount.val());
+                    //     const rows = $installmentsTable.rows().data();
+                    //     const selectedRowData = rows[selectedRowIndex];
+                    //     const selectedValue = parseFloat(selectedRowData.value);
 
-                        rows.each(function(rowData, index) {
-                            if (index !== selectedRowIndex) {
-                                $installmentsTable.cell(index, 1).data(recalculatedValue
-                                    .toFixed(2));
-                            }
-                        });
+                    //     // Recalcula o valor das parcelas restantes
+                    //     const recalculatedValue = (amount - selectedValue) / (rows.length - 1);
 
-                        $installmentsTable.draw();
-                    }
+                    //     rows.each(function(rowData, index) {
+                    //         if (index !== selectedRowIndex) {
+                    //             $installmentsTable.cell(index, 1).data(recalculatedValue
+                    //                 .toFixed(2));
+                    //         }
+                    //     });
+
+                    //     $installmentsTable.draw();
+                    // }
+
+                    // ---------------------------------------------------------------
                 }
 
                 selectedRowIndex = null;
@@ -949,27 +1026,6 @@
             const numberOfInstallments = $inputInstallmentsNumber.val();
             $installmentsTable.clear();
             generateInstallments(numberOfInstallments);
-        });
-
-        // masks
-        $phoneNumber.imask({
-            mask: [{
-                    mask: '(00) 0000-0000'
-                },
-                {
-                    mask: '(00) 00000-0000'
-                }
-            ]
-        });
-
-        $serviceAmount.imask({
-            mask: Number,
-            scale: 2,
-            thousandsSeparator: '.',
-            normalizeZeros: true,
-            padFractionalZeros: true,
-            min: 0,
-            max: 1000000000,
         });
     });
 </script>

@@ -167,6 +167,7 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
+                            <li><a href="{{ route('request.links') }}">Nova Solicitação</a></li>
                             <li><a href="{{ route('requests.own') }}">Minhas Solicitações</a></li>
                             @if (auth()->user()->profile->is_admin)
                                 <li><a href="{{ route('requests') }}">Solicitações Gerais</a></li>
