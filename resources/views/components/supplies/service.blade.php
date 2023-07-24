@@ -15,7 +15,8 @@
                 </div>
             </div>
         </div>
-
-    <x-SuppliesServiceList/>
+    </div>
+    
+    <x-SuppliesServiceList :filter="$filter"  />
 
 </x-app>

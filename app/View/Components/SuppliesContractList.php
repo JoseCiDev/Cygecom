@@ -2,27 +2,37 @@
 
 namespace App\View\Components;
 
+use App\Enums\CompanyGroup;
+use App\Enums\PurchaseRequestType;
 use App\Providers\PurchaseRequestService;
+use App\Providers\SupplierService;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 class SuppliesContractList extends Component
 {
-    public function __construct(private PurchaseRequestService $purchaseRequestService)
-    {
+    public function __construct(
+        private PurchaseRequestService $purchaseRequestService,
+        private SupplierService $supplierService,
+        private CompanyGroup|null $filter
+    ) {
     }
 
     public function render(): View|Closure|string
     {
         $purchaseRequests = $this->purchaseRequestService->purchaseRequests();
 
-        $contractList = $purchaseRequests->filter(function ($item) {
-            if ($item->type->label() === "Contrato") {
+        $contracts = $purchaseRequests->filter(function ($item) {
+            if ($item->type->value === PurchaseRequestType::CONTRACT->value) {
                 return $item;
             }
         });
 
-        return view('components.supplies.contract-content.supplies-contract-list', ['contractList' => $contractList]);
+        if ($this->filter) {
+            $contracts = $this->supplierService->filterRequestByCompanyGroup($contracts, $this->filter);
+        }
+
+        return view('components.supplies.contract-content.supplies-contract-list', ['contracts' => $contracts]);
     }
 }

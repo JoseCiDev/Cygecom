@@ -23,13 +23,20 @@
                             <th class="col-sm-1">Tipo de quitação</th>
                             <th class="col-sm-1">Progresso</th>
                             <th class="col-sm-1">Contratação por</th>
+                            <th class="col-sm-1">Grupo de custo</th>
                             <th class="col-sm-1">Data desejada</th>
                             <th class="col-sm-1">Atualizado em</th>
                             <th class="col-sm-1">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($serviceList as $service)
+                        @foreach ($services as $service)
+                            @php 
+                                $groups = $service->CostCenterApportionment->pluck('costCenter.Company.group')->unique(); 
+                                $concatenatedGroups = $groups->map(function ($item) {
+                                        return $item->label(); 
+                                    })->implode(', ');
+                            @endphp
                             <tr>
                                 <td>{{$service->id}}</td>
                                 <td>{{$service->user->person->name}}</td>
@@ -37,6 +44,7 @@
                                 <td>{{$service->service->first()->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
                                 <td>{{$service->service->first()->already_provided ? 'Executado' : 'Não executado'}}</td>
                                 <td>{{$service->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
+                                <td>{{$concatenatedGroups}}</td>
                                 <td>{{ \Carbon\Carbon::parse($service->desired_date)->format('d/m/Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($service->updated_at)->format('d/m/Y h:m:s') }}</td>
                                 <td class="text-center" style="white-space: nowrap;">

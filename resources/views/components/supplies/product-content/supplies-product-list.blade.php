@@ -25,6 +25,7 @@
                             <th class="col-sm-1">Tipo de quitação</th>
                             <th class="col-sm-1">Progresso</th>
                             <th class="col-sm-1">Contratação por</th>
+                            <th class="col-sm-1">Grupo de custo</th>
 
                             <th class="col-sm-1">Data desejada</th>
                             <th class="col-sm-1">Atualizado em</th>
@@ -33,7 +34,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($productList as $product)
+                        @foreach ($products as $product),
+                            @php 
+                                $groups = $product->CostCenterApportionment->pluck('costCenter.Company.group')->unique(); 
+                                $concatenatedGroups = $groups->map(function ($item) {
+                                        return $item->label(); 
+                                    })->implode(', ');
+                            @endphp
                             <tr>
                                 <td>{{$product->id}}</td>
                                 <td>{{$product->user->person->name}}</td>
@@ -43,6 +50,7 @@
                                 <td>{{$product->purchaseRequestProduct->first()->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
                                 <td>{{$product->purchaseRequestProduct->first()->already_provided ? 'Executado' : 'Não executado'}}</td>
                                 <td>{{$product->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
+                                <td>{{$concatenatedGroups}}</td>
 
                                 <td>{{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td>{{ $product->updated_at ? \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') : '---'}}</td>

@@ -32,7 +32,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($contractList as $contract)
+                        @foreach ($contracts as $contract)
+                            @php 
+                                $groups = $contract->CostCenterApportionment->pluck('costCenter.Company.group')->unique(); 
+                                $concatenatedGroups = $groups->map(function ($item) {
+                                        return $item->label(); 
+                                    })->implode(', ');
+                            @endphp
                             <tr>
                                 <td>{{$contract->id}}</td>
                                 <td>{{$contract->user->person->name}}</td>
@@ -41,6 +47,7 @@
                                 <td>{{$contract->contract->first()->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
                                 <td>{{$contract->contract->first()->already_provided ? 'Executado' : 'Não executado'}}</td>
                                 <td>{{$contract->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
+                                <td>{{$concatenatedGroups}}</td>
 
                                 <td>{{ \Carbon\Carbon::parse($contract->desired_date)->format('d/m/Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($contract->updated_at)->format('d/m/Y h:m:s') }}</td>
