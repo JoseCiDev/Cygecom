@@ -623,7 +623,7 @@
                 .find('input[name$="[apportionment_currency]"]')
                 .val()
 
-            const isValidApportionment = costCenterSelect && (costcenterPercentage || costCenterCurrency);
+            const isValidApportionment = Boolean(costCenterSelect && (costcenterPercentage || costCenterCurrency));
 
             $btnAddCostCenter.prop('disabled', !isValidApportionment);
         }
@@ -667,7 +667,7 @@
             updateApportionmentFields();
             checkCostCenterCount();
             disableSelectedOptions();
-            toggleCostCenterBtn.bind(this)();
+            toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
         });
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
