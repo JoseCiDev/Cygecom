@@ -27,7 +27,7 @@ class PurchaseRequest extends Model
 
     public function costCenterApportionment()
     {
-        return $this->hasMany(CostCenterApportionment::class);
+        return $this->hasMany(CostCenterApportionment::class, 'purchase_request_id');
     }
 
     public function purchaseRequestProduct()
