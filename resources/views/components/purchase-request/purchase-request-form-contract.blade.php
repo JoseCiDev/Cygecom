@@ -3,6 +3,7 @@
     $purchaseRequest ??= null;
     $isCopy ??= null;
     $contractInstallments = $purchaseRequest?->contract?->installments;
+    $contractPayday = $purchaseRequest?->contract?->payday;
     $purchaseRequestContractAmount = $purchaseRequest?->contract?->amount === null ? null : (float) $purchaseRequest?->contract?->amount;
 @endphp
 
@@ -363,7 +364,9 @@
                         <div class="form-check" style="12px; display:inline;">
                             {{-- FIXO --}}
                             <input name="contract[is_fixed_payment]" value="1" class="radio-is-fixed-value"
-                                type="radio" data-skin="minimal" @checked((isset($purchaseRequest->contract->is_fixed_payment) && $isFixedPayment) || !isset($purchaseRequest->contract->is_fixed_payment))>
+                                type="radio" data-skin="minimal" @checked(
+                                    (isset($purchaseRequest->contract->is_fixed_payment) && $isFixedPayment) ||
+                                        !isset($purchaseRequest->contract->is_fixed_payment))>
                             <label class="form-check-label" for="services" style="margin-right:15px;">FIXO</label>
                             {{-- VARIAVEL --}}
                             <input name="contract[is_fixed_payment]" value="0" class="radio-is-fixed-value"
@@ -443,7 +446,8 @@
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @for ($day = 1; $day <= 31; $day++)
-                                    <option value="{{ $day }}">{{ $day }}</option>
+                                    <option value="{{ $day }}" @selected($contractPayday === $day)>
+                                        {{ $day }}</option>
                                 @endfor
                             </select>
                         </div>
