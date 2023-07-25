@@ -137,15 +137,20 @@ class PurchaseRequestService extends ServiceProvider
 
     /**
      * @abstract Atualiza apenas entidade solicitação com relação do rateio e arquivo/link.
-     * Deve ser chamada pelos métodos específicios de serviço, contrato ou produtos.
+     * Normalmente é chamada pelos métodos específicios de serviço, contrato ou produtos.
+     * Pode ser chamada por suprimentos para atualizar status da solicitação.
      */
-    public function updatePurchaseRequest(int $id, array $data)
+    public function updatePurchaseRequest(int $id, array $data, bool $isSuppliesUpdate = false)
     {
-        return DB::transaction(function () use ($id, $data) {
+        return DB::transaction(function () use ($id, $data, $isSuppliesUpdate) {
             $purchaseRequest = PurchaseRequest::find($id);
             $purchaseRequest->updated_by = auth()->user()->id;
             $purchaseRequest->fill($data);
             $purchaseRequest->save();
+
+            if ($isSuppliesUpdate) {
+                return $purchaseRequest;
+            }
 
             $this->saveCostCenterApportionment($purchaseRequest->id, $data);
             $this->savePurchaseRequestFile($purchaseRequest->id, $data);
