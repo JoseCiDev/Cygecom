@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\PurchaseRequestStatus;
 use Carbon\Carbon;
 use App\Models\ServiceInstallment;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +52,27 @@ class PurchaseRequestService extends ServiceProvider
             'contract.installments',
 
         ])->whereNull('deleted_at')->where('user_id', $id)->get();
+    }
+
+    /**
+     * @return mixed Pelo status da solicitação retorna todas com suas relações, exceto deletadas.
+     */
+    public function purchaseRequestsByStatus(PurchaseRequestStatus $status)
+    {
+        return PurchaseRequest::with([
+            'user.person.costCenter',
+            'purchaseRequestFile',
+            'costCenterApportionment.costCenter.company',
+            'deletedByUser',
+            'updatedByUser',
+            'service',
+            'service.paymentInfo',
+            'purchaseRequestProduct',
+            'purchaseRequestProduct.category',
+            'contract',
+            'contract.installments',
+
+        ])->whereNull('deleted_at')->where('status', $status->value)->get();
     }
 
     /**
