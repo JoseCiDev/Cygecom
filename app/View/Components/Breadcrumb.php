@@ -102,7 +102,6 @@ class Breadcrumb extends Component
         'supplies.service.detail' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.service', 'label' => 'Solicitações de Serviços'],
             ['route' => 'supplies.service.detail', 'label' => 'Serviço Solicitado'],
         ],
         'supplies.product' => [
@@ -118,7 +117,6 @@ class Breadcrumb extends Component
         'supplies.product.detail' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.product', 'label' => 'Solicitações de Produtos'],
             ['route' => 'supplies.product.detail', 'label' => 'Produto(s) Solicitado(s)'],
         ],
         'supplies.contract' => [
@@ -134,7 +132,6 @@ class Breadcrumb extends Component
         'supplies.contract.detail' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.contract', 'label' => 'Solicitações de Contratos'],
             ['route' => 'supplies.contract.detail', 'label' => 'Contrato Solicitado'],
         ]
     ];
