@@ -14,7 +14,6 @@ class CheckProfileMiddleware
     public function handle($request, Closure $next, ...$profiles)
     {
         $currentProfile = $request->user()->profile->name;
-        $suppliesGroup = $request->route('suppliesGroup');
 
         $isAdmin = $currentProfile === 'admin';
         if ($isAdmin) {
@@ -22,15 +21,7 @@ class CheckProfileMiddleware
         }
 
         if (in_array($currentProfile, $profiles)) {
-            if (!$suppliesGroup) {
-                return $next($request);
-            }
-
-            $isAuthInp = $currentProfile === 'suprimentos_inp' && $suppliesGroup === 'inp';
-            $isAuthHkm = $currentProfile === 'suprimentos_hkm' && $suppliesGroup === 'hkm';
-            if ($suppliesGroup && ($isAuthInp || $isAuthHkm)) {;
-                return $next($request);
-            }
+            return $next($request);
         }
 
         abort(403, 'Acesso não autorizado.');
