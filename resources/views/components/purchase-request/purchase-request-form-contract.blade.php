@@ -3,6 +3,7 @@
     $purchaseRequest ??= null;
     $isCopy ??= null;
     $contractInstallments = $purchaseRequest?->contract?->installments;
+    $purchaseRequestContractAmount = $purchaseRequest?->contract?->amount === null ? null : (float) $purchaseRequest?->contract?->amount;
 @endphp
 
 <style>
@@ -334,10 +335,10 @@
                 {{-- OBSERVACAO --}}
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="observation" class="control-label">
+                        <label for="request-observation" class="control-label">
                             Observações
                         </label>
-                        <textarea name="observation" id="observation" rows="3"
+                        <textarea name="observation" id="request-observation" rows="3"
                             placeholder="Informações complementares desta solicitação" class="form-control text-area no-resize">{{ $purchaseRequest->observation ?? null }}</textarea>
                     </div>
                 </div>
@@ -356,15 +357,17 @@
                         <label for="form-check" class="control-label" style="padding-right:10px;">
                             Valor do contrato será:
                         </label>
-                        @php $isFixedPayment = isset($purchaseRequest->contract) && $purchaseRequest->contract->is_fixed_payment @endphp
+                        @php
+                            $isFixedPayment = isset($purchaseRequest->contract) && $purchaseRequest->contract->is_fixed_payment;
+                        @endphp
                         <div class="form-check" style="12px; display:inline;">
                             {{-- FIXO --}}
                             <input name="contract[is_fixed_payment]" value="1" class="radio-is-fixed-value"
-                                type="radio" data-skin="minimal" @checked($isFixedPayment || !isset($purchaseRequest))>
+                                type="radio" data-skin="minimal" @checked((isset($purchaseRequest->contract->is_fixed_payment) && $isFixedPayment) || !isset($purchaseRequest->contract->is_fixed_payment))>
                             <label class="form-check-label" for="services" style="margin-right:15px;">FIXO</label>
                             {{-- VARIAVEL --}}
                             <input name="contract[is_fixed_payment]" value="0" class="radio-is-fixed-value"
-                                type="radio" data-skin="minimal" @checked($isFixedPayment)>
+                                type="radio" data-skin="minimal" @checked(isset($purchaseRequest->contract->is_fixed_payment) && !$isFixedPayment)>
                             <label class="form-check-label" for="">VARIÁVEL</label>
                         </div>
                         <div class="small" style="color:rgb(85, 85, 85);">
@@ -376,9 +379,10 @@
                         <label class="control-label">Valor total do contrato: </label>
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
-                            <input type="number" placeholder="0.00" class="form-control amount" min="0"
-                                name="contract[amount]" id="amount"
-                                value="{{ $purchaseRequest->contract->amount ?? null }}">
+                            <input type="text" placeholder="0,00" class="form-control format-amount"
+                                id="format-amount" value="{{ $purchaseRequestContractAmount }}">
+                            <input type="hidden" name="contract[amount]" id="amount"
+                                class="amount no-validation" value="{{ $purchaseRequestContractAmount }}">
                         </div>
                     </div>
 
@@ -624,6 +628,19 @@
         const statusValues = @json($statusValues);
         const isRequestCopy = @json($isCopy);
 
+        const $amount = $('.amount');
+        const $contractAmount = $('.format-amount');
+
+        // masks
+        $contractAmount.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 0,
+            max: 1000000000,
+        });
 
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
@@ -697,10 +714,24 @@
             `${$costCenterSelect.selector}, ${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
             toggleCostCenterBtn);
 
-        toggleCostCenterBtn();
+        toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
 
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
         $costCenterPercentage.add($costCenterCurrency).on('input', updateApportionmentFields);
+
+
+        // trata valor serviço mascara
+        $contractAmount.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $amount.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
+        // ---
 
 
         // set desired date min
@@ -749,7 +780,6 @@
         const $inputStartDate = $('.start-date');
         const $inputEndDate = $('.end-date');
         const $recurrence = $('#recurrence');
-        const $amount = $('.amount');
 
         function calculateMonthsPassed(startDate, endDate) {
             const startYear = startDate.getFullYear();
@@ -956,7 +986,7 @@
             const isFixedValue = $(this).val() === "1";
             $divBtnAddInstallment.attr('hidden', isFixedValue);
 
-            if (!isNotCopyAndIssetPurchaseRequest) {
+            if (!isRequestCopy && !purchaseRequest) {
                 $installmentsTable.clear().draw();
             }
 
@@ -970,7 +1000,7 @@
             } else {
                 $inputsForInstallmentEvents.off('change');
             }
-        }).first().trigger('change');
+        }).filter(':checked').trigger('change');
 
         // show btn add installment quando VIGENCIA INDETERMINADA
         $checkboxHasNoEndDate.on('click', function() {

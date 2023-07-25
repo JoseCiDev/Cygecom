@@ -697,7 +697,6 @@
         // ---
 
         // trata valor serviço mascara
-
         $serviceAmount.on('input', function() {
             const formattedValue = $(this).val();
             if (formattedValue !== null) {
