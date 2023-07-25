@@ -253,7 +253,7 @@
                         <label for="reason" class="control-label">
                             Motivo da solicitação
                         </label>
-                        <textarea required name="reason" id="reason" rows="4"
+                        <textarea data-rule-required="true" minlength="20" name="reason" id="reason" rows="4"
                             placeholder="Ex: Ar condicionado da sala de reuniões do atrium apresenta defeitos de funcionamento"
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
@@ -268,7 +268,7 @@
                 <div class="col-sm-8">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
-                        <textarea required name="description" id="description" rows="4"
+                        <textarea data-rule-required="true" minlength="30" name="description" id="description" rows="4"
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
@@ -291,7 +291,7 @@
                         <input name="local_description" value="{{ $purchaseRequest->local_description ?? null }}"
                             type="text" id="local-description"
                             placeholder="Ex: HKM - Av. Gentil Reinaldo Cordioli, 161 - Jardim Eldorado"
-                            class="form-control" data-rule-required="true" data-rule-minlength="2" required>
+                            class="form-control" data-rule-required="true" minlength="15">
                     </div>
                 </div>
 
@@ -381,11 +381,8 @@
                                 value="{{ $purchaseRequest->contract->amount ?? null }}">
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-
-                    <div class="col-sm-2">
+                    <div class="col-sm-2" style="margin-top:-10px;">
                         <div class="form-group">
                             <label class="control-label">Vigência - data inicío</label>
                             <input type="date" name="contract[start_date]" class="form-control start-date"
@@ -393,7 +390,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2">
+                    <div class="col-sm-2" style="margin-top:-10px;">
                         <div class="form-group" style="margin-bottom:0px;">
                             <label class="control-label">Vigência - data fim</label>
                             <input type="date" name="contract[end_date]" class="form-control end-date"
@@ -413,6 +410,9 @@
                             </label>
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
 
                     {{-- RECORRENCIA --}}
                     <div class="col-sm-2">
@@ -435,8 +435,13 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="control-label">Dia de vencimento</label>
-                            <input type="number" name="contract[payday]" class="form-control"
-                                value="{{ $purchaseRequest->contract->payday ?? null }}">
+                            <select name="contract[payday]" id="contract[payday]" class='select2-me contract[payday]'
+                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
+                                <option value=""></option>
+                                @for ($day = 1; $day <= 31; $day++)
+                                    <option value="{{ $day }}">{{ $day }}</option>
+                                @endfor
+                            </select>
                         </div>
                     </div>
 
@@ -482,11 +487,23 @@
                         </div>
                     </div>
 
+                    {{-- DESCRICAO DADOS PAGAMENTO --}}
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="payment-info-description" class="control-label">
+                                Detalhes do pagamento
+                            </label>
+                            <textarea name="contract[payment_info][description]" id="payment-info-description" rows="3"
+                                placeholder="Informações sobre pagamento. Ex: Chave PIX, dados bancários do fornecedor, etc..."
+                                class="form-control text-area no-resize">{{ $purchaseRequest->contract->paymentInfo->description ?? null }}</textarea>
+                        </div>
+                    </div>
+
                     <input type="hidden" value="" name="contract[payment_info][id]">
                 </div>
 
                 {{-- TABLE PARCELAS --}}
-                <div class="row" style="display:flex; align-items:center; margin-top:15px; margin-bottom:5px;">
+                <div class="row" style="display:flex; align-items:center; margin-bottom:5px;">
                     <h4 class="col-sm-6">
                         <i class="fa fa-dollar"></i>
                         Parcelas deste contrato
@@ -662,7 +679,8 @@
                 .find('input[name$="[apportionment_currency]"]')
                 .val()
 
-            const isValidApportionment = Boolean(costCenterSelect && (costcenterPercentage || costCenterCurrency));
+            const isValidApportionment = Boolean(costCenterSelect && (costcenterPercentage ||
+                costCenterCurrency));
 
             $btnAddCostCenter.prop('disabled', !isValidApportionment);
         }
@@ -675,6 +693,14 @@
 
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
         $costCenterPercentage.add($costCenterCurrency).on('input', updateApportionmentFields);
+
+
+        // set desired date min
+        const currentDate = moment().format('YYYY-MM-DD');
+        const $desiredDate = $('#desired-date');
+
+        $desiredDate.attr('min', currentDate);
+
 
         // Add Centro de Custo
         $('.add-cost-center-btn').click(function() {
@@ -861,7 +887,8 @@
                 const idInput = document.createElement('input');
                 idInput.type = 'text';
                 idInput.name = 'contract[contract_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest.contract.installments[0].id :
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.contract?.installments[0]
+                    ?.id :
                     null;
                 idInput.hidden = true;
 
@@ -975,7 +1002,11 @@
 
             // desabilita pagamento
             $paymentBlock
-                .find('input, textarea, checkbox')
+                .find('input, textarea')
+                .prop('readonly', isContractedBySupplies);
+
+            $paymentBlock
+                .find('input[type="checkbox"], input[type="radio"]')
                 .prop('disabled', isContractedBySupplies);
 
             $paymentBlock
@@ -983,7 +1014,10 @@
                 .prop('disabled', isContractedBySupplies)
                 .trigger('change.select2');
 
-            //$installmentsTable.clear().draw();
+            if (isContractedBySupplies) {
+                $installmentsTable.clear().draw();
+            }
+
         }).filter(':checked').trigger('change');
 
 
