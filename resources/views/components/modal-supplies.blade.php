@@ -42,19 +42,31 @@
                             <hr>
                             <h4><i class="fa fa-user"></i> <strong>Informações do solicitante</strong></h4>
                             <hr>
-                            <p><strong>E-mail do solicitante:</strong> <span class="email"></span></p>
+                            <p><strong>E-mail do solicitante:</strong> <span class="user-email">---</span></p>
                             <p>
                                 <strong>Autorização para solicitar:</strong>
-                                <span class="is_buyer">TESTE</span>
+                                <span class="user-is_buyer">---</span>
                             </p>
                             <p>
                                 <strong>Aprovação limite:</strong>
-                                <span class="approve_limit"></span>
+                                <span class="user-approve_limit">---</span>
                             </p>
                         </div>
                     </div>
                     <div class="request-details-content-box">
                         <div class="tab-content padding">
+                            <h4><i class="fa fa-user"></i> <strong>Informações do suprimentos</strong></h4>
+                            <hr>
+                            <p>
+                                <strong>Responsável:</strong> <span class="supplies-user-email">---</span>
+                            </p>
+                            <p>
+                                <strong>E-mail do responsável:</strong> <span class="supplies-user-person">---</span>
+                            </p>
+                            <p>
+                                <strong>Responsável em:</strong> <span class="responsibility_marked_at">---</span>
+                            </p>
+                            <hr>
                             <h4><i class="fa fa-user"></i> <strong>Motivo e observações</strong></h4>
                             <hr>
                             <p>
