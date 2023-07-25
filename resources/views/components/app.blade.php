@@ -38,6 +38,7 @@
     <link rel="stylesheet" href="{{ asset('css/supplies.css') }}">
     <link rel="stylesheet" href="{{ asset('css/modal-supplies.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootbox.custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-modal-dialog.css') }}">
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -144,7 +145,7 @@
             <div class="container-fluid">
                 <x-navbar.logo />
                 <ul class='main-nav'>
-                    <x-navbar.menu-item route="home" title="DASHBOARD" />
+                    <x-navbar.menu-item route="home" title="INÍCIO" />
 
                     @if (auth()->user()->profile->name === 'admin')
                         <li>
@@ -181,7 +182,7 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ route('supplies.index') }}">Introdução</a></li>
+                                <li><a href="{{ route('supplies.index') }}">Dashboard</a></li>
                                 @if (auth()->user()->profile->name === 'admin')
                                     <li><a href="{{ route('supplies.product') }}">Produtos</a></li>
                                     <li><a href="{{ route('supplies.service') }}">Serviços</a></li>
