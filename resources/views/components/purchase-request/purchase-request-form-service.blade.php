@@ -227,7 +227,7 @@
                 <div class="col-sm-8">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
-                        <textarea data-rule-required="true" minlength="40" name="description" id="description" rows="4"
+                        <textarea data-rule-required="true" minlength="30" name="description" id="description" rows="4"
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
@@ -247,7 +247,7 @@
                         <label for="local-description" class="control-label">
                             Local de prestação do serviço
                         </label>
-                        <input data-rule-required="true" minlength="20" name="local_description"
+                        <input data-rule-required="true" minlength="15" name="local_description"
                             value="{{ $purchaseRequest->local_description ?? null }}" type="text"
                             id="local-description"
                             placeholder="Ex: HKM - Av. Gentil Reinaldo Cordioli, 161 - Jardim Eldorado"
@@ -825,7 +825,7 @@
                 const idInput = document.createElement('input');
                 idInput.type = 'number';
                 idInput.name = 'service[service_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[0]
                     ?.id : null;
                 idInput.hidden = true;
 
@@ -910,7 +910,10 @@
                 .prop('disabled', isContractedBySupplies)
                 .trigger('change.select2');
 
-            //$installmentsTable.clear().draw();
+            if (isContractedBySupplies) {
+                $installmentsTable.clear().draw();
+            }
+
         }).filter(':checked').trigger('change');
 
         const $inputInstallmentsNumber = $('#installments-number');

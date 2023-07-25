@@ -956,6 +956,10 @@
             const isFixedValue = $(this).val() === "1";
             $divBtnAddInstallment.attr('hidden', isFixedValue);
 
+            if (!isNotCopyAndIssetPurchaseRequest) {
+                $installmentsTable.clear().draw();
+            }
+
             $inputsForInstallmentEvents =
                 $recurrence
                 .add($amount)
