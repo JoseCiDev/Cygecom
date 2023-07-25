@@ -500,6 +500,9 @@
                     </div>
 
                     <input type="hidden" value="" name="contract[payment_info][id]">
+
+                    <input type="hidden" value="" name="contract[quantity_of_installments]"
+                        id="qtd-installments">
                 </div>
 
                 {{-- TABLE PARCELAS --}}
@@ -617,6 +620,11 @@
 <script src="{{ asset('js/modal-supplier-register/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
+        const purchaseRequest = @json($purchaseRequest);
+        const statusValues = @json($statusValues);
+        const isRequestCopy = @json($isCopy);
+
+
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
 
@@ -767,11 +775,6 @@
             return;
         }
 
-        // function calculateNumberOfInstallmentsToSend() {
-
-        // }
-
-        const purchaseRequest = @json($purchaseRequest);
 
         // dataTable config
         const $installmentsTable = $('#installments-table-striped').DataTable({
@@ -825,7 +828,6 @@
             // }
         });
 
-        const isRequestCopy = @json($isCopy);
         const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
 
         function fillHiddenInputsWithRowData() {
@@ -953,7 +955,7 @@
         $radioIsFixedValue.on('change', function() {
             const isFixedValue = $(this).val() === "1";
             $divBtnAddInstallment.attr('hidden', isFixedValue);
-            //$installmentsTable.clear().draw();
+
             $inputsForInstallmentEvents =
                 $recurrence
                 .add($amount)
@@ -1142,8 +1144,6 @@
             }
         });
 
-        const statusValues = @json($statusValues);
-
         let selectedRowIndex = null;
 
         // modal edit installment
@@ -1192,5 +1192,15 @@
                 $('#modal-edit-installment').modal('hide');
             });
         }
+
+        // calculo para enviar qtd parcelas
+        const $quantityOfInstallments = $('#qtd-installments');
+
+        function calculateQtdInstallmentsToSend() {
+            const qtdInstallments = $installmentsTable.data().length;
+            $quantityOfInstallments.val(qtdInstallments);
+        }
+
+        $installmentsTable.on('draw.dt', calculateQtdInstallmentsToSend);
     });
 </script>
