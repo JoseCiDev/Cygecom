@@ -21,9 +21,18 @@
 
                             <th>Solicitante</th>
                             <th>Responsável</th>
-                            <th>Responsável em</th>
-
-                            <th>Status</th>
+                            <th>Resp. em</th>
+                            <th class="col-xs-2">
+                                <select id="filterStatus" class="form-control">
+                                    <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
+                                    @foreach (\App\Enums\PurchaseRequestStatus::cases() as $statusCase)
+                                        <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}} 
+                                            value="{{ $statusCase->value }}" @selected($statusCase->value === $status?->value)>
+                                            {{ $statusCase->label() }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </th>
                             <th>Fornecedor</th>
                             <th>Qualif. fornecedor</th>
 
@@ -94,4 +103,5 @@
     </div>
 </div>
 
-<script src="{{asset('js/modal-confirm-supplies-responsability/modal-confirm-supplies-responsability.js')}}"></script>
+<script src="{{asset('js/supplies/modal-confirm-supplies-responsability.js')}}"></script>
+<script src="{{asset('js/supplies/redirect-route-by-request-status.js')}}"></script>
