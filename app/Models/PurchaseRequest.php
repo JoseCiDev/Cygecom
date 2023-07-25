@@ -40,6 +40,11 @@ class PurchaseRequest extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function suppliesUser()
+    {
+        return $this->belongsTo(User::class, 'supplies_user_id');
+    }
+
     public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
@@ -62,6 +67,8 @@ class PurchaseRequest extends Model
         'description',
         'observation',
         'desired_date',
+        'supplies_user_id',
+        'responsibility_marked_at',
         'updated_by',
         'deleted_by',
         'deleted_at',
