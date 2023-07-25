@@ -262,10 +262,6 @@
                                 <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações</strong></h4>
                                 <div class="tab-content padding">
                                     <p>
-                                        <strong>Status geral:</strong> Processo
-                                        {{ $request->service->is_fineshed ? 'finalizado' : 'em andamento' }}
-                                    </p>
-                                    <p>
                                         <strong>Tipo de quitação:</strong> Pgto.
                                         {{ $request->service->is_prepaid ? 'antecipado' : 'pós-pago' }}
                                     </p>
