@@ -36,9 +36,8 @@
                                         @endif
                                     </div>
                                 </li>
-                                <li>Qtd. de solicitações para INP: <strong>{{$productsFromInp->count()}}</strong></li>
-                                <li>Qtd. de solicitações para HKM: <strong>{{$productsFromHkm->count()}}</strong></li>
-                                <li>Qtd. de contratações do tipo suprimentos: <strong>{{$productAcquiredBySuppliesQtd}}</strong></li>
+                                <li>Solicitações para INP/Noorskin/Oasis: <strong>{{$productsFromInp->count()}}</strong></li>
+                                <li>Solicitações para farmácias e demais empresas: <strong>{{$productsFromHkm->count()}}</strong></li>
                                 <li>Qtd. de COMEX: <strong>{{$productComexQtd}}</strong></li>
                                 <li>Qtd. desejadas p/ hoje: <strong>{{$productDesiredTodayQtd}}</strong></li>
                             </ul>
@@ -58,9 +57,8 @@
                                         @endif
                                     </div>
                                 </li>
-                                <li>Qtd. de solicitações para INP: <strong>{{$servicesFromInp->count()}}</strong></li>
-                                <li>Qtd. de solicitações para HKM: <strong>{{$servicesFromHkm->count()}}</strong></li>
-                                <li>Qtd. de contratações do tipo suprimentos: <strong>{{$serviceAcquiredBySuppliesQtd}}</strong></li>
+                                <li>Solicitações para INP/Noorskin/Oasis <strong>{{$servicesFromInp->count()}}</strong></li>
+                                <li>Solicitações para farmácias e demais empresas: <strong>{{$servicesFromHkm->count()}}</strong></li>
                                 <li>Qtd. de COMEX: <strong>{{$serviceComexQtd}}</strong></li>
                                 <li>Qtd. desejadas p/ hoje: <strong>{{$serviceDesiredTodayQtd}}</strong></li>
                             </ul>
@@ -80,9 +78,8 @@
                                         @endif
                                     </div>
                                 </li>
-                                <li>Qtd. de solicitações para INP: <strong>{{$contractsFromInp->count()}}</strong></li>
-                                <li>Qtd. de solicitações para HKM: <strong>{{$contractsFromHkm->count()}}</strong></li>
-                                <li>Qtd. de contratações do tipo suprimentos: <strong>{{$contractAcquiredBySuppliesQtd}}</strong></li>
+                                <li>Solicitações para INP/Noorskin/Oasis: <strong>{{$contractsFromInp->count()}}</strong></li>
+                                <li>Solicitações para farmácias e demais empresas: <strong>{{$contractsFromHkm->count()}}</strong></li>
                                 <li>Qtd. de COMEX: <strong>{{$contractComexQtd}}</strong></li>
                                 <li>Qtd. desejadas p/ hoje: <strong>{{$contractDesiredTodayQtd}}</strong></li>
                             </ul>
