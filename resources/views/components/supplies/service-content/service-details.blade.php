@@ -15,6 +15,34 @@
         <h1>Página de suprimentos</h1>
     </x-slot>
 
+    <div class="row" style="padding: 25px 0">
+        <div class="col-sm-12">
+            <form class="form-validate" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
+            @csrf
+                <div class="row">
+                   <div class="col-md-12">
+                        <label for="status">Status da solicitação</label>
+                   </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <select name="status">
+                            @foreach ($allRequestStatus as $status)
+                                <option @selected($request->status === $status) value="{{$status}}">{{$status->label()}}</option>
+                            @endforeach
+                        </select>
+                        <button type="submit" class="btn btn-icon btn-small btn-primary"> Aplicar status </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
+        </div>
+    </div>
+
     <div class="request-details">
         <header class="request-details-header">
             <img class="request-details-header-logo"
