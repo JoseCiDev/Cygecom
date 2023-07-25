@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CompanyGroup;
+use App\Enums\PurchaseRequestStatus;
 use App\Enums\PurchaseRequestType;
 use App\Providers\PurchaseRequestService;
 use App\Providers\SupplierService;
@@ -58,7 +59,7 @@ class SuppliesController extends Controller
         return view('components.supplies.index', $params);
     }
 
-    public function product(string $suppliesGroup = null)
+    public function product(string $suppliesGroup = null, string $status = null)
     {
         if ($suppliesGroup !== null) {
             try {
@@ -68,10 +69,18 @@ class SuppliesController extends Controller
             }
         }
 
-        return view('components.supplies.product', ['suppliesGroup' => $suppliesGroup]);
+        if ($status !== null) {
+            try {
+                $status = PurchaseRequestStatus::from($status);
+            } catch (\ValueError $error) {
+                return redirect()->back()->withInput()->withErrors("$status não é um parâmetro válido.");
+            }
+        }
+
+        return view('components.supplies.product', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 
-    public function service(string $suppliesGroup = null)
+    public function service(string $suppliesGroup = null, string $status = null)
     {
         if ($suppliesGroup !== null) {
             try {
@@ -81,10 +90,18 @@ class SuppliesController extends Controller
             }
         }
 
-        return view('components.supplies.service', ['suppliesGroup' => $suppliesGroup]);
+        if ($status !== null) {
+            try {
+                $status = PurchaseRequestStatus::from($status);
+            } catch (\ValueError $error) {
+                return redirect()->back()->withInput()->withErrors("$status não é um parâmetro válido.");
+            }
+        }
+
+        return view('components.supplies.service', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 
-    public function contract(string $suppliesGroup = null)
+    public function contract(string $suppliesGroup = null, string $status = null)
     {
         if ($suppliesGroup !== null) {
             try {
@@ -94,6 +111,14 @@ class SuppliesController extends Controller
             }
         }
 
-        return view('components.supplies.contract', ['suppliesGroup' => $suppliesGroup]);
+        if ($status !== null) {
+            try {
+                $status = PurchaseRequestStatus::from($status);
+            } catch (\ValueError $error) {
+                return redirect()->back()->withInput()->withErrors("$status não é um parâmetro válido.");
+            }
+        }
+
+        return view('components.supplies.contract', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 }
