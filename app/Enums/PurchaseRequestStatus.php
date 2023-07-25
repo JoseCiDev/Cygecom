@@ -23,8 +23,8 @@ enum PurchaseRequestStatus: string implements EnumInterface
     {
         return match ($value) {
             self::PENDENTE => 'Pendente',
-            self::EM_TRATATIVA => 'Aprovado',
-            self::EM_COTACAO => 'Desaprovado',
+            self::EM_TRATATIVA => 'Em tratativa',
+            self::EM_COTACAO => 'Em cotação',
             self::AGUARDANDO_APROVACAO_DE_COMPRA => 'Aguardando aprovação de compra',
             self::COMPRA_EFETUADA => 'Compra efetuada',
             self::FINALIZADA => 'Finalizada',
