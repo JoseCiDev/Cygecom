@@ -8,7 +8,9 @@ Route::middleware(['auth', 'profile:suprimentos_hkm,suprimentos_inp'])->group(fu
     Route::get('/supplies/product/{suppliesGroup}', [App\Http\Controllers\SuppliesController::class, 'product'])->name('supplies.product.filter');
     Route::get('/supplies/contract/{suppliesGroup}', [App\Http\Controllers\SuppliesController::class, 'contract'])->name('supplies.contract.filter');
 
-    Route::get('/supplies/service/{id}/detail', [App\Http\Controllers\ServiceController::class, 'serviceDetails'])->name('supplies.service.detail');
+    Route::get('/supplies/service/{id}/details', [App\Http\Controllers\ServiceController::class, 'serviceDetails'])->name('supplies.service.detail');
     Route::get('/supplies/product/{id}/details', [App\Http\Controllers\ProductController::class, 'productDetails'])->name('supplies.product.detail');
     Route::get('/supplies/contract/{id}/details', [App\Http\Controllers\ContractController::class, 'contractDetails'])->name('supplies.contract.detail');
+
+    Route::post('supplies/request/status/update/{id}', [App\Http\Controllers\PurchaseRequestController::class, 'updateStatusFromSupplies'])->name('supplies.request.status.update');
 });
