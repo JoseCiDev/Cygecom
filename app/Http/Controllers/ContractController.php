@@ -110,6 +110,7 @@ class ContractController extends Controller
 
         try {
             $purchaseRequest = PurchaseRequest::find($id);
+            $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
 
             $isAdmin = auth()->user()->profile->name === 'admin';
             $isSuprimHkm = auth()->user()->profile->name === 'suprimentos_hkm';
@@ -121,7 +122,7 @@ class ContractController extends Controller
             $existSuppliesMarkedAt = (bool)$purchaseRequest->responsibility_marked_at;
             $alreadyExistSuppliesUser = $existSuppliesUserId && $existSuppliesMarkedAt;
 
-            $isAuthorized = ($isAdmin || $isSuprimHkm || $isSuprimInp) && !$isDeletedRequest && !$alreadyExistSuppliesUser;
+            $isAuthorized = ($isAdmin || $isSuprimHkm || $isSuprimInp) && !$isDeletedRequest && !$alreadyExistSuppliesUser && !$isOwnPurchaseRequest;
             if ($isAuthorized) {
                 $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
                 $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);

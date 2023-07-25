@@ -88,6 +88,7 @@ class PurchaseRequestController extends Controller
 
         try {
             $purchaseRequest = PurchaseRequest::find($id);
+            $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
 
             if (!$purchaseRequest) {
                 throw new Exception('Não foi possível acessar essa solicitação.');
@@ -98,7 +99,7 @@ class PurchaseRequestController extends Controller
             $isSuprimInp = auth()->user()->profile->name === 'suprimentos_inp';
             $isDeletedRequest = $purchaseRequest->deleted_at !== null;
 
-            $isAuthorized = ($isAdmin || $isSuprimHkm || $isSuprimInp) && !$isDeletedRequest;
+            $isAuthorized = ($isAdmin || $isSuprimHkm || $isSuprimInp) && !$isDeletedRequest && !$isOwnPurchaseRequest;
             if ($isAuthorized) {
                 $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
             } else {
