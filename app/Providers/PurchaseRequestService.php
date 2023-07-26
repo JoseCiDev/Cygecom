@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\PurchaseRequestStatus;
 use Carbon\Carbon;
 use App\Models\ServiceInstallment;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +52,27 @@ class PurchaseRequestService extends ServiceProvider
             'contract.installments',
 
         ])->whereNull('deleted_at')->where('user_id', $id)->get();
+    }
+
+    /**
+     * @return mixed Pelo status da solicitação retorna todas com suas relações, exceto deletadas.
+     */
+    public function purchaseRequestsByStatus(PurchaseRequestStatus $status)
+    {
+        return PurchaseRequest::with([
+            'user.person.costCenter',
+            'purchaseRequestFile',
+            'costCenterApportionment.costCenter.company',
+            'deletedByUser',
+            'updatedByUser',
+            'service',
+            'service.paymentInfo',
+            'purchaseRequestProduct',
+            'purchaseRequestProduct.category',
+            'contract',
+            'contract.installments',
+
+        ])->whereNull('deleted_at')->where('status', $status->value)->get();
     }
 
     /**
@@ -137,15 +159,20 @@ class PurchaseRequestService extends ServiceProvider
 
     /**
      * @abstract Atualiza apenas entidade solicitação com relação do rateio e arquivo/link.
-     * Deve ser chamada pelos métodos específicios de serviço, contrato ou produtos.
+     * Normalmente é chamada pelos métodos específicios de serviço, contrato ou produtos.
+     * Pode ser chamada por suprimentos para atualizar status da solicitação.
      */
-    public function updatePurchaseRequest(int $id, array $data)
+    public function updatePurchaseRequest(int $id, array $data, bool $isSuppliesUpdate = false)
     {
-        return DB::transaction(function () use ($id, $data) {
+        return DB::transaction(function () use ($id, $data, $isSuppliesUpdate) {
             $purchaseRequest = PurchaseRequest::find($id);
             $purchaseRequest->updated_by = auth()->user()->id;
             $purchaseRequest->fill($data);
             $purchaseRequest->save();
+
+            if ($isSuppliesUpdate) {
+                return $purchaseRequest;
+            }
 
             $this->saveCostCenterApportionment($purchaseRequest->id, $data);
             $this->savePurchaseRequestFile($purchaseRequest->id, $data);

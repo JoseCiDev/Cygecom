@@ -56,7 +56,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'email'                        => ['nullable', 'email', 'max:255', 'unique:users,email'],
         'password'                     => ['nullable', 'string', 'min:8', 'confirmed'],
         'password_confirmation'        => ['nullable', 'required_with:password', 'same:password'],
-        'profile_type'                 => ['nullable', 'in:admin,normal'],
+        'profile_type'                 => ['nullable', 'in:admin,normal,suprimentos_hkm,suprimentos_inp'],
         'approver_user_id'             => ['nullable', 'numeric', 'min:1', 'exists:users,id'],
         'approve_limit'                => ['nullable', 'numeric', 'min:100'],
         'birthdate'                    => ['nullable', 'date'],

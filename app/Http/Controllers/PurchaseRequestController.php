@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PurchaseRequestType;
+use App\Models\PurchaseRequest;
 use App\Providers\PurchaseRequestService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class PurchaseRequestController extends Controller
 {
@@ -78,5 +80,35 @@ class PurchaseRequestController extends Controller
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi deletar o registro no banco de dados.', $error->getMessage()]);
         }
+    }
+
+    public function updateStatusFromSupplies(Request $request, int $id): RedirectResponse
+    {
+        $data = $request->all();
+        try {
+            $purchaseRequest = PurchaseRequest::find($id);
+            $isDeletedRequest = $purchaseRequest->deleted_at !== null;
+            $isOwnPurchaseRequest = auth()->user()->purchaseRequest->find($id);
+
+            if (!$purchaseRequest || $isDeletedRequest) {
+                throw new Exception('Não foi possível encontrar essa solicitação.');
+            }
+
+            $allowedProfiles = ['admin', 'suprimentos_hkm', 'suprimentos_inp'];
+            $isAllowedProfile = in_array(auth()->user()->profile->name, $allowedProfiles);
+
+            $isAuthorized = $isAllowedProfile && !$isOwnPurchaseRequest;
+            if (!$isAuthorized) {
+                throw new Exception('Não autorizado.');
+            }
+
+            $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
+        } catch (Exception $error) {
+            return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
+        }
+
+        session()->flash('success', "Solicitação de serviço atualizada com sucesso!");
+
+        return back();
     }
 }

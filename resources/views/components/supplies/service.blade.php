@@ -15,7 +15,8 @@
                 </div>
             </div>
         </div>
-
-    <x-SuppliesServiceList/>
+    </div>
+    
+    <x-SuppliesServiceList :suppliesGroup="$suppliesGroup" :status="$status" />
 
 </x-app>

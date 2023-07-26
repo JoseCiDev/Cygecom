@@ -17,35 +17,57 @@
                     data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                     <thead>
                         <tr>
-                            <th class="col-sm-1">ID</th>
-                            <th class="col-sm-1">Solicitante</th>
-                            <th class="col-sm-1">Fornecedor</th>
-
-                            <th class="col-sm-1">Tipo de quitação</th>
-                            <th class="col-sm-1">Progresso</th>
-                            <th class="col-sm-1">Contratação por</th>
-
-                            <th class="col-sm-1">Data desejada</th>
-                            <th class="col-sm-1">Atualizado em</th>
-
-                            <th class="col-sm-1">Ações</th>
+                            <th>ID</th>
+                            <th>Solicitante</th>
+                            <th>Responsável</th>
+                            <th>Responsável em</th>
+                            <th class="col-xs-2">
+                                <select id="filterStatus" class="form-control">
+                                    <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
+                                    @foreach (\App\Enums\PurchaseRequestStatus::cases() as $statusCase)
+                                        <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}} 
+                                            value="{{ $statusCase->value }}" @selected($statusCase->value === $status?->value)>
+                                            {{ $statusCase->label() }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </th>
+                            <th>Fornecedor</th>
+                            <th>Qualif. fornecedor</th>
+                            <th>Tipo de quitação</th>
+                            <th>Progresso</th>
+                            <th>Contratação por</th>
+                            <th>Grupo de custo</th>
+                            <th>Data desejada</th>
+                            <th>Atualizado em</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($contractList as $contract)
+                        @foreach ($contracts as $contract)
+                            @php 
+                                $groups = $contract->CostCenterApportionment->pluck('costCenter.Company.group')->unique(); 
+                                $concatenatedGroups = $groups->map(function ($item) {
+                                        return $item->label(); 
+                                    })->implode(', ');
+                            @endphp
                             <tr>
                                 <td>{{$contract->id}}</td>
                                 <td>{{$contract->user->person->name}}</td>
-                                <td>{{$contract->contract->first()->Supplier->cpf_cnpj}}</td>
+                                <td>{{$contract->SuppliesUser?->Person->name ?? '---'}}</td>
+                                <td>{{$contract->responsibility_marked_at ? \Carbon\Carbon::parse($contract->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
+                                <td>{{$contract->status->label()}}</td>
+                                <td>{{$contract->contract->Supplier?->cpf_cnpj ?? '---'}}</td>
+                                <td>{{$contract->contract->Supplier?->qualification->label() ?? '---'}}</td>
 
-                                <td>{{$contract->contract->first()->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
-                                <td>{{$contract->contract->first()->already_provided ? 'Executado' : 'Não executado'}}</td>
+                                <td>{{$contract->contract->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
+                                <td>{{$contract->contract->already_provided ? 'Executado' : 'Não executado'}}</td>
                                 <td>{{$contract->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
+                                <td>{{$concatenatedGroups}}</td>
 
                                 <td>{{ \Carbon\Carbon::parse($contract->desired_date)->format('d/m/Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($contract->updated_at)->format('d/m/Y h:m:s') }}</td>
 
-                                {{-- BTN AÇÕES --}}
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button 
                                         data-modal-name="{{ 'Analisando Solicitação de Contrato - ID ' . $contract->id }}"
@@ -57,44 +79,17 @@
                                         data-toggle="modal"
                                         data-target="#modal-supplies"
                                     >
-                                        <i class="fa fa-search"></i> Analisar
+                                        <i class="fa fa-search"></i>
                                     </button>
+                                    @php $isToShow = !(bool)$contract->SuppliesUser?->Person->name &&  !(bool)$contract->responsibility_marked_at @endphp
                                     <a href="{{route('supplies.contract.detail', ['id' => $contract->id])}}"
-                                        class="btn btn-link"
+                                        class="btn btn-link openDetail"
                                         rel="tooltip"
                                         title="Abrir"
+                                        isToShow="{{$isToShow ? 'true' : 'false'}}"
                                     >
-                                        <i class="fa fa-external-link"></i> Abrir
+                                        <i class="fa fa-external-link"></i>
                                     </a>
-                                    <a href="{{route('request.edit', ['type'=> $contract->type, 'id' => $contract->id])}}"
-                                        class="btn"
-                                        rel="tooltip"
-                                        title="Editar"
-                                    >
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    @php
-                                        $endpoint = $contract->type->value;
-                                        $route = "request.$endpoint.register";
-                                    @endphp
-                                    <a href="{{route($route, ['id' => $contract->id])}}"
-                                        rel="tooltip"
-                                        title="Copiar"
-                                        class="btn"
-                                    >
-                                        <i class="fa fa fa-copy"></i>
-                                    </a>
-                                    <button data-route="purchaseRequests"
-                                        data-name="{{'Solicitação de compra - ID ' . $contract->id}}"
-                                        data-id="{{$contract->id}}"
-                                        rel="tooltip"
-                                        title="Excluir"
-                                        class="btn btn-danger"
-                                        data-toggle="modal"
-                                        data-target="#modal"
-                                    >
-                                        <i class="fa fa-times"></i>
-                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -104,3 +99,6 @@
         </div>
     </div>
 </div>
+
+<script src="{{asset('js/supplies/modal-confirm-supplies-responsability.js')}}"></script>
+<script src="{{asset('js/supplies/redirect-route-by-request-status.js')}}"></script>

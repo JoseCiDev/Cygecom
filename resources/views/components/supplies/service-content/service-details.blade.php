@@ -15,6 +15,34 @@
         <h1>Página de suprimentos</h1>
     </x-slot>
 
+    <div class="row" style="padding: 25px 0">
+        <div class="col-sm-12">
+            <form class="form-validate" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
+            @csrf
+                <div class="row">
+                   <div class="col-md-12">
+                        <label for="status">Status da solicitação</label>
+                   </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <select name="status">
+                            @foreach ($allRequestStatus as $status)
+                                <option @selected($request->status === $status) value="{{$status}}">{{$status->label()}}</option>
+                            @endforeach
+                        </select>
+                        <button type="submit" class="btn btn-icon btn-small btn-primary"> Aplicar status </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
+        </div>
+    </div>
+
     <div class="request-details">
         <header class="request-details-header">
             <img class="request-details-header-logo"
@@ -191,38 +219,38 @@
                                         <div class="col-sm-6">
                                             <p>
                                                 <strong>Razão social:</strong>
-                                                {{ $request->service?->Supplier->corporate_name ?? '---' }}
+                                                {{ $request->service->Supplier?->corporate_name ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>Nome fantasia:</strong>
-                                                {{ $request->service?->Supplier->name ?? '---' }}
+                                                {{ $request->service->Supplier?->name ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>CPF/CNPJ:</strong>
-                                                {{ $request->service?->Supplier->cpf_cnpj ?? '---' }}
+                                                {{ $request->service->Supplier?->cpf_cnpj ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>Indicação:</strong>
-                                                {{ $request->service?->Supplier->supplier_indication ?? '---' }}
+                                                {{ $request->service->Supplier?->supplier_indication ?? '---' }}
                                             </p>
                                             
                                         </div>
                                         <div class="col-sm-6">
                                             <p>
                                                 <strong>Qualifacação:</strong>
-                                                {{ $request->service->Supplier->qualification->label() ?? '---' }}
+                                                {{ $request->service->Supplier?->qualification->label() ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>Tipo de mercado:</strong>
-                                                {{ $request->service?->Supplier->market_type ?? '---' }}
+                                                {{ $request->service->Supplier?->market_type ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>Representante:</strong>
-                                                {{ $request->service?->Supplier->representative ?? '---' }}
+                                                {{ $request->service->Supplier?->representative ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>E-mail:</strong>
-                                                {{ $request->service?->Supplier->email ?? '---' }}
+                                                {{ $request->service->Supplier?->email ?? '---' }}
                                             </p>
                                         </div>
                                     </div>
@@ -233,10 +261,6 @@
                             <div class="request-details-content-box">
                                 <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações</strong></h4>
                                 <div class="tab-content padding">
-                                    <p>
-                                        <strong>Status geral:</strong> Processo
-                                        {{ $request->service->is_fineshed ? 'finalizado' : 'em andamento' }}
-                                    </p>
                                     <p>
                                         <strong>Tipo de quitação:</strong> Pgto.
                                         {{ $request->service->is_prepaid ? 'antecipado' : 'pós-pago' }}
