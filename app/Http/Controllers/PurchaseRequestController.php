@@ -85,26 +85,24 @@ class PurchaseRequestController extends Controller
     public function updateStatusFromSupplies(Request $request, int $id): RedirectResponse
     {
         $data = $request->all();
-
         try {
             $purchaseRequest = PurchaseRequest::find($id);
-            $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
-
-            if (!$purchaseRequest) {
-                throw new Exception('Não foi possível acessar essa solicitação.');
-            }
-
-            $isAdmin = auth()->user()->profile->name === 'admin';
-            $isSuprimHkm = auth()->user()->profile->name === 'suprimentos_hkm';
-            $isSuprimInp = auth()->user()->profile->name === 'suprimentos_inp';
             $isDeletedRequest = $purchaseRequest->deleted_at !== null;
+            $isOwnPurchaseRequest = auth()->user()->purchaseRequest->find($id);
 
-            $isAuthorized = ($isAdmin || $isSuprimHkm || $isSuprimInp) && !$isDeletedRequest && !$isOwnPurchaseRequest;
-            if ($isAuthorized) {
-                $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
-            } else {
-                throw new Exception('Não autorizado. Não foi possível acessar essa solicitação.');
+            if (!$purchaseRequest || $isDeletedRequest) {
+                throw new Exception('Não foi possível encontrar essa solicitação.');
             }
+
+            $allowedProfiles = ['admin', 'suprimentos_hkm', 'suprimentos_inp'];
+            $isAllowedProfile = in_array(auth()->user()->profile->name, $allowedProfiles);
+
+            $isAuthorized = $isAllowedProfile && !$isOwnPurchaseRequest;
+            if (!$isAuthorized) {
+                throw new Exception('Não autorizado.');
+            }
+
+            $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
         }

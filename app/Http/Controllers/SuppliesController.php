@@ -56,64 +56,46 @@ class SuppliesController extends Controller
         return view('components.supplies.index', $params);
     }
 
-    public function product(string $suppliesGroup = null, string $status = null)
+    public function product()
     {
-        if ($suppliesGroup !== null) {
-            try {
-                $suppliesGroup = CompanyGroup::from($suppliesGroup);
-            } catch (\ValueError $error) {
-                return redirect()->back()->withInput()->withErrors("$suppliesGroup não é um parâmetro válido.");
-            }
-        }
+        $queryStatus = request()->query('status');
+        $querySuppliesGroup = request()->query('suppliesGroup');
 
-        if ($status !== null) {
-            try {
-                $status = PurchaseRequestStatus::from($status);
-            } catch (\ValueError $error) {
-                return redirect()->back()->withInput()->withErrors("$status não é um parâmetro válido.");
-            }
+        try {
+            $status = $queryStatus ? PurchaseRequestStatus::from($queryStatus) : null;
+            $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
+        } catch (\ValueError $error) {
+            return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
         }
 
         return view('components.supplies.product', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 
-    public function service(string $suppliesGroup = null, string $status = null)
+    public function service()
     {
-        if ($suppliesGroup !== null) {
-            try {
-                $suppliesGroup = CompanyGroup::from($suppliesGroup);
-            } catch (\ValueError $error) {
-                return redirect()->back()->withInput()->withErrors("$suppliesGroup não é um parâmetro válido.");
-            }
-        }
+        $queryStatus = request()->query('status');
+        $querySuppliesGroup = request()->query('suppliesGroup');
 
-        if ($status !== null) {
-            try {
-                $status = PurchaseRequestStatus::from($status);
-            } catch (\ValueError $error) {
-                return redirect()->back()->withInput()->withErrors("$status não é um parâmetro válido.");
-            }
+        try {
+            $status = $queryStatus ? PurchaseRequestStatus::from($queryStatus) : null;
+            $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
+        } catch (\ValueError $error) {
+            return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
         }
 
         return view('components.supplies.service', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 
-    public function contract(string $suppliesGroup = null, string $status = null)
+    public function contract()
     {
-        if ($suppliesGroup !== null) {
-            try {
-                $suppliesGroup = CompanyGroup::from($suppliesGroup);
-            } catch (\ValueError $error) {
-                return redirect()->back()->withInput()->withErrors("$suppliesGroup não é um parâmetro válido.");
-            }
-        }
+        $queryStatus = request()->query('status');
+        $querySuppliesGroup = request()->query('suppliesGroup');
 
-        if ($status !== null) {
-            try {
-                $status = PurchaseRequestStatus::from($status);
-            } catch (\ValueError $error) {
-                return redirect()->back()->withInput()->withErrors("$status não é um parâmetro válido.");
-            }
+        try {
+            $status = $queryStatus ? PurchaseRequestStatus::from($queryStatus) : null;
+            $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
+        } catch (\ValueError $error) {
+            return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
         }
 
         return view('components.supplies.contract', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
