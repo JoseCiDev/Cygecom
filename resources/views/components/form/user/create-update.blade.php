@@ -163,19 +163,31 @@
                     @enderror
                 </div>
             </div>
-            {{-- PERFIL DE USUÁRIO --}}
-            <div class="col-sm-3">
+        </div>
+        <div class="row" style="padding: 25px 0">
+             {{-- PERFIL DE USUÁRIO --}}
+             <div class="col-sm-12">
                 <label for="form-check" style="margin-bottom: 12px;">Perfil de Usuário</label>
                 <div class="form-check">
                     {{-- ADMIN --}}
-                    <input @if (isset($user) && $user['profile']['name'] === 'admin') {{ 'checked' }} @endif class="icheck-me"
+                    <input @checked(isset($user) && $user['profile']['name'] === 'admin') class="icheck-me"
                         type="radio" name="profile_type" id="profile_admin" value="admin" data-skin="minimal">
                     <label class="form-check-label" for="profile_admin">Administrador</label>
+
                     {{-- PADRÃO --}}
-                    <input @if (isset($user) && $user['profile']['name'] === 'normal') {{ 'checked' }} @endif class="icheck-me"
+                    <input @checked(isset($user) && $user['profile']['name'] === 'normal') class="icheck-me"
                         type="radio" name="profile_type" id="profile_normal" value="normal" data-skin="minimal"
                         @if (!isset($user)) checked @endif>
                     <label class="form-check-label" for="personal">Padrão</label>
+
+                    <input @checked(isset($user) && $user['profile']['name'] === 'suprimentos_hkm') class="icheck-me"
+                        type="radio" name="profile_type" id="profile_suprimentos_hkm" value="suprimentos_hkm" data-skin="minimal">
+                    <label class="form-check-label" for="personal">Suprimentos HKM</label>
+
+                    <input @checked(isset($user) && $user['profile']['name'] === 'suprimentos_inp') class="icheck-me"
+                        type="radio" name="profile_type" id="profile_suprimentos_inp" value="suprimentos_inp" data-skin="minimal" >
+                    <label class="form-check-label" for="personal">Suprimentos INP</label>
+                    
                     @error('approve_limit')
                         <p><strong>{{ $message }}</strong></p>
                     @enderror
@@ -288,7 +300,7 @@
                 <div class="form-group">
                     <label for="approver_user_id" id="cost-center-permissions" class="control-label">Centros de
                         custos permitidos</label>
-                    <select @if (!auth()->user()->profile->is_admin) disabled @endif name="user_cost_center_permissions[]"
+                    <select @if (!auth()->user()->profile->name === 'admin') disabled @endif name="user_cost_center_permissions[]"
                         id="user_cost_center_permissions" multiple="multiple"
                         class="chosen-select form-control cost-centers-permissions"
                         placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras">

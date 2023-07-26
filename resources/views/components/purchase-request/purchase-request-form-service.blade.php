@@ -542,7 +542,7 @@
 </div>
 
 
-<script src="{{ asset('js/modal-supplier-register/select2-custom.js') }}"></script>
+<script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
         const $amount = $('.amount');

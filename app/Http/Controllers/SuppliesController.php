@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CompanyGroup;
+use App\Enums\PurchaseRequestStatus;
+use App\Enums\PurchaseRequestType;
 use App\Providers\PurchaseRequestService;
+use App\Providers\SupplierService;
 
 class SuppliesController extends Controller
 {
-    public function __construct(private PurchaseRequestService $purchaseRequestService)
+    public function __construct(private PurchaseRequestService $purchaseRequestService, private SupplierService $supplierService)
     {
         $this->middleware('auth');
     }
@@ -19,56 +23,81 @@ class SuppliesController extends Controller
         $purchaseRequests = $this->purchaseRequestService->purchaseRequests();
 
         $typesGrouped = $purchaseRequests->groupBy(function ($item) {
-            return $item->type->label();
+            return $item->type->value;
         });
 
-        $contractQtd = $typesGrouped->get('Contrato', collect())->count();
-        $serviceQtd = $typesGrouped->get('Serviço', collect())->count();
-        $productQtd = $typesGrouped->get('Produto', collect())->count();
-
-        $contractAcquiredBySuppliesQtd = $typesGrouped->get('Contrato', collect())->where('is_supplies_contract', true)->count();
-        $serviceAcquiredBySuppliesQtd = $typesGrouped->get('Serviço', collect())->where('is_supplies_contract', true)->count();
-        $productAcquiredBySuppliesQtd = $typesGrouped->get('Produto', collect())->where('is_supplies_contract', true)->count();
-
-        $contractComexQtd = $typesGrouped->get('Contrato', collect())->where('is_comex', true)->count();
-        $serviceComexQtd = $typesGrouped->get('Serviço', collect())->where('is_comex', true)->count();
-        $productComexQtd = $typesGrouped->get('Produto', collect())->where('is_comex', true)->count();
+        $contracts = $typesGrouped->get(PurchaseRequestType::CONTRACT->value, collect());
+        $services = $typesGrouped->get(PurchaseRequestType::SERVICE->value, collect());
+        $products = $typesGrouped->get(PurchaseRequestType::PRODUCT->value, collect());
 
         $today = \Carbon\Carbon::today()->format('Y-m-d');
-        $contractDesiredTodayQtd = $typesGrouped->get('Contrato', collect())->where('desired_date', $today)->count();
-        $serviceDesiredTodayQtd = $typesGrouped->get('Serviço', collect())->where('desired_date', $today)->count();
-        $productDesiredTodayQtd = $typesGrouped->get('Produto', collect())->where('desired_date', $today)->count();
 
         $params = [
             'purchaseRequests' => $purchaseRequests,
-            'contractQtd' => $contractQtd,
-            'serviceQtd' => $serviceQtd,
-            'productQtd' => $productQtd,
-            'contractAcquiredBySuppliesQtd' => $contractAcquiredBySuppliesQtd,
-            'serviceAcquiredBySuppliesQtd' => $serviceAcquiredBySuppliesQtd,
-            'productAcquiredBySuppliesQtd' => $productAcquiredBySuppliesQtd,
-            'contractComexQtd' => $contractComexQtd,
-            'serviceComexQtd' => $serviceComexQtd,
-            'productComexQtd' => $productComexQtd,
-            'contractDesiredTodayQtd' => $contractDesiredTodayQtd,
-            'serviceDesiredTodayQtd' => $serviceDesiredTodayQtd,
-            'productDesiredTodayQtd' => $productDesiredTodayQtd,
+            'contractQtd' => $contracts->count(),
+            'serviceQtd' => $services->count(),
+            'productQtd' => $products->count(),
+            'contractComexQtd' => $contracts->where('is_comex', true)->count(),
+            'serviceComexQtd' => $services->where('is_comex', true)->count(),
+            'productComexQtd' => $products->where('is_comex', true)->count(),
+            'contractDesiredTodayQtd' => $contracts->where('desired_date', $today)->count(),
+            'serviceDesiredTodayQtd' => $services->where('desired_date', $today)->count(),
+            'productDesiredTodayQtd' => $products->where('desired_date', $today)->count(),
+
+            'productsFromInp' => $this->supplierService->filterRequestByCompanyGroup($products, CompanyGroup::INP),
+            'productsFromHkm' => $this->supplierService->filterRequestByCompanyGroup($products, CompanyGroup::HKM),
+
+            'servicesFromInp' => $this->supplierService->filterRequestByCompanyGroup($services, CompanyGroup::INP),
+            'servicesFromHkm' => $this->supplierService->filterRequestByCompanyGroup($services, CompanyGroup::HKM),
+
+            'contractsFromInp' => $this->supplierService->filterRequestByCompanyGroup($contracts, CompanyGroup::INP),
+            'contractsFromHkm' => $this->supplierService->filterRequestByCompanyGroup($contracts, CompanyGroup::HKM),
         ];
         return view('components.supplies.index', $params);
     }
 
     public function product()
     {
-        return view('components.supplies.product');
+        $queryStatus = request()->query('status');
+        $querySuppliesGroup = request()->query('suppliesGroup');
+
+        try {
+            $status = $queryStatus ? PurchaseRequestStatus::from($queryStatus) : null;
+            $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
+        } catch (\ValueError $error) {
+            return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
+        }
+
+        return view('components.supplies.product', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 
     public function service()
     {
-        return view('components.supplies.service');
+        $queryStatus = request()->query('status');
+        $querySuppliesGroup = request()->query('suppliesGroup');
+
+        try {
+            $status = $queryStatus ? PurchaseRequestStatus::from($queryStatus) : null;
+            $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
+        } catch (\ValueError $error) {
+            return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
+        }
+
+        return view('components.supplies.service', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 
     public function contract()
     {
-        return view('components.supplies.contract');
+        $queryStatus = request()->query('status');
+        $querySuppliesGroup = request()->query('suppliesGroup');
+
+        try {
+            $status = $queryStatus ? PurchaseRequestStatus::from($queryStatus) : null;
+            $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
+        } catch (\ValueError $error) {
+            return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
+        }
+
+        return view('components.supplies.contract', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 }

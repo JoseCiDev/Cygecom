@@ -37,6 +37,8 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies.css') }}">
     <link rel="stylesheet" href="{{ asset('css/modal-supplies.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootbox.custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-modal-dialog.css') }}">
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -143,9 +145,9 @@
             <div class="container-fluid">
                 <x-navbar.logo />
                 <ul class='main-nav'>
-                    <x-navbar.menu-item route="home" title="DASHBOARD" />
+                    <x-navbar.menu-item route="home" title="INÍCIO" />
 
-                    @if (auth()->user()->profile->is_admin)
+                    @if (auth()->user()->profile->name === 'admin')
                         <li>
                             <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
                                 <span>CADASTROS</span>
@@ -169,22 +171,24 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ route('request.links') }}">Nova Solicitação</a></li>
                             <li><a href="{{ route('requests.own') }}">Minhas Solicitações</a></li>
-                            @if (auth()->user()->profile->is_admin)
+                            @if (auth()->user()->profile->name === 'admin')
                                 <li><a href="{{ route('requests') }}">Solicitações Gerais</a></li>
                             @endif
                         </ul>
                     </li>
-                    @if (auth()->user()->profile->is_admin || auth()->user()->profile->name === 'suprimentosNutrition' || auth()->user()->profile->name === 'suprimentosPharma')
+                    @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_inp' || auth()->user()->profile->name === 'suprimentos_hkm')
                         <li>
                             <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
                                 <span>SUPRIMENTOS</span>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ route('supplies.index') }}">Introdução</a></li>
-                                <li><a href="{{ route('supplies.product') }}">Produtos</a></li>
-                                <li><a href="{{ route('supplies.service') }}">Serviços</a></li>
-                                <li><a href="{{ route('supplies.contract') }}">Contratos</a></li>
+                                <li><a href="{{ route('supplies.index') }}">Dashboard</a></li>
+                                @if (auth()->user()->profile->name === 'admin')
+                                    <li><a href="{{ route('supplies.product') }}">Produtos</a></li>
+                                    <li><a href="{{ route('supplies.service') }}">Serviços</a></li>
+                                    <li><a href="{{ route('supplies.contract') }}">Contratos</a></li>
+                                @endif
                             </ul>
                         </li>
                     @endif

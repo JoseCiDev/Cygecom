@@ -27,7 +27,7 @@ class PurchaseRequest extends Model
 
     public function costCenterApportionment()
     {
-        return $this->hasMany(CostCenterApportionment::class);
+        return $this->hasMany(CostCenterApportionment::class, 'purchase_request_id');
     }
 
     public function purchaseRequestProduct()
@@ -38,6 +38,11 @@ class PurchaseRequest extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function suppliesUser()
+    {
+        return $this->belongsTo(User::class, 'supplies_user_id');
     }
 
     public function deletedByUser()
@@ -62,6 +67,8 @@ class PurchaseRequest extends Model
         'description',
         'observation',
         'desired_date',
+        'supplies_user_id',
+        'responsibility_marked_at',
         'updated_by',
         'deleted_by',
         'deleted_at',
