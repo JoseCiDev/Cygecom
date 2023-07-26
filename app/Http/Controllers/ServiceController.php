@@ -24,6 +24,7 @@ class ServiceController extends Controller
         $route      = 'requests';
         $routeParam = [];
         $data       = $request->all();
+        $files       = $request->file('arquivos');
 
         $validator = $this->validatorService->purchaseRequest($data);
 
@@ -32,13 +33,12 @@ class ServiceController extends Controller
         }
 
         try {
-            $purchaseRequest = $this->purchaseRequestService->registerServiceRequest($data);
+            $purchaseRequest = $this->purchaseRequestService->registerServiceRequest($data, $files);
             $route           = 'request.edit';
             $routeParam      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
         }
-
         session()->flash('success', "Solicitação de serviço criada com sucesso!");
 
         return redirect()->route($route, $routeParam);
@@ -74,6 +74,7 @@ class ServiceController extends Controller
         $route = 'request.edit';
         $data = $request->all();
         $validator = $this->validatorService->purchaseRequest($data);
+        $files = $request->file('arquivos');
 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
@@ -85,7 +86,7 @@ class ServiceController extends Controller
             $isAuthorized = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
 
             if ($isAuthorized) {
-                $this->purchaseRequestService->updateServiceRequest($id, $data);
+                $this->purchaseRequestService->updateServiceRequest($id, $data, $files);
             } else {
                 throw new Exception('Não foi possível acessar essa solicitação.');
             }

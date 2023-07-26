@@ -11,7 +11,7 @@ class S3ServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton('S3', function ($app) {
+        $this->app->singleton('S3', function () {
             return new \App\Services\S3();
         });
     }

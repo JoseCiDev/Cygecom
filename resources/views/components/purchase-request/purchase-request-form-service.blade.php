@@ -35,7 +35,7 @@
 <hr style="margin-top:5px; margin-bottom:30px;">
 
 <div class="box-content">
-    <form class="form-validate" id="request-form" method="POST"
+    <form enctype="multipart/form-data" class="form-validate" id="request-form" method="POST"
         action="@if (isset($purchaseRequest) && !$isCopy) {{ route('request.service.update', ['id' => $id]) }}
                     @else {{ route('request.service.register') }} @endif">
         @csrf
@@ -504,6 +504,27 @@
                 </div>
             </div>
 
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <fieldset>
+                        <legend>Arquivos</legend>
+                        <input type="file" class="form-control" name="arquivos[]" multiple>
+                        <ul>
+                            @foreach ($files as $each)
+                                @php
+                                    $filenameSearch = explode('/', $each->path);
+                                    $filename = end($filenameSearch);
+                                @endphp
+                                <li data-id-purchase-request-files="{{ $each->id }}">
+                                    <a href="{{ env('AWS_S3_BASE_URL') . $each->path }}"target="_blank">{{ $filename }}</a> -
+                                    <span class="excluir">[Excluir]</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </fieldset>
+                </div>
+            </div>
+
             <div class="form-actions pull-right" style="margin-top:50px;">
                 <button type="submit" class="btn btn-primary">Salvar</button>
                 <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
@@ -521,6 +542,7 @@
     $(document).ready(function() {
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
+        const $excluir = $('span.excluir');
 
         function disableSelectedOptions() {
             const selectedValues = $.map($('.cost-center-container select'), (self) => {
@@ -687,7 +709,8 @@
                     const idInput = document.createElement('input');
                     idInput.type = 'number';
                     idInput.name = 'service[service_installments][' + index + '][id]';
-                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]?.id : null;
+                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service
+                        ?.installments[index]?.id : null;
                     idInput.hidden = true;
 
                     const expireDateInput = document.createElement('input');
@@ -728,7 +751,8 @@
                 const idInput = document.createElement('input');
                 idInput.type = 'number';
                 idInput.name = 'service[service_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]?.id : null;
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]
+                    ?.id : null;
                 idInput.hidden = true;
 
                 const expireDateInput = document.createElement('input');
@@ -970,6 +994,25 @@
             padFractionalZeros: true,
             min: 0,
             max: 1000000000,
+        });
+
+        $excluir.click(async (e)=>{
+            const target = $(e.target);
+            const li = target.parent();
+            const idPurchaseRequestFiles = li.data("id-purchase-request-files");
+
+            // try{
+            //     const data = await $.post("/",{idPurchaseRequestFiles});
+            //     if(data.success){
+            //         li.remove();
+            //     }
+            // }catch(error){
+            //     console.error(error);
+            // }
+
+            alert(`Excluir ${idPurchaseRequestFiles}, vamos supor que fizemos o post e retornou sucesso...`);
+            li.remove();
+
         });
     });
 </script>
