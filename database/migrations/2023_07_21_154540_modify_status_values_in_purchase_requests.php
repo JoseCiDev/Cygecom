@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::table('purchase_requests', function (Blueprint $table) {
             $table->enum('status', [
                 'pendente', 'em_tratativa', 'em_cotacao', 'aguardando_aprovacao_de_compra',
-                'compra_efetuado', 'finalizada', 'cancelada'
+                'compra_efetuada', 'finalizada', 'cancelada'
             ])->default('pendente');
         });
     }

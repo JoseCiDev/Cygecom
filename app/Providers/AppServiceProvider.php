@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\PurchaseRequest;
+use App\Observers\PurchaseRequestObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,5 +29,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(CSVImporter::class, function ($app) {
             return new CSVImporter($app);
         });
+    }
+
+    public function boot()
+    {
+        PurchaseRequest::observe(PurchaseRequestObserver::class);
     }
 }
