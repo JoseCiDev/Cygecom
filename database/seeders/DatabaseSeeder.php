@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
             PopulateCompanies::class,
             PopulateUserProfiles::class,
             PopulateProductCategories::class,
-            // PopulateProducts::class,
             PopulateCostCenters::class,
             RegisterAdmin::class,
             PopulateUserCostCenterPermissionDefault::class,

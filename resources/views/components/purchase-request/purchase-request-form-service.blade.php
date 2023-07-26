@@ -41,7 +41,7 @@
                     @else {{ route('request.service.register') }} @endif">
         @csrf
 
-        <input type="hidden" name="type" value="service">
+        <input type="hidden" name="type" value="service" class="no-validation">
 
         <div class="row center-block" style="padding-bottom: 10px;">
             <h4>CONTRATANTE</h4>
@@ -52,11 +52,12 @@
             @foreach ($purchaseRequest->costCenterApportionment as $index => $apportionment)
                 <div class="row cost-center-container">
                     <div class="col-sm-6">
-                        <label style="display:block;" for="textfield" class="control-label">Centro de custo da
+                        <label style="display:block;" for="select-cost-center" class="control-label">Centro de custo da
                             despesa</label>
                         <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
+                            id="select-cost-center"
                             class='select2-me @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                            required data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
+                            data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
                             <option value=""></option>
                             @foreach ($costCenters as $costCenter)
                                 @php
@@ -112,10 +113,11 @@
         @else
             <div class="row cost-center-container">
                 <div class="col-sm-6">
-                    <label for="textfield" class="control-label" style="display:block">
+                    <label for="select-cost-center" class="control-label" style="display:block">
                         Centro de custo da despesa
                     </label>
-                    <select style="width:100%" name="cost_center_apportionments[0][cost_center_id]"
+                    <select style="width:100%" id="select-cost-center"
+                        name="cost_center_apportionments[0][cost_center_id]"
                         class='select2-me
             @error('cost_center_id_{{ $index }}') is-invalid @enderror'
                         required data-rule-required="true" placeholder="Ex: Almoxarifado">
@@ -202,6 +204,21 @@
                     </div>
                 </div>
 
+                {{-- COMEX --}}
+                <div class="col-sm-4">
+                    <label for="form-check" class="control-label" style="padding-right:10px;">
+                        Contrato se enquadra na categoria COMEX?
+                    </label>
+                    <div class="form-check">
+                        <input name="is_comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
+                            type="radio" data-skin="minimal">
+                        <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
+                        <input name="is_comex"value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest)) class="radio-comex"
+                            type="radio" data-skin="minimal">
+                        <label class="form-check-label" for="">Não</label>
+                    </div>
+                </div>
+
             </div>
 
             <div class="row" style="margin-bottom:5px;">
@@ -227,7 +244,7 @@
                 <div class="col-sm-8">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
-                        <textarea data-rule-required="true" minlength="30" name="description" id="description" rows="4"
+                        <textarea data-rule-required="true" minlength="20" name="description" id="description" rows="4"
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
@@ -247,11 +264,27 @@
                         <label for="local-description" class="control-label">
                             Local de prestação do serviço
                         </label>
-                        <input data-rule-required="true" minlength="15" name="local_description"
+                        <input data-rule-required="true" minlength="5" name="local_description"
                             value="{{ $purchaseRequest->local_description ?? null }}" type="text"
                             id="local-description"
                             placeholder="Ex: HKM - Av. Gentil Reinaldo Cordioli, 161 - Jardim Eldorado"
                             class="form-control">
+                    </div>
+                </div>
+
+                {{-- SERVIÇO JÁ PRESTADO --}}
+                <div class="col-sm-2">
+                    <label for="form-check" class="control-label" style="padding-right:10px;">
+                        Este serviço já foi prestado?
+                    </label>
+                    <div class="form-check">
+                        <input name="service[already_provided]" value="1" class="radio-already-provided"
+                            id="already-provided" type="radio" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided)>
+                        <label class="form-check-label" for="already-provided">Sim</label>
+
+                        <input name="service[already_provided]" value="0" class="radio-already-provided"
+                            type="radio" id="not-provided" style="margin-left: 7px;" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided) || !isset($purchaseRequest))>
+                        <label class="form-check-label" for="not-provided">Não</label>
                     </div>
                 </div>
 
@@ -263,21 +296,6 @@
                     </div>
                 </div>
 
-                {{-- COMEX --}}
-                <div class="col-sm-4">
-                    <label for="form-check" class="control-label" style="padding-right:10px;">
-                        Contrato se enquadra na categoria COMEX?
-                    </label>
-                    <div class="form-check" style="12px; margin-top:4px;">
-                        <input name="is_comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
-                            type="radio" data-skin="minimal">
-                        <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
-                        <input name="is_comex"value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest)) class="radio-comex"
-                            type="radio" data-skin="minimal">
-                        <label class="form-check-label" for="">Não</label>
-                    </div>
-                </div>
-
             </div>
 
             <div class="row">
@@ -285,7 +303,8 @@
                 {{-- LINK --}}
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="purchase-request-files[path]" class="control-label">Link</label>
+                        <label for="purchase-request-files[path]" class="control-label">Links de apoio /
+                            sugestão</label>
                         <textarea placeholder="Adicone um ou mais links válidos. Ex: Contrato disponibilizado pelo fornecedor" rows="3"
                             name="purchase_request_files[path]" id="purchase-request-files[path]" class="form-control text-area no-resize">{{ isset($purchaseRequest->purchaseRequestFile[0]) && $purchaseRequest->purchaseRequestFile[0]->path ? $purchaseRequest->purchaseRequestFile[0]->path : '' }}</textarea>
                     </div>
@@ -305,26 +324,6 @@
             </div>
 
             <hr>
-
-            <div class="row" style="margin-top: 20px; margin-bottom:15px;">
-                {{-- SERVIÇO JÁ PRESTADO --}}
-                <div class="col-sm-3">
-                    <label for="form-check" class="control-label" style="padding-right:10px;">
-                        Este serviço já foi prestado?
-                    </label>
-                    <div class="form-check">
-                        <input name="service[already_provided]" value="1" class="radio-already-provided"
-                            id="already-provided" type="radio" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided)>
-                        <label class="form-check-label" for="already-provided">Sim</label>
-
-                        <input name="service[already_provided]" value="0" class="radio-already-provided"
-                            type="radio" id="not-provided" style="margin-left: 7px;" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided) || !isset($purchaseRequest))>
-                        <label class="form-check-label" for="not-provided">Não</label>
-                    </div>
-                </div>
-            </div>
-
-
 
             <div class="payment-block">
                 <div class="row center-block" style="padding-bottom: 10px;">
@@ -388,7 +387,7 @@
                         </div>
                     </div>
 
-                    <input type="hidden" value="" name="service[payment_info][id]">
+                    <input type="hidden" class="no-validation" value="" name="service[payment_info][id]">
 
                     {{-- Nº PARCELAS --}}
                     <div class="col-sm-2">
@@ -408,6 +407,23 @@
                                 <option value="5" @selected($quantityOfInstallments === 5)>5x</option>
                                 <option value="6" @selected($quantityOfInstallments === 6)>6x</option>
                             </select>
+                        </div>
+                    </div>
+
+                    {{-- COLOCAR MASCARA DE 1 ATÉ 60 E VER INPUT HIDDEN ETC --}}
+
+
+                    {{-- VALOR TOTAL --}}
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label for="format-amount" class="control-label">Valor total do serviço</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">R$</span>
+                                <input type="text" id="format-amount" placeholder="0.00"
+                                    class="form-control format-amount" value="{{ $purchaseRequestServicePrice }}">
+                                <input type="hidden" name="service[quantity_of_installments]" id="amount"
+                                    class="amount no-validation" value="{{ $purchaseRequestServicePrice }}">
+                            </div>
                         </div>
                     </div>
 
@@ -623,12 +639,14 @@
                 .find('input[name$="[apportionment_currency]"]')
                 .val()
 
-            const isValidApportionment = Boolean(costCenterSelect && (costcenterPercentage || costCenterCurrency));
+            const isValidApportionment = Boolean(costCenterSelect && (costcenterPercentage ||
+                costCenterCurrency));
 
             $btnAddCostCenter.prop('disabled', !isValidApportionment);
         }
 
-        $(document).on('input change', `${$costCenterSelect.selector}, ${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
+        $(document).on('input change',
+            `${$costCenterSelect.selector}, ${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
             toggleCostCenterBtn);
 
         toggleCostCenterBtn();
@@ -785,6 +803,7 @@
                     idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service
                         ?.installments[index]?.id : null;
                     idInput.hidden = true;
+                    idInput.className = "no-validation";
 
                     const expireDateInput = document.createElement('input');
                     expireDateInput.type = 'date';
@@ -792,12 +811,14 @@
                         '][expire_date]';
                     expireDateInput.value = expireDate;
                     expireDateInput.hidden = true;
+                    expireDateInput.className = "no-validation";
 
                     const valueInput = document.createElement('input');
                     valueInput.type = 'number';
                     valueInput.name = 'service[service_installments][' + index + '][value]';
                     valueInput.value = value;
                     valueInput.hidden = true;
+                    valueInput.className = "no-validation";
 
                     const observationInput = document.createElement('input');
                     observationInput.type = 'text';
@@ -805,12 +826,14 @@
                         '][observation]';
                     observationInput.value = observation;
                     observationInput.hidden = true;
+                    observationInput.className = "no-validation";
 
                     const statusInput = document.createElement('input');
                     statusInput.type = 'text';
                     statusInput.name = 'service[service_installments][' + index + '][status]';
                     statusInput.value = status;
                     statusInput.hidden = true;
+                    statusInput.className = "no-validation";
 
                     hiddenInputsContainer.append(
                         idInput,
@@ -827,30 +850,36 @@
                 idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[0]
                     ?.id : null;
                 idInput.hidden = true;
+                idInput.className = "no-validation";
 
                 const expireDateInput = document.createElement('input');
                 expireDateInput.type = 'date';
                 expireDateInput.name = 'service[service_installments][0][expire_date]';
                 expireDateInput.value = "";
                 expireDateInput.hidden = true;
+                expireDateInput.className = "no-validation";
+
 
                 const valueInput = document.createElement('input');
                 valueInput.type = 'number';
                 valueInput.name = 'service[service_installments][0][value]';
                 valueInput.value = "";
                 valueInput.hidden = true;
+                valueInput.className = "no-validation";
 
                 const observationInput = document.createElement('input');
                 observationInput.type = 'text';
                 observationInput.name = 'service[service_installments][0][observation]';
                 observationInput.value = "";
                 observationInput.hidden = true;
+                observationInput.className = "no-validation";
 
                 const statusInput = document.createElement('input');
                 statusInput.type = 'text';
                 statusInput.name = 'service[service_installments][0][status]';
                 statusInput.value = "";
                 statusInput.hidden = true;
+                statusInput.className = 'no-validation';
 
                 hiddenInputsContainer.append(
                     idInput,
@@ -903,13 +932,17 @@
             $paymentBlock
                 .find('input, textarea')
                 .prop('readonly', isContractedBySupplies);
+            //.data('rule-required', !isContractedBySupplies);
 
             $paymentBlock
                 .find('select')
                 .prop('disabled', isContractedBySupplies)
+                //.data('rule-required', !isContractedBySupplies)
                 .trigger('change.select2');
 
             if (isContractedBySupplies) {
+                //$paymentBlock.find('.form-group').removeClass('has-error');
+                //$paymentBlock.find('input').valid();
                 $installmentsTable.clear().draw();
             }
 

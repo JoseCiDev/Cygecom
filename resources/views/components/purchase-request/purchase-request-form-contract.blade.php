@@ -230,7 +230,7 @@
 
             <div class="row" style="margin-bottom:15px; margin-top:5px;">
 
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <label for="form-check" class="control-label" style="padding-right:10px;">
                         Quem está responsável por esta contratação?
                     </label>
@@ -242,6 +242,21 @@
                         <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio"
                             id="is-area-contract" style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
                         <label class="form-check-label" for="is-area-contract"> Área solicitante</label>
+                    </div>
+                </div>
+
+                {{-- COMEX --}}
+                <div class="col-sm-4">
+                    <label for="form-check" class="control-label" style="padding-right:10px;">
+                        Contrato se enquadra na categoria COMEX?
+                    </label>
+                    <div class="form-check">
+                        <input name="is_comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
+                            type="radio" data-skin="minimal">
+                        <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
+                        <input name="is_comex"value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest)) class="radio-comex"
+                            type="radio" data-skin="minimal">
+                        <label class="form-check-label" for="">Não</label>
                     </div>
                 </div>
 
@@ -270,7 +285,7 @@
                 <div class="col-sm-8">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
-                        <textarea data-rule-required="true" minlength="30" name="description" id="description" rows="4"
+                        <textarea data-rule-required="true" minlength="20" name="description" id="description" rows="4"
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
@@ -288,35 +303,20 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="local-description" class="control-label">
-                            Local de entrega do produto
+                            Local da prestação do serviço
                         </label>
                         <input name="local_description" value="{{ $purchaseRequest->local_description ?? null }}"
                             type="text" id="local-description"
                             placeholder="Ex: HKM - Av. Gentil Reinaldo Cordioli, 161 - Jardim Eldorado"
-                            class="form-control" data-rule-required="true" minlength="15">
+                            class="form-control" data-rule-required="true" minlength="5">
                     </div>
                 </div>
 
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label for="desired-date" class="control-label">Data desejada</label>
+                        <label for="desired-date" class="control-label">Data desejada da contratação</label>
                         <input type="date" name="desired_date" id="desired-date" class="form-control"
                             value="{{ $purchaseRequest->desired_date ?? null }}">
-                    </div>
-                </div>
-
-                {{-- COMEX --}}
-                <div class="col-sm-4">
-                    <label for="form-check" class="control-label" style="padding-right:10px;">
-                        Contrato se enquadra na categoria COMEX?
-                    </label>
-                    <div class="form-check" style="12px; margin-top:4px;">
-                        <input name="is_comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
-                            type="radio" data-skin="minimal">
-                        <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
-                        <input name="is_comex"value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest)) class="radio-comex"
-                            type="radio" data-skin="minimal">
-                        <label class="form-check-label" for="">Não</label>
                     </div>
                 </div>
 
@@ -327,7 +327,7 @@
                 {{-- LINK --}}
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="purchase-request-files[path]" class="control-label">Link</label>
+                        <label for="purchase-request-files[path]" class="control-label">Links de apoio / sugestão</label>
                         <textarea placeholder="Adicone um ou mais links válidos. Ex: Contrato disponibilizado pelo fornecedor" rows="3"
                             name="purchase_request_files[path]" id="purchase-request-files[path]" class="form-control text-area no-resize">{{ isset($purchaseRequest->purchaseRequestFile[0]) && $purchaseRequest->purchaseRequestFile[0]->path ? $purchaseRequest->purchaseRequestFile[0]->path : '' }}</textarea>
                     </div>
@@ -1054,7 +1054,9 @@
                 .prop('disabled', isContractedBySupplies)
                 .trigger('change.select2');
 
+
             if (isContractedBySupplies) {
+                //$paymentBlock.find('.form-group').removeClass('has-error').valid();
                 $installmentsTable.clear().draw();
             }
 
