@@ -23,7 +23,7 @@
                             <ul class="pricing col-sm-4">
                                 <li class="head">
                                     <div class="name" style="background-color: #339933"><i class="fa fa-tags"></i> Solicitações de produtos</div>
-                                    <div class="price">
+                                    <div class="price" style="background-color: #33993368">
                                         {{ $productQtd  ?? '---'}} <span>solicitações existentes</span>
                                         @if (auth()->user()->profile->name === 'admin')
                                             <a href="{{route('supplies.product')}}" class="btn btn-grey-4">Todos de produtos</a>
@@ -44,7 +44,7 @@
                             <ul class="pricing green col-sm-4">
                                 <li class="head">
                                     <div class="name" style="background-color: #111111"><i class="fa fa-briefcase"></i> Solicitações de serviços</div>
-                                    <div class="price">
+                                    <div class="price" style="background-color: #11111159">
                                         {{ $serviceQtd  ?? '---'}} <span>solicitações existentes</span>
                                         @if (auth()->user()->profile->name === 'admin')
                                             <a href="{{route('supplies.service')}}" class="btn btn-grey-4">Todos serviços</a>
@@ -64,8 +64,8 @@
                             </ul>
                             <ul class="pricing red col-sm-4">
                                 <li class="head">
-                                    <div class="name" style="background-color: #62a7e7"><i class="glyphicon glyphicon-list-alt"></i> Solicitações de contratos</div>
-                                    <div class="price">
+                                    <div class="name" style="background-color: #62a7e7;"><i class="glyphicon glyphicon-list-alt"></i> Solicitações de contratos</div>
+                                    <div class="price" style="background-color: #62a7e75c;">
                                         {{ $contractQtd  ?? '---'}} <span>solicitações existentes</span>
                                         @if (auth()->user()->profile->name === 'admin')
                                             <a href="{{route('supplies.contract')}}" class="btn btn-grey-4">Todos de contratos</a>
