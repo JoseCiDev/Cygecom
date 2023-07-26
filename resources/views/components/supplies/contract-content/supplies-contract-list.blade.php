@@ -20,7 +20,7 @@
                             <th>ID</th>
                             <th>Solicitante</th>
                             <th>Responsável</th>
-                            <th>Responsável em</th>
+                            <th class="hidden-1440">Responsável em</th>
                             <th class="col-xs-2">
                                 <select id="filterStatus" class="form-control">
                                     <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
@@ -35,13 +35,13 @@
                                 </select>
                             </th>
                             <th>Fornecedor</th>
-                            <th>Qualif. fornecedor</th>
+                            <th class="hidden-1280">Qualif. fornecedor</th>
                             <th>Tipo de quitação</th>
                             <th>Progresso</th>
-                            <th>Contratação por</th>
-                            <th>Grupo de custo</th>
-                            <th>Data desejada</th>
-                            <th>Atualizado em</th>
+                            <th class="hidden-1024">Contratação por</th>
+                            <th class="hidden-1440">Grupo de custo</th>
+                            <th class="hidden-1440">Data desejada</th>
+                            <th class="hidden-1440">Atualizado em</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -57,18 +57,18 @@
                                 <td>{{$contract->id}}</td>
                                 <td>{{$contract->user->person->name}}</td>
                                 <td>{{$contract->SuppliesUser?->Person->name ?? '---'}}</td>
-                                <td>{{$contract->responsibility_marked_at ? \Carbon\Carbon::parse($contract->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
+                                <td class="hidden-1440">{{$contract->responsibility_marked_at ? \Carbon\Carbon::parse($contract->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td>{{$contract->status->label()}}</td>
                                 <td>{{$contract->contract->Supplier?->cpf_cnpj ?? '---'}}</td>
-                                <td>{{$contract->contract->Supplier?->qualification->label() ?? '---'}}</td>
+                                <td class="hidden-1280">{{$contract->contract->Supplier?->qualification->label() ?? '---'}}</td>
 
                                 <td>{{$contract->contract->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
                                 <td>{{$contract->contract->already_provided ? 'Executado' : 'Não executado'}}</td>
-                                <td>{{$contract->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
-                                <td>{{$concatenatedGroups}}</td>
+                                <td class="hidden-1024">{{$contract->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
+                                <td class="hidden-1440">{{$concatenatedGroups}}</td>
 
-                                <td>{{ \Carbon\Carbon::parse($contract->desired_date)->format('d/m/Y') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($contract->updated_at)->format('d/m/Y h:m:s') }}</td>
+                                <td class="hidden-1440">{{ \Carbon\Carbon::parse($contract->desired_date)->format('d/m/Y') }}</td>
+                                <td class="hidden-1440">{{ \Carbon\Carbon::parse($contract->updated_at)->format('d/m/Y h:m:s') }}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button 
