@@ -510,16 +510,20 @@
                         <legend>Arquivos</legend>
                         <input type="file" class="form-control" name="arquivos[]" multiple>
                         <ul>
-                            @foreach ($files as $each)
-                                @php
-                                    $filenameSearch = explode('/', $each->path);
-                                    $filename = end($filenameSearch);
-                                @endphp
-                                <li data-id-purchase-request-files="{{ $each->id }}">
-                                    <a href="{{ env('AWS_S3_BASE_URL') . $each->path }}"target="_blank">{{ $filename }}</a> -
-                                    <span class="excluir">[Excluir]</span>
-                                </li>
-                            @endforeach
+                            @if (isset($files))
+                                @foreach ($files as $each)
+                                    @php
+                                        $filenameSearch = explode('/', $each->path);
+                                        $filename = end($filenameSearch);
+                                    @endphp
+                                    <li data-id-purchase-request-files="{{ $each->id }}">
+                                        <a
+                                            href="{{ env('AWS_S3_BASE_URL') . $each->path }}"target="_blank">{{ $filename }}</a>
+                                        -
+                                        <span class="excluir">[Excluir]</span>
+                                    </li>
+                                @endforeach
+                            @endif
                         </ul>
                     </fieldset>
                 </div>
@@ -996,7 +1000,7 @@
             max: 1000000000,
         });
 
-        $excluir.click(async (e)=>{
+        $excluir.click(async (e) => {
             const target = $(e.target);
             const li = target.parent();
             const idPurchaseRequestFiles = li.data("id-purchase-request-files");
@@ -1010,7 +1014,8 @@
             //     console.error(error);
             // }
 
-            alert(`Excluir ${idPurchaseRequestFiles}, vamos supor que fizemos o post e retornou sucesso...`);
+            alert(
+                `Excluir ${idPurchaseRequestFiles}, vamos supor que fizemos o post e retornou sucesso...`);
             li.remove();
 
         });
