@@ -15,7 +15,7 @@ return new class () extends Migration {
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->enum('recurrence', ['unique', 'monthly', 'yearly'])->default('monthly');
-            $table->boolean('is_fixed_payment')->default(false);
+            $table->boolean('is_fixed_payment')->nullable()->default(null);
             $table->boolean('is_prepaid')->nullable()->deafult(false);
 
             $table->string('seller')->nullable();
