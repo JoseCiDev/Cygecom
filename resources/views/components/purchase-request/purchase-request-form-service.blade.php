@@ -12,9 +12,11 @@
     .cost-center-container {
         margin-bottom: 10px;
     }
+
     div.dataTables_wrapper div.dataTables_length,
     div.dataTables_wrapper div.dataTables_info {
-        display: none;     /* remover espao em branco do datatables*/
+        display: none;
+        /* remover espao em branco do datatables*/
     }
 </style>
 
@@ -395,7 +397,7 @@
                     <input type="hidden" class="no-validation" value="" name="service[payment_info][id]">
 
                     {{-- Nº PARCELAS --}}
-                    <div class="col-sm-2">
+                    <div class="col-sm-1" style="margin-top: -17px;">
                         <div class="form-group">
                             <label for="installments-number" class="control-label">Nº de parcelas</label>
                             <input type="text" class="form-control format-installments-number"
@@ -407,7 +409,7 @@
                     </div>
 
                     {{-- DESCRICAO DADOS PAGAMENTO --}}
-                    <div class="col-sm-4" style="margin-bottom: -20px;">
+                    <div class="col-sm-5" style="margin-bottom: -20px;">
                         <div class="form-group">
                             <label for="payment-info-description" class="control-label">
                                 Detalhes do pagamento
@@ -561,6 +563,20 @@
         });
 
         $serviceAmount.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 0,
+            max: 1000000000,
+        });
+
+        // mascaras pra modal edicao
+        const $editValueInputModal = $('#edit-value');
+        const $editValueHiddenModal = $('#edit-value-hidden');
+
+        $editValueInputModal.imask({
             mask: Number,
             scale: 2,
             thousandsSeparator: '.',
@@ -730,6 +746,8 @@
             }
         });
 
+        // sim está repetindo muito...
+
         // trata qtd parcelas mascara
         $formatInputInstallmentsNumber.on('input', function() {
             const formattedValue = $(this).val();
@@ -743,6 +761,22 @@
         });
         // ---
 
+        // sim está repetindo muito...
+
+        // trata valor serviço mascara
+        $editValueInputModal.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $editValueHiddenModal.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
+        // ---
+
+        // sim está repetindo muito...
 
         const $selectSupplier = $('.select-supplier');
         const $paymentMethod = $('.payment-method');
@@ -766,7 +800,7 @@
                 {
                     data: "value",
                     render: function(data, type, row, meta) {
-                        const dataWithR$ = "R$"+ data;
+                        const dataWithR$ = "R$" + data;
                         return dataWithR$;
                     }
                 },
@@ -1055,7 +1089,7 @@
 
                 const expireDate = $('#edit-expire-date').val();
 
-                const value = $('#edit-value').val();
+                const value = $('#edit-value-hidden').val();
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
 

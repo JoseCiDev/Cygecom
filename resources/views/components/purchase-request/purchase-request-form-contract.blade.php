@@ -35,7 +35,8 @@
 
     div.dataTables_wrapper div.dataTables_length,
     div.dataTables_wrapper div.dataTables_info {
-        display: none;     /* remover espao em branco do datatables*/
+        display: none;
+        /* remover espao em branco do datatables*/
     }
 </style>
 
@@ -332,7 +333,8 @@
                 {{-- LINK --}}
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="purchase-request-files[path]" class="control-label">Links de apoio / sugestão</label>
+                        <label for="purchase-request-files[path]" class="control-label">Links de apoio /
+                            sugestão</label>
                         <textarea placeholder="Adicone um ou mais links válidos. Ex: Contrato disponibilizado pelo fornecedor" rows="3"
                             name="purchase_request_files[path]" id="purchase-request-files[path]" class="form-control text-area no-resize">{{ isset($purchaseRequest->purchaseRequestFile[0]) && $purchaseRequest->purchaseRequestFile[0]->path ? $purchaseRequest->purchaseRequestFile[0]->path : '' }}</textarea>
                     </div>
@@ -670,6 +672,34 @@
             max: 1000000000,
         });
 
+        // mascaras pra modal edicao e add
+        const $valueModalAdd = $('#value');
+        const $valueModalAddHidden = $('#value-hidden');
+
+        const $editValueInputModal = $('#edit-value');
+        const $editValueHiddenModal = $('#edit-value-hidden');
+
+        $editValueInputModal.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 0,
+            max: 1000000000,
+        });
+
+        $valueModalAdd.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 0,
+            max: 1000000000,
+        });
+
+
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
 
@@ -756,6 +786,33 @@
                 const rawValue = parseFloat(processedValue);
                 if (!isNaN(rawValue)) {
                     $amount.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
+        // ---
+
+        // sim está repetindo muito...
+
+        // trata valor serviço mascara
+        $editValueInputModal.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $editValueHiddenModal.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
+        // ---
+
+        $valueModalAdd.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $valueModalAddHidden.val(rawValue.toFixed(2)).trigger('change');
                 }
             }
         });
@@ -851,7 +908,7 @@
                 {
                     data: "value",
                     render: function(data, type, row, meta) {
-                        const dataWithR$ = "R$"+ data;
+                        const dataWithR$ = "R$" + data;
                         return dataWithR$;
                     }
                 },
@@ -886,7 +943,7 @@
                     previous: "Anterior",
                     next: "Próximo",
                 },
-                info:""
+                info: ""
             },
             order: [
                 [0, 'desc']
@@ -1177,7 +1234,7 @@
             const expireDateFormatted = expireDate.toLocaleDateString('pt-BR', {
                 timeZone: 'UTC'
             });
-            const value = $('#value').val();
+            const value = $('#value-hidden').val();
             const status = $('#status').find(':selected').text();
             const observation = $('#observation').val();
 
@@ -1245,7 +1302,7 @@
 
                 const expireDateInput = $('#edit-expire-date').val();
 
-                const value = $('#edit-value').val();
+                const value = $('#edit-value-hidden').val();
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
 
