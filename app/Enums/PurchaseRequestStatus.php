@@ -6,6 +6,7 @@ use App\Contracts\EnumInterface;
 
 enum PurchaseRequestStatus: string implements EnumInterface
 {
+    case RASCUNHO = 'rascunho';
     case PENDENTE = 'pendente';
     case EM_TRATATIVA = 'em_tratativa';
     case EM_COTACAO = 'em_cotacao';
@@ -22,6 +23,7 @@ enum PurchaseRequestStatus: string implements EnumInterface
     public static function getLabel($value): string
     {
         return match ($value) {
+            self::RASCUNHO => 'Rascunho',
             self::PENDENTE => 'Pendente',
             self::EM_TRATATIVA => 'Em tratativa',
             self::EM_COTACAO => 'Em cotação',

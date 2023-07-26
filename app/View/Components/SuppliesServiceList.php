@@ -24,9 +24,9 @@ class SuppliesServiceList extends Component
     public function render(): View|Closure|string
     {
         if ($this->status) {
-            $purchaseRequests = $this->purchaseRequestService->purchaseRequestsByStatus($this->status);
+            $purchaseRequests = $this->purchaseRequestService->purchaseRequestsByStatus($this->status)->whereNotIn('status', ['rascunho'])->get();
         } else {
-            $purchaseRequests = $this->purchaseRequestService->purchaseRequests();
+            $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()->whereNotIn('status', ['rascunho'])->whereNull('deleted_at')->get();
         }
 
         $services = $purchaseRequests->filter(function ($item) {

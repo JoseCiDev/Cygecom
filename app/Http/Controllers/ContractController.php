@@ -86,15 +86,21 @@ class ContractController extends Controller
         }
 
         try {
-            $isAdmin         = auth()->user()->profile->name === 'admin';
-            $purchaseRequest = auth()->user()->purchaseRequest->find($id);
-            $isAuthorized    = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
+            $isAdmin = auth()->user()->profile->name === 'admin';
+            $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
+            if (!$isOwnPurchaseRequest && !$isAdmin) {
+                throw new Exception('Não autorizado. Não foi possível acessar essa solicitação.');
+            }
 
-            if ($isAuthorized) {
-                $this->purchaseRequestService->updateContractRequest($id, $data);
-            } else {
+            $purchaseRequest = PurchaseRequest::find($id);
+            $isDeleted = $purchaseRequest->deleted_at !== null;
+
+            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
+            if (!$isAuthorized) {
                 throw new Exception('Não foi possível acessar essa solicitação.');
             }
+
+            $this->purchaseRequestService->updateContractRequest($id, $data);
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
         }

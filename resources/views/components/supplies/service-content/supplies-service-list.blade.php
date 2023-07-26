@@ -26,10 +26,12 @@
                                 <select id="filterStatus" class="form-control">
                                     <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
                                     @foreach (\App\Enums\PurchaseRequestStatus::cases() as $statusCase)
-                                        <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}} 
-                                            value="{{ $statusCase->value }}" @selected($statusCase->value === $status?->value)>
-                                            {{ $statusCase->label() }}
-                                        </option>
+                                        @if ($statusCase->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
+                                            <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}} 
+                                                value="{{ $statusCase->value }}" @selected($statusCase->value === $status?->value)>
+                                                {{ $statusCase->label() }}
+                                            </option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </th>
