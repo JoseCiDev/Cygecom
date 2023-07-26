@@ -13,11 +13,18 @@ class CheckSuppliesGroupMiddleware
      */
     public function handle($request, Closure $next, ...$allowedSuppliesGroups)
     {
-        $suppliesGroup = $request->route('suppliesGroup');
-        if (in_array($suppliesGroup, $allowedSuppliesGroups)) {
-            return $next($request);
+        $isAdmin = auth()->user()->profile->name === 'admin';
+        $suppliesGroup = (bool)$request->query('suppliesGroup');
+        $isAllowedGroup = in_array($suppliesGroup, $allowedSuppliesGroups);
+
+        if (!$isAdmin && !$suppliesGroup) {
+            abort(400, 'Parâmetro obrigatório para perfis não administrativos. [Parâmetro: suppliesGroup]');
         }
 
-        abort(403, 'Acesso não autorizado para o grupo de suprimentos.');
+        if ($suppliesGroup && !$isAllowedGroup) {
+            abort(403, 'Acesso não autorizado para o grupo de suprimentos.');
+        }
+
+        return $next($request);
     }
 }
