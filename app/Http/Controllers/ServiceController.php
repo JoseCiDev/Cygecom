@@ -9,19 +9,13 @@ use Illuminate\Http\{RedirectResponse, Request};
 
 class ServiceController extends Controller
 {
-    private $validatorService;
-
-    private $purchaseRequestService;
-
-    public function __construct(ValidatorService $validatorService, PurchaseRequestService $purchaseRequestService)
-    {
-        $this->validatorService       = $validatorService;
-        $this->purchaseRequestService = $purchaseRequestService;
-    }
+    public function __construct(
+        private ValidatorService $validatorService,
+        private PurchaseRequestService $purchaseRequestService
+    ){}
 
     public function registerService(Request $request): RedirectResponse
     {
-        $route      = 'requests';
         $routeParam = [];
         $data       = $request->all();
 
@@ -32,9 +26,8 @@ class ServiceController extends Controller
         }
 
         try {
-            $purchaseRequest = $this->purchaseRequestService->registerServiceRequest($data);
-            $route           = 'request.edit';
-            $routeParam      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
+            $this->purchaseRequestService->registerServiceRequest($data);
+            $route           = 'requests.own';
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
         }
@@ -83,19 +76,21 @@ class ServiceController extends Controller
             $isAdmin         = auth()->user()->profile->is_admin;
             $purchaseRequest = auth()->user()->purchaseRequest->find($id);
             $isAuthorized    = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
+            $route     = 'requests.own';
 
             if ($isAuthorized) {
                 $this->purchaseRequestService->updateServiceRequest($id, $data);
             } else {
                 throw new Exception('Não foi possível acessar essa solicitação.');
             }
+
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
         }
 
         session()->flash('success', "Solicitação de serviço atualizada com sucesso!");
 
-        return redirect()->route($route, ['type' => $purchaseRequest->type, 'id' => $id]);
+        return redirect()->route($route);
     }
 
     public function serviceDetails(int $id)
