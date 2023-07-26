@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\S3;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -32,9 +33,14 @@ class HomeController extends Controller
         if ($request->isMethod('post')) {
             $file = $request->file('arquivo_teste');
 
-            $uniq = uniqid(); //não precisa disso, só pra teste
-            $result = self::sendFilesToS3($file, 'solicitacao', "id_solicitacao_aqui$uniq");
-            dump($result);
+            if ($file instanceof \Illuminate\Http\UploadedFile || is_array($file)) {
+                $uniq = uniqid(); //não precisa disso, só pra teste
+                $result = S3::sendFiles($file, 'solicitacao', "id_solicitacao_aqui$uniq");
+                dump($result);
+
+                // $exemploComProvider = app('S3');
+                // $result = $exemploComProvider::sendFiles($file, 'solicitacao', "id_solicitacao_aqui$uniq");
+            }
             return view('home');
         }
     }
