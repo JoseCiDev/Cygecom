@@ -4,12 +4,17 @@
     $isCopy ??= null;
     $serviceInstallments = $purchaseRequest?->service?->installments;
     $purchaseRequestServicePrice = $purchaseRequest?->service?->price === null ? null : (float) $purchaseRequest?->service?->price;
+    $serviceQuantityOfInstallments = $purchaseRequest?->service?->quantity_of_installments === null ? null : (int) $purchaseRequest?->service?->quantity_of_installments;
 @endphp
 
 
 <style>
     .cost-center-container {
         margin-bottom: 10px;
+    }
+    div.dataTables_wrapper div.dataTables_length,
+    div.dataTables_wrapper div.dataTables_info {
+        display: none;     /* remover espao em branco do datatables*/
     }
 </style>
 
@@ -393,42 +398,16 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label for="installments-number" class="control-label">Nº de parcelas</label>
-                            @php
-                                $quantityOfInstallments = $purchaseRequest?->service?->quantity_of_installments;
-                            @endphp
-                            <select name="service[quantity_of_installments]" class='select2-me'
-                                id="installments-number" style="width:100%; padding-top:2px;"
-                                data-placeholder="Escolha uma opção">
-                                <option value=""></option>
-                                <option value="1" @selected($quantityOfInstallments === 1)>1x</option>
-                                <option value="2" @selected($quantityOfInstallments === 2)>2x</option>
-                                <option value="3" @selected($quantityOfInstallments === 3)>3x</option>
-                                <option value="4" @selected($quantityOfInstallments === 4)>4x </option>
-                                <option value="5" @selected($quantityOfInstallments === 5)>5x</option>
-                                <option value="6" @selected($quantityOfInstallments === 6)>6x</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    {{-- COLOCAR MASCARA DE 1 ATÉ 60 E VER INPUT HIDDEN ETC --}}
-
-
-                    {{-- VALOR TOTAL --}}
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="format-amount" class="control-label">Valor total do serviço</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">R$</span>
-                                <input type="text" id="format-amount" placeholder="0.00"
-                                    class="form-control format-amount" value="{{ $purchaseRequestServicePrice }}">
-                                <input type="hidden" name="service[quantity_of_installments]" id="amount"
-                                    class="amount no-validation" value="{{ $purchaseRequestServicePrice }}">
-                            </div>
+                            <input type="text" class="form-control format-installments-number"
+                                placeholder="Ex: 24" value="{{ $serviceQuantityOfInstallments }}">
+                            <input type="hidden" name="service[quantity_of_installments]" id="installments-number"
+                                class="installments-number no-validation"
+                                value="{{ $serviceQuantityOfInstallments }}">
                         </div>
                     </div>
 
                     {{-- DESCRICAO DADOS PAGAMENTO --}}
-                    <div class="col-sm-4">
+                    <div class="col-sm-4" style="margin-bottom: -20px;">
                         <div class="form-group">
                             <label for="payment-info-description" class="control-label">
                                 Detalhes do pagamento
@@ -441,10 +420,10 @@
                 </div>
 
                 {{-- TABLE PARCELAS --}}
-                <div class="row" style="display:flex; align-items:center; margin-bottom:5px;">
+                <div class="row" style="display:flex; align-items:center; margin-bottom:7px;">
                     <h4 class="col-sm-6">
                         <i class="fa fa-dollar"></i>
-                        Parcelas deste serviço
+                        PARCELAS DESTE SERVIÇO
                     </h4>
                     <div class="col-sm-6 btn-add-installment" hidden>
                         <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
@@ -461,11 +440,26 @@
                                     id="installments-table-striped">
                                     <thead>
                                         <tr>
-                                            <th class="col-sm-2">VENCIMENTO</th>
-                                            <th class="col-sm-2">VALOR</th>
-                                            <th class='col-sm-4 hidden-350'>OBSERVAÇÃO</th>
-                                            <th class='col-sm-2 hidden-1024'>STATUS</th>
-                                            <th class='col-sm-2 hidden-480'>AÇÕES</th>
+                                            <th class="col-sm-2">
+                                                <i class="fa fa-calendar-o" style="padding-right:5px;"></i>
+                                                VENCIMENTO
+                                            </th>
+                                            <th class="col-sm-2">
+                                                <i class="fa fa-money" style="padding-right:5px;"></i>
+                                                VALOR
+                                            </th>
+                                            <th class='col-sm-4 hidden-350'>
+                                                <i class="fa fa-pencil-square" style="padding-right:5px;"></i>
+                                                OBSERVAÇÃO
+                                            </th>
+                                            <th class='col-sm-2 hidden-1024'>
+                                                <i class="fa fa-tasks" style="padding-right:5px;"></i>
+                                                STATUS
+                                            </th>
+                                            <th class='col-sm-2 hidden-480'>
+                                                <i class="fa fa-sliders" style="padding-right:5px;"></i>
+                                                AÇÕES
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -574,6 +568,16 @@
             padFractionalZeros: true,
             min: 0,
             max: 1000000000,
+        });
+
+        const $inputInstallmentsNumber = $('.installments-number');
+        const $formatInputInstallmentsNumber = $('.format-installments-number');
+
+        $formatInputInstallmentsNumber.imask({
+            mask: IMask.MaskedRange,
+            from: 1,
+            to: 60,
+            autofix: false,
         });
 
 
@@ -725,6 +729,18 @@
                 }
             }
         });
+
+        // trata qtd parcelas mascara
+        $formatInputInstallmentsNumber.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const rawValue = parseInt(formattedValue);
+                if (!isNaN(rawValue)) {
+                    $inputInstallmentsNumber.val(rawValue).trigger('change');
+                }
+            }
+            console.log($inputInstallmentsNumber.val());
+        });
         // ---
 
 
@@ -749,6 +765,10 @@
                 },
                 {
                     data: "value",
+                    render: function(data, type, row, meta) {
+                        const dataWithR$ = "R$"+ data;
+                        return dataWithR$;
+                    }
                 },
                 {
                     data: "observation",
@@ -764,12 +784,19 @@
                 }
             ],
             orderable: false,
-            paging: false,
-            info: false,
+            paging: true,
+            pageLength: 12,
+            info: "Página _PAGE_ of _PAGES_",
             searching: false,
             language: {
-                emptyTable: "",
-                zeroRecords: ""
+                lengthMenu: "",
+                emptyTable: "Nenhuma parcela adicionada.",
+                zeroRecords: "",
+                paginate: {
+                    previous: "Anterior",
+                    next: "Próximo",
+                },
+                info: ""
             },
             order: [
                 [0, 'desc']
@@ -947,8 +974,6 @@
             }
 
         }).filter(':checked').trigger('change');
-
-        const $inputInstallmentsNumber = $('#installments-number');
 
         const editButton =
             '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';

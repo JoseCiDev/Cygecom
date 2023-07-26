@@ -45,7 +45,7 @@ class PurchaseRequestController extends Controller
             } else {
                 $purchaseRequest = auth()->user()->purchaseRequest->find($id);
 
-                if ($purchaseRequest->isEmpty()) {
+                if (!isset($purchaseRequest)) {
                     throw new Exception('Não foi possível acessar essa solicitação.');
                 }
 

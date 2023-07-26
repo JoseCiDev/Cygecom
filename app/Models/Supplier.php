@@ -51,8 +51,6 @@ class Supplier extends Model
         'representative',
         'callisto_code',
         'senior_code',
-        'supplier_type_callisto',
-        'payment_type_callisto',
         'updated_by',
         'deleted_by',
         'deleted_at',

@@ -32,6 +32,11 @@
     h4 {
         font-size: 20px;
     }
+
+    div.dataTables_wrapper div.dataTables_length,
+    div.dataTables_wrapper div.dataTables_info {
+        display: none;     /* remover espao em branco do datatables*/
+    }
 </style>
 
 <x-ModalSupplierRegister />
@@ -536,11 +541,26 @@
                                     id="installments-table-striped">
                                     <thead>
                                         <tr>
-                                            <th class="col-sm-2">VENCIMENTO</th>
-                                            <th class="col-sm-2">VALOR</th>
-                                            <th class='col-sm-5'>OBSERVAÇÃO</th>
-                                            <th class='col-sm-2'>STATUS</th>
-                                            <th class='col-sm-1'>AÇÕES</th>
+                                            <th class="col-sm-2">
+                                                <i class="fa fa-calendar-o" style="padding-right:5px;"></i>
+                                                VENCIMENTO
+                                            </th>
+                                            <th class="col-sm-2">
+                                                <i class="fa fa-money" style="padding-right:5px;"></i>
+                                                VALOR
+                                            </th>
+                                            <th class='col-sm-4 hidden-350'>
+                                                <i class="fa fa-pencil-square" style="padding-right:5px;"></i>
+                                                OBSERVAÇÃO
+                                            </th>
+                                            <th class='col-sm-2 hidden-1024'>
+                                                <i class="fa fa-tasks" style="padding-right:5px;"></i>
+                                                STATUS
+                                            </th>
+                                            <th class='col-sm-2 hidden-480'>
+                                                <i class="fa fa-sliders" style="padding-right:5px;"></i>
+                                                AÇÕES
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -613,6 +633,10 @@
             </div>
 
             <div class="form-actions pull-right" style="margin-top:50px;">
+                <button type="submit" class="btn btn-primary">
+                    Enviar solicitação
+                    <i class="fa fa-paper-plane"></i>
+                </button>
                 <button type="submit" class="btn btn-primary">Salvar</button>
                 <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
             </div>
@@ -826,6 +850,10 @@
                 },
                 {
                     data: "value",
+                    render: function(data, type, row, meta) {
+                        const dataWithR$ = "R$"+ data;
+                        return dataWithR$;
+                    }
                 },
                 {
                     data: "observation",
@@ -846,12 +874,19 @@
                 }
             ],
             orderable: false,
-            paging: false,
-            info: false,
+            paging: true,
+            pageLength: 12,
+            info: "Página _PAGE_ of _PAGES_",
             searching: false,
             language: {
-                emptyTable: "",
-                zeroRecords: ""
+                lengthMenu: "",
+                emptyTable: "Nenhuma parcela adicionada.",
+                zeroRecords: "",
+                paginate: {
+                    previous: "Anterior",
+                    next: "Próximo",
+                },
+                info:""
             },
             order: [
                 [0, 'desc']

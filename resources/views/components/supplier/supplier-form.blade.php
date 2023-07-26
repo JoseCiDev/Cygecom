@@ -229,26 +229,6 @@
 
     <hr>
 
-    <div class="row center-block">
-        <h4>Valores para Callisto</h4>
-    </div>
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="form-group">
-                <label for="supplier_type_callisto" class="control-label">Tipo de fornecedor:</label>
-                <input value="{{ $supplier?->supplier_type_callisto }}" type="text" name="supplier_type_callisto"
-                    id="supplier_type_callisto" class="form-control" data-rule-required="true">
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-group">
-                <label for="payment_type_callisto" class="control-label">Tipo de pagamento:</label>
-                <input value="{{ $supplier?->payment_type_callisto }}" type="text" name="payment_type_callisto"
-                    id="payment_type_callisto" class="form-control" data-rule-required="true">
-            </div>
-        </div>
-    </div>
-
     <div class="col form-actions pull-right">
         <button type="submit" class="btn btn-primary">Salvar</button>
         <a href="{{ url()->previous() }}" class="btn">Cancelar</a>

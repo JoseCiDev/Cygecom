@@ -24,8 +24,6 @@ return new class() extends Migration
             $table->string('email')->nullable();
             $table->string('callisto_code')->nullable();
             $table->string('senior_code')->nullable();
-            $table->string('supplier_type_callisto')->nullable();
-            $table->string('payment_type_callisto')->nullable();
 
             $table->unsignedInteger('address_id')->unique()->nullable();
             $table->foreign('address_id')->references('id')->on('addresses');
