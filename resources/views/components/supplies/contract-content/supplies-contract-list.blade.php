@@ -79,7 +79,7 @@
                                         data-toggle="modal"
                                         data-target="#modal-supplies"
                                     >
-                                        <i class="fa fa-search"></i> Analisar
+                                        <i class="fa fa-search"></i>
                                     </button>
                                     @php $isToShow = !(bool)$contract->SuppliesUser?->Person->name &&  !(bool)$contract->responsibility_marked_at @endphp
                                     <a href="{{route('supplies.contract.detail', ['id' => $contract->id])}}"
@@ -88,7 +88,7 @@
                                         title="Abrir"
                                         isToShow="{{$isToShow ? 'true' : 'false'}}"
                                     >
-                                        <i class="fa fa-external-link"></i> Abrir
+                                        <i class="fa fa-external-link"></i>
                                     </a>
                                 </td>
                             </tr>

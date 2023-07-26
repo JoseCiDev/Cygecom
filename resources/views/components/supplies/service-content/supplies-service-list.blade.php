@@ -81,7 +81,7 @@
                                         data-toggle="modal"
                                         data-target="#modal-supplies"
                                     >
-                                        <i class="fa fa-search"></i> Analisar
+                                        <i class="fa fa-search"></i>
                                     </button>
                                     @php $isToShow = !(bool)$service->SuppliesUser?->Person->name &&  !(bool)$service->responsibility_marked_at @endphp
                                     <a 
@@ -91,7 +91,7 @@
                                         title="Abrir"
                                         isToShow="{{$isToShow ? 'true' : 'false'}}"
                                     >
-                                        <i class="fa fa-external-link"></i> Abrir
+                                        <i class="fa fa-external-link"></i>
                                     </a>
                                 </td>
                             </tr>
