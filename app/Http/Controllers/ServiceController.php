@@ -23,7 +23,8 @@ class ServiceController extends Controller
     {
         $route = 'requests';
         $routeParam = [];
-        $data = $request->all();
+        $data       = $request->all();
+        $files       = $request->file('arquivos');
 
         // captura o botão submit clicado (se for submit_request update status);
         $action = $request->input('action');
@@ -38,7 +39,7 @@ class ServiceController extends Controller
             // MUDAR
             DB::beginTransaction();
 
-            $purchaseRequest = $this->purchaseRequestService->registerServiceRequest($data);
+            $purchaseRequest = $this->purchaseRequestService->registerServiceRequest($data, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
@@ -91,6 +92,7 @@ class ServiceController extends Controller
         $action = $request->input('action');
 
         $validator = $this->validatorService->purchaseRequest($data);
+        $files = $request->file('arquivos');
 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
@@ -118,7 +120,7 @@ class ServiceController extends Controller
             // MUDAR
             DB::beginTransaction();
 
-            $this->purchaseRequestService->updateServiceRequest($id, $data);
+            $this->purchaseRequestService->updateServiceRequest($id, $data, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);

@@ -22,6 +22,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/{type}/edit/{id}', [App\Http\Controllers\PurchaseRequestController::class, 'edit'])->name('request.edit');
 
+        Route::delete('/remove-file/{id}', [App\Http\Controllers\PurchaseRequestController::class, 'fileDelete'])->name('request.file.delete');
+
         Route::post('/delete/{id}', [App\Http\Controllers\PurchaseRequestController::class, 'delete'])->name('request.delete');
     });
 });

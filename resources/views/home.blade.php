@@ -17,7 +17,7 @@
                         {{-- Para acesso rápido --}}
                         @if (auth()->user()->profile->name === 'admin')
                             <p>TESTE E-MAIL</p>
-                            <a class="btn btn-primary" href="{{route('email')}}">E-mail</a>
+                            <a class="btn btn-primary" href="{{ route('email') }}">E-mail</a>
                         @endif
 
                     </div>
@@ -25,4 +25,5 @@
             </div>
         </div>
     </div>
+
 </x-app>

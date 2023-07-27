@@ -21,6 +21,9 @@ class ContractController extends Controller
 
     public function registerContract(Request $request): RedirectResponse
     {
+        $route      = 'requests';
+        $data       = $request->all();
+        $files       = $request->file('arquivos');
         $routeParams = [];
         $data = $request->all();
 
@@ -34,12 +37,15 @@ class ContractController extends Controller
         }
 
         try {
+            $purchaseRequest = $this->purchaseRequestService->registerContractRequest($data, $files);
+            $route           = 'request.edit';
+            $routeParams      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
             $msg = "Solicitação de contrato criada com sucesso!";
 
             // MUDAR
             DB::beginTransaction();
 
-            $purchaseRequest = $this->purchaseRequestService->registerContractRequest($data);
+            $purchaseRequest = $this->purchaseRequestService->registerContractRequest($data, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
@@ -97,6 +103,7 @@ class ContractController extends Controller
         $action = $request->input('action');
 
         $validator = $this->validatorService->purchaseRequest($data);
+        $files = $request->file('arquivos');
 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
@@ -122,7 +129,7 @@ class ContractController extends Controller
             // MUDAR
             DB::beginTransaction();
 
-            $this->purchaseRequestService->updateContractRequest($id, $data);
+            $this->purchaseRequestService->updateContractRequest($id, $data, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);

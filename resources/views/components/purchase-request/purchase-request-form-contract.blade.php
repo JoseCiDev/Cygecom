@@ -92,7 +92,8 @@
             $route = route('request.contract.register');
         }
     @endphp
-    <form class="form-validate" id="request-form" method="POST" action="{{ $route }}">
+    <form enctype="multipart/form-data" class="form-validate" id="request-form" method="POST"
+        action="{{ $route }}">
 
         @csrf
 
@@ -131,7 +132,8 @@
                                     @php
                                         $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
                                     @endphp
-                                    <option value="{{ $costCenter->id }}" {{ $isApportionmentSelect ? 'selected' : '' }}>
+                                    <option value="{{ $costCenter->id }}"
+                                        {{ $isApportionmentSelect ? 'selected' : '' }}>
                                         {{ $costCenter->name }}
                                     </option>
                                 @endforeach
@@ -658,6 +660,46 @@
                 </div>
             </div>
 
+            <hr>
+
+            {{-- ARQUIVOS --}}
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <fieldset id="files-group">
+                        <legend>Arquivos</legend>
+                        <input type="file" class="form-control" name="arquivos[]" multiple>
+                        <ul class="list-group" style="margin-top:15px">
+                            @if (isset($files))
+                                @foreach ($files as $each)
+                                    @php
+                                        $filenameSearch = explode('/', $each->path);
+                                        $filename = end($filenameSearch);
+                                    @endphp
+                                    <li class="list-group-item" data-id-purchase-request-file="{{ $each->id }}">
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <i class='fa fa-file'></i><a style='margin-left:5px'
+                                                    href="{{ env('AWS_S3_BASE_URL') . $each->path }}"target="_blank">{{ $filename }}</a>
+                                            </div>
+                                            <div class="col-xs-6 text-right">
+                                                <button type="button" class="btn btn-primary file-remove"><i
+                                                        class='fa fa-trash'
+                                                        style='margin-right:5px'></i>Excluir</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            @endif
+                        </ul>
+                        <div class="alert alert-success" style="display:none;margin:15px 0px 15px 0px;"><i
+                                class="fa fa-check"></i> Excluido com sucesso!</div>
+                        <div class="alert alert-danger" style="display:none;margin:15px 0px 15px 0px;"><i
+                                class="fa fa-close"></i> Não foi possível excluir, por favor tente novamente mais
+                            tarde.</div>
+                    </fieldset>
+                </div>
+            </div>
+
             <div class="form-actions pull-right" style="margin-top:50px; padding-bottom:20px">
                 @if (!$hasSentRequest)
                     <input type="hidden" name="action" id="action" value="">
@@ -666,8 +708,8 @@
                         Salvar rascunho
                     </button>
 
-                    <button type="submit" name="submit_request" style="margin-right: 10px" class="btn btn-success btn-submit-request"
-                        value="submit-request">
+                    <button type="submit" name="submit_request" style="margin-right: 10px"
+                        class="btn btn-success btn-submit-request" value="submit-request">
                         Salvar e enviar solicitação
                         <i class="fa fa-paper-plane"></i>
                     </button>
@@ -751,6 +793,9 @@
 
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
+        const $fileRemove = $('button.file-remove');
+        const $filesGroup = $('fieldset#files-group');
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
         function disableSelectedOptions() {
             const selectedValues = $.map($('.cost-center-container select'), (self) => {
@@ -972,10 +1017,10 @@
                     render: function(data, type, row, meta) {
                         const btnEdit = $(
                             "<div><button type='button' rel='tooltip' title='Editar Parcela' class='btn btn-edit-installment'><i class='fa fa-edit'></i></button></div>"
-                            );
+                        );
                         const btnDelete = $(
                             "<div><button type='button' class='btn btn-delete-installment' style='margin-left:5px' title='Excluir'><i class='fa fa-times'></i></button></div>"
-                            );
+                        );
 
                         btnEdit.find('button').prop('disabled', hasSentRequest);
                         btnDelete.find('button').prop('disabled', hasSentRequest);
@@ -1383,6 +1428,29 @@
             });
         }
 
+        $fileRemove.click(async (e) => {
+            const target = $(e.target);
+            const li = target.closest('li');
+            const idPurchaseRequestFile = li.data("id-purchase-request-file");
+
+            try {
+                const response = await fetch("/request/remove-file/" + idPurchaseRequestFile, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                });
+                if (response.ok) {
+                    li.remove();
+                    $filesGroup.find('div.alert-success').fadeIn(500).fadeOut(2500);
+                } else {
+                    $filesGroup.find('div.alert-danger').fadeIn(500).fadeOut(2500);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+
         // calculo para enviar qtd parcelas
         const $quantityOfInstallments = $('#qtd-installments');
 
@@ -1398,7 +1466,7 @@
         const $paymentMethod = $('#payment-method');
         const $payday = $('#contract-payday');
 
-        $isPrePaid.on('change', function () {
+        $isPrePaid.on('change', function() {
             const isPrePaid = $(this).val() === "1";
             $contractAmount.data('rule-required', isPrePaid);
             $paymentMethod.data('rule-required', isPrePaid);

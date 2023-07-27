@@ -61,7 +61,7 @@
 <hr style="margin-top:5px; margin-bottom:30px;">
 
 <div class="box-content">
-    <form class="form-validate" id="request-form" method="POST"
+    <form enctype="multipart/form-data" class="form-validate" id="request-form" method="POST"
         action="@if (isset($purchaseRequest) && !$isCopy) {{ route('request.service.update', ['id' => $id]) }}
                     @else {{ route('request.service.register') }} @endif">
         @csrf
@@ -550,6 +550,46 @@
                 </div>
             </div>
 
+            <hr>
+
+            {{-- ARQUIVOS --}}
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <fieldset id="files-group">
+                        <legend>Arquivos</legend>
+                        <input type="file" class="form-control" name="arquivos[]" multiple>
+                        <ul class="list-group" style="margin-top:15px">
+                            @if (isset($files))
+                                @foreach ($files as $each)
+                                    @php
+                                        $filenameSearch = explode('/', $each->path);
+                                        $filename = end($filenameSearch);
+                                    @endphp
+                                    <li class="list-group-item" data-id-purchase-request-file="{{ $each->id }}">
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <i class='fa fa-file'></i><a style='margin-left:5px'
+                                                    href="{{ env('AWS_S3_BASE_URL') . $each->path }}"target="_blank">{{ $filename }}</a>
+                                            </div>
+                                            <div class="col-xs-6 text-right">
+                                                <button type="button" class="btn btn-primary file-remove"><i
+                                                        class='fa fa-trash'
+                                                        style='margin-right:5px'></i>Excluir</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            @endif
+                        </ul>
+                        <div class="alert alert-success" style="display:none;margin:15px 0px 15px 0px;"><i
+                                class="fa fa-check"></i> Excluido com sucesso!</div>
+                        <div class="alert alert-danger" style="display:none;margin:15px 0px 15px 0px;"><i
+                                class="fa fa-close"></i> Não foi possível excluir, por favor tente novamente mais
+                            tarde.</div>
+                    </fieldset>
+                </div>
+            </div>
+
             <div class="form-actions pull-right" style="margin-top:50px; padding-bottom:20px">
                 @if (!$hasSentRequest)
                     <input type="hidden" name="action" id="action" value="">
@@ -558,8 +598,8 @@
                         Salvar rascunho
                     </button>
 
-                    <button type="submit" name="submit_request" style="margin-right: 10px" class="btn btn-success btn-submit-request"
-                        value="submit-request">
+                    <button type="submit" name="submit_request" style="margin-right: 10px"
+                        class="btn btn-success btn-submit-request" value="submit-request">
                         Salvar e enviar solicitação
                         <i class="fa fa-paper-plane"></i>
                     </button>
@@ -637,6 +677,9 @@
 
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
+        const $fileRemove = $('button.file-remove');
+        const $filesGroup = $('fieldset#files-group');
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
         function disableSelectedOptions() {
             const selectedValues = $.map($('.cost-center-container select'), (self) => {
@@ -863,7 +906,7 @@
                     render: function(data, type, row, meta) {
                         const btnEdit = $(
                             '<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>'
-                            );
+                        );
                         btnEdit.find('button').prop('disabled', hasSentRequest);
 
                         return btnEdit.html();
@@ -961,7 +1004,7 @@
                 const idInput = document.createElement('input');
                 idInput.type = 'number';
                 idInput.name = 'service[service_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[0]
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]
                     ?.id : null;
                 idInput.hidden = true;
                 idInput.className = "no-validation";
@@ -1260,6 +1303,29 @@
                     }
                 }
             });
+        });
+
+        $fileRemove.click(async (e) => {
+            const target = $(e.target);
+            const li = target.closest('li');
+            const idPurchaseRequestFile = li.data("id-purchase-request-file");
+
+            try {
+                const response = await fetch("/request/remove-file/" + idPurchaseRequestFile, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                });
+                if (response.ok) {
+                    li.remove();
+                    $filesGroup.find('div.alert-success').fadeIn(500).fadeOut(2500);
+                } else {
+                    $filesGroup.find('div.alert-danger').fadeIn(500).fadeOut(2500);
+                }
+            } catch (error) {
+                console.error(error);
+            }
         });
     });
 </script>
