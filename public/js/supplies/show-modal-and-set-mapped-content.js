@@ -44,7 +44,6 @@ $(() =>{
             responsibility_marked_at: (value) => dateFormatter(value),
             is_comex: (value) => booleanFormatter(value, 'Sim', 'Não'),
             is_supplies_contract: (value) => booleanFormatter(value, 'Suprimentos', 'Solicitante'),
-            purchase_request_file: (value) => value[0] ? `<a href="${value[0].path}" target="_blank" rel="noopener noreferrer">Ver link</a> ` : '---' ,
         }
     
         const mappedUserEntries = {

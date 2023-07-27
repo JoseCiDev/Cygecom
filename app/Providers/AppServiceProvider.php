@@ -26,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
             return new PurchaseRequestService($app);
         });
 
+        $this->app->singleton(EmailService::class, function ($app) {
+            return new EmailService($app);
+        });
+
         $this->app->singleton(CSVImporter::class, function ($app) {
             return new CSVImporter($app);
         });

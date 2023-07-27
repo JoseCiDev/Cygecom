@@ -6,19 +6,18 @@ use App\Contracts\EmailControllerInterface;
 use App\Mail\GenericEmail;
 use App\Providers\UserService;
 use Illuminate\Http\{RedirectResponse, Request};
-use Illuminate\Support\Facades\Mail;
 
 class EmailController extends Controller implements EmailControllerInterface
 {
     public function store(Request $request): RedirectResponse
     {
         $recipients = $request->input('recipients');
-        $subject    = $request->input('subject');
-        $body       = $request->input('body');
+        $subject = $request->input('subject');
+        $body = $request->input('body');
 
         try {
-            $email = new GenericEmail($recipients, $subject, $body);
-            Mail::to($recipients)->send($email);
+            $email = new GenericEmail($subject, $body, $recipients);
+            $email->sendMail();
             session()->flash('success', "E-mail enviado!");
 
             return redirect('/email');

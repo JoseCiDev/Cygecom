@@ -41,10 +41,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
-        </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="pull-right">
                 <x-PdfGeneratorButton print-by-selector=".details-content" :file-name="'solicitacao_servico_'.$request->id . now()->format('dmY_His_u')"/>
             </div>
@@ -65,6 +62,11 @@
                 <p>Serviço desejado para:
                     {{ $request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : '---' }}
                 </p>
+               <div class="row">
+                    <div class="col-md-12">
+                        <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
+                    </div>
+               </div>
             </header>
             <main>
                 <div class="row">
@@ -91,15 +93,6 @@
                                         </p>
                                         <p>
                                             <strong>COMEX:</strong> {{ $request->is_comex ? 'Sim' : 'Não' }}
-                                        </p>
-                                        <p>
-                                            <strong>Link de sugestão:</strong>
-                                            @if ($request->PurchaseRequestFile->first()?->path)
-                                                <a href="{{ $request->PurchaseRequestFile->first()->path }}" target="_blank"
-                                                    rel="noopener noreferrer">link</a>
-                                            @else
-                                                ---
-                                            @endif
                                         </p>
                                         <p>
                                             <strong>Motivo da solicitação:</strong> {{ $request->reason }}
@@ -347,6 +340,23 @@
                     </div>
                 </div>
             </main>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-12">
+                 <h4><strong>Links:</strong></h4>
+                 @if ($request->purchaseRequestFile->count())
+                    <ul>
+                        @foreach ($request->purchaseRequestFile as $index => $file)
+                            <li><a style="font-size: 16px" href="{{ $file->path }}" target="_blank" rel="noopener noreferrer">Link {{$index + 1}}</a></li>                        
+                        @endforeach
+                    </ul>
+                 @else
+                    <p>Ainda não há registros aqui.</p>   
+                 @endif
+            </div>
         </div>
     </div>
 </x-app>
