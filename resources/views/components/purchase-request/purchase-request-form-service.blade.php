@@ -77,7 +77,7 @@
             @foreach ($purchaseRequest->costCenterApportionment as $index => $apportionment)
                 <div class="row cost-center-container">
                     <div class="col-sm-6">
-                        <label style="display:block;" for="select-cost-center" class="control-label">Centro de custo da
+                        <label style="display:block;" class="control-label">Centro de custo da
                             despesa</label>
                         <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
                             id="select-cost-center"
@@ -138,7 +138,7 @@
         @else
             <div class="row cost-center-container">
                 <div class="col-sm-6">
-                    <label for="select-cost-center" class="control-label" style="display:block">
+                    <label class="control-label" style="display:block">
                         Centro de custo da despesa
                     </label>
                     <select style="width:100%" id="select-cost-center"
@@ -359,8 +359,8 @@
                     {{-- CONDIÇÃO DE PAGAMENTO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="service[is_prepaid]" class="control-label">Condição de pagamento</label>
-                            <select name="service[is_prepaid]" id="service[is_prepaid]"
+                            <label class="control-label">Condição de pagamento</label>
+                            <select name="service[is_prepaid]" id="service-is-prepaid"
                                 class='select2-me service[is_prepaid]' style="width:100%; padding-top:2px;"
                                 data-placeholder="Escolha uma opção">
                                 <option value=""></option>
@@ -387,7 +387,7 @@
                     {{-- FORMA DE PAGAMENTO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="payment-method" class="control-label">Forma de pagamento</label>
+                            <label class="control-label">Forma de pagamento</label>
                             @php
                                 $paymentMethod = null;
                                 if (isset($purchaseRequest->service) && isset($purchaseRequest->service->paymentInfo)) {
@@ -417,7 +417,7 @@
                     {{-- Nº PARCELAS --}}
                     <div class="col-sm-1">
                         <div class="form-group">
-                            <label for="installments-number" class="control-label">Nº de parcelas</label>
+                            <label class="control-label">Nº de parcelas</label>
                             <input type="text" class="form-control format-installments-number"
                                 placeholder="Ex: 24" value="{{ $serviceQuantityOfInstallments }}">
                             <input type="hidden" name="service[quantity_of_installments]" id="installments-number"
@@ -503,7 +503,7 @@
 
                     {{-- FORNECEDOR (CNPJ/RAZAO SOCIAL --}}
                     <div class="col-sm-4 form-group">
-                        <label style="display:block;" for="service[supplier_id]" class="control-label">
+                        <label for="service[supplier_id]" style="display:block;" class="control-label">
                             Fornecedor (CNPJ - RAZÃO SOCIAL)
                         </label>
                         <select name="service[supplier_id]" class='select2-me'
@@ -554,14 +554,14 @@
                 @if (!$hasSentRequest)
                     <input type="hidden" name="action" id="action" value="">
 
-                    <button type="submit" name="submit_request" class="btn btn-primary btn-submit-request"
-                        value="submit-request">
-                        Enviar solicitação
-                        <i class="fa fa-paper-plane"></i>
+                    <button type="submit" class="btn btn-primary btn-draft" style="margin-right: 10px">
+                        Salvar rascunho
                     </button>
 
-                    <button type="submit" class="btn btn-primary btn-draft">
-                        Salvar
+                    <button type="submit" name="submit_request" style="margin-right: 10px" class="btn btn-success btn-submit-request"
+                        value="submit-request">
+                        Salvar e enviar solicitação
+                        <i class="fa fa-paper-plane"></i>
                     </button>
 
                     <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
@@ -861,7 +861,9 @@
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        const btnEdit = $('<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>');
+                        const btnEdit = $(
+                            '<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>'
+                            );
                         btnEdit.find('button').prop('disabled', hasSentRequest);
 
                         return btnEdit.html();
@@ -1034,11 +1036,11 @@
             const isContractedBySupplies = $(this).val() === "1";
 
             // muda label
-            const supplierSelect = $suppliersBlock.find('select.select2-me');
+            const supplierSelect = $suppliersBlock.find('select');
             const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
 
             supplierSelect.siblings('label[for="' + supplierSelect.attr('name') + '"]').text(newLabel);
-            supplierSelect.data('rule-required', isContractedBySupplies);
+            supplierSelect.data('rule-required', !isContractedBySupplies);
 
             // desabilita pagamento
             $paymentBlock
@@ -1206,6 +1208,31 @@
             $installmentsTable.clear();
             generateInstallments(numberOfInstallments);
         });
+
+        const $isPrePaid = $('#service-is-prepaid');
+        const $paymentInfoDescription = $('#payment-info-description');
+
+        $isPrePaid.on('change', function() {
+            const isPrePaid = $(this).val() === "1";
+            $serviceAmount.data('rule-required', isPrePaid);
+            $paymentMethod.data('rule-required', isPrePaid);
+            $formatInputInstallmentsNumber.data('rule-required', isPrePaid);
+            $paymentInfoDescription.data('rule-required', isPrePaid);
+
+            if (!isPrePaid) {
+                $serviceAmount.closest('.form-group').removeClass('has-error');
+                $paymentMethod.closest('.form-group').removeClass('has-error');
+                $formatInputInstallmentsNumber.closest('.form-group').removeClass('has-error');
+                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
+                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
+
+                $paymentBlock.find('.help-block').remove();
+            }
+        });
+
+        if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
+            $isPrePaid.filter(':selected').trigger('change.select2');
+        }
 
         // btns
         const $btnSubmitRequest = $('.btn-submit-request');

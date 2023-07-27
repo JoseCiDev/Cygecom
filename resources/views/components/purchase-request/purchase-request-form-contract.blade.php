@@ -403,14 +403,30 @@
                         </div>
                     </div>
 
+                    {{-- CONDIÇÃO DE PAGAMENTO --}}
                     <div class="col-sm-2" style="margin-top:-10px;">
-                        <label class="control-label">Valor total do contrato: </label>
-                        <div class="input-group">
-                            <span class="input-group-addon">R$</span>
-                            <input type="text" placeholder="0,00" class="form-control format-amount"
-                                id="format-amount" value="{{ $purchaseRequestContractAmount }}">
-                            <input type="hidden" name="contract[amount]" id="amount"
-                                class="amount no-validation" value="{{ $purchaseRequestContractAmount }}">
+                        <div class="form-group">
+                            <label for="contract[is_prepaid]" class="control-label">Condição de pagamento</label>
+                            <select name="contract[is_prepaid]" id="contract-is-prepaid"
+                                class='select2-me contract[is_prepaid]' style="width:100%; padding-top:2px;"
+                                data-placeholder="Escolha uma opção">
+                                <option value=""></option>
+                                <option value="1" @selected(isset($purchaseRequest->contract) && (bool) $purchaseRequest->contract->is_prepaid)>Pagamento antecipado</option>
+                                <option value="0" @selected(isset($purchaseRequest->contract) && !(bool) $purchaseRequest->contract->is_prepaid)>Pagamento após execução</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2" style="margin-top:-10px;">
+                        <div class="form-group">
+                            <label class="control-label">Valor total do contrato: </label>
+                            <div class="input-group">
+                                <span class="input-group-addon">R$</span>
+                                <input type="text" placeholder="0,00" class="form-control format-amount"
+                                    id="format-amount" value="{{ $purchaseRequestContractAmount }}">
+                                <input type="hidden" name="contract[amount]" id="amount"
+                                    class="amount no-validation" value="{{ $purchaseRequestContractAmount }}">
+                            </div>
                         </div>
                     </div>
 
@@ -449,14 +465,17 @@
                     {{-- RECORRENCIA --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="recurrence" class="control-label">Recorrência</label>
+                            <label class="control-label">Recorrência</label>
                             <select name="recurrence" id="recurrence" class="select2-me recurrence"
                                 style="width: 100%; padding-top: 2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="unique" {{ $recurrence?->value === 'unique' ? 'selected' : '' }}>ÚNICA</option>
-                                <option value="monthly" {{ $recurrence?->value === 'monthly' ? 'selected' : '' }}>MENSAL
+                                <option value="unique" {{ $recurrence?->value === 'unique' ? 'selected' : '' }}>ÚNICA
                                 </option>
-                                <option value="yearly" {{ $recurrence?->value === 'yearly' ? 'selected' : '' }}>ANUAL</option>
+                                <option value="monthly" {{ $recurrence?->value === 'monthly' ? 'selected' : '' }}>
+                                    MENSAL
+                                </option>
+                                <option value="yearly" {{ $recurrence?->value === 'yearly' ? 'selected' : '' }}>ANUAL
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -464,7 +483,7 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="control-label">Dia de vencimento</label>
-                            <select name="contract[payday]" id="contract[payday]" class='select2-me contract[payday]'
+                            <select name="contract[payday]" id="contract-payday" class='select2-me contract[payday]'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @for ($day = 1; $day <= 31; $day++)
@@ -475,24 +494,10 @@
                         </div>
                     </div>
 
-                    {{-- CONDIÇÃO DE PAGAMENTO --}}
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="contract[is_prepaid]" class="control-label">Condição de pagamento</label>
-                            <select name="contract[is_prepaid]" id="contract[is_prepaid]"
-                                class='select2-me contract[is_prepaid]' style="width:100%; padding-top:2px;"
-                                data-placeholder="Escolha uma opção">
-                                <option value=""></option>
-                                <option value="1" @selected(isset($purchaseRequest->contract) && (bool) $purchaseRequest->contract->is_prepaid)>Pagamento antecipado</option>
-                                <option value="0" @selected(isset($purchaseRequest->contract) && !(bool) $purchaseRequest->contract->is_prepaid)>Pagamento após execução</option>
-                            </select>
-                        </div>
-                    </div>
-
                     {{-- FORMA DE PAGAMENTO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="payment-method" class="control-label">Forma de pagamento</label>
+                            <label class="control-label">Forma de pagamento</label>
                             @php
                                 $paymentMethod = null;
                                 if (isset($purchaseRequest->contract) && isset($purchaseRequest->contract->paymentInfo)) {
@@ -518,7 +523,7 @@
                     </div>
 
                     {{-- DESCRICAO DADOS PAGAMENTO --}}
-                    <div class="col-sm-4">
+                    <div class="col-sm-6" style="margin-bottom: -20px;">
                         <div class="form-group">
                             <label for="payment-info-description" class="control-label">
                                 Detalhes do pagamento
@@ -653,14 +658,14 @@
                 @if (!$hasSentRequest)
                     <input type="hidden" name="action" id="action" value="">
 
-                    <button type="submit" name="submit_request" class="btn btn-primary btn-submit-request"
-                        value="submit-request">
-                        Enviar solicitação
-                        <i class="fa fa-paper-plane"></i>
+                    <button type="submit" class="btn btn-primary btn-draft" style="margin-right: 10px">
+                        Salvar rascunho
                     </button>
 
-                    <button type="submit" class="btn btn-primary btn-draft">
-                        Salvar
+                    <button type="submit" name="submit_request" style="margin-right: 10px" class="btn btn-success btn-submit-request"
+                        value="submit-request">
+                        Salvar e enviar solicitação
+                        <i class="fa fa-paper-plane"></i>
                     </button>
 
                     <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
@@ -961,8 +966,12 @@
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        const btnEdit = $("<div><button type='button' rel='tooltip' title='Editar Parcela' class='btn btn-edit-installment'><i class='fa fa-edit'></i></button></div>");
-                        const btnDelete = $("<div><button type='button' class='btn btn-delete-installment' style='margin-left:5px' title='Excluir'><i class='fa fa-times'></i></button></div>");
+                        const btnEdit = $(
+                            "<div><button type='button' rel='tooltip' title='Editar Parcela' class='btn btn-edit-installment'><i class='fa fa-edit'></i></button></div>"
+                            );
+                        const btnDelete = $(
+                            "<div><button type='button' class='btn btn-delete-installment' style='margin-left:5px' title='Excluir'><i class='fa fa-times'></i></button></div>"
+                            );
 
                         btnEdit.find('button').prop('disabled', hasSentRequest);
                         btnDelete.find('button').prop('disabled', hasSentRequest);
@@ -1167,11 +1176,11 @@
             const isContractedBySupplies = $(this).val() === "1";
 
             // muda label
-            const supplierSelect = $suppliersBlock.find('select.select2-me');
+            const supplierSelect = $suppliersBlock.find('select');
             const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
 
             supplierSelect.siblings('label[for="' + supplierSelect.attr('name') + '"]').text(newLabel);
-            supplierSelect.data('rule-required', isContractedBySupplies);
+            supplierSelect.data('rule-required', !isContractedBySupplies);
 
             // desabilita pagamento
             $paymentBlock
@@ -1379,6 +1388,38 @@
         }
 
         $installmentsTable.on('draw.dt', calculateQtdInstallmentsToSend);
+
+        const $isPrePaid = $('#contract-is-prepaid');
+        const $paymentInfoDescription = $('#payment-info-description');
+        const $paymentMethod = $('#payment-method');
+        const $payday = $('#contract-payday');
+
+        $isPrePaid.on('change', function () {
+            const isPrePaid = $(this).val() === "1";
+            $contractAmount.data('rule-required', isPrePaid);
+            $paymentMethod.data('rule-required', isPrePaid);
+            $payday.data('rule-required', isPrePaid);
+            $paymentInfoDescription.data('rule-required', isPrePaid);
+            $recurrence.data('rule-required', isPrePaid);
+            $inputStartDate.data('rule-required', isPrePaid);
+            $inputEndDate.data('rule-required', isPrePaid);
+
+            if (!isPrePaid) {
+                $contractAmount.closest('.form-group').removeClass('has-error');
+                $paymentMethod.closest('.form-group').removeClass('has-error');
+                $payday.closest('.form-group').removeClass('has-error');
+                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
+                $recurrence.closest('.form-group').removeClass('has-error');
+                $inputStartDate.closest('.form-group').removeClass('has-error');
+                $inputEndDate.closest('.form-group').removeClass('has-error');
+
+                $paymentBlock.find('.help-block').remove();
+            }
+        });
+
+        if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
+            $isPrePaid.filter(':selected').trigger('change.select2');
+        }
 
         // btns
         const $btnSubmitRequest = $('.btn-submit-request');
