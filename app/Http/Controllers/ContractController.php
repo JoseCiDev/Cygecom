@@ -4,20 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Enums\PurchaseRequestStatus;
 use App\Models\{Company, CostCenter, PurchaseRequest};
-use App\Providers\{PurchaseRequestService, ValidatorService};
+use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 use Exception;
 use Illuminate\Http\{RedirectResponse, Request};
 
 class ContractController extends Controller
 {
-    private $validatorService;
-
-    private $purchaseRequestService;
-
-    public function __construct(ValidatorService $validatorService, PurchaseRequestService $purchaseRequestService)
-    {
-        $this->validatorService       = $validatorService;
-        $this->purchaseRequestService = $purchaseRequestService;
+    public function __construct(
+        private ValidatorService $validatorService,
+        private PurchaseRequestService $purchaseRequestService,
+        private EmailService $emailService
+    ) {
     }
 
     public function registerContract(Request $request): RedirectResponse
@@ -112,6 +109,7 @@ class ContractController extends Controller
 
     public function contractDetails(int $id)
     {
+        $sendEmail = false;
         $allRequestStatus = PurchaseRequestStatus::cases();
 
         try {
@@ -132,12 +130,18 @@ class ContractController extends Controller
             if ($isAuthorized) {
                 $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
                 $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
+                $sendEmail = true;
             }
 
             $contract = $this->purchaseRequestService->purchaseRequestById($id);
             if (!$contract) {
                 return throw new Exception('Não foi possível acessar essa solicitação.');
             }
+
+            if ($sendEmail) {
+                $this->emailService->sendResponsibleAssignedEmail($purchaseRequest);
+            }
+
             return view('components.supplies.contract-content.contract-details', ['contract' => $contract, 'allRequestStatus' => $allRequestStatus]);
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors([$error->getMessage()]);

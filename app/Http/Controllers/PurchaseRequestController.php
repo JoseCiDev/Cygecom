@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PurchaseRequestStatus;
 use App\Enums\PurchaseRequestType;
+use App\Mail\GenericEmail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\PurchaseRequest;
+use App\Providers\EmailService;
 use App\Providers\PurchaseRequestService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -11,11 +15,8 @@ use Illuminate\Http\Request;
 
 class PurchaseRequestController extends Controller
 {
-    private $purchaseRequestService;
-
-    public function __construct(PurchaseRequestService $purchaseRequestService)
+    public function __construct(private PurchaseRequestService $purchaseRequestService, private EmailService $emailService)
     {
-        $this->purchaseRequestService = $purchaseRequestService;
     }
 
     public function index()
@@ -85,6 +86,7 @@ class PurchaseRequestController extends Controller
 
     public function updateStatusFromSupplies(Request $request, int $id): RedirectResponse
     {
+        $sendEmail = true;
         $data = $request->all();
         try {
             $purchaseRequest = PurchaseRequest::find($id);
@@ -103,7 +105,17 @@ class PurchaseRequestController extends Controller
                 throw new Exception('Não autorizado.');
             }
 
-            $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
+            $purchaseRequest = $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
+
+            $approver = $purchaseRequest->user->approver;
+            $isPendingStatus = $purchaseRequest->status->value === PurchaseRequestStatus::PENDENTE->value;
+            if ($approver && $sendEmail && $isPendingStatus) {
+                $this->emailService->sendPendingApprovalEmail($purchaseRequest, $approver);
+            }
+
+            if ($sendEmail) {
+                $this->emailService->sendStatusUpdatedEmail($purchaseRequest);
+            }
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
         }
