@@ -7,6 +7,7 @@ use App\Models\{Company, CostCenter, PurchaseRequest};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 use Exception;
 use Illuminate\Http\{RedirectResponse, Request};
+use Symfony\Component\Mailer\Exception\TransportException;
 
 class ProductController extends Controller
 {
@@ -104,41 +105,42 @@ class ProductController extends Controller
 
     public function productDetails(int $id)
     {
-        $sendEmail = false;
         $allRequestStatus = PurchaseRequestStatus::cases();
 
-        try {
-            $purchaseRequest = PurchaseRequest::find($id);
+        $purchaseRequest = PurchaseRequest::find($id);
 
-            $isAdmin = auth()->user()->profile->name === 'admin';
-            $isSuprimHkm = auth()->user()->profile->name === 'suprimentos_hkm';
-            $isSuprimInp = auth()->user()->profile->name === 'suprimentos_inp';
-
-            $isDeletedRequest = $purchaseRequest->deleted_at !== null;
-
-            $existSuppliesUserId = (bool)$purchaseRequest->supplies_user_id;
-            $existSuppliesMarkedAt = (bool)$purchaseRequest->responsibility_marked_at;
-            $alreadyExistSuppliesUser = $existSuppliesUserId && $existSuppliesMarkedAt;
-
-            $isAuthorized = ($isAdmin || $isSuprimHkm || $isSuprimInp) && !$isDeletedRequest && !$alreadyExistSuppliesUser;
-            if ($isAuthorized) {
-                $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
-                $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
-                $sendEmail = true;
-            }
-
-            $product = $this->purchaseRequestService->purchaseRequestById($id);
-            if (!$product) {
-                return throw new Exception('Não foi possível acessar essa solicitação.');
-            }
-
-            if ($sendEmail) {
-                $this->emailService->sendResponsibleAssignedEmail($purchaseRequest);
-            }
-
-            return view('components.supplies.product-content.product-details', ['product' => $product, 'allRequestStatus' => $allRequestStatus]);
-        } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
+        if (!$purchaseRequest || $purchaseRequest->deleted_at !== null) {
+            throw new Exception('Não foi possível acessar essa solicitação.');
         }
+
+        if ($this->isAuthorizedToUpdate($purchaseRequest)) {
+            $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
+            $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
+
+            try {
+                $this->emailService->sendResponsibleAssignedEmail($purchaseRequest);
+            } catch (TransportException $transportException) {
+                // Tratar erro de envio de email aqui, se necessário.
+            }
+        }
+
+        $product = $this->purchaseRequestService->purchaseRequestById($id);
+
+        if (!$product) {
+            return throw new Exception('Não foi possível acessar essa solicitação.');
+        }
+
+        return view('components.supplies.product-content.product-details', ['product' => $product, 'allRequestStatus' => $allRequestStatus]);
+    }
+
+    private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool
+    {
+        $allowedProfiles = ['admin', 'suprimentos_hkm', 'suprimentos_inp'];
+        $userProfile = auth()->user()->profile->name;
+
+        $existSuppliesUserId = (bool) $purchaseRequest->supplies_user_id;
+        $existSuppliesMarkedAt = (bool) $purchaseRequest->responsibility_marked_at;
+
+        return in_array($userProfile, $allowedProfiles) && !$existSuppliesUserId && !$existSuppliesMarkedAt && !auth()->user()->purchaseRequest->contains($purchaseRequest);
     }
 }

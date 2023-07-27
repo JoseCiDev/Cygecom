@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Enums\PurchaseRequestStatus;
 use App\Enums\PurchaseRequestType;
-use App\Mail\GenericEmail;
-use Illuminate\Support\Facades\Mail;
 use App\Models\PurchaseRequest;
 use App\Providers\EmailService;
 use App\Providers\PurchaseRequestService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\Mailer\Exception\TransportException;
 
 class PurchaseRequestController extends Controller
 {
@@ -89,32 +88,26 @@ class PurchaseRequestController extends Controller
         $sendEmail = true;
         $data = $request->all();
         try {
-            $purchaseRequest = PurchaseRequest::find($id);
-            $isDeletedRequest = $purchaseRequest->deleted_at !== null;
-            $isOwnPurchaseRequest = auth()->user()->purchaseRequest->find($id);
+            $purchaseRequest = $this->validatePurchaseRequest($id);
 
-            if (!$purchaseRequest || $isDeletedRequest) {
-                throw new Exception('Não foi possível encontrar essa solicitação.');
-            }
-
-            $allowedProfiles = ['admin', 'suprimentos_hkm', 'suprimentos_inp'];
-            $isAllowedProfile = in_array(auth()->user()->profile->name, $allowedProfiles);
-
-            $isAuthorized = $isAllowedProfile && !$isOwnPurchaseRequest;
-            if (!$isAuthorized) {
-                throw new Exception('Não autorizado.');
-            }
+            $this->authorizePurchaseRequest($purchaseRequest);
 
             $purchaseRequest = $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
 
             $approver = $purchaseRequest->user->approver;
             $isPendingStatus = $purchaseRequest->status->value === PurchaseRequestStatus::PENDENTE->value;
-            if ($approver && $sendEmail && $isPendingStatus) {
-                $this->emailService->sendPendingApprovalEmail($purchaseRequest, $approver);
-            }
+            $mailFailed = false;
 
-            if ($sendEmail) {
-                $this->emailService->sendStatusUpdatedEmail($purchaseRequest);
+            try {
+                if ($approver && $sendEmail && $isPendingStatus) {
+                    $this->emailService->sendPendingApprovalEmail($purchaseRequest, $approver);
+                }
+
+                if ($sendEmail) {
+                    $this->emailService->sendStatusUpdatedEmail($purchaseRequest);
+                }
+            } catch (TransportException $transportException) {
+                $mailFailed = true;
             }
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
@@ -122,6 +115,30 @@ class PurchaseRequestController extends Controller
 
         session()->flash('success', "Solicitação de serviço atualizada com sucesso!");
 
+        if ($mailFailed) {
+            return back()->withInput()->withErrors('Desculpe, estamos com problemas no envio de e-mail. Não foi possível enviar a notificação. ');
+        }
+
         return back();
+    }
+
+    private function validatePurchaseRequest(int $id): PurchaseRequest
+    {
+        $purchaseRequest = PurchaseRequest::find($id);
+        if (!$purchaseRequest || $purchaseRequest->deleted_at !== null) {
+            throw new Exception('Não foi possível encontrar essa solicitação.');
+        }
+        return $purchaseRequest;
+    }
+
+    private function authorizePurchaseRequest(PurchaseRequest $purchaseRequest): void
+    {
+        $allowedProfiles = ['admin', 'suprimentos_hkm', 'suprimentos_inp'];
+        $isAllowedProfile = in_array(auth()->user()->profile->name, $allowedProfiles);
+        $isOwnPurchaseRequest = auth()->user()->purchaseRequest->find($purchaseRequest->id);
+
+        if (!$isAllowedProfile || $isOwnPurchaseRequest) {
+            throw new Exception('Não autorizado.');
+        }
     }
 }

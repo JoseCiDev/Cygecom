@@ -7,6 +7,7 @@ use App\Models\{Company, CostCenter, PurchaseRequest};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 use Exception;
 use Illuminate\Http\{RedirectResponse, Request};
+use Symfony\Component\Mailer\Exception\TransportException;
 
 class ContractController extends Controller
 {
@@ -109,42 +110,42 @@ class ContractController extends Controller
 
     public function contractDetails(int $id)
     {
-        $sendEmail = false;
         $allRequestStatus = PurchaseRequestStatus::cases();
 
-        try {
-            $purchaseRequest = PurchaseRequest::find($id);
-            $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
+        $purchaseRequest = PurchaseRequest::find($id);
 
-            $isAdmin = auth()->user()->profile->name === 'admin';
-            $isSuprimHkm = auth()->user()->profile->name === 'suprimentos_hkm';
-            $isSuprimInp = auth()->user()->profile->name === 'suprimentos_inp';
-
-            $isDeletedRequest = $purchaseRequest->deleted_at !== null;
-
-            $existSuppliesUserId = (bool)$purchaseRequest->supplies_user_id;
-            $existSuppliesMarkedAt = (bool)$purchaseRequest->responsibility_marked_at;
-            $alreadyExistSuppliesUser = $existSuppliesUserId && $existSuppliesMarkedAt;
-
-            $isAuthorized = ($isAdmin || $isSuprimHkm || $isSuprimInp) && !$isDeletedRequest && !$alreadyExistSuppliesUser && !$isOwnPurchaseRequest;
-            if ($isAuthorized) {
-                $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
-                $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
-                $sendEmail = true;
-            }
-
-            $contract = $this->purchaseRequestService->purchaseRequestById($id);
-            if (!$contract) {
-                return throw new Exception('Não foi possível acessar essa solicitação.');
-            }
-
-            if ($sendEmail) {
-                $this->emailService->sendResponsibleAssignedEmail($purchaseRequest);
-            }
-
-            return view('components.supplies.contract-content.contract-details', ['contract' => $contract, 'allRequestStatus' => $allRequestStatus]);
-        } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
+        if (!$purchaseRequest || $purchaseRequest->deleted_at !== null) {
+            throw new Exception('Não foi possível acessar essa solicitação.');
         }
+
+        if ($this->isAuthorizedToUpdate($purchaseRequest)) {
+            $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
+            $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
+
+            try {
+                $this->emailService->sendResponsibleAssignedEmail($purchaseRequest);
+            } catch (TransportException $transportException) {
+                // Tratar erro de envio de email aqui, se necessário.
+            }
+        }
+
+        $contract = $this->purchaseRequestService->purchaseRequestById($id);
+
+        if (!$contract) {
+            return throw new Exception('Não foi possível acessar essa solicitação.');
+        }
+
+        return view('components.supplies.contract-content.contract-details', ['contract' => $contract, 'allRequestStatus' => $allRequestStatus]);
+    }
+
+    private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool
+    {
+        $allowedProfiles = ['admin', 'suprimentos_hkm', 'suprimentos_inp'];
+        $userProfile = auth()->user()->profile->name;
+
+        $existSuppliesUserId = (bool) $purchaseRequest->supplies_user_id;
+        $existSuppliesMarkedAt = (bool) $purchaseRequest->responsibility_marked_at;
+
+        return in_array($userProfile, $allowedProfiles) && !$existSuppliesUserId && !$existSuppliesMarkedAt && !auth()->user()->purchaseRequest->contains($purchaseRequest);
     }
 }
