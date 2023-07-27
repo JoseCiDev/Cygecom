@@ -45,8 +45,6 @@ class ContractController extends Controller
             // MUDAR
             DB::beginTransaction();
 
-            $purchaseRequest = $this->purchaseRequestService->registerContractRequest($data, $files);
-
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
                 $msg = "Solicitação de contrato criada e enviada ao setor de suprimentos responsável!";
