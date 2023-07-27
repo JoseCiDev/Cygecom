@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Mail\GenericEmail;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
 
 class EmailService extends ServiceProvider
@@ -20,8 +19,8 @@ class EmailService extends ServiceProvider
             . "E-mail do responsável: " . $purchaseRequest->suppliesUser->email . '. '
             . "Telefone/celular do responsável: " . $purchaseRequest->suppliesUser->person->phone->first()->number . '. ';
 
-        $email = new GenericEmail($subject, $message);
-        Mail::to($approver->email)->send($email);
+        $email = new GenericEmail($subject, $message, $approver->email);
+        $email->sendMail();
     }
 
     public function sendStatusUpdatedEmail($purchaseRequest)
@@ -29,8 +28,8 @@ class EmailService extends ServiceProvider
         $subject = "Solicitação de " . $purchaseRequest->type->label() . " nº " . $purchaseRequest->id . ' - Status atualizado para ' . $purchaseRequest->status->label();
         $message = "Olá, " . $purchaseRequest->user->person->name . "! Sua solicitação de " . $purchaseRequest->type->label() . " teve o status atualizado para [" . $purchaseRequest->status->label() . '].';
 
-        $email = new GenericEmail($subject, $message);
-        Mail::to($purchaseRequest->user->email)->send($email);
+        $email = new GenericEmail($subject, $message, $purchaseRequest->user->email);
+        $email->sendMail();
     }
 
     public function sendResponsibleAssignedEmail($purchaseRequest)
@@ -40,7 +39,7 @@ class EmailService extends ServiceProvider
             . "Sua solicitação de " . $purchaseRequest->type->label() . " nº " . $purchaseRequest->id . " foi atualizada. "
             . "Foi atribuído um responsável pelo processo.";
 
-        $email = new GenericEmail($subject, $message);
-        Mail::to($purchaseRequest->user->email)->send($email);
+        $email = new GenericEmail($subject, $message, $purchaseRequest->user->email);
+        $email->sendMail();
     }
 }

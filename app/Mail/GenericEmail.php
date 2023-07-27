@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
 
 class GenericEmail extends Mailable
 {
@@ -12,14 +13,20 @@ class GenericEmail extends Mailable
     use SerializesModels;
 
     protected $body;
-    public function __construct(string $subject, string $body)
+    protected $recipients;
+    public function __construct(string $subject, string $body, $recipients)
     {
         $this->body = $body;
-        $this->subject($subject)->from('admin@essentia.com.br', 'Administrador');
+        $this->subject($subject);
+        $this->recipients = config('app.env') === 'production' ? $recipients : auth()->user()->email;
     }
-
     public function build()
     {
         return $this->view('mails.generic')->with(['body' => $this->body]);
+    }
+
+    public function sendMail()
+    {
+        Mail::to($this->recipients)->send($this);
     }
 }
