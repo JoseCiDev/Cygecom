@@ -120,21 +120,23 @@
             @foreach ($purchaseRequest->costCenterApportionment as $index => $apportionment)
                 <div class="row cost-center-container">
                     <div class="col-sm-6">
-                        <label style="display:block;" for="textfield" class="control-label">Centro de custo da
-                            despesa</label>
-                        <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
-                            class='select2-me @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                            required data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
-                            <option value=""></option>
-                            @foreach ($costCenters as $costCenter)
-                                @php
-                                    $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
-                                @endphp
-                                <option value="{{ $costCenter->id }}" {{ $isApportionmentSelect ? 'selected' : '' }}>
-                                    {{ $costCenter->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="form-group">
+                            <label style="display:block;" for="textfield" class="control-label">Centro de custo da
+                                despesa</label>
+                            <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
+                                class='select2-me @error('cost_center_id_{{ $index }}') is-invalid @enderror'
+                                required data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
+                                <option value=""></option>
+                                @foreach ($costCenters as $costCenter)
+                                    @php
+                                        $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
+                                    @endphp
+                                    <option value="{{ $costCenter->id }}" {{ $isApportionmentSelect ? 'selected' : '' }}>
+                                        {{ $costCenter->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
 
                     <div class="col-sm-2">
@@ -180,26 +182,28 @@
         @else
             <div class="row cost-center-container">
                 <div class="col-sm-6">
-                    <label for="textfield" class="control-label" style="display:block">
-                        Centro de custo da despesa
-                    </label>
-                    <select style="width:100%" name="cost_center_apportionments[0][cost_center_id]"
-                        class='select2-me
-                        @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                        required data-rule-required="true" placeholder="Ex: Almoxarifado">
-                        <option value="" disalbed></option>
-                        @foreach ($costCenters as $costCenter)
-                            @php
-                                $isUserCostCenter = isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id;
-                                $costCenterCompanyName = $costCenter->company->corporate_name;
-                                $costCenterName = $costCenter->name;
-                                $costCenterSeniorCode = $costCenter->senior_code;
-                            @endphp
-                            <option value="{{ $costCenter->id }}" {{ $isUserCostCenter ? 'selected' : '' }}>
-                                {{ $costCenterCompanyName . ' - ' . $costCenterName . ' - ' . $costCenterSeniorCode }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="form-group">
+                        <label for="textfield" class="control-label" style="display:block">
+                            Centro de custo da despesa
+                        </label>
+                        <select style="width:100%" name="cost_center_apportionments[0][cost_center_id]"
+                            class='select2-me
+                            @error('cost_center_id_{{ $index }}') is-invalid @enderror'
+                            required data-rule-required="true" placeholder="Ex: Almoxarifado">
+                            <option value="" disalbed></option>
+                            @foreach ($costCenters as $costCenter)
+                                @php
+                                    $isUserCostCenter = isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id;
+                                    $costCenterCompanyName = $costCenter->company->corporate_name;
+                                    $costCenterName = $costCenter->name;
+                                    $costCenterSeniorCode = $costCenter->senior_code;
+                                @endphp
+                                <option value="{{ $costCenter->id }}" {{ $isUserCostCenter ? 'selected' : '' }}>
+                                    {{ $costCenterCompanyName . ' - ' . $costCenterName . ' - ' . $costCenterSeniorCode }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
 
                 <div class="col-sm-2">

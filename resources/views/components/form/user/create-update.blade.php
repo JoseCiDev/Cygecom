@@ -77,7 +77,7 @@
                     @error('number')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
-                    <div class="form-group" style="margin: 5px 0px -10px 0px;">
+                    <div style="margin: 5px 0px -10px 0px;">
                         {{-- PESSOAL --}}
                         <input
                             @if (isset($user)) @if ($user['person']['phone']['phone_type'] === 'personal') {{ 'checked' }} @endif
@@ -187,7 +187,7 @@
                     <input @checked(isset($user) && $user['profile']['name'] === 'suprimentos_inp') class="icheck-me"
                         type="radio" name="profile_type" id="profile_suprimentos_inp" value="suprimentos_inp" data-skin="minimal" >
                     <label class="form-check-label" for="personal">Suprimentos INP</label>
-                    
+
                     @error('approve_limit')
                         <p><strong>{{ $message }}</strong></p>
                     @enderror

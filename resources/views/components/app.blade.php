@@ -110,7 +110,7 @@
         $(() => {
             // required style
             $('[data-rule-required]').each(function() {
-                const $label = $('label[for="' + $(this).attr('id') + '"]');
+                const $label = $(this).closest('.form-group').find('label').first();
                 $label.append('<sup style="color:red">*</sup>');
             });
         });
