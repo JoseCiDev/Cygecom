@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Enums\CompanyGroup;
 use App\Models\{Address, Phone, Supplier};
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
-class SuppplierService extends ServiceProvider
+class SupplierService extends ServiceProvider
 {
     /**
      * @return Supplier Retorna fornecedor com suas relações, exceto deletados.
@@ -18,11 +20,11 @@ class SuppplierService extends ServiceProvider
     }
 
     /**
-     * @abstract Cria endereço, telefone e fornecedor com suas relações.
+     * @abstract Cria e retorna fornecedor com endereço e telefone.
      */
-    public function registerSupplier(array $data): void
+    public function registerSupplier(array $data)
     {
-        DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data) {
             $addressId = $this->createAddress($data);
             $phoneId   = $this->createPhone($data);
             $supplier  = new Supplier();
@@ -30,6 +32,7 @@ class SuppplierService extends ServiceProvider
             $supplier->address_id = $addressId;
             $supplier->phone_id   = $phoneId;
             $supplier->save();
+            return $supplier;
         });
     }
 
@@ -55,6 +58,16 @@ class SuppplierService extends ServiceProvider
         $supplier->deleted_at = Carbon::now();
         $supplier->deleted_by = auth()->user()->id;
         $supplier->save();
+    }
+
+    public function filterRequestByCompanyGroup(Collection $requests, CompanyGroup $companyGroup)
+    {
+        return $requests->filter(function ($item) use ($companyGroup) {
+            $costCenterApportionments = $item->CostCenterApportionment;
+            return $costCenterApportionments->contains(function ($apportionment) use ($companyGroup) {
+                return $apportionment->costCenter->Company->group->value === $companyGroup->value;
+            });
+        });
     }
 
     private function createPhone(array $data): int

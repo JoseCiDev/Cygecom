@@ -10,25 +10,28 @@ class PopulateCompanies extends Seeder
     public function run(): void
     {
         $companies = [
-            ['corporate_name' => 'HKM FARMACIA DE MANIPULACAO LTDA', 'cnpj' => '12.345.678/0001-00'],
-            ['corporate_name' => 'INSTITUTO HADI', 'cnpj' => '12.345.678/0001-01'],
-            ['corporate_name' => 'SMART MATRIZ', 'cnpj' => '12.345.678/0001-02'],
-            ['corporate_name' => 'SMART FILIA 1', 'cnpj' => '12.345.678/0001-03'],
-            ['corporate_name' => 'SMART FILIA 2', 'cnpj' => '12.345.678/0001-04'],
-            ['corporate_name' => 'OASIS IMPORTAÇÃO E EXPORTAÇÃO DE INSUMOS FARMACÊUTICOS', 'cnpj' => '12.345.678/0001-05'],
-            ['corporate_name' => 'SHF PARTICIPAÇÕES', 'cnpj' => '12.345.678/0001-06'],
-            ['corporate_name' => 'GHN COMÉRCIO VAREJISTA EM E-COMMERCE LTDA', 'cnpj' => '12.345.678/0001-07'],
-            ['corporate_name' => 'KLQ SOLUÇÕES TECNOLÓGICAS', 'cnpj' => '12.345.678/0001-08'],
-            ['corporate_name' => 'JML ENTERPRISES BRASIL', 'cnpj' => '12.345.678/0001-09'],
-            ['corporate_name' => 'MTN EMPREENDIMENTOS LTDA', 'cnpj' => '12.345.678/0001-10'],
-            ['corporate_name' => 'RSHD CENTRO DE EVENTOS', 'cnpj' => '12.345.678/0001-18'],
-            ['corporate_name' => 'NOORSKIN INDÚSTRIA DE COSMÉTICOS', 'cnpj' => '12.345.678/0001-11'],
-            ['corporate_name' => 'CGE ADMINISTRADORA DE BENS LTDA', 'cnpj' => '12.345.678/0001-12'],
-            ['corporate_name' => 'INP MATRIZ', 'cnpj' => '12.345.678/0001-13'],
-            ['corporate_name' => 'INP FILIAL PALHOÇA ATRIUM', 'cnpj' => '12.345.678/0001-14'],
-            ['corporate_name' => 'INP FILIAL SP (QG)', 'cnpj' => '12.345.678/0001-15'],
-            ['corporate_name' => 'INP FILIAL SÃO JOSÉ - ELAN VITAE', 'cnpj' => '12.345.678/0001-16'],
-            ['corporate_name' => 'INP MATRIZ SP - CLÍNICA', 'cnpj' => '12.345.678/0001-17'],
+            //suprimentos_hkm
+            ['corporate_name' => 'SMART MATRIZ', 'cnpj' => '11847299000130', 'group' => 'hkm'],
+            ['corporate_name' => 'SMART FILIA 1', 'cnpj' => '11847299000211', 'group' => 'hkm'],
+            ['corporate_name' => 'SMART FILIA 2', 'cnpj' => '11847299000300', 'group' => 'hkm'],
+            ['corporate_name' => 'HKM  FARMÁCIA DE MANIPULAÇÃO', 'cnpj' => '06354562000110', 'group' => 'hkm'],
+            ['corporate_name' => 'KLQ SOLUÇÕES TECNOLÓGICAS', 'cnpj' => '134600406000127', 'group' => 'hkm'],
+            ['corporate_name' => 'JML ENTERPRISES BRASIL', 'cnpj' => '41869107000158', 'group' => 'hkm'],
+            ['corporate_name' => 'RSHD CENTRO DE EVENTOS', 'cnpj' => '49307303000140', 'group' => 'hkm'],
+            ['corporate_name' => 'CGE ADMINISTRADORA DE BENS LTDA', 'cnpj' => '49582758000174', 'group' => 'hkm'],
+            ['corporate_name' => 'SHF PARTICIPAÇÕES', 'cnpj' => '26616618000162', 'group' => 'hkm'],
+            ['corporate_name' => 'INSTITUTO HADI', 'cnpj' => '10242045000126', 'group' => 'hkm'],
+            ['corporate_name' => 'MTN EMPREENDIMENTOS LTDA', 'cnpj' => '43659893000194', 'group' => 'hkm'],
+
+            //suprimentos_inp
+            ['corporate_name' => 'INP MATRIZ', 'cnpj' => '17979609000157', 'group' => 'inp'],
+            ['corporate_name' => 'INP FILIAL PALHOÇA ATRIUM', 'cnpj' => '17979609000238', 'group' => 'inp'],
+            ['corporate_name' => 'INP FILIAL SP (QG)', 'cnpj' => '17979609000319', 'group' => 'inp'],
+            ['corporate_name' => 'INP FILIAL SÃO JOSÉ - ELAN VITAE', 'cnpj' => '17979609000408', 'group' => 'inp'],
+            ['corporate_name' => 'INP FILIAL SP - CLÍNICA', 'cnpj' => '17979609000580', 'group' => 'inp'],
+            ['corporate_name' => 'GHN COMÉRCIO VAREJISTA EM E-COMMERCE LTDA', 'cnpj' => '32295954000165', 'group' => 'inp'],
+            ['corporate_name' => 'NOORSKIN INDÚSTRIA DE COSMÉTICOS LTDA', 'cnpj' => '49315512000109', 'group' => 'inp'],
+            ['corporate_name' => 'OASIS IMPORTAÇÃO E EXPORTAÇÃO DE INSUMOS FARMACEUTICOS', 'cnpj' => '24681127000170', 'group' => 'inp'],
         ];
 
         DB::table('companies')->insert($companies);

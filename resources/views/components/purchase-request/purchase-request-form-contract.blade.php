@@ -633,7 +633,7 @@
 
 </div>
 
-<script src="{{ asset('js/modal-supplier-register/select2-custom.js') }}"></script>
+<script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
@@ -1182,17 +1182,5 @@
                 console.error(error);
             }
         });
-
-        // const btnModalSupplierRegister = $("#btn-modal-supplier-register");
-        // const elementsWithSupplierID = $('select[name*="supplier_id"]');
-        // elementsWithSupplierID.each(function () {
-        //     $(this).select2({
-        //         formatNoMatches: function () {
-        //             return `<button onclick="$('#btn-modal-supplier-register').click();" type='button' title='Registrar novo fornecedor' class='btn btn-primary'" >
-        //                         <i class='fa fa-plus'></i> Registar novo fornecedor
-        //                     </button>`
-        //         },
-        //     });
-        // });
     });
 </script>

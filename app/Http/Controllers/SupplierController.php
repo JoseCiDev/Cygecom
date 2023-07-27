@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
-use App\Providers\{SuppplierService, ValidatorService};
+use App\Providers\{SupplierService, ValidatorService};
 use Exception;
 use Illuminate\Http\Request;
 
@@ -13,7 +13,7 @@ class SupplierController extends Controller
 
     private $supplierService;
 
-    public function __construct(ValidatorService $validatorService, SuppplierService $supplierService)
+    public function __construct(ValidatorService $validatorService, SupplierService $supplierService)
     {
         $this->validatorService = $validatorService;
         $this->supplierService  = $supplierService;
@@ -65,7 +65,6 @@ class SupplierController extends Controller
     public function registerAPI(Request $request)
     {
         $data = $request->all();
-
         $validator = $this->validatorService->supplier($data);
 
         if ($validator->fails()) {
@@ -73,12 +72,17 @@ class SupplierController extends Controller
         }
 
         try {
-            $this->supplierService->registerSupplier($data);
+            $supplier = $this->supplierService->registerSupplier($data);
         } catch (Exception $error) {
             return response()->json(['error' => 'Não foi possível fazer o registro no banco de dados.'], 500);
         }
 
-        return response()->json(['message' => 'Fornecedor cadastrado com sucesso!', 'cpf_cnpj' => $data['cpf_cnpj']], 200);
+        return response()->json([
+            'message' => 'Fornecedor cadastrado com sucesso!',
+            'cpf_cnpj' => $data['cpf_cnpj'],
+            'id' => $supplier->id,
+            'corporate_name' => $supplier->corporate_name
+        ], 200);
     }
 
     public function update(Request $request, int $id)
