@@ -32,7 +32,8 @@
     <!-- Color CSS -->
     <link rel="stylesheet" href="{{ asset('css/themes.css') }}">
 
-    <link rel="{{ asset('apple-touch-icon-precomposed') }}" href="{{ asset('img/apple-touch-icon-precomposed.png') }}" />
+    <link rel="{{ asset('apple-touch-icon-precomposed') }}"
+        href="{{ asset('img/apple-touch-icon-precomposed.png') }}" />
 
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies.css') }}">
@@ -101,16 +102,14 @@
     <script src="{{ asset('js/plugins/validation/additional-methods.min.js') }}"></script>
 
     <!-- MOMENT JS -->
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"
-        integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg==" crossorigin="anonymous"
-        referrerpolicy="no-referrer">
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"
+        integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
         $(() => {
             // required style
-            $('[data-rule-required]').each(function () {
+            $('[data-rule-required]').each(function() {
                 const $label = $('label[for="' + $(this).attr('id') + '"]');
                 $label.append('<sup style="color:red">*</sup>');
             });
@@ -121,10 +120,13 @@
     <script src="https://unpkg.com/imask"></script>
     <script>
         $.fn.imask = function(options) {
-            return this.each(function() {
-                const element = this;
-                new IMask(element, options);
-            });
+            const maskedElements = this.map((_, input) => new IMask(input, options)).toArray();
+
+            if (maskedElements.length === 1) {
+                return maskedElements[0];
+            }
+
+            return maskedElements;
         }
     </script>
 
@@ -178,7 +180,9 @@
                             @endif
                         </ul>
                     </li>
-                    @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_inp' || auth()->user()->profile->name === 'suprimentos_hkm')
+                    @if (auth()->user()->profile->name === 'admin' ||
+                            auth()->user()->profile->name === 'suprimentos_inp' ||
+                            auth()->user()->profile->name === 'suprimentos_hkm')
                         <li>
                             <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
                                 <span>SUPRIMENTOS</span>

@@ -97,6 +97,7 @@ class ServiceController extends Controller
 
             $isAdmin = auth()->user()->profile->name === 'admin';
             $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
+
             if (!$isOwnPurchaseRequest && !$isAdmin) {
                 throw new Exception('Não autorizado. Não foi possível acessar essa solicitação.');
             }
@@ -105,6 +106,7 @@ class ServiceController extends Controller
             $isDeleted = $purchaseRequest->deleted_at !== null;
 
             $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
+
             if (!$isAuthorized) {
                 throw new Exception('Não foi possível acessar essa solicitação.');
             }

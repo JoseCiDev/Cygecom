@@ -1,15 +1,26 @@
 @php
+    use App\Enums\PurchaseRequestStatus;
+
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
     $isCopy ??= null;
     $contractInstallments = $purchaseRequest?->contract?->installments;
     $contractPayday = $purchaseRequest?->contract?->payday;
     $purchaseRequestContractAmount = $purchaseRequest?->contract?->amount === null ? null : (float) $purchaseRequest?->contract?->amount;
+    $recurrence = $purchaseRequest?->contract?->recurrence ?? null;
+
+    // verifica status para desabilitar campos para o usuário
+    $requestAlreadySent = $purchaseRequest?->status !== PurchaseRequestStatus::RASCUNHO;
+    // ve se tem request e não foi enviada
+    $hasRequestNotSent = $issetPurchaseRequest && !$requestAlreadySent;
+    // ve se tem request ja enviada e n é copia
+    $hasSentRequest = $issetPurchaseRequest && $requestAlreadySent && !$isCopy;
 @endphp
 
 <style>
     #contract-title {
-        border: none;
+        border: 1px solid rgb(195, 195, 195);
+        padding: 18px 0px 23px 10px;
     }
 
     #contract-title::placeholder {
@@ -18,7 +29,6 @@
 
     #contract-title {
         font-size: 20px;
-        padding-left: 0px;
     }
 
     .label-contract-title {
@@ -40,22 +50,30 @@
     }
 </style>
 
-<x-ModalSupplierRegister />
-
 <div class="row">
 
     <div class="col-sm-6">
-        <h2>
-            {{ isset($purchaseRequest) ? 'Editar solicitação' : 'Nova solicitação' }}
-        </h2>
+        @if ($hasRequestNotSent)
+            <h2>Editar Solicitação</h2>
+        @elseif ($hasSentRequest)
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h5>
+                    <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
+                </h5>
+            </div>
+            <h2>Visualizar Solicitação</h2>
+        @else
+            <h2>Nova Solicitação</h2>
+        @endif
     </div>
 
-    @if (isset($purchaseRequest))
+    @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-sm-6 pull-right">
             <x-modalDelete />
             <button data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - ID ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip" title="Excluir"
-                class="btn btn-danger pull-right" style="margin-right: 15px">
+                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
+                title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
                 Excluir solicitação
             </button>
         </div>
@@ -82,12 +100,12 @@
 
         {{-- NOME CONTRATO --}}
         <div class="row contract-title-container" style="margin-bottom:5px; margin-top:18px;">
-            <div class="col-sm-8 contract-title">
+            <div class="col-sm-6 contract-title">
                 <div class="form-group">
                     <label for="contract-title" class="control-label label-contract-title">Nome do contrato: </label>
                     <input type="text" id="contract-title" name="contract[name]"
-                        placeholder="Digite aqui um nome para este contrato..." class="form-control"
-                        data-rule-required="true" minlength="15"
+                        placeholder="Digite aqui um nome para este contrato... Ex: Contrato Work DB - 07/23 até 07/24"
+                        class="form-control" data-rule-required="true" minlength="15"
                         value="@if (isset($purchaseRequest->contract) && $purchaseRequest->contract->name) {{ $purchaseRequest->contract->name }} @endif">
                 </div>
             </div>
@@ -432,16 +450,13 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label for="recurrence" class="control-label">Recorrência</label>
-                            @php
-                                $recurrence = isset($purchaseRequest->contract) ? $purchaseRequest->contract->recurrence : null;
-                            @endphp
                             <select name="recurrence" id="recurrence" class="select2-me recurrence"
                                 style="width: 100%; padding-top: 2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="unique" {{ $recurrence === 'unique' ? 'selected' : '' }}>ÚNICA</option>
-                                <option value="monthly" {{ $recurrence === 'monthly' ? 'selected' : '' }}>MENSAL
+                                <option value="unique" {{ $recurrence?->value === 'unique' ? 'selected' : '' }}>ÚNICA</option>
+                                <option value="monthly" {{ $recurrence?->value === 'monthly' ? 'selected' : '' }}>MENSAL
                                 </option>
-                                <option value="yearly" {{ $recurrence === 'yearly' ? 'selected' : '' }}>ANUAL</option>
+                                <option value="yearly" {{ $recurrence?->value === 'yearly' ? 'selected' : '' }}>ANUAL</option>
                             </select>
                         </div>
                     </div>
@@ -634,13 +649,26 @@
                 </div>
             </div>
 
-            <div class="form-actions pull-right" style="margin-top:50px;">
-                <button type="submit" class="btn btn-primary">
-                    Enviar solicitação
-                    <i class="fa fa-paper-plane"></i>
-                </button>
-                <button type="submit" class="btn btn-primary">Salvar</button>
-                <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
+            <div class="form-actions pull-right" style="margin-top:50px; padding-bottom:20px">
+                @if (!$hasSentRequest)
+                    <input type="hidden" name="action" id="action" value="">
+
+                    <button type="submit" name="submit_request" class="btn btn-primary btn-submit-request"
+                        value="submit-request">
+                        Enviar solicitação
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+
+                    <button type="submit" class="btn btn-primary btn-draft">
+                        Salvar
+                    </button>
+
+                    <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
+                @endif
+
+                @if ($hasSentRequest)
+                    <a href="{{ route('requests.own') }}" class="btn btn-primary btn-large">VOLTAR</a>
+                @endif
             </div>
         </div>
     </form>
@@ -648,6 +676,8 @@
     <x-modal-add-installment />
 
     <x-modal-edit-installment :statusValues="$statusValues" />
+
+    <x-ModalSupplierRegister />
 
 </div>
 
@@ -657,9 +687,19 @@
         const purchaseRequest = @json($purchaseRequest);
         const statusValues = @json($statusValues);
         const isRequestCopy = @json($isCopy);
+        const hasSentRequest = @json($hasSentRequest);
 
         const $amount = $('.amount');
         const $contractAmount = $('.format-amount');
+
+        $('#request-form')
+            .find('input, textarea, checkbox')
+            .prop('disabled', hasSentRequest);
+
+        $('#request-form')
+            .find('select')
+            .prop('disabled', hasSentRequest);
+
 
         // masks
         $contractAmount.imask({
@@ -921,12 +961,13 @@
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        const actions = [
-                            "<button type='button' rel='tooltip' title='Editar Parcela' class='btn btn-edit-installment'><i class='fa fa-edit'></i></button>",
-                            "<button type='button' class='btn btn-delete-installment' style='margin-left:5px' title='Excluir'><i class='fa fa-times'></i></button>"
-                        ];
+                        const btnEdit = $("<div><button type='button' rel='tooltip' title='Editar Parcela' class='btn btn-edit-installment'><i class='fa fa-edit'></i></button></div>");
+                        const btnDelete = $("<div><button type='button' class='btn btn-delete-installment' style='margin-left:5px' title='Excluir'><i class='fa fa-times'></i></button></div>");
 
-                        return actions.join('');
+                        btnEdit.find('button').prop('disabled', hasSentRequest);
+                        btnDelete.find('button').prop('disabled', hasSentRequest);
+
+                        return btnEdit.html() + " " + btnDelete.html();
                     }
                 }
             ],
@@ -1152,7 +1193,11 @@
                 $installmentsTable.clear().draw();
             }
 
-        }).filter(':checked').trigger('change');
+        });
+
+        if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
+            $radioIsContractedBySupplies.filter(':checked').trigger('change');
+        }
 
 
         // declaracao dos botoes edit e delete do datatable
@@ -1302,7 +1347,7 @@
 
                 const expireDateInput = $('#edit-expire-date').val();
 
-                const value = $('#edit-value-hidden').val();
+                const value = $('#edit-value').val();
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
 
@@ -1334,5 +1379,33 @@
         }
 
         $installmentsTable.on('draw.dt', calculateQtdInstallmentsToSend);
+
+        // btns
+        const $btnSubmitRequest = $('.btn-submit-request');
+        const $sendAction = $('#action');
+
+        $btnSubmitRequest.on('click', function(event) {
+            event.preventDefault();
+
+            bootbox.confirm({
+                message: "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?",
+                buttons: {
+                    confirm: {
+                        label: 'Sim, enviar solicitação',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'Cancelar',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function(result) {
+                    if (result) {
+                        $sendAction.val('submit-request');
+                        $('#request-form').trigger('submit');
+                    }
+                }
+            });
+        });
     });
 </script>

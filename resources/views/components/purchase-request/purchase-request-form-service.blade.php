@@ -45,9 +45,6 @@
         @else
             <h2>Nova Solicitação</h2>
         @endif
-
-
-
     </div>
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right">
@@ -1062,7 +1059,7 @@
             }
         });
 
-        if (!hasSentRequest || $radioIsContractedBySupplies.val() === "1") {
+        if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
             $radioIsContractedBySupplies.filter(':checked').trigger('change');
         }
 
