@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedInteger('user_id');
 
             $table->string('action');
-            $table->jsonb('changes');
+            $table->jsonb('changes')->nullable();
 
             $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));

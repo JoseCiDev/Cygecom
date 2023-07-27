@@ -136,6 +136,8 @@
     <script src="{{ asset('js/plugins/datatables/extensions/dataTables.colReorder.min.js') }}"></script>
     <script src="{{ asset('js/plugins/datatables/extensions/dataTables.colVis.min.js') }}"></script>
     <script src="{{ asset('js/plugins/datatables/extensions/dataTables.scroller.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
 </head>
 
 <body>

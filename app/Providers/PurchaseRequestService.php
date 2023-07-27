@@ -12,6 +12,26 @@ use App\Models\{Contract, ContractInstallment, CostCenterApportionment, PaymentI
 class PurchaseRequestService extends ServiceProvider
 {
     /**
+     * @return mixed Retorna todas solicitações com suas relações.
+     */
+    public function allPurchaseRequests()
+    {
+        return PurchaseRequest::with([
+            'user.person.costCenter',
+            'purchaseRequestFile',
+            'costCenterApportionment.costCenter.company',
+            'deletedByUser',
+            'updatedByUser',
+            'service',
+            'service.paymentInfo',
+            'purchaseRequestProduct',
+            'purchaseRequestProduct.category',
+            'contract',
+            'contract.installments',
+        ]);
+    }
+
+    /**
      * @return mixed Retorna todas solicitações com suas relações, exceto deletados.
      */
     public function purchaseRequests()
@@ -72,7 +92,7 @@ class PurchaseRequestService extends ServiceProvider
             'contract',
             'contract.installments',
 
-        ])->whereNull('deleted_at')->where('status', $status->value)->get();
+        ])->whereNull('deleted_at')->where('status', $status->value);
     }
 
     /**

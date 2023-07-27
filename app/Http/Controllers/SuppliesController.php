@@ -20,7 +20,7 @@ class SuppliesController extends Controller
      */
     public function index()
     {
-        $purchaseRequests = $this->purchaseRequestService->purchaseRequests();
+        $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()->whereNull('deleted_at')->whereNotIn('status', ['rascunho'])->get();
 
         $typesGrouped = $purchaseRequests->groupBy(function ($item) {
             return $item->type->value;

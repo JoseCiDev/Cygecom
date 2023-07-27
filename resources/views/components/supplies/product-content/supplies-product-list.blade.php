@@ -20,24 +20,26 @@
                             <th>ID</th>
                             <th>Solicitante</th>
                             <th>Responsável</th>
-                            <th>Responsável em</th>
+                            <th class="hidden-1280">Responsável em</th>
                             <th class="col-xs-2">
                                 <select id="filterStatus" class="form-control">
                                     <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
                                     @foreach (\App\Enums\PurchaseRequestStatus::cases() as $statusCase)
-                                        <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}} 
-                                            value="{{ $statusCase->value }}" @selected($statusCase->value === $status?->value)>
-                                            {{ $statusCase->label() }}
-                                        </option>
+                                        @if ($statusCase->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
+                                            <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}} 
+                                                value="{{ $statusCase->value }}" @selected($statusCase->value === $status?->value)>
+                                                {{ $statusCase->label() }}
+                                            </option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </th>
-                            <th>Tipo de quitação</th>
-                            <th>Progresso</th>
-                            <th>Contratação por</th>
-                            <th>Grupo de custo</th>
-                            <th>Data desejada</th>
-                            <th>Atualizado em</th>
+                            <th >Tipo de quitação</th>
+                            <th class="hidden-1024">Progresso</th>
+                            <th class="hidden-1024">Contratação por</th>
+                            <th class="hidden-1280">Grupo de custo</th>
+                            <th class="hidden-1440">Data desejada</th>
+                            <th class="hidden-1440">Atualizado em</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -51,17 +53,17 @@
                             @endphp
                             <tr>
                                 <td>{{$product->id}}</td>
-                                <td>{{$product->user->person->name}}</td>
+                                <td >{{$product->user->person->name}}</td>
                                 <td>{{$product->SuppliesUser?->Person->name ?? '---'}}</td>
-                                <td>{{$product->responsibility_marked_at ? \Carbon\Carbon::parse($product->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
+                                <td class="hidden-1280">{{$product->responsibility_marked_at ? \Carbon\Carbon::parse($product->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td>{{$product->status->label()}}</td>
-                                <td>{{$product->purchaseRequestProduct->first()->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
-                                <td>{{$product->purchaseRequestProduct->first()->already_provided ? 'Executado' : 'Não executado'}}</td>
-                                <td>{{$product->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
-                                <td>{{$concatenatedGroups}}</td>
+                                <td >{{$product->purchaseRequestProduct->first()->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
+                                <td class="hidden-1024">{{$product->purchaseRequestProduct->first()->already_provided ? 'Executado' : 'Não executado'}}</td>
+                                <td class="hidden-1024">{{$product->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
+                                <td class="hidden-1280">{{$concatenatedGroups}}</td>
 
-                                <td>{{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y h:m:s') : '---'}}</td>
-                                <td>{{ $product->updated_at ? \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') : '---'}}</td>
+                                <td class="hidden-1440">{{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y h:m:s') : '---'}}</td>
+                                <td class="hidden-1440">{{ $product->updated_at ? \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') : '---'}}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button 

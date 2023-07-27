@@ -21,19 +21,35 @@ class PurchaseRequestObserver
      */
     public function updated(PurchaseRequest $purchaseRequest): void
     {
-        $currentStatus = $purchaseRequest?->status;
-        $newSuppliesUser = $purchaseRequest?->supplies_user_id;
+        $changes = [];
 
-        $this->createLog('update', $purchaseRequest, $currentStatus, $newSuppliesUser);
-    }
+        $dirtyAttributes = $purchaseRequest->getDirty();
 
-    private function createLog($action, $purchaseRequest, $newStatus = null, ?int $newSuppliesUser = null)
-    {
-        $changes = [
-            'status' => $newStatus ? $newStatus->value : null,
-            'supplies_user_id' => $newSuppliesUser,
+        $attributesToTrack = [
+            'status' => $purchaseRequest->status->value,
+            'supplies_user_id' => $purchaseRequest->supplies_user_id,
+            'deleted_at' => $purchaseRequest->deleted_at,
         ];
 
+        foreach ($attributesToTrack as $attribute => $value) {
+            if (array_key_exists($attribute, $dirtyAttributes)) {
+                $changes[$attribute] = $value;
+            }
+        }
+
+        if (!empty($changes)) {
+            $isDelete = $purchaseRequest->wasChanged('deleted_at') && $purchaseRequest->deleted_at !== null;
+
+            if ($isDelete) {
+                $this->createLog('soft-delete', $purchaseRequest, $changes, $isDelete);
+            } else {
+                $this->createLog('update', $purchaseRequest, $changes);
+            }
+        }
+    }
+
+    private function createLog($action, $purchaseRequest, ?array $changes = null, ?bool $isDelete = null)
+    {
         PurchaseRequestsLog::create([
             'purchase_request_id' => $purchaseRequest->id,
             'action' => $action,

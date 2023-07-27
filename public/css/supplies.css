@@ -2,14 +2,20 @@
     border: 5px solid #35363a;
     padding: 50px;
 }
+
 .request-details-header {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
+
 .request-details-header-logo {
     width: 120px;
+    position: absolute;
+    left: 0;
 }
+
 .box-title .request-title {
     font-size: 30px;
     font-weight: 500;
@@ -27,50 +33,63 @@
     justify-content: center;
     border: 1px solid rgb(221, 221, 221);
 }
+
 .request-details-content-box {
     width: 100%;
     padding: 20px;
     border: 1px solid rgb(221, 221, 221);
 }
+
 .request-details-content-box-apportionment {
     padding: 10px;
     border: 1px solid rgb(174, 174, 174);
 }
+
 .request-details-content-box-apportionment .row {
     border-bottom: 1px solid rgb(174, 174, 174);
     margin: 0 1px;
 }
+
 .request-details-content-box-apportionment .row div {
     padding: 10px 15px;
 }
+
 .request-details-content-box p,
 .request-details-content-box span {
     font-size: 16px;
     word-break: break-all;
 }
+
 .request-details-content-box-contract {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-    justify-content: center;
+    border: 1px solid rgb(174, 174, 174);
 }
+
 .request-details-content-box-contract-installment {
-    padding: 10px;
-    border: 1px solid rgb(221, 221, 221);
+    padding: 10px 5px;
+}
+
+.request-details-content-box-contract-installment:nth-child(even) {
+    background-color: #c5c5c5;
+}
+
+.request-details-content-box-contract-installment:nth-child(odd) {
+    background-color: #eaeaea;
 }
 
 .request-supplier-group {
     border: 5px solid rgb(221, 221, 221);
 }
+
 .request-details-content-box-supplier {
     border: 2px solid rgb(221, 221, 221);
     padding: 20px;
 }
+
 .request-details-content-box-products {
     border: 2px solid rgb(221, 221, 221);
     padding: 20px;
 }
+
 .request-details-content-box-products-product {
     border: 1px solid rgb(221, 221, 221);
     flex-grow: 1;

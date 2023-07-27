@@ -4415,6 +4415,48 @@ label, input, button, select, textarea {
     margin-left: 0 !important;
   }
 }
+@media (max-width: 1280px) {
+  #main .page-header .stats {
+    display: none;
+  }
+
+  .search-form > .search-pane > input {
+    width: 135px !important;
+  }
+
+  .hidden-1280 {
+    display: none !important;
+  }
+
+  .form-wizard .single-step .title {
+    padding: 1px 5px !important;
+  }
+  .form-wizard .single-step .description {
+    font-size: 12px !important;
+    margin-left: 0 !important;
+  }
+}
+@media (max-width: 1440px) {
+  #main .page-header .stats {
+    display: none;
+  }
+
+  .search-form > .search-pane > input {
+    width: 135px !important;
+  }
+
+  .hidden-1440 {
+    display: none !important;
+  }
+
+  .form-wizard .single-step .title {
+    padding: 1px 5px !important;
+  }
+  .form-wizard .single-step .description {
+    font-size: 12px !important;
+    margin-left: 0 !important;
+  }
+}
 @media (max-width: 976px) {
   #navigation .user .dropdown > a {
     padding: 7px 6px 6px 6px !important;

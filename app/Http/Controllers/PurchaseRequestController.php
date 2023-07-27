@@ -63,22 +63,23 @@ class PurchaseRequestController extends Controller
         $route = 'requests';
 
         try {
-            $isAdmin         = auth()->user()->profile->name === 'admin';
+            $isAdmin = auth()->user()->profile->name === 'admin';
             $purchaseRequest = auth()->user()->purchaseRequest->find($id);
-            $isAuthorized    = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
+            $isDeleted = $purchaseRequest?->deleted_at !== null;
+            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
 
-            if ($isAuthorized) {
-                $this->purchaseRequestService->deletePurchaseRequest($id);
-                $route = 'requests.own';
-            } else {
-                throw new Exception('Não foi possível acessar essa solicitação.');
+            if (!$isAuthorized) {
+                throw new Exception('Não autorizado. Não foi possível excluir essa solicitação.');
             }
+
+            $this->purchaseRequestService->deletePurchaseRequest($id);
+            $route = 'requests.own';
 
             session()->flash('success', "Solicitação deletada com sucesso!");
 
             return redirect()->route($route);
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi deletar o registro no banco de dados.', $error->getMessage()]);
+            return redirect()->back()->withInput()->withErrors(['Não foi possível deletar o registro no banco de dados.', $error->getMessage()]);
         }
     }
 
