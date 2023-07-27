@@ -85,14 +85,6 @@
                                             {{ $request->is_supplies_contract ? 'Suprimentos' : 'Centro de custo solicitante' }}
                                         </p>
                                         <p><strong>COMEX:</strong> {{ $request->is_comex ? 'Sim' : 'Não' }}</p>
-                                        <p><strong>Link de sugestão:</strong>
-                                            @if ($request->PurchaseRequestFile->first()?->path)
-                                                <a href="{{ $request->PurchaseRequestFile->first()->path }}" target="_blank"
-                                                    rel="noopener noreferrer">link</a>
-                                            @else
-                                                ---
-                                            @endif
-                                        </p>
                                         <p><strong>Motivo da solicitação:</strong> {{ $request->reason }} </p>
                                         <p><strong>Observação:</strong> {{ $request->observation }}</p>
                                         <hr>
@@ -345,6 +337,23 @@
                     </div>
                 </div>
             </main>
+        </div>
+
+        <hr>
+        
+        <div class="row">
+            <div class="col-md-12">
+                 <h4><strong>Links:</strong></h4>
+                 @if ($request->purchaseRequestFile->count())
+                    <ul>
+                        @foreach ($request->purchaseRequestFile as $index => $file)
+                            <li><a style="font-size: 16px" href="{{ $file->path }}" target="_blank" rel="noopener noreferrer">Link {{$index + 1}}</a></li>                        
+                        @endforeach
+                    </ul>
+                @else
+                    <p>Ainda não há registros aqui.</p>   
+                 @endif
+            </div>
         </div>
     </div>
 </x-app>

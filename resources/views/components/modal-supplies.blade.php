@@ -27,10 +27,6 @@
                                 <strong>COMEX:</strong> <span class="is_comex"></span>
                             </p>
                             <p>
-                                <strong>Link de sugestão:</strong>
-                                <span class="purchase_request_file"></span>
-                            </p>
-                            <p>
                                 <strong>Solicitação criada em:</strong> <span class="created_at"></span>
                             </p>
                             <p>
