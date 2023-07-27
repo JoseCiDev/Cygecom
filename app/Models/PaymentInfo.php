@@ -31,6 +31,7 @@ class PaymentInfo extends Model
 
     protected $fillable = [
         'payment_method',
+        'description',
         'updated_by',
         'deleted_by',
     ];

@@ -12,9 +12,8 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="edit-expire-date" class="control-label">Vencimento</label>
-                                <input
-                                    type="date" name="expire_date"
-                                    id="edit-expire-date" class="form-control edit-expire-date">
+                                <input type="date" name="expire_date" id="edit-expire-date"
+                                    class="form-control edit-expire-date">
                             </div>
                         </div>
                         {{-- VALOR --}}
@@ -23,8 +22,9 @@
                             </label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
-                                <input type="number" placeholder="0.00" class="form-control" min="0"
-                                    name="value" id="edit-value">
+                                <input type="text" placeholder="0.00" class="form-control"
+                                    id="edit-value">
+                                <input type="hidden" name="value" id="edit-value-hidden">
                             </div>
                         </div>
                         {{-- STATUS --}}
@@ -34,7 +34,7 @@
                                 <select name="status" id="edit-status" class='select2-me'
                                     style="width:100%; padding-top:2px;" data-placeholder="Pagamento do serviço">
                                     <option value=""></option>
-                                    @foreach($statusValues as $status)
+                                    @foreach ($statusValues as $status)
                                         <option value="{{ $status['id'] }}">{{ $status['description'] }}</option>
                                     @endforeach
                                 </select>
@@ -64,4 +64,3 @@
         </div>
     </div>
 </div>
-

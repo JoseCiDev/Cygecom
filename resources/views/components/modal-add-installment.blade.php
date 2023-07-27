@@ -24,8 +24,9 @@
                             </label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
-                                <input type="number" placeholder="0.00" class="form-control" min="0"
-                                    name="value" id="value" data-rule-required="true">
+                                <input type="text" placeholder="0.00" class="form-control"
+                                    id="value">
+                                <input type="hidden" name="value" id="value-hidden">
                             </div>
                         </div>
                         {{-- STATUS --}}

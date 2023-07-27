@@ -12,7 +12,7 @@ return new class () extends Migration {
             $table->decimal('price', 14, 2)->nullable();
             $table->boolean('already_provided')->default(false);
             $table->boolean('is_finished')->default(false);
-            $table->boolean('is_prepaid')->default(false);
+            $table->boolean('is_prepaid')->nulllable()->default(false);
             $table->unsignedInteger('quantity_of_installments')->nullable();
 
             $table->string('hours_performed')->nullable()->default(null);

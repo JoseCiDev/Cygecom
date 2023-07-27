@@ -22,8 +22,9 @@
                             </label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
-                                <input type="number" placeholder="0.00" class="form-control" min="0"
-                                    name="value" id="edit-value">
+                                <input type="text" placeholder="0.00" class="form-control"
+                                    id="edit-value">
+                                <input type="hidden" name="value" id="edit-value-hidden">
                             </div>
                         </div>
                         {{-- STATUS --}}

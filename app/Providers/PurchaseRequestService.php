@@ -204,7 +204,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de serviço.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveService para atualizar serviço.
      */
-    public function updateServiceRequest(int $id, array $data, UploadedFile | array | null  $files): void
+    public function updateServiceRequest(int $id, array $data, UploadedFile | array | null  $files)
     {
         DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data);
@@ -250,7 +250,7 @@ class PurchaseRequestService extends ServiceProvider
     /**
      * @abstract Responsável por criar, atualizar ou remover relações de rateios com centro de custo
      */
-    private function saveCostCenterApportionment(int $purchaseRequestId, array $data): void
+    private function saveCostCenterApportionment(int $purchaseRequestId, array $data)
     {
         $userId = auth()->user()->id;
         $apportionmentData = $data['cost_center_apportionments'];
@@ -276,7 +276,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar purchaseRequestFile.
      * Recomendado executar com o método específico registerProductRequest ou updateProductRequest
      */
-    private function savePurchaseRequestFile(int $purchaseRequestId, $filePath): void
+    private function savePurchaseRequestFile(int $purchaseRequestId, $filePath)
     {
         $purchaseRequestFile['path'] = $filePath;
         $purchaseRequestFile['purchase_request_id'] = $purchaseRequestId;
@@ -289,7 +289,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar service.
      * Recomendado executar com o método específico registerServiceRequest ou updateServiceRequest
      */
-    private function saveService(int $purchaseRequestId, array $data, UploadedFile | array | null $files): void
+    private function saveService(int $purchaseRequestId, array $data, UploadedFile | array | null $files)
     {
         if (!isset($data['type']) && $data['type'] !== "service") {
             return;
@@ -315,6 +315,9 @@ class PurchaseRequestService extends ServiceProvider
             foreach ($uploadFiles->urls_bucket as $filePath) {
                 $this->savePurchaseRequestFile($purchaseRequestId, $filePath);
             }
+        } else {
+            $msg = $uploadFiles->exception;
+            return redirect()->back()->withInput()->withErrors([$msg]);
         }
 
         $existingInstallments = ServiceInstallment::where('service_id', $service->id)->get();
@@ -331,7 +334,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar products.
      * Recomendado executar com o método específico registerProductRequest ou updateProductRequest
      */
-    private function saveProducts(int $purchaseRequestId, array $data): void
+    private function saveProducts(int $purchaseRequestId, array $data)
     {
         if (!isset($data['type']) && $data['type'] !== "product") {
             return;
@@ -355,7 +358,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar contrato.
      * Recomendado executar com o método específico registerContractRequest ou updateContractRequest
      */
-    private function saveContract(int $purchaseRequestId, array $data, UploadedFile | array | null $files): void
+    private function saveContract(int $purchaseRequestId, array $data, UploadedFile | array | null $files)
     {
         if (!isset($data['type']) && $data['type'] !== "contract") {
             return;
@@ -380,6 +383,9 @@ class PurchaseRequestService extends ServiceProvider
             foreach ($uploadFiles->urls_bucket as $filePath) {
                 $this->savePurchaseRequestFile($purchaseRequestId, $filePath);
             }
+        } else {
+            $msg = $uploadFiles->exception;
+            return redirect()->back()->withInput()->withErrors([$msg]);
         }
 
         $existingInstallments = ContractInstallment::where('contract_id', $contract->id)->get();
@@ -397,7 +403,7 @@ class PurchaseRequestService extends ServiceProvider
      *
      * @param $existingInstallments é uma ocorrência do Model Installment
      */
-    private function updateNumberOfInstallments($existingInstallments, array $installmentsData): void
+    private function updateNumberOfInstallments($existingInstallments, array $installmentsData)
     {
         if (count($existingInstallments) > count($installmentsData)) {
             $installmentsToDelete = $existingInstallments->slice(count($installmentsData));

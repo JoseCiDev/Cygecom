@@ -1,8 +1,19 @@
 @php
+    use App\Enums\PurchaseRequestStatus;
+
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
     $isCopy ??= null;
     $serviceInstallments = $purchaseRequest?->service?->installments;
+    $purchaseRequestServicePrice = $purchaseRequest?->service?->price === null ? null : (float) $purchaseRequest?->service?->price;
+    $serviceQuantityOfInstallments = $purchaseRequest?->service?->quantity_of_installments === null ? null : (int) $purchaseRequest?->service?->quantity_of_installments;
+
+    // verifica status para desabilitar campos para o usuário
+    $requestAlreadySent = $purchaseRequest?->status !== PurchaseRequestStatus::RASCUNHO;
+    // ve se tem request e não foi enviada
+    $hasRequestNotSent = $issetPurchaseRequest && !$requestAlreadySent;
+    // ve se tem request ja enviada e n é copia
+    $hasSentRequest = $issetPurchaseRequest && $requestAlreadySent && !$isCopy;
 @endphp
 
 
@@ -10,22 +21,37 @@
     .cost-center-container {
         margin-bottom: 10px;
     }
+
+    div.dataTables_wrapper div.dataTables_length,
+    div.dataTables_wrapper div.dataTables_info {
+        display: none;
+        /* remover espao em branco do datatables*/
+    }
 </style>
 
-<x-ModalSupplierRegister />
-
 <div class="row">
+
     <div class="col-sm-6">
-        <h2>
-            {{ isset($purchaseRequest) ? 'Editar solicitação' : 'Nova solicitação' }}
-        </h2>
+        @if ($hasRequestNotSent)
+            <h2>Editar Solicitação</h2>
+        @elseif ($hasSentRequest)
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h5>
+                    <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
+                </h5>
+            </div>
+            <h2>Visualizar Solicitação</h2>
+        @else
+            <h2>Nova Solicitação</h2>
+        @endif
     </div>
-    @if (isset($purchaseRequest))
+    @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right">
             <x-modalDelete />
             <button data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - ID ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip" title="Excluir"
-                class="btn btn-danger pull-right" style="margin-right: 15px">
+                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
+                title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
                 Excluir solicitação
             </button>
         </div>
@@ -40,7 +66,7 @@
                     @else {{ route('request.service.register') }} @endif">
         @csrf
 
-        <input type="hidden" name="type" value="service">
+        <input type="hidden" name="type" value="service" class="no-validation">
 
         <div class="row center-block" style="padding-bottom: 10px;">
             <h4>CONTRATANTE</h4>
@@ -51,11 +77,12 @@
             @foreach ($purchaseRequest->costCenterApportionment as $index => $apportionment)
                 <div class="row cost-center-container">
                     <div class="col-sm-6">
-                        <label style="display:block;" for="textfield" class="control-label">Centro de custo da
+                        <label style="display:block;" class="control-label">Centro de custo da
                             despesa</label>
                         <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
+                            id="select-cost-center"
                             class='select2-me @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                            required data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
+                            data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
                             <option value=""></option>
                             @foreach ($costCenters as $costCenter)
                                 @php
@@ -111,10 +138,11 @@
         @else
             <div class="row cost-center-container">
                 <div class="col-sm-6">
-                    <label for="textfield" class="control-label" style="display:block">
+                    <label class="control-label" style="display:block">
                         Centro de custo da despesa
                     </label>
-                    <select style="width:100%" name="cost_center_apportionments[0][cost_center_id]"
+                    <select style="width:100%" id="select-cost-center"
+                        name="cost_center_apportionments[0][cost_center_id]"
                         class='select2-me
             @error('cost_center_id_{{ $index }}') is-invalid @enderror'
                         required data-rule-required="true" placeholder="Ex: Almoxarifado">
@@ -139,8 +167,8 @@
                     </label>
                     <div class="input-group">
                         <span class="input-group-addon">%</span>
-                        <input type="number" placeholder="0.00" class="form-control" min="0"
-                            name="cost_center_apportionments[0][apportionment_percentage]"
+                        <input type="number" placeholder="0.00" class="form-control apportionment-percentage"
+                            min="0" name="cost_center_apportionments[0][apportionment_percentage]"
                             id="cost_center_apportionments[0][apportionment_percentage]">
                         @error('cost_center_apportionments[0][apportionment_percentage]')
                             <p><strong>{{ $message }}</strong></p>
@@ -201,19 +229,18 @@
                     </div>
                 </div>
 
-                {{-- SERVIÇO JÁ PRESTADO --}}
-                <div class="col-sm-3">
+                {{-- COMEX --}}
+                <div class="col-sm-4">
                     <label for="form-check" class="control-label" style="padding-right:10px;">
-                        Este serviço já foi prestado?
+                        Contrato se enquadra na categoria COMEX?
                     </label>
                     <div class="form-check">
-                        <input name="service[already_provided]"value="1" class="radio-already-provided"
-                            id="already-provided" type="radio" @checked((isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided) || !isset($purchaseRequest))>
-                        <label class="form-check-label" for="already-provided">Sim</label>
-
-                        <input name="service[already_provided]" value="0" class="radio-already-provided"
-                            type="radio" id="not-provided" style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided)>
-                        <label class="form-check-label" for="not-provided">Não</label>
+                        <input name="is_comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
+                            type="radio" data-skin="minimal">
+                        <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
+                        <input name="is_comex"value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest)) class="radio-comex"
+                            type="radio" data-skin="minimal">
+                        <label class="form-check-label" for="">Não</label>
                     </div>
                 </div>
 
@@ -242,7 +269,7 @@
                 <div class="col-sm-8">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
-                        <textarea data-rule-required="true" minlength="40" name="description" id="description" rows="4"
+                        <textarea data-rule-required="true" minlength="20" name="description" id="description" rows="4"
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
@@ -262,7 +289,7 @@
                         <label for="local-description" class="control-label">
                             Local de prestação do serviço
                         </label>
-                        <input data-rule-required="true" minlength="20" name="local_description"
+                        <input data-rule-required="true" minlength="5" name="local_description"
                             value="{{ $purchaseRequest->local_description ?? null }}" type="text"
                             id="local-description"
                             placeholder="Ex: HKM - Av. Gentil Reinaldo Cordioli, 161 - Jardim Eldorado"
@@ -270,26 +297,27 @@
                     </div>
                 </div>
 
+                {{-- SERVIÇO JÁ PRESTADO --}}
                 <div class="col-sm-2">
-                    <div class="form-group">
-                        <label for="desired-date" class="control-label">Data desejada</label>
-                        <input type="date" name="desired_date" id="desired-date" class="form-control"
-                            value="{{ $purchaseRequest->desired_date ?? null }}">
+                    <label for="form-check" class="control-label" style="padding-right:10px;">
+                        Este serviço já foi prestado?
+                    </label>
+                    <div class="form-check">
+                        <input name="service[already_provided]" value="1" class="radio-already-provided"
+                            id="already-provided" type="radio" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided)>
+                        <label class="form-check-label" for="already-provided">Sim</label>
+
+                        <input name="service[already_provided]" value="0" class="radio-already-provided"
+                            type="radio" id="not-provided" style="margin-left: 7px;" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided) || !isset($purchaseRequest))>
+                        <label class="form-check-label" for="not-provided">Não</label>
                     </div>
                 </div>
 
-                {{-- COMEX --}}
-                <div class="col-sm-4">
-                    <label for="form-check" class="control-label" style="padding-right:10px;">
-                        Contrato se enquadra na categoria COMEX?
-                    </label>
-                    <div class="form-check" style="12px; margin-top:4px;">
-                        <input name="is_comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
-                            type="radio" data-skin="minimal">
-                        <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
-                        <input name="is_comex"value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest)) class="radio-comex"
-                            type="radio" data-skin="minimal">
-                        <label class="form-check-label" for="">Não</label>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="desired-date" class="control-label">Data desejada do serviço</label>
+                        <input type="date" name="desired_date" id="desired-date" class="form-control"
+                            min="2023-07-24" value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
 
@@ -298,13 +326,13 @@
             <div class="row">
 
                 {{-- LINK --}}
-                <div class="col-sm-6 link-util">
-                    <label for="purchase-request-files[path]" class="control-label">Link</label>
-                    <input
-                        value="{{ isset($purchaseRequest->purchaseRequestFile[0]) && $purchaseRequest->purchaseRequestFile[0]->path ? $purchaseRequest->purchaseRequestFile[0]->path : '' }}"
-                        type="text"
-                        placeholder="Adicone um link válido. Ex: Contrato disponibilizado pelo fornecedor"
-                        name="purchase_request_files[path]" id="purchase-request-files[path]" class="form-control">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="purchase-request-files[path]" class="control-label">Links de apoio /
+                            sugestão</label>
+                        <textarea placeholder="Adicone um ou mais links válidos. Ex: Contrato disponibilizado pelo fornecedor" rows="3"
+                            name="purchase_request_files[path]" id="purchase-request-files[path]" class="form-control text-area no-resize">{{ isset($purchaseRequest->purchaseRequestFile[0]) && $purchaseRequest->purchaseRequestFile[0]->path ? $purchaseRequest->purchaseRequestFile[0]->path : '' }}</textarea>
+                    </div>
                 </div>
 
                 {{-- OBSERVACAO --}}
@@ -313,22 +341,169 @@
                         <label for="observation" class="control-label">
                             Observações
                         </label>
-                        <textarea name="observation" id="observation" rows="2"
+                        <textarea name="observation" id="observation" rows="3"
                             placeholder="Informações complementares desta solicitação" class="form-control text-area no-resize">{{ $purchaseRequest->observation ?? null }}</textarea>
                     </div>
                 </div>
 
             </div>
 
+            <hr>
+
+            <div class="payment-block">
+                <div class="row center-block" style="padding-bottom: 10px;">
+                    <h4>PAGAMENTO</h4>
+                </div>
+
+                <div class="row" style="margin-bottom: -50;">
+                    {{-- CONDIÇÃO DE PAGAMENTO --}}
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label class="control-label">Condição de pagamento</label>
+                            <select name="service[is_prepaid]" id="service-is-prepaid"
+                                class='select2-me service[is_prepaid]' style="width:100%; padding-top:2px;"
+                                data-placeholder="Escolha uma opção">
+                                <option value=""></option>
+                                <option value="1" @selected(isset($purchaseRequest->service) && (bool) $purchaseRequest->service->is_prepaid)>Pagamento antecipado</option>
+                                <option value="0" @selected(isset($purchaseRequest->service) && !(bool) $purchaseRequest->service->is_prepaid)>Pagamento após execução</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- VALOR TOTAL --}}
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label for="format-amount" class="control-label">Valor total do serviço</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">R$</span>
+                                <input type="text" id="format-amount" placeholder="0.00"
+                                    class="form-control format-amount" value="{{ $purchaseRequestServicePrice }}">
+                                <input type="hidden" name="service[price]" id="amount"
+                                    class="amount no-validation" value="{{ $purchaseRequestServicePrice }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- FORMA DE PAGAMENTO --}}
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label class="control-label">Forma de pagamento</label>
+                            @php
+                                $paymentMethod = null;
+                                if (isset($purchaseRequest->service) && isset($purchaseRequest->service->paymentInfo)) {
+                                    $paymentMethod = $purchaseRequest->service->paymentInfo->payment_method;
+                                }
+                            @endphp
+                            <select name="service[payment_info][payment_method]" id="payment-method"
+                                class='select2-me payment-method' style="width:100%; padding-top:2px;"
+                                data-placeholder="Escolha uma opção">
+                                <option value=""></option>
+                                <option value="PIX" {{ $paymentMethod === 'PIX' ? 'selected' : '' }}>PIX</option>
+                                <option value="DEPÓSITO BANCÁRIO"
+                                    {{ $paymentMethod === 'DEPÓSITO BANCÁRIO' ? 'selected' : '' }}>DEPÓSITO BANCÁRIO
+                                </option>
+                                <option value="BOLETO" {{ $paymentMethod === 'BOLETO' ? 'selected' : '' }}>BOLETO
+                                </option>
+                                <option value="CARTÃO CRÉDITO"
+                                    {{ $paymentMethod === 'CARTÃO CRÉDITO' ? 'selected' : '' }}>CARTÃO CRÉDITO</option>
+                                <option value="CARTÃO DÉBITO"
+                                    {{ $paymentMethod === 'CARTÃO DÉBITO' ? 'selected' : '' }}>CARTÃO DÉBITO</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <input type="hidden" class="no-validation" value="" name="service[payment_info][id]">
+
+                    {{-- Nº PARCELAS --}}
+                    <div class="col-sm-1">
+                        <div class="form-group">
+                            <label class="control-label">Nº de parcelas</label>
+                            <input type="text" class="form-control format-installments-number"
+                                placeholder="Ex: 24" value="{{ $serviceQuantityOfInstallments }}">
+                            <input type="hidden" name="service[quantity_of_installments]" id="installments-number"
+                                class="installments-number no-validation"
+                                value="{{ $serviceQuantityOfInstallments }}">
+                        </div>
+                    </div>
+
+                    {{-- DESCRICAO DADOS PAGAMENTO --}}
+                    <div class="col-sm-5" style="margin-bottom: -20px;">
+                        <div class="form-group">
+                            <label for="payment-info-description" class="control-label">
+                                Detalhes do pagamento
+                            </label>
+                            <textarea name="service[payment_info][description]" id="payment-info-description" rows="3"
+                                placeholder="Informações sobre pagamento. Ex: Chave PIX, dados bancários do fornecedor, etc..."
+                                class="form-control text-area no-resize">{{ $purchaseRequest->service->paymentInfo->description ?? null }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- TABLE PARCELAS --}}
+                <div class="row" style="display:flex; align-items:center; margin-bottom:7px;">
+                    <h4 class="col-sm-6">
+                        <i class="fa fa-dollar"></i>
+                        PARCELAS DESTE SERVIÇO
+                    </h4>
+                    <div class="col-sm-6 btn-add-installment" hidden>
+                        <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
+                            data-route="user" rel="tooltip" title="Adicionar Parcela">
+                            + Adicionar parcela
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box">
+                            <div class="box-content nopadding">
+                                <table class="table table-hover table-nomargin table-striped"
+                                    id="installments-table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-sm-2">
+                                                <i class="fa fa-calendar-o" style="padding-right:5px;"></i>
+                                                VENCIMENTO
+                                            </th>
+                                            <th class="col-sm-2">
+                                                <i class="fa fa-money" style="padding-right:5px;"></i>
+                                                VALOR
+                                            </th>
+                                            <th class='col-sm-4 hidden-350'>
+                                                <i class="fa fa-pencil-square" style="padding-right:5px;"></i>
+                                                OBSERVAÇÃO
+                                            </th>
+                                            <th class='col-sm-2 hidden-1024'>
+                                                <i class="fa fa-tasks" style="padding-right:5px;"></i>
+                                                STATUS
+                                            </th>
+                                            <th class='col-sm-2 hidden-480'>
+                                                <i class="fa fa-sliders" style="padding-right:5px;"></i>
+                                                AÇÕES
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <div class="hidden-installments-inputs-container">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
             <div class="suppliers-block">
-                <div class="row center-block" style="padding-bottom: 5px;">
+                <div class="row center-block">
                     <h4>INFORMAÇÕES DO FORNECEDOR</h4>
                 </div>
-                <div class="row" style="margin-top: 15px">
+                <div class="row" style="margin-top: 10px">
 
                     {{-- FORNECEDOR (CNPJ/RAZAO SOCIAL --}}
                     <div class="col-sm-4 form-group">
-                        <label style="display:block;" for="service[supplier_id]" class="control-label">
+                        <label for="service[supplier_id]" style="display:block;" class="control-label">
                             Fornecedor (CNPJ - RAZÃO SOCIAL)
                         </label>
                         <select name="service[supplier_id]" class='select2-me'
@@ -377,177 +552,72 @@
 
             <hr>
 
-            <div class="payment-block">
-                <div class="row center-block" style="padding-bottom: 10px;">
-                    <h4>PAGAMENTO</h4>
-                </div>
-
-                <div class="row">
-                    {{-- CONDIÇÃO DE PAGAMENTO --}}
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="service[is_prepaid]" class="control-label">Condição de pagamento</label>
-                            <select name="service[is_prepaid]" id="service[is_prepaid]"
-                                class='select2-me service[is_prepaid]' style="width:100%; padding-top:2px;"
-                                data-placeholder="Escolha uma opção">
-                                <option value=""></option>
-                                <option value="1" @selected(isset($purchaseRequest->service) && (bool) $purchaseRequest->service->is_prepaid)>Pagamento antecipado</option>
-                                <option value="0" @selected(isset($purchaseRequest->service) && !(bool) $purchaseRequest->service->is_prepaid)>Pagamento após execução</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    {{-- VALOR TOTAL --}}
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="format-amount" class="control-label">Valor total do serviço</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">R$</span>
-                                <input type="text" id="format-amount" placeholder="0.00"
-                                    class="form-control format-amount"
-                                    value="{{ (float) $purchaseRequest?->service?->price ?? null }}">
-                                <input type="hidden" name="service[price]" id="amount"
-                                    class="amount no-validation"
-                                    value="{{ (float) $purchaseRequest?->service?->price ?? null }}">
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- FORMA DE PAGAMENTO --}}
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="payment-method" class="control-label">Forma de pagamento</label>
-                            @php
-                                $paymentMethod = null;
-                                if (isset($purchaseRequest->service) && isset($purchaseRequest->service->paymentInfo)) {
-                                    $paymentMethod = $purchaseRequest->service->paymentInfo->payment_method;
-                                }
-                            @endphp
-                            <select name="service[payment_info][payment_method]" id="payment-method"
-                                class='select2-me payment-method' style="width:100%; padding-top:2px;"
-                                data-placeholder="Escolha uma opção">
-                                <option value=""></option>
-                                <option value="PIX" {{ $paymentMethod === 'PIX' ? 'selected' : '' }}>PIX</option>
-                                <option value="DEPÓSITO BANCÁRIO"
-                                    {{ $paymentMethod === 'DEPÓSITO BANCÁRIO' ? 'selected' : '' }}>DEPÓSITO BANCÁRIO
-                                </option>
-                                <option value="BOLETO" {{ $paymentMethod === 'BOLETO' ? 'selected' : '' }}>BOLETO
-                                </option>
-                                <option value="CARTÃO CRÉDITO"
-                                    {{ $paymentMethod === 'CARTÃO CRÉDITO' ? 'selected' : '' }}>CARTÃO CRÉDITO</option>
-                                <option value="CARTÃO DÉBITO"
-                                    {{ $paymentMethod === 'CARTÃO DÉBITO' ? 'selected' : '' }}>CARTÃO DÉBITO</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <input type="hidden" value="" name="service[payment_info][id]">
-
-                    {{-- Nº PARCELAS --}}
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="installments-number" class="control-label">Nº de parcelas</label>
-                            @php
-                                $quantityOfInstallments = $purchaseRequest?->service?->quantity_of_installments;
-                            @endphp
-                            <select name="service[quantity_of_installments]" class='select2-me'
-                                id="installments-number" style="width:100%; padding-top:2px;"
-                                data-placeholder="Escolha uma opção">
-                                <option value=""></option>
-                                <option value="1" @selected($quantityOfInstallments === 1)>1x</option>
-                                <option value="2" @selected($quantityOfInstallments === 2)>2x</option>
-                                <option value="3" @selected($quantityOfInstallments === 3)>3x</option>
-                                <option value="4" @selected($quantityOfInstallments === 4)>4x </option>
-                                <option value="5" @selected($quantityOfInstallments === 5)>5x</option>
-                                <option value="6" @selected($quantityOfInstallments === 6)>6x</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- TABLE PARCELAS --}}
-                <div class="row" style="display:flex; align-items:center; margin-top:15px; margin-bottom:5px;">
-                    <h4 class="col-sm-6">
-                        <i class="fa fa-dollar"></i>
-                        Parcelas deste serviço
-                    </h4>
-                    <div class="col-sm-6 btn-add-installment" hidden>
-                        <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
-                            data-route="user" rel="tooltip" title="Adicionar Parcela">
-                            + Adicionar parcela
-                        </button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="box">
-                            <div class="box-content nopadding">
-                                <table class="table table-hover table-nomargin table-striped"
-                                    id="installments-table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th class="col-sm-2">VENCIMENTO</th>
-                                            <th class="col-sm-2">VALOR</th>
-                                            <th class='col-sm-4 hidden-350'>OBSERVAÇÃO</th>
-                                            <th class='col-sm-2 hidden-1024'>STATUS</th>
-                                            <th class='col-sm-2 hidden-480'>AÇÕES</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                                <div class="hidden-installments-inputs-container">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row justify-content-center">
-                    <div class="col-12">
-                        <fieldset id="files-group">
-                            <legend>Arquivos</legend>
-                            <input type="file" class="form-control" name="arquivos[]" multiple>
-                            <ul class="list-group" style="margin-top:15px">
-                                @if (isset($files))
-                                    @foreach ($files as $each)
-                                        @php
-                                            $filenameSearch = explode('/', $each->path);
-                                            $filename = end($filenameSearch);
-                                        @endphp
-                                        <li class="list-group-item" data-id-purchase-request-file="{{ $each->id }}">
-                                            <div class="row">
-                                                <div class="col-xs-6">
-                                                    <i class='fa fa-file'></i><a style='margin-left:5px'
-                                                        href="{{ env('AWS_S3_BASE_URL') . $each->path }}"target="_blank">{{ $filename }}</a>
-                                                </div>
-                                                <div class="col-xs-6 text-right">
-                                                    <button type="button" class="btn btn-primary file-remove"><i
-                                                            class='fa fa-trash'
-                                                            style='margin-right:5px'></i>Excluir</span>
-                                                </div>
+            {{-- ARQUIVOS --}}
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <fieldset id="files-group">
+                        <legend>Arquivos</legend>
+                        <input type="file" class="form-control" name="arquivos[]" multiple>
+                        <ul class="list-group" style="margin-top:15px">
+                            @if (isset($files))
+                                @foreach ($files as $each)
+                                    @php
+                                        $filenameSearch = explode('/', $each->path);
+                                        $filename = end($filenameSearch);
+                                    @endphp
+                                    <li class="list-group-item" data-id-purchase-request-file="{{ $each->id }}">
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <i class='fa fa-file'></i><a style='margin-left:5px'
+                                                    href="{{ env('AWS_S3_BASE_URL') . $each->path }}"target="_blank">{{ $filename }}</a>
                                             </div>
-                                        </li>
-                                    @endforeach
-                                @endif
-                            </ul>
-                            <div class="alert alert-success" style="display:none;margin:15px 0px 15px 0px;"><i
-                                    class="fa fa-check"></i> Excluido com sucesso!</div>
-                            <div class="alert alert-danger" style="display:none;margin:15px 0px 15px 0px;"><i
-                                    class="fa fa-close"></i> Não foi possível excluir, por favor tente novamente mais
-                                tarde.</div>
-                        </fieldset>
-                    </div>
+                                            <div class="col-xs-6 text-right">
+                                                <button type="button" class="btn btn-primary file-remove"><i
+                                                        class='fa fa-trash'
+                                                        style='margin-right:5px'></i>Excluir</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            @endif
+                        </ul>
+                        <div class="alert alert-success" style="display:none;margin:15px 0px 15px 0px;"><i
+                                class="fa fa-check"></i> Excluido com sucesso!</div>
+                        <div class="alert alert-danger" style="display:none;margin:15px 0px 15px 0px;"><i
+                                class="fa fa-close"></i> Não foi possível excluir, por favor tente novamente mais
+                            tarde.</div>
+                    </fieldset>
                 </div>
             </div>
-            <div class="form-actions pull-right" style="margin-top:50px;">
-                <button type="submit" class="btn btn-primary">Salvar</button>
-                <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
+
+            <div class="form-actions pull-right" style="margin-top:50px; padding-bottom:20px">
+                @if (!$hasSentRequest)
+                    <input type="hidden" name="action" id="action" value="">
+
+                    <button type="submit" class="btn btn-primary btn-draft" style="margin-right: 10px">
+                        Salvar rascunho
+                    </button>
+
+                    <button type="submit" name="submit_request" style="margin-right: 10px"
+                        class="btn btn-success btn-submit-request" value="submit-request">
+                        Salvar e enviar solicitação
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+
+                    <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
+                @endif
+
+                @if ($hasSentRequest)
+                    <a href="{{ route('requests.own') }}" class="btn btn-primary btn-large">VOLTAR</a>
+                @endif
             </div>
+
         </div>
     </form>
 
     <x-modal-edit-service-installment :statusValues="$statusValues" />
+
+    <x-ModalSupplierRegister />
 
 </div>
 
@@ -555,6 +625,56 @@
 <script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
+        const $amount = $('.amount');
+        const $serviceAmount = $('#format-amount');
+        const $phoneNumber = $('#phone-number');
+
+        // masks
+        $phoneNumber.imask({
+            mask: [{
+                    mask: '(00) 0000-0000'
+                },
+                {
+                    mask: '(00) 00000-0000'
+                }
+            ]
+        });
+
+        $serviceAmount.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 0,
+            max: 1000000000,
+        });
+
+        // mascaras pra modal edicao
+        const $editValueInputModal = $('#edit-value');
+        const $editValueHiddenModal = $('#edit-value-hidden');
+
+        $editValueInputModal.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 0,
+            max: 1000000000,
+        });
+
+        const $inputInstallmentsNumber = $('.installments-number');
+        const $formatInputInstallmentsNumber = $('.format-installments-number');
+
+        $formatInputInstallmentsNumber.imask({
+            mask: IMask.MaskedRange,
+            from: 1,
+            to: 60,
+            autofix: false,
+        });
+
+
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
         const $fileRemove = $('button.file-remove');
@@ -580,7 +700,7 @@
             costCenterCount > 1 ? $('.delete-cost-center').prop('disabled', false) : $('.delete-cost-center')
                 .prop('disabled', true);
         }
-        checkCostCenterCount()
+        checkCostCenterCount();
 
         function updateApportionmentFields() {
             const hasPercentageInput = $costCenterPercentage.filter(function() {
@@ -600,6 +720,38 @@
             }
         }
         updateApportionmentFields();
+
+        // desabilita botao caso nao tenha sido preenchido cost center corretamente;
+        const $btnAddCostCenter = $('.add-cost-center-btn');
+        const $costCenterSelect = $('.cost-center-container select');
+
+        function toggleCostCenterBtn() {
+            const costCenterContainer = $(this).closest('.cost-center-container');
+
+            const costCenterSelect = costCenterContainer
+                .find('select')
+                .val();
+
+            const costcenterPercentage = costCenterContainer
+                .find('input[name$="[apportionment_percentage]"]')
+                .val()
+
+            const costCenterCurrency = costCenterContainer
+                .find('input[name$="[apportionment_currency]"]')
+                .val()
+
+            const isValidApportionment = Boolean(costCenterSelect && (costcenterPercentage ||
+                costCenterCurrency));
+
+            $btnAddCostCenter.prop('disabled', !isValidApportionment);
+        }
+
+        $(document).on('input change',
+            `${$costCenterSelect.selector}, ${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
+            toggleCostCenterBtn);
+
+        toggleCostCenterBtn();
+
 
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
         $costCenterPercentage.add($costCenterCurrency).on('input', updateApportionmentFields);
@@ -626,6 +778,7 @@
             newRow.find('.delete-cost-center').removeAttr('hidden');
             checkCostCenterCount();
             disableSelectedOptions();
+            toggleCostCenterBtn.bind(this)();
         });
 
         $(document).on('click', '.delete-cost-center', function() {
@@ -633,15 +786,36 @@
             updateApportionmentFields();
             checkCostCenterCount();
             disableSelectedOptions();
+            toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
         });
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
 
+        // muda data desejada minima quando serviço já prestado
+        const $desiredDate = $('#desired-date');
+        const $serviceAlreadyProvided = $('.radio-already-provided');
+        const currentDate = moment().format('YYYY-MM-DD');
+        const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
 
-        const $amount = $('.amount');
-        const $serviceAmount = $('#format-amount');
-        const $phoneNumber = $('#phone-number');
+        function desiredDateGreaterThanCurrent() {
+            const desiredDate = $desiredDate.val();
 
+            return desiredDate > currentDate;
+        }
+
+        function changeMinDesiredDate() {
+            const isValidDate = desiredDateGreaterThanCurrent();
+            const serviceAlreadyProvided = $serviceAlreadyProvided.filter(':checked').val() === "1";
+
+            const minDate = serviceAlreadyProvided ? minInitialDate : currentDate;
+
+            $desiredDate.attr('min', minDate);
+        }
+
+        $serviceAlreadyProvided.add($desiredDate).on('change', changeMinDesiredDate);
+        // ---
+
+        // trata valor serviço mascara
         $serviceAmount.on('input', function() {
             const formattedValue = $(this).val();
             if (formattedValue !== null) {
@@ -653,12 +827,53 @@
             }
         });
 
+        // sim está repetindo muito...
+
+        // trata qtd parcelas mascara
+        $formatInputInstallmentsNumber.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const rawValue = parseInt(formattedValue);
+                if (!isNaN(rawValue)) {
+                    $inputInstallmentsNumber.val(rawValue).trigger('change');
+                }
+            }
+        });
+        // ---
+
+        // sim está repetindo muito...
+
+        // trata valor serviço mascara
+        $editValueInputModal.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $editValueHiddenModal.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
+        // ---
+
+        // sim está repetindo muito...
 
         const $selectSupplier = $('.select-supplier');
         const $paymentMethod = $('.payment-method');
         const $paymentInfo = $('.payment-info');
 
         const purchaseRequest = @json($purchaseRequest);
+        const hasSentRequest = @json($hasSentRequest);
+
+        // desabilita todos os campos do form caso solicitacao ja enviada
+        $('#request-form')
+            .find('input, textarea, checkbox')
+            .prop('disabled', hasSentRequest);
+
+        $('#request-form')
+            .find('select')
+            .prop('disabled', hasSentRequest);
+
 
         // dataTable config - parcelas
         const $installmentsTable = $('#installments-table-striped').DataTable({
@@ -675,6 +890,10 @@
                 },
                 {
                     data: "value",
+                    render: function(data, type, row, meta) {
+                        const dataWithR$ = "R$" + data;
+                        return dataWithR$;
+                    }
                 },
                 {
                     data: "observation",
@@ -685,17 +904,29 @@
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        return '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
+                        const btnEdit = $(
+                            '<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>'
+                        );
+                        btnEdit.find('button').prop('disabled', hasSentRequest);
+
+                        return btnEdit.html();
                     }
                 }
             ],
             orderable: false,
-            paging: false,
-            info: false,
+            paging: true,
+            pageLength: 12,
+            info: "Página _PAGE_ of _PAGES_",
             searching: false,
             language: {
-                emptyTable: "",
-                zeroRecords: ""
+                lengthMenu: "",
+                emptyTable: "Nenhuma parcela adicionada.",
+                zeroRecords: "",
+                paginate: {
+                    previous: "Anterior",
+                    next: "Próximo",
+                },
+                info: ""
             },
             order: [
                 [0, 'desc']
@@ -729,6 +960,7 @@
                     idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service
                         ?.installments[index]?.id : null;
                     idInput.hidden = true;
+                    idInput.className = "no-validation";
 
                     const expireDateInput = document.createElement('input');
                     expireDateInput.type = 'date';
@@ -736,12 +968,14 @@
                         '][expire_date]';
                     expireDateInput.value = expireDate;
                     expireDateInput.hidden = true;
+                    expireDateInput.className = "no-validation";
 
                     const valueInput = document.createElement('input');
                     valueInput.type = 'number';
                     valueInput.name = 'service[service_installments][' + index + '][value]';
                     valueInput.value = value;
                     valueInput.hidden = true;
+                    valueInput.className = "no-validation";
 
                     const observationInput = document.createElement('input');
                     observationInput.type = 'text';
@@ -749,12 +983,14 @@
                         '][observation]';
                     observationInput.value = observation;
                     observationInput.hidden = true;
+                    observationInput.className = "no-validation";
 
                     const statusInput = document.createElement('input');
                     statusInput.type = 'text';
                     statusInput.name = 'service[service_installments][' + index + '][status]';
                     statusInput.value = status;
                     statusInput.hidden = true;
+                    statusInput.className = "no-validation";
 
                     hiddenInputsContainer.append(
                         idInput,
@@ -771,30 +1007,36 @@
                 idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]
                     ?.id : null;
                 idInput.hidden = true;
+                idInput.className = "no-validation";
 
                 const expireDateInput = document.createElement('input');
                 expireDateInput.type = 'date';
                 expireDateInput.name = 'service[service_installments][0][expire_date]';
                 expireDateInput.value = "";
                 expireDateInput.hidden = true;
+                expireDateInput.className = "no-validation";
+
 
                 const valueInput = document.createElement('input');
                 valueInput.type = 'number';
                 valueInput.name = 'service[service_installments][0][value]';
                 valueInput.value = "";
                 valueInput.hidden = true;
+                valueInput.className = "no-validation";
 
                 const observationInput = document.createElement('input');
                 observationInput.type = 'text';
                 observationInput.name = 'service[service_installments][0][observation]';
                 observationInput.value = "";
                 observationInput.hidden = true;
+                observationInput.className = "no-validation";
 
                 const statusInput = document.createElement('input');
                 statusInput.type = 'text';
                 statusInput.name = 'service[service_installments][0][status]';
                 statusInput.value = "";
                 statusInput.hidden = true;
+                statusInput.className = 'no-validation';
 
                 hiddenInputsContainer.append(
                     idInput,
@@ -829,28 +1071,42 @@
         const $radioIsContractedBySupplies = $('.radio-who-wants');
         const $suppliersBlock = $('.suppliers-block');
         const $paymentBlock = $('.payment-block');
-        const $linkUtil = $('.link-util');
+
+        const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
+        const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
 
         $radioIsContractedBySupplies.on('change', function() {
             const isContractedBySupplies = $(this).val() === "1";
-            const $elementsToDisable = $suppliersBlock.add($paymentBlock);
 
-            $elementsToDisable
+            // muda label
+            const supplierSelect = $suppliersBlock.find('select');
+            const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
+
+            supplierSelect.siblings('label[for="' + supplierSelect.attr('name') + '"]').text(newLabel);
+            supplierSelect.data('rule-required', !isContractedBySupplies);
+
+            // desabilita pagamento
+            $paymentBlock
                 .find('input, textarea')
                 .prop('readonly', isContractedBySupplies);
+            //.data('rule-required', !isContractedBySupplies);
 
-            $elementsToDisable
+            $paymentBlock
                 .find('select')
                 .prop('disabled', isContractedBySupplies)
+                //.data('rule-required', !isContractedBySupplies)
                 .trigger('change.select2');
 
-            // esconde link caso SUPRIMENTOS
-            $linkUtil.prop('hidden', isContractedBySupplies);
+            if (isContractedBySupplies) {
+                //$paymentBlock.find('.form-group').removeClass('has-error');
+                //$paymentBlock.find('input').valid();
+                $installmentsTable.clear().draw();
+            }
+        });
 
-            //$installmentsTable.clear().draw();
-        }).filter(':checked').trigger('change');
-
-        const $inputInstallmentsNumber = $('#installments-number');
+        if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
+            $radioIsContractedBySupplies.filter(':checked').trigger('change');
+        }
 
         const editButton =
             '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
@@ -912,10 +1168,10 @@
             const status = $('#edit-status');
             const observation = $('#edit-observation');
 
-            const disabled = selectedRowIndex !== 0;
-            value.prop({
-                disabled
-            });
+            // const disabled = selectedRowIndex !== 0;
+            // value.prop({
+            //     disabled
+            // });
 
             if (rowData.expire_date) {
                 const formattedDate = new Date(rowData.expire_date.split('/').reverse().join('-'));
@@ -932,7 +1188,7 @@
 
                 const expireDate = $('#edit-expire-date').val();
 
-                const value = $('#edit-value').val();
+                const value = $('#edit-value-hidden').val();
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
 
@@ -945,24 +1201,28 @@
                     $installmentsTable.cell(selectedRowIndex, 4).data(editButton);
                     $installmentsTable.draw();
 
-                    if (selectedRowIndex === 0) {
-                        const amount = parseFloat($amount.val());
-                        const rows = $installmentsTable.rows().data();
-                        const selectedRowData = rows[selectedRowIndex];
-                        const selectedValue = parseFloat(selectedRowData.value);
+                    // comentado recalculo de parcelas para facilitar no futuro
 
-                        // Recalcula o valor das parcelas restantes
-                        const recalculatedValue = (amount - selectedValue) / (rows.length - 1);
+                    // if (selectedRowIndex === 0) {
+                    //     const amount = parseFloat($amount.val());
+                    //     const rows = $installmentsTable.rows().data();
+                    //     const selectedRowData = rows[selectedRowIndex];
+                    //     const selectedValue = parseFloat(selectedRowData.value);
 
-                        rows.each(function(rowData, index) {
-                            if (index !== selectedRowIndex) {
-                                $installmentsTable.cell(index, 1).data(recalculatedValue
-                                    .toFixed(2));
-                            }
-                        });
+                    //     // Recalcula o valor das parcelas restantes
+                    //     const recalculatedValue = (amount - selectedValue) / (rows.length - 1);
 
-                        $installmentsTable.draw();
-                    }
+                    //     rows.each(function(rowData, index) {
+                    //         if (index !== selectedRowIndex) {
+                    //             $installmentsTable.cell(index, 1).data(recalculatedValue
+                    //                 .toFixed(2));
+                    //         }
+                    //     });
+
+                    //     $installmentsTable.draw();
+                    // }
+
+                    // ---------------------------------------------------------------
                 }
 
                 selectedRowIndex = null;
@@ -992,25 +1252,57 @@
             generateInstallments(numberOfInstallments);
         });
 
-        // masks
-        $phoneNumber.imask({
-            mask: [{
-                    mask: '(00) 0000-0000'
-                },
-                {
-                    mask: '(00) 00000-0000'
-                }
-            ]
+        const $isPrePaid = $('#service-is-prepaid');
+        const $paymentInfoDescription = $('#payment-info-description');
+
+        $isPrePaid.on('change', function() {
+            const isPrePaid = $(this).val() === "1";
+            $serviceAmount.data('rule-required', isPrePaid);
+            $paymentMethod.data('rule-required', isPrePaid);
+            $formatInputInstallmentsNumber.data('rule-required', isPrePaid);
+            $paymentInfoDescription.data('rule-required', isPrePaid);
+
+            if (!isPrePaid) {
+                $serviceAmount.closest('.form-group').removeClass('has-error');
+                $paymentMethod.closest('.form-group').removeClass('has-error');
+                $formatInputInstallmentsNumber.closest('.form-group').removeClass('has-error');
+                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
+                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
+
+                $paymentBlock.find('.help-block').remove();
+            }
         });
 
-        $serviceAmount.imask({
-            mask: Number,
-            scale: 2,
-            thousandsSeparator: '.',
-            normalizeZeros: true,
-            padFractionalZeros: true,
-            min: 0,
-            max: 1000000000,
+        if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
+            $isPrePaid.filter(':selected').trigger('change.select2');
+        }
+
+        // btns
+        const $btnSubmitRequest = $('.btn-submit-request');
+        const $sendAction = $('#action');
+
+        $btnSubmitRequest.on('click', function(event) {
+            event.preventDefault();
+
+            bootbox.confirm({
+                message: "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?",
+                buttons: {
+                    confirm: {
+                        label: 'Sim, enviar solicitação',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'Cancelar',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function(result) {
+                    if (result) {
+                        $sendAction.val('submit-request');
+                        $('#request-form').trigger('submit');
+                    }
+                }
+            });
         });
 
         $fileRemove.click(async (e) => {
@@ -1028,7 +1320,7 @@
                 if (response.ok) {
                     li.remove();
                     $filesGroup.find('div.alert-success').fadeIn(500).fadeOut(2500);
-                }else{
+                } else {
                     $filesGroup.find('div.alert-danger').fadeIn(500).fadeOut(2500);
                 }
             } catch (error) {

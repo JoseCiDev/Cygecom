@@ -52,9 +52,9 @@ class PurchaseRequestController extends Controller
 
             $purchaseRequest = auth()->user()->purchaseRequest->find($id);
 
-            if (collect($purchaseRequest)->isEmpty()) {
-                throw new Exception('Não foi possível acessar essa solicitação.');
-            }
+                if (!isset($purchaseRequest)) {
+                    throw new Exception('Não foi possível acessar essa solicitação.');
+                }
 
 
             return view('components.purchase-request.edit', ["type" => $type, "id" => $purchaseRequest->id, "files" => $purchaseRequestFiles]);

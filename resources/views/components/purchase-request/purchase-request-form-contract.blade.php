@@ -1,13 +1,26 @@
 @php
+    use App\Enums\PurchaseRequestStatus;
+
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
     $isCopy ??= null;
     $contractInstallments = $purchaseRequest?->contract?->installments;
+    $contractPayday = $purchaseRequest?->contract?->payday;
+    $purchaseRequestContractAmount = $purchaseRequest?->contract?->amount === null ? null : (float) $purchaseRequest?->contract?->amount;
+    $recurrence = $purchaseRequest?->contract?->recurrence ?? null;
+
+    // verifica status para desabilitar campos para o usuário
+    $requestAlreadySent = $purchaseRequest?->status !== PurchaseRequestStatus::RASCUNHO;
+    // ve se tem request e não foi enviada
+    $hasRequestNotSent = $issetPurchaseRequest && !$requestAlreadySent;
+    // ve se tem request ja enviada e n é copia
+    $hasSentRequest = $issetPurchaseRequest && $requestAlreadySent && !$isCopy;
 @endphp
 
 <style>
     #contract-title {
-        border: none;
+        border: 1px solid rgb(195, 195, 195);
+        padding: 18px 0px 23px 10px;
     }
 
     #contract-title::placeholder {
@@ -16,7 +29,10 @@
 
     #contract-title {
         font-size: 20px;
-        padding-left: 0px;
+    }
+
+    .label-contract-title {
+        font-size: 16px;
     }
 
     .cost-center-container {
@@ -26,24 +42,38 @@
     h4 {
         font-size: 20px;
     }
-</style>
 
-<x-ModalSupplierRegister />
+    div.dataTables_wrapper div.dataTables_length,
+    div.dataTables_wrapper div.dataTables_info {
+        display: none;
+        /* remover espao em branco do datatables*/
+    }
+</style>
 
 <div class="row">
 
     <div class="col-sm-6">
-        <h2>
-            {{ isset($purchaseRequest) ? 'Editar solicitação' : 'Nova solicitação' }}
-        </h2>
+        @if ($hasRequestNotSent)
+            <h2>Editar Solicitação</h2>
+        @elseif ($hasSentRequest)
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h5>
+                    <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
+                </h5>
+            </div>
+            <h2>Visualizar Solicitação</h2>
+        @else
+            <h2>Nova Solicitação</h2>
+        @endif
     </div>
 
-    @if (isset($purchaseRequest))
+    @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-sm-6 pull-right">
             <x-modalDelete />
             <button data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - ID ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip" title="Excluir"
-                class="btn btn-danger pull-right" style="margin-right: 15px">
+                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
+                title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
                 Excluir solicitação
             </button>
         </div>
@@ -56,14 +86,14 @@
 <div class="box-content">
 
     @php
-        if(isset($purchaseRequest) && !$isCopy) {
+        if (isset($purchaseRequest) && !$isCopy) {
             $route = route('request.contract.update', ['type' => $purchaseRequest->type, 'id' => $id]);
-        }else {
+        } else {
             $route = route('request.contract.register');
         }
     @endphp
     <form enctype="multipart/form-data" class="form-validate" id="request-form" method="POST"
-        action="{{$route}}">
+        action="{{ $route }}">
 
         @csrf
 
@@ -71,12 +101,12 @@
 
         {{-- NOME CONTRATO --}}
         <div class="row contract-title-container" style="margin-bottom:5px; margin-top:18px;">
-            <div class="col-sm-8 contract-title">
+            <div class="col-sm-6 contract-title">
                 <div class="form-group">
-                    <label for="contract-title" class="control-label">Nome do contrato: </label>
+                    <label for="contract-title" class="control-label label-contract-title">Nome do contrato: </label>
                     <input type="text" id="contract-title" name="contract[name]"
-                        placeholder="Digite aqui um nome para este contrato..." class="form-control"
-                        data-rule-required="true" minlength="15"
+                        placeholder="Digite aqui um nome para este contrato... Ex: Contrato Work DB - 07/23 até 07/24"
+                        class="form-control" data-rule-required="true" minlength="15"
                         value="@if (isset($purchaseRequest->contract) && $purchaseRequest->contract->name) {{ $purchaseRequest->contract->name }} @endif">
                 </div>
             </div>
@@ -91,21 +121,24 @@
             @foreach ($purchaseRequest->costCenterApportionment as $index => $apportionment)
                 <div class="row cost-center-container">
                     <div class="col-sm-6">
-                        <label style="display:block;" for="textfield" class="control-label">Centro de custo da
-                            despesa</label>
-                        <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
-                            class='select2-me @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                            required data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
-                            <option value=""></option>
-                            @foreach ($costCenters as $costCenter)
-                                @php
-                                    $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
-                                @endphp
-                                <option value="{{ $costCenter->id }}" {{ $isApportionmentSelect ? 'selected' : '' }}>
-                                    {{ $costCenter->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="form-group">
+                            <label style="display:block;" for="textfield" class="control-label">Centro de custo da
+                                despesa</label>
+                            <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
+                                class='select2-me @error('cost_center_id_{{ $index }}') is-invalid @enderror'
+                                required data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
+                                <option value=""></option>
+                                @foreach ($costCenters as $costCenter)
+                                    @php
+                                        $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
+                                    @endphp
+                                    <option value="{{ $costCenter->id }}"
+                                        {{ $isApportionmentSelect ? 'selected' : '' }}>
+                                        {{ $costCenter->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
 
                     <div class="col-sm-2">
@@ -151,26 +184,28 @@
         @else
             <div class="row cost-center-container">
                 <div class="col-sm-6">
-                    <label for="textfield" class="control-label" style="display:block">
-                        Centro de custo da despesa
-                    </label>
-                    <select style="width:100%" name="cost_center_apportionments[0][cost_center_id]"
-                        class='select2-me
-                        @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                        required data-rule-required="true" placeholder="Ex: Almoxarifado">
-                        <option value="" disalbed></option>
-                        @foreach ($costCenters as $costCenter)
-                            @php
-                                $isUserCostCenter = isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id;
-                                $costCenterCompanyName = $costCenter->company->corporate_name;
-                                $costCenterName = $costCenter->name;
-                                $costCenterSeniorCode = $costCenter->senior_code;
-                            @endphp
-                            <option value="{{ $costCenter->id }}" {{ $isUserCostCenter ? 'selected' : '' }}>
-                                {{ $costCenterCompanyName . ' - ' . $costCenterName . ' - ' . $costCenterSeniorCode }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="form-group">
+                        <label for="textfield" class="control-label" style="display:block">
+                            Centro de custo da despesa
+                        </label>
+                        <select style="width:100%" name="cost_center_apportionments[0][cost_center_id]"
+                            class='select2-me
+                            @error('cost_center_id_{{ $index }}') is-invalid @enderror'
+                            required data-rule-required="true" placeholder="Ex: Almoxarifado">
+                            <option value="" disalbed></option>
+                            @foreach ($costCenters as $costCenter)
+                                @php
+                                    $isUserCostCenter = isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id;
+                                    $costCenterCompanyName = $costCenter->company->corporate_name;
+                                    $costCenterName = $costCenter->name;
+                                    $costCenterSeniorCode = $costCenter->senior_code;
+                                @endphp
+                                <option value="{{ $costCenter->id }}" {{ $isUserCostCenter ? 'selected' : '' }}>
+                                    {{ $costCenterCompanyName . ' - ' . $costCenterName . ' - ' . $costCenterSeniorCode }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
 
                 <div class="col-sm-2">
@@ -225,18 +260,33 @@
 
             <div class="row" style="margin-bottom:15px; margin-top:5px;">
 
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <label for="form-check" class="control-label" style="padding-right:10px;">
                         Quem está responsável por esta contratação?
                     </label>
                     <div class="form-check">
                         <input name="is_supplies_contract"value="1" class="radio-who-wants"
-                            id="is-supplies-contract" type="radio" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
+                            id="is-supplies-contract" type="radio" @checked((isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract) || !isset($purchaseRequest))>
                         <label class="form-check-label" for="is-supplies-contract">Suprimentos</label>
 
                         <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio"
                             id="is-area-contract" style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
                         <label class="form-check-label" for="is-area-contract"> Área solicitante</label>
+                    </div>
+                </div>
+
+                {{-- COMEX --}}
+                <div class="col-sm-4">
+                    <label for="form-check" class="control-label" style="padding-right:10px;">
+                        Contrato se enquadra na categoria COMEX?
+                    </label>
+                    <div class="form-check">
+                        <input name="is_comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
+                            type="radio" data-skin="minimal">
+                        <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
+                        <input name="is_comex"value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest)) class="radio-comex"
+                            type="radio" data-skin="minimal">
+                        <label class="form-check-label" for="">Não</label>
                     </div>
                 </div>
 
@@ -250,7 +300,7 @@
                         <label for="reason" class="control-label">
                             Motivo da solicitação
                         </label>
-                        <textarea required name="reason" id="reason" rows="4"
+                        <textarea data-rule-required="true" minlength="20" name="reason" id="reason" rows="4"
                             placeholder="Ex: Ar condicionado da sala de reuniões do atrium apresenta defeitos de funcionamento"
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
@@ -265,7 +315,7 @@
                 <div class="col-sm-8">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
-                        <textarea required name="description" id="description" rows="4"
+                        <textarea data-rule-required="true" minlength="20" name="description" id="description" rows="4"
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
@@ -283,35 +333,20 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="local-description" class="control-label">
-                            Local de entrega do produto
+                            Local da prestação do serviço
                         </label>
                         <input name="local_description" value="{{ $purchaseRequest->local_description ?? null }}"
                             type="text" id="local-description"
                             placeholder="Ex: HKM - Av. Gentil Reinaldo Cordioli, 161 - Jardim Eldorado"
-                            class="form-control" data-rule-required="true" data-rule-minlength="2" required>
+                            class="form-control" data-rule-required="true" minlength="5">
                     </div>
                 </div>
 
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label for="desired-date" class="control-label">Data desejada</label>
+                        <label for="desired-date" class="control-label">Data desejada da contratação</label>
                         <input type="date" name="desired_date" id="desired-date" class="form-control"
                             value="{{ $purchaseRequest->desired_date ?? null }}">
-                    </div>
-                </div>
-
-                {{-- COMEX --}}
-                <div class="col-sm-4">
-                    <label for="form-check" class="control-label" style="padding-right:10px;">
-                        Contrato se enquadra na categoria COMEX?
-                    </label>
-                    <div class="form-check" style="12px; margin-top:4px;">
-                        <input name="is_comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
-                            type="radio" data-skin="minimal">
-                        <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
-                        <input name="is_comex"value="0" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) class="radio-comex"
-                            type="radio" data-skin="minimal">
-                        <label class="form-check-label" for="">Não</label>
                     </div>
                 </div>
 
@@ -320,84 +355,26 @@
             <div class="row">
 
                 {{-- LINK --}}
-                <div class="col-sm-6 link-util">
-                    <label for="purchase-request-files[path]" class="control-label">Link</label>
-                    <input
-                        value="{{ isset($purchaseRequest->purchaseRequestFile[0]) && $purchaseRequest->purchaseRequestFile[0]->path ? $purchaseRequest->purchaseRequestFile[0]->path : '' }}"
-                        type="text"
-                        placeholder="Adicone um link válido. Ex: Contrato disponibilizado pelo fornecedor"
-                        name="purchase_request_files[path]" id="purchase-request-files[path]" class="form-control">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="purchase-request-files[path]" class="control-label">Links de apoio /
+                            sugestão</label>
+                        <textarea placeholder="Adicone um ou mais links válidos. Ex: Contrato disponibilizado pelo fornecedor" rows="3"
+                            name="purchase_request_files[path]" id="purchase-request-files[path]" class="form-control text-area no-resize">{{ isset($purchaseRequest->purchaseRequestFile[0]) && $purchaseRequest->purchaseRequestFile[0]->path ? $purchaseRequest->purchaseRequestFile[0]->path : '' }}</textarea>
+                    </div>
                 </div>
 
                 {{-- OBSERVACAO --}}
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="observation" class="control-label">
+                        <label for="request-observation" class="control-label">
                             Observações
                         </label>
-                        <textarea name="observation" id="observation" rows="2"
-                            placeholder="Informações complementares desta solicitação"
-                            class="form-control text-area no-resize">{{ $purchaseRequest->observation ?? null }}</textarea>
+                        <textarea name="observation" id="request-observation" rows="3"
+                            placeholder="Informações complementares desta solicitação" class="form-control text-area no-resize">{{ $purchaseRequest->observation ?? null }}</textarea>
                     </div>
                 </div>
 
-            </div>
-
-            <div class="suppliers-block">
-                <div class="row center-block" style="padding-bottom: 5px;">
-                    <h4>INFORMAÇÕES DO FORNECEDOR</h4>
-                </div>
-                <div class="row" style="margin-top: 15px">
-
-                    {{-- FORNECEDOR (CNPJ/RAZAO SOCIAL --}}
-                    <div class="col-sm-4 form-group">
-                        <label style="display:block;" for="contract[supplier_id]" class="control-label">
-                            Fornecedor (CNPJ - RAZÃO SOCIAL)
-                        </label>
-                        <select name="contract[supplier_id]" class='select2-me'
-                            data-placeholder="Escolha uma fornecedor" style="width:100%;">
-                            <option value=""></option>
-                            @foreach ($suppliers as $supplier)
-                                @php $supplierSelected = isset($purchaseRequest->contract) && $purchaseRequest->contract->supplier_id === $supplier->id; @endphp
-                                <option value="{{ $supplier->id }}" @selected($supplierSelected)>
-                                    {{ "$supplier->cpf_cnpj - $supplier->corporate_name" }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- VENDEDOR/ATENDENTE --}}
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="attendant" class="control-label">Vendedor/Atendente</label>
-                            <input type="text" id="attendant" name="contract[seller]"
-                                placeholder="Pessoa responsável pela cotação" class="form-control"
-                                data-rule-minlength="2"
-                                value="{{ $purchaseRequest?->contract?->seller ?? null }}">
-                        </div>
-                    </div>
-
-                    {{-- TELEFONE --}}
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="phone-number" class="control-label">Telefone</label>
-                            <input type="text" name="contract[phone]" id="phone-number" placeholder="(00) 0000-0000"
-                                class="form-control mask_phone"
-                                value="{{ $purchaseRequest?->contract?->phone ?? null }}">
-                        </div>
-                    </div>
-
-                    {{-- E-MAIL --}}
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="email" class="control-label">E-mail</label>
-                            <input type="text" name="contract[email]" id="email"
-                                placeholder="user_email@vendedor.com.br" class="form-control"
-                                data-rule-minlength="2"
-                                value="{{ $purchaseRequest?->contract?->email ?? null }}">
-                        </div>
-                    </div>
-
-                </div>
             </div>
 
             <hr>
@@ -412,15 +389,19 @@
                         <label for="form-check" class="control-label" style="padding-right:10px;">
                             Valor do contrato será:
                         </label>
-                        @php $isFixedPayment = isset($purchaseRequest->contract) && $purchaseRequest->contract->is_fixed_payment @endphp
+                        @php
+                            $isFixedPayment = isset($purchaseRequest->contract) && $purchaseRequest->contract->is_fixed_payment;
+                        @endphp
                         <div class="form-check" style="12px; display:inline;">
                             {{-- FIXO --}}
                             <input name="contract[is_fixed_payment]" value="1" class="radio-is-fixed-value"
-                                type="radio" data-skin="minimal" @checked($isFixedPayment)>
+                                type="radio" data-skin="minimal" @checked(
+                                    (isset($purchaseRequest->contract->is_fixed_payment) && $isFixedPayment) ||
+                                        !isset($purchaseRequest->contract->is_fixed_payment))>
                             <label class="form-check-label" for="services" style="margin-right:15px;">FIXO</label>
                             {{-- VARIAVEL --}}
                             <input name="contract[is_fixed_payment]" value="0" class="radio-is-fixed-value"
-                                type="radio" data-skin="minimal" @checked($isFixedPayment)>
+                                type="radio" data-skin="minimal" @checked(isset($purchaseRequest->contract->is_fixed_payment) && !$isFixedPayment)>
                             <label class="form-check-label" for="">VARIÁVEL</label>
                         </div>
                         <div class="small" style="color:rgb(85, 85, 85);">
@@ -428,20 +409,34 @@
                         </div>
                     </div>
 
+                    {{-- CONDIÇÃO DE PAGAMENTO --}}
                     <div class="col-sm-2" style="margin-top:-10px;">
-                        <label class="control-label">Valor total do contrato: </label>
-                        <div class="input-group">
-                            <span class="input-group-addon">R$</span>
-                            <input type="number" placeholder="0.00" class="form-control amount" min="0"
-                                name="contract[amount]" id="amount"
-                                value="{{ $purchaseRequest->contract->amount ?? null }}">
+                        <div class="form-group">
+                            <label for="contract[is_prepaid]" class="control-label">Condição de pagamento</label>
+                            <select name="contract[is_prepaid]" id="contract-is-prepaid"
+                                class='select2-me contract[is_prepaid]' style="width:100%; padding-top:2px;"
+                                data-placeholder="Escolha uma opção">
+                                <option value=""></option>
+                                <option value="1" @selected(isset($purchaseRequest->contract) && (bool) $purchaseRequest->contract->is_prepaid)>Pagamento antecipado</option>
+                                <option value="0" @selected(isset($purchaseRequest->contract) && !(bool) $purchaseRequest->contract->is_prepaid)>Pagamento após execução</option>
+                            </select>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
+                    <div class="col-sm-2" style="margin-top:-10px;">
+                        <div class="form-group">
+                            <label class="control-label">Valor total do contrato: </label>
+                            <div class="input-group">
+                                <span class="input-group-addon">R$</span>
+                                <input type="text" placeholder="0,00" class="form-control format-amount"
+                                    id="format-amount" value="{{ $purchaseRequestContractAmount }}">
+                                <input type="hidden" name="contract[amount]" id="amount"
+                                    class="amount no-validation" value="{{ $purchaseRequestContractAmount }}">
+                            </div>
+                        </div>
+                    </div>
 
-                    <div class="col-sm-2">
+                    <div class="col-sm-2" style="margin-top:-10px;">
                         <div class="form-group">
                             <label class="control-label">Vigência - data inicío</label>
                             <input type="date" name="contract[start_date]" class="form-control start-date"
@@ -449,7 +444,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2">
+                    <div class="col-sm-2" style="margin-top:-10px;">
                         <div class="form-group" style="margin-bottom:0px;">
                             <label class="control-label">Vigência - data fim</label>
                             <input type="date" name="contract[end_date]" class="form-control end-date"
@@ -469,38 +464,46 @@
                             </label>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label class="control-label">Dia de vencimento</label>
-                            <input type="number" name="contract[payday]" class="form-control"
-                                value="{{ $purchaseRequest->contract->payday ?? null }}">
-                        </div>
-                    </div>
+                <div class="row">
 
                     {{-- RECORRENCIA --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="recurrence" class="control-label">Recorrência</label>
-                            @php
-                                $recurrence = isset($purchaseRequest->contract) ? $purchaseRequest->contract->recurrence : null;
-                            @endphp
+                            <label class="control-label">Recorrência</label>
                             <select name="recurrence" id="recurrence" class="select2-me recurrence"
                                 style="width: 100%; padding-top: 2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="unique" {{ $recurrence === 'unique' ? 'selected' : '' }}>ÚNICA</option>
-                                <option value="monthly" {{ $recurrence === 'monthly' ? 'selected' : '' }}>MENSAL
+                                <option value="unique" {{ $recurrence?->value === 'unique' ? 'selected' : '' }}>ÚNICA
                                 </option>
-                                <option value="yearly" {{ $recurrence === 'yearly' ? 'selected' : '' }}>ANUAL</option>
+                                <option value="monthly" {{ $recurrence?->value === 'monthly' ? 'selected' : '' }}>
+                                    MENSAL
+                                </option>
+                                <option value="yearly" {{ $recurrence?->value === 'yearly' ? 'selected' : '' }}>ANUAL
+                                </option>
                             </select>
                         </div>
                     </div>
 
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label class="control-label">Dia de vencimento</label>
+                            <select name="contract[payday]" id="contract-payday" class='select2-me contract[payday]'
+                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
+                                <option value=""></option>
+                                @for ($day = 1; $day <= 31; $day++)
+                                    <option value="{{ $day }}" @selected($contractPayday === $day)>
+                                        {{ $day }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
 
                     {{-- FORMA DE PAGAMENTO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="payment-method" class="control-label">Forma de pagamento</label>
+                            <label class="control-label">Forma de pagamento</label>
                             @php
                                 $paymentMethod = null;
                                 if (isset($purchaseRequest->contract) && isset($purchaseRequest->contract->paymentInfo)) {
@@ -525,25 +528,26 @@
                         </div>
                     </div>
 
-                    <input type="hidden" value="" name="contract[payment_info][id]">
-
-                    {{-- CONDIÇÃO DE PAGAMENTO --}}
-                    <div class="col-sm-2">
+                    {{-- DESCRICAO DADOS PAGAMENTO --}}
+                    <div class="col-sm-6" style="margin-bottom: -20px;">
                         <div class="form-group">
-                            <label for="contract[is_prepaid]" class="control-label">Condição de pagamento</label>
-                            <select name="contract[is_prepaid]" id="contract[is_prepaid]"
-                                class='select2-me contract[is_prepaid]' style="width:100%; padding-top:2px;"
-                                data-placeholder="Escolha uma opção">
-                                <option value=""></option>
-                                <option value="1" @selected(isset($purchaseRequest->contract) && (bool) $purchaseRequest->contract->is_prepaid)>Pagamento antecipado</option>
-                                <option value="0" @selected(isset($purchaseRequest->contract) && !(bool) $purchaseRequest->contract->is_prepaid)>Pagamento após execução</option>
-                            </select>
+                            <label for="payment-info-description" class="control-label">
+                                Detalhes do pagamento
+                            </label>
+                            <textarea name="contract[payment_info][description]" id="payment-info-description" rows="3"
+                                placeholder="Informações sobre pagamento. Ex: Chave PIX, dados bancários do fornecedor, etc..."
+                                class="form-control text-area no-resize">{{ $purchaseRequest->contract->paymentInfo->description ?? null }}</textarea>
                         </div>
                     </div>
+
+                    <input type="hidden" value="" name="contract[payment_info][id]">
+
+                    <input type="hidden" value="" name="contract[quantity_of_installments]"
+                        id="qtd-installments">
                 </div>
 
                 {{-- TABLE PARCELAS --}}
-                <div class="row" style="display:flex; align-items:center; margin-top:15px; margin-bottom:5px;">
+                <div class="row" style="display:flex; align-items:center; margin-bottom:5px;">
                     <h4 class="col-sm-6">
                         <i class="fa fa-dollar"></i>
                         Parcelas deste contrato
@@ -565,11 +569,26 @@
                                     id="installments-table-striped">
                                     <thead>
                                         <tr>
-                                            <th class="col-sm-2">VENCIMENTO</th>
-                                            <th class="col-sm-2">VALOR</th>
-                                            <th class='col-sm-5'>OBSERVAÇÃO</th>
-                                            <th class='col-sm-2'>STATUS</th>
-                                            <th class='col-sm-1'>AÇÕES</th>
+                                            <th class="col-sm-2">
+                                                <i class="fa fa-calendar-o" style="padding-right:5px;"></i>
+                                                VENCIMENTO
+                                            </th>
+                                            <th class="col-sm-2">
+                                                <i class="fa fa-money" style="padding-right:5px;"></i>
+                                                VALOR
+                                            </th>
+                                            <th class='col-sm-4 hidden-350'>
+                                                <i class="fa fa-pencil-square" style="padding-right:5px;"></i>
+                                                OBSERVAÇÃO
+                                            </th>
+                                            <th class='col-sm-2 hidden-1024'>
+                                                <i class="fa fa-tasks" style="padding-right:5px;"></i>
+                                                STATUS
+                                            </th>
+                                            <th class='col-sm-2 hidden-480'>
+                                                <i class="fa fa-sliders" style="padding-right:5px;"></i>
+                                                AÇÕES
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -583,8 +602,69 @@
                     </div>
                 </div>
             </div>
+
+            <hr>
+
+            <div class="suppliers-block">
+                <div class="row center-block" style="padding-bottom: 5px;">
+                    <h4>INFORMAÇÕES DO FORNECEDOR</h4>
+                </div>
+                <div class="row" style="margin-top: 10px">
+
+                    {{-- FORNECEDOR (CNPJ/RAZAO SOCIAL --}}
+                    <div class="col-sm-4 form-group">
+                        <label style="display:block;" for="contract[supplier_id]" class="control-label">
+                            Fornecedor (CNPJ - RAZÃO SOCIAL)
+                        </label>
+                        <select name="contract[supplier_id]" class='select2-me'
+                            data-placeholder="Escolha uma fornecedor" style="width:100%;">
+                            <option value=""></option>
+                            @foreach ($suppliers as $supplier)
+                                @php $supplierSelected = isset($purchaseRequest->contract) && $purchaseRequest->contract->supplier_id === $supplier->id; @endphp
+                                <option value="{{ $supplier->id }}" @selected($supplierSelected)>
+                                    {{ "$supplier->cpf_cnpj - $supplier->corporate_name" }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- VENDEDOR/ATENDENTE --}}
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="attendant" class="control-label">Vendedor/Atendente</label>
+                            <input type="text" id="attendant" name="contract[seller]"
+                                placeholder="Pessoa responsável pela cotação" class="form-control"
+                                data-rule-minlength="2" value="{{ $purchaseRequest?->contract?->seller ?? null }}">
+                        </div>
+                    </div>
+
+                    {{-- TELEFONE --}}
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label for="phone-number" class="control-label">Telefone</label>
+                            <input type="text" name="contract[phone]" id="phone-number"
+                                placeholder="(00) 0000-0000" class="form-control mask_phone"
+                                value="{{ $purchaseRequest?->contract?->phone ?? null }}">
+                        </div>
+                    </div>
+
+                    {{-- E-MAIL --}}
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="email" class="control-label">E-mail</label>
+                            <input type="text" name="contract[email]" id="email"
+                                placeholder="user_email@vendedor.com.br" class="form-control" data-rule-minlength="2"
+                                value="{{ $purchaseRequest?->contract?->email ?? null }}">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <hr>
+
+            {{-- ARQUIVOS --}}
             <div class="row justify-content-center">
-                <div class="col-12">
+                <div class="col-sm-12">
                     <fieldset id="files-group">
                         <legend>Arquivos</legend>
                         <input type="file" class="form-control" name="arquivos[]" multiple>
@@ -620,9 +700,26 @@
                 </div>
             </div>
 
-            <div class="form-actions pull-right" style="margin-top:50px;">
-                <button type="submit" class="btn btn-primary">Salvar</button>
-                <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
+            <div class="form-actions pull-right" style="margin-top:50px; padding-bottom:20px">
+                @if (!$hasSentRequest)
+                    <input type="hidden" name="action" id="action" value="">
+
+                    <button type="submit" class="btn btn-primary btn-draft" style="margin-right: 10px">
+                        Salvar rascunho
+                    </button>
+
+                    <button type="submit" name="submit_request" style="margin-right: 10px"
+                        class="btn btn-success btn-submit-request" value="submit-request">
+                        Salvar e enviar solicitação
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+
+                    <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
+                @endif
+
+                @if ($hasSentRequest)
+                    <a href="{{ route('requests.own') }}" class="btn btn-primary btn-large">VOLTAR</a>
+                @endif
             </div>
         </div>
     </form>
@@ -631,11 +728,69 @@
 
     <x-modal-edit-installment :statusValues="$statusValues" />
 
+    <x-ModalSupplierRegister />
+
 </div>
 
 <script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
+        const purchaseRequest = @json($purchaseRequest);
+        const statusValues = @json($statusValues);
+        const isRequestCopy = @json($isCopy);
+        const hasSentRequest = @json($hasSentRequest);
+
+        const $amount = $('.amount');
+        const $contractAmount = $('.format-amount');
+
+        $('#request-form')
+            .find('input, textarea, checkbox')
+            .prop('disabled', hasSentRequest);
+
+        $('#request-form')
+            .find('select')
+            .prop('disabled', hasSentRequest);
+
+
+        // masks
+        $contractAmount.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 0,
+            max: 1000000000,
+        });
+
+        // mascaras pra modal edicao e add
+        const $valueModalAdd = $('#value');
+        const $valueModalAddHidden = $('#value-hidden');
+
+        const $editValueInputModal = $('#edit-value');
+        const $editValueHiddenModal = $('#edit-value-hidden');
+
+        $editValueInputModal.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 0,
+            max: 1000000000,
+        });
+
+        $valueModalAdd.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 0,
+            max: 1000000000,
+        });
+
+
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
         const $fileRemove = $('button.file-remove');
@@ -682,8 +837,88 @@
         }
         updateApportionmentFields();
 
+        // desabilita botao caso nao tenha sido preenchido cost center corretamente;
+        const $btnAddCostCenter = $('.add-cost-center-btn');
+        const $costCenterSelect = $('.cost-center-container select');
+
+        function toggleCostCenterBtn() {
+            const costCenterContainer = $(this).closest('.cost-center-container');
+
+            const costCenterSelect = costCenterContainer
+                .find('select')
+                .val();
+
+            const costcenterPercentage = costCenterContainer
+                .find('input[name$="[apportionment_percentage]"]')
+                .val()
+
+            const costCenterCurrency = costCenterContainer
+                .find('input[name$="[apportionment_currency]"]')
+                .val()
+
+            const isValidApportionment = Boolean(costCenterSelect && (costcenterPercentage ||
+                costCenterCurrency));
+
+            $btnAddCostCenter.prop('disabled', !isValidApportionment);
+        }
+
+        $(document).on('input change',
+            `${$costCenterSelect.selector}, ${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
+            toggleCostCenterBtn);
+
+        toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
+
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
         $costCenterPercentage.add($costCenterCurrency).on('input', updateApportionmentFields);
+
+
+        // trata valor serviço mascara
+        $contractAmount.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $amount.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
+        // ---
+
+        // sim está repetindo muito...
+
+        // trata valor serviço mascara
+        $editValueInputModal.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $editValueHiddenModal.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
+        // ---
+
+        $valueModalAdd.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $valueModalAddHidden.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
+        // ---
+
+
+        // set desired date min
+        const currentDate = moment().format('YYYY-MM-DD');
+        const $desiredDate = $('#desired-date');
+
+        $desiredDate.attr('min', currentDate);
+
 
         // Add Centro de Custo
         $('.add-cost-center-btn').click(function() {
@@ -707,6 +942,7 @@
             newRow.find('.delete-cost-center').removeAttr('hidden');
             checkCostCenterCount();
             disableSelectedOptions();
+            toggleCostCenterBtn.bind(this)();
         });
 
         $(document).on('click', '.delete-cost-center', function() {
@@ -714,6 +950,7 @@
             updateApportionmentFields();
             checkCostCenterCount();
             disableSelectedOptions();
+            toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
         });
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
@@ -722,7 +959,6 @@
         const $inputStartDate = $('.start-date');
         const $inputEndDate = $('.end-date');
         const $recurrence = $('#recurrence');
-        const $amount = $('.amount');
 
         function calculateMonthsPassed(startDate, endDate) {
             const startYear = startDate.getFullYear();
@@ -748,18 +984,12 @@
             return;
         }
 
-        // function calculateNumberOfInstallmentsToSend() {
-
-        // }
-
-        const purchaseRequest = @json($purchaseRequest);
 
         // dataTable config
         const $installmentsTable = $('#installments-table-striped').DataTable({
             defer: true,
             data: purchaseRequest?.contract?.installments || [],
-            columns: [
-                {
+            columns: [{
                     data: "expire_date",
                     render: function(data, type, row, meta) {
                         if (!data) {
@@ -771,6 +1001,10 @@
                 },
                 {
                     data: "value",
+                    render: function(data, type, row, meta) {
+                        const dataWithR$ = "R$" + data;
+                        return dataWithR$;
+                    }
                 },
                 {
                     data: "observation",
@@ -781,22 +1015,34 @@
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        const actions = [
-                            "<button type='button' rel='tooltip' title='Editar Parcela' class='btn btn-edit-installment'><i class='fa fa-edit'></i></button>",
-                            "<button type='button' class='btn btn-delete-installment' style='margin-left:5px' title='Excluir'><i class='fa fa-times'></i></button>"
-                        ];
+                        const btnEdit = $(
+                            "<div><button type='button' rel='tooltip' title='Editar Parcela' class='btn btn-edit-installment'><i class='fa fa-edit'></i></button></div>"
+                        );
+                        const btnDelete = $(
+                            "<div><button type='button' class='btn btn-delete-installment' style='margin-left:5px' title='Excluir'><i class='fa fa-times'></i></button></div>"
+                        );
 
-                        return actions.join('');
+                        btnEdit.find('button').prop('disabled', hasSentRequest);
+                        btnDelete.find('button').prop('disabled', hasSentRequest);
+
+                        return btnEdit.html() + " " + btnDelete.html();
                     }
                 }
             ],
             orderable: false,
-            paging: false,
-            info: false,
+            paging: true,
+            pageLength: 12,
+            info: "Página _PAGE_ of _PAGES_",
             searching: false,
             language: {
-                emptyTable: "",
-                zeroRecords: ""
+                lengthMenu: "",
+                emptyTable: "Nenhuma parcela adicionada.",
+                zeroRecords: "",
+                paginate: {
+                    previous: "Anterior",
+                    next: "Próximo",
+                },
+                info: ""
             },
             order: [
                 [0, 'desc']
@@ -807,7 +1053,6 @@
             // }
         });
 
-        const isRequestCopy = @json($isCopy);
         const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
 
         function fillHiddenInputsWithRowData() {
@@ -827,7 +1072,8 @@
                     const idInput = document.createElement('input');
                     idInput.type = 'number';
                     idInput.name = 'contract[contract_installments][' + index + '][id]';
-                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.contract?.installments[index]?.id : null;
+                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.contract
+                        ?.installments[index]?.id : null;
                     idInput.hidden = true;
 
                     const expireDateInput = document.createElement('input');
@@ -868,7 +1114,9 @@
                 const idInput = document.createElement('input');
                 idInput.type = 'text';
                 idInput.name = 'contract[contract_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest.contract.installments[0].id : null;
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.contract?.installments[0]
+                    ?.id :
+                    null;
                 idInput.hidden = true;
 
                 const expireDateInput = document.createElement('input');
@@ -932,7 +1180,11 @@
         $radioIsFixedValue.on('change', function() {
             const isFixedValue = $(this).val() === "1";
             $divBtnAddInstallment.attr('hidden', isFixedValue);
-            //$installmentsTable.clear().draw();
+
+            if (!isRequestCopy && !purchaseRequest) {
+                $installmentsTable.clear().draw();
+            }
+
             $inputsForInstallmentEvents =
                 $recurrence
                 .add($amount)
@@ -943,7 +1195,7 @@
             } else {
                 $inputsForInstallmentEvents.off('change');
             }
-        }).first().trigger('change');
+        }).filter(':checked').trigger('change');
 
         // show btn add installment quando VIGENCIA INDETERMINADA
         $checkboxHasNoEndDate.on('click', function() {
@@ -965,27 +1217,45 @@
         const $radioIsContractedBySupplies = $('.radio-who-wants');
         const $paymentBlock = $('.payment-block');
         const $suppliersBlock = $('.suppliers-block');
-        const $linkUtil = $('.link-util');
 
-        $radioIsContractedBySupplies.on('click', function() {
+        const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
+        const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
+
+        $radioIsContractedBySupplies.on('change', function() {
             const isContractedBySupplies = $(this).val() === "1";
-            const $elementsToDisable = $suppliersBlock.add($paymentBlock);
 
-            $elementsToDisable
-                .find('input')
+            // muda label
+            const supplierSelect = $suppliersBlock.find('select');
+            const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
+
+            supplierSelect.siblings('label[for="' + supplierSelect.attr('name') + '"]').text(newLabel);
+            supplierSelect.data('rule-required', !isContractedBySupplies);
+
+            // desabilita pagamento
+            $paymentBlock
+                .find('input, textarea')
                 .prop('readonly', isContractedBySupplies);
 
-            $elementsToDisable
-                .select2('readonly', isContractedBySupplies)
+            $paymentBlock
+                .find('input[type="checkbox"], input[type="radio"]')
+                .prop('disabled', isContractedBySupplies);
+
+            $paymentBlock
+                .find('select')
+                .prop('disabled', isContractedBySupplies)
                 .trigger('change.select2');
 
-            // esconde link util caso SUPRIMENTOS
-            $linkUtil.prop('hidden', isContractedBySupplies);
 
-            //$installmentsTable.clear().draw();
-            $radioIsFixedValue.first().prop('checked', true);
-            $divBtnAddInstallment.attr('hidden', true);
-        }).trigger('click');
+            if (isContractedBySupplies) {
+                //$paymentBlock.find('.form-group').removeClass('has-error').valid();
+                $installmentsTable.clear().draw();
+            }
+
+        });
+
+        if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
+            $radioIsContractedBySupplies.filter(':checked').trigger('change');
+        }
 
 
         // declaracao dos botoes edit e delete do datatable
@@ -1067,7 +1337,7 @@
             const expireDateFormatted = expireDate.toLocaleDateString('pt-BR', {
                 timeZone: 'UTC'
             });
-            const value = $('#value').val();
+            const value = $('#value-hidden').val();
             const status = $('#status').find(':selected').text();
             const observation = $('#observation').val();
 
@@ -1108,8 +1378,6 @@
                 selectedRowIndex = $installmentsTable.row(this).index();
             }
         });
-
-        const statusValues = @json($statusValues);
 
         let selectedRowIndex = null;
 
@@ -1175,12 +1443,82 @@
                 if (response.ok) {
                     li.remove();
                     $filesGroup.find('div.alert-success').fadeIn(500).fadeOut(2500);
-                }else{
+                } else {
                     $filesGroup.find('div.alert-danger').fadeIn(500).fadeOut(2500);
                 }
             } catch (error) {
                 console.error(error);
             }
+        });
+
+        // calculo para enviar qtd parcelas
+        const $quantityOfInstallments = $('#qtd-installments');
+
+        function calculateQtdInstallmentsToSend() {
+            const qtdInstallments = $installmentsTable.data().length;
+            $quantityOfInstallments.val(qtdInstallments);
+        }
+
+        $installmentsTable.on('draw.dt', calculateQtdInstallmentsToSend);
+
+        const $isPrePaid = $('#contract-is-prepaid');
+        const $paymentInfoDescription = $('#payment-info-description');
+        const $paymentMethod = $('#payment-method');
+        const $payday = $('#contract-payday');
+
+        $isPrePaid.on('change', function() {
+            const isPrePaid = $(this).val() === "1";
+            $contractAmount.data('rule-required', isPrePaid);
+            $paymentMethod.data('rule-required', isPrePaid);
+            $payday.data('rule-required', isPrePaid);
+            $paymentInfoDescription.data('rule-required', isPrePaid);
+            $recurrence.data('rule-required', isPrePaid);
+            $inputStartDate.data('rule-required', isPrePaid);
+            $inputEndDate.data('rule-required', isPrePaid);
+
+            if (!isPrePaid) {
+                $contractAmount.closest('.form-group').removeClass('has-error');
+                $paymentMethod.closest('.form-group').removeClass('has-error');
+                $payday.closest('.form-group').removeClass('has-error');
+                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
+                $recurrence.closest('.form-group').removeClass('has-error');
+                $inputStartDate.closest('.form-group').removeClass('has-error');
+                $inputEndDate.closest('.form-group').removeClass('has-error');
+
+                $paymentBlock.find('.help-block').remove();
+            }
+        });
+
+        if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
+            $isPrePaid.filter(':selected').trigger('change.select2');
+        }
+
+        // btns
+        const $btnSubmitRequest = $('.btn-submit-request');
+        const $sendAction = $('#action');
+
+        $btnSubmitRequest.on('click', function(event) {
+            event.preventDefault();
+
+            bootbox.confirm({
+                message: "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?",
+                buttons: {
+                    confirm: {
+                        label: 'Sim, enviar solicitação',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'Cancelar',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function(result) {
+                    if (result) {
+                        $sendAction.val('submit-request');
+                        $('#request-form').trigger('submit');
+                    }
+                }
+            });
         });
     });
 </script>

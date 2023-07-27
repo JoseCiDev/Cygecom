@@ -11,7 +11,7 @@ return new class() extends Migration
         Schema::create('purchase_request_files', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
 
-            $table->string('path');
+            $table->text('path'); // rever (text é péssimo)
 
             $table->unsignedInteger('purchase_request_id');
             $table->foreign('purchase_request_id')->references('id')->on('purchase_requests');

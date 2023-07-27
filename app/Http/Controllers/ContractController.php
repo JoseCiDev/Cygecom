@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use Illuminate\Support\Facades\DB;
 use App\Enums\PurchaseRequestStatus;
+use Illuminate\Http\{RedirectResponse, Request};
 use App\Models\{Company, CostCenter, PurchaseRequest};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
-use Exception;
-use Illuminate\Http\{RedirectResponse, Request};
 use Symfony\Component\Mailer\Exception\TransportException;
 
 class ContractController extends Controller
@@ -21,9 +22,13 @@ class ContractController extends Controller
     public function registerContract(Request $request): RedirectResponse
     {
         $route      = 'requests';
-        $routeParam = [];
         $data       = $request->all();
         $files       = $request->file('arquivos');
+        $routeParams = [];
+        $data = $request->all();
+
+        // captura o botão submit clicado (se for submit_request update status);
+        $action = $request->input('action');
 
         $validator = $this->validatorService->purchaseRequest($data);
 
@@ -34,23 +39,38 @@ class ContractController extends Controller
         try {
             $purchaseRequest = $this->purchaseRequestService->registerContractRequest($data, $files);
             $route           = 'request.edit';
-            $routeParam      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
+            $routeParams      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
+            $msg = "Solicitação de contrato criada com sucesso!";
+
+            // MUDAR
+            DB::beginTransaction();
+
+            if ($action === 'submit-request') {
+                $purchaseRequest->update(['status' => 'pendente']);
+                $msg = "Solicitação de contrato criada e enviada ao setor de suprimentos responsável!";
+            }
+
+            DB::commit();
+
+            $route = 'requests.own';
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
+            $msg = 'Não foi possível fazer o registro no banco de dados.';
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
         }
 
-        session()->flash('success', "Solicitação de contrato criada com sucesso!");
+        session()->flash('success', $msg);
 
-        return redirect()->route($route, $routeParam);
+        return redirect()->route($route, $routeParams);
     }
 
     public function contractForm(int $purchaseRequestIdToCopy = null)
     {
-        $companies   = Company::all();
+        $companies = Company::all();
         $costCenters = CostCenter::all();
 
         $params = [
-            "companies"   => $companies,
+            "companies" => $companies,
             "costCenters" => $costCenters,
         ];
 
@@ -76,8 +96,10 @@ class ContractController extends Controller
 
     public function updateContract(Request $request, int $id): RedirectResponse
     {
-        $route     = 'request.edit';
-        $data      = $request->all();
+        $route = 'requests.own';
+        $data = $request->all();
+        $action = $request->input('action');
+
         $validator = $this->validatorService->purchaseRequest($data);
         $files = $request->file('arquivos');
 
@@ -86,8 +108,11 @@ class ContractController extends Controller
         }
 
         try {
+            $msg = "Solicitação de contrato atualizada com sucesso!";
+
             $isAdmin = auth()->user()->profile->name === 'admin';
             $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
+
             if (!$isOwnPurchaseRequest && !$isAdmin) {
                 throw new Exception('Não autorizado. Não foi possível acessar essa solicitação.');
             }
@@ -99,15 +124,26 @@ class ContractController extends Controller
             if (!$isAuthorized) {
                 throw new Exception('Não foi possível acessar essa solicitação.');
             }
+            // MUDAR
+            DB::beginTransaction();
 
             $this->purchaseRequestService->updateContractRequest($id, $data, $files);
+
+            if ($action === 'submit-request') {
+                $purchaseRequest->update(['status' => 'pendente']);
+                $msg = "Solicitação de contrato enviada ao setor de suprimentos responsável!";
+            }
+
+            DB::commit();
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
+            DB::rollBack();
+            $msg = 'Não foi possível atualizar o registro no banco de dados.';
+            return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
         }
 
-        session()->flash('success', "Solicitação de contrato atualizada com sucesso!");
+        session()->flash('success', $msg);
 
-        return redirect()->route($route, ['type' => $purchaseRequest->type, 'id' => $id]);
+        return redirect()->route($route);
     }
 
     public function contractDetails(int $id)
