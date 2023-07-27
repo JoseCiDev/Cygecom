@@ -84,4 +84,15 @@ class PurchaseRequestController extends Controller
             return redirect()->back()->withInput()->withErrors(['Não foi deletar o registro no banco de dados.', $error->getMessage()]);
         }
     }
+
+    public function fileDelete(int $id)
+    {
+        try {
+            $model = PurchaseRequestFile::findOrFail($id);
+            $model->update(['deleted_at' => now(), 'deleted_by' => auth()->user()->id]);
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
+    }
 }
