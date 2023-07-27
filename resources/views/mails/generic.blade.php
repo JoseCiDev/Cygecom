@@ -46,10 +46,7 @@
                                     <tr>
                                         <td align="center" style="padding: 0 20px;">
                                             <p
-                                                style="font-family: Arial, Helvetica, sans-serif; font-size: 20px; line-height: 26px; color: #242424; font-weight: bold; margin: 40px 0px 30px;">
-                                                Ol&aacute;, *|DATA_GENERO|* *|FIRST_NAME|*</p>
-                                            <p
-                                                style="font-family: Arial, Helvetica, sans-serif; font-size: 17px; line-height: 22px; color: #242424; margin: 0 0 20px; max-width: 320px;">
+                                                style="font-family: Arial, Helvetica, sans-serif; font-size: 17px; line-height: 22px; color: #242424; margin: 40px 0 20px; max-width: 320px;">
                                                 {{$body}}
                                             </p>
                                         </td>
