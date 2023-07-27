@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use Illuminate\Support\Facades\DB;
 use App\Enums\PurchaseRequestStatus;
+use Illuminate\Http\{RedirectResponse, Request};
 use App\Models\{Company, CostCenter, PurchaseRequest};
 use App\Providers\{PurchaseRequestService, ValidatorService};
-use Exception;
-use Illuminate\Http\{RedirectResponse, Request};
 
 class ServiceController extends Controller
 {
@@ -20,6 +21,8 @@ class ServiceController extends Controller
         $routeParam = [];
         $data       = $request->all();
 
+        // captura o botão submit clicado (se for submit_request update status);
+        $action = $request->input('action');
         $validator = $this->validatorService->purchaseRequest($data);
 
         if ($validator->fails()) {
@@ -27,13 +30,27 @@ class ServiceController extends Controller
         }
 
         try {
-            $this->purchaseRequestService->registerServiceRequest($data);
+            $msg = "Solicitação de serviço criada com sucesso!";
+            // MUDAR
+            DB::beginTransaction();
+
+            $purchaseRequest = $this->purchaseRequestService->registerServiceRequest($data);
+
+            if ($action === 'submit-request') {
+                $purchaseRequest->update(['status' => 'pendente']);
+                $msg = "Solicitação de serviço criada e enviada ao setor de suprimentos responsável!";
+            }
+
+            DB::commit();
+
             $route           = 'requests.own';
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
+            $msg = 'Não foi possível fazer o registro no banco de dados.';
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
         }
 
-        session()->flash('success', "Solicitação de serviço criada com sucesso!");
+        session()->flash('success', $msg);
 
         return redirect()->route($route, $routeParam);
     }
@@ -67,6 +84,8 @@ class ServiceController extends Controller
     {
         $route = 'requests.own';
         $data = $request->all();
+        $action = $request->input('action');
+
         $validator = $this->validatorService->purchaseRequest($data);
 
         if ($validator->fails()) {
@@ -74,6 +93,8 @@ class ServiceController extends Controller
         }
 
         try {
+            $msg = "Solicitação de serviço atualizada com sucesso!";
+
             $isAdmin = auth()->user()->profile->name === 'admin';
             $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
             if (!$isOwnPurchaseRequest && !$isAdmin) {
@@ -88,12 +109,24 @@ class ServiceController extends Controller
                 throw new Exception('Não foi possível acessar essa solicitação.');
             }
 
+            // MUDAR
+            DB::beginTransaction();
+
             $this->purchaseRequestService->updateServiceRequest($id, $data);
+
+            if ($action === 'submit-request') {
+                $purchaseRequest->update(['status' => 'pendente']);
+                $msg = "Solicitação de serviço enviada ao setor de suprimentos responsável!";
+            }
+
+            DB::commit();
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
+            DB::rollBack();
+            $msg = 'Não foi possível atualizar o registro no banco de dados.';
+            return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
         }
 
-        session()->flash('success', "Solicitação de serviço atualizada com sucesso!");
+        session()->flash('success', $msg);
 
         return redirect()->route($route);
     }

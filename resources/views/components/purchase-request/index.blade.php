@@ -67,17 +67,19 @@
                                         >
                                             <i class="fa fa fa-copy"></i>
                                         </a>
-                                        <button data-route="purchaseRequests"
-                                            data-name="{{'Solicitação de compra - ID ' . $purchaseRequest->id}}"
-                                            data-id="{{$purchaseRequest->id}}"
-                                            rel="tooltip"
-                                            title="Excluir"
-                                            class="btn"
-                                            data-toggle="modal"
-                                            data-target="#modal"
-                                        >
-                                            <i class="fa fa-times"></i>
-                                        </button>
+                                        @if($purchaseRequest->status->name === "RASCUNHO")
+                                            <button data-route="purchaseRequests"
+                                                data-name="{{'Solicitação de compra - ID ' . $purchaseRequest->id}}"
+                                                data-id="{{$purchaseRequest->id}}"
+                                                rel="tooltip"
+                                                title="Excluir"
+                                                class="btn"
+                                                data-toggle="modal"
+                                                data-target="#modal"
+                                            >
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

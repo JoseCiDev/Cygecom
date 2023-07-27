@@ -1,10 +1,19 @@
 @php
+    use App\Enums\PurchaseRequestStatus;
+
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
     $isCopy ??= null;
     $serviceInstallments = $purchaseRequest?->service?->installments;
     $purchaseRequestServicePrice = $purchaseRequest?->service?->price === null ? null : (float) $purchaseRequest?->service?->price;
     $serviceQuantityOfInstallments = $purchaseRequest?->service?->quantity_of_installments === null ? null : (int) $purchaseRequest?->service?->quantity_of_installments;
+
+    // verifica status para desabilitar campos para o usuário
+    $requestAlreadySent = $purchaseRequest?->status !== PurchaseRequestStatus::RASCUNHO;
+    // ve se tem request e não foi enviada
+    $hasRequestNotSent = $issetPurchaseRequest && !$requestAlreadySent;
+    // ve se tem request ja enviada e n é copia
+    $hasSentRequest = $issetPurchaseRequest && $requestAlreadySent && !$isCopy;
 @endphp
 
 
@@ -20,20 +29,32 @@
     }
 </style>
 
-<x-ModalSupplierRegister />
-
 <div class="row">
+
     <div class="col-sm-6">
-        <h2>
-            {{ isset($purchaseRequest) ? 'Editar solicitação' : 'Nova solicitação' }}
-        </h2>
+        @if ($hasRequestNotSent)
+            <h2>Editar Solicitação</h2>
+        @elseif ($hasSentRequest)
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h5>
+                    <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
+                </h5>
+            </div>
+            <h2>Visualizar Solicitação</h2>
+        @else
+            <h2>Nova Solicitação</h2>
+        @endif
+
+
+
     </div>
-    @if (isset($purchaseRequest))
+    @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right">
             <x-modalDelete />
             <button data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - ID ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip" title="Excluir"
-                class="btn btn-danger pull-right" style="margin-right: 15px">
+                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
+                title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
                 Excluir solicitação
             </button>
         </div>
@@ -397,7 +418,7 @@
                     <input type="hidden" class="no-validation" value="" name="service[payment_info][id]">
 
                     {{-- Nº PARCELAS --}}
-                    <div class="col-sm-1" style="margin-top: -17px;">
+                    <div class="col-sm-1">
                         <div class="form-group">
                             <label for="installments-number" class="control-label">Nº de parcelas</label>
                             <input type="text" class="form-control format-installments-number"
@@ -532,14 +553,34 @@
                 </div>
             </div>
 
-            <div class="form-actions pull-right" style="margin-top:50px;">
-                <button type="submit" class="btn btn-primary">Salvar</button>
-                <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
+            <div class="form-actions pull-right" style="margin-top:50px; padding-bottom:20px">
+                @if (!$hasSentRequest)
+                    <input type="hidden" name="action" id="action" value="">
+
+                    <button type="submit" name="submit_request" class="btn btn-primary btn-submit-request"
+                        value="submit-request">
+                        Enviar solicitação
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+
+                    <button type="submit" class="btn btn-primary btn-draft">
+                        Salvar
+                    </button>
+
+                    <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
+                @endif
+
+                @if ($hasSentRequest)
+                    <a href="{{ route('requests.own') }}" class="btn btn-primary btn-large">VOLTAR</a>
+                @endif
             </div>
+
         </div>
     </form>
 
     <x-modal-edit-service-installment :statusValues="$statusValues" />
+
+    <x-ModalSupplierRegister />
 
 </div>
 
@@ -757,7 +798,6 @@
                     $inputInstallmentsNumber.val(rawValue).trigger('change');
                 }
             }
-            console.log($inputInstallmentsNumber.val());
         });
         // ---
 
@@ -783,6 +823,17 @@
         const $paymentInfo = $('.payment-info');
 
         const purchaseRequest = @json($purchaseRequest);
+        const hasSentRequest = @json($hasSentRequest);
+
+        // desabilita todos os campos do form caso solicitacao ja enviada
+        $('#request-form')
+            .find('input, textarea, checkbox')
+            .prop('disabled', hasSentRequest);
+
+        $('#request-form')
+            .find('select')
+            .prop('disabled', hasSentRequest);
+
 
         // dataTable config - parcelas
         const $installmentsTable = $('#installments-table-striped').DataTable({
@@ -813,7 +864,10 @@
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        return '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
+                        const btnEdit = $('<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>');
+                        btnEdit.find('button').prop('disabled', hasSentRequest);
+
+                        return btnEdit.html();
                     }
                 }
             ],
@@ -1006,8 +1060,11 @@
                 //$paymentBlock.find('input').valid();
                 $installmentsTable.clear().draw();
             }
+        });
 
-        }).filter(':checked').trigger('change');
+        if (!hasSentRequest || $radioIsContractedBySupplies.val() === "1") {
+            $radioIsContractedBySupplies.filter(':checked').trigger('change');
+        }
 
         const editButton =
             '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
@@ -1151,6 +1208,34 @@
             const numberOfInstallments = $inputInstallmentsNumber.val();
             $installmentsTable.clear();
             generateInstallments(numberOfInstallments);
+        });
+
+        // btns
+        const $btnSubmitRequest = $('.btn-submit-request');
+        const $sendAction = $('#action');
+
+        $btnSubmitRequest.on('click', function(event) {
+            event.preventDefault();
+
+            bootbox.confirm({
+                message: "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?",
+                buttons: {
+                    confirm: {
+                        label: 'Sim, enviar solicitação',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'Cancelar',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function(result) {
+                    if (result) {
+                        $sendAction.val('submit-request');
+                        $('#request-form').trigger('submit');
+                    }
+                }
+            });
         });
     });
 </script>
