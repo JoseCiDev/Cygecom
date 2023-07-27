@@ -4,27 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Enums\PurchaseRequestStatus;
 use App\Models\{Company, CostCenter, PurchaseRequest};
-use App\Providers\{PurchaseRequestService, ValidatorService};
+use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 use Exception;
 use Illuminate\Http\{RedirectResponse, Request};
+use Symfony\Component\Mailer\Exception\TransportException;
 
 class ServiceController extends Controller
 {
-    private $validatorService;
-
-    private $purchaseRequestService;
-
-    public function __construct(ValidatorService $validatorService, PurchaseRequestService $purchaseRequestService)
-    {
-        $this->validatorService       = $validatorService;
-        $this->purchaseRequestService = $purchaseRequestService;
+    public function __construct(
+        private ValidatorService $validatorService,
+        private PurchaseRequestService $purchaseRequestService,
+        private EmailService $emailService
+    ) {
     }
 
     public function registerService(Request $request): RedirectResponse
     {
-        $route      = 'requests';
+        $route = 'requests';
         $routeParam = [];
-        $data       = $request->all();
+        $data = $request->all();
 
         $validator = $this->validatorService->purchaseRequest($data);
 
@@ -34,8 +32,8 @@ class ServiceController extends Controller
 
         try {
             $purchaseRequest = $this->purchaseRequestService->registerServiceRequest($data);
-            $route           = 'request.edit';
-            $routeParam      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
+            $route = 'request.edit';
+            $routeParam = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
         }
@@ -109,33 +107,40 @@ class ServiceController extends Controller
     {
         $allRequestStatus = PurchaseRequestStatus::cases();
 
-        try {
-            $purchaseRequest = PurchaseRequest::find($id);
-            $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
+        $purchaseRequest = PurchaseRequest::find($id);
 
-            $isAdmin = auth()->user()->profile->name === 'admin';
-            $isSuprimHkm = auth()->user()->profile->name === 'suprimentos_hkm';
-            $isSuprimInp = auth()->user()->profile->name === 'suprimentos_inp';
-
-            $isDeletedRequest = $purchaseRequest->deleted_at !== null;
-
-            $existSuppliesUserId = (bool)$purchaseRequest->supplies_user_id;
-            $existSuppliesMarkedAt = (bool)$purchaseRequest->responsibility_marked_at;
-            $alreadyExistSuppliesUser = $existSuppliesUserId && $existSuppliesMarkedAt;
-
-            $isAuthorized = ($isAdmin || $isSuprimHkm || $isSuprimInp) && !$isDeletedRequest && !$alreadyExistSuppliesUser && !$isOwnPurchaseRequest;
-            if ($isAuthorized) {
-                $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
-                $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
-            }
-
-            $service = $this->purchaseRequestService->purchaseRequestById($id);
-            if (!$service) {
-                return throw new Exception('Não foi possível acessar essa solicitação.');
-            }
-            return view('components.supplies.service-content.service-details', ['service' => $service, 'allRequestStatus' => $allRequestStatus]);
-        } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
+        if (!$purchaseRequest || $purchaseRequest->deleted_at !== null) {
+            throw new Exception('Não foi possível acessar essa solicitação.');
         }
+
+        if ($this->isAuthorizedToUpdate($purchaseRequest)) {
+            $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
+            $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
+
+            try {
+                $this->emailService->sendResponsibleAssignedEmail($purchaseRequest);
+            } catch (TransportException $transportException) {
+                // Tratar erro de envio de email aqui, se necessário.
+            }
+        }
+
+        $service = $this->purchaseRequestService->purchaseRequestById($id);
+
+        if (!$service) {
+            return throw new Exception('Não foi possível acessar essa solicitação.');
+        }
+
+        return view('components.supplies.service-content.service-details', ['service' => $service, 'allRequestStatus' => $allRequestStatus]);
+    }
+
+    private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool
+    {
+        $allowedProfiles = ['admin', 'suprimentos_hkm', 'suprimentos_inp'];
+        $userProfile = auth()->user()->profile->name;
+
+        $existSuppliesUserId = (bool) $purchaseRequest->supplies_user_id;
+        $existSuppliesMarkedAt = (bool) $purchaseRequest->responsibility_marked_at;
+
+        return in_array($userProfile, $allowedProfiles) && !$existSuppliesUserId && !$existSuppliesMarkedAt && !auth()->user()->purchaseRequest->contains($purchaseRequest);
     }
 }

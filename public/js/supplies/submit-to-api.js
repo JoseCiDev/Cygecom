@@ -9,6 +9,10 @@ $(() => {
         $("#modal-supplier-register").modal("hide");
         $("#cpf_cnpj").trigger("focus");
 
+        const selectElement = $('select[name="service[supplier_id]"]');
+       const newOption = new Option(`${response.cpf_cnpj} - ${response.corporate_name}`, response.id, true, true);
+        selectElement.append(newOption).trigger('change');
+
     };
 
     const showFailAlert = (response) => {

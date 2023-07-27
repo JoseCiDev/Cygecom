@@ -13,11 +13,11 @@ class EmailController extends Controller implements EmailControllerInterface
     public function store(Request $request): RedirectResponse
     {
         $recipients = $request->input('recipients');
-        $subject    = $request->input('subject');
-        $body       = $request->input('body');
+        $subject = $request->input('subject');
+        $body = $request->input('body');
 
         try {
-            $email = new GenericEmail($recipients, $subject, $body);
+            $email = new GenericEmail($subject, $body);
             Mail::to($recipients)->send($email);
             session()->flash('success', "E-mail enviado!");
 

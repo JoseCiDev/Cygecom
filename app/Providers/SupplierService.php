@@ -20,11 +20,11 @@ class SupplierService extends ServiceProvider
     }
 
     /**
-     * @abstract Cria endereço, telefone e fornecedor com suas relações.
+     * @abstract Cria e retorna fornecedor com endereço e telefone.
      */
-    public function registerSupplier(array $data): void
+    public function registerSupplier(array $data)
     {
-        DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data) {
             $addressId = $this->createAddress($data);
             $phoneId   = $this->createPhone($data);
             $supplier  = new Supplier();
@@ -32,6 +32,7 @@ class SupplierService extends ServiceProvider
             $supplier->address_id = $addressId;
             $supplier->phone_id   = $phoneId;
             $supplier->save();
+            return $supplier;
         });
     }
 
