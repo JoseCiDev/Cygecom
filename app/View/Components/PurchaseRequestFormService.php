@@ -6,6 +6,7 @@ use App\Models\{Company, CostCenter, Supplier};
 use App\Providers\PurchaseRequestService;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\Component;
 
 class PurchaseRequestFormService extends Component
@@ -16,11 +17,14 @@ class PurchaseRequestFormService extends Component
 
     private $isCopy;
 
-    public function __construct(PurchaseRequestService $purchaseRequestService, int $id = null, $isCopy = false)
+    private $files;
+
+    public function __construct(PurchaseRequestService $purchaseRequestService, int $id = null, ?bool $isCopy = false, Collection | array | null $files = null)
     {
         $this->purchaseRequestService = $purchaseRequestService;
         $this->isCopy              = $isCopy;
         $this->id                  = $id;
+        $this->files               = $files;
     }
 
     public function render(): View|Closure|string
@@ -55,6 +59,7 @@ class PurchaseRequestFormService extends Component
             $params['id']           = $this->id;
             $params['purchaseRequest'] = $this->purchaseRequestService->purchaseRequestById($this->id);
             $params['isCopy']       = $this->isCopy;
+            $params['files']        = $this->files;
         }
 
         return view('components.purchase-request.purchase-request-form-service', $params);

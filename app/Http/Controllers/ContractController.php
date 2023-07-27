@@ -24,6 +24,7 @@ class ContractController extends Controller
         $route      = 'requests';
         $routeParam = [];
         $data       = $request->all();
+        $files       = $request->file('arquivos');
 
         $validator = $this->validatorService->purchaseRequest($data);
 
@@ -32,7 +33,7 @@ class ContractController extends Controller
         }
 
         try {
-            $purchaseRequest = $this->purchaseRequestService->registerContractRequest($data);
+            $purchaseRequest = $this->purchaseRequestService->registerContractRequest($data, $files);
             $route           = 'request.edit';
             $routeParam      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
         } catch (Exception $error) {
@@ -79,6 +80,7 @@ class ContractController extends Controller
         $route     = 'request.edit';
         $data      = $request->all();
         $validator = $this->validatorService->purchaseRequest($data);
+        $files = $request->file('arquivos');
 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
@@ -90,7 +92,7 @@ class ContractController extends Controller
             $isAuthorized    = ($isAdmin || $purchaseRequest !== null) && $purchaseRequest->deleted_at === null;
 
             if ($isAuthorized) {
-                $this->purchaseRequestService->updateContractRequest($id, $data);
+                $this->purchaseRequestService->updateContractRequest($id, $data, $files);
             } else {
                 throw new Exception('Não foi possível acessar essa solicitação.');
             }
