@@ -14,7 +14,7 @@
             @elseif ($type === PurchaseRequestType::PRODUCT)
                 <x-PurchaseRequestFormProduct :id="$id" />
             @elseif ($type === PurchaseRequestType::CONTRACT)
-                <x-PurchaseRequestFormContract :id="$id" />
+                <x-PurchaseRequestFormContract :id="$id" :files="$files"/>
             @endif
         </div>
     </div>

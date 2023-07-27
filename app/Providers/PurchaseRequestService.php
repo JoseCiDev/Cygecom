@@ -110,11 +110,11 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Cria solicitação de contrato.
      * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveContract para salvar contrato.
      */
-    public function registerContractRequest(array $data)
+    public function registerContractRequest(array $data, UploadedFile | array | null  $files)
     {
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data, $files) {
             $purchaseRequest = $this->registerPurchaseRequest($data);
-            $this->saveContract($purchaseRequest->id, $data);
+            $this->saveContract($purchaseRequest->id, $data, $files);
 
             return $purchaseRequest;
         });
@@ -181,11 +181,11 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de contrato.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveContract para atualizar contrato.
      */
-    public function updateContractRequest(int $id, array $data)
+    public function updateContractRequest(int $id, array $data, $files)
     {
-        DB::transaction(function () use ($id, $data) {
+        DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data);
-            $this->saveContract($purchaseRequest->id, $data);
+            $this->saveContract($purchaseRequest->id, $data, $files);
         });
     }
 
@@ -263,7 +263,7 @@ class PurchaseRequestService extends ServiceProvider
         $service = Service::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $supplierId], $serviceData);
 
         //teste upload arquivos
-        $uploadFiles = S3::sendFiles($files, 'solicitacao', $service->id);
+        $uploadFiles = S3::sendFiles($files, 'request-service', $service->id);
         if ($uploadFiles->success) {
             foreach ($uploadFiles->urls_bucket as $filePath) {
                 $this->savePurchaseRequestFile($purchaseRequestId, $filePath);
@@ -308,7 +308,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar contrato.
      * Recomendado executar com o método específico registerContractRequest ou updateContractRequest
      */
-    private function saveContract(int $purchaseRequestId, array $data): void
+    private function saveContract(int $purchaseRequestId, array $data, UploadedFile | array | null $files): void
     {
         if (!isset($data['type']) && $data['type'] !== "contract") {
             return;
@@ -327,6 +327,13 @@ class PurchaseRequestService extends ServiceProvider
         }
 
         $contract = Contract::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $supplierId], $contractData);
+
+        $uploadFiles = S3::sendFiles($files, 'request-contract', $contract->id);
+        if ($uploadFiles->success) {
+            foreach ($uploadFiles->urls_bucket as $filePath) {
+                $this->savePurchaseRequestFile($purchaseRequestId, $filePath);
+            }
+        }
 
         $existingInstallments = ContractInstallment::where('contract_id', $contract->id)->get();
 
