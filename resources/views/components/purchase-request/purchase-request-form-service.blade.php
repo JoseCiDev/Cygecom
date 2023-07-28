@@ -77,22 +77,24 @@
             @foreach ($purchaseRequest->costCenterApportionment as $index => $apportionment)
                 <div class="row cost-center-container">
                     <div class="col-sm-6">
-                        <label style="display:block;" class="control-label">Centro de custo da
-                            despesa</label>
-                        <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
-                            id="select-cost-center"
-                            class='select2-me @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                            data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
-                            <option value=""></option>
-                            @foreach ($costCenters as $costCenter)
-                                @php
-                                    $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
-                                @endphp
-                                <option value="{{ $costCenter->id }}" {{ $isApportionmentSelect ? 'selected' : '' }}>
-                                    {{ $costCenter->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="form-group">
+                            <label style="display:block;" class="control-label">Centro de custo da
+                                despesa</label>
+                            <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
+                                id="select-cost-center"
+                                class='select2-me @error('cost_center_id_{{ $index }}') is-invalid @enderror'
+                                data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
+                                <option value=""></option>
+                                @foreach ($costCenters as $costCenter)
+                                    @php
+                                        $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
+                                    @endphp
+                                    <option value="{{ $costCenter->id }}" {{ $isApportionmentSelect ? 'selected' : '' }}>
+                                        {{ $costCenter->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
 
                     <div class="col-sm-2">
@@ -138,27 +140,29 @@
         @else
             <div class="row cost-center-container">
                 <div class="col-sm-6">
-                    <label class="control-label" style="display:block">
-                        Centro de custo da despesa
-                    </label>
-                    <select style="width:100%" id="select-cost-center"
-                        name="cost_center_apportionments[0][cost_center_id]"
-                        class='select2-me
-            @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                        required data-rule-required="true" placeholder="Ex: Almoxarifado">
-                        <option value="" disalbed></option>
-                        @foreach ($costCenters as $costCenter)
-                            @php
-                                $isUserCostCenter = isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id;
-                                $costCenterCompanyName = $costCenter->company->corporate_name;
-                                $costCenterName = $costCenter->name;
-                                $costCenterSeniorCode = $costCenter->senior_code;
-                            @endphp
-                            <option value="{{ $costCenter->id }}" {{ $isUserCostCenter ? 'selected' : '' }}>
-                                {{ $costCenterCompanyName . ' - ' . $costCenterName . ' - ' . $costCenterSeniorCode }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="form-group">
+                        <label class="control-label" style="display:block">
+                            Centro de custo da despesa
+                        </label>
+                        <select style="width:100%" id="select-cost-center"
+                            name="cost_center_apportionments[0][cost_center_id]"
+                            class='select2-me
+                                    @error('cost_center_id_{{ $index }}') is-invalid @enderror'
+                            required data-rule-required="true" placeholder="Ex: Almoxarifado">
+                            <option value="" disalbed></option>
+                            @foreach ($costCenters as $costCenter)
+                                @php
+                                    $isUserCostCenter = isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id;
+                                    $costCenterCompanyName = $costCenter->company->corporate_name;
+                                    $costCenterName = $costCenter->name;
+                                    $costCenterSeniorCode = $costCenter->senior_code;
+                                @endphp
+                                <option value="{{ $costCenter->id }}" {{ $isUserCostCenter ? 'selected' : '' }}>
+                                    {{ $costCenterCompanyName . ' - ' . $costCenterName . ' - ' . $costCenterSeniorCode }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
 
                 <div class="col-sm-2">
@@ -812,7 +816,12 @@
             $desiredDate.attr('min', minDate);
         }
 
-        $serviceAlreadyProvided.add($desiredDate).on('change', changeMinDesiredDate);
+        $serviceAlreadyProvided
+            .add($desiredDate)
+            .on('change', changeMinDesiredDate)
+            .filter(':checked')
+            .trigger('change');
+
         // ---
 
         // trata valor serviço mascara
@@ -873,6 +882,8 @@
         $('#request-form')
             .find('select')
             .prop('disabled', hasSentRequest);
+
+        $('.file-remove').prop('disabled', hasSentRequest);
 
 
         // dataTable config - parcelas
@@ -1188,7 +1199,7 @@
 
                 const expireDate = $('#edit-expire-date').val();
 
-                const value = $('#edit-value-hidden').val();
+                const value = $('#edit-value').val();
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
 

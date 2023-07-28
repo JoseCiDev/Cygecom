@@ -43,19 +43,14 @@ class ContractController extends Controller
             $msg = "Solicitação de contrato criada com sucesso!";
 
             // MUDAR
-            DB::beginTransaction();
-
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
                 $msg = "Solicitação de contrato criada e enviada ao setor de suprimentos responsável!";
             }
 
-            DB::commit();
-
             $route = 'requests.own';
         } catch (Exception $error) {
             $msg = 'Não foi possível fazer o registro no banco de dados.';
-            DB::rollBack();
             return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
         }
 

@@ -751,6 +751,8 @@
             .find('select')
             .prop('disabled', hasSentRequest);
 
+        $('.file-remove').prop('disabled', hasSentRequest);
+
 
         // masks
         $contractAmount.imask({

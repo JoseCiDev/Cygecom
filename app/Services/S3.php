@@ -7,7 +7,7 @@ use Illuminate\Http\UploadedFile;
 class S3
 {
 
-    public static function sendFiles(UploadedFile | array | null $file, string $type_module, string | int $id_folder, $returnType = 'object')
+    public static function sendFiles(UploadedFile | array | null $file, string $type_module, string | int $id_folder)
     {
         $out = [
             'success' => false,
@@ -54,6 +54,6 @@ class S3
                 $out['exception'] = $e->getMessage();
             }
         }
-        return $returnType === 'object' ? (object) $out : $out;
+        return (object) $out;
     }
 }

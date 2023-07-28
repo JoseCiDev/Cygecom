@@ -2,14 +2,16 @@
 
 namespace App\Providers;
 
-use App\Enums\PurchaseRequestStatus;
+use Exception;
 use Carbon\Carbon;
-use App\Models\ServiceInstallment;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\ServiceProvider;
-use App\Models\{Contract, ContractInstallment, CostCenterApportionment, PaymentInfo, PurchaseRequest, PurchaseRequestFile, PurchaseRequestProduct, Service};
 use App\Services\S3;
 use Illuminate\Http\UploadedFile;
+use App\Enums\PurchaseRequestType;
+use App\Models\ServiceInstallment;
+use Illuminate\Support\Facades\DB;
+use App\Enums\PurchaseRequestStatus;
+use Illuminate\Support\ServiceProvider;
+use App\Models\{Contract, ContractInstallment, CostCenterApportionment, PaymentInfo, PurchaseRequest, PurchaseRequestFile, PurchaseRequestProduct, Service};
 
 class PurchaseRequestService extends ServiceProvider
 {
@@ -121,13 +123,20 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Cria apenas entidade solicitação com relação do rateio e arquivo/link.
      * Deve ser chamada pelos métodos específicios de serviço, contrato ou produtos.
      */
-    public function registerPurchaseRequest(array $data)
+    public function registerPurchaseRequest(array $data,  UploadedFile | array | null $files)
     {
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data, $files) {
             $data['user_id'] = auth()->user()->id;
             $purchaseRequest = PurchaseRequest::create($data);
 
+            $type = $purchaseRequest->type;
+            $id = $purchaseRequest->id;
+
             $this->saveCostCenterApportionment($purchaseRequest->id, $data);
+
+            if (collect($files)->count()) {
+                $this->uploadFilesToS3($files, $type, $id);
+            }
 
             return $purchaseRequest;
         });
@@ -138,11 +147,11 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Cria solicitação de serviço.
      * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveService para salvar serviço.
      */
-    public function registerServiceRequest(array $data, UploadedFile | array | null  $files)
+    public function registerServiceRequest(array $data,  UploadedFile | array | null $files)
     {
         return DB::transaction(function () use ($data, $files) {
-            $purchaseRequest = $this->registerPurchaseRequest($data);
-            $this->saveService($purchaseRequest->id, $data, $files);
+            $purchaseRequest = $this->registerPurchaseRequest($data, $files);
+            $this->saveService($purchaseRequest->id, $data);
             return $purchaseRequest;
         });
     }
@@ -152,11 +161,11 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Cria solicitação de contrato.
      * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveContract para salvar contrato.
      */
-    public function registerContractRequest(array $data, UploadedFile | array | null  $files)
+    public function registerContractRequest(array $data,  UploadedFile | array | null $files)
     {
         return DB::transaction(function () use ($data, $files) {
-            $purchaseRequest = $this->registerPurchaseRequest($data);
-            $this->saveContract($purchaseRequest->id, $data, $files);
+            $purchaseRequest = $this->registerPurchaseRequest($data, $files);
+            $this->saveContract($purchaseRequest->id, $data);
 
             return $purchaseRequest;
         });
@@ -167,10 +176,10 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Cria solicitação de produto(s).
      * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveProduct para salvar produto(s).
      */
-    public function registerProductRequest(array $data)
+    public function registerProductRequest(array $data,  UploadedFile | array | null $files)
     {
-        return DB::transaction(function () use ($data) {
-            $purchaseRequest = $this->registerPurchaseRequest($data);
+        return DB::transaction(function () use ($data, $files) {
+            $purchaseRequest = $this->registerPurchaseRequest($data,$files);
             $this->saveProducts($purchaseRequest->id, $data);
 
             return $purchaseRequest;
@@ -182,22 +191,43 @@ class PurchaseRequestService extends ServiceProvider
      * Normalmente é chamada pelos métodos específicios de serviço, contrato ou produtos.
      * Pode ser chamada por suprimentos para atualizar status da solicitação.
      */
-    public function updatePurchaseRequest(int $id, array $data, bool $isSuppliesUpdate = false)
+    public function updatePurchaseRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile | array | null $files)
     {
-        return DB::transaction(function () use ($id, $data, $isSuppliesUpdate) {
+        return DB::transaction(function () use ($id, $data, $isSuppliesUpdate, $files) {
             $purchaseRequest = PurchaseRequest::find($id);
             $purchaseRequest->updated_by = auth()->user()->id;
             $purchaseRequest->fill($data);
             $purchaseRequest->save();
+            $type = $purchaseRequest->type;
+            $id = $purchaseRequest->id;
 
             if ($isSuppliesUpdate) {
                 return $purchaseRequest;
             }
 
-            $this->saveCostCenterApportionment($purchaseRequest->id, $data);
+            $this->saveCostCenterApportionment($id, $data);
+
+            if (collect($files)->count()) {
+                $this->uploadFilesToS3($files, $type, $id);
+            }
 
             return $purchaseRequest;
         });
+    }
+
+    private function uploadFilesToS3(UploadedFile | array $files, PurchaseRequestType $purchcaseRequestType, int $requestId): void
+    {
+        $type = 'request-'.$purchcaseRequestType->value;
+
+        $uploadFiles = S3::sendFiles($files, $type, $requestId);
+
+        if (!$uploadFiles->success) {
+            $msg = $uploadFiles->exception;
+            throw new Exception($msg);
+        }
+        foreach ($uploadFiles->urls_bucket as $filePath) {
+            $this->savePurchaseRequestFile($requestId, $filePath);
+        }
     }
 
     /**
@@ -207,8 +237,8 @@ class PurchaseRequestService extends ServiceProvider
     public function updateServiceRequest(int $id, array $data, UploadedFile | array | null  $files)
     {
         DB::transaction(function () use ($id, $data, $files) {
-            $purchaseRequest = $this->updatePurchaseRequest($id, $data);
-            $this->saveService($purchaseRequest->id, $data, $files);
+            $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
+            $this->saveService($purchaseRequest->id, $data);
         });
     }
 
@@ -228,11 +258,11 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de contrato.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveContract para atualizar contrato.
      */
-    public function updateContractRequest(int $id, array $data, $files)
+    public function updateContractRequest(int $id, array $data, UploadedFile | array | null  $files)
     {
         DB::transaction(function () use ($id, $data, $files) {
-            $purchaseRequest = $this->updatePurchaseRequest($id, $data);
-            $this->saveContract($purchaseRequest->id, $data, $files);
+            $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
+            $this->saveContract($purchaseRequest->id, $data);
         });
     }
 
@@ -289,7 +319,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar service.
      * Recomendado executar com o método específico registerServiceRequest ou updateServiceRequest
      */
-    private function saveService(int $purchaseRequestId, array $data, UploadedFile | array | null $files)
+    private function saveService(int $purchaseRequestId, array $data): void
     {
         if (!isset($data['type']) && $data['type'] !== "service") {
             return;
@@ -308,17 +338,6 @@ class PurchaseRequestService extends ServiceProvider
         }
 
         $service = Service::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $supplierId], $serviceData);
-
-        //teste upload arquivos
-        $uploadFiles = S3::sendFiles($files, 'request-service', $service->id);
-        if ($uploadFiles->success) {
-            foreach ($uploadFiles->urls_bucket as $filePath) {
-                $this->savePurchaseRequestFile($purchaseRequestId, $filePath);
-            }
-        } else {
-            $msg = $uploadFiles->exception;
-            return redirect()->back()->withInput()->withErrors([$msg]);
-        }
 
         $existingInstallments = ServiceInstallment::where('service_id', $service->id)->get();
 
@@ -358,7 +377,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar contrato.
      * Recomendado executar com o método específico registerContractRequest ou updateContractRequest
      */
-    private function saveContract(int $purchaseRequestId, array $data, UploadedFile | array | null $files)
+    private function saveContract(int $purchaseRequestId, array $data)
     {
         if (!isset($data['type']) && $data['type'] !== "contract") {
             return;
@@ -377,16 +396,6 @@ class PurchaseRequestService extends ServiceProvider
         }
 
         $contract = Contract::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $supplierId], $contractData);
-
-        $uploadFiles = S3::sendFiles($files, 'request-contract', $contract->id);
-        if ($uploadFiles->success) {
-            foreach ($uploadFiles->urls_bucket as $filePath) {
-                $this->savePurchaseRequestFile($purchaseRequestId, $filePath);
-            }
-        } else {
-            $msg = $uploadFiles->exception;
-            return redirect()->back()->withInput()->withErrors([$msg]);
-        }
 
         $existingInstallments = ContractInstallment::where('contract_id', $contract->id)->get();
 
