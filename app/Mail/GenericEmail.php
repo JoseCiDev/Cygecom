@@ -27,6 +27,10 @@ class GenericEmail extends Mailable
 
     public function sendMail()
     {
+        if (!env('SEND_EMAIL')) {
+            return;
+        }
+
         Mail::to($this->recipients)->send($this);
     }
 }
