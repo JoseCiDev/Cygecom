@@ -30,7 +30,9 @@
                     <div class="col-md-12">
                         <select name="status" @disabled($requestIsFromLogged)>
                             @foreach ($allRequestStatus as $status)
-                                <option @selected($request->status === $status) value="{{$status}}">{{$status->label()}}</option>
+                                @if ($status->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
+                                    <option @selected($request->status === $status) value="{{$status}}">{{$status->label()}}</option>
+                                @endif
                             @endforeach
                         </select>
                         <button type="submit" class="btn btn-icon btn-small btn-primary" @disabled($requestIsFromLogged)> Aplicar status </button>
