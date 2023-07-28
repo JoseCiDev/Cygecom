@@ -176,10 +176,10 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Cria solicitação de produto(s).
      * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveProduct para salvar produto(s).
      */
-    public function registerProductRequest(array $data,  UploadedFile | array | null $files)
+    public function registerProductRequest(array $data,  UploadedFile | array | null $files = null)
     {
         return DB::transaction(function () use ($data, $files) {
-            $purchaseRequest = $this->registerPurchaseRequest($data,$files);
+            $purchaseRequest = $this->registerPurchaseRequest($data, $files);
             $this->saveProducts($purchaseRequest->id, $data);
 
             return $purchaseRequest;
@@ -191,7 +191,7 @@ class PurchaseRequestService extends ServiceProvider
      * Normalmente é chamada pelos métodos específicios de serviço, contrato ou produtos.
      * Pode ser chamada por suprimentos para atualizar status da solicitação.
      */
-    public function updatePurchaseRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile | array | null $files)
+    public function updatePurchaseRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile | array | null $files = null)
     {
         return DB::transaction(function () use ($id, $data, $isSuppliesUpdate, $files) {
             $purchaseRequest = PurchaseRequest::find($id);
@@ -217,7 +217,7 @@ class PurchaseRequestService extends ServiceProvider
 
     private function uploadFilesToS3(UploadedFile | array $files, PurchaseRequestType $purchcaseRequestType, int $requestId): void
     {
-        $type = 'request-'.$purchcaseRequestType->value;
+        $type = 'request-' . $purchcaseRequestType->value;
 
         $uploadFiles = S3::sendFiles($files, $type, $requestId);
 
