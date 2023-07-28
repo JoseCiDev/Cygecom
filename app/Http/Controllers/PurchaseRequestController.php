@@ -43,19 +43,16 @@ class PurchaseRequestController extends Controller
         $isAdmin = auth()->user()->profile->name === 'admin';
 
         try {
-            $purchaseRequest = auth()->user()->purchaseRequest->find($id);
+            $purchaseRequest = PurchaseRequest::find($id);
             $purchaseRequestFiles = PurchaseRequestFile::where(["purchase_request_id" => $purchaseRequest->id, "deleted_at" => null])->get();
 
             if ($isAdmin) {
                 return view('components.purchase-request.edit', ["type" => $type, "id" => $id, "files" => $purchaseRequestFiles]);
             }
-
-            $purchaseRequest = auth()->user()->purchaseRequest->find($id);
-
-                if (!isset($purchaseRequest)) {
-                    throw new Exception('Não foi possível acessar essa solicitação.');
-                }
-
+            $isOwnPurchaseRequest = (bool) auth()->user()->purchaseRequest->find($id);
+            if (!$isOwnPurchaseRequest) {
+                throw new Exception('Desculpe, não é autorizado acessar solicitações de outros usuários.');
+            }
 
             return view('components.purchase-request.edit', ["type" => $type, "id" => $purchaseRequest->id, "files" => $purchaseRequestFiles]);
         } catch (Exception $error) {
