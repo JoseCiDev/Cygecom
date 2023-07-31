@@ -104,7 +104,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'street_number' => ['nullable', 'string', 'max:20', 'min:0'],
         'complement'    => ['nullable', 'string', 'max:255'],
 
-        'number'     => ['nullable', 'string', 'max:20', 'min:8'],
+        'number'     => ['nullable', 'string', 'max:15', 'min:8'],
         'phone_type' => ['nullable', 'string', 'max:20'],
     ];
 
