@@ -67,6 +67,7 @@ class PurchaseRequest extends Model
         'description',
         'observation',
         'desired_date',
+        'support_links',
         'supplies_user_id',
         'responsibility_marked_at',
         'updated_by',

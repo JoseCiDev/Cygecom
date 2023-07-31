@@ -331,10 +331,9 @@
                 {{-- LINK --}}
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="purchase-request-files[path]" class="control-label">Links de apoio /
-                            sugestão</label>
-                        <textarea placeholder="Adicone um ou mais links válidos. Ex: Contrato disponibilizado pelo fornecedor" rows="3"
-                            name="purchase_request_files[path]" id="purchase-request-files[path]" data-cy="purchase-request-files[path]" class="form-control text-area no-resize">{{ isset($purchaseRequest->purchaseRequestFile[0]) && $purchaseRequest->purchaseRequestFile[0]->path ? $purchaseRequest->purchaseRequestFile[0]->path : '' }}</textarea>
+                        <label for="support_links" class="control-label">Links de apoio / sugestão</label>
+                        <textarea placeholder="Adicone um ou mais links válidos para apoio ou sugestão." rows="3"
+                            name="support_links" id="support_links" data-cy="support_links" class="form-control text-area no-resize">{{ isset($purchaseRequest->support_links) && $purchaseRequest->support_links ? $purchaseRequest->support_links : '' }}</textarea>
                     </div>
                 </div>
 
