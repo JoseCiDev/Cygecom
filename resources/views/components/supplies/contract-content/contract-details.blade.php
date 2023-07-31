@@ -423,14 +423,14 @@
 
         <div class="row">
             <div class="col-md-12">
-                 <h4><strong>Anexos:</strong></h4>
-                 @if ($files->count())
-                    <ul>
-                        @foreach ($files as $index => $file)
-                            <li><a style="font-size: 16px" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank" rel="noopener noreferrer">{{ $file->original_name }}</a></li>
-                        @endforeach
-                    </ul>
-                 @else
+                <h4><strong>Links / Anexos:</strong></h4>
+                @if ($files->count())
+                   <ul>
+                       @foreach ($files as $index => $file)
+                           <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank" rel="noopener noreferrer">{{ $file->original_name }}</a></li>
+                       @endforeach
+                   </ul>
+                @else
                     <p>Ainda não há registros aqui.</p>
                  @endif
             </div>
