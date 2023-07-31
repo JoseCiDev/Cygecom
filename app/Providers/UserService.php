@@ -32,7 +32,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
      */
     public function getApprovers(string $action, int $id = null)
     {
-        $isUserUpdate = $action === 'userUpdate';
+        $isUserUpdate = $action === 'user.update';
         $query        = User::with(['person'])->where('profile_id', 1)->whereNull('deleted_at');
 
         if ($isUserUpdate && $id !== null) {
@@ -86,7 +86,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user   = $this->getUserById($userId);
             $person = $user->person;
             $phone  = $user->person->phone;
-
+            // dd($user);
             $this->saveUser($user, $data);
             $this->savePerson($person, $data);
             $this->savePhone($phone, $data);
@@ -119,12 +119,21 @@ class UserService extends ServiceProvider implements UserServiceInterface
      */
     private function saveUser(User $user, array $data)
     {
+        $email = $data['email'] ?? $user->email;
+        $password = isset($data['password']) ? Hash::make($data['password']) : $user->password;
+
+        $profile = isset($data['profile_type']) ? UserProfile::firstOrCreate(['name' => $data['profile_type']]) : $user->profile;
+        $profileId = $profile->id;
+
+        $approverUserId = isset($data['approver_user_id']) ? User::find($data['approver_user_id'])->id : $user->approver_user_id;
+        $approveLimit = $data['approve_limit'] ?? $user->approve_limit;
+
         $user->update([
-            'email'            => $data['email'] ?? $user->email,
-            'password'         => isset($data['password']) ? Hash::make($data['password']) : $user->password,
-            'profile_id'       => isset($data['profile_type']) ? UserProfile::firstWhere('name', $data['profile_type'])->id : $user->profile_id,
-            'approver_user_id' => isset($data['approver_user_id']) ? User::where('id', $data['approver_user_id'])->value('id') : $user->approver_user_id,
-            'approve_limit'    => $data['approve_limit'],
+            'email' => $email,
+            'password' => $password,
+            'profile_id' => $profileId,
+            'approver_user_id' => $approverUserId,
+            'approve_limit' => $approveLimit,
         ]);
     }
 
