@@ -15,7 +15,7 @@
                                 <h3 class="pull-left">Todos os fornecedores</h3>
                             </div>
                             <div class="col-md-6">
-                                <a href="{{ route('supplier.form') }}" class="btn pull-right btn-large" style="margin-right: 15px">Cadastrar novo</a>
+                                <a data-cy="btn-cadastrar-novo" href="{{ route('supplier.form') }}" class="btn pull-right btn-large" style="margin-right: 15px">Cadastrar novo</a>
                             </div>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($suppliers as $supplier)
+                                @foreach ($suppliers as $index => $supplier)
                                 <tr>
                                     <td>{{$supplier->cpf_cnpj}}</td>
                                     <td>{{$supplier->corporate_name}}</td>
@@ -53,9 +53,9 @@
                                     <td><strong>{{$supplier->market_type}}</strong></td>
                                     <td>{{$supplier->qualification->label()}}</td>
                                     <td align="center">
-                                        <a href="{{route('supplier', ['id' => $supplier->id])}}" class="btn" rel="tooltip" title="Editar"><i class="fa fa-edit"></i></a>
+                                        <a href="{{route('supplier', ['id' => $supplier->id])}}" class="btn" rel="tooltip" title="Editar" data-cy="btn-edit-supplier-{{$index}}"><i class="fa fa-edit"></i></a>
                                         <button data-route="supplier" data-name="{{$supplier->corporate_name}}" data-id="{{$supplier->id}}" rel="tooltip" title="Excluir"
-                                                class="btn" data-toggle="modal" data-target="#modal"  ><i class="fa fa-times"></i>
+                                                class="btn" data-toggle="modal" data-target="#modal" data-cy="btn-modal-delete-supplier" ><i class="fa fa-times"></i>
                                         </button>
                                     </td>
                                 </tr>

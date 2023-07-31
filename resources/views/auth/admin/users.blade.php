@@ -15,7 +15,7 @@
                                 <h3 class="pull-left">Lista de usuários</h3>
                             </div>
                             <div class="col-md-6">
-                                <a href="{{route('register')}}" class="btn pull-right btn-large" style="margin-right: 15px">Novo usuário</a>
+                                <a data-cy="btn-novo-usuario" href="{{route('register')}}" class="btn pull-right btn-large" style="margin-right: 15px">Novo usuário</a>
                             </div>
                         </div>
                     </div>
@@ -36,16 +36,16 @@
                             </thead>
                             <tbody>
 
-                                @foreach ($users as $user)
+                                @foreach ($users as $index => $user)
                                 <tr>
-                                    <td>{{$user['person']['name']}}</td>
-                                    <td >{{$user['email']}}</td>
-                                    <td class='hidden-350'>{{$user['profile']['name']}}</td>
-                                    <td class='hidden-1024'>{{\Carbon\Carbon::parse($user['created_at'])->format('d/m/Y - H:m:s')}}</td>
+                                    <td>{{$user->person->name}}</td>
+                                    <td >{{$user->email}}</td>
+                                    <td class='hidden-350'>{{$user->profile->name}}</td>
+                                    <td class='hidden-1024'>{{\Carbon\Carbon::parse($user->created_at)->format('d/m/Y - H:m:s')}}</td>
                                     <td class='hidden-480'>
-                                        <a href="{{route('user' , ['id' => $user['id']])}}" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
-                                        <button data-route="user" data-name="{{$user['person']['name']}}" data-id="{{$user['id']}}" rel="tooltip" title="Excluir"
-                                                class="btn" data-toggle="modal" data-target="#modal"  >
+                                        <a data-cy="btn-editar-usuario-{{$index}}" href="{{route('user' , ['id' => $user->id ])}}" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
+                                        <button data-route="user" data-name="{{$user->person->name}}" data-id="{{$user->id}}" rel="tooltip" title="Excluir"
+                                                class="btn" data-toggle="modal" data-target="#modal" data-cy="btn-modal-excluir-usuario-{{$index}}" >
                                                 <i class="fa fa-times"></i>
                                         </button>
                                     </td>

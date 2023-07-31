@@ -1,7 +1,7 @@
 <x-app>
 
     <x-slot name="title">
-        <h1>Usuário {{$user['id']}} - {{$user['person']['name']}}</h1>
+        <h1>Usuário {{$user->id}} - {{$user->person->name}}</h1>
     </x-slot>
 
     <div class="row">

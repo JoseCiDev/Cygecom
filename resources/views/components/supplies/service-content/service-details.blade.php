@@ -19,7 +19,7 @@
 
     <div class="row" style="padding: 25px 0">
         <div class="col-sm-12">
-            <form class="form-validate" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
+            <form class="form-validate" data-cy="form-request-status" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
             @csrf
                 <div class="row">
                    <div class="col-md-12">
@@ -28,14 +28,14 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <select name="status" @disabled($requestIsFromLogged)>
+                        <select name="status" data-cy="status" @disabled($requestIsFromLogged)>
                             @foreach ($allRequestStatus as $status)
                                 @if ($status->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
                                     <option @selected($request->status === $status) value="{{$status}}">{{$status->label()}}</option>
                                 @endif
                             @endforeach
                         </select>
-                        <button type="submit" class="btn btn-icon btn-small btn-primary" @disabled($requestIsFromLogged)> Aplicar status </button>
+                        <button ata-cy="btn-apply-status" type="submit" class="btn btn-icon btn-small btn-primary" @disabled($requestIsFromLogged)> Aplicar status </button>
                     </div>
                 </div>
             </form>

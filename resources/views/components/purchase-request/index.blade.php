@@ -1,3 +1,6 @@
+@php
+    use App\Enums\PurchaseRequestStatus;
+@endphp
 <x-app>
     <x-slot name="title">
         <h1>Solicitações de Compra/Serviço</h1>
@@ -14,7 +17,7 @@
                             <h3 class="pull-left">Todas as solicitações</h3>
                         </div>
                         <div class="col-md-6">
-                            <a href="{{ route('request.links') }}" class="btn pull-right btn-large" style="margin-right: 15px">Nova Solicitação</a>
+                            <a data-cy="btn-nova-solicitacao" href="{{ route('request.links') }}" class="btn pull-right btn-large" style="margin-right: 15px">Nova Solicitação</a>
                         </div>
                     </div>
                 </div>
@@ -37,7 +40,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($purchaseRequests as $purchaseRequest)
+                            @foreach ($purchaseRequests as $index => $purchaseRequest)
                                 <tr>
                                     <td>{{$purchaseRequest->id}}</td>
                                     <td>{{$purchaseRequest->user->person->name}}</td>
@@ -53,6 +56,7 @@
                                             class="btn"
                                             rel="tooltip"
                                             title="Editar"
+                                            data-cy="btn-edit-request-{{$index}}"
                                         >
                                             <i class="fa fa-edit"></i>
                                         </a>
@@ -64,10 +68,11 @@
                                             rel="tooltip"
                                             title="Copiar"
                                             class="btn"
+                                            data-cy="btn-copy-request-{{$index}}"
                                         >
                                             <i class="fa fa fa-copy"></i>
                                         </a>
-                                        @if($purchaseRequest->status->name === "RASCUNHO")
+                                        @if($purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value)
                                             <button data-route="purchaseRequests"
                                                 data-name="{{'Solicitação de compra - ID ' . $purchaseRequest->id}}"
                                                 data-id="{{$purchaseRequest->id}}"
@@ -76,6 +81,7 @@
                                                 class="btn"
                                                 data-toggle="modal"
                                                 data-target="#modal"
+                                                data-cy="btn-delete-request-{{$index}}"
                                             >
                                                 <i class="fa fa-times"></i>
                                             </button>

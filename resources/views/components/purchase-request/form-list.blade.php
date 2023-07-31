@@ -17,7 +17,7 @@
                         Lista de produtos que precisam ser adquiridos ou solicitados a suprimentos. Por exemplo:
                         compra de materiais de escritório.
                     </p>
-                    <a href="{{ route('request.product.register') }}" class="btn btn-success btn-large btn-products" >
+                    <a data-cy="btn-products" href="{{ route('request.product.register') }}" class="btn btn-success btn-large btn-products" >
                         PRODUTOS
                     </a>
                 </div>
@@ -26,14 +26,14 @@
                         Serviços pontuais, prestados uma vez e com pagamento único ou parcelado. Por exemplo:
                         conserto de ar condicionado.
                     </p>
-                    <a href="{{ route('request.service.register') }}" class="btn btn-inverse btn-large btn-services">SERVIÇOS</a>
+                    <a data-cy="btn-services" href="{{ route('request.service.register') }}" class="btn btn-inverse btn-large btn-services">SERVIÇOS</a>
                 </div>
                 <div class="col-sm-4 contracts" style="display:flex; flex-direction:column; align-items:center">
                     <p class="text-center">
                         Contratos de serviçoes prestados com recorrência, que possam ter parcelas fixas
                         ou variáveis. Exemplo: consultorias e softwares.
                     </p>
-                    <a href="{{ route('request.contract.register') }}" class="btn btn-info btn-large btn-contracts">CONTRATOS</a>
+                    <a data-cy="btn-contracts" href="{{ route('request.contract.register') }}" class="btn btn-info btn-large btn-contracts">CONTRATOS</a>
                 </div>
             </div>
         </div>
