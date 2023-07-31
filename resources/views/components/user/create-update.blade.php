@@ -155,7 +155,7 @@
         @if ($currentProfile === 'admin')
             <div class="row" style="padding: 25px 0">
                 {{-- PERFIL DE USUÁRIO --}}
-                <div class="col-sm-12">
+                <div class="col-sm-4">
                     <label for="form-check" style="margin-bottom: 12px;">Perfil de Usuário</label>
                     <div class="form-check">
                         {{-- ADMIN --}}
@@ -178,6 +178,22 @@
                         <label class="form-check-label" for="personal">Suprimentos INP</label>
 
                         @error('approve_limit')
+                            <p><strong>{{ $message }}</strong></p>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label for="form-check" style="margin-bottom: 12px;">Autorização para Solicitar</label>
+                    <div class="form-check">
+                        <input @checked(!isset($user) || (isset($user) && $user->is_buyer)) name="is_buyer" id="is_buyer_true" data-cy="is_buyer_true"
+                             class="icheck-me" type="radio" value="1" data-skin="minimal">
+                        <label class="form-check-label" for="is_buyer_true">Autorizado</label>
+
+                        <input @checked(isset($user) && !$user->is_buyer) class="icheck-me" type="radio" name="is_buyer" id="is_buyer_false" 
+                            data-cy="is_buyer_false" value="0" data-skin="minimal" >
+                        <label class="form-check-label" for="is_buyer_false">Não autorizado</label>
+
+                        @error('is_buyer')
                             <p><strong>{{ $message }}</strong></p>
                         @enderror
                     </div>
