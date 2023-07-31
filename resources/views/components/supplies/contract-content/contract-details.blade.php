@@ -435,5 +435,21 @@
                  @endif
             </div>
         </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4><strong>Links de apoio/sugestão:</strong></h4>
+                @php
+                    $supportLinks = 'Não há links para serem exibidos aqui.';
+                    if( $request?->support_links) {
+                        $supportLinks = str_replace(' ', '<br>', $request->support_links);
+                        $supportLinks = nl2br($supportLinks);
+                    }
+                @endphp
+                <p class="support_links" style="max-height: 300px; overflow:auto">{!! $supportLinks !!}</p>
+            </div>
+        </div>
     </div>
 </x-app>
