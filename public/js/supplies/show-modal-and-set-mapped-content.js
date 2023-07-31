@@ -38,6 +38,7 @@ $(() =>{
             local_description: (value) => value,
             reason: (value) => value,
             observation: (value) => value,
+            support_links: (value) => value?.replaceAll('\n', '<br>').replaceAll(' ', '<br><br>') ?? 'Sem links de apoio/sugestão',
             desired_date: (value) => dateFormatter(value),
             created_at: (value) => dateFormatter(value),
             updated_at: (value) => dateFormatter(value),
