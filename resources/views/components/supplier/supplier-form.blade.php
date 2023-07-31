@@ -11,7 +11,15 @@
     @csrf
 
     <div class="row center-block" style="padding-bottom: 12px;">
-        <h4>DADOS FISCAIS</h4>
+        <div class="col-sm-6">
+            <h4>DADOS FISCAIS</h4>
+        </div>
+        <div class="col-sm-6">
+            <div class="pull-right">
+                <fieldset> Consulte aqui o cartão CNPJ: </fieldset>
+                <a style="display: block" href="https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/cnpjreva_solicitacao.asp" target="_blank" rel="noopener noreferrer">Clique aqui para a pesquisa do cartão CNPJ</a>
+            </div>
+        </div>
     </div>
     <div class="row">
 
