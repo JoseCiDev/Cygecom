@@ -32,7 +32,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
      */
     public function getApprovers(string $action, int $id = null)
     {
-        $isUserUpdate = $action === 'userUpdate';
+        $isUserUpdate = $action === 'user.update';
         $query        = User::with(['person'])->where('profile_id', 1)->whereNull('deleted_at');
 
         if ($isUserUpdate && $id !== null) {
@@ -53,17 +53,19 @@ class UserService extends ServiceProvider implements UserServiceInterface
     public function registerUser(array $request): User
     {
         return DB::transaction(function () use ($request) {
-            $phoneId             = $this->createPhone($request);
+            $phoneId = $this->createPhone($request);
             $request['phone_id'] = $phoneId;
-            $person              = $this->createPerson($request);
+            $person = $this->createPerson($request);
 
-            $user                   = new User();
-            $user->email            = $request['email'];
-            $user->password         = Hash::make($request['password']);
-            $user->profile_id       = $this->getProfileId($request);
-            $user->person_id        = $person->id;
+            $user = new User();
+            $user->email = $request['email'];
+            $user->password  = Hash::make($request['password']);
+            $user->profile_id = $this->getProfileId($request);
+            $user->person_id = $person->id;
             $user->approver_user_id = $request['approver_user_id'] ?? null;
-            $user->approve_limit    = $request['approve_limit'];
+            $user->approve_limit = $request['approve_limit'];
+            $user->is_buyer = $request['is_buyer'] ?? false;
+
             $user->save();
 
             if (auth()->user()->profile->name === 'admin') {
@@ -119,12 +121,24 @@ class UserService extends ServiceProvider implements UserServiceInterface
      */
     private function saveUser(User $user, array $data)
     {
+        $email = $data['email'] ?? $user->email;
+        $password = isset($data['password']) ? Hash::make($data['password']) : $user->password;
+
+        $profile = isset($data['profile_type']) ? UserProfile::firstOrCreate(['name' => $data['profile_type']]) : $user->profile;
+        $profileId = $profile->id;
+
+        $approverUserId = isset($data['approver_user_id']) ? User::find($data['approver_user_id'])->id : $user->approver_user_id;
+        $approveLimit = $data['approve_limit'] ?? $user->approve_limit;
+
+        $isBuyer = $data['is_buyer'] ?? $user->is_buyer;
+
         $user->update([
-            'email'            => $data['email'] ?? $user->email,
-            'password'         => isset($data['password']) ? Hash::make($data['password']) : $user->password,
-            'profile_id'       => isset($data['profile_type']) ? UserProfile::firstWhere('name', $data['profile_type'])->id : $user->profile_id,
-            'approver_user_id' => isset($data['approver_user_id']) ? User::where('id', $data['approver_user_id'])->value('id') : $user->approver_user_id,
-            'approve_limit'    => $data['approve_limit'],
+            'email' => $email,
+            'password' => $password,
+            'profile_id' => $profileId,
+            'approver_user_id' => $approverUserId,
+            'approve_limit' => $approveLimit,
+            'is_buyer' => $isBuyer,
         ]);
     }
 

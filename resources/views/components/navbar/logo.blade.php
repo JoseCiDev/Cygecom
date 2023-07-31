@@ -1,1 +1,1 @@
-<a href="/" id="brand">GECOM</a>
+<a data-cy="logo-gecom" href="/" id="brand">GECOM</a>

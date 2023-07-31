@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-cy="btn-dismiss-modal">
                     Fechar
                 </button>
             </div>

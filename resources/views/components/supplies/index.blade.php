@@ -1,3 +1,6 @@
+@php
+    $currentProfile = auth()->user()->profile->name;
+@endphp
 <x-app>
     <x-slot name="title">
         <h1>Dashboard de suprimentos</h1>
@@ -25,14 +28,14 @@
                                     <div class="name" style="background-color: #339933"><i class="fa fa-tags"></i> Solicitações de produtos</div>
                                     <div class="price" style="background-color: #33993368">
                                         {{ $productQtd  ?? '---'}} <span>solicitações existentes</span>
-                                        @if (auth()->user()->profile->name === 'admin')
-                                            <a href="{{route('supplies.product')}}" class="btn btn-grey-4">Todos de produtos</a>
+                                        @if ($currentProfile === 'admin')
+                                            <a href="{{route('supplies.product')}}" class="btn btn-grey-4" data-cy="btn-all-products">Todos de produtos</a>
                                         @endif
-                                        @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4">Produtos HKM</a>
+                                        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
+                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-products">Produtos HKM</a>
                                         @endif
-                                        @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_inp')
-                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4">Produtos INP</a>
+                                        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
+                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-products">Produtos INP</a>
                                         @endif
                                     </div>
                                 </li>
@@ -46,14 +49,14 @@
                                     <div class="name" style="background-color: #111111"><i class="fa fa-briefcase"></i> Solicitações de serviços</div>
                                     <div class="price" style="background-color: #11111159">
                                         {{ $serviceQtd  ?? '---'}} <span>solicitações existentes</span>
-                                        @if (auth()->user()->profile->name === 'admin')
-                                            <a href="{{route('supplies.service')}}" class="btn btn-grey-4">Todos serviços</a>
+                                        @if ($currentProfile === 'admin')
+                                            <a href="{{route('supplies.service')}}" class="btn btn-grey-4" data-cy="btn-all-services">Todos serviços</a>
                                         @endif
-                                        @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4">Serviços HKM</a>
+                                        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
+                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-services">Serviços HKM</a>
                                         @endif
-                                        @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_inp')
-                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4">Serviços INP</a>
+                                        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
+                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-services">Serviços INP</a>
                                         @endif
                                     </div>
                                 </li>
@@ -67,14 +70,14 @@
                                     <div class="name" style="background-color: #62a7e7;"><i class="glyphicon glyphicon-list-alt"></i> Solicitações de contratos</div>
                                     <div class="price" style="background-color: #62a7e75c;">
                                         {{ $contractQtd  ?? '---'}} <span>solicitações existentes</span>
-                                        @if (auth()->user()->profile->name === 'admin')
-                                            <a href="{{route('supplies.contract')}}" class="btn btn-grey-4">Todos de contratos</a>
+                                        @if ($currentProfile === 'admin')
+                                            <a href="{{route('supplies.contract')}}" class="btn btn-grey-4" data-cy="btn-all-contracts">Todos de contratos</a>
                                         @endif
-                                        @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4">Contratos HKM</a>
+                                        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
+                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-contracts">Contratos HKM</a>
                                         @endif
-                                        @if (auth()->user()->profile->name === 'admin' || auth()->user()->profile->name === 'suprimentos_inp')
-                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4">Contratos INP</a>
+                                        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
+                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-contracts">Contratos INP</a>
                                         @endif
                                     </div>
                                 </li>

@@ -76,7 +76,7 @@ class UserController extends Controller implements UserControllerInterface
         return view('auth.admin.user', ['user' => $user, 'approvers' => $approvers, 'costCenters' => $costCenters]);
     }
 
-    public function userUpdate(Request $request, int $id)
+    public function update(Request $request, int $id)
     {
         $isAdmin = auth()->user()->profile->name === 'admin';
         $isOwnId = $id === auth()->user()->id;

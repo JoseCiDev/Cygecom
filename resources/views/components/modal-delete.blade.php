@@ -8,11 +8,11 @@
                 <p>Tem certeza que deseja excluir <strong class="name"></strong>?</p>
                 <p>Essa ação não pode ser desfeita!</p>
             </div>
-            <form id="modal-form-delete" method="POST" action="">
+            <form id="modal-form-delete" data-cy="modal-form-delete" method="POST" action="">
                 @csrf
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-danger">Excluir</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-cy="btn-modal-form-delete-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-danger" data-cy="btn-modal-delete">Excluir</button>
                 </div>
             </form>
         </div>

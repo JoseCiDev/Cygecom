@@ -1,4 +1,4 @@
-<button id="print-pdf" class="btn btn-primary">Imprimir PDF</button>
+<button id="print-pdf" data-cy="print-pdf" class="btn btn-primary">Imprimir PDF</button>
 
 <script>
     $(()=> {

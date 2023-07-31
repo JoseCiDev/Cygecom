@@ -13,5 +13,5 @@ interface UserControllerInterface
     public function showRegistrationForm();
     public function showUsers();
     public function showUser(int $id);
-    public function userUpdate(Request $request, int $id);
+    public function update(Request $request, int $id);
 }

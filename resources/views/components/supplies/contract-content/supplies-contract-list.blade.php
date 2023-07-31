@@ -22,7 +22,7 @@
                             <th>Responsável</th>
                             <th class="hidden-1440">Responsável em</th>
                             <th class="col-xs-2">
-                                <select id="filterStatus" class="form-control">
+                                <select id="filterStatus" data-cy="filterStatus" class="form-control">
                                     <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
                                     @foreach (\App\Enums\PurchaseRequestStatus::cases() as $statusCase)
                                         @if ($statusCase->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
@@ -46,7 +46,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($contracts as $contract)
+                        @foreach ($contracts as $index => $contract)
                             @php 
                                 $groups = $contract->CostCenterApportionment->pluck('costCenter.Company.group')->unique(); 
                                 $concatenatedGroups = $groups->map(function ($item) {
@@ -80,6 +80,7 @@
                                         class="btn btn-primary"
                                         data-toggle="modal"
                                         data-target="#modal-supplies"
+                                        data-cy="btn-analisar-{{$index}}"
                                     >
                                         <i class="fa fa-search"></i>
                                     </button>
@@ -89,6 +90,7 @@
                                         rel="tooltip"
                                         title="Abrir"
                                         isToShow="{{$isToShow ? 'true' : 'false'}}"
+                                        data-cy="btn-open-details-{{$index}}"
                                     >
                                         <i class="fa fa-external-link"></i>
                                     </a>

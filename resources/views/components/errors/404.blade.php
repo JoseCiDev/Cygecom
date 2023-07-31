@@ -21,7 +21,7 @@
 <body class='login theme-darkblue'>
 	<div class="wrapper">
 		<h1 style="color: #ffffff">Página não encontrada!<h1>
-        <a href="{{ route('home') }}">
+        <a href="{{ route('home') }}" data-cy="voltar-ao-inicio">
             <button class="btn btn-large">
                 VOLTAR AO INICÍO
             </button>
