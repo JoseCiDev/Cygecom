@@ -81,7 +81,10 @@ class SupplierController extends Controller
             'message' => 'Fornecedor cadastrado com sucesso!',
             'cpf_cnpj' => $data['cpf_cnpj'],
             'id' => $supplier->id,
-            'corporate_name' => $supplier->corporate_name
+            'corporate_name' => $supplier->corporate_name,
+            'representative' => $supplier->representative,
+            'email' => $supplier->email,
+            'phone_number' => $supplier->phone->number,
         ], 200);
     }
 
