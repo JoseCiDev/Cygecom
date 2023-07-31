@@ -78,7 +78,7 @@
                                 <h2 class="request-title">Detalhes da solicitação</h2>
                             </div>
                             <div class="request-details-content">
-    
+
                                 <div class="request-details-content-box">
                                     <h4><i class="fa fa-info"></i> <strong>Informações básicas</strong></h4>
                                     <hr>
@@ -117,7 +117,7 @@
                                         </p>
                                     </div>
                                 </div>
-    
+
                                 <div class="request-details-content-box">
                                     <h4><i class="fa fa-user"></i><strong> Informações do solicitante</strong></h4>
                                     <hr>
@@ -170,7 +170,7 @@
                                         </p>
                                     </div>
                                 </div>
-    
+
                             </div>
 
                             <div class="request-details-content">
@@ -241,7 +241,7 @@
                                                     <strong>Indicação:</strong>
                                                     {{ $request->service->Supplier?->supplier_indication ?? '---' }}
                                                 </p>
-                                                
+
                                             </div>
                                             <div class="col-sm-6">
                                                 <p>
@@ -337,7 +337,7 @@
                                     </p>
                                 </div>
                             </div>
-    
+
                         </div>
                     </div>
                 </div>
@@ -348,15 +348,15 @@
 
         <div class="row">
             <div class="col-md-12">
-                 <h4><strong>Links:</strong></h4>
-                 @if ($request->purchaseRequestFile->count())
+                 <h4><strong>Anexos:</strong></h4>
+                 @if ($files->count())
                     <ul>
-                        @foreach ($request->purchaseRequestFile as $index => $file)
-                            <li><a style="font-size: 16px" href="{{ $file->path }}" target="_blank" rel="noopener noreferrer">Link {{$index + 1}}</a></li>                        
+                        @foreach ($files as $index => $file)
+                            <li><a style="font-size: 16px" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank" rel="noopener noreferrer">{{ $file->original_name }}</a></li>
                         @endforeach
                     </ul>
                  @else
-                    <p>Ainda não há registros aqui.</p>   
+                    <p>Ainda não há registros aqui.</p>
                  @endif
             </div>
         </div>

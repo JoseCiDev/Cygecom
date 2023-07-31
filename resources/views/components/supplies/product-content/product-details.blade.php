@@ -41,7 +41,7 @@
             </form>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-6">
             <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
@@ -153,7 +153,7 @@
                             </div>
 
                             <hr class="pagebreak"/>
-                            
+
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <h4>
@@ -237,7 +237,7 @@
                                                         <p class="col-sm-4" style="margin: 0">
                                                             <strong>Tipo de mercado:</strong> {{ $supplierGroup->first()->supplier->market_type }}
                                                         </p>
-                                                    
+
                                                         <p class="col-sm-4" style="margin: 0">
                                                             <strong>Qualificação:</strong> {{ $supplierGroup->first()->supplier->qualification->label() }}
                                                         </p>
@@ -342,18 +342,18 @@
         </div>
 
         <hr>
-        
+
         <div class="row">
             <div class="col-md-12">
                  <h4><strong>Links:</strong></h4>
-                 @if ($request->purchaseRequestFile->count())
+                 @if ($files->count())
                     <ul>
-                        @foreach ($request->purchaseRequestFile as $index => $file)
-                            <li><a style="font-size: 16px" href="{{ $file->path }}" target="_blank" rel="noopener noreferrer">Link {{$index + 1}}</a></li>                        
+                        @foreach ($files as $index => $file)
+                            <li><a style="font-size: 16px" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank" rel="noopener noreferrer">{{ $file->original_name }}</a></li>
                         @endforeach
                     </ul>
-                @else
-                    <p>Ainda não há registros aqui.</p>   
+                 @else
+                    <p>Ainda não há registros aqui.</p>
                  @endif
             </div>
         </div>

@@ -27,6 +27,7 @@ class PurchaseRequestFile extends Model
     protected $fillable = [
         'path',
         'purchase_request_id',
+        'original_name',
         'updated_by',
         'deleted_by',
         'deleted_at',

@@ -135,7 +135,10 @@ class PurchaseRequestService extends ServiceProvider
             $this->saveCostCenterApportionment($purchaseRequest->id, $data);
 
             if (collect($files)->count()) {
-                $this->uploadFilesToS3($files, $type, $id);
+                foreach ($files as $file) {
+                    $originalNames[] = $file->getClientOriginalName();
+                }
+                $this->uploadFilesToS3($files, $type, $id, $originalNames);
             }
 
             return $purchaseRequest;
@@ -208,16 +211,28 @@ class PurchaseRequestService extends ServiceProvider
             $this->saveCostCenterApportionment($id, $data);
 
             if (collect($files)->count()) {
-                $this->uploadFilesToS3($files, $type, $id);
+                foreach ($files as $file) {
+                    $originalNames[] = $file->getClientOriginalName();
+                }
+                $this->uploadFilesToS3($files, $type, $id, $originalNames);
             }
 
             return $purchaseRequest;
         });
     }
 
-    private function uploadFilesToS3(UploadedFile | array $files, PurchaseRequestType $purchcaseRequestType, int $requestId): void
+    private function uploadFilesToS3(UploadedFile | array $files, PurchaseRequestType $purchcaseRequestType, int $requestId, array $originalNames): void
     {
         $type = 'request-' . $purchcaseRequestType->value;
+
+        $uploadedFilesData = [];
+
+        foreach ($files as $index => $file) {
+            $uploadedFilesData[] = [
+                'file' => $file,
+                'original_name' => $originalNames[$index], // Pegar o nome original do arquivo a partir do array
+            ];
+        }
 
         $uploadFiles = S3::sendFiles($files, $type, $requestId);
 
@@ -225,8 +240,8 @@ class PurchaseRequestService extends ServiceProvider
             $msg = $uploadFiles->exception;
             throw new Exception($msg);
         }
-        foreach ($uploadFiles->urls_bucket as $filePath) {
-            $this->savePurchaseRequestFile($requestId, $filePath);
+        foreach ($uploadFiles->urls_bucket as $index => $filePath) {
+            $this->savePurchaseRequestFile($requestId, $filePath, $originalNames[$index]);
         }
     }
 
@@ -306,11 +321,13 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar purchaseRequestFile.
      * Recomendado executar com o método específico registerProductRequest ou updateProductRequest
      */
-    private function savePurchaseRequestFile(int $purchaseRequestId, $filePath)
+    private function savePurchaseRequestFile(int $purchaseRequestId, $filePath, string $originalName)
     {
         $purchaseRequestFile['path'] = $filePath;
         $purchaseRequestFile['purchase_request_id'] = $purchaseRequestId;
         $purchaseRequestFile['updated_by'] = auth()->user()->id;
+        $purchaseRequestFile['original_name'] = $originalName; // Atribuir apenas o nome original, não o array
+
         PurchaseRequestFile::create($purchaseRequestFile);
     }
 

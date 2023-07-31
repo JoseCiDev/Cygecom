@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PurchaseRequestFile;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use App\Enums\PurchaseRequestStatus;
@@ -162,11 +163,15 @@ class ServiceController extends Controller
 
         $service = $this->purchaseRequestService->purchaseRequestById($id);
 
+        $files = PurchaseRequestFile::where('purchase_request_id', $id)
+            ->whereNull('deleted_at')
+            ->get();
+
         if (!$service) {
             return throw new Exception('Não foi possível acessar essa solicitação.');
         }
 
-        return view('components.supplies.service-content.service-details', ['service' => $service, 'allRequestStatus' => $allRequestStatus]);
+        return view('components.supplies.service-content.service-details', compact('service', 'allRequestStatus', 'files'));
     }
 
     private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool

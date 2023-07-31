@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PurchaseRequestStatus;
-use App\Models\{Company, CostCenter, PurchaseRequest};
-use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 use Exception;
+use App\Models\PurchaseRequestFile;
+use App\Enums\PurchaseRequestStatus;
 use Illuminate\Http\{RedirectResponse, Request};
+use App\Models\{Company, CostCenter, PurchaseRequest};
 use Symfony\Component\Mailer\Exception\TransportException;
+use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 
 class ProductController extends Controller
 {
@@ -126,11 +127,15 @@ class ProductController extends Controller
 
         $product = $this->purchaseRequestService->purchaseRequestById($id);
 
+        $files = PurchaseRequestFile::where('purchase_request_id', $id)
+        ->whereNull('deleted_at')
+        ->get();
+
         if (!$product) {
             return throw new Exception('Não foi possível acessar essa solicitação.');
         }
 
-        return view('components.supplies.product-content.product-details', ['product' => $product, 'allRequestStatus' => $allRequestStatus]);
+        return view('components.supplies.product-content.product-details', compact('product', 'allRequestStatus', 'files'));
     }
 
     private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool
