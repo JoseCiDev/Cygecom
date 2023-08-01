@@ -1,5 +1,23 @@
 @php
     $currentProfile = auth()->user()->profile->name;
+    
+    $productQtdByProfile = [
+        'admin' => $productQtd, 
+        'suprimentos_hkm' => $productsFromHkm->count(), 
+        'suprimentos_inp' => $productsFromInp->count()
+    ];
+    
+    $serviceQtdByProfile = [
+        'admin' => $serviceQtd, 
+        'suprimentos_hkm' => $servicesFromHkm->count(), 
+        'suprimentos_inp' => $servicesFromInp->count()
+    ];
+    
+    $contractQtdByProfile = [
+        'admin' => $contractQtd, 
+        'suprimentos_hkm' => $contractsFromHkm->count(), 
+        'suprimentos_inp' => $contractsFromInp->count()
+    ];
 @endphp
 <x-app>
     <x-slot name="title">
@@ -27,20 +45,28 @@
                                 <li class="head">
                                     <div class="name" style="background-color: #339933"><i class="fa fa-tags"></i> Solicitações de produtos</div>
                                     <div class="price" style="background-color: #33993368">
-                                        {{ $productQtd  ?? '---'}} <span>solicitações existentes</span>
+
+                                        {{$productQtdByProfile[$currentProfile]}}
+                                        <span>solicitações existentes</span>
+
                                         @if ($currentProfile === 'admin')
                                             <a href="{{route('supplies.product')}}" class="btn btn-grey-4" data-cy="btn-all-products">Todos de produtos</a>
                                         @endif
+
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
                                             <a href="{{route('supplies.product', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-products">Produtos HKM</a>
                                         @endif
+                                        
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
                                             <a href="{{route('supplies.product', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-products">Produtos INP</a>
                                         @endif
+
                                     </div>
                                 </li>
-                                <li>Solicitações para INP/Noorskin/Oasis: <strong>{{$productsFromInp->count()}}</strong></li>
-                                <li>Solicitações para farmácias e demais empresas: <strong>{{$productsFromHkm->count()}}</strong></li>
+                                @if ($currentProfile === 'admin')
+                                    <li>Solicitações para INP/Noorskin/Oasis: <strong>{{$productsFromInp->count()}}</strong></li>
+                                    <li>Solicitações para farmácias e demais empresas: <strong>{{$productsFromHkm->count()}}</strong></li>
+                                @endif
                                 <li>Qtd. de COMEX: <strong>{{$productComexQtd}}</strong></li>
                                 <li>Qtd. desejadas p/ hoje: <strong>{{$productDesiredTodayQtd}}</strong></li>
                             </ul>
@@ -48,20 +74,27 @@
                                 <li class="head">
                                     <div class="name" style="background-color: #111111"><i class="fa fa-briefcase"></i> Solicitações de serviços</div>
                                     <div class="price" style="background-color: #11111159">
-                                        {{ $serviceQtd  ?? '---'}} <span>solicitações existentes</span>
+
+                                        {{$serviceQtdByProfile[$currentProfile]}}
+                                        <span>solicitações existentes</span>
+
                                         @if ($currentProfile === 'admin')
                                             <a href="{{route('supplies.service')}}" class="btn btn-grey-4" data-cy="btn-all-services">Todos serviços</a>
                                         @endif
+
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
                                             <a href="{{route('supplies.service', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-services">Serviços HKM</a>
                                         @endif
+
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
                                             <a href="{{route('supplies.service', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-services">Serviços INP</a>
                                         @endif
                                     </div>
                                 </li>
-                                <li>Solicitações para INP/Noorskin/Oasis <strong>{{$servicesFromInp->count()}}</strong></li>
-                                <li>Solicitações para farmácias e demais empresas: <strong>{{$servicesFromHkm->count()}}</strong></li>
+                                @if ($currentProfile === 'admin')
+                                    <li>Solicitações para INP/Noorskin/Oasis <strong>{{$servicesFromInp->count()}}</strong></li>
+                                    <li>Solicitações para farmácias e demais empresas: <strong>{{$servicesFromHkm->count()}}</strong></li>
+                                @endif
                                 <li>Qtd. de COMEX: <strong>{{$serviceComexQtd}}</strong></li>
                                 <li>Qtd. desejadas p/ hoje: <strong>{{$serviceDesiredTodayQtd}}</strong></li>
                             </ul>
@@ -69,20 +102,27 @@
                                 <li class="head">
                                     <div class="name" style="background-color: #62a7e7;"><i class="glyphicon glyphicon-list-alt"></i> Solicitações de contratos</div>
                                     <div class="price" style="background-color: #62a7e75c;">
-                                        {{ $contractQtd  ?? '---'}} <span>solicitações existentes</span>
+
+                                        {{$contractQtdByProfile[$currentProfile]}}
+                                        <span>solicitações existentes</span>
+
                                         @if ($currentProfile === 'admin')
                                             <a href="{{route('supplies.contract')}}" class="btn btn-grey-4" data-cy="btn-all-contracts">Todos de contratos</a>
                                         @endif
+
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
                                             <a href="{{route('supplies.contract', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-contracts">Contratos HKM</a>
                                         @endif
+
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
                                             <a href="{{route('supplies.contract', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-contracts">Contratos INP</a>
                                         @endif
                                     </div>
                                 </li>
-                                <li>Solicitações para INP/Noorskin/Oasis: <strong>{{$contractsFromInp->count()}}</strong></li>
-                                <li>Solicitações para farmácias e demais empresas: <strong>{{$contractsFromHkm->count()}}</strong></li>
+                                @if ($currentProfile === 'admin')
+                                    <li>Solicitações para INP/Noorskin/Oasis: <strong>{{$contractsFromInp->count()}}</strong></li>
+                                    <li>Solicitações para farmácias e demais empresas: <strong>{{$contractsFromHkm->count()}}</strong></li>
+                                @endif
                                 <li>Qtd. de COMEX: <strong>{{$contractComexQtd}}</strong></li>
                                 <li>Qtd. desejadas p/ hoje: <strong>{{$contractDesiredTodayQtd}}</strong></li>
                             </ul>
