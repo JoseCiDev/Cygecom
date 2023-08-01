@@ -672,7 +672,7 @@
                             @if (isset($files))
                                 @foreach ($files as $each)
                                     @php
-                                        $filenameSearch = explode('/', $each->path);
+                                        $filenameSearch = explode('/', $each->original_name);
                                         $filename = end($filenameSearch);
                                     @endphp
                                     <li class="list-group-item" data-id-purchase-request-file="{{ $each->id }}">

@@ -19,7 +19,7 @@
 
 <style>
     .cost-center-container {
-        margin-bottom: 10px;
+        margin-bottom: 5px;
     }
 
     div.dataTables_wrapper div.dataTables_length,
@@ -566,7 +566,7 @@
                             @if (isset($files))
                                 @foreach ($files as $each)
                                     @php
-                                        $filenameSearch = explode('/', $each->path);
+                                        $filenameSearch = explode('/', $each->original_name);
                                         $filename = end($filenameSearch);
                                     @endphp
                                     <li class="list-group-item" data-id-purchase-request-file="{{ $each->id }}">
