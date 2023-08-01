@@ -152,12 +152,12 @@
                             @foreach ($costCenters as $costCenter)
                                 @php
                                     $isUserCostCenter = isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id;
-                                    $costCenterCompanyName = $costCenter->company->corporate_name;
+                                    $companyName = $costCenter->company->name;
                                     $costCenterName = $costCenter->name;
-                                    $costCenterSeniorCode = $costCenter->senior_code;
+                                    $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
                                 @endphp
-                                <option value="{{ $costCenter->id }}" {{ $isUserCostCenter ? 'selected' : '' }}>
-                                    {{ $costCenterCompanyName . ' - ' . $costCenterName . ' - ' . $costCenterSeniorCode }}
+                                <option value="{{ $costCenter->id }}" @selected($isUserCostCenter)>
+                                    {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
                                 </option>
                             @endforeach
                         </select>
