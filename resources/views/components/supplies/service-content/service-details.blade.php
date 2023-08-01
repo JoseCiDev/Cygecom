@@ -17,7 +17,7 @@
         <h1>Página de suprimentos</h1>
     </x-slot>
 
-    <div class="row" style="padding: 25px 0">
+    <div class="row">
         <div class="col-sm-12">
             <form class="form-validate" data-cy="form-request-status" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
             @csrf
@@ -348,7 +348,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                 <h4><strong>Links:</strong></h4>
+                 <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
                  @if ($request->purchaseRequestFile->count())
                     <ul>
                         @foreach ($request->purchaseRequestFile as $index => $file)
@@ -365,7 +365,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <h4><strong>Links de apoio/sugestão:</strong></h4>
+                <h4><i class="glyphicon glyphicon-link"></i> <strong>Links de apoio/sugestão:</strong></h4>
                 @php
                     $supportLinks = 'Não há links para serem exibidos aqui.';
                     if( $request?->support_links) {

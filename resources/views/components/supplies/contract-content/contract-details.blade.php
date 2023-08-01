@@ -17,7 +17,7 @@
         <h1>Página de suprimentos</h1>
     </x-slot>
 
-    <div class="row" style="padding: 25px 0">
+    <div class="row">
         <div class="col-sm-12">
             <form data-cy="form-request-status" class="form-validate" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
             @csrf
@@ -41,12 +41,9 @@
             </form>
         </div>
     </div>
-
+  
     <div class="row">
-        <div class="col-md-6">
-            <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
-        </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="pull-right">
                 <x-PdfGeneratorButton print-by-selector=".details-content" :file-name="'solicitacao_contrato_'.$request->id . now()->format('dmY_His_u')"/>
             </div>
@@ -67,6 +64,11 @@
                 <p>Produto(s) desejado(s) para:
                     {{ $request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : '---' }}
                 </p>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
+                    </div>
+               </div>
             </header>
             <main>
                 <div class="row">
@@ -385,7 +387,7 @@
                                         <hr class="pagebreak"/>
 
                                         <div class="request-details-content-box-contract">
-                                            <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong>Contrato - Parcelas</strong></h4>
+                                            <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
                                             @foreach ($request->contract->installments as $installmentIndex => $installment)
                                             <div class="request-details-content-box-contract-installment">
                                                 <div class="row">
@@ -423,7 +425,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                 <h4><strong>Links:</strong></h4>
+                 <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
                  @if ($request->purchaseRequestFile->count())
                     <ul>
                         @foreach ($request->purchaseRequestFile as $index => $file)
@@ -440,7 +442,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <h4><strong>Links de apoio/sugestão:</strong></h4>
+                <h4><i class="glyphicon glyphicon-link"></i> <strong>Links de apoio/sugestão:</strong></h4>
                 @php
                     $supportLinks = 'Não há links para serem exibidos aqui.';
                     if( $request?->support_links) {

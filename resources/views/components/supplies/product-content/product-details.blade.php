@@ -17,7 +17,7 @@
         <h1>Página de suprimentos</h1>
     </x-slot>
 
-    <div class="row" style="padding: 25px 0">
+    <div class="row">
         <div class="col-sm-12">
             <form class="form-validate" data-cy="form-request-status" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
             @csrf
@@ -43,10 +43,7 @@
     </div>
     
     <div class="row">
-        <div class="col-md-6">
-            <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
-        </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="pull-right">
                 <x-PdfGeneratorButton print-by-selector=".details-content" :file-name="'solicitacao_produto_'.$request->id . now()->format('dmY_His_u')"/>
             </div>
@@ -67,6 +64,11 @@
                 <p>Desejado para:
                     {{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y') : '---' }}
                 </p>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
+                    </div>
+               </div>
             </header>
             <main>
                 <div class="row">
@@ -121,7 +123,7 @@
                                             {{ $request->user->person->costCenter->company->corporate_name }}
                                         </p>
                                         <hr>
-                                        <p><strong>Perfil do solicitante:</strong> {{ $request->user->Profile->name }}</p>
+                                        <p><strong>Perfil do solicitante:</strong> {{ $request->user->profile->name }}</p>
                                         <p>
                                             <strong>Autorização para solicitar:</strong>
                                             {{ $request->user->is_buyer ? 'Autorizado' : 'Sem autorização' }}
@@ -152,7 +154,7 @@
                                 </div>
                             </div>
 
-                            <hr class="pagebreak"/>
+                            <span class="pagebreak"></span>
                             
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
@@ -196,7 +198,7 @@
                                 </div>
                             </div>
 
-                            <hr class="pagebreak"/>
+                            <span class="pagebreak"></span>
 
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
@@ -213,10 +215,10 @@
                                         @foreach ($productsGroupedBySupplier as $supplierIndex => $supplierGroup)
                                             <div class="request-supplier-group">
                                                 @if ($loopIndex > 0)
-                                                    <hr class="pagebreak"/>
+                                                    <span class="pagebreak"></span>
                                                 @endif
                                                 <div class="request-details-content-box-supplier">
-                                                    <h4><strong>Fornecedor nº: {{ $supplierIndex }}</strong></h4>
+                                                    <h4><i class="fa fa-truck"></i> <strong>Fornecedor nº: {{ $supplierIndex }}</strong></h4>
 
                                                     <div class="row">
                                                         <p class="col-sm-4" style="margin: 0">
@@ -276,62 +278,59 @@
 
                                                 </div>
                                                 <div class="request-details-content-box-products">
-                                                    @foreach ($supplierGroup as $index => $productItem)
-                                                        <div class="request-details-content-box-products-product">
-                                                            <p><strong>Produto nº {{ $index }}:</strong></p>
+                                                    @php
+                                                        $productCategoryGroups = $supplierGroup->groupBy(function ($item) {
+                                                            return $item->category->name;
+                                                        });
+                                                    @endphp
 
-                                                            <div class="row">
-                                                                <p class="col-xs-4" style="margin: 0">
-                                                                    <strong>Categoria:</strong> {{ $productItem->category->name }}
-                                                                </p>
-                                                                <p class="col-xs-4" style="margin: 0">
-                                                                    <strong>Quantidade:</strong> {{ $productItem->quantity }}
-                                                                </p>
-                                                                <p class="col-xs-4" style="margin: 0">
-                                                                    <strong>Preço unitário:</strong> {{ $productItem->unit_price ?? '---' }}
-                                                                </p>
+                                                    @foreach ($productCategoryGroups as $productCategory => $products)
+                                                        <hr>
+                                                        <p><strong><i class="glyphicon glyphicon-th-large"></i> Categoria:</strong> {{$productCategory}}</p>    
+
+                                                        @foreach ($products as $index => $productItem)
+                                                            <div class="request-details-content-box-products-product">
+                                                                <p><strong><i class="glyphicon glyphicon-tag"></i> Produto nº {{ $index + 1 }}:</strong></p>
+
+                                                                <div class="row">
+                                                                    <p class="col-xs-4" style="margin: 0">
+                                                                        <strong>Nome do produto:</strong> {{ $productItem->name }}
+                                                                    </p>
+                                                                    <p class="col-xs-4" style="margin: 0">
+                                                                        <strong>Tamanho e dimensões do produto:</strong> {{ $productItem->size ?? '---' }}
+                                                                    </p>
+                                                                    <p class="col-xs-4" style="margin: 0">
+                                                                        <strong>Preço total:</strong> {{ $productItem->unit_price ? $productItem->unit_price * $productItem->quantity : 'Indefinido' }}
+                                                                    </p>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <p class="col-xs-4" style="margin: 0">
+                                                                        <strong>Quantidade:</strong> {{ $productItem->quantity }}
+                                                                    </p>
+                                                                    <p class="col-xs-4" style="margin: 0">
+                                                                        <strong>Modelo do produto:</strong> {{ $productItem->model ?? '---' }}
+                                                                    </p>
+                                                                    <p class="col-xs-4" style="margin: 0">
+                                                                        <strong>Descrição do produto:</strong> {{ $productItem->description ?? '---' }}
+                                                                    </p>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <p class="col-xs-4" style="margin: 0">
+                                                                        <strong>Preço unitário:</strong> {{ $productItem->unit_price ?? '---' }}
+                                                                    </p>
+                                                                    <p class="col-xs-4" style="margin: 0">
+                                                                        <strong>Cor do produto:</strong> {{ $productItem->color ?? '---' }}
+                                                                    </p>
+                                                                </div>
                                                             </div>
-
-                                                            <div class="row">
-                                                                <p class="col-xs-4" style="margin: 0">
-                                                                    <strong>Preço total:</strong> {{ $productItem->unit_price ? $productItem->unit_price * $productItem->quantity : 'Indefinido' }}
-                                                                </p>
-                                                                <p class="col-xs-4" style="margin: 0">
-                                                                    <strong>Tamanho e dimensões do produto:</strong> {{ $productItem->size ?? '---' }}
-                                                                </p>
-                                                                <p class="col-xs-4" style="margin: 0">
-                                                                    <strong>Modelo do produto:</strong> {{ $productItem->model ?? '---' }}
-                                                                </p>
-                                                            </div>
-
-                                                            <div class="row">
-                                                                <p class="col-xs-4" style="margin: 0">
-                                                                    <strong>Cor do produto:</strong> {{ $productItem->color ?? '---' }}
-                                                                </p>
-                                                                <p class="col-xs-4" style="margin: 0">
-                                                                    <strong>Produto criado em:</strong> {{ \Carbon\Carbon::parse($productItem->created_at)->format('d/m/Y h:m:s') }}
-                                                                </p>
-                                                                <p class="col-xs-4" style="margin: 0">
-                                                                    <strong>Nome do produto:</strong> {{ $productItem->name }}
-                                                                </p>
-                                                            </div>
-
-                                                            <div class="row">
-                                                                <p class="col-xs-4" style="margin: 0">
-                                                                    <strong>Descrição do produto:</strong> {{ $productItem->description ?? '---' }}
-                                                                </p>
-                                                                <p class="col-xs-4">
-                                                                    <strong>Produto atualizado em:</strong> {{ \Carbon\Carbon::parse($productItem->updated_at)->format('d/m/Y h:m:s') }}
-                                                                </p>
-                                                            </div>
-
-                                                        </div>
+                                                        @endforeach
                                                     @endforeach
                                                 </div>
                                             </div>
                                             @php $loopIndex++; @endphp
                                         @endforeach
-
                                     </div>
                                 </div>
                             </div>
@@ -345,7 +344,7 @@
         
         <div class="row">
             <div class="col-md-12">
-                 <h4><strong>Links:</strong></h4>
+                 <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
                  @if ($request->purchaseRequestFile->count())
                     <ul>
                         @foreach ($request->purchaseRequestFile as $index => $file)
@@ -362,7 +361,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <h4><strong>Links de apoio/sugestão:</strong></h4>
+                <h4><i class="glyphicon glyphicon-link"></i> <strong>Links de apoio/sugestão:</strong></h4>
                 @php
                     $supportLinks = 'Não há links para serem exibidos aqui.';
                     if( $request?->support_links) {
