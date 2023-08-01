@@ -141,7 +141,7 @@ class ContractController extends Controller
         return redirect()->route($route);
     }
 
-    public function contractDetails(int $id)
+    public function details(int $id)
     {
         $allRequestStatus = PurchaseRequestStatus::cases();
 
