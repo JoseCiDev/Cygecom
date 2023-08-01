@@ -376,11 +376,11 @@ class PurchaseRequestService extends ServiceProvider
             return;
         }
 
-        $suppliers = $data['purchase_request_products'];
+        $suppliers = array_values($data['purchase_request_products']);
 
         foreach ($suppliers as $supplier) {
             $supplierId = $supplier['supplier_id'];
-            $products = $supplier['products'];
+            $products = array_values($supplier['products']);
 
             foreach ($products as $product) {
                 $product['supplier_id'] = $supplierId;
