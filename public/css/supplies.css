@@ -81,17 +81,14 @@
 }
 
 .request-details-content-box-supplier {
-    border: 2px solid rgb(221, 221, 221);
-    padding: 20px;
+    padding: 0 20px;
 }
 
 .request-details-content-box-products {
-    border: 2px solid rgb(221, 221, 221);
-    padding: 20px;
+    padding: 0 20px;
 }
 
 .request-details-content-box-products-product {
-    border: 1px solid rgb(221, 221, 221);
     flex-grow: 1;
     padding: 10px;
 }
