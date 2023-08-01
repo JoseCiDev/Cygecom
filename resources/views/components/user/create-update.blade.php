@@ -207,12 +207,17 @@
                             <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id"
                                 class='chosen-select form-control @error('cost_center_id') is-invalid @enderror'
                                 data-rule-required="true" required>
-                                <option value="" disabled {{ isset($user->person->costCenter) ? '' : 'selected' }}>
+                                
+                                <option value="" disabled @selected(!isset($user->person->costCenter))>
                                     Selecione uma opção</option>
                                 @foreach ($costCenters as $costCenter)
-                                    <option value="{{ $costCenter->id }}"
-                                        {{ isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id ? 'selected' : '' }}>
-                                        {{ $costCenter->name }}
+                                    @php
+                                        $companyName = $costCenter->company->name;
+                                        $costCenterName = $costCenter->name;
+                                        $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
+                                    @endphp 
+                                    <option value="{{ $costCenter->id }}" @selected(isset($user->person->costCenter) && $user->person->costCenter->id === $costCenter->id)>
+                                        {{ $formattedCnpj . ' - ' . $companyName . ' / ' . $costCenterName }}
                                     </option>
                                 @endforeach
                             </select>
@@ -220,12 +225,16 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         @else
-                            <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id" class='chosen-select form-control'
-                                data-rule-required="true">
+                            <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id" class='chosen-select form-control' data-rule-required="true">
                                 <option value="" disabled selected>Selecione uma opção </option>
                                 @foreach ($costCenters as $costCenter)
+                                    @php
+                                        $companyName = $costCenter->company->name;
+                                        $costCenterName = $costCenter->name;
+                                        $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
+                                    @endphp 
                                     <option value="{{ $costCenter->id }}">
-                                        {{ $costCenter->name }}
+                                        {{ $formattedCnpj . ' - ' . $companyName . ' / ' . $costCenterName }}
                                     </option>
                                 @endforeach
                             </select>
@@ -295,30 +304,34 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <label for="approver_user_id" id="cost-center-permissions" class="control-label">Centros de
-                            custos permitidos</label>
+                        <label for="approver_user_id" id="cost-center-permissions" class="control-label">Centros de custos permitidos</label>
                         <select @disabled(!$currentProfile === 'admin') name="user_cost_center_permissions[]" id="user_cost_center_permissions" data-cy="user_cost_center_permissions" multiple="multiple"
                             class="chosen-select form-control cost-centers-permissions" placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras">
                             @foreach ($costCenters as $costCenter)
-                                <option value="{{ $costCenter->id }}" @if (isset($user) && collect($user->userCostCenterPermission)->contains('costCenter.id', $costCenter->id)) selected @endif>
-                                    {{ $costCenter->name }}
+                                @php
+                                    $companyName = $costCenter->company->name;
+                                    $costCenterName = $costCenter->name;
+                                @endphp 
+
+                                <option value="{{ $costCenter->id }}" @selected(isset($user) && collect($user->userCostCenterPermission)->contains('costCenter.id', $costCenter->id))>
+                                    {{ $companyName . ' / ' . $costCenterName }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
                 </div>
-                <div class="cost-center-options" style="width:70%">
-                    <div class="col-sm-2">
-                        <a href="#cost-center-permissions" class="btn btn-small btn-primary btn-select-all-cost-centers" data-cy="btn-select-all-cost-centers"
-                            style="font-size:12px; padding: 2.5px 12px">
-                            Selecionar todos
-                        </a>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-small btn-primary btn-clear-cost-centers" data-cy="btn-clear-cost-centers"
-                            style="font-size:12px; padding: 2.5px 12px">
-                            Limpar
-                        </button>
+                <div class="col-sm-12 cost-center-options">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <a href="#cost-center-permissions" class="btn btn-small btn-primary btn-select-all-cost-centers" data-cy="btn-select-all-cost-centers"
+                                style="font-size:12px;">
+                                Selecionar todos
+                            </a>
+                            <button type="button" class="btn btn-small btn-primary btn-clear-cost-centers" data-cy="btn-clear-cost-centers"
+                                style="font-size:12px;">
+                                Limpar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

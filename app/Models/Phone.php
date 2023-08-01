@@ -19,11 +19,6 @@ class Phone extends Model
         return $this->hasMany(Supplier::class);
     }
 
-    public function costCenter()
-    {
-        return $this->hasMany(CostCenter::class);
-    }
-
     public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');

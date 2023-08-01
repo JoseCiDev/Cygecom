@@ -14,14 +14,6 @@ return new class() extends Migration
 
             $table->unsignedInteger('company_id');
             $table->foreign('company_id')->references('id')->on('companies');
-
-            $table->unsignedInteger('address_id');
-            $table->foreign('address_id')->references('id')->on('addresses');
-
-            $table->unsignedInteger('phone_id');
-            $table->foreign('phone_id')->references('id')->on('phones');
-
-            $table->string('senior_code')->nullable();
         });
     }
 

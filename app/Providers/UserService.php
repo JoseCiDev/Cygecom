@@ -47,7 +47,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
      */
     public function getCostCenters()
     {
-        return CostCenter::all();
+        return CostCenter::with('company')->get();
     }
 
     public function registerUser(array $request): User
