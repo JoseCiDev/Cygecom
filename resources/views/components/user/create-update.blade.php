@@ -207,12 +207,17 @@
                             <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id"
                                 class='chosen-select form-control @error('cost_center_id') is-invalid @enderror'
                                 data-rule-required="true" required>
-                                <option value="" disabled {{ isset($user->person->costCenter) ? '' : 'selected' }}>
+                                
+                                <option value="" disabled @selected(!isset($user->person->costCenter))>
                                     Selecione uma opção</option>
                                 @foreach ($costCenters as $costCenter)
-                                    <option value="{{ $costCenter->id }}"
-                                        {{ isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id ? 'selected' : '' }}>
-                                        {{ $costCenter->name }}
+                                    @php
+                                        $companyName = $costCenter->company->name;
+                                        $costCenterName = $costCenter->name;
+                                        $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
+                                    @endphp 
+                                    <option value="{{ $costCenter->id }}" @selected(isset($user->person->costCenter) && $user->person->costCenter->id === $costCenter->id)>
+                                        {{ $formattedCnpj . ' - ' . $companyName . ' / ' . $costCenterName }}
                                     </option>
                                 @endforeach
                             </select>
@@ -220,12 +225,16 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         @else
-                            <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id" class='chosen-select form-control'
-                                data-rule-required="true">
+                            <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id" class='chosen-select form-control' data-rule-required="true">
                                 <option value="" disabled selected>Selecione uma opção </option>
                                 @foreach ($costCenters as $costCenter)
+                                    @php
+                                        $companyName = $costCenter->company->name;
+                                        $costCenterName = $costCenter->name;
+                                        $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
+                                    @endphp 
                                     <option value="{{ $costCenter->id }}">
-                                        {{ $costCenter->name }}
+                                        {{ $formattedCnpj . ' - ' . $companyName . ' / ' . $costCenterName }}
                                     </option>
                                 @endforeach
                             </select>
