@@ -295,30 +295,34 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <label for="approver_user_id" id="cost-center-permissions" class="control-label">Centros de
-                            custos permitidos</label>
+                        <label for="approver_user_id" id="cost-center-permissions" class="control-label">Centros de custos permitidos</label>
                         <select @disabled(!$currentProfile === 'admin') name="user_cost_center_permissions[]" id="user_cost_center_permissions" data-cy="user_cost_center_permissions" multiple="multiple"
                             class="chosen-select form-control cost-centers-permissions" placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras">
                             @foreach ($costCenters as $costCenter)
-                                <option value="{{ $costCenter->id }}" @if (isset($user) && collect($user->userCostCenterPermission)->contains('costCenter.id', $costCenter->id)) selected @endif>
-                                    {{ $costCenter->name }}
+                                @php
+                                    $companyName = $costCenter->company->name;
+                                    $costCenterName = $costCenter->name;
+                                @endphp 
+
+                                <option value="{{ $costCenter->id }}" @selected(isset($user) && collect($user->userCostCenterPermission)->contains('costCenter.id', $costCenter->id))>
+                                    {{ $companyName . ' / ' . $costCenterName }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
                 </div>
-                <div class="cost-center-options" style="width:70%">
-                    <div class="col-sm-2">
-                        <a href="#cost-center-permissions" class="btn btn-small btn-primary btn-select-all-cost-centers" data-cy="btn-select-all-cost-centers"
-                            style="font-size:12px; padding: 2.5px 12px">
-                            Selecionar todos
-                        </a>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="button" class="btn btn-small btn-primary btn-clear-cost-centers" data-cy="btn-clear-cost-centers"
-                            style="font-size:12px; padding: 2.5px 12px">
-                            Limpar
-                        </button>
+                <div class="col-sm-12 cost-center-options">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <a href="#cost-center-permissions" class="btn btn-small btn-primary btn-select-all-cost-centers" data-cy="btn-select-all-cost-centers"
+                                style="font-size:12px;">
+                                Selecionar todos
+                            </a>
+                            <button type="button" class="btn btn-small btn-primary btn-clear-cost-centers" data-cy="btn-clear-cost-centers"
+                                style="font-size:12px;">
+                                Limpar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
