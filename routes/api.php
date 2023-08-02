@@ -20,5 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth.session')->group(function () {
-    Route::post('suppliers/register', [SupplierController::class, 'registerAPI'])->name('api.supplier.register');
+    Route::group(['prefix' => 'suppliers'], function () {
+        Route::get('/', [SupplierController::class, 'indexAPI'])->name('api.suppliers.index');
+        Route::post('/register', [SupplierController::class, 'registerAPI'])->name('api.supplier.register');
+    });
 });
