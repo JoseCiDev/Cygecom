@@ -21,7 +21,8 @@ class Filter
         }
 
         foreach ($suppliers as $supplier) {
-            $isValidCnpj = $this->validateCnpj($supplier['cpf_cnpj']);
+            $cnpj = str_pad($supplier['cpf_cnpj'], 14, '0', STR_PAD_LEFT);
+            $isValidCnpj = $this->validateCnpj($cnpj);
             $isDuplicate = in_array($supplier['corporate_name'], $existingCorporateNames);
             $validator = $this->validatorService->supplier($supplier);
             $isValidPhoneNumber = strlen($supplier['number']) <= 15;
@@ -29,6 +30,7 @@ class Filter
                 continue;
             }
 
+            $supplier['cpf_cnpj'] = $cnpj;
             $supplier['qualification'] = 'qualificado';
             $filteredSuppliers[] = $supplier;
 
@@ -40,7 +42,6 @@ class Filter
 
     private function validateCnpj(string $cnpj): bool
     {
-        $cnpj = str_pad($cnpj, 14, '0', STR_PAD_LEFT);
         $cnpj = preg_replace('/[^0-9]/', '', $cnpj);
 
         if (strlen($cnpj) !== 14 || preg_match('/(\d)\1{13}/', $cnpj)) {

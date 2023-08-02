@@ -27,30 +27,26 @@
                             data-nosort="0" data-checkall="all">
                             <thead>
                                 <tr>
-                                    <th class="col-md-1">CNPJ/CPF</th>
-                                    <th class="col-md-1">Razão Social</th>
-                                    <th class="col-md-2">Nome Fantasia</th>
-                                    <th class="col-md-2">Indicação</th>
-                                    <th class="col-md-1">Mercado</th>
-                                    <th class='col-md-1'>Situação</th>
-                                    <th class='col-md-1' >Ações</th>
+                                    <th >CNPJ</th>
+                                    <th >Razão Social</th>
+                                    <th >Nome Fantasia</th>
+                                    <th >Indicação</th>
+                                    <th >Mercado</th>
+                                    <th >Situação</th>
+                                    <th >Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($suppliers as $index => $supplier)
+                                @php
+                                    $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj);
+                                @endphp
                                 <tr>
-                                    <td>{{$supplier->cpf_cnpj}}</td>
+                                    <td>{{$formattedCnpj}}</td>
                                     <td>{{$supplier->corporate_name}}</td>
                                     <td>{{$supplier->name ?? '---'}}</td>
-                                    <td>
-                                        <strong>
-                                            @if ($supplier->supplier_indication === "M") Matéria-Prima
-                                            @elseif ($supplier->supplier_indication === "S") Serviço
-                                            @else Ambos    
-                                            @endif
-                                        </strong>
-                                    </td>
-                                    <td><strong>{{$supplier->market_type}}</strong></td>
+                                    <td>{{$supplier->supplier_indication}}</td>
+                                    <td>{{$supplier->market_type}}</td>
                                     <td>{{$supplier->qualification->label()}}</td>
                                     <td align="center">
                                         <a href="{{route('supplier', ['id' => $supplier->id])}}" class="btn" rel="tooltip" title="Editar" data-cy="btn-edit-supplier-{{$index}}"><i class="fa fa-edit"></i></a>
