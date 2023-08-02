@@ -4,12 +4,11 @@
     }
 </style>
 @php
-    if ($isRegister)  $route = route('supplier.register');
-    else $route = route('supplier.update', ['id' => $id]);
+    $route = $isRegister ? route('supplier.register') : route('supplier.update', ['id' => $id]);
 @endphp
 <form method="POST" action="{{$route}}" class="form-validate" id="supplier-form" data-cy="supplier-form">
     @csrf
-
+    
     <div class="row center-block" style="padding-bottom: 12px;">
         <div class="col-sm-6">
             <h4>DADOS FISCAIS</h4>
@@ -26,9 +25,7 @@
         <div class="col-sm-2">
             <div class="form-group">
                 <label for="cpf_cnpj" class="control-label">CNPJ</label>
-                <input value="{{ $supplier?->cpf_cnpj }}" type="text" name="cpf_cnpj" id="cpf_cnpj" data-cy="cpf_cnpj"
-                    placeholder="00.000.000/0000-00" class="form-control cpf-cnpj" data-rule-required="true"
-                    minLength="18">
+                <x-InputCnpj :cnpj="$supplier?->cpf_cnpj" name="cpf_cnpj" id="cpf_cnpj" data-cy="cpf_cnpj" />
             </div>
             <input type="hidden" name="entity_type" value="PJ" data-cy="entity_type">
         </div>
@@ -65,17 +62,17 @@
                 <fieldset id="market-type" data-rule-required="true">
                     <div class="row">
                         <input @checked($supplier?->market_type === 'nacional') class="icheck-me" type="radio"
-                            name="market_type" id="nacional" data-cy="nacional" value="nacional" data-skin="minimal" required>
+                            name="market_type" id="nacional" data-cy="nacional" value="Nacional" data-skin="minimal" required>
                         <label class="form-check-label" for="nacional">Mercado nacional</label>
                     </div>
                     <div class="row">
                         <input @checked($supplier?->market_type === 'externo') class="icheck-me" type="radio"
-                            name="market_type" id="externo" data-cy="externo" value="externo" data-skin="minimal" required>
+                            name="market_type" id="externo" data-cy="externo" value="Externo" data-skin="minimal" required>
                         <label class="form-check-label" for="externo">Mercado externo</label>
                     </div>
                     <div class="row">
                         <input @checked($supplier?->market_type === 'prospec') class="icheck-me" type="radio"
-                            name="market_type" id="prospec" data-cy="prospec" value="prospec" data-skin="minimal" required>
+                            name="market_type" id="prospec" data-cy="prospec" value="Prospecção" data-skin="minimal" required>
                         <label class="form-check-label" for="prospec">Prospecção</label>
                     </div>
                 </fieldset>
@@ -87,17 +84,17 @@
                 <fieldset id="supplier-indication" data-rule-required="true">
                     <div class="row">
                         <input @checked($supplier?->supplier_indication === 'M') class="icheck-me" type="radio"
-                            name="supplier_indication" id="materia-prima" data-cy="materia-prima" value="M" data-skin="minimal" required>
+                            name="supplier_indication" id="materia-prima" data-cy="materia-prima" value="Matéria Prima" data-skin="minimal" required>
                         <label class="form-check-label" for="materia-prima">Matéria-prima</label>
                     </div>
                     <div class="row">
                         <input @checked($supplier?->supplier_indication === 'S') class="icheck-me" type="radio"
-                            name="supplier_indication" id="servico" data-cy="servico" value="S" data-skin="minimal" required>
+                            name="supplier_indication" id="servico" data-cy="servico" value="Serviço" data-skin="minimal" required>
                         <label class="form-check-label" for="servico">Serviço</label>
                     </div>
                     <div class="row">
                         <input @checked($supplier?->supplier_indication === 'A') class="icheck-me" type="radio"
-                            name="supplier_indication" id="ambos" value="A" data-cy="ambos" data-skin="minimal" required>
+                            name="supplier_indication" id="ambos" value="Ambos" data-cy="ambos" data-skin="minimal" required>
                         <label class="form-check-label" for="ambos">Ambos</label>
                     </div>
                 </fieldset>
@@ -210,7 +207,7 @@
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="number" class="control-label">Telefone</label>
-                <input value="{{ $supplier?->phone->number }}" type="text" name="number" id="number" data-cy="number"
+                <input value="{{ $supplier?->phone?->number }}" type="text" name="number" id="number" data-cy="number"
                     placeholder="(00) 0000-0000" class="form-control phone-number" data-rule-required="true"
                     minLength="14">
                 <input type="hidden" name="phone_type" id="commercial" value="commercial" data-cy="commercial">
@@ -248,7 +245,6 @@
 
 <script>
     $(() => {
-        const $identificationDocument = $('.cpf-cnpj');
         const $postalCode = $('.postal-code');
         const $phoneNumber = $('.phone-number');
         const $streetNumber = $('.street-number');
@@ -269,9 +265,6 @@
         });
 
         // masks
-        $identificationDocument.imask({
-            mask: '00.000.000/0000-00'
-        });
         $postalCode.imask({
             mask: '00.000-000'
         });
