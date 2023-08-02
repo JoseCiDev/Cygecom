@@ -20,9 +20,7 @@ class SupplierController extends Controller
 
     public function index()
     {
-        $suppliers = $this->supplierService->getSuppliers()->get();
-
-        return view('components.supplier.index', ['suppliers' => $suppliers]);
+        return view('components.supplier.index');
     }
 
     public function indexAPI()
