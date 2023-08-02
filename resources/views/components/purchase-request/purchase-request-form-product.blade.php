@@ -5,6 +5,15 @@
     $purchaseRequest ??= null;
     $isCopy ??= null;
 
+    $allProducts = $purchaseRequest?->purchaseRequestProduct ?? null;
+
+    if ($allProducts) {
+        $productSuppliers = [];
+        foreach ($allProducts as $product) {
+            $productSuppliers[$product['supplier_id']][] = $product;
+        }
+    }
+
     // verifica status para desabilitar campos para o usuário
     $requestAlreadySent = $purchaseRequest?->status !== PurchaseRequestStatus::RASCUNHO;
     // ve se tem request e não foi enviada
@@ -474,151 +483,36 @@
                     </div>
                 </div>
             </div>
--
-            {{-- FORNECEDOR 1 --}}
+
+            {{-- FORNECEDORES COM PRODUTOS --}}
+
             <div class="supplier-container">
-                <div class="box box-color box-bordered supplier-block">
-                    <div class="box-title">
-                        <h3 class="supplier-title"><i class="glyphicon glyphicon-briefcase"></i>
-                            FORNECEDOR 1
-                        </h3>
-                        <div class="actions">
-                            <a class="btn btn-mini delete-supplier"> <i class="fa fa-times"></i> </a>
-                            <a class="btn btn-mini content-slideUp">
-                                <i class="fa fa-angle-down"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="box-content">
-                        <div class="col-sm-12">
-                            <div class="row">
-                                <div class="col-sm-5">
-                                    <div class="form-group">
-                                        <label class="control-label">
-                                            Fornecedor (CNPJ - RAZÃO SOCIAL)</label>
-                                        <select name="purchase_request_products[0][supplier_id]"
-                                            class='select2-me select-supplier'
-                                            data-placeholder="Informe um fornecedor ou cadastre um novo"
-                                            style="width:100%;">
-                                            <option value=""></option>
-                                            @foreach ($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}">
-                                                    {{ "$supplier->cpf_cnpj - $supplier->corporate_name" }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 product-container">
-                            <div class="box-title"
-                                style="background-color:rgba(129, 129, 129, 0.531); border: 1px solid rgb(158, 158, 158); ">
-                                <h3 style="color:rgb(46, 46, 46)"> <i class="glyphicon glyphicon-tag"></i> Produtos
-                                </h3>
-                            </div>
-                            <div class="box-content nopadding"
-                                style="background-color:rgba(244, 244, 244, 0.531); border: 1px solid rgb(179, 179, 179); border-top: 0px; ">
-                                {{-- PRODUTO 1 --}}
-                                <div class="product-row" style="padding:0px; background-color:rgb(223, 223, 223);">
-                                    <div class="row" style="padding-top:15px;">
-                                        <div class="col-sm-1" style="margin-top: 23px; margin-left:10px; width:5.3%;">
-                                            <button type="button" class="btn btn-icon btn-danger delete-product"><i
-                                                    class="fa fa-trash-o"></i></button>
-                                        </div>
-                                        <input type="hidden" name="purchase_request_products[0][products][0][id]"
-                                            value="">
-                                        {{-- CATEGORIA PRODUTO --}}
-                                        <div class="col-sm-5" style="margin-left:-10px;">
-                                            <div class="form-group">
-                                                <label for="product-category" class="control-label">
-                                                    Categoria do produto
-                                                </label>
-                                                <select
-                                                    name="purchase_request_products[0][products][0][product_category_id]"
-                                                    class='select2-me' style="width:100%;"
-                                                    data-placeholder="Escolha uma categoria para este produto">
-                                                    <option value=""></option>
-                                                    @foreach ($productCategories as $productCategory)
-                                                        @php
-                                                            $categoryWithDescription = $productCategory->name . ' - ' . $productCategory->description;
-                                                            $categoryOption = $productCategory->description ? $categoryWithDescription : $productCategory->name;
-                                                        @endphp
-                                                        <option value={{ $productCategory->id }}>
-                                                            {{ $categoryOption }} </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        {{-- NOME / DESCRIÇÃO --}}
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="control-label">
-                                                    Nome/Descrição
-                                                </label>
-                                                <input class="form-control" type="text" placeholder=""
-                                                    name="purchase_request_products[0][products][0][name]">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-1" style="width:5.3%;"></div>
-                                        <div class="col-sm-2">
-                                            <div class="form-group" style="margin-top:-10px">
-                                                <label for="qtd" class="control-label">Quantidade</label>
-                                                <input name="purchase_request_products[0][products][0][quantity]"
-                                                    type="number" placeholder="00" class="form-control">
-                                            </div>
-                                        </div>
-                                        {{-- COR --}}
-                                        <div class="col-sm-2">
-                                            <div class="form-group" style="margin-top:-10px">
-                                                <label for="" class="control-label">Cor</label>
-                                                <input type="text"
-                                                    name="purchase_request_products[0][products][0][color]"
-                                                    class="form-control">
-                                            </div>
-                                        </div>
-                                        {{-- TAMANHO --}}
-                                        <div class="col-sm-3">
-                                            <div class="form-group" style="margin-top:-10px">
-                                                <label for="" class="control-label">Tamanho</label>
-                                                <input type="text"
-                                                    name="purchase_request_products[0][products][0][size]"
-                                                    class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <div class="form-group" style="margin-top:-10px">
-                                                <label for="" class="control-label">Modelo</label>
-                                                <input type="text"
-                                                    name="purchase_request_products[0][products][0][model]"
-                                                    class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                </div>
-                                {{-- END PRODUTO 1 --}}
-                                <button type="button"
-                                    style="background-color:rgba(162, 162, 162, 0.531); color:rgb(46, 46, 46); margin:10px;"
-                                    class="btn btn-success add-product-btn">
-                                    <i class="glyphicon glyphicon-plus"></i>
-                                    Adicionar produto
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @php $supplierIndex = 0; @endphp
+                @if ($issetPurchaseRequest)
+                    @foreach ($productSuppliers as $supplierId => $products)
+                        <x-purchase-request.product.supplier
+                            :productCategories="$productCategories"
+                            :suppliers="$suppliers"
+                            :supplierId="$supplierId"
+                            :products="$products"
+                            :supplierIndex="$supplierIndex"
+                        />
+                        @php $supplierIndex++; @endphp
+                    @endforeach
+                @else
+                    <x-purchase-request.product.supplier
+                        :productCategories="$productCategories"
+                        :suppliers="$suppliers"
+                    />
+                @endif
 
                 {{-- ADICIONAR CENTRO DE CUSTO --}}
                 <button type="button" style="margin-top:15px;" class="btn btn-large btn-primary add-supplier-btn">
                     <i class="glyphicon glyphicon-plus"></i>
                     <strong>Adicionar fornecedor</strong>
                 </button>
+
             </div>
-
-
-
 
             {{-- FORNECEDOR 2 --}}
             {{-- <div class="box box-color box-bordered colored">
@@ -1353,13 +1247,13 @@
                 const lastIndex = Number(oldName.match(regexNewName).at(1));
                 const anotherRegex = /\[\d+\]/;
 
-                // poderia ser
+                // poderia ser (e foi mermo)
                 const newName = oldName
                     .replaceAll(/\[\d+\]/g, `[0]`)
                     .replace(/\[\d+\]/, `[${lastIndex + 1}]`);
                 // assinado: --get
 
-                // POWER OF GAMBIARRATION
+                // POWER OF GAMBIARRATION (venceu) será?
                 // const newName = oldName
                 //     .replace(regexNewName, `purchase_request_products[${lastIndex + 1}]$2`
                 //         // função para fazer replace nas demais ocorrências (exceto a primeira);
@@ -1376,7 +1270,6 @@
 
             $('.supplier-block').last().after($newContainer);
             $newContainer.find('.delete-supplier').removeAttr('hidden');
-
         });
 
         $(document).on('click', '.delete-supplier', function() {

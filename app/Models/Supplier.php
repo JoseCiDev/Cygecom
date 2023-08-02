@@ -12,7 +12,7 @@ class Supplier extends Model
 
     public function purchaseRequestProduct()
     {
-        return $this->belongsTo(PurchaseRequestProduct::class, 'purchase_request_id');
+        return $this->hasMany(PurchaseRequestProduct::class, 'purchase_request_id');
     }
 
     public function address()
