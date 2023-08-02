@@ -1,7 +1,7 @@
 
 @props([
-    'supplierIndex' => null,
-    'productIndex' => null,
+    'supplierIndex',
+    'productIndex',
     'productCategories',
     'product' => null
 ])

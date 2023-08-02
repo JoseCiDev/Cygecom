@@ -490,20 +490,12 @@
                 @php $supplierIndex = 0; @endphp
                 @if ($issetPurchaseRequest)
                     @foreach ($productSuppliers as $supplierId => $products)
-                        <x-purchase-request.product.supplier
-                            :productCategories="$productCategories"
-                            :suppliers="$suppliers"
-                            :supplierId="$supplierId"
-                            :products="$products"
-                            :supplierIndex="$supplierIndex"
-                        />
+                        <x-purchase-request.product.supplier :productCategories="$productCategories" :suppliers="$suppliers" :supplierId="$supplierId"
+                            :products="$products" :supplierIndex="$supplierIndex" />
                         @php $supplierIndex++; @endphp
                     @endforeach
                 @else
-                    <x-purchase-request.product.supplier
-                        :productCategories="$productCategories"
-                        :suppliers="$suppliers"
-                    />
+                    <x-purchase-request.product.supplier :productCategories="$productCategories" :suppliers="$suppliers" :supplierIndex="$supplierIndex" />
                 @endif
 
                 {{-- ADICIONAR CENTRO DE CUSTO --}}
@@ -1274,7 +1266,36 @@
 
         $(document).on('click', '.delete-supplier', function() {
             $(this).closest('.supplier-block').remove();
+
+            // Atualizar os índices dos fornecedores restantes
+            const $supplierBlocks = $('.supplier-block');
+            $supplierBlocks.each(function(index) {
+                $(this).find(
+                    'select[name^="purchase_request_suppliers"], input[name^="purchase_request_suppliers"]'
+                ).each(function() {
+                    const oldName = $(this).attr('name');
+                    const regexNewName = /purchase_request_suppliers\[(\d+)\](.*)/;
+                    const newName = oldName.replace(regexNewName,
+                        `purchase_request_suppliers[${index}]$2`);
+                    $(this).attr('name', newName);
+                });
+            });
+
+            // Recalcular também os índices dos produtos nos fornecedores restantes
+            const $productRows = $('.product-row');
+            $productRows.each(function(index) {
+                $(this).find(
+                    'select[name^="purchase_request_products"], input[name^="purchase_request_products"]'
+                ).each(function() {
+                    const oldName = $(this).attr('name');
+                    const regexNewName = /\[products\]\[(\d+)\]/;
+                    const newName = oldName.replace(regexNewName,
+                        `[products][${index}]`);
+                    $(this).attr('name', newName);
+                });
+            });
         });
+
 
 
         // add produto
@@ -1309,71 +1330,3 @@
 
     });
 </script>
-
-
-{{-- PRODUTO 2 --}}
-{{-- <div class="full-product-line product-form" data-product="1">
-                                <div class="row product-row">
-                                    <div class="col-sm-1" style="margin-top: 23px; width:5.3%;">
-                                        <button type="button" class="btn btn-icon btn-danger delete-product"><i
-                                                class="fa fa-trash-o"></i></button>
-                                    </div>
-
-                                    <input type="hidden" name="purchase_request_products[0][products][1][id]"
-                                        value="">
-
-
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="product-category" class="control-label">Categoria do produto</label>
-                                            <select
-                                                name="purchase_request_products[0][products][1][product_category_id]"
-                                                id="product-category" class='select2-me' style="width:100%;"
-                                                data-placeholder="Escolha uma produto">
-                                                <option value=""></option>
-                                                @foreach ($productCategories as $productCategory)
-                                                    <option value={{ $productCategory->id }}>
-                                                        {{ $productCategory->name }} </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="textfield" class="control-label"> Nome / Descrição </label>
-                                            <textarea name="purchase_request_products[0][products][1][name]" rows="4"
-                                                placeholder="Descreva detalhadamente o produto desejado"
-                                                class="form-control text-area no-resize"></textarea>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-1">
-                                        <div class="form-group">
-                                            <label for="qtd" class="control-label">Quantidade</label>
-                                            <input name="purchase_request_products[0][products][1][quantity]"
-                                                type="number" placeholder="00" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div> <label for="">Cor</label></div>
-                                            <input type="text"
-                                                name="purchase_request_products[0][products][1][color]">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div><label for="">Tamanho</label></div>
-                                            <input type="text"
-                                                name="purchase_request_products[0][products][1][size]">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div><label for="">Modelo</label></div>
-                                            <input type="text"
-                                                name="purchase_request_products[0][products][1][model]">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
-{{-- END PRODUTO 2 --}}

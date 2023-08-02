@@ -63,6 +63,8 @@
                     @else
                         <x-purchase-request.product.product
                             :productCategories="$productCategories"
+                            :productIndex="$productIndex"
+                            :supplierIndex="$supplierIndex"
                         />
                     @endif
 
