@@ -31,6 +31,11 @@
         border-top: 5px solid rgb(178, 177, 177);
         margin: 0px;
     }
+    div.dataTables_wrapper div.dataTables_length,
+    div.dataTables_wrapper div.dataTables_info {
+        display: none;
+        /* remover espao em branco do datatables*/
+    }
 </style>
 
 
@@ -434,7 +439,7 @@
                 <div class="row" style="display:flex; align-items:center; margin-bottom:7px;">
                     <h4 class="col-sm-6">
                         <i class="fa fa-dollar"></i>
-                        PARCELAS DESTE SERVIÇO
+                        PARCELAS
                     </h4>
                     <div class="col-sm-6 btn-add-installment" hidden>
                         <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
@@ -505,180 +510,6 @@
                 </button>
 
             </div>
-
-            {{-- FORNECEDOR 2 --}}
-            {{-- <div class="box box-color box-bordered colored">
-                <div class="box-title">
-                    <h3 id="supplier-title" class="supplier-title"><i class="glyphicon glyphicon-briefcase"></i>
-                        FORNECEDOR 2
-                    </h3>
-                </div>
-                <div class="box-content">
-                    <div class="row" data-product="1">
-                        <div class="col-sm-6 form-group">
-                            <label for="supplier" class="control-label"><sup style="color:red">*</sup>Fornecedor
-                                (CNPJ - RAZÃO SOCIAL)</label>
-                            <select name="purchase_request_products[1][supplier_id]" id="supplier"
-                                class='select2-me select-supplier' data-rule-required="true"
-                                data-placeholder="Escolha uma produto" style="width:100%;">
-                                <option value=""></option>
-                                @foreach ($suppliers as $supplier)
-                                    <option value="{{ $supplier->id }}">
-                                        {{ "$supplier->cpf_cnpj - $supplier->corporate_name" }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12 product-block" id="product-container">
-                        <div class="box-title"
-                            style="background-color:rgba(244, 244, 244, 0.531); border: 2px solid rgb(158, 158, 158); ">
-                            <h3 id="product-title" style="color:rgb(80, 80, 80)"> <i
-                                    class="glyphicon glyphicon-tag"></i> Produtos </h3>
-                        </div>
-
-                        <div class="box-content"
-                            style="background-color:rgba(244, 244, 244, 0.531); border: 2px solid rgb(158, 158, 158); border-top: 0px; ">
-
-                            <div class="full-product-line product-form" data-product="1">
-                                <div class="row product-row">
-                                    <div class="col-sm-1" style="margin-top: 23px; width:5.3%;">
-                                        <button type="button" class="btn btn-icon btn-danger delete-product"><i
-                                                class="fa fa-trash-o"></i></button>
-                                    </div>
-
-                                    <input type="hidden" name="purchase_request_products[1][products][0][id]"
-                                        value="">
-
-
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="product-category" class="control-label">Categoria</label>
-                                            <select
-                                                name="purchase_request_products[1][products][0][product_category_id]"
-                                                id="product-category" class='select2-me' style="width:100%;"
-                                                data-placeholder="Escolha uma produto">
-                                                <option value=""></option>
-                                                @foreach ($productCategories as $productCategory)
-                                                    <option value={{ $productCategory->id }}>
-                                                        {{ $productCategory->name }} </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="textfield" class="control-label"> Nome/Descrição </label>
-                                            <textarea name="purchase_request_products[1][products][0][name]" rows="4" placeholder="Descrição do produto"
-                                                class="form-control text-area no-resize"></textarea>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-1">
-                                        <div class="form-group">
-                                            <label for="qtd" class="control-label">Quantidade</label>
-                                            <input name="purchase_request_products[1][products][0][quantity]"
-                                                type="number" placeholder="00" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div> <label for="">Cor</label></div>
-                                            <input type="text"
-                                                name="purchase_request_products[1][products][0][color]">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div><label for="">Tamanho</label></div>
-                                            <input type="text"
-                                                name="purchase_request_products[1][products][0][size]">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div><label for="">Modelo</label></div>
-                                            <input type="text"
-                                                name="purchase_request_products[1][products][0][model]">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <div class="full-product-line product-form" data-product="1">
-                                <div class="row product-row">
-                                    <div class="col-sm-1" style="margin-top: 23px; width:5.3%;">
-                                        <button type="button" class="btn btn-icon btn-danger delete-product"><i
-                                                class="fa fa-trash-o"></i></button>
-                                    </div>
-
-                                    <input type="hidden" name="purchase_request_products[1][products][1][id]"
-                                        value="">
-
-
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="product-category" class="control-label">Categoria</label>
-                                            <select
-                                                name="purchase_request_products[1][products][1][product_category_id]"
-                                                id="product-category" class='select2-me' style="width:100%;"
-                                                data-placeholder="Escolha uma produto">
-                                                <option value=""></option>
-                                                @foreach ($productCategories as $productCategory)
-                                                    <option value={{ $productCategory->id }}>
-                                                        {{ $productCategory->name }} </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="textfield" class="control-label"> Nome/Descrição </label>
-                                            <textarea name="purchase_request_products[1][products][1][name]" rows="4" placeholder="Descrição do produto"
-                                                class="form-control text-area no-resize"></textarea>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-1">
-                                        <div class="form-group">
-                                            <label for="qtd" class="control-label">Quantidade</label>
-                                            <input name="purchase_request_products[1][products][1][quantity]"
-                                                type="number" placeholder="00" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div> <label for="">Cor</label></div>
-                                            <input type="text"
-                                                name="purchase_request_products[1][products][1][color]">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div><label for="">Tamanho</label></div>
-                                            <input type="text"
-                                                name="purchase_request_products[1][products][1][size]">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div><label for="">Modelo</label></div>
-                                            <input type="text"
-                                                name="purchase_request_products[1][products][1][model]">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-            </div> --}}
-            {{-- END FORNECEDOR --}}
-
-            {{-- END FORM PRODUTO --}}
         </div>
 
         <div class="form-actions pull-right">
@@ -689,9 +520,11 @@
 
     <x-ModalSupplierRegister />
 
+    <x-modal-edit-product-installment :statusValues="$statusValues" />
+
 </div>
 
-<script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
+{{-- <script src="{{ asset('js/supplies/select2-custom.js') }}"></script> --}}
 <script>
     $(document).ready(function() {
         hasSentRequest = @json($hasSentRequest);
@@ -835,6 +668,50 @@
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
 
+        // trata valor serviço mascara
+        $serviceAmount.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $amount.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
+
+        // sim está repetindo muito...
+
+        // trata qtd parcelas mascara
+        $formatInputInstallmentsNumber.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const rawValue = parseInt(formattedValue);
+                if (!isNaN(rawValue)) {
+                    $inputInstallmentsNumber.val(rawValue).trigger('change');
+                }
+            }
+        });
+        // ---
+
+        // sim está repetindo muito...
+
+        // trata valor serviço mascara
+        $editValueInputModal.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $editValueHiddenModal.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
+        // ---
+
+        // sim está repetindo muito...
+
+
         const purchaseRequest = @json($purchaseRequest);
         const isRequestCopy = @json($isCopy);
         const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
@@ -883,6 +760,7 @@
             info: "Página _PAGE_ of _PAGES_",
             searching: false,
             language: {
+                info: "",
                 lengthMenu: "",
                 emptyTable: "Nenhuma parcela adicionada.",
                 zeroRecords: "",
@@ -890,7 +768,6 @@
                     previous: "Anterior",
                     next: "Próximo",
                 },
-                info: ""
             },
             order: [
                 [0, 'desc']
@@ -917,15 +794,15 @@
 
                     const idInput = document.createElement('input');
                     idInput.type = 'number';
-                    idInput.name = 'service[service_installments][' + index + '][id]';
-                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service
+                    idInput.name = 'product[product_installments][' + index + '][id]';
+                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.product
                         ?.installments[index]?.id : null;
                     idInput.hidden = true;
                     idInput.className = "no-validation";
 
                     const expireDateInput = document.createElement('input');
                     expireDateInput.type = 'date';
-                    expireDateInput.name = 'service[service_installments][' + index +
+                    expireDateInput.name = 'product[product_installments][' + index +
                         '][expire_date]';
                     expireDateInput.value = expireDate;
                     expireDateInput.hidden = true;
@@ -933,14 +810,14 @@
 
                     const valueInput = document.createElement('input');
                     valueInput.type = 'number';
-                    valueInput.name = 'service[service_installments][' + index + '][value]';
+                    valueInput.name = 'product[product_installments][' + index + '][value]';
                     valueInput.value = value;
                     valueInput.hidden = true;
                     valueInput.className = "no-validation";
 
                     const observationInput = document.createElement('input');
                     observationInput.type = 'text';
-                    observationInput.name = 'service[service_installments][' + index +
+                    observationInput.name = 'product[product_installments][' + index +
                         '][observation]';
                     observationInput.value = observation;
                     observationInput.hidden = true;
@@ -948,7 +825,7 @@
 
                     const statusInput = document.createElement('input');
                     statusInput.type = 'text';
-                    statusInput.name = 'service[service_installments][' + index + '][status]';
+                    statusInput.name = 'product[product_installments][' + index + '][status]';
                     statusInput.value = status;
                     statusInput.hidden = true;
                     statusInput.className = "no-validation";
@@ -964,15 +841,15 @@
             } else {
                 const idInput = document.createElement('input');
                 idInput.type = 'number';
-                idInput.name = 'service[service_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]
+                idInput.name = 'product[product_installments][0][id]';
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.product?.installments[index]
                     ?.id : null;
                 idInput.hidden = true;
                 idInput.className = "no-validation";
 
                 const expireDateInput = document.createElement('input');
                 expireDateInput.type = 'date';
-                expireDateInput.name = 'service[service_installments][0][expire_date]';
+                expireDateInput.name = 'product[product_installments][0][expire_date]';
                 expireDateInput.value = "";
                 expireDateInput.hidden = true;
                 expireDateInput.className = "no-validation";
@@ -980,21 +857,21 @@
 
                 const valueInput = document.createElement('input');
                 valueInput.type = 'number';
-                valueInput.name = 'service[service_installments][0][value]';
+                valueInput.name = 'product[product_installments][0][value]';
                 valueInput.value = "";
                 valueInput.hidden = true;
                 valueInput.className = "no-validation";
 
                 const observationInput = document.createElement('input');
                 observationInput.type = 'text';
-                observationInput.name = 'service[service_installments][0][observation]';
+                observationInput.name = 'product[product_installments][0][observation]';
                 observationInput.value = "";
                 observationInput.hidden = true;
                 observationInput.className = "no-validation";
 
                 const statusInput = document.createElement('input');
                 statusInput.type = 'text';
-                statusInput.name = 'service[service_installments][0][status]';
+                statusInput.name = 'product[product_installments][0][status]';
                 statusInput.value = "";
                 statusInput.hidden = true;
                 statusInput.className = 'no-validation';
@@ -1011,11 +888,11 @@
 
         function deleteHiddenInputs(row) {
             const index = $installmentsTable.row(row).index();
-            $('input[name^="service[service_installments][' + index + ']"]').remove();
+            $('input[name^="product[product_installments][' + index + ']"]').remove();
         }
 
         function updateHiddenInputIndex() {
-            $('input[name^="service[service_installments]"]').each(function() {
+            $('input[name^="product[product_installments]"]').each(function() {
                 const currentName = $(this).attr('name');
                 const newIndex = currentName.replace(/\[(\d+)\]/, function(match, index) {
                     const currentIndex = parseInt(index);
@@ -1122,7 +999,7 @@
 
         // modal edit installment
         function openModalForEdit(rowData) {
-            $('#modal-edit-service-installment').modal('show');
+            $('#modal-edit-product-installment').modal('show');
 
             const expireDate = $('#edit-expire-date');
             const value = $('#edit-value');
@@ -1144,7 +1021,7 @@
 
             status.select2('val', statusValues.find((status) => status.description === rowData.status).id);
 
-            $('#form-modal-edit-service-installment').one('submit', function(event) {
+            $('#form-modal-edit-product-installment').one('submit', function(event) {
                 event.preventDefault();
 
                 const expireDate = $('#edit-expire-date').val();
@@ -1194,7 +1071,7 @@
                 $(this).find('input, select').val('');
                 $(this).find('textarea').val('');
 
-                $('#modal-edit-service-installment').modal('hide');
+                $('#modal-edit-product-installment').modal('hide');
             });
         }
 
@@ -1213,6 +1090,32 @@
             generateInstallments(numberOfInstallments);
         });
 
+        const $isPrePaid = $('#service-is-prepaid');
+        const $paymentInfoDescription = $('#payment-info-description');
+
+        $isPrePaid.on('change', function() {
+            const isPrePaid = $(this).val() === "1";
+            $serviceAmount.data('rule-required', isPrePaid);
+            $paymentMethod.data('rule-required', isPrePaid);
+            $formatInputInstallmentsNumber.data('rule-required', isPrePaid);
+            $paymentInfoDescription.data('rule-required', isPrePaid);
+
+            if (!isPrePaid) {
+                $serviceAmount.closest('.form-group').removeClass('has-error');
+                $paymentMethod.closest('.form-group').removeClass('has-error');
+                $formatInputInstallmentsNumber.closest('.form-group').removeClass('has-error');
+                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
+                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
+
+                $paymentBlock.find('.help-block').remove();
+            }
+        });
+
+        if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
+            $isPrePaid.filter(':selected').trigger('change.select2');
+        }
+
+        let supplierNumber = 1;
 
         // add supplier
         const $supplierContainer = $('.supplier-container');
@@ -1262,6 +1165,9 @@
 
             $('.supplier-block').last().after($newContainer);
             $newContainer.find('.delete-supplier').removeAttr('hidden');
+
+            supplierNumber++;
+            $newContainer.find('h3').text('FORNECEDOR ' + supplierNumber);
         });
 
         $(document).on('click', '.delete-supplier', function() {
@@ -1279,6 +1185,7 @@
                         `purchase_request_suppliers[${index}]$2`);
                     $(this).attr('name', newName);
                 });
+                supplierNumber--;
             });
 
             // Recalcular também os índices dos produtos nos fornecedores restantes

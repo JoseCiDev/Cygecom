@@ -10,9 +10,7 @@
 
 <div class="box box-color box-bordered supplier-block">
     <div class="box-title">
-        <h3 class="supplier-title"><i class="glyphicon glyphicon-briefcase"></i>
-            FORNECEDOR 1
-        </h3>
+        <h3 class="supplier-title"><i class="glyphicon glyphicon-briefcase"></i>FORNECEDOR 1</h3>
         <div class="actions">
             <a class="btn btn-mini delete-supplier"> <i class="fa fa-times"></i> </a>
             <a class="btn btn-mini content-slideUp">

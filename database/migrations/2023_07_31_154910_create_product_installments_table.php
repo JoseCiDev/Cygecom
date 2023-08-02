@@ -12,7 +12,6 @@ return new class extends Migration
         Schema::create('product_installments', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->decimal('value', 14, 2)->nullable();
-            $table->boolean('already_provided')->default(false);
 
             $table->date('expire_date')->nullable();
             $table->text('observation')->nullable();
@@ -23,7 +22,7 @@ return new class extends Migration
             $table->dateTime('deleted_at')->nullable();
 
             $table->unsignedInteger('product_id');
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('product_id')->references('id')->on('');
         });
     }
 

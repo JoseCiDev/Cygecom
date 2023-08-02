@@ -26,7 +26,6 @@ class ProductInstallment extends Model
 
     protected $fillable = [
         'value',
-        'already_provided',
         'expire_date',
         'observation',
         'status',
