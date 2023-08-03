@@ -337,7 +337,43 @@
                                     </p>
                                 </div>
                             </div>
-    
+
+                            <hr class="pagebreak"/>
+
+                            <div class="request-details-content-box">
+                                <div class="request-details-content-box-service">
+                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
+                                    @foreach ($request->service->installments as $installmentIndex => $installment)
+                                    <div class="request-details-content-box-service-installment">
+                                        <div class="row">
+                                            <p class="col-xs-3">
+                                                <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Serviço executado:</strong> {{ $installment->already_provided ? 'Sim' : 'Não' }}
+                                            </p>
+                                        </div>
+                                        <div class="row">
+                                            <p class="col-xs-3">
+                                                <strong>Valor:</strong> {{ $installment->value }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
+                                            </p>
+                                            <p class="col-xs-6">
+                                                <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    @if ($installmentIndex === 14)
+                                        <hr class="pagebreak"/>
+                                    @endif
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
