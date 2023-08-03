@@ -510,9 +510,26 @@
             </div>
         </div>
 
-        <div class="form-actions pull-right">
-            <button type="submit" class="btn btn-primary">Salvar</button>
-            <a href="{{ url()->previous() }}" class="btn">Cancelar</a>
+        <div class="form-actions pull-right" style="margin-top:50px; padding-bottom:20px">
+            @if (!$hasSentRequest)
+                <input type="hidden" name="action" id="action" value="">
+
+                <button type="submit" class="btn btn-primary btn-draft" style="margin-right: 10px">
+                    Salvar rascunho
+                </button>
+
+                <button type="submit" name="submit_request" style="margin-right: 10px"
+                    class="btn btn-success btn-submit-request" value="submit-request">
+                    Salvar e enviar solicitação
+                    <i class="fa fa-paper-plane"></i>
+                </button>
+
+                <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
+            @endif
+
+            @if ($hasSentRequest)
+                <a href="{{ route('requests.own') }}" class="btn btn-primary btn-large">VOLTAR</a>
+            @endif
         </div>
     </form>
 
@@ -708,6 +725,27 @@
         // ---
 
         // sim está repetindo muito...
+
+        const $selectSupplier = $('.select-supplier');
+        const $paymentMethod = $('.payment-method');
+        const $paymentInfo = $('.payment-info');
+
+        // desabilita todos os campos do form caso solicitacao ja enviada
+        $('#request-form')
+            .find('input, textarea, checkbox')
+            .prop('disabled', hasSentRequest);
+
+        $('#request-form')
+            .find('select')
+            .prop('disabled', hasSentRequest);
+
+        $('.file-remove').prop('disabled', hasSentRequest);
+
+        $('.add-supplier-btn').prop('disabled', hasSentRequest);
+        $('.delete-supplier').prop('disabled', hasSentRequest);
+
+        $('.add-product').prop('disabled', hasSentRequest);
+        $('.delete-product').prop('disabled', hasSentRequest);
 
 
         const purchaseRequest = @json($purchaseRequest);
@@ -1227,5 +1265,33 @@
             $(this).closest('.product-row').remove();
         });
 
+        // salvar rascunho ou
+
+        const $btnSubmitRequest = $('.btn-submit-request');
+        const $sendAction = $('#action');
+
+        $btnSubmitRequest.on('click', function(event) {
+            event.preventDefault();
+
+            bootbox.confirm({
+                message: "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?",
+                buttons: {
+                    confirm: {
+                        label: 'Sim, enviar solicitação',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'Cancelar',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function(result) {
+                    if (result) {
+                        $sendAction.val('submit-request');
+                        $('#request-form').trigger('submit');
+                    }
+                }
+            });
+        });
     });
 </script>

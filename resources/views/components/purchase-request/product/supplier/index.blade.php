@@ -12,7 +12,7 @@
     <div class="box-title">
         <h3 class="supplier-title"><i class="glyphicon glyphicon-briefcase"></i>FORNECEDOR</h3>
         <div class="actions">
-            <a class="btn btn-mini delete-supplier"> <i class="fa fa-times"></i> </a>
+            <button class="btn btn-mini delete-supplier"> <i class="fa fa-times"></i> </button>
             <a class="btn btn-mini content-slideUp">
                 <i class="fa fa-angle-down"></i>
             </a>
