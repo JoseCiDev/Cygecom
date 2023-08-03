@@ -143,6 +143,9 @@
 </head>
 
 <body>
+    @php
+        $currentProfile = auth()->user()->profile->name;
+    @endphp
     <div id="app">
         {{-- NAVBAR --}}
         <div id="navigation">
@@ -151,49 +154,47 @@
                 <ul class='main-nav'>
                     <x-navbar.menu-item route="home" title="INÍCIO" />
 
-                    @if (auth()->user()->profile->name === 'admin')
+                    @if ($currentProfile === 'admin')
                         <li>
-                            <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+                            <a href="#" data-toggle="dropdown" class='dropdown-toggle' data-cy="dropdown-cadastros">
                                 <span>CADASTROS</span>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{{ route('users') }}">Usuários</a>
+                                    <a href="{{ route('users') }}" data-cy="dropdown-cadastros-usuarios">Usuários</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('suppliers') }}">Fornecedores</a>
+                                    <a href="{{ route('suppliers') }}" data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
                                 </li>
                             </ul>
                         </li>
                     @endif
                     <li>
-                        <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+                        <a href="#" data-toggle="dropdown" class='dropdown-toggle' data-cy="dropdown-solicitacoes">
                             <span>SOLICITAÇÕES</span>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ route('request.links') }}">Nova Solicitação</a></li>
-                            <li><a href="{{ route('requests.own') }}">Minhas Solicitações</a></li>
-                            @if (auth()->user()->profile->name === 'admin')
-                                <li><a href="{{ route('requests') }}">Solicitações Gerais</a></li>
+                            <li><a href="{{ route('request.links') }}" data-cy="dropdown-solicitacoes-novas">Nova Solicitação</a></li>
+                            <li><a href="{{ route('requests.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas Solicitações</a></li>
+                            @if ($currentProfile === 'admin')
+                                <li><a href="{{ route('requests') }}" data-cy="dropdown-solicitacoes-gerais">Solicitações Gerais</a></li>
                             @endif
                         </ul>
                     </li>
-                    @if (auth()->user()->profile->name === 'admin' ||
-                            auth()->user()->profile->name === 'suprimentos_inp' ||
-                            auth()->user()->profile->name === 'suprimentos_hkm')
+                    @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp' || $currentProfile === 'suprimentos_hkm')
                         <li>
-                            <a href="#" data-toggle="dropdown" class='dropdown-toggle'>
+                            <a href="#" data-toggle="dropdown" class='dropdown-toggle' data-cy="dropdown-suprimentos">
                                 <span>SUPRIMENTOS</span>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ route('supplies.index') }}">Dashboard</a></li>
-                                @if (auth()->user()->profile->name === 'admin')
-                                    <li><a href="{{ route('supplies.product') }}">Produtos</a></li>
-                                    <li><a href="{{ route('supplies.service') }}">Serviços</a></li>
-                                    <li><a href="{{ route('supplies.contract') }}">Contratos</a></li>
+                                <li><a href="{{ route('supplies.index') }}" data-cy="dropdown-suprimentos-dashboard">Dashboard</a></li>
+                                @if ($currentProfile === 'admin')
+                                    <li><a href="{{ route('supplies.product') }}" data-cy="dropdown-suprimentos-produtos">Produtos</a></li>
+                                    <li><a href="{{ route('supplies.service') }}" data-cy="dropdown-suprimentos-servicos">Serviços</a></li>
+                                    <li><a href="{{ route('supplies.contract') }}" data-cy="dropdown-suprimentos-contratos">Contratos</a></li>
                                 @endif
                             </ul>
                         </li>
@@ -221,21 +222,21 @@
         $(() => {
             // datatable language
             $('#DataTables_Table_0').DataTable({
-                "language": {
-                    "lengthMenu": "Mostrar _MENU_ registros",
-                    "zeroRecords": "Nenhum registro encontrado",
-                    "info": "Mostrando página _PAGE_ de _PAGES_",
-                    "infoEmpty": "Nenhum registro disponível",
-                    "infoFiltered": "(filtrado de _MAX_ registros no total)",
-                    "search": "Buscar:",
-                    "paginate": {
-                        "first": "Primeiro",
-                        "last": "Último",
-                        "next": "Próximo",
-                        "previous": "Anterior"
+                language: {
+                    lengthMenu: "Mostrar _MENU_ registros",
+                    zeroRecords: "Nenhum registro encontrado",
+                    info: "Mostrando página _PAGE_ de _PAGES_",
+                    infoEmpty: "Nenhum registro disponível",
+                    infoFiltered: "(filtrado de _MAX_ registros no total)",
+                    search: "Buscar:",
+                    paginate: {
+                        first: "Primeiro",
+                        last: "Último",
+                        next: "Próximo",
+                        previous: "Anterior"
                     }
                 },
-                "destroy": true
+                destroy: true
             });
 
             // autocomplete off

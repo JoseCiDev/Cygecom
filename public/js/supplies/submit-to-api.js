@@ -10,9 +10,12 @@ $(() => {
         $("#cpf_cnpj").trigger("focus");
 
         const selectElement = $('select[name="service[supplier_id]"]');
-       const newOption = new Option(`${response.cpf_cnpj} - ${response.corporate_name}`, response.id, true, true);
+        const newOption = new Option(`${response.cpf_cnpj} - ${response.corporate_name}`, response.id, true, true);
         selectElement.append(newOption).trigger('change');
 
+        $('#attendant').val(`${response.representative}`);
+        $('#phone-number').val(`${response.phone_number}`);
+        $('#email').val(`${response.email}`);
     };
 
     const showFailAlert = (response) => {

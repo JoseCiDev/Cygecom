@@ -144,7 +144,7 @@ class ProductController extends Controller
         return redirect()->route($route, ['type' => $purchaseRequest->type, 'id' => $id]);
     }
 
-    public function productDetails(int $id)
+    public function details(int $id)
     {
         $allRequestStatus = PurchaseRequestStatus::cases();
 

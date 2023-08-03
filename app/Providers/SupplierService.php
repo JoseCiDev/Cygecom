@@ -12,7 +12,15 @@ use Illuminate\Support\ServiceProvider;
 class SupplierService extends ServiceProvider
 {
     /**
-     * @return Supplier Retorna fornecedor com suas relações, exceto deletados.
+     * @return mixed Retorna fornecedores com suas relações, exceto deletados.
+     */
+    public function getSuppliers()
+    {
+        return Supplier::with(['address', 'phone', 'deletedByUser', 'updatedByUser'])->whereNull('deleted_at');
+    }
+
+    /**
+     * @return Supplier Retorna fornecedor pelo ID com suas relações, exceto deletados.
      */
     public function getSupplierById(int $id)
     {

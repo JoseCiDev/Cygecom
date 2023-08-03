@@ -9,11 +9,6 @@ class Address extends Model
 {
     use HasFactory;
 
-    public function costCenter()
-    {
-        return $this->hasOne(CostCenter::class);
-    }
-
     public function supplier()
     {
         return $this->hasOne(Supplier::class);

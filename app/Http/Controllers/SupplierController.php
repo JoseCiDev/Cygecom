@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Supplier;
 use App\Providers\{SupplierService, ValidatorService};
 use Exception;
 use Illuminate\Http\Request;
@@ -21,9 +20,39 @@ class SupplierController extends Controller
 
     public function index()
     {
-        $suppliers = Supplier::with('address', 'phone')->whereNull('deleted_at')->get();
+        return view('components.supplier.index');
+    }
 
-        return view('components.supplier.index', ['suppliers' => $suppliers]);
+    public function indexAPI()
+    {
+        $draw = (int) request()->query('draw', 1);
+        $start = (int) request()->query('start', 0);
+        $length = (int) request()->query('length', 10);
+        $searchValue = request()->query('search')['value'];
+        $currentPage = ($start / $length) + 1;
+
+        try {
+            $query = $this->supplierService->getSuppliers();
+
+            if (!empty($searchValue)) {
+                $query->where('cpf_cnpj', 'like', "%{$searchValue}%")
+                    ->orWhere('corporate_name', 'like', "%{$searchValue}%")
+                    ->orWhere('name', 'like', "%{$searchValue}%")
+                    ->orWhere('supplier_indication', 'like', "%{$searchValue}%")
+                    ->orWhere('market_type', 'like', "%{$searchValue}%");
+            }
+
+            $suppliersQuery = $query->paginate($length, ['*'], 'page', $currentPage);
+        } catch (Exception $error) {
+            return response()->json(['error' => 'Não foi possível buscar os fornecedores. Por favor, tente novamente mais tarde.'], 500);
+        }
+
+        return response()->json([
+            'data' => $suppliersQuery->items(),
+            'draw' => $draw,
+            'recordsTotal' => $suppliersQuery->total(),
+            'recordsFiltered' => $suppliersQuery->total(),
+        ], 200);
     }
 
     public function supplier(int $id)
@@ -81,7 +110,10 @@ class SupplierController extends Controller
             'message' => 'Fornecedor cadastrado com sucesso!',
             'cpf_cnpj' => $data['cpf_cnpj'],
             'id' => $supplier->id,
-            'corporate_name' => $supplier->corporate_name
+            'corporate_name' => $supplier->corporate_name,
+            'representative' => $supplier->representative,
+            'email' => $supplier->email,
+            'phone_number' => $supplier->phone->number,
         ], 200);
     }
 

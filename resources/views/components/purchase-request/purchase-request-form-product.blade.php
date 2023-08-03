@@ -171,12 +171,12 @@
                             @foreach ($costCenters as $costCenter)
                                 @php
                                     $isUserCostCenter = isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id;
-                                    $costCenterCompanyName = $costCenter->company->corporate_name;
+                                    $companyName = $costCenter->company->name;
                                     $costCenterName = $costCenter->name;
-                                    $costCenterSeniorCode = $costCenter->senior_code;
+                                    $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
                                 @endphp
-                                <option value="{{ $costCenter->id }}" {{ $isUserCostCenter ? 'selected' : '' }}>
-                                    {{ $costCenterCompanyName . ' - ' . $costCenterName . ' - ' . $costCenterSeniorCode }}
+                                <option value="{{ $costCenter->id }}" @selected($isUserCostCenter)>
+                                    {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
                                 </option>
                             @endforeach
                         </select>
@@ -331,10 +331,11 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="purchase-request-files[path]" class="control-label">Links de apoio /
+                        <label for="support-links" class="control-label">Links de apoio /
                             sugestão</label>
                         <textarea placeholder="Adicone um ou mais links válidos. Ex: Contrato disponibilizado pelo fornecedor" rows="3"
-                            name="support_Links" id="purchase-request-files[path]" class="form-control text-area no-resize">{{ isset($purchaseRequest->purchaseRequestFile[0]) && $purchaseRequest->purchaseRequestFile[0]->path ? $purchaseRequest->purchaseRequestFile[0]->path : '' }}</textarea>
+                            name="support_Links" id="support-links" data-cy="support-links"
+                            class="form-control text-area no-resize">{{ $purchaseRequest->support_links }}</textarea>
                     </div>
                 </div>
 
@@ -496,7 +497,7 @@
                 @if ($issetPurchaseRequest)
                     @foreach ($productSuppliers as $supplierId => $products)
                         <x-purchase-request.product.supplier :productCategories="$productCategories" :suppliers="$suppliers" :supplierId="$supplierId"
-                            :products="$products" :supplierIndex="$supplierIndex" />
+                            :products="$products" :supplierIndex="$supplierIndex" :isCopy="$isCopy"/>
                         @php $supplierIndex++; @endphp
                     @endforeach
                 @else

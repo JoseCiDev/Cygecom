@@ -3,7 +3,8 @@
     'supplierIndex',
     'productIndex',
     'productCategories',
-    'product' => null
+    'product' => null,
+    'isCopy' => false
 ])
 
 
@@ -14,7 +15,7 @@
                     class="fa fa-trash-o"></i></button>
         </div>
         <input type="hidden" name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][id]"
-            value="{{ $product->id ?? null }}">
+            value="{{ $isCopy ? null : $product?->id}}">
         {{-- CATEGORIA PRODUTO --}}
         <div class="col-sm-5" style="margin-left:-10px;">
             <div class="form-group">

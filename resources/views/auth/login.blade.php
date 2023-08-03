@@ -57,16 +57,16 @@
                 @csrf
 				<div class="form-group">
 					<div class="email controls">
-						<input type="email" name='email' placeholder="Email" class='form-control' @error('email') is-invalid @enderror name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+						<input type="email" name='email' data-cy="email" placeholder="Email" class='form-control' @error('email') is-invalid @enderror name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="pw controls">
-						<input type="password" name="password" placeholder="Senha" class='form-control' @error('password') is-invalid @enderror name="password" required autocomplete="current-password">
+						<input type="password" name="password" data-cy="password" placeholder="Senha" class='form-control' @error('password') is-invalid @enderror name="password" required autocomplete="current-password">
 					</div>
 				</div>
 				<div class="submit" style="padding-bottom: 10px;">
-					<input type="submit" value="Entrar" class='btn btn-primary'>
+					<input type="submit" data-cy="btn-login-entrar" value="Entrar" class='btn btn-primary'>
 				</div>
 			</form>
 		</div>

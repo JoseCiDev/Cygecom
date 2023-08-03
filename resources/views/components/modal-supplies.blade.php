@@ -59,7 +59,7 @@
                                 <strong>Responsável em:</strong> <span class="responsibility_marked_at">---</span>
                             </p>
                             <hr>
-                            <h4><i class="fa fa-user"></i> <strong>Centros de custo</strong></h4>
+                            <h4><i class="fa fa-money"></i> <strong>Centros de custo</strong></h4>
                             <hr>
                             <ul class="costCenterApportionment" style="font-size: 16px">
                                 {{-- Adição dinâmica de <li> aqui --}}
@@ -68,7 +68,11 @@
                     </div>
                     <div class="request-details-content-box">
                         <div class="tab-content padding">
-                            <h4><i class="fa fa-user"></i> <strong>Motivo e observações</strong></h4>
+                            <h4><i class="glyphicon glyphicon-globe"></i> <strong>Links de apoio/sugestão</strong></h4>
+                            <hr>
+                            <p class="support_links" style="white-space: pre-wrap; max-height: 300px; overflow:scroll;"></p>
+                            <hr>
+                            <h4><i class="glyphicon glyphicon-info-sign"></i> <strong>Motivo e observações</strong></h4>
                             <hr>
                             <p>
                                 <strong>Motivo da solicitação:</strong> <span class="reason"></span>
@@ -81,7 +85,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-cy="btn-close-modal">Fechar</button>
             </div>
         </div>
     </div>

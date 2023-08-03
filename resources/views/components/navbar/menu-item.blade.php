@@ -2,9 +2,8 @@
     'route',
     'title'
 ])
-
 <li>
-    <a href=" {{ route( $route ) }} ">
+    <a data-cy="route-{{$route}}" href=" {{ route( $route ) }} ">
         <span> {{ $title }} </span>
     </a>
 </li>

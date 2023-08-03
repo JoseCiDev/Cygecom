@@ -140,7 +140,7 @@ class ServiceController extends Controller
         return redirect()->route($route);
     }
 
-    public function serviceDetails(int $id)
+    public function details(int $id)
     {
         $allRequestStatus = PurchaseRequestStatus::cases();
 

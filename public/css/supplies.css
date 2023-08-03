@@ -60,19 +60,27 @@
     word-break: break-all;
 }
 
-.request-details-content-box-contract {
+.request-details-content-box-contract,
+.request-details-content-box-service,
+.request-details-content-box-product {
     border: 1px solid rgb(174, 174, 174);
 }
 
-.request-details-content-box-contract-installment {
+.request-details-content-box-contract-installment,
+.request-details-content-box-service-installment,
+.request-details-content-box-product-installment {
     padding: 10px 5px;
 }
 
-.request-details-content-box-contract-installment:nth-child(even) {
+.request-details-content-box-contract-installment:nth-child(even),
+.request-details-content-box-service-installment:nth-child(even),
+.request-details-content-box-product-installment:nth-child(even) {
     background-color: #c5c5c5;
 }
 
-.request-details-content-box-contract-installment:nth-child(odd) {
+.request-details-content-box-contract-installment:nth-child(odd),
+.request-details-content-box-service-installment:nth-child(odd),
+.request-details-content-box-product-installment:nth-child(odd) {
     background-color: #eaeaea;
 }
 
@@ -81,17 +89,14 @@
 }
 
 .request-details-content-box-supplier {
-    border: 2px solid rgb(221, 221, 221);
-    padding: 20px;
+    padding: 0 20px;
 }
 
 .request-details-content-box-products {
-    border: 2px solid rgb(221, 221, 221);
-    padding: 20px;
+    padding: 0 20px;
 }
 
 .request-details-content-box-products-product {
-    border: 1px solid rgb(221, 221, 221);
     flex-grow: 1;
     padding: 10px;
 }

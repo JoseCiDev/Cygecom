@@ -17,9 +17,9 @@
         <h1>Página de suprimentos</h1>
     </x-slot>
 
-    <div class="row" style="padding: 25px 0">
+    <div class="row">
         <div class="col-sm-12">
-            <form class="form-validate" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
+            <form class="form-validate" data-cy="form-request-status" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
             @csrf
                 <div class="row">
                    <div class="col-md-12">
@@ -28,14 +28,14 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <select name="status" @disabled($requestIsFromLogged)>
+                        <select name="status" data-cy="status" @disabled($requestIsFromLogged)>
                             @foreach ($allRequestStatus as $status)
                                 @if ($status->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
                                     <option @selected($request->status === $status) value="{{$status}}">{{$status->label()}}</option>
                                 @endif
                             @endforeach
                         </select>
-                        <button type="submit" class="btn btn-icon btn-small btn-primary" @disabled($requestIsFromLogged)> Aplicar status </button>
+                        <button ata-cy="btn-apply-status" type="submit" class="btn btn-icon btn-small btn-primary" @disabled($requestIsFromLogged)> Aplicar status </button>
                     </div>
                 </div>
             </form>
@@ -338,6 +338,42 @@
                                 </div>
                             </div>
 
+                            <hr class="pagebreak"/>
+
+                            <div class="request-details-content-box">
+                                <div class="request-details-content-box-service">
+                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
+                                    @foreach ($request->service->installments as $installmentIndex => $installment)
+                                    <div class="request-details-content-box-service-installment">
+                                        <div class="row">
+                                            <p class="col-xs-3">
+                                                <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Serviço executado:</strong> {{ $installment->already_provided ? 'Sim' : 'Não' }}
+                                            </p>
+                                        </div>
+                                        <div class="row">
+                                            <p class="col-xs-3">
+                                                <strong>Valor:</strong> {{ $installment->value }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
+                                            </p>
+                                            <p class="col-xs-6">
+                                                <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    @if ($installmentIndex === 14)
+                                        <hr class="pagebreak"/>
+                                    @endif
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -348,7 +384,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                 <h4><strong>Links / Anexos:</strong></h4>
+                 <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
                  @if ($files->count())
                     <ul>
                         @foreach ($files as $index => $file)
@@ -358,6 +394,22 @@
                  @else
                     <p>Ainda não há registros aqui.</p>
                  @endif
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4><i class="glyphicon glyphicon-link"></i> <strong>Links de apoio/sugestão:</strong></h4>
+                @php
+                    $supportLinks = 'Não há links para serem exibidos aqui.';
+                    if( $request?->support_links) {
+                        $supportLinks = str_replace(' ', '<br>', $request->support_links);
+                        $supportLinks = nl2br($supportLinks);
+                    }
+                @endphp
+                <p class="support_links" style="max-height: 300px; overflow:auto">{!! $supportLinks !!}</p>
             </div>
         </div>
     </div>

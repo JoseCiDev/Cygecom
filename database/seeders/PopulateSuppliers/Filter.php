@@ -21,13 +21,16 @@ class Filter
         }
 
         foreach ($suppliers as $supplier) {
-            $isValidCnpj = $this->validateCnpj($supplier['cpf_cnpj']);
+            $cnpj = str_pad($supplier['cpf_cnpj'], 14, '0', STR_PAD_LEFT);
+            $isValidCnpj = $this->validateCnpj($cnpj);
             $isDuplicate = in_array($supplier['corporate_name'], $existingCorporateNames);
             $validator = $this->validatorService->supplier($supplier);
-            if (!$isValidCnpj || $isDuplicate || $validator->fails()) {
+            $isValidPhoneNumber = strlen($supplier['number']) <= 15;
+            if (!$isValidCnpj || $isDuplicate || !$isValidPhoneNumber || $validator->fails()) {
                 continue;
             }
 
+            $supplier['cpf_cnpj'] = $cnpj;
             $supplier['qualification'] = 'qualificado';
             $filteredSuppliers[] = $supplier;
 

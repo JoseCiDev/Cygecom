@@ -14,8 +14,8 @@
                         @endif
                         <h1>Bem-vindo!</h1>
                         <p>Este é o portal de gerenciamento de compras dao grupo Essentia!</p>
-                        {{-- Para acesso rápido --}}
-                        @if (auth()->user()->profile->name === 'admin')
+                        
+                        @if (config('app.env') === 'local' && auth()->user()->profile->name === 'admin')
                             <p>TESTE E-MAIL</p>
                             <a class="btn btn-primary" href="{{ route('email') }}">E-mail</a>
                         @endif

@@ -17,9 +17,9 @@
         <h1>Página de suprimentos</h1>
     </x-slot>
 
-    <div class="row" style="padding: 25px 0">
+    <div class="row">
         <div class="col-sm-12">
-            <form class="form-validate" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
+            <form data-cy="form-request-status" class="form-validate" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
             @csrf
                 <div class="row">
                    <div class="col-md-6">
@@ -28,14 +28,14 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <select name="status" @disabled($requestIsFromLogged)>
+                        <select name="status" data-cy="status" @disabled($requestIsFromLogged)>
                             @foreach ($allRequestStatus as $status)
                                 @if ($status->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
                                     <option @selected($request->status === $status) value="{{$status}}">{{$status->label()}}</option>
                                 @endif
                             @endforeach
                         </select>
-                        <button type="submit" class="btn btn-icon btn-small btn-primary" @disabled($requestIsFromLogged)> Aplicar status </button>
+                        <button data-cy="btn-apply-status" type="submit" class="btn btn-icon btn-small btn-primary" @disabled($requestIsFromLogged)> Aplicar status </button>
                     </div>
                 </div>
             </form>
@@ -43,10 +43,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
-        </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="pull-right">
                 <x-PdfGeneratorButton print-by-selector=".details-content" :file-name="'solicitacao_contrato_'.$request->id . now()->format('dmY_His_u')"/>
             </div>
@@ -67,6 +64,11 @@
                 <p>Produto(s) desejado(s) para:
                     {{ $request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : '---' }}
                 </p>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
+                    </div>
+               </div>
             </header>
             <main>
                 <div class="row">
@@ -385,21 +387,29 @@
                                         <hr class="pagebreak"/>
 
                                         <div class="request-details-content-box-contract">
-                                            <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong>Contrato - Parcelas</strong></h4>
+                                            <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
                                             @foreach ($request->contract->installments as $installmentIndex => $installment)
                                             <div class="request-details-content-box-contract-installment">
                                                 <div class="row">
-                                                    <p class="col-xs-2">
+                                                    <p class="col-xs-3">
                                                         <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
                                                     </p>
-                                                    <p class="col-xs-2">
+                                                    <p class="col-xs-3">
+                                                        <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
+                                                    </p>
+                                                    <p class="col-xs-3">
+                                                        <strong>Serviço executado:</strong> {{ $installment->already_provided ? 'Sim' : 'Não' }}
+                                                    </p>
+                                                </div>
+                                                <div class="row">
+                                                    <p class="col-xs-3">
                                                         <strong>Valor:</strong> {{ $installment->value }}
                                                     </p>
-                                                    <p class="col-xs-2">
-                                                        <strong>Pago no dia:</strong> {{ $installment->payment_day ?? '---' }}
+                                                    <p class="col-xs-3">
+                                                        <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
                                                     </p>
                                                     <p class="col-xs-6">
-                                                        <strong>Descrição do pagamento:</strong> <span>{{ $installment->description ?? '---' }}</span>
+                                                        <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
                                                     </p>
                                                 </div>
                                             </div>
@@ -423,16 +433,32 @@
 
         <div class="row">
             <div class="col-md-12">
-                <h4><strong>Links / Anexos:</strong></h4>
-                @if ($files->count())
-                   <ul>
-                       @foreach ($files as $index => $file)
-                           <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank" rel="noopener noreferrer">{{ $file->original_name }}</a></li>
-                       @endforeach
-                   </ul>
+                 <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
+                 @if ($files->count())
+                    <ul>
+                        @foreach ($files as $index => $file)
+                        <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank" rel="noopener noreferrer">{{ $file->original_name }}</a></li>
+                    @endforeach
+                    </ul>
                 @else
-                    <p>Ainda não há registros aqui.</p>
+                    <p>Nenhum registro encontrado.</p>
                  @endif
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4><i class="glyphicon glyphicon-link"></i> <strong>Links de apoio/sugestão:</strong></h4>
+                @php
+                    $supportLinks = 'Não há links para serem exibidos aqui.';
+                    if( $request?->support_links) {
+                        $supportLinks = str_replace(' ', '<br>', $request->support_links);
+                        $supportLinks = nl2br($supportLinks);
+                    }
+                @endphp
+                <p class="support_links" style="max-height: 300px; overflow:auto">{!! $supportLinks !!}</p>
             </div>
         </div>
     </div>

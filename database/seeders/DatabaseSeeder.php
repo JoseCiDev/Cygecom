@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             PopulateCostCenters::class,
             RegisterAdmin::class,
             PopulateUserCostCenterPermissionDefault::class,
+            PopulateSuppliers::class,
         ]);
     }
 }

@@ -4,7 +4,8 @@
     'productCategories',
     'suppliers',
     'supplierId' => null,
-    'products' => null
+    'products' => null,
+    'isCopy' => false
 ])
 
 
@@ -55,6 +56,7 @@
                                 :product="$product"
                                 :productIndex="$productIndex"
                                 :supplierIndex="$supplierIndex"
+                                :isCopy="$isCopy"
                             />
                             @php $productIndex++; @endphp
                         @endforeach
