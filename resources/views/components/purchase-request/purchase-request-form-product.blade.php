@@ -34,12 +34,6 @@
         border-top: 5px solid rgb(178, 177, 177);
         margin: 0px;
     }
-
-    div.dataTables_wrapper div.dataTables_length,
-    div.dataTables_wrapper div.dataTables_info {
-        display: none;
-        /* remover espao em branco do datatables*/
-    }
 </style>
 
 
@@ -98,7 +92,7 @@
                             <label style="display:block;" class="control-label">Centro de custo da
                                 despesa</label>
                             <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
-                                id="select-cost-center"
+                                id="select-cost-center" data-cy="cost-center-apportionments-{{ $index }}"
                                 class='select2-me @error('cost_center_id_{{ $index }}') is-invalid @enderror'
                                 data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
                                 <option value=""></option>
@@ -125,6 +119,7 @@
                             <input type="number" placeholder="0.00" class="form-control" min="0"
                                 name="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
                                 id="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
+                                data-cy="cost-center-apportionments-{{ $index }}-apportionment_percentage"
                                 value="{{ $apportionment->apportionment_percentage }}">
                             @error('cost_center_apportionments[{{ $index }}][apportionment_percentage]')
                                 <p><strong>{{ $message }}</strong></p>
@@ -142,6 +137,7 @@
                             <input type="number" placeholder="0.00" class="form-control" min="0"
                                 name="cost_center_apportionments[{{ $index }}][apportionment_currency]"
                                 id="cost_center_apportionments[{{ $index }}][apportionment_currency]"
+                                data-cy="cost-center-apportionments-{{ $index }}-apportionment_currency"
                                 value="{{ $apportionment->apportionment_currency }}">
                             @error('cost_center_apportionments[{{ $index }}][apportionment_currency]')
                                 <p><strong>{{ $message }}</strong></p>
@@ -150,8 +146,9 @@
                     </div>
 
                     <div class="col-sm-1" style="margin-top: 28px;">
-                        <button class="btn btn-icon btn-small btn-danger delete-cost-center"><i
-                                class="fa fa-trash-o"></i></button>
+                        <button class="btn btn-icon btn-small btn-danger delete-cost-center"
+                            data-cy="delete-cost-center"><i class="fa fa-trash-o"></i>
+                        </button>
                     </div>
                 </div>
             @endforeach
@@ -162,7 +159,7 @@
                         <label class="control-label" style="display:block">
                             Centro de custo da despesa
                         </label>
-                        <select style="width:100%" id="select-cost-center"
+                        <select style="width:100%" id="select-cost-center" data-cy="select-cost-center"
                             name="cost_center_apportionments[0][cost_center_id]"
                             class='select2-me
                                     @error('cost_center_id_{{ $index }}') is-invalid @enderror'
@@ -191,7 +188,8 @@
                         <span class="input-group-addon">%</span>
                         <input type="number" placeholder="0.00" class="form-control apportionment-percentage"
                             min="0" name="cost_center_apportionments[0][apportionment_percentage]"
-                            id="cost_center_apportionments[0][apportionment_percentage]">
+                            id="cost_center_apportionments[0][apportionment_percentage]"
+                            data-cy="cost_center_apportionments-0-apportionment_percentage">
                         @error('cost_center_apportionments[0][apportionment_percentage]')
                             <p><strong>{{ $message }}</strong></p>
                         @enderror
@@ -205,7 +203,8 @@
                     <div class="input-group">
                         <span class="input-group-addon">R$</span>
                         <input type="number" name="cost_center_apportionments[0][apportionment_currency]"
-                            id="cost_center_apportionments[0][apportionment_currency]" placeholder="0.00"
+                            id="cost_center_apportionments[0][apportionment_currency]"
+                            data-cy="cost_center_apportionments-0-apportionment_currency" placeholder="0.00"
                             class="form-control" min="0">
                         @error('cost_center_apportionments[0][apportionment_currency]')
                             <p><strong>{{ $message }}</strong></p>
@@ -222,7 +221,7 @@
         @endif
 
         {{-- ADICIONAR CENTRO DE CUSTO --}}
-        <button type="button" class="btn btn-small btn-primary add-cost-center-btn">
+        <button type="button" class="btn btn-small btn-primary add-cost-center-btn" data-cy="add-cost-center-btn">
             Adicionar linha
         </button>
 
@@ -242,11 +241,13 @@
                     </label>
                     <div class="form-check">
                         <input name="is_supplies_contract"value="1" class="radio-who-wants"
-                            id="is-supplies-contract" type="radio" @checked((isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract) || !isset($purchaseRequest))>
+                            id="is-supplies-contract" data-cy="is-supplies-contract"
+                            type="radio" @checked((isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract) || !isset($purchaseRequest))>
                         <label class="form-check-label" for="is-supplies-contract">Suprimentos</label>
 
                         <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio"
-                            id="is-area-contract" style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
+                            id="is-area-contract" data-cy="is-area-contract"
+                            style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
                         <label class="form-check-label" for="is-area-contract"> Área solicitante</label>
                     </div>
                 </div>
@@ -257,10 +258,10 @@
                         Contrato se enquadra na categoria COMEX?
                     </label>
                     <div class="form-check">
-                        <input name="is_comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
-                            type="radio" data-skin="minimal">
+                        <input name="is_comex" data-cy="is-comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
+                            type="radio" data-skin="minimal" >
                         <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
-                        <input name="is_comex"value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest)) class="radio-comex"
+                        <input name="is_comex" data-cy="is-not-comex" value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest)) class="radio-comex"
                             type="radio" data-skin="minimal">
                         <label class="form-check-label" for="">Não</label>
                     </div>
@@ -276,7 +277,7 @@
                         <label for="reason" class="control-label">
                             Motivo da solicitação
                         </label>
-                        <textarea data-rule-required="true" minlength="20" name="reason" id="reason" rows="4"
+                        <textarea data-rule-required="true" minlength="20" name="reason" id="reason" data-cy="reason" rows="4"
                             placeholder="Ex: Ar condicionado da sala de reuniões do atrium apresenta defeitos de funcionamento"
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
@@ -291,7 +292,7 @@
                 <div class="col-sm-8">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
-                        <textarea data-rule-required="true" minlength="20" name="description" id="description" rows="4"
+                        <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description" rows="4"
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
@@ -307,12 +308,12 @@
 
                 <div class="col-sm-6" style="margin-bottom:8px;">
                     <div class="form-group product-input" id="product-input">
-                        <label for="local_description" class="control-label">
+                        <label for="local-description" class="control-label">
                             Local de entrega do produto
                         </label>
                         <input name="local_description"
                             value="@if (isset($purchaseRequest)) {{ $purchaseRequest->local_description }} @endif"
-                            type="text" id="local_description"
+                            type="text" id="local-description" data-cy="local-description"
                             placeholder="Informe em qual local / sala ficará o produto" class="form-control"
                             data-rule-required="true" data-rule-minlength="2">
                     </div>
@@ -321,7 +322,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="control-label">Data desejada do serviço</label>
-                        <input type="date" name="desired_date" id="desired-date" class="form-control"
+                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date" class="form-control"
                             min="2023-07-24" value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
@@ -335,14 +336,14 @@
                             sugestão</label>
                         <textarea placeholder="Adicone um ou mais links válidos. Ex: Contrato disponibilizado pelo fornecedor" rows="3"
                             name="support_Links" id="support-links" data-cy="support-links"
-                            class="form-control text-area no-resize">{{ $purchaseRequest->support_links }}</textarea>
+                            class="form-control text-area no-resize">{{ $purchaseRequest?->support_links ?? null }}</textarea>
                     </div>
                 </div>
 
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="observation" class="control-label"> Observação </label>
-                        <textarea name="observation" rows="3" placeholder="Observação" class="form-control text-area no-resize"></textarea>
+                        <textarea name="observation" id="request-observation" data-cy="request-observation" rows="3" placeholder="Observação" class="form-control text-area no-resize"></textarea>
                     </div>
                 </div>
             </div>
@@ -357,7 +358,7 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="control-label">Condição de pagamento</label>
-                            <select name="product[is_prepaid]" id="product-is-prepaid"
+                            <select name="product[is_prepaid]" id="product-is-prepaid" data-cy="product-is-prepaid"
                                 class='select2-me product[is_prepaid]' style="width:100%; padding-top:2px;"
                                 data-placeholder="Escolha uma opção">
                                 <option value=""></option>
@@ -373,9 +374,9 @@
                             <label for="format-amount" class="control-label">Valor total do(s) produto(s)</label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
-                                <input type="text" id="format-amount" placeholder="0.00"
+                                <input type="text" id="format-amount" data-cy="format-amount" placeholder="0.00"
                                     class="form-control format-amount" value="{{ $purchaseRequestProductAmount }}">
-                                <input type="hidden" name="product[amount]" id="amount"
+                                <input type="hidden" name="product[amount]" id="amount" data-cy="amount"
                                     class="amount no-validation" value="{{ $purchaseRequestProductAmount }}">
                             </div>
                         </div>
@@ -391,7 +392,7 @@
                                     $paymentMethod = $purchaseRequest->product->paymentInfo->payment_method;
                                 }
                             @endphp
-                            <select name="product[payment_info][payment_method]" id="payment-method"
+                            <select name="product[payment_info][payment_method]" id="payment-method" data-cy="payment-method"
                                 class='select2-me payment-method' style="width:100%; padding-top:2px;"
                                 data-placeholder="Escolha uma opção">
                                 <option value=""></option>
@@ -409,7 +410,8 @@
                         </div>
                     </div>
 
-                    <input type="hidden" class="no-validation" value="" name="product[payment_info][id]">
+                    <input type="hidden" id="product-payment-info-id" data-cy="product-payment-info-id"
+                        class="no-validation" value="" name="product[payment_info][id]">
 
                     {{-- Nº PARCELAS --}}
                     <div class="col-sm-1">
@@ -418,6 +420,7 @@
                             <input type="text" class="form-control format-installments-number"
                                 placeholder="Ex: 24" value="{{ $productQuantityOfInstallments }}">
                             <input type="hidden" name="product[quantity_of_installments]" id="installments-number"
+                                data-cy="installments-number"
                                 class="installments-number no-validation"
                                 value="{{ $productQuantityOfInstallments }}">
                         </div>
@@ -429,7 +432,8 @@
                             <label for="payment-info-description" class="control-label">
                                 Detalhes do pagamento
                             </label>
-                            <textarea name="product[payment_info][description]" id="payment-info-description" rows="3"
+                            <textarea name="product[payment_info][description]" id="payment-info-description"
+                                data-cy="payment-info-description" rows="3"
                                 placeholder="Informações sobre pagamento. Ex: Chave PIX, dados bancários do fornecedor, etc..."
                                 class="form-control text-area no-resize">{{ $purchaseRequest->product->paymentInfo->description ?? null }}</textarea>
                         </div>
@@ -444,7 +448,7 @@
                     </h4>
                     <div class="col-sm-6 btn-add-installment" hidden>
                         <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
-                            data-route="user" rel="tooltip" title="Adicionar Parcela">
+                            data-route="user" rel="tooltip" title="Adicionar Parcela" data-cy="btn-add-installment">
                             + Adicionar parcela
                         </button>
                     </div>
@@ -839,13 +843,11 @@
             orderable: false,
             paging: true,
             pageLength: 12,
-            info: "Página _PAGE_ of _PAGES_",
+            info: false,
             searching: false,
+            bLengthChange: false,
             language: {
-                info: "",
-                lengthMenu: "",
                 emptyTable: "Nenhuma parcela adicionada.",
-                zeroRecords: "",
                 paginate: {
                     previous: "Anterior",
                     next: "Próximo",
@@ -881,6 +883,7 @@
                         ?.installments[index]?.id : null;
                     idInput.hidden = true;
                     idInput.className = "no-validation";
+                    idInput.setAttribute('data-cy', 'product-product_installments-' + index + '-id');
 
                     const expireDateInput = document.createElement('input');
                     expireDateInput.type = 'date';
@@ -889,6 +892,7 @@
                     expireDateInput.value = expireDate;
                     expireDateInput.hidden = true;
                     expireDateInput.className = "no-validation";
+                    expireDateInput.setAttribute('data-cy', 'product-product_installments-' + index + '-expire_date');
 
                     const valueInput = document.createElement('input');
                     valueInput.type = 'number';
@@ -896,6 +900,7 @@
                     valueInput.value = value;
                     valueInput.hidden = true;
                     valueInput.className = "no-validation";
+                    valueInput.setAttribute('data-cy', 'product-product_installments-' + index + '-value');
 
                     const observationInput = document.createElement('input');
                     observationInput.type = 'text';
@@ -904,6 +909,7 @@
                     observationInput.value = observation;
                     observationInput.hidden = true;
                     observationInput.className = "no-validation";
+                    observationInput.setAttribute('data-cy', 'product-product_installments-' + index + '-observation');
 
                     const statusInput = document.createElement('input');
                     statusInput.type = 'text';
@@ -911,6 +917,7 @@
                     statusInput.value = status;
                     statusInput.hidden = true;
                     statusInput.className = "no-validation";
+                    statusInput.setAttribute('data-cy', 'product-product_installments-' + index + '-status');
 
                     hiddenInputsContainer.append(
                         idInput,
@@ -928,6 +935,7 @@
                     ?.id : null;
                 idInput.hidden = true;
                 idInput.className = "no-validation";
+                idInput.setAttribute('data-cy', 'product-product_installments-0-id');
 
                 const expireDateInput = document.createElement('input');
                 expireDateInput.type = 'date';
@@ -935,6 +943,7 @@
                 expireDateInput.value = "";
                 expireDateInput.hidden = true;
                 expireDateInput.className = "no-validation";
+                expireDateInput.setAttribute('data-cy', 'product-product_installments-0-expire_date');
 
 
                 const valueInput = document.createElement('input');
@@ -943,6 +952,7 @@
                 valueInput.value = "";
                 valueInput.hidden = true;
                 valueInput.className = "no-validation";
+                valueInput.setAttribute('data-cy', 'product-product_installments-0-value');
 
                 const observationInput = document.createElement('input');
                 observationInput.type = 'text';
@@ -950,6 +960,7 @@
                 observationInput.value = "";
                 observationInput.hidden = true;
                 observationInput.className = "no-validation";
+                observationInput.setAttribute('data-cy', 'product-product_installments-0-observation');
 
                 const statusInput = document.createElement('input');
                 statusInput.type = 'text';
@@ -957,6 +968,7 @@
                 statusInput.value = "";
                 statusInput.hidden = true;
                 statusInput.className = 'no-validation';
+                statusInput.setAttribute('data-cy', 'product-product_installments-0-status');
 
                 hiddenInputsContainer.append(
                     idInput,

@@ -1031,17 +1031,15 @@
             orderable: false,
             paging: true,
             pageLength: 12,
-            info: "Página _PAGE_ of _PAGES_",
+            info: false,
             searching: false,
+            bLengthChange: false,
             language: {
-                lengthMenu: "",
                 emptyTable: "Nenhuma parcela adicionada.",
-                zeroRecords: "",
                 paginate: {
                     previous: "Anterior",
                     next: "Próximo",
                 },
-                info: ""
             },
             order: [
                 [0, 'desc']
