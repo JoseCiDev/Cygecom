@@ -14,6 +14,9 @@
         }
     }
 
+    $purchaseRequestProductAmount = $purchaseRequest?->product?->amount === null ? null : (float) $purchaseRequest?->product?->amount;
+    $productQuantityOfInstallments = $purchaseRequest?->product?->quantity_of_installments === null ? null : (int) $purchaseRequest?->product?->quantity_of_installments;
+
     // verifica status para desabilitar campos para o usuário
     $requestAlreadySent = $purchaseRequest?->status !== PurchaseRequestStatus::RASCUNHO;
     // ve se tem request e não foi enviada
@@ -356,8 +359,8 @@
                                 class='select2-me product[is_prepaid]' style="width:100%; padding-top:2px;"
                                 data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="1">Pagamento antecipado</option>
-                                <option value="0">Pagamento após execução</option>
+                                <option value="1" @selected(isset($purchaseRequest->product) && (bool) $purchaseRequest->product->is_prepaid)>Pagamento antecipado</option>
+                                <option value="0" @selected(isset($purchaseRequest->product) && !(bool) $purchaseRequest->product->is_prepaid)>Pagamento após execução</option>
                             </select>
                         </div>
                     </div>
@@ -365,13 +368,13 @@
                     {{-- VALOR TOTAL --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="format-amount" class="control-label">Valor total do serviço</label>
+                            <label for="format-amount" class="control-label">Valor total do(s) produto(s)</label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
                                 <input type="text" id="format-amount" placeholder="0.00"
-                                    class="form-control format-amount" value="">
-                                <input type="hidden" name="service[price]" id="amount"
-                                    class="amount no-validation" value="">
+                                    class="form-control format-amount" value="{{ $purchaseRequestProductAmount }}">
+                                <input type="hidden" name="product[amount]" id="amount"
+                                    class="amount no-validation" value="{{ $purchaseRequestProductAmount }}">
                             </div>
                         </div>
                     </div>
@@ -380,31 +383,26 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="control-label">Forma de pagamento</label>
-                            {{-- @php
+                            @php
                                 $paymentMethod = null;
-                                if (isset($purchaseRequest->service) && isset($purchaseRequest->service->paymentInfo)) {
-                                    $paymentMethod = $purchaseRequest->service->paymentInfo->payment_method;
+                                if (isset($purchaseRequest->product) && isset($purchaseRequest->product->paymentInfo)) {
+                                    $paymentMethod = $purchaseRequest->product->paymentInfo->payment_method;
                                 }
-                            @endphp --}}
+                            @endphp
                             <select name="product[payment_info][payment_method]" id="payment-method"
                                 class='select2-me payment-method' style="width:100%; padding-top:2px;"
                                 data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="PIX">
-                                    PIX
+                                <option value="PIX" {{ $paymentMethod === 'PIX' ? 'selected' : '' }}>PIX</option>
+                                <option value="DEPÓSITO BANCÁRIO"
+                                    {{ $paymentMethod === 'DEPÓSITO BANCÁRIO' ? 'selected' : '' }}>DEPÓSITO BANCÁRIO
                                 </option>
-                                <option value="DEPÓSITO BANCÁRIO">
-                                    DEPÓSITO BANCÁRIO
+                                <option value="BOLETO" {{ $paymentMethod === 'BOLETO' ? 'selected' : '' }}>BOLETO
                                 </option>
-                                <option value="BOLETO">
-                                    BOLETO
-                                </option>
-                                <option value="CARTÃO CRÉDITO">
-                                    CARTÃO CRÉDITO
-                                </option>
-                                <option value="CARTÃO DÉBITO">
-                                    CARTÃO DÉBITO
-                                </option>
+                                <option value="CARTÃO CRÉDITO"
+                                    {{ $paymentMethod === 'CARTÃO CRÉDITO' ? 'selected' : '' }}>CARTÃO CRÉDITO</option>
+                                <option value="CARTÃO DÉBITO"
+                                    {{ $paymentMethod === 'CARTÃO DÉBITO' ? 'selected' : '' }}>CARTÃO DÉBITO</option>
                             </select>
                         </div>
                     </div>
@@ -416,9 +414,9 @@
                         <div class="form-group">
                             <label class="control-label">Nº de parcelas</label>
                             <input type="text" class="form-control format-installments-number"
-                                placeholder="Ex: 24" value="">
+                                placeholder="Ex: 24" value="{{ $productQuantityOfInstallments }}">
                             <input type="hidden" name="product[quantity_of_installments]" id="installments-number"
-                                class="installments-number no-validation" value="">
+                                class="installments-number no-validation" value="{{ $productQuantityOfInstallments }}">
                         </div>
                     </div>
 
@@ -842,7 +840,7 @@
                 const idInput = document.createElement('input');
                 idInput.type = 'number';
                 idInput.name = 'product[product_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.product?.installments[index]
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.product?.installments[0]
                     ?.id : null;
                 idInput.hidden = true;
                 idInput.className = "no-validation";
@@ -1115,8 +1113,6 @@
             $isPrePaid.filter(':selected').trigger('change.select2');
         }
 
-        let supplierNumber = 1;
-
         // add supplier
         const $supplierContainer = $('.supplier-container');
         const $addSupplierBtn = $('.add-supplier-btn');
@@ -1165,9 +1161,6 @@
 
             $('.supplier-block').last().after($newContainer);
             $newContainer.find('.delete-supplier').removeAttr('hidden');
-
-            supplierNumber++;
-            $newContainer.find('h3').text('FORNECEDOR ' + supplierNumber);
         });
 
         $(document).on('click', '.delete-supplier', function() {
@@ -1185,7 +1178,6 @@
                         `purchase_request_suppliers[${index}]$2`);
                     $(this).attr('name', newName);
                 });
-                supplierNumber--;
             });
 
             // Recalcular também os índices dos produtos nos fornecedores restantes

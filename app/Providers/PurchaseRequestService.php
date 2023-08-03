@@ -5,9 +5,11 @@ namespace App\Providers;
 use Exception;
 use Carbon\Carbon;
 use App\Services\S3;
+use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Http\UploadedFile;
 use App\Enums\PurchaseRequestType;
+use App\Models\ProductInstallment;
 use App\Models\ServiceInstallment;
 use Illuminate\Support\Facades\DB;
 use App\Enums\PurchaseRequestStatus;
@@ -27,12 +29,10 @@ class PurchaseRequestService extends ServiceProvider
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
             'updatedByUser',
-            'service',
             'service.paymentInfo',
-            'purchaseRequestProduct',
             'purchaseRequestProduct.category',
-            'contract',
             'contract.installments',
+            'product.installments'
         ]);
     }
 
@@ -47,12 +47,10 @@ class PurchaseRequestService extends ServiceProvider
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
             'updatedByUser',
-            'service',
             'service.paymentInfo',
-            'purchaseRequestProduct',
             'purchaseRequestProduct.category',
-            'contract',
             'contract.installments',
+            'product.installments'
         ])->whereNull('deleted_at')->get();
     }
 
@@ -69,13 +67,10 @@ class PurchaseRequestService extends ServiceProvider
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
             'updatedByUser',
-            'service',
             'service.paymentInfo',
-            'purchaseRequestProduct',
             'purchaseRequestProduct.category',
-            'contract',
             'contract.installments',
-
+            'product.installments'
         ])->whereNull('deleted_at')->where('user_id', $id)->get();
     }
 
@@ -90,13 +85,10 @@ class PurchaseRequestService extends ServiceProvider
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
             'updatedByUser',
-            'service',
             'service.paymentInfo',
-            'purchaseRequestProduct',
             'purchaseRequestProduct.category',
-            'contract',
             'contract.installments',
-
+            'product.installments'
         ])->whereNull('deleted_at')->where('status', $status->value);
     }
 
@@ -111,12 +103,10 @@ class PurchaseRequestService extends ServiceProvider
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
             'updatedByUser',
-            'service',
             'service.paymentInfo',
-            'purchaseRequestProduct',
             'purchaseRequestProduct.category',
-            'contract',
             'contract.installments',
+            'product.installments'
         ])->whereNull('deleted_at')->where('id', $id)->first();
     }
 
@@ -375,6 +365,26 @@ class PurchaseRequestService extends ServiceProvider
     {
         if (!isset($data['type']) && $data['type'] !== "product") {
             return;
+        }
+
+        $productData = $data['product'];
+        $productInstallmentsData = $productData['product_installments'] ?? [];
+        $paymentInfoData = $productData['payment_info'] ?? [];
+
+        if (count($paymentInfoData) > 0) {
+            $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
+            $productData['payment_info_id'] = $paymentInfoResponse->id;
+        }
+
+        $product = Product::updateOrCreate(['purchase_request_id' => $purchaseRequestId], $productData);
+
+        $existingInstallments = ProductInstallment::where('product_id', $product->id)->get();
+
+        $this->updateNumberOfInstallments($existingInstallments, $productInstallmentsData);
+
+        foreach ($productInstallmentsData as $installment) {
+            $installment['product_id'] = $product->id;
+            ProductInstallment::updateOrCreate(['id' => $installment['id']], $installment);
         }
 
         $suppliers = array_values($data['purchase_request_products']);
