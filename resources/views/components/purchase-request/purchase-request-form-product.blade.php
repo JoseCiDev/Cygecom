@@ -34,6 +34,7 @@
         border-top: 5px solid rgb(178, 177, 177);
         margin: 0px;
     }
+
     div.dataTables_wrapper div.dataTables_length,
     div.dataTables_wrapper div.dataTables_info {
         display: none;
@@ -77,7 +78,7 @@
 
 
 <div class="box-content">
-    <form class="form-validate" id="request-form" method="POST"
+    <form enctype="multipart/form-data" class="form-validate" id="request-form" method="POST"
         action="@if (isset($purchaseRequest) && !$isCopy) {{ route('request.product.update', ['type' => $purchaseRequest->type, 'id' => $id]) }}
                     @else {{ route('request.product.register') }} @endif">
         @csrf
@@ -416,7 +417,8 @@
                             <input type="text" class="form-control format-installments-number"
                                 placeholder="Ex: 24" value="{{ $productQuantityOfInstallments }}">
                             <input type="hidden" name="product[quantity_of_installments]" id="installments-number"
-                                class="installments-number no-validation" value="{{ $productQuantityOfInstallments }}">
+                                class="installments-number no-validation"
+                                value="{{ $productQuantityOfInstallments }}">
                         </div>
                     </div>
 
@@ -501,12 +503,50 @@
                     <x-purchase-request.product.supplier :productCategories="$productCategories" :suppliers="$suppliers" :supplierIndex="$supplierIndex" />
                 @endif
 
-                {{-- ADICIONAR CENTRO DE CUSTO --}}
                 <button type="button" style="margin-top:15px;" class="btn btn-large btn-primary add-supplier-btn">
                     <i class="glyphicon glyphicon-plus"></i>
                     <strong>Adicionar fornecedor</strong>
                 </button>
 
+            </div>
+        </div>
+
+        <hr>
+
+        {{-- ARQUIVOS --}}
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <fieldset id="files-group">
+                    <legend>Arquivos</legend>
+                    <input type="file" class="form-control" name="arquivos[]" multiple>
+                    <ul class="list-group" style="margin-top:15px">
+                        @if (isset($files))
+                            @foreach ($files as $each)
+                                @php
+                                    $filenameSearch = explode('/', $each->original_name);
+                                    $filename = end($filenameSearch);
+                                @endphp
+                                <li class="list-group-item" data-id-purchase-request-file="{{ $each->id }}">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <i class='fa fa-file'></i><a style='margin-left:5px'
+                                                href="{{ env('AWS_S3_BASE_URL') . $each->path }}"target="_blank">{{ $filename }}</a>
+                                        </div>
+                                        <div class="col-xs-6 text-right">
+                                            <button type="button" class="btn btn-primary file-remove"><i
+                                                    class='fa fa-trash' style='margin-right:5px'></i>Excluir</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            @endforeach
+                        @endif
+                    </ul>
+                    <div class="alert alert-success" style="display:none;margin:15px 0px 15px 0px;"><i
+                            class="fa fa-check"></i> Excluido com sucesso!</div>
+                    <div class="alert alert-danger" style="display:none;margin:15px 0px 15px 0px;"><i
+                            class="fa fa-close"></i> Não foi possível excluir, por favor tente novamente mais
+                        tarde.</div>
+                </fieldset>
             </div>
         </div>
 
@@ -595,6 +635,11 @@
 
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
+
+        const $fileRemove = $('button.file-remove');
+        const $filesGroup = $('fieldset#files-group');
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
 
         // Verifica quem vai cotar e aplica regra em campo description
         $('input[name="is_supplies_quote"]').change(function() {
@@ -1292,6 +1337,30 @@
                     }
                 }
             });
+        });
+
+
+        $fileRemove.click(async (e) => {
+            const target = $(e.target);
+            const li = target.closest('li');
+            const idPurchaseRequestFile = li.data("id-purchase-request-file");
+
+            try {
+                const response = await fetch("/request/remove-file/" + idPurchaseRequestFile, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                });
+                if (response.ok) {
+                    li.remove();
+                    $filesGroup.find('div.alert-success').fadeIn(500).fadeOut(2500);
+                } else {
+                    $filesGroup.find('div.alert-danger').fadeIn(500).fadeOut(2500);
+                }
+            } catch (error) {
+                console.error(error);
+            }
         });
     });
 </script>

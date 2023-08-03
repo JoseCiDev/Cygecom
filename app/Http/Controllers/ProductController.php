@@ -26,6 +26,7 @@ class ProductController extends Controller
         $data       = $request->all();
         // captura o botão submit clicado (se for submit_request update status);
         $action = $request->input('action');
+        $files       = $request->file('arquivos');
 
         $validator = $this->validatorService->purchaseRequest($data);
 
@@ -37,7 +38,7 @@ class ProductController extends Controller
             $msg = "Solicitação de produto criada com sucesso!";
 
             DB::beginTransaction();
-            $purchaseRequest = $this->purchaseRequestService->registerProductRequest($data);
+            $purchaseRequest = $this->purchaseRequestService->registerProductRequest($data, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
@@ -91,6 +92,8 @@ class ProductController extends Controller
 
         $validator = $this->validatorService->purchaseRequest($data);
 
+        $files = $request->file('arquivos');
+
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
         }
@@ -116,7 +119,7 @@ class ProductController extends Controller
 
             DB::beginTransaction();
 
-            $this->purchaseRequestService->updateProductRequest($id, $data);
+            $this->purchaseRequestService->updateProductRequest($id, $data, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);

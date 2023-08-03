@@ -170,7 +170,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Cria solicitação de produto(s).
      * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveProduct para salvar produto(s).
      */
-    public function registerProductRequest(array $data, UploadedFile|array|null $files = null)
+    public function registerProductRequest(array $data, UploadedFile|array|null $files)
     {
         return DB::transaction(function () use ($data, $files) {
             $purchaseRequest = $this->registerPurchaseRequest($data, $files);
@@ -252,10 +252,10 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de produto(s).
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveProduct para atualizar produto(s).
      */
-    public function updateProductRequest(int $id, array $data)
+    public function updateProductRequest(int $id, array $data,  UploadedFile|array|null $files)
     {
-        DB::transaction(function () use ($id, $data) {
-            $purchaseRequest = $this->updatePurchaseRequest($id, $data);
+        DB::transaction(function () use ($id, $data, $files) {
+            $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
             $this->saveProducts($purchaseRequest->id, $data);
         });
     }

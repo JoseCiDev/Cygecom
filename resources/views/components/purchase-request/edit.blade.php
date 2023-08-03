@@ -12,7 +12,7 @@
             @if ($type ===  PurchaseRequestType::SERVICE)
                 <x-PurchaseRequestFormService :id="$id" :files="$files"/>
             @elseif ($type === PurchaseRequestType::PRODUCT)
-                <x-PurchaseRequestFormProduct :id="$id" />
+                <x-PurchaseRequestFormProduct :id="$id" :files="$files"/>
             @elseif ($type === PurchaseRequestType::CONTRACT)
                 <x-PurchaseRequestFormContract :id="$id" :files="$files"/>
             @endif
