@@ -59,7 +59,7 @@
                                 <td>{{$product->status->label()}}</td>
                                 <td >{{$product->purchaseRequestProduct->first()->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
                                 <td class="hidden-1024">{{$product->purchaseRequestProduct->first()->already_provided ? 'Executado' : 'Não executado'}}</td>
-                                <td class="hidden-1024">{{$product->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
+                                <td class="hidden-1024">{{$product->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1280">{{$concatenatedGroups}}</td>
 
                                 <td class="hidden-1440">{{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y h:m:s') : '---'}}</td>
