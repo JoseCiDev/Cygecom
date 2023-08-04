@@ -30,6 +30,10 @@
         margin-bottom: 5px
     }
 
+    h4 {
+        font-size: 20px;
+    }
+
     .product-row hr {
         border-top: 5px solid rgb(178, 177, 177);
         margin: 0px;
@@ -241,13 +245,13 @@
                     </label>
                     <div class="form-check">
                         <input name="is_supplies_contract"value="1" class="radio-who-wants"
-                            id="is-supplies-contract" data-cy="is-supplies-contract"
-                            type="radio" @checked((isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract) || !isset($purchaseRequest))>
+                            id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
+                            @checked((isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract) || !isset($purchaseRequest))>
                         <label class="form-check-label" for="is-supplies-contract">Suprimentos</label>
 
                         <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio"
-                            id="is-area-contract" data-cy="is-area-contract"
-                            style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
+                            id="is-area-contract" data-cy="is-area-contract" style="margin-left: 7px;"
+                            @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
                         <label class="form-check-label" for="is-area-contract"> Área solicitante</label>
                     </div>
                 </div>
@@ -258,11 +262,11 @@
                         Contrato se enquadra na categoria COMEX?
                     </label>
                     <div class="form-check">
-                        <input name="is_comex" data-cy="is-comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
-                            type="radio" data-skin="minimal" >
+                        <input name="is_comex" data-cy="is-comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex)
+                            class="radio-comex" type="radio" data-skin="minimal">
                         <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
-                        <input name="is_comex" data-cy="is-not-comex" value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest)) class="radio-comex"
-                            type="radio" data-skin="minimal">
+                        <input name="is_comex" data-cy="is-not-comex" value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest))
+                            class="radio-comex" type="radio" data-skin="minimal">
                         <label class="form-check-label" for="">Não</label>
                     </div>
                 </div>
@@ -292,7 +296,8 @@
                 <div class="col-sm-8">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
-                        <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description" rows="4"
+                        <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
+                            rows="4"
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
@@ -322,8 +327,9 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="control-label">Data desejada do serviço</label>
-                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date" class="form-control"
-                            min="2023-07-24" value="{{ $purchaseRequest->desired_date ?? null }}">
+                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
+                            class="form-control" min="2023-07-24"
+                            value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
 
@@ -335,15 +341,15 @@
                         <label for="support-links" class="control-label">Links de apoio /
                             sugestão</label>
                         <textarea placeholder="Adicone um ou mais links válidos. Ex: Contrato disponibilizado pelo fornecedor" rows="3"
-                            name="support_Links" id="support-links" data-cy="support-links"
-                            class="form-control text-area no-resize">{{ $purchaseRequest?->support_links ?? null }}</textarea>
+                            name="support_Links" id="support-links" data-cy="support-links" class="form-control text-area no-resize">{{ $purchaseRequest?->support_links ?? null }}</textarea>
                     </div>
                 </div>
 
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="observation" class="control-label"> Observação </label>
-                        <textarea name="observation" id="request-observation" data-cy="request-observation" rows="3" placeholder="Observação" class="form-control text-area no-resize"></textarea>
+                        <textarea name="observation" id="request-observation" data-cy="request-observation" rows="3"
+                            placeholder="Observação" class="form-control text-area no-resize"></textarea>
                     </div>
                 </div>
             </div>
@@ -392,9 +398,9 @@
                                     $paymentMethod = $purchaseRequest->product->paymentInfo->payment_method;
                                 }
                             @endphp
-                            <select name="product[payment_info][payment_method]" id="payment-method" data-cy="payment-method"
-                                class='select2-me payment-method' style="width:100%; padding-top:2px;"
-                                data-placeholder="Escolha uma opção">
+                            <select name="product[payment_info][payment_method]" id="payment-method"
+                                data-cy="payment-method" class='select2-me payment-method'
+                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 <option value="PIX" {{ $paymentMethod === 'PIX' ? 'selected' : '' }}>PIX</option>
                                 <option value="DEPÓSITO BANCÁRIO"
@@ -420,8 +426,7 @@
                             <input type="text" class="form-control format-installments-number"
                                 placeholder="Ex: 24" value="{{ $productQuantityOfInstallments }}">
                             <input type="hidden" name="product[quantity_of_installments]" id="installments-number"
-                                data-cy="installments-number"
-                                class="installments-number no-validation"
+                                data-cy="installments-number" class="installments-number no-validation"
                                 value="{{ $productQuantityOfInstallments }}">
                         </div>
                     </div>
@@ -432,9 +437,8 @@
                             <label for="payment-info-description" class="control-label">
                                 Detalhes do pagamento
                             </label>
-                            <textarea name="product[payment_info][description]" id="payment-info-description"
-                                data-cy="payment-info-description" rows="3"
-                                placeholder="Informações sobre pagamento. Ex: Chave PIX, dados bancários do fornecedor, etc..."
+                            <textarea name="product[payment_info][description]" id="payment-info-description" data-cy="payment-info-description"
+                                rows="3" placeholder="Informações sobre pagamento. Ex: Chave PIX, dados bancários do fornecedor, etc..."
                                 class="form-control text-area no-resize">{{ $purchaseRequest->product->paymentInfo->description ?? null }}</textarea>
                         </div>
                     </div>
@@ -448,7 +452,8 @@
                     </h4>
                     <div class="col-sm-6 btn-add-installment" hidden>
                         <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
-                            data-route="user" rel="tooltip" title="Adicionar Parcela" data-cy="btn-add-installment">
+                            data-route="user" rel="tooltip" title="Adicionar Parcela"
+                            data-cy="btn-add-installment">
                             + Adicionar parcela
                         </button>
                     </div>
@@ -501,7 +506,7 @@
                 @if ($issetPurchaseRequest)
                     @foreach ($productSuppliers as $supplierId => $products)
                         <x-purchase-request.product.supplier :productCategories="$productCategories" :suppliers="$suppliers" :supplierId="$supplierId"
-                            :products="$products" :supplierIndex="$supplierIndex" :isCopy="$isCopy"/>
+                            :products="$products" :supplierIndex="$supplierIndex" :isCopy="$isCopy" />
                         @php $supplierIndex++; @endphp
                     @endforeach
                 @else
@@ -516,13 +521,15 @@
             </div>
         </div>
 
-        <hr>
+        <hr style="margin-top: 30px; margin-bottom: 25px;">
 
         {{-- ARQUIVOS --}}
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" >
             <div class="col-sm-12">
                 <fieldset id="files-group">
-                    <legend>Arquivos</legend>
+                    <h4 style="margin-bottom: 20px;">
+                        <i class="fa fa-paperclip"></i> Anexos
+                    </h4>
                     <input type="file" class="form-control" name="arquivos[]" multiple>
                     <ul class="list-group" style="margin-top:15px">
                         @if (isset($files))
@@ -892,7 +899,8 @@
                     expireDateInput.value = expireDate;
                     expireDateInput.hidden = true;
                     expireDateInput.className = "no-validation";
-                    expireDateInput.setAttribute('data-cy', 'product-product_installments-' + index + '-expire_date');
+                    expireDateInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                        '-expire_date');
 
                     const valueInput = document.createElement('input');
                     valueInput.type = 'number';
@@ -900,7 +908,8 @@
                     valueInput.value = value;
                     valueInput.hidden = true;
                     valueInput.className = "no-validation";
-                    valueInput.setAttribute('data-cy', 'product-product_installments-' + index + '-value');
+                    valueInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                        '-value');
 
                     const observationInput = document.createElement('input');
                     observationInput.type = 'text';
@@ -909,7 +918,8 @@
                     observationInput.value = observation;
                     observationInput.hidden = true;
                     observationInput.className = "no-validation";
-                    observationInput.setAttribute('data-cy', 'product-product_installments-' + index + '-observation');
+                    observationInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                        '-observation');
 
                     const statusInput = document.createElement('input');
                     statusInput.type = 'text';
@@ -917,7 +927,8 @@
                     statusInput.value = status;
                     statusInput.hidden = true;
                     statusInput.className = "no-validation";
-                    statusInput.setAttribute('data-cy', 'product-product_installments-' + index + '-status');
+                    statusInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                        '-status');
 
                     hiddenInputsContainer.append(
                         idInput,
@@ -1209,9 +1220,32 @@
             $isPrePaid.filter(':selected').trigger('change.select2');
         }
 
+
         // add supplier
         const $supplierContainer = $('.supplier-container');
         const $addSupplierBtn = $('.add-supplier-btn');
+
+        function checkSuppliersContainerLength() {
+            const suppliersCount = $supplierContainer.find('.supplier-block').length;
+            const suppliersCountGreaterThanOne = suppliersCount > 1;
+            console.log(suppliersCountGreaterThanOne);
+            $('.delete-supplier').prop('disabled', !suppliersCountGreaterThanOne);
+        }
+
+        const $productContainer = $('.product-container');
+        const $addProductBtn = $('.add-product-btn');
+
+        function checkProductRows() {
+            $('.supplier-block').each(function() {
+                const $productContainer = $(this).find('.product-container');
+                const productRowCount = $productContainer.find('.product-row').length;
+
+                $productContainer.find('.delete-product').prop('disabled', productRowCount <= 1);
+            });
+        }
+
+        checkSuppliersContainerLength();
+        checkProductRows();
 
         $(document).on('click', '.add-supplier-btn', function() {
             const $supplierContainerTemplate = $(this).closest('.supplier-container').find(
@@ -1257,6 +1291,9 @@
 
             $('.supplier-block').last().after($newContainer);
             $newContainer.find('.delete-supplier').removeAttr('hidden');
+
+            checkSuppliersContainerLength();
+            checkProductRows();
         });
 
         $(document).on('click', '.delete-supplier', function() {
@@ -1276,26 +1313,10 @@
                 });
             });
 
-            // Recalcular também os índices dos produtos nos fornecedores restantes
-            const $productRows = $('.product-row');
-            $productRows.each(function(index) {
-                $(this).find(
-                    'select[name^="purchase_request_products"], input[name^="purchase_request_products"]'
-                ).each(function() {
-                    const oldName = $(this).attr('name');
-                    const regexNewName = /\[products\]\[(\d+)\]/;
-                    const newName = oldName.replace(regexNewName,
-                        `[products][${index}]`);
-                    $(this).attr('name', newName);
-                });
-            });
+            checkSuppliersContainerLength();
+            checkProductRows();
         });
 
-
-
-        // add produto
-        const $productContainer = $('.product-container');
-        const $addProductBtn = $('.add-product-btn');
 
         $(document).on('click', '.add-product-btn', function() {
             const $productRowTemplate = $(this).closest('.product-container').find('.product-row')
@@ -1317,10 +1338,14 @@
 
             $(this).siblings('.product-row').last().after(newRow);
             newRow.find('.delete-product').removeAttr('hidden');
+
+            checkProductRows();
         });
 
         $(document).on('click', '.delete-product', function() {
             $(this).closest('.product-row').remove();
+
+            checkProductRows();
         });
 
         // salvar rascunho ou

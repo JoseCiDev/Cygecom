@@ -10,7 +10,7 @@
 
 <div class="product-row" style="padding:0px; background-color:rgb(223, 223, 223);">
     <div class="row" style="padding-top:15px;">
-        <div class="col-sm-1" style="margin-top: 23px; margin-left:10px; width:5.3%;">
+        <div class="col-sm-1" style="margin-top: 23px; margin-left:10px; width:5.3%;" disabled>
             <button type="button" class="btn btn-icon btn-danger delete-product"><i
                     class="fa fa-trash-o"></i></button>
         </div>
