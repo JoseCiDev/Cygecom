@@ -26,7 +26,7 @@
                                     <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
                                     @foreach (\App\Enums\PurchaseRequestStatus::cases() as $statusCase)
                                         @if ($statusCase->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
-                                            <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}} 
+                                            <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}}
                                                 value="{{ $statusCase->value }}" @selected($statusCase->value === $status?->value)>
                                                 {{ $statusCase->label() }}
                                             </option>
@@ -44,11 +44,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($products as $index => $product),
-                            @php 
-                                $groups = $product->CostCenterApportionment->pluck('costCenter.Company.group')->unique(); 
+                        @foreach ($products as $index => $product)
+                            @php
+                                $groups = $product->CostCenterApportionment->pluck('costCenter.Company.group')->unique();
                                 $concatenatedGroups = $groups->map(function ($item) {
-                                        return $item->label(); 
+                                        return $item->label();
                                     })->implode(', ');
                             @endphp
                             <tr>
@@ -66,7 +66,7 @@
                                 <td class="hidden-1440">{{ $product->updated_at ? \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') : '---'}}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
-                                    <button 
+                                    <button
                                         data-modal-name="{{ 'Analisando Solicitação de Produto - ID ' . $product->id }}"
                                         data-id="{{ $product->id }}"
                                         data-request="{{json_encode($product)}}"
