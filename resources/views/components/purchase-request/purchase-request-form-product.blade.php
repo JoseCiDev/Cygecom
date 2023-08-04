@@ -326,7 +326,7 @@
 
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label for="desired-date" class="control-label">Data desejada do serviço</label>
+                        <label for="desired-date" class="control-label">Data desejada entrega do produto</label>
                         <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
                             class="form-control" min="2023-07-24"
                             value="{{ $purchaseRequest->desired_date ?? null }}">
@@ -524,7 +524,7 @@
         <hr style="margin-top: 30px; margin-bottom: 25px;">
 
         {{-- ARQUIVOS --}}
-        <div class="row justify-content-center" >
+        <div class="row justify-content-center">
             <div class="col-sm-12">
                 <fieldset id="files-group">
                     <h4 style="margin-bottom: 20px;">
@@ -642,8 +642,9 @@
             mask: IMask.MaskedRange,
             from: 1,
             to: 60,
-            autofix: false,
+            autofix: 'pad'
         });
+
 
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
@@ -1228,7 +1229,6 @@
         function checkSuppliersContainerLength() {
             const suppliersCount = $supplierContainer.find('.supplier-block').length;
             const suppliersCountGreaterThanOne = suppliersCount > 1;
-            console.log(suppliersCountGreaterThanOne);
             $('.delete-supplier').prop('disabled', !suppliersCountGreaterThanOne);
         }
 

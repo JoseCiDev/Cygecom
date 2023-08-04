@@ -27,7 +27,7 @@
                                     <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
                                     @foreach (\App\Enums\PurchaseRequestStatus::cases() as $statusCase)
                                         @if ($statusCase->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
-                                            <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}} 
+                                            <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}}
                                                 value="{{ $statusCase->value }}" @selected($statusCase->value === $status?->value)>
                                                 {{ $statusCase->label() }}
                                             </option>
@@ -51,10 +51,10 @@
                     </thead>
                     <tbody>
                         @foreach ($services as $index => $service)
-                            @php 
-                                $groups = $service->CostCenterApportionment->pluck('costCenter.Company.group')->unique(); 
+                            @php
+                                $groups = $service->CostCenterApportionment->pluck('costCenter.Company.group')->unique();
                                 $concatenatedGroups = $groups->map(function ($item) {
-                                        return $item->label(); 
+                                        return $item->label();
                                     })->implode(', ');
                             @endphp
                             <tr>
@@ -65,15 +65,15 @@
                                 <td>{{$service->status->label()}}</td>
                                 <td>{{$service->service->Supplier?->cpf_cnpj ?? '---'}}</td>
                                 <td class="hidden-1280">{{$service->service->Supplier?->qualification->label() ?? '---'}}</td>
-                                
+
                                 <td>{{$service->service->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
                                 <td>{{$service->service->already_provided ? 'Executado' : 'Não executado'}}</td>
-                                <td>{{$service->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
+                                <td>{{$service->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1440">{{$concatenatedGroups}}</td>
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($service->desired_date)->format('d/m/Y') }}</td>
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($service->updated_at)->format('d/m/Y h:m:s') }}</td>
                                 <td class="text-center" style="white-space: nowrap;">
-                                    <button 
+                                    <button
                                         data-modal-name="{{ 'Analisando Solicitação de Serviço - ID ' . $service->id }}"
                                         data-id="{{ $service->id }}"
                                         data-request="{{json_encode($service)}}"
@@ -87,7 +87,7 @@
                                         <i class="fa fa-search"></i>
                                     </button>
                                     @php $isToShow = !(bool)$service->SuppliesUser?->Person->name &&  !(bool)$service->responsibility_marked_at @endphp
-                                    <a 
+                                    <a
                                         href="{{route('supplies.service.detail', ['id' => $service->id])}}"
                                         class="btn btn-link openDetail"
                                         rel="tooltip"
