@@ -61,22 +61,26 @@
 }
 
 .request-details-content-box-contract,
-.request-details-content-box-service {
+.request-details-content-box-service,
+.request-details-content-box-product {
     border: 1px solid rgb(174, 174, 174);
 }
 
 .request-details-content-box-contract-installment,
-.request-details-content-box-service-installment {
+.request-details-content-box-service-installment,
+.request-details-content-box-product-installment {
     padding: 10px 5px;
 }
 
 .request-details-content-box-contract-installment:nth-child(even),
-.request-details-content-box-service-installment:nth-child(even) {
+.request-details-content-box-service-installment:nth-child(even),
+.request-details-content-box-product-installment:nth-child(even) {
     background-color: #c5c5c5;
 }
 
 .request-details-content-box-contract-installment:nth-child(odd),
-.request-details-content-box-service-installment:nth-child(odd) {
+.request-details-content-box-service-installment:nth-child(odd),
+.request-details-content-box-product-installment:nth-child(odd) {
     background-color: #eaeaea;
 }
 

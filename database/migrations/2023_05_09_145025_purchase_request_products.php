@@ -15,7 +15,6 @@ return new class extends Migration
             $table->integer('quantity')->default(1);
             $table->decimal('unit_price', 14, 2)->nullable();
 
-            $table->text('description')->nullable();
             $table->string('model')->nullable();
             $table->string('color')->nullable();
             $table->string('size')->nullable();

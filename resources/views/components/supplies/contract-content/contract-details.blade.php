@@ -41,7 +41,7 @@
             </form>
         </div>
     </div>
-  
+
     <div class="row">
         <div class="col-md-12">
             <div class="pull-right">
@@ -166,7 +166,7 @@
                             </div>
 
                             <hr class="pagebreak"/>
-                            
+
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <h4><i class="fa fa-money"></i> <strong>Centro de custo e rateio</strong></h4>
@@ -236,7 +236,7 @@
                                                     <strong>Indicação:</strong>
                                                     {{ $request->contract?->Supplier->supplier_indication ?? '---' }}
                                                 </p>
-                                                
+
                                             </div>
                                             <div class="col-sm-6">
                                                 <p>
@@ -434,14 +434,14 @@
         <div class="row">
             <div class="col-md-12">
                  <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
-                 @if ($request->purchaseRequestFile->count())
+                 @if ($files->count())
                     <ul>
-                        @foreach ($request->purchaseRequestFile as $index => $file)
-                            <li><a style="font-size: 16px" href="{{ $file->path }}" target="_blank" rel="noopener noreferrer">Link {{$index + 1}}</a></li>                        
-                        @endforeach
+                        @foreach ($files as $index => $file)
+                        <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank" rel="noopener noreferrer">{{ $file->original_name }}</a></li>
+                    @endforeach
                     </ul>
                 @else
-                    <p>Ainda não há registros aqui.</p>   
+                    <p>Nenhum registro encontrado.</p>
                  @endif
             </div>
         </div>

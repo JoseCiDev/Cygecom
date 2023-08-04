@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PurchaseRequestFile extends Model
+class ProductInstallment extends Model
 {
     use HasFactory;
 
-    public function purchaseRequest()
+    public function product()
     {
-        return $this->belongsTo(PurchaseRequest::class);
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function deletedByUser()
@@ -25,11 +25,10 @@ class PurchaseRequestFile extends Model
     }
 
     protected $fillable = [
-        'path',
-        'purchase_request_id',
-        'original_name',
-        'updated_by',
-        'deleted_by',
-        'deleted_at',
+        'value',
+        'expire_date',
+        'observation',
+        'status',
+        'product_id',
     ];
 }

@@ -5,8 +5,11 @@ namespace App\Providers;
 use Exception;
 use Carbon\Carbon;
 use App\Services\S3;
+use App\Models\Product;
+use App\Models\Supplier;
 use Illuminate\Http\UploadedFile;
 use App\Enums\PurchaseRequestType;
+use App\Models\ProductInstallment;
 use App\Models\ServiceInstallment;
 use Illuminate\Support\Facades\DB;
 use App\Enums\PurchaseRequestStatus;
@@ -26,12 +29,10 @@ class PurchaseRequestService extends ServiceProvider
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
             'updatedByUser',
-            'service',
             'service.paymentInfo',
-            'purchaseRequestProduct',
             'purchaseRequestProduct.category',
-            'contract',
             'contract.installments',
+            'product.installments'
         ]);
     }
 
@@ -46,12 +47,10 @@ class PurchaseRequestService extends ServiceProvider
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
             'updatedByUser',
-            'service',
             'service.paymentInfo',
-            'purchaseRequestProduct',
             'purchaseRequestProduct.category',
-            'contract',
             'contract.installments',
+            'product.installments'
         ])->whereNull('deleted_at')->get();
     }
 
@@ -68,13 +67,10 @@ class PurchaseRequestService extends ServiceProvider
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
             'updatedByUser',
-            'service',
             'service.paymentInfo',
-            'purchaseRequestProduct',
             'purchaseRequestProduct.category',
-            'contract',
             'contract.installments',
-
+            'product.installments'
         ])->whereNull('deleted_at')->where('user_id', $id)->get();
     }
 
@@ -89,13 +85,10 @@ class PurchaseRequestService extends ServiceProvider
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
             'updatedByUser',
-            'service',
             'service.paymentInfo',
-            'purchaseRequestProduct',
             'purchaseRequestProduct.category',
-            'contract',
             'contract.installments',
-
+            'product.installments'
         ])->whereNull('deleted_at')->where('status', $status->value);
     }
 
@@ -110,12 +103,10 @@ class PurchaseRequestService extends ServiceProvider
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
             'updatedByUser',
-            'service',
             'service.paymentInfo',
-            'purchaseRequestProduct',
             'purchaseRequestProduct.category',
-            'contract',
             'contract.installments',
+            'product.installments'
         ])->whereNull('deleted_at')->where('id', $id)->first();
     }
 
@@ -123,7 +114,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Cria apenas entidade solicitação com relação do rateio e arquivo/link.
      * Deve ser chamada pelos métodos específicios de serviço, contrato ou produtos.
      */
-    public function registerPurchaseRequest(array $data,  UploadedFile | array | null $files)
+    public function registerPurchaseRequest(array $data, UploadedFile|array|null $files)
     {
         return DB::transaction(function () use ($data, $files) {
             $data['user_id'] = auth()->user()->id;
@@ -135,7 +126,10 @@ class PurchaseRequestService extends ServiceProvider
             $this->saveCostCenterApportionment($purchaseRequest->id, $data);
 
             if (collect($files)->count()) {
-                $this->uploadFilesToS3($files, $type, $id);
+                foreach ($files as $file) {
+                    $originalNames[] = $file->getClientOriginalName();
+                }
+                $this->uploadFilesToS3($files, $type, $id, $originalNames);
             }
 
             return $purchaseRequest;
@@ -147,7 +141,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Cria solicitação de serviço.
      * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveService para salvar serviço.
      */
-    public function registerServiceRequest(array $data,  UploadedFile | array | null $files)
+    public function registerServiceRequest(array $data, UploadedFile|array|null $files)
     {
         return DB::transaction(function () use ($data, $files) {
             $purchaseRequest = $this->registerPurchaseRequest($data, $files);
@@ -161,7 +155,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Cria solicitação de contrato.
      * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveContract para salvar contrato.
      */
-    public function registerContractRequest(array $data,  UploadedFile | array | null $files)
+    public function registerContractRequest(array $data, UploadedFile|array|null $files)
     {
         return DB::transaction(function () use ($data, $files) {
             $purchaseRequest = $this->registerPurchaseRequest($data, $files);
@@ -176,7 +170,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Cria solicitação de produto(s).
      * Executa método registerPurchaseRequest para criar entidade de solicitação e método saveProduct para salvar produto(s).
      */
-    public function registerProductRequest(array $data,  UploadedFile | array | null $files = null)
+    public function registerProductRequest(array $data, UploadedFile|array|null $files)
     {
         return DB::transaction(function () use ($data, $files) {
             $purchaseRequest = $this->registerPurchaseRequest($data, $files);
@@ -191,7 +185,7 @@ class PurchaseRequestService extends ServiceProvider
      * Normalmente é chamada pelos métodos específicios de serviço, contrato ou produtos.
      * Pode ser chamada por suprimentos para atualizar status da solicitação.
      */
-    public function updatePurchaseRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile | array | null $files = null)
+    public function updatePurchaseRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile|array|null $files = null)
     {
         return DB::transaction(function () use ($id, $data, $isSuppliesUpdate, $files) {
             $purchaseRequest = PurchaseRequest::find($id);
@@ -208,16 +202,28 @@ class PurchaseRequestService extends ServiceProvider
             $this->saveCostCenterApportionment($id, $data);
 
             if (collect($files)->count()) {
-                $this->uploadFilesToS3($files, $type, $id);
+                foreach ($files as $file) {
+                    $originalNames[] = $file->getClientOriginalName();
+                }
+                $this->uploadFilesToS3($files, $type, $id, $originalNames);
             }
 
             return $purchaseRequest;
         });
     }
 
-    private function uploadFilesToS3(UploadedFile | array $files, PurchaseRequestType $purchcaseRequestType, int $requestId): void
+    private function uploadFilesToS3(UploadedFile|array $files, PurchaseRequestType $purchcaseRequestType, int $requestId, array $originalNames): void
     {
         $type = 'request-' . $purchcaseRequestType->value;
+
+        $uploadedFilesData = [];
+
+        foreach ($files as $index => $file) {
+            $uploadedFilesData[] = [
+                'file' => $file,
+                'original_name' => $originalNames[$index], // Pegar o nome original do arquivo a partir do array
+            ];
+        }
 
         $uploadFiles = S3::sendFiles($files, $type, $requestId);
 
@@ -225,8 +231,8 @@ class PurchaseRequestService extends ServiceProvider
             $msg = $uploadFiles->exception;
             throw new Exception($msg);
         }
-        foreach ($uploadFiles->urls_bucket as $filePath) {
-            $this->savePurchaseRequestFile($requestId, $filePath);
+        foreach ($uploadFiles->urls_bucket as $index => $filePath) {
+            $this->savePurchaseRequestFile($requestId, $filePath, $originalNames[$index]);
         }
     }
 
@@ -234,7 +240,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de serviço.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveService para atualizar serviço.
      */
-    public function updateServiceRequest(int $id, array $data, UploadedFile | array | null  $files)
+    public function updateServiceRequest(int $id, array $data, UploadedFile|array|null $files)
     {
         DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
@@ -246,10 +252,10 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de produto(s).
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveProduct para atualizar produto(s).
      */
-    public function updateProductRequest(int $id, array $data)
+    public function updateProductRequest(int $id, array $data,  UploadedFile|array|null $files)
     {
-        DB::transaction(function () use ($id, $data) {
-            $purchaseRequest = $this->updatePurchaseRequest($id, $data);
+        DB::transaction(function () use ($id, $data, $files) {
+            $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
             $this->saveProducts($purchaseRequest->id, $data);
         });
     }
@@ -258,7 +264,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de contrato.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveContract para atualizar contrato.
      */
-    public function updateContractRequest(int $id, array $data, UploadedFile | array | null  $files)
+    public function updateContractRequest(int $id, array $data, UploadedFile|array|null $files)
     {
         DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
@@ -306,11 +312,13 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar purchaseRequestFile.
      * Recomendado executar com o método específico registerProductRequest ou updateProductRequest
      */
-    private function savePurchaseRequestFile(int $purchaseRequestId, $filePath)
+    private function savePurchaseRequestFile(int $purchaseRequestId, $filePath, string $originalName)
     {
         $purchaseRequestFile['path'] = $filePath;
         $purchaseRequestFile['purchase_request_id'] = $purchaseRequestId;
         $purchaseRequestFile['updated_by'] = auth()->user()->id;
+        $purchaseRequestFile['original_name'] = $originalName; // Atribuir apenas o nome original, não o array
+
         PurchaseRequestFile::create($purchaseRequestFile);
     }
 
@@ -359,11 +367,39 @@ class PurchaseRequestService extends ServiceProvider
             return;
         }
 
-        $suppliers = $data['purchase_request_products'];
+        $productData = $data['product'];
+        $productInstallmentsData = $productData['product_installments'] ?? [];
+        $paymentInfoData = $productData['payment_info'] ?? [];
+
+        if (count($paymentInfoData) > 0) {
+            $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
+            $productData['payment_info_id'] = $paymentInfoResponse->id;
+        }
+
+        $product = Product::updateOrCreate(['purchase_request_id' => $purchaseRequestId], $productData);
+
+        $existingInstallments = ProductInstallment::where('product_id', $product->id)->get();
+
+        $this->updateNumberOfInstallments($existingInstallments, $productInstallmentsData);
+
+        foreach ($productInstallmentsData as $installment) {
+            $installment['product_id'] = $product->id;
+            ProductInstallment::updateOrCreate(['id' => $installment['id']], $installment);
+        }
+
+        $suppliers = array_values($data['purchase_request_products']);
+
+        $idsArray = collect($suppliers)->pluck('products')->map(function ($products) {
+            return collect($products)->pluck('id');
+        })->flatten()->toArray();
+
+        $existingProductIds = PurchaseRequestProduct::where('purchase_request_id', $purchaseRequestId)->pluck('id')->toArray();
+
+        $productIdsToDelete = array_diff($existingProductIds, $idsArray);
 
         foreach ($suppliers as $supplier) {
             $supplierId = $supplier['supplier_id'];
-            $products = $supplier['products'];
+            $products = array_values($supplier['products']);
 
             foreach ($products as $product) {
                 $product['supplier_id'] = $supplierId;
@@ -371,6 +407,8 @@ class PurchaseRequestService extends ServiceProvider
                 PurchaseRequestProduct::updateOrCreate(['id' => $product['id']], $product);
             }
         }
+
+        PurchaseRequestProduct::whereIn('id', $productIdsToDelete)->delete();
     }
 
     /**

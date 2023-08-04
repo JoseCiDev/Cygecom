@@ -41,7 +41,7 @@
             </form>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-12">
             <div class="pull-right">
@@ -154,8 +154,8 @@
                                 </div>
                             </div>
 
-                            <span class="pagebreak"></span>
-                            
+                            <hr class="pagebreak"/>
+
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <h4>
@@ -239,7 +239,7 @@
                                                         <p class="col-sm-4" style="margin: 0">
                                                             <strong>Tipo de mercado:</strong> {{ $supplierGroup->first()->supplier->market_type }}
                                                         </p>
-                                                    
+
                                                         <p class="col-sm-4" style="margin: 0">
                                                             <strong>Qualificação:</strong> {{ $supplierGroup->first()->supplier->qualification->label() }}
                                                         </p>
@@ -286,7 +286,7 @@
 
                                                     @foreach ($productCategoryGroups as $productCategory => $products)
                                                         <hr>
-                                                        <p><strong><i class="glyphicon glyphicon-th-large"></i> Categoria:</strong> {{$productCategory}}</p>    
+                                                        <p><strong><i class="glyphicon glyphicon-th-large"></i> Categoria:</strong> {{$productCategory}}</p>
 
                                                         @foreach ($products as $index => $productItem)
                                                             <div class="request-details-content-box-products-product">
@@ -334,6 +334,44 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <hr class="pagebreak"/>
+
+                            <div class="request-details-content-box">
+                                <div class="request-details-content-box-product">
+                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
+                                    @foreach ($request->product->installments as $installmentIndex => $installment)
+                                    <div class="request-details-content-box-product-installment">
+                                        <div class="row">
+                                            <p class="col-xs-3">
+                                                <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Serviço executado:</strong> {{ $installment->already_provided ? 'Sim' : 'Não' }}
+                                            </p>
+                                        </div>
+                                        <div class="row">
+                                            <p class="col-xs-3">
+                                                <strong>Valor:</strong> {{ $installment->value }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
+                                            </p>
+                                            <p class="col-xs-6">
+                                                <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    @if ($installmentIndex === 14)
+                                        <hr class="pagebreak"/>
+                                    @endif
+                                    @endforeach
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -341,18 +379,18 @@
         </div>
 
         <hr>
-        
+
         <div class="row">
             <div class="col-md-12">
                  <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
-                 @if ($request->purchaseRequestFile->count())
+                 @if ($files->count())
                     <ul>
-                        @foreach ($request->purchaseRequestFile as $index => $file)
-                            <li><a style="font-size: 16px" href="{{ $file->path }}" target="_blank" rel="noopener noreferrer">Link {{$index + 1}}</a></li>                        
+                        @foreach ($files as $index => $file)
+                            <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank" rel="noopener noreferrer">{{ $file->original_name }}</a></li>
                         @endforeach
                     </ul>
-                @else
-                    <p>Ainda não há registros aqui.</p>   
+                 @else
+                    <p>Ainda não há registros aqui.</p>
                  @endif
             </div>
         </div>

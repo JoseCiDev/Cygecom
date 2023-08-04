@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PurchaseRequestStatus;
-use App\Models\{Company, CostCenter, PurchaseRequest};
-use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 use Exception;
+use Illuminate\Support\Facades\DB;
+use App\Models\PurchaseRequestFile;
+use App\Enums\PurchaseRequestStatus;
 use Illuminate\Http\{RedirectResponse, Request};
+use App\Models\{Company, CostCenter, PurchaseRequest};
 use Symfony\Component\Mailer\Exception\TransportException;
+use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 
 class ProductController extends Controller
 {
@@ -21,8 +23,10 @@ class ProductController extends Controller
     public function registerProduct(Request $request): RedirectResponse
     {
         $route      = 'requests';
-        $routeParam = [];
         $data       = $request->all();
+        // captura o botão submit clicado (se for submit_request update status);
+        $action = $request->input('action');
+        $files       = $request->file('arquivos');
 
         $validator = $this->validatorService->purchaseRequest($data);
 
@@ -31,16 +35,28 @@ class ProductController extends Controller
         }
 
         try {
-            $purchaseRequest = $this->purchaseRequestService->registerProductRequest($data);
-            $route           = 'request.edit';
-            $routeParam      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
+            $msg = "Solicitação de produto criada com sucesso!";
+
+            DB::beginTransaction();
+            $purchaseRequest = $this->purchaseRequestService->registerProductRequest($data, $files);
+
+            if ($action === 'submit-request') {
+                $purchaseRequest->update(['status' => 'pendente']);
+                $msg = "Solicitação de produto criada e enviada ao setor de suprimentos responsável!";
+            }
+
+            DB::commit();
+
+            $route           = 'requests.own';
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
+            $msg = 'Não foi possível fazer o registro no banco de dados.';
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
         }
 
-        session()->flash('success', "Solicitação de produto(s) criada com sucesso!");
+        session()->flash('success', $msg);
 
-        return redirect()->route($route, $routeParam);
+        return redirect()->route($route);
     }
 
     public function productForm(int $purchaseRequestIdToCopy = null)
@@ -72,15 +88,22 @@ class ProductController extends Controller
     {
         $route     = 'request.edit';
         $data      = $request->all();
+        $action = $request->input('action');
+
         $validator = $this->validatorService->purchaseRequest($data);
+
+        $files = $request->file('arquivos');
 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
         }
 
         try {
+            $msg = "Solicitação de produto atualizada com sucesso!";
+
             $isAdmin = auth()->user()->profile->name === 'admin';
             $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
+
             if (!$isOwnPurchaseRequest && !$isAdmin) {
                 throw new Exception('Não autorizado. Não foi possível acessar essa solicitação.');
             }
@@ -89,16 +112,34 @@ class ProductController extends Controller
             $isDeleted = $purchaseRequest->deleted_at !== null;
 
             $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
+
             if (!$isAuthorized) {
                 throw new Exception('Não foi possível acessar essa solicitação.');
             }
 
-            $this->purchaseRequestService->updateProductRequest($id, $data);
+            DB::beginTransaction();
+
+            $this->purchaseRequestService->updateProductRequest($id, $data, $files);
+
+            if ($action === 'submit-request') {
+                $purchaseRequest->update(['status' => 'pendente']);
+                $msg = "Solicitação de serviço enviada ao setor de suprimentos responsável!";
+            }
+
+            if ($action === 'submit-request') {
+                $purchaseRequest->update(['status' => 'pendente']);
+                $msg = "Solicitação de serviço enviada ao setor de suprimentos responsável!";
+            }
+            DB::commit();
+
+            $route           = 'requests.own';
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
+            DB::rollBack();
+            $msg = 'Não foi possível atualizar o registro no banco de dados.';
+            return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
         }
 
-        session()->flash('success', "Solicitação de produto(s) atualizado com sucesso!");
+        session()->flash('success', $msg);
 
         return redirect()->route($route, ['type' => $purchaseRequest->type, 'id' => $id]);
     }
@@ -126,11 +167,15 @@ class ProductController extends Controller
 
         $product = $this->purchaseRequestService->purchaseRequestById($id);
 
+        $files = PurchaseRequestFile::where('purchase_request_id', $id)
+        ->whereNull('deleted_at')
+        ->get();
+
         if (!$product) {
             return throw new Exception('Não foi possível acessar essa solicitação.');
         }
 
-        return view('components.supplies.product-content.product-details', ['product' => $product, 'allRequestStatus' => $allRequestStatus]);
+        return view('components.supplies.product-content.product-details', compact('product', 'allRequestStatus', 'files'));
     }
 
     private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool

@@ -657,19 +657,21 @@
                 </div>
             </div>
 
-            <hr>
+            <hr style="margin-top: 15px; margin-bottom: 15px;">
 
             {{-- ARQUIVOS --}}
             <div class="row justify-content-center">
                 <div class="col-sm-12">
                     <fieldset id="files-group">
-                        <legend>Arquivos</legend>
+                        <h4 style="margin-bottom: 20px;">
+                            <i class="fa fa-paperclip"></i> Anexos
+                        </h4>
                         <input type="file" class="form-control" name="arquivos[]" data-cy="arquivos" multiple>
                         <ul class="list-group" style="margin-top:15px">
                             @if (isset($files))
                                 @foreach ($files as $each)
                                     @php
-                                        $filenameSearch = explode('/', $each->path);
+                                        $filenameSearch = explode('/', $each->original_name);
                                         $filename = end($filenameSearch);
                                     @endphp
                                     <li class="list-group-item" data-id-purchase-request-file="{{ $each->id }}">
@@ -1031,17 +1033,15 @@
             orderable: false,
             paging: true,
             pageLength: 12,
-            info: "Página _PAGE_ of _PAGES_",
+            info: false,
             searching: false,
+            bLengthChange: false,
             language: {
-                lengthMenu: "",
                 emptyTable: "Nenhuma parcela adicionada.",
-                zeroRecords: "",
                 paginate: {
                     previous: "Anterior",
                     next: "Próximo",
                 },
-                info: ""
             },
             order: [
                 [0, 'desc']
