@@ -705,6 +705,37 @@
         }
         updateApportionmentFields();
 
+        // desabilita botao caso nao tenha sido preenchido cost center corretamente;
+        const $btnAddCostCenter = $('.add-cost-center-btn');
+        const $costCenterSelect = $('.cost-center-container select');
+
+        function toggleCostCenterBtn() {
+            const costCenterContainer = $(this).closest('.cost-center-container');
+
+            const costCenterSelect = costCenterContainer
+                .find('select')
+                .val();
+
+            const costcenterPercentage = costCenterContainer
+                .find('input[name$="[apportionment_percentage]"]')
+                .val()
+
+            const costCenterCurrency = costCenterContainer
+                .find('input[name$="[apportionment_currency]"]')
+                .val()
+
+            const isValidApportionment = Boolean(costCenterSelect && (costcenterPercentage ||
+                costCenterCurrency));
+
+            $btnAddCostCenter.prop('disabled', !isValidApportionment);
+        }
+
+        $(document).on('input change',
+            `${$costCenterSelect.selector}, ${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
+            toggleCostCenterBtn);
+
+        toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
+
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
         $costCenterPercentage.add($costCenterCurrency).on('input', updateApportionmentFields);
 
@@ -730,6 +761,7 @@
             newRow.find('.delete-cost-center').removeAttr('hidden');
             checkCostCenterCount();
             disableSelectedOptions();
+            toggleCostCenterBtn.bind(this)();
         });
 
         $(document).on('click', '.delete-cost-center', function() {
@@ -737,6 +769,7 @@
             updateApportionmentFields();
             checkCostCenterCount();
             disableSelectedOptions();
+            toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
         });
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
@@ -804,6 +837,9 @@
 
         $('.add-product').prop('disabled', hasSentRequest);
         $('.delete-product').prop('disabled', hasSentRequest);
+
+        $('.add-cost-center-btn').prop('disabled', hasSentRequest);
+        $('.delete-cost-center').prop('disabled', hasSentRequest);
 
 
         const purchaseRequest = @json($purchaseRequest);

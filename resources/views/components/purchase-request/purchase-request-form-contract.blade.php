@@ -752,6 +752,9 @@
 
         $('.file-remove').prop('disabled', hasSentRequest);
 
+        $('.add-cost-center-btn').prop('disabled', hasSentRequest);
+        $('.delete-cost-center').prop('disabled', hasSentRequest);
+
 
         // masks
         $contractAmount.imask({

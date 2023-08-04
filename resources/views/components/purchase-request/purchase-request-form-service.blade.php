@@ -758,7 +758,7 @@
             `${$costCenterSelect.selector}, ${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
             toggleCostCenterBtn);
 
-        toggleCostCenterBtn();
+        toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
 
 
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
@@ -888,6 +888,9 @@
             .prop('disabled', hasSentRequest);
 
         $('.file-remove').prop('disabled', hasSentRequest);
+
+        $('.add-cost-center-btn').prop('disabled', hasSentRequest);
+        $('.delete-cost-center').prop('disabled', hasSentRequest);
 
 
         // dataTable config - parcelas
