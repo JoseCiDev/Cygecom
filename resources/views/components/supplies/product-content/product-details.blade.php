@@ -198,6 +198,78 @@
                                 </div>
                             </div>
 
+                            <hr class="pagebreak"/>
+
+                            <div class="request-details-content-box">
+
+                                <h4><i class="fa fa-truck"></i> <strong>Informações de pagamento</strong></h4>
+                                <hr>
+                                <div class="tab-content">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <p>
+                                                <strong>Vendedor:</strong>
+                                                {{ $request->product->seller ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>Celular de contato:</strong>
+                                                {{ $request->product->phone ?? '---' }}
+                                            </p>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <p>
+                                                <strong>Nº de parcelas:</strong>
+                                                {{ $request->product->quantity_of_installments ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>Valor total:</strong>
+                                                R$ {{ $request->product->amout ?? '---' }}
+                                            </p>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <p>
+                                                <strong>Quitação:</strong>
+                                                Pgto. {{ $request->product->is_prepaid ? 'antecipado' : 'pós-pago' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                        
+
+                                <div class="request-details-content-box-product">
+                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
+                                    @foreach ($request->product->installments as $installmentIndex => $installment)
+                                    <div class="request-details-content-box-product-installment">
+                                        <div class="row">
+                                            <p class="col-xs-3">
+                                                <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Serviço executado:</strong> {{ $installment->already_provided ? 'Sim' : 'Não' }}
+                                            </p>
+                                        </div>
+                                        <div class="row">
+                                            <p class="col-xs-3">
+                                                <strong>Valor:</strong> {{ $installment->value }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
+                                            </p>
+                                            <p class="col-xs-6">
+                                                <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    @if ($installmentIndex === 14)
+                                        <hr class="pagebreak"/>
+                                    @endif
+                                    @endforeach
+                                </div>
+                            </div>
+
                             <span class="pagebreak"></span>
 
                             <div class="request-details-content">
@@ -332,43 +404,6 @@
                                             @php $loopIndex++; @endphp
                                         @endforeach
                                     </div>
-                                </div>
-                            </div>
-
-                            <hr class="pagebreak"/>
-
-                            <div class="request-details-content-box">
-                                <div class="request-details-content-box-product">
-                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
-                                    @foreach ($request->product->installments as $installmentIndex => $installment)
-                                    <div class="request-details-content-box-product-installment">
-                                        <div class="row">
-                                            <p class="col-xs-3">
-                                                <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
-                                            </p>
-                                            <p class="col-xs-3">
-                                                <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
-                                            </p>
-                                            <p class="col-xs-3">
-                                                <strong>Serviço executado:</strong> {{ $installment->already_provided ? 'Sim' : 'Não' }}
-                                            </p>
-                                        </div>
-                                        <div class="row">
-                                            <p class="col-xs-3">
-                                                <strong>Valor:</strong> {{ $installment->value }}
-                                            </p>
-                                            <p class="col-xs-3">
-                                                <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
-                                            </p>
-                                            <p class="col-xs-6">
-                                                <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    @if ($installmentIndex === 14)
-                                        <hr class="pagebreak"/>
-                                    @endif
-                                    @endforeach
                                 </div>
                             </div>
 
