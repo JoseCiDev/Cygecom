@@ -17,7 +17,7 @@
                     data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Nº</th>
                             <th>Solicitante</th>
                             <th>Responsável</th>
                             <th class="hidden-1440">Responsável em</th>
@@ -72,7 +72,7 @@
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button 
-                                        data-modal-name="{{ 'Analisando Solicitação de Contrato - ID ' . $contract->id }}"
+                                        data-modal-name="{{ 'Analisando Solicitação de Contrato - Nº ' . $contract->id }}"
                                         data-id="{{ $contract->id }}"
                                         data-request="{{json_encode($contract)}}"
                                         rel="tooltip"

@@ -17,7 +17,7 @@
                     data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Nº</th>
 
                             <th>Solicitante</th>
                             <th>Responsável</th>
@@ -74,7 +74,7 @@
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($service->updated_at)->format('d/m/Y h:m:s') }}</td>
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button 
-                                        data-modal-name="{{ 'Analisando Solicitação de Serviço - ID ' . $service->id }}"
+                                        data-modal-name="{{ 'Analisando Solicitação de Serviço - Nº ' . $service->id }}"
                                         data-id="{{ $service->id }}"
                                         data-request="{{json_encode($service)}}"
                                         rel="tooltip"

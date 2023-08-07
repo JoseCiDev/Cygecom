@@ -63,3 +63,25 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    $(() => {
+        // mascaras pra modal edicao
+        const $editValueInputModal = $('#edit-value');
+        const $editValueHiddenModal = $('#edit-value-hidden');
+
+        $editValueInputModal.imask({ mask: Number, scale: 2, thousandsSeparator: '.', normalizeZeros: true, padFractionalZeros: true, min: 0, max: 1000000000, });
+
+        $editValueInputModal.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $editValueHiddenModal.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
+    });
+</script>

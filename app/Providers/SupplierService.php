@@ -55,8 +55,21 @@ class SupplierService extends ServiceProvider
             $supplier->updated_by = auth()->user()->id;
             $supplier->save();
 
-            $supplier->address->update($data);
-            $supplier->phone->update($data);
+            if ($supplier->address) {
+                $supplier->address->update($data);
+            } else {
+                $newAddress = $supplier->address()->create($data);
+                $supplier->address_id = $newAddress->id;
+                $supplier->save();
+            }
+
+            if ($supplier->phone) {
+                $supplier->phone->update($data);
+            } else {
+                $newPhone = $supplier->phone()->create($data);
+                $supplier->phone_id = $newPhone->id;
+                $supplier->save();
+            }
         });
     }
 
