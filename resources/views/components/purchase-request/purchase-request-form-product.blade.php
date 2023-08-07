@@ -326,7 +326,7 @@
 
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label for="desired-date" class="control-label">Data desejada do serviço</label>
+                        <label for="desired-date" class="control-label">Data desejada entrega do produto</label>
                         <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
                             class="form-control" min="2023-07-24"
                             value="{{ $purchaseRequest->desired_date ?? null }}">
