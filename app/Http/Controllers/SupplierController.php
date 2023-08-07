@@ -119,10 +119,11 @@ class SupplierController extends Controller
 
     public function update(Request $request, int $id)
     {
-        $data               = $request->all();
+        $data = $request->all();
         $data['updated_by'] = auth()->user()->id;
 
-        $validator = $this->validatorService->supplier($data);
+
+        $validator = $this->validatorService->supplierUpdate($data);
 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
