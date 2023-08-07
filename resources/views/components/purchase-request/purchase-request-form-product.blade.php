@@ -103,10 +103,13 @@
                                 @foreach ($costCenters as $costCenter)
                                     @php
                                         $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
+                                        $companyName = $costCenter->company->name;
+                                        $costCenterName = $costCenter->name;
+                                        $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
                                     @endphp
                                     <option value="{{ $costCenter->id }}"
                                         {{ $isApportionmentSelect ? 'selected' : '' }}>
-                                        {{ $costCenter->name }}
+                                        {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
                                     </option>
                                 @endforeach
                             </select>
@@ -822,25 +825,26 @@
         const $paymentInfo = $('.payment-info');
 
         // desabilita todos os campos do form caso solicitacao ja enviada
-        $('#request-form')
-            .find('input, textarea, checkbox')
-            .prop('disabled', hasSentRequest);
+        if (hasSentRequest) {
+            $('#request-form')
+                .find('input, textarea, checkbox')
+                .prop('disabled', hasSentRequest);
 
-        $('#request-form')
-            .find('select')
-            .prop('disabled', hasSentRequest);
+            $('#request-form')
+                .find('select')
+                .prop('disabled', hasSentRequest);
 
-        $('.file-remove').prop('disabled', hasSentRequest);
+            $('.file-remove').prop('disabled', hasSentRequest);
 
-        $('.add-supplier-btn').prop('disabled', hasSentRequest);
-        $('.delete-supplier').prop('disabled', hasSentRequest);
+            $('.add-supplier-btn').prop('disabled', hasSentRequest);
+            $('.delete-supplier').prop('disabled', hasSentRequest);
 
-        $('.add-product').prop('disabled', hasSentRequest);
-        $('.delete-product').prop('disabled', hasSentRequest);
+            $('.add-product').prop('disabled', hasSentRequest);
+            $('.delete-product').prop('disabled', hasSentRequest);
 
-        $('.add-cost-center-btn').prop('disabled', hasSentRequest);
-        $('.delete-cost-center').prop('disabled', hasSentRequest);
-
+            $('.add-cost-center-btn').prop('disabled', hasSentRequest);
+            $('.delete-cost-center').prop('disabled', hasSentRequest);
+        }
 
         const purchaseRequest = @json($purchaseRequest);
         const isRequestCopy = @json($isCopy);
