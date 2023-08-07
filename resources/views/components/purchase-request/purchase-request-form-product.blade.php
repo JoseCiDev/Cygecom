@@ -59,17 +59,6 @@
         @endif
     </div>
 
-    {{-- @if (isset($purchaseRequest))
-        <div class="col-md-6 pull-right">
-            <x-modalDelete />
-            <button data-route="purchaseRequests"
-                data-name="{{ 'Solicitação de compra - ID ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
-                title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
-                Excluir solicitação
-            </button>
-        </div>
-    @endif --}}
 </div>
 
 <hr style="margin-top:5px; margin-bottom:30px;">

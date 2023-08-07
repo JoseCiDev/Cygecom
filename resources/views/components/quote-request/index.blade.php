@@ -64,7 +64,7 @@
                                         <i class="fa fa fa-copy"></i>
                                     </a>
                                     <button data-route="quoteRequests"
-                                        data-name="{{'Solicitação de compra - ID ' . $quoteRequest->id}}"
+                                        data-name="{{'Solicitação de compra - Nº ' . $quoteRequest->id}}"
                                         data-id="{{$quoteRequest->id}}"
                                         rel="tooltip"
                                         title="Excluir"

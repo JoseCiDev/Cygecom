@@ -61,17 +61,17 @@
                 <label for="market-type" class="control-label">Tipo de mercado</label>
                 <fieldset id="market-type" data-rule-required="true">
                     <div class="row">
-                        <input @checked($supplier?->market_type === 'nacional') class="icheck-me" type="radio"
+                        <input @checked($supplier?->market_type === 'Nacional') class="icheck-me" type="radio"
                             name="market_type" id="nacional" data-cy="nacional" value="Nacional" data-skin="minimal" required>
                         <label class="form-check-label" for="nacional">Mercado nacional</label>
                     </div>
                     <div class="row">
-                        <input @checked($supplier?->market_type === 'externo') class="icheck-me" type="radio"
+                        <input @checked($supplier?->market_type === 'Externo') class="icheck-me" type="radio"
                             name="market_type" id="externo" data-cy="externo" value="Externo" data-skin="minimal" required>
                         <label class="form-check-label" for="externo">Mercado externo</label>
                     </div>
                     <div class="row">
-                        <input @checked($supplier?->market_type === 'prospec') class="icheck-me" type="radio"
+                        <input @checked($supplier?->market_type === 'Prospecção') class="icheck-me" type="radio"
                             name="market_type" id="prospec" data-cy="prospec" value="Prospecção" data-skin="minimal" required>
                         <label class="form-check-label" for="prospec">Prospecção</label>
                     </div>
@@ -83,17 +83,17 @@
                 <label for="supplier-indication" class="control-label">Indicação do fornecedor</label>
                 <fieldset id="supplier-indication" data-rule-required="true">
                     <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'M') class="icheck-me" type="radio"
+                        <input @checked($supplier?->supplier_indication === 'Matéria Prima') class="icheck-me" type="radio"
                             name="supplier_indication" id="materia-prima" data-cy="materia-prima" value="Matéria Prima" data-skin="minimal" required>
                         <label class="form-check-label" for="materia-prima">Matéria-prima</label>
                     </div>
                     <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'S') class="icheck-me" type="radio"
+                        <input @checked($supplier?->supplier_indication === 'Serviço') class="icheck-me" type="radio"
                             name="supplier_indication" id="servico" data-cy="servico" value="Serviço" data-skin="minimal" required>
                         <label class="form-check-label" for="servico">Serviço</label>
                     </div>
                     <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'A') class="icheck-me" type="radio"
+                        <input @checked($supplier?->supplier_indication === 'Ambos') class="icheck-me" type="radio"
                             name="supplier_indication" id="ambos" value="Ambos" data-cy="ambos" data-skin="minimal" required>
                         <label class="form-check-label" for="ambos">Ambos</label>
                     </div>
