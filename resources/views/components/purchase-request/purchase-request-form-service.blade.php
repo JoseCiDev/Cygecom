@@ -532,7 +532,7 @@
                         <label for="service[supplier_id]" style="display:block;" class="control-label">
                             Fornecedor (CNPJ - RAZÃO SOCIAL)
                         </label>
-                        <select name="service[supplier_id]" class='select2-me' data-cy="service[supplier_id]"
+                        <select name="service[supplier_id]" class='select2-me select-supplier' data-cy="service[supplier_id]"
                             data-placeholder="Escolha um fornecedor" style="width:100%;">
                             <option value=""></option>
                             @foreach ($suppliers as $supplier)
@@ -647,7 +647,7 @@
 
     <x-modal-edit-service-installment :statusValues="$statusValues" />
 
-    <x-ModalSupplierRegister />
+    <x-ModalSupplierRegister/>
 
 </div>
 

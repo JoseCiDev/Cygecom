@@ -594,7 +594,7 @@
 
 </div>
 
-{{-- <script src="{{ asset('js/supplies/select2-custom.js') }}"></script> --}}
+<script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
         hasSentRequest = @json($hasSentRequest);
@@ -1334,6 +1334,12 @@
 
             checkSuppliersContainerLength();
             checkProductRows();
+
+            const $selectSupplier = $newContainer.find('select').first();
+
+            console.log($selectSupplier);
+
+            addBtnSupplierSelect($selectSupplier);
         });
 
         $(document).on('click', '.delete-supplier', function() {

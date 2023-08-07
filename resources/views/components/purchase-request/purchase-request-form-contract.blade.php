@@ -616,7 +616,7 @@
                         <label style="display:block;" for="contract[supplier_id]" class="control-label">
                             Fornecedor (CNPJ - RAZÃO SOCIAL)
                         </label>
-                        <select name="contract[supplier_id]" data-cy="contract[supplier_id]" class='select2-me'
+                        <select name="contract[supplier_id]" data-cy="contract[supplier_id]" class='select2-me select-supplier'
                             data-placeholder="Escolha uma fornecedor" style="width:100%;">
                             <option value=""></option>
                             @foreach ($suppliers as $supplier)

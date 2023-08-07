@@ -5,13 +5,14 @@ $(() => {
                 message: `<strong>CNPJ:</strong> ${response.cpf_cnpj} <br> ${response.message}`,
                 className: 'bootbox-custom-success'
             });
-        
-        $("#modal-supplier-register").modal("hide");
-        $("#cpf_cnpj").trigger("focus");
 
-        const selectElement = $('select[name="service[supplier_id]"]');
+        $("#modal-supplier-register").modal("hide");
+
+        const $selectElement = $("select.select-supplier");
+        $selectElement.trigger("focus");
+
         const newOption = new Option(`${response.cpf_cnpj} - ${response.corporate_name}`, response.id, true, true);
-        selectElement.append(newOption).trigger('change');
+        $selectElement.append(newOption).trigger('change');
 
         $('#attendant').val(`${response.representative}`);
         $('#phone-number').val(`${response.phone_number}`);
