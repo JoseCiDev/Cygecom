@@ -328,6 +328,24 @@
                     </div>
                 </div>
 
+                {{-- PRODUTO JÁ COMPRADO --}}
+                <div class="col-sm-3" style="width: 20%">
+                    <label for="form-check" class="control-label" style="padding-right:10px">
+                        Você já realizou a compra deste produto?
+                    </label>
+                    <div class="form-check">
+                        <input name="product[already_purchased]" value="1" class="radio-already-purchased"
+                            id="already-purchased" data-cy="already-purchased" type="radio"
+                            @checked(isset($purchaseRequest) && (bool) $purchaseRequest->product->already_purchased)>
+                        <label class="form-check-label" for="already-purchased">Sim</label>
+
+                        <input name="product[already_purchased]" value="0" class="radio-already-purchased"
+                            type="radio" id="not-provided" data-cy="not-provided" style="margin-left: 7px;"
+                            @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->product->already_purchased) || !isset($purchaseRequest))>
+                        <label class="form-check-label" for="not-provided">Não</label>
+                    </div>
+                </div>
+
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="control-label">Data desejada entrega do produto</label>
@@ -407,10 +425,7 @@
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentMethods as $paymentMethod)
-                                    <option
-                                        value="{{ $paymentMethod->value }}"
-                                        @selected($paymentMethod->value === $selectedPaymentMethod)
-                                    >
+                                    <option value="{{ $paymentMethod->value }}" @selected($paymentMethod->value === $selectedPaymentMethod)>
                                         {{ $paymentMethod->label() }}
                                     </option>
                                 @endforeach
