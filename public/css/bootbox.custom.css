@@ -1,4 +1,4 @@
-.bootbox .modal-content  {
+.bootbox .modal-content {
     border-radius: 8px;
 }
 
@@ -7,4 +7,8 @@
     color: #3c763d;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+}
+
+.bootbox.modal {
+    z-index: 999999;
 }

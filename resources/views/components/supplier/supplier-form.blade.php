@@ -256,7 +256,6 @@
 
     <div class="col form-actions pull-right">
         <button type="submit" class="btn btn-primary" data-cy="btn-supplier-submit">Salvar</button>
-        <a href="{{ url()->previous() }}" class="btn" data-cy="btn-cancel">Cancelar</a>
     </div>
 </form>
 
