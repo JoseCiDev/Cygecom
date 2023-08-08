@@ -111,9 +111,7 @@
         <div class="col-sm-2">
             <div class="form-group">
                 <label for="postal_code" class="control-label">CEP</label>
-                <input value="{{ $supplier?->address->postal_code }}" type="text" name="postal_code"
-                    id="postal_code" data-cy="postal_code" placeholder="00.000-000" class="form-control postal-code"
-                    data-rule-required="true" data-rule-minlength="10">
+                <x-InputCep name="postal_code" id="postal_code" data-cy="postal_code" :value="$supplier?->address->postal_code" />
             </div>
         </div>
         {{-- PAÍS --}}
@@ -208,27 +206,50 @@
             <div class="form-group">
                 <label for="number" class="control-label">Telefone</label>
                 <input value="{{ $supplier?->phone?->number }}" type="text" name="number" id="number" data-cy="number"
-                    placeholder="(00) 0000-0000" class="form-control phone-number" data-rule-required="true"
-                    minLength="14">
-                <input type="hidden" name="phone_type" id="commercial" value="commercial" data-cy="commercial">
+                    placeholder="(00) 0000-0000" class="form-control phone-number" minLength="14">
             </div>
         </div>
         <div class="col-sm-4">
             <div class="form-group">
                 <label for="email" class="control-label">E-mail</label>
                 <input value="{{ $supplier?->email }}" type="email" name="email" id="email" data-cy="email"
-                    placeholder="user_email@fornecedor.com.br" class="form-control" data-rule-email="true"
-                    data-rule-required="true">
+                    placeholder="user_email@fornecedor.com.br" class="form-control" data-rule-email="true">
             </div>
         </div>
         <div class="col-sm-5">
             <div class="form-group">
                 <label for="representative" class="control-label">Responsável/Representante</label>
                 <input value="{{ $supplier?->representative }}" type="text" name="representative"
-                    id="representative" data-cy="representative" placeholder="Informe o nome para contato" class="form-control"
-                    data-rule-required="true">
+                    id="representative" data-cy="representative" placeholder="Informe o nome para contato" class="form-control" >
             </div>
         </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+
+         @if ($supplier)
+            <div class="col-sm-3">
+                <label for="qualification" class="control-label">Qualificação do fornecedor</label>
+                <select name="qualification" id="qualification" data-cy="qualification" class="chosen-select form-control">
+                    <option value="" selected >Selecione uma opção </option>
+                    @foreach ($supplierQualificationStatus as $qualification)
+                        <option value="{{ $qualification->value }}" @selected($supplier?->qualification === $qualification)>
+                            {{ $qualification->label() }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="tributary_observation" class="control-label">Observações tributárias</label>
+                    <textarea name="tributary_observation" id="tributary_observation" data-cy="tributary_observation" placeholder="Observações tributárias" rows="3"
+                        class="form-control no-resize">{{ $supplier?->tributary_observation }}</textarea>
+                </div>
+            </div>
+         @endif
     </div>
 
     <hr>
@@ -245,7 +266,6 @@
 
 <script>
     $(() => {
-        const $postalCode = $('.postal-code');
         const $phoneNumber = $('.phone-number');
         const $streetNumber = $('.street-number');
         const $checkboxHasNoStreetNumber = $('.checkbox-has-no-street-number');
@@ -265,9 +285,6 @@
         });
 
         // masks
-        $postalCode.imask({
-            mask: '00.000-000'
-        });
         $streetNumber.imask({
             mask: Number,
         });
