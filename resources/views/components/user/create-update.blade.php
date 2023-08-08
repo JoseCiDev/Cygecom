@@ -170,11 +170,13 @@
                     <div class="form-check row">
 
                         <div class="col-md-4">
-                            <div>
-                                <input @checked(isset($user) && $user->profile->name === 'admin') class="icheck-me"
-                                    type="radio" name="profile_type" id="profile_admin" data-cy="profile_admin" value="admin" data-skin="minimal">
-                                <label class="form-check-label" for="profile_admin">Administrador</label>
-                            </div>
+                            @if ($isAdmin)
+                                <div>
+                                    <input @checked(isset($user) && $user->profile->name === 'admin') class="icheck-me"
+                                        type="radio" name="profile_type" id="profile_admin" data-cy="profile_admin" value="admin" data-skin="minimal">
+                                    <label class="form-check-label" for="profile_admin">Administrador</label>
+                                </div>
+                            @endif
                             <div>
                                 <input @checked(isset($user) && $user->profile->name === 'normal') class="icheck-me"
                                     type="radio" name="profile_type" id="profile_normal" data-cy="profile_normal" value="normal" data-skin="minimal"
