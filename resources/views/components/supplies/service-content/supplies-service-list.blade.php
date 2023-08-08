@@ -60,7 +60,7 @@
                             <tr>
                                 <td>{{$service->id}}</td>
                                 <td>{{$service->user->person->name}}</td>
-                                <td>{{$service->SuppliesUser?->Person->name ?? '---'}}</td>
+                                <td>{{$service->suppliesUser?->person->name ?? '---'}}</td>
                                 <td class="hidden-1280">{{$service->responsibility_marked_at ? \Carbon\Carbon::parse($service->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td>{{$service->status->label()}}</td>
                                 <td>{{$service->service->Supplier?->cpf_cnpj ?? '---'}}</td>
@@ -86,7 +86,7 @@
                                     >
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    @php $isToShow = !(bool)$service->SuppliesUser?->Person->name &&  !(bool)$service->responsibility_marked_at @endphp
+                                    @php $isToShow = !(bool)$service->suppliesUser?->person->name &&  !(bool)$service->responsibility_marked_at @endphp
                                     <a 
                                         href="{{route('supplies.service.detail', ['id' => $service->id])}}"
                                         class="btn btn-link openDetail"

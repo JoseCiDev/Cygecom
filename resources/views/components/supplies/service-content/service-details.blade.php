@@ -66,7 +66,7 @@
                 </p>
                <div class="row">
                     <div class="col-md-12">
-                        <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
+                        <h4>Responsável pela solicitação: {{$request->suppliesUser?->person->name ?? '---'}} / {{$request->suppliesUser?->email ?? "---"}}</h4>
                     </div>
                </div>
             </header>
@@ -100,7 +100,7 @@
                                             <strong>Motivo da solicitação:</strong> {{ $request->reason }}
                                         </p>
                                         <p>
-                                            <strong>Observação:</strong> {{ $request->observation }}
+                                            <strong>Observação:</strong> {{ $request->observation ?? '---' }}
                                         </p>
                                         <hr>
                                         <p>
@@ -144,9 +144,6 @@
                                             {{ $request->user->person->costCenter->company->corporate_name }}
                                         </p>
                                         <hr>
-                                        <p>
-                                            <strong>Perfil do solicitante:</strong> {{ $request->user->Profile->name }}
-                                        </p>
                                         <p>
                                             <strong>Autorização para solicitar:</strong>
                                             {{ $request->user->is_buyer ? 'Autorizado' : 'Sem autorização' }}
@@ -227,38 +224,38 @@
                                             <div class="col-sm-6">
                                                 <p>
                                                     <strong>Razão social:</strong>
-                                                    {{ $request->service->Supplier?->corporate_name ?? '---' }}
+                                                    {{ $request->service->supplier?->corporate_name ?? '---' }}
                                                 </p>
                                                 <p>
                                                     <strong>Nome fantasia:</strong>
-                                                    {{ $request->service->Supplier?->name ?? '---' }}
+                                                    {{ $request->service->supplier?->name ?? '---' }}
                                                 </p>
                                                 <p>
                                                     <strong>CPF/CNPJ:</strong>
-                                                    {{ $request->service->Supplier?->cpf_cnpj ?? '---' }}
+                                                    {{ $request->service->supplier?->cpf_cnpj ?? '---' }}
                                                 </p>
                                                 <p>
                                                     <strong>Indicação:</strong>
-                                                    {{ $request->service->Supplier?->supplier_indication ?? '---' }}
+                                                    {{ $request->service->supplier?->supplier_indication ?? '---' }}
                                                 </p>
 
                                             </div>
                                             <div class="col-sm-6">
                                                 <p>
                                                     <strong>Qualifacação:</strong>
-                                                    {{ $request->service->Supplier?->qualification->label() ?? '---' }}
+                                                    {{ $request->service->supplier?->qualification->label() ?? '---' }}
                                                 </p>
                                                 <p>
                                                     <strong>Tipo de mercado:</strong>
-                                                    {{ $request->service->Supplier?->market_type ?? '---' }}
+                                                    {{ $request->service->supplier?->market_type ?? '---' }}
                                                 </p>
                                                 <p>
                                                     <strong>Representante:</strong>
-                                                    {{ $request->service->Supplier?->representative ?? '---' }}
+                                                    {{ $request->service->supplier?->representative ?? '---' }}
                                                 </p>
                                                 <p>
                                                     <strong>E-mail:</strong>
-                                                    {{ $request->service->Supplier?->email ?? '---' }}
+                                                    {{ $request->service->supplier?->email ?? '---' }}
                                                 </p>
                                             </div>
                                         </div>

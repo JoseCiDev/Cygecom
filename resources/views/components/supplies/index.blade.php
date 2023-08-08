@@ -54,11 +54,11 @@
                                         @endif
 
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-products">Produtos HKM</a>
+                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-products">Ir p/ solicitações {{$currentProfile === 'admin' ? '(HKM)' : ''}} <i class="fa fa-external-link"></i></a>
                                         @endif
                                         
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
-                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-products">Produtos INP</a>
+                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-products">Ir p/ solicitações {{$currentProfile === 'admin' ? '(INP)' : ''}} <i class="fa fa-external-link"></i></a>
                                         @endif
 
                                     </div>
@@ -83,11 +83,11 @@
                                         @endif
 
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-services">Serviços HKM</a>
+                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-services">Ir p/ solicitações {{ $currentProfile === 'admin' ? '(HKM)' : ''}} <i class="fa fa-external-link"></i></a>
                                         @endif
 
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
-                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-services">Serviços INP</a>
+                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-services">Ir p/ solicitações {{ $currentProfile === 'admin' ? '(INP)' : ''}} <i class="fa fa-external-link"></i></a>
                                         @endif
                                     </div>
                                 </li>
@@ -111,11 +111,11 @@
                                         @endif
 
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-contracts">Contratos HKM</a>
+                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-contracts">Ir p/ solicitações {{$currentProfile === 'admin' ? '(HKM)' : ''}} <i class="fa fa-external-link"></i></a>
                                         @endif
 
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
-                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-contracts">Contratos INP</a>
+                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-contracts">Ir p/ solicitações {{$currentProfile === 'admin' ? '(INP)' : ''}} <i class="fa fa-external-link"></i></a>
                                         @endif
                                     </div>
                                 </li>

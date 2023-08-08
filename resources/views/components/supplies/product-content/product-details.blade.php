@@ -66,7 +66,7 @@
                 </p>
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Responsável pela solicitação: {{$request->SuppliesUser?->Person->name ?? '---'}} / {{$request->SuppliesUser?->email ?? "---"}}</h4>
+                        <h4>Responsável pela solicitação: {{$request->suppliesUser?->person->name ?? '---'}} / {{$request->suppliesUser?->email ?? "---"}}</h4>
                     </div>
                </div>
             </header>
@@ -90,7 +90,7 @@
                                         </p>
                                         <p><strong>COMEX:</strong> {{ $request->is_comex ? 'Sim' : 'Não' }}</p>
                                         <p><strong>Motivo da solicitação:</strong> {{ $request->reason }} </p>
-                                        <p><strong>Observação:</strong> {{ $request->observation }}</p>
+                                        <p><strong>Observação:</strong> {{ $request->observation ?? '---' }}</p>
                                         <hr>
                                         <p><strong>Solicitação criada em:</strong>
                                             {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</p>
@@ -123,7 +123,6 @@
                                             {{ $request->user->person->costCenter->company->corporate_name }}
                                         </p>
                                         <hr>
-                                        <p><strong>Perfil do solicitante:</strong> {{ $request->user->profile->name }}</p>
                                         <p>
                                             <strong>Autorização para solicitar:</strong>
                                             {{ $request->user->is_buyer ? 'Autorizado' : 'Sem autorização' }}

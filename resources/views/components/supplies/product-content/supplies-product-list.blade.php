@@ -35,7 +35,6 @@
                                 </select>
                             </th>
                             <th >Tipo de quitação</th>
-                            <th class="hidden-1024">Progresso</th>
                             <th class="hidden-1024">Contratação por</th>
                             <th class="hidden-1280">Grupo de custo</th>
                             <th class="hidden-1440">Data desejada</th>
@@ -44,7 +43,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($products as $index => $product),
+                        @foreach ($products as $index => $product)
                             @php 
                                 $groups = $product->CostCenterApportionment->pluck('costCenter.Company.group')->unique(); 
                                 $concatenatedGroups = $groups->map(function ($item) {
@@ -54,11 +53,10 @@
                             <tr>
                                 <td>{{$product->id}}</td>
                                 <td >{{$product->user->person->name}}</td>
-                                <td>{{$product->SuppliesUser?->Person->name ?? '---'}}</td>
+                                <td>{{$product->suppliesUser?->person->name ?? '---'}}</td>
                                 <td class="hidden-1280">{{$product->responsibility_marked_at ? \Carbon\Carbon::parse($product->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td>{{$product->status->label()}}</td>
                                 <td >{{$product->purchaseRequestProduct->first()->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
-                                <td class="hidden-1024">{{$product->purchaseRequestProduct->first()->already_provided ? 'Executado' : 'Não executado'}}</td>
                                 <td class="hidden-1024">{{$product->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1280">{{$concatenatedGroups}}</td>
 
@@ -79,7 +77,7 @@
                                     >
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    @php $isToShow = !(bool)$product->SuppliesUser?->Person->name &&  !(bool)$product->responsibility_marked_at @endphp
+                                    @php $isToShow = !(bool)$product->suppliesUser?->person->name &&  !(bool)$product->responsibility_marked_at @endphp
                                     <a href="{{route('supplies.product.detail', ['id' => $product->id])}}"
                                         class="btn btn-link openDetail"
                                         rel="tooltip"
