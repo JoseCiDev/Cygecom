@@ -4,17 +4,18 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
-return new class () extends Migration {
+return new class() extends Migration
+{
     public function up(): void
     {
         Schema::create('services', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
-            $table->decimal('price', 14, 2)->nullable();
             $table->boolean('already_provided')->default(false);
             $table->boolean('is_finished')->default(false);
+
+            $table->decimal('price', 14, 2)->nullable();
             $table->boolean('is_prepaid')->nullable();
             $table->unsignedInteger('quantity_of_installments')->nullable();
-
             $table->string('hours_performed')->nullable()->default(null);
             $table->string('seller')->nullable();
             $table->string('phone')->nullable();

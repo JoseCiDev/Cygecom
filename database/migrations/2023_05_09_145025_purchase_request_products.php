@@ -13,8 +13,8 @@ return new class extends Migration
             $table->unsignedInteger('id')->autoIncrement();
             $table->text('name');
             $table->integer('quantity')->default(1);
-            $table->decimal('unit_price', 14, 2)->nullable();
 
+            $table->decimal('unit_price', 14, 2)->nullable();
             $table->string('model')->nullable();
             $table->string('color')->nullable();
             $table->string('size')->nullable();
