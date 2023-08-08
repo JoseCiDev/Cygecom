@@ -200,9 +200,7 @@
                         </li>
                     @endif
                 </ul>
-                <x-navbar.user>
-                    <x-navbar.notification />
-                </x-navbar.user>
+                <x-navbar.user/>
             </div>
         </div>
 
