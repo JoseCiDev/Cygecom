@@ -74,6 +74,8 @@ class SupplierController extends Controller
     public function register(Request $request)
     {
         $data = $request->all();
+        $data['cpf_cnpj'] = preg_replace('/[^0-9]/', '', $data['cpf_cnpj']);
+
         $validator = $this->validatorService->supplier($data);
 
         if ($validator->fails()) {
@@ -121,7 +123,6 @@ class SupplierController extends Controller
     {
         $data = $request->all();
         $data['updated_by'] = auth()->user()->id;
-
 
         $validator = $this->validatorService->supplierUpdate($data);
 
