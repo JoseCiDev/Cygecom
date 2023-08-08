@@ -709,13 +709,6 @@
             });
         }
 
-        // desabilita todos os campos do form caso solicitacao ja enviada
-        if(hasSentRequest) {
-            $('#request-form').find('input, textarea, checkbox').prop('disabled', true);
-            $('#request-form').find('select').prop('disabled', true);
-            $('.file-remove').prop('disabled', true);
-        }
-
         // dataTable config - parcelas
         const $installmentsTable = $('#installments-table-striped').DataTable({
             data: purchaseRequest?.service?.installments || [],
@@ -853,6 +846,13 @@
 
         if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
             $isPrePaid.filter(':selected').trigger('change.select2');
+        }
+
+        // desabilita todos os campos do form caso solicitacao ja enviada
+        if(hasSentRequest) {
+            $('#request-form').find('input, textarea, checkbox').prop('disabled', true);
+            $('#request-form').find('select').prop('disabled', true);
+            $('.file-remove').prop('disabled', true);
         }
     });
 </script>
