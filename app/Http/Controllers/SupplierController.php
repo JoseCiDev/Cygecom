@@ -39,10 +39,11 @@ class SupplierController extends Controller
                     ->orWhere('corporate_name', 'like', "%{$searchValue}%")
                     ->orWhere('name', 'like', "%{$searchValue}%")
                     ->orWhere('supplier_indication', 'like', "%{$searchValue}%")
-                    ->orWhere('market_type', 'like', "%{$searchValue}%");
+                    ->orWhere('market_type', 'like', "%{$searchValue}%")
+                    ->orWhere('qualification', 'like', "%{$searchValue}%");
             }
 
-            $suppliersQuery = $query->paginate($length, ['*'], 'page', $currentPage);
+            $suppliersQuery = $query->orderBy('created_at', 'desc')->paginate($length, ['*'], 'page', $currentPage);
         } catch (Exception $error) {
             return response()->json(['error' => 'Não foi possível buscar os fornecedores. Por favor, tente novamente mais tarde.'], 500);
         }
