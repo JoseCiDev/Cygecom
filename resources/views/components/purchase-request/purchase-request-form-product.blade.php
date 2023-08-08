@@ -1,5 +1,6 @@
 @php
     use App\Enums\PurchaseRequestStatus;
+    use App\Enums\PaymentMethod;
 
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
@@ -396,25 +397,23 @@
                         <div class="form-group">
                             <label class="control-label">Forma de pagamento</label>
                             @php
-                                $paymentMethod = null;
+                                $selectedPaymentMethod = null;
                                 if (isset($purchaseRequest->product) && isset($purchaseRequest->product->paymentInfo)) {
-                                    $paymentMethod = $purchaseRequest->product->paymentInfo->payment_method;
+                                    $selectedPaymentMethod = $purchaseRequest->product->paymentInfo->payment_method;
                                 }
                             @endphp
                             <select name="product[payment_info][payment_method]" id="payment-method"
                                 data-cy="payment-method" class='select2-me payment-method'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="PIX" {{ $paymentMethod === 'PIX' ? 'selected' : '' }}>PIX</option>
-                                <option value="DEPÓSITO BANCÁRIO"
-                                    {{ $paymentMethod === 'DEPÓSITO BANCÁRIO' ? 'selected' : '' }}>DEPÓSITO BANCÁRIO
-                                </option>
-                                <option value="BOLETO" {{ $paymentMethod === 'BOLETO' ? 'selected' : '' }}>BOLETO
-                                </option>
-                                <option value="CARTÃO CRÉDITO"
-                                    {{ $paymentMethod === 'CARTÃO CRÉDITO' ? 'selected' : '' }}>CARTÃO CRÉDITO</option>
-                                <option value="CARTÃO DÉBITO"
-                                    {{ $paymentMethod === 'CARTÃO DÉBITO' ? 'selected' : '' }}>CARTÃO DÉBITO</option>
+                                @foreach ($paymentMethods as $paymentMethod)
+                                    <option
+                                        value="{{ $paymentMethod->value }}"
+                                        @selected($paymentMethod->value === $selectedPaymentMethod)
+                                    >
+                                        {{ $paymentMethod->label() }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
