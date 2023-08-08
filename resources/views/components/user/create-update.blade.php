@@ -1,10 +1,10 @@
 @php
-    $userToChangeIsAdmin = $user->profile->name === 'admin';
+    $userToChangeIsAdmin = isset($user) && $user->profile->name === 'admin';
 
     $currentProfile = auth()->user()->profile->name;
     $isAdmin = $currentProfile === 'admin';
     $isGestorUsuarios = $currentProfile === 'gestor_usuarios';
-    $isOwnRequest = auth()->user()->id === $user->id;
+    $isOwnRequest = isset($user) && auth()->user()->id === $user->id;
     $isDisabled = $userToChangeIsAdmin || !$isAdmin && (!$isGestorUsuarios || ($isGestorUsuarios && $isOwnRequest)) 
 @endphp
 
