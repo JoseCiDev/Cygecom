@@ -302,6 +302,12 @@ class PurchaseRequestService extends ServiceProvider
             $existingRecord = CostCenterApportionment::where(['purchase_request_id' => $purchaseRequestId, 'cost_center_id' => $apportionment['cost_center_id']])->first();
 
             if ($existingRecord) {
+                if (isset($apportionment['apportionment_currency'])) {
+                    $apportionment['apportionment_percentage'] = null;
+                } elseif (isset($apportionment['apportionment_percentage'])) {
+                    $apportionment['apportionment_currency'] = null;
+                }
+
                 $existingRecord->update($apportionment);
                 $existingIds = array_diff($existingIds, [$existingRecord->id]);
             } else {

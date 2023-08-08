@@ -204,6 +204,8 @@
                 const lastIndex = Number(oldName.match(regexNewName).at(-1));
                 const newName = oldName.replace(regexNewName, `[${lastIndex + 1}]`);
                 $(this).attr('name', newName);
+                $(this).attr('id', newName);
+                $(this).attr('data-cy', newName);
             });
 
             newRow.find("input, select").val(null);
@@ -212,14 +214,6 @@
 
             $('.cost-center-container').last().after(newRow);
             newRow.find('.delete-cost-center').removeAttr('hidden');
-
-            // Adicionar manipuladores de eventos aos novos elementos
-            newRow.find('select[name^="cost_center_apportionments"]').on('change', toggleCostCenterBtn);
-            newRow.find('input[name$="[apportionment_percentage]"]').on('input', toggleCostCenterBtn);
-            newRow.find('input[name$="[apportionment_currency]"]').on('input', toggleCostCenterBtn);
-
-            newRow.find('input[name$="[apportionment_percentage]"]').on('input focus', updateApportionmentFields);
-            newRow.find('input[name$="[apportionment_currency]"]').on('input focus', updateApportionmentFields);
 
             checkCostCenterCount();
             disableSelectedOptions();
@@ -246,6 +240,7 @@
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
         
+        updateApportionmentFields();
         toggleCostCenterBtn();
         checkCostCenterCount();
     });

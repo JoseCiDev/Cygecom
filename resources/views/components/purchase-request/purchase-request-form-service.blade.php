@@ -710,9 +710,11 @@
         }
 
         // desabilita todos os campos do form caso solicitacao ja enviada
-        $('#request-form').find('input, textarea, checkbox').prop('disabled', hasSentRequest);
-        $('#request-form').find('select').prop('disabled', hasSentRequest);
-        $('.file-remove').prop('disabled', hasSentRequest);
+        if(hasSentRequest) {
+            $('#request-form').find('input, textarea, checkbox').prop('disabled', true);
+            $('#request-form').find('select').prop('disabled', true);
+            $('.file-remove').prop('disabled', true);
+        }
 
         // dataTable config - parcelas
         const $installmentsTable = $('#installments-table-striped').DataTable({
