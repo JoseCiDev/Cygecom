@@ -421,7 +421,7 @@
                             <label class="form-check-label" for="">VARIÁVEL</label>
                         </div>
                         <div class="small" style="color:rgb(85, 85, 85);">
-                            <p>(Se o valor final do contrato não estiver difinido, será VARIÁVEL).</p>
+                            <p>(Se o valor final do contrato não estiver definido, será VARIÁVEL).</p>
                         </div>
                     </div>
 
@@ -1494,26 +1494,29 @@
 
         $isPrePaid.on('change', function() {
             const isPrePaid = $(this).val() === "1";
-            $contractAmount.data('rule-required', isPrePaid);
-            $paymentMethod.data('rule-required', isPrePaid);
-            $payday.data('rule-required', isPrePaid);
-            $paymentInfoDescription.data('rule-required', isPrePaid);
-            $recurrence.data('rule-required', isPrePaid);
-            $inputStartDate.data('rule-required', isPrePaid);
-            $inputEndDate.data('rule-required', isPrePaid);
+
+            $contractAmount
+                .add($paymentMethod)
+                .add($payday)
+                .add($paymentInfoDescription)
+                .add($recurrence)
+                .add($inputStartDate)
+                .makeRequired();
 
             if (!isPrePaid) {
-                $contractAmount.closest('.form-group').removeClass('has-error');
-                $paymentMethod.closest('.form-group').removeClass('has-error');
-                $payday.closest('.form-group').removeClass('has-error');
-                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
-                $recurrence.closest('.form-group').removeClass('has-error');
-                $inputStartDate.closest('.form-group').removeClass('has-error');
-                $inputEndDate.closest('.form-group').removeClass('has-error');
+                $contractAmount
+                    .add($paymentMethod)
+                    .add($payday)
+                    .add($paymentInfoDescription)
+                    .add($recurrence)
+                    .add($inputStartDate)
+                    .closest('.form-group')
+                    .removeClass('has-error')
+                    .removeRequired();
 
                 $paymentBlock.find('.help-block').remove();
             }
-        });
+        }).trigger('change');
 
         if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
             $isPrePaid.filter(':selected').trigger('change.select2');

@@ -893,7 +893,7 @@
         // sim está repetindo muito...
 
         const $selectSupplier = $('.select-supplier');
-        const $paymentMethod = $('.payment-method');
+        const $paymentMethod = $('#payment-method');
         const $paymentInfo = $('.payment-info');
 
         const purchaseRequest = @json($purchaseRequest);
@@ -1280,21 +1280,27 @@
 
         $isPrePaid.on('change', function() {
             const isPrePaid = $(this).val() === "1";
-            $serviceAmount.data('rule-required', isPrePaid);
-            $paymentMethod.data('rule-required', isPrePaid);
-            $formatInputInstallmentsNumber.data('rule-required', isPrePaid);
-            $paymentInfoDescription.data('rule-required', isPrePaid);
+
+            $paymentMethod.next().removeAttr('data-rule-required');
+
+            $serviceAmount
+                .add($paymentMethod)
+                .add($formatInputInstallmentsNumber)
+                .add($paymentInfoDescription)
+                .makeRequired();
 
             if (!isPrePaid) {
-                $serviceAmount.closest('.form-group').removeClass('has-error');
-                $paymentMethod.closest('.form-group').removeClass('has-error');
-                $formatInputInstallmentsNumber.closest('.form-group').removeClass('has-error');
-                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
-                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
+                $serviceAmount
+                    .add($paymentMethod)
+                    .add($formatInputInstallmentsNumber)
+                    .add($paymentInfoDescription)
+                    .closest('.form-group')
+                    .removeClass('has-error')
+                    .removeRequired();
 
                 $paymentBlock.find('.help-block').remove();
             }
-        });
+        }).trigger('change');
 
         if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
             $isPrePaid.filter(':selected').trigger('change.select2');
