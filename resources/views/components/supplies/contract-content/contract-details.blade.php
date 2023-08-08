@@ -162,8 +162,6 @@
                                 </div>
                             </div>
 
-                            <hr class="pagebreak"/>
-
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <h4><i class="fa fa-money"></i> <strong>Centro de custo e rateio</strong></h4>
@@ -216,7 +214,7 @@
                                     <hr>
                                     <div class="tab-content">
                                         <div class="row">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-4">
                                                 <p>
                                                     <strong>Razão social:</strong>
                                                     {{ $request->contract?->supplier?->corporate_name ?? '---' }}
@@ -235,7 +233,7 @@
                                                 </p>
 
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-4">
                                                 <p>
                                                     <strong>Qualifacação:</strong>
                                                     {{ $request->contract->supplier?->qualification->label() ?? '---' }}
@@ -253,12 +251,20 @@
                                                     {{ $request->contract?->supplier->email ?? '---' }}
                                                 </p>
                                             </div>
+                                            <div class="col-sm-4">
+                                                <p>
+                                                    <strong>Descrição:</strong> 
+                                                    {{ $request->contract->supplier->description ?? '---' }}
+                                                </p>
+                                                <p>
+                                                    <strong>Observações tributárias:</strong> 
+                                                    {{ $request->contract->supplier->tributary_observation ?? '---' }}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <hr class="pagebreak"/>
 
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
@@ -390,8 +396,6 @@
                                             </div>
                                         </div>
 
-                                        <hr class="pagebreak"/>
-
                                         <div class="request-details-content-box-contract">
                                             <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
                                             @foreach ($request->contract->installments as $installmentIndex => $installment)
@@ -419,9 +423,6 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                            @if ($installmentIndex === 14)
-                                                <hr class="pagebreak"/>
-                                            @endif
                                             @endforeach
                                         </div>
 

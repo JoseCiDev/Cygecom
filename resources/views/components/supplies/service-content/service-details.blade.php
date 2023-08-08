@@ -213,15 +213,13 @@
                                 </div>
                             </div>
 
-                            <hr class="pagebreak"/>
-
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <h4><i class="fa fa-truck"></i> <strong>Fornecedor</strong></h4>
                                     <hr>
                                     <div class="tab-content">
                                         <div class="row">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-4">
                                                 <p>
                                                     <strong>Razão social:</strong>
                                                     {{ $request->service->supplier?->corporate_name ?? '---' }}
@@ -240,7 +238,7 @@
                                                 </p>
 
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-4">
                                                 <p>
                                                     <strong>Qualifacação:</strong>
                                                     {{ $request->service->supplier?->qualification->label() ?? '---' }}
@@ -258,6 +256,16 @@
                                                     {{ $request->service->supplier?->email ?? '---' }}
                                                 </p>
                                             </div>
+                                            <div class="col-sm-4">
+                                                <p>
+                                                    <strong>Descrição:</strong> 
+                                                    {{ $request->service->supplier->description ?? '---' }}
+                                                </p>
+                                                <p>
+                                                    <strong>Observações tributárias:</strong> 
+                                                    {{ $request->service->supplier->tributary_observation ?? '---' }}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -265,8 +273,8 @@
 
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
-                                    <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações</strong></h4>
                                     <div class="tab-content padding">
+                                        <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações</strong></h4>
                                         <p>
                                             <strong>Tipo de quitação:</strong> Pgto.
                                             {{ $request->service->is_prepaid ? 'antecipado' : 'pós-pago' }}
@@ -306,9 +314,8 @@
                                 </div>
 
                                 <div class="request-details-content-box">
-                                    <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações de pagamento</strong>
-                                    </h4>
                                     <div class="tab-content padding">
+                                        <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações de pagamento</strong></h4>
                                         <p>
                                             <strong>Tipo do pagamento:</strong>
                                             {{ $request->service->paymentInfo->payment_type ?? '---' }}
@@ -330,12 +337,10 @@
                                     <hr>
                                     <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Descrição</strong></h4>
                                     <p>
-                                        <strong>Descrição do serviço:</strong>{{ $request->service->description }}
+                                        <strong>Descrição do serviço:</strong> {{ $request->service->description ?? '---' }}
                                     </p>
                                 </div>
                             </div>
-
-                            <hr class="pagebreak"/>
 
                             <div class="request-details-content-box">
                                 <div class="request-details-content-box-service">
@@ -365,9 +370,6 @@
                                             </p>
                                         </div>
                                     </div>
-                                    @if ($installmentIndex === 14)
-                                        <hr class="pagebreak"/>
-                                    @endif
                                     @endforeach
                                 </div>
                             </div>

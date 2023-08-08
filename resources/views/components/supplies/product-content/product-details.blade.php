@@ -153,8 +153,6 @@
                                 </div>
                             </div>
 
-                            <hr class="pagebreak"/>
-
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <h4>
@@ -197,8 +195,6 @@
                                 </div>
                             </div>
 
-                            <hr class="pagebreak"/>
-
                             <div class="request-details-content-box">
 
                                 <h4><i class="fa fa-truck"></i> <strong>Informações de pagamento</strong></h4>
@@ -233,7 +229,6 @@
                                         </div>
                                     </div>
                                 </div>
-                        
 
                                 <div class="request-details-content-box-product">
                                     <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
@@ -262,19 +257,14 @@
                                             </p>
                                         </div>
                                     </div>
-                                    @if ($installmentIndex === 14)
-                                        <hr class="pagebreak"/>
-                                    @endif
                                     @endforeach
                                 </div>
                             </div>
 
-                            <span class="pagebreak"></span>
-
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
-                                    <h4><i class="fa fa-tags"></i> <strong>Produto(s) - Informações</strong></h4>
                                     <div class="tab-content">
+                                        <h4><i class="fa fa-tags"></i> <strong>Produto(s) - Informações</strong></h4>
                                         @php
                                             $productsGroupedBySupplier = $request->purchaseRequestProduct->groupBy(function ($item) {
                                                 return $item->supplier->id;
@@ -284,10 +274,10 @@
                                         @endphp
 
                                         @foreach ($productsGroupedBySupplier as $supplierIndex => $supplierGroup)
+                                            @if ($loopIndex > 0)
+                                                <hr class="pagebreak">
+                                            @endif
                                             <div class="request-supplier-group">
-                                                @if ($loopIndex > 0)
-                                                    <span class="pagebreak"></span>
-                                                @endif
                                                 <div class="request-details-content-box-supplier">
                                                     <h4><i class="fa fa-truck"></i> <strong>Fornecedor nº: {{ $supplierIndex }}</strong></h4>
 
@@ -337,13 +327,16 @@
                                                             <strong>Descrição:</strong> {{ $supplierGroup->first()->supplier->description ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong> Fornecedor criado em:</strong> {{ $supplierGroup->first()->supplier->created_at }}
+                                                            <strong>Fornecedor criado em:</strong> {{ $supplierGroup->first()->supplier->created_at }}
                                                         </p>
                                                     </div>
 
                                                     <div class="row">
-                                                        <p class="col-sm-3" style="margin: 0">
+                                                        <p class="col-sm-4" style="margin: 0">
                                                             <strong>Fornecedor atualizado em:</strong> {{ $supplierGroup->first()->supplier->updated_at }}
+                                                        </p>
+                                                        <p class="col-sm-4" style="margin: 0">
+                                                            <strong>Observações tributárias:</strong> {{ $supplierGroup->first()->supplier->tributary_observation ?? '---' }}
                                                         </p>
                                                     </div>
 
