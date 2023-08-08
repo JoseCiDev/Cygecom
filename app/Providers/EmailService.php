@@ -37,7 +37,8 @@ class EmailService extends ServiceProvider
         $subject = "Solicitação de " . $purchaseRequest->type->label() . " nº " . $purchaseRequest->id . " - Atribuição de responsável";
         $message = "Olá, " . $purchaseRequest->user->person->name . "! "
             . "Sua solicitação de " . $purchaseRequest->type->label() . " nº " . $purchaseRequest->id . " foi atualizada. "
-            . "Foi atribuído um responsável pelo processo.";
+            . "Foi atribuído o(a) " . $purchaseRequest->suppliesUser->person->name . " como responsável pelo processo. E-mail para eventual contato: "
+            . $purchaseRequest->suppliesUser->email;
 
         $email = new GenericEmail($subject, $message, $purchaseRequest->user->email);
         $email->sendMail();

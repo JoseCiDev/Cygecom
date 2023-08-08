@@ -43,6 +43,7 @@ class PurchaseRequestService extends ServiceProvider
     {
         return PurchaseRequest::with([
             'user.person.costCenter',
+            'suppliesUser.person.costCenter',
             'purchaseRequestFile',
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
@@ -63,6 +64,7 @@ class PurchaseRequestService extends ServiceProvider
 
         return PurchaseRequest::with([
             'user.person.costCenter',
+            'suppliesUser.person.costCenter',
             'purchaseRequestFile',
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
@@ -81,6 +83,7 @@ class PurchaseRequestService extends ServiceProvider
     {
         return PurchaseRequest::with([
             'user.person.costCenter',
+            'suppliesUser.person.costCenter',
             'purchaseRequestFile',
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
@@ -99,6 +102,7 @@ class PurchaseRequestService extends ServiceProvider
     {
         return PurchaseRequest::with([
             'user.person.costCenter',
+            'suppliesUser.person.costCenter',
             'purchaseRequestFile',
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
