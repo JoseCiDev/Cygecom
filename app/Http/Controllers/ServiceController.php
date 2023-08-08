@@ -144,7 +144,7 @@ class ServiceController extends Controller
     {
         $allRequestStatus = PurchaseRequestStatus::cases();
 
-        $purchaseRequest = PurchaseRequest::find($id);
+        $purchaseRequest = $this->purchaseRequestService->purchaseRequestById($id);
 
         if (!$purchaseRequest || $purchaseRequest->deleted_at !== null) {
             throw new Exception('Não foi possível acessar essa solicitação.');
@@ -152,10 +152,10 @@ class ServiceController extends Controller
 
         if ($this->isAuthorizedToUpdate($purchaseRequest)) {
             $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
-            $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
+            $purchaseRequestUpdated = $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
 
             try {
-                $this->emailService->sendResponsibleAssignedEmail($purchaseRequest);
+                $this->emailService->sendResponsibleAssignedEmail($purchaseRequestUpdated);
             } catch (TransportException $transportException) {
                 // Tratar erro de envio de email aqui, se necessário.
             }
@@ -163,9 +163,7 @@ class ServiceController extends Controller
 
         $service = $this->purchaseRequestService->purchaseRequestById($id);
 
-        $files = PurchaseRequestFile::where('purchase_request_id', $id)
-            ->whereNull('deleted_at')
-            ->get();
+        $files = PurchaseRequestFile::where('purchase_request_id', $id)->whereNull('deleted_at')->get();
 
         if (!$service) {
             return throw new Exception('Não foi possível acessar essa solicitação.');

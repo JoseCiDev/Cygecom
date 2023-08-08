@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use App\Enums\SupplierQualificationStatus;
 use App\Models\Supplier;
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -16,7 +17,7 @@ class SupplierForm extends Component
     public string|null $isAPI;
     public function __construct(int|null $id = null, $supplier = null, $isAPI = false)
     {
-        $this->id       = $id;
+        $this->id = $id;
         $this->supplier = $supplier;
         $this->isAPI = $isAPI;
     }
@@ -28,6 +29,7 @@ class SupplierForm extends Component
         } else {
             $params = ['isRegister' => true, 'isAPI' => $this->isAPI];
         }
+        $params['supplierQualificationStatus'] = SupplierQualificationStatus::cases();
         return view('components.supplier.supplier-form', $params);
     }
 }

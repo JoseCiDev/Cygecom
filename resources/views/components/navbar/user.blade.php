@@ -1,5 +1,4 @@
 <div class="user">
-    {{ $slot }}
     <div class="dropdown">
         <a href="#" class='dropdown-toggle' data-toggle="dropdown" data-cy="profile-dropdown">
             <img src="{{ asset('img/demo/default-user.png') }}" alt="" width="30">

@@ -39,10 +39,11 @@ class SupplierController extends Controller
                     ->orWhere('corporate_name', 'like', "%{$searchValue}%")
                     ->orWhere('name', 'like', "%{$searchValue}%")
                     ->orWhere('supplier_indication', 'like', "%{$searchValue}%")
-                    ->orWhere('market_type', 'like', "%{$searchValue}%");
+                    ->orWhere('market_type', 'like', "%{$searchValue}%")
+                    ->orWhere('qualification', 'like', "%{$searchValue}%");
             }
 
-            $suppliersQuery = $query->paginate($length, ['*'], 'page', $currentPage);
+            $suppliersQuery = $query->orderBy('created_at', 'desc')->paginate($length, ['*'], 'page', $currentPage);
         } catch (Exception $error) {
             return response()->json(['error' => 'Não foi possível buscar os fornecedores. Por favor, tente novamente mais tarde.'], 500);
         }
@@ -74,6 +75,8 @@ class SupplierController extends Controller
     public function register(Request $request)
     {
         $data = $request->all();
+        $data['cpf_cnpj'] = preg_replace('/[^0-9]/', '', $data['cpf_cnpj']);
+
         $validator = $this->validatorService->supplier($data);
 
         if ($validator->fails()) {
@@ -121,7 +124,6 @@ class SupplierController extends Controller
     {
         $data = $request->all();
         $data['updated_by'] = auth()->user()->id;
-
 
         $validator = $this->validatorService->supplierUpdate($data);
 

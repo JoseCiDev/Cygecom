@@ -154,19 +154,23 @@
                 <ul class='main-nav'>
                     <x-navbar.menu-item route="home" title="INÍCIO" />
 
-                    @if ($currentProfile === 'admin')
+                    @if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios' || $currentProfile === 'gestor_fornecedores')
                         <li>
                             <a href="#" data-toggle="dropdown" class='dropdown-toggle' data-cy="dropdown-cadastros">
                                 <span>CADASTROS</span>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li>
-                                    <a href="{{ route('users') }}" data-cy="dropdown-cadastros-usuarios">Usuários</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('suppliers') }}" data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
-                                </li>
+                                @if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios')
+                                    <li>
+                                        <a href="{{ route('users') }}" data-cy="dropdown-cadastros-usuarios">Usuários</a>
+                                    </li>
+                                @endif
+                                @if ($currentProfile === 'admin' || $currentProfile === 'gestor_fornecedores')
+                                    <li>
+                                        <a href="{{ route('suppliers') }}" data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     @endif
@@ -200,9 +204,7 @@
                         </li>
                     @endif
                 </ul>
-                <x-navbar.user>
-                    <x-navbar.notification />
-                </x-navbar.user>
+                <x-navbar.user/>
             </div>
         </div>
 
