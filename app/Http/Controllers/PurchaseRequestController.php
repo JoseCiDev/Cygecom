@@ -150,7 +150,7 @@ class PurchaseRequestController extends Controller
             $model = PurchaseRequestFile::findOrFail($id);
             $model->update(['deleted_at' => now(), 'deleted_by' => auth()->user()->id]);
             return response()->json(['success' => true]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()]);
         }
     }

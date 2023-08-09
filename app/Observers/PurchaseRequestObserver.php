@@ -41,14 +41,14 @@ class PurchaseRequestObserver
             $isDelete = $purchaseRequest->wasChanged('deleted_at') && $purchaseRequest->deleted_at !== null;
 
             if ($isDelete) {
-                $this->createLog('soft-delete', $purchaseRequest, $changes, $isDelete);
+                $this->createLog('soft-delete', $purchaseRequest, $changes);
             } else {
                 $this->createLog('update', $purchaseRequest, $changes);
             }
         }
     }
 
-    private function createLog($action, $purchaseRequest, ?array $changes = null, ?bool $isDelete = null)
+    private function createLog($action, $purchaseRequest, ?array $changes = null)
     {
         PurchaseRequestsLog::create([
             'purchase_request_id' => $purchaseRequest->id,
