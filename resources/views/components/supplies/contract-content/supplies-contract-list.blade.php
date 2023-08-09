@@ -17,7 +17,7 @@
                     data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Nº</th>
                             <th>Solicitante</th>
                             <th>Responsável</th>
                             <th class="hidden-1440">Responsável em</th>
@@ -56,11 +56,11 @@
                             <tr>
                                 <td>{{$contract->id}}</td>
                                 <td>{{$contract->user->person->name}}</td>
-                                <td>{{$contract->SuppliesUser?->Person->name ?? '---'}}</td>
+                                <td>{{$contract->suppliesUser?->person->name ?? '---'}}</td>
                                 <td class="hidden-1440">{{$contract->responsibility_marked_at ? \Carbon\Carbon::parse($contract->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td>{{$contract->status->label()}}</td>
-                                <td>{{$contract->contract->Supplier?->cpf_cnpj ?? '---'}}</td>
-                                <td class="hidden-1280">{{$contract->contract->Supplier?->qualification->label() ?? '---'}}</td>
+                                <td>{{$contract->contract->supplier?->cpf_cnpj ?? '---'}}</td>
+                                <td class="hidden-1280">{{$contract->contract->supplier?->qualification->label() ?? '---'}}</td>
 
                                 <td>{{$contract->contract->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
                                 <td>{{$contract->contract->already_provided ? 'Executado' : 'Não executado'}}</td>
@@ -72,7 +72,7 @@
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
-                                        data-modal-name="{{ 'Analisando Solicitação de Contrato - ID ' . $contract->id }}"
+                                        data-modal-name="{{ 'Analisando Solicitação de Contrato - Nº ' . $contract->id }}"
                                         data-id="{{ $contract->id }}"
                                         data-request="{{json_encode($contract)}}"
                                         rel="tooltip"
@@ -84,7 +84,7 @@
                                     >
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    @php $isToShow = !(bool)$contract->SuppliesUser?->Person->name &&  !(bool)$contract->responsibility_marked_at @endphp
+                                    @php $isToShow = !(bool)$contract->suppliesUser?->person->name &&  !(bool)$contract->responsibility_marked_at @endphp
                                     <a href="{{route('supplies.contract.detail', ['id' => $contract->id])}}"
                                         class="btn btn-link openDetail"
                                         rel="tooltip"

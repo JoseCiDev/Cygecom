@@ -49,6 +49,7 @@ class Supplier extends Model
         'state_registration',
         'email',
         'representative',
+        'tributary_observation',
         'callisto_code',
         'senior_code',
         'updated_by',

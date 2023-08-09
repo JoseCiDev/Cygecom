@@ -50,19 +50,19 @@ class Breadcrumb extends Component
         ],
         'request.service.register' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests', 'label' => 'Solicitações'],
+            ['route' => 'requests.own', 'label' => 'Minhas Solicitações'],
             ['route' => 'request.links', 'label' => 'Nova Solicitação'],
             ['route' => 'request.service.register', 'label' => 'Serviço'],
         ],
         'request.product.register' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests', 'label' => 'Solicitações'],
+            ['route' => 'requests.own', 'label' => 'Minhas Solicitações'],
             ['route' => 'request.links', 'label' => 'Nova Solicitação'],
             ['route' => 'request.product.register', 'label' => 'Produto(s)'],
         ],
         'request.contract.register' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests', 'label' => 'Solicitações'],
+            ['route' => 'requests.own', 'label' => 'Minhas Solicitações'],
             ['route' => 'request.links', 'label' => 'Nova Solicitação'],
             ['route' => 'request.contract.register', 'label' => 'Contrato'],
         ],

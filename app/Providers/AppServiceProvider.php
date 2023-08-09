@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\PurchaseRequest;
-use App\Observers\PurchaseRequestObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -37,6 +35,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        PurchaseRequest::observe(PurchaseRequestObserver::class);
+        //
     }
 }

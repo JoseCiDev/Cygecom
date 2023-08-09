@@ -11,12 +11,17 @@ class PaymentInfo extends Model
 
     public function contract()
     {
-        return $this->hasOne(Service::class);
+        return $this->hasOne(Contract::class);
     }
 
     public function service()
     {
         return $this->hasOne(Service::class);
+    }
+
+    public function product()
+    {
+        return $this->hasOne(Product::class);
     }
 
     public function deletedByUser()

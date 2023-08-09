@@ -33,12 +33,13 @@ class SupplierService extends ServiceProvider
     public function registerSupplier(array $data)
     {
         return DB::transaction(function () use ($data) {
-            $addressId = $this->createAddress($data);
-            $phoneId   = $this->createPhone($data);
-            $supplier  = new Supplier();
-            $supplier->fill($data);
-            $supplier->address_id = $addressId;
-            $supplier->phone_id   = $phoneId;
+            $supplier = Supplier::create($data);
+            $supplier->address_id = $this->createAddress($data);
+
+            if ($data['number'] !== null) {
+                $supplier->phone_id = $this->createPhone($data);
+            }
+
             $supplier->save();
             return $supplier;
         });
@@ -51,12 +52,14 @@ class SupplierService extends ServiceProvider
     {
         DB::transaction(function () use ($data, $id) {
             $supplier = $this->getSupplierById($id);
-            $supplier->fill($data);
-            $supplier->updated_by = auth()->user()->id;
+            $supplier->fill(array_merge($data, ['updated_by' => auth()->user()->id]));
             $supplier->save();
 
-            $supplier->address->update($data);
-            $supplier->phone->update($data);
+            $this->updateOrCreateAddress($supplier->address(), $data);
+
+            if ($data['number'] !== null) {
+                $this->updateOrCreatePhone($supplier, $data);
+            }
         });
     }
 
@@ -91,5 +94,21 @@ class SupplierService extends ServiceProvider
         $addressId = $address->id;
 
         return $addressId;
+    }
+
+    private function updateOrCreateAddress($addressRelation, $data)
+    {
+        $addressRelation->updateOrCreate([], $data);
+    }
+
+    private function updateOrCreatePhone(?Supplier $supplier, $data)
+    {
+        if ($supplier->phone !== null) {
+            $supplier->phone->update($data);
+        } else {
+            $newPhone = $supplier->phone()->create($data);
+            $supplier->phone_id = $newPhone->id;
+            $supplier->save();
+        }
     }
 }

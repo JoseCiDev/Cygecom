@@ -17,7 +17,7 @@
                     data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Nº</th>
 
                             <th>Solicitante</th>
                             <th>Responsável</th>
@@ -60,7 +60,7 @@
                             <tr>
                                 <td>{{$service->id}}</td>
                                 <td>{{$service->user->person->name}}</td>
-                                <td>{{$service->SuppliesUser?->Person->name ?? '---'}}</td>
+                                <td>{{$service->suppliesUser?->person->name ?? '---'}}</td>
                                 <td class="hidden-1280">{{$service->responsibility_marked_at ? \Carbon\Carbon::parse($service->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td>{{$service->status->label()}}</td>
                                 <td>{{$service->service->Supplier?->cpf_cnpj ?? '---'}}</td>
@@ -74,7 +74,7 @@
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($service->updated_at)->format('d/m/Y h:m:s') }}</td>
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
-                                        data-modal-name="{{ 'Analisando Solicitação de Serviço - ID ' . $service->id }}"
+                                        data-modal-name="{{ 'Analisando Solicitação de Serviço - Nº ' . $service->id }}"
                                         data-id="{{ $service->id }}"
                                         data-request="{{json_encode($service)}}"
                                         rel="tooltip"
@@ -86,7 +86,7 @@
                                     >
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    @php $isToShow = !(bool)$service->SuppliesUser?->Person->name &&  !(bool)$service->responsibility_marked_at @endphp
+                                    @php $isToShow = !(bool)$service->suppliesUser?->person->name &&  !(bool)$service->responsibility_marked_at @endphp
                                     <a
                                         href="{{route('supplies.service.detail', ['id' => $service->id])}}"
                                         class="btn btn-link openDetail"

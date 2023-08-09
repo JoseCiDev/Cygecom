@@ -29,7 +29,7 @@
                         data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>Nº</th>
                                 <th>Solicitante</th>
                                 <th>Contratação por</th>
                                 <th>Tipo de solicitação</th>
@@ -74,7 +74,7 @@
                                         </a>
                                         @if($purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value)
                                             <button data-route="purchaseRequests"
-                                                data-name="{{'Solicitação de compra - ID ' . $purchaseRequest->id}}"
+                                                data-name="{{'Solicitação de compra - Nº ' . $purchaseRequest->id}}"
                                                 data-id="{{$purchaseRequest->id}}"
                                                 rel="tooltip"
                                                 title="Excluir"

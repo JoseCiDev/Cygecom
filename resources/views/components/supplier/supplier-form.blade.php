@@ -63,18 +63,18 @@
                 <label for="market-type" class="control-label">Tipo de mercado</label>
                 <fieldset id="market-type" data-rule-required="true">
                     <div class="row">
-                        <input @checked($supplier?->market_type === 'nacional') class="icheck-me" type="radio" name="market_type"
-                            id="nacional" data-cy="nacional" value="Nacional" data-skin="minimal" required>
+                        <input @checked($supplier?->market_type === 'Nacional') class="icheck-me" type="radio"
+                            name="market_type" id="nacional" data-cy="nacional" value="Nacional" data-skin="minimal" required>
                         <label class="form-check-label" for="nacional">Mercado nacional</label>
                     </div>
                     <div class="row">
-                        <input @checked($supplier?->market_type === 'externo') class="icheck-me" type="radio" name="market_type"
-                            id="externo" data-cy="externo" value="Externo" data-skin="minimal" required>
+                        <input @checked($supplier?->market_type === 'Externo') class="icheck-me" type="radio"
+                            name="market_type" id="externo" data-cy="externo" value="Externo" data-skin="minimal" required>
                         <label class="form-check-label" for="externo">Mercado externo</label>
                     </div>
                     <div class="row">
-                        <input @checked($supplier?->market_type === 'prospec') class="icheck-me" type="radio" name="market_type"
-                            id="prospec" data-cy="prospec" value="Prospecção" data-skin="minimal" required>
+                        <input @checked($supplier?->market_type === 'Prospecção') class="icheck-me" type="radio"
+                            name="market_type" id="prospec" data-cy="prospec" value="Prospecção" data-skin="minimal" required>
                         <label class="form-check-label" for="prospec">Prospecção</label>
                     </div>
                 </fieldset>
@@ -85,21 +85,18 @@
                 <label for="supplier-indication" class="control-label">Indicação do fornecedor</label>
                 <fieldset id="supplier-indication" data-rule-required="true">
                     <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'M') class="icheck-me" type="radio"
-                            name="supplier_indication" id="materia-prima" data-cy="materia-prima"
-                            value="Matéria Prima" data-skin="minimal" required>
+                        <input @checked($supplier?->supplier_indication === 'Matéria Prima') class="icheck-me" type="radio"
+                            name="supplier_indication" id="materia-prima" data-cy="materia-prima" value="Matéria Prima" data-skin="minimal" required>
                         <label class="form-check-label" for="materia-prima">Matéria-prima</label>
                     </div>
                     <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'S') class="icheck-me" type="radio"
-                            name="supplier_indication" id="servico" data-cy="servico" value="Serviço"
-                            data-skin="minimal" required>
+                        <input @checked($supplier?->supplier_indication === 'Serviço') class="icheck-me" type="radio"
+                            name="supplier_indication" id="servico" data-cy="servico" value="Serviço" data-skin="minimal" required>
                         <label class="form-check-label" for="servico">Serviço</label>
                     </div>
                     <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'A') class="icheck-me" type="radio"
-                            name="supplier_indication" id="ambos" value="Ambos" data-cy="ambos"
-                            data-skin="minimal" required>
+                        <input @checked($supplier?->supplier_indication === 'Ambos') class="icheck-me" type="radio"
+                            name="supplier_indication" id="ambos" value="Ambos" data-cy="ambos" data-skin="minimal" required>
                         <label class="form-check-label" for="ambos">Ambos</label>
                     </div>
                 </fieldset>
@@ -116,9 +113,7 @@
         <div class="col-sm-2">
             <div class="form-group">
                 <label for="postal_code" class="control-label">CEP</label>
-                <input value="{{ $supplier?->address->postal_code }}" type="text" name="postal_code"
-                    id="postal_code" data-cy="postal_code" placeholder="00.000-000" class="form-control postal-code"
-                    data-rule-required="true" data-rule-minlength="10">
+                <x-InputCep name="postal_code" id="postal_code" data-cy="postal_code" :value="$supplier?->address->postal_code" />
             </div>
         </div>
         {{-- PAÍS --}}
@@ -242,17 +237,42 @@
             <div class="form-group">
                 <label for="representative" class="control-label">Responsável/Representante</label>
                 <input value="{{ $supplier?->representative }}" type="text" name="representative"
-                    id="representative" data-cy="representative" placeholder="Informe o nome para contato" class="form-control"
-                    data-rule-required="true">
+                    id="representative" data-cy="representative" placeholder="Informe o nome para contato" class="form-control" >
             </div>
         </div>
     </div>
 
     <hr>
 
+    <div class="row">
+
+         @if ($supplier)
+            <div class="col-sm-3">
+                <label for="qualification" class="control-label">Qualificação do fornecedor</label>
+                <select name="qualification" id="qualification" data-cy="qualification" class="chosen-select form-control">
+                    <option value="" selected >Selecione uma opção </option>
+                    @foreach ($supplierQualificationStatus as $qualification)
+                        <option value="{{ $qualification->value }}" @selected($supplier?->qualification === $qualification)>
+                            {{ $qualification->label() }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="tributary_observation" class="control-label">Observações tributárias</label>
+                    <textarea name="tributary_observation" id="tributary_observation" data-cy="tributary_observation" placeholder="Observações tributárias" rows="3"
+                        class="form-control no-resize">{{ $supplier?->tributary_observation }}</textarea>
+                </div>
+            </div>
+         @endif
+    </div>
+
+    <hr>
+
     <div class="col form-actions pull-right">
         <button type="submit" class="btn btn-primary" data-cy="btn-supplier-submit">Salvar</button>
-        <a href="{{ url()->previous() }}" class="btn" data-cy="btn-cancel">Cancelar</a>
     </div>
 </form>
 
@@ -262,7 +282,6 @@
 
 <script>
     $(() => {
-        const $postalCode = $('.postal-code');
         const $phoneNumber = $('.phone-number');
         const $streetNumber = $('.street-number');
         const $checkboxHasNoStreetNumber = $('.checkbox-has-no-street-number');
@@ -281,14 +300,9 @@
             $streetNumber.prop('readonly', isChecked).val(currentValue).valid();
         });
 
-        $postalCode.imask({
-            mask: '00.000-000'
-        });
-
         $streetNumber.imask({
             mask: Number,
         });
-
 
         // checkbox número internacional (mudança mascara)
         const $checkboxInternationalNumber = $('#checkbox-international-number');

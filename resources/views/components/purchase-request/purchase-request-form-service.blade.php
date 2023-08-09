@@ -54,8 +54,7 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right">
             <x-modalDelete />
-            <button data-cy="btn-delete-request" data-route="purchaseRequests"
-                data-name="{{ 'Solicitação de compra - ID ' . $purchaseRequest->id }}"
+            <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
                 title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
                 Excluir solicitação
@@ -79,150 +78,7 @@
         </div>
 
         {{-- CENTRO DE CUSTOS --}}
-        @if (isset($purchaseRequest))
-            @foreach ($purchaseRequest->costCenterApportionment as $index => $apportionment)
-                <div class="row cost-center-container">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label style="display:block;" class="control-label">Centro de custo da
-                                despesa</label>
-                            <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
-                                id="select-cost-center" data-cy="select-cost-center"
-                                class='select2-me @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                                data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
-                                <option value=""></option>
-                                @foreach ($costCenters as $costCenter)
-                                    @php
-                                        $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
-                                        $companyName = $costCenter->company->name;
-                                        $costCenterName = $costCenter->name;
-                                        $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
-                                    @endphp
-                                    <option value="{{ $costCenter->id }}"
-                                        {{ $isApportionmentSelect ? 'selected' : '' }}>
-                                        {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-2">
-                        <label for="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                            class="control-label">
-                            Rateio (%)
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-addon">%</span>
-                            <input type="number" placeholder="0.00" class="form-control" min="0"
-                                name="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                                id="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                                data-cy="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                                value="{{ $apportionment->apportionment_percentage }}">
-                            @error('cost_center_apportionments[{{ $index }}][apportionment_percentage]')
-                                <p><strong>{{ $message }}</strong></p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-sm-2">
-                        <label for="cost_center_apportionments[{{ $index }}][apportionment_currency]"
-                            class="control-label">
-                            Rateio (R$)
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-addon">R$</span>
-                            <input type="number" placeholder="0.00" class="form-control" min="0"
-                                name="cost_center_apportionments[{{ $index }}][apportionment_currency]"
-                                id="cost_center_apportionments[{{ $index }}][apportionment_currency]"
-                                data-cy="cost_center_apportionments[{{ $index }}][apportionment_currency]"
-                                value="{{ $apportionment->apportionment_currency }}">
-                            @error('cost_center_apportionments[{{ $index }}][apportionment_currency]')
-                                <p><strong>{{ $message }}</strong></p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-sm-1" style="margin-top: 28px;">
-                        <button class="btn btn-icon btn-small btn-danger delete-cost-center"
-                            data-cy="btn-delete-cost-center-{{ $index }}"><i class="fa fa-trash-o"></i></button>
-                    </div>
-                </div>
-            @endforeach
-        @else
-            <div class="row cost-center-container">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label class="control-label" style="display:block">
-                            Centro de custo da despesa
-                        </label>
-                        <select style="width:100%" id="select-cost-center"
-                            name="cost_center_apportionments[0][cost_center_id]"
-                            data-cy="cost_center_apportionments[0][cost_center_id]"
-                            class='select2-me
-                                    @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                            required data-rule-required="true" placeholder="Ex: Almoxarifado">
-                            <option value="" disalbed></option>
-                            @foreach ($costCenters as $costCenter)
-                                @php
-                                    $isUserCostCenter = isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id;
-                                    $companyName = $costCenter->company->name;
-                                    $costCenterName = $costCenter->name;
-                                    $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
-                                @endphp
-                                <option value="{{ $costCenter->id }}" @selected($isUserCostCenter)>
-                                    {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-sm-2">
-                    <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label">
-                        Rateio (%)
-                    </label>
-                    <div class="input-group">
-                        <span class="input-group-addon">%</span>
-                        <input type="number" placeholder="0.00" class="form-control apportionment-percentage"
-                            min="0" name="cost_center_apportionments[0][apportionment_percentage]"
-                            id="cost_center_apportionments[0][apportionment_percentage]"
-                            data-cy="cost_center_apportionments[0][apportionment_percentage]">
-                        @error('cost_center_apportionments[0][apportionment_percentage]')
-                            <p><strong>{{ $message }}</strong></p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="col-sm-2">
-                    <label for="cost_center_apportionments[0][apportionment_currency]" class="control-label">
-                        Rateio (R$)
-                    </label>
-                    <div class="input-group">
-                        <span class="input-group-addon">R$</span>
-                        <input type="number" name="cost_center_apportionments[0][apportionment_currency]"
-                            id="cost_center_apportionments[0][apportionment_currency]"
-                            data-cy="cost_center_apportionments[0][apportionment_currency]" placeholder="0.00"
-                            class="form-control" min="0">
-                        @error('cost_center_apportionments[0][apportionment_currency]')
-                            <p><strong>{{ $message }}</strong></p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="col-sm-1" style="margin-top: 28px;">
-                    <button class="btn btn-icon btn-small btn-danger delete-cost-center"
-                        data-cy="btn-delete-cost-center-0">
-                        <i class="fa fa-trash-o"></i>
-                    </button>
-                </div>
-            </div>
-        @endif
-
-        {{-- ADICIONAR CENTRO DE CUSTO --}}
-        <button type="button" class="btn btn-small btn-primary add-cost-center-btn" data-cy="btn-add-cost-center">
-            Adicionar linha
-        </button>
+        <x-CostCenterApportionment :purchaseRequest="$purchaseRequest" />
 
         <hr>
 
@@ -644,326 +500,35 @@
         </div>
     </form>
 
-    <x-modal-edit-service-installment :statusValues="$statusValues" />
+    <x-ModalEditServiceInstallment :statusValues="$statusValues" />
 
     <x-ModalSupplierRegister/>
 
 </div>
 
-
 <script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
+<script src="{{asset('js/service-form/desired-date-config.js')}}"></script>
+<script src="{{asset('js/service-form/file-remove-button-config.js')}}"></script>
+<script src="{{asset('js/service-form/submit-buttons-config.js')}}"></script>
+<script src="{{asset('js/service-form/imasks.js')}}"></script>
+
 <script>
-    $(document).ready(function() {
-        const $amount = $('.amount');
-        const $serviceAmount = $('#format-amount');
-        const $phoneNumber = $('#phone-number');
-
-        // masks
-        $phoneNumber.imask({
-            mask: [{
-                    mask: '(00) 0000-0000'
-                },
-                {
-                    mask: '(00) 00000-0000'
-                }
-            ]
-        });
-
-        $serviceAmount.imask({
-            mask: Number,
-            scale: 2,
-            thousandsSeparator: '.',
-            normalizeZeros: true,
-            padFractionalZeros: true,
-            min: 0,
-            max: 1000000000,
-        });
-
-        // mascaras pra modal edicao
-        const $editValueInputModal = $('#edit-value');
-        const $editValueHiddenModal = $('#edit-value-hidden');
-
-        $editValueInputModal.imask({
-            mask: Number,
-            scale: 2,
-            thousandsSeparator: '.',
-            normalizeZeros: true,
-            padFractionalZeros: true,
-            min: 0,
-            max: 1000000000,
-        });
-
-        const $inputInstallmentsNumber = $('.installments-number');
-        const $formatInputInstallmentsNumber = $('.format-installments-number');
-
-        $formatInputInstallmentsNumber.imask({
-            mask: IMask.MaskedRange,
-            from: 1,
-            to: 60,
-            autofix: false,
-        });
-
-
-        const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
-        const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
-        const $fileRemove = $('button.file-remove');
-        const $filesGroup = $('fieldset#files-group');
-        const csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-        function disableSelectedOptions() {
-            const selectedValues = $.map($('.cost-center-container select'), (self) => {
-                return $(self).val();
-            });
-            $('.cost-center-container option').each((_, option) => {
-                const includedValues = selectedValues.includes($(option).prop('value'));
-                const isSelectedOption = $(option).is(':selected');
-                const disabled = includedValues && !isSelectedOption;
-                $(option).prop({
-                    disabled
-                });
-            })
-        }
-
-        function checkCostCenterCount() {
-            const costCenterCount = $('.cost-center-container').length;
-            costCenterCount > 1 ? $('.delete-cost-center').prop('disabled', false) : $('.delete-cost-center')
-                .prop('disabled', true);
-        }
-        checkCostCenterCount();
-
-        function updateApportionmentFields() {
-            const hasPercentageInput = $costCenterPercentage.filter(function() {
-                return $(this).val() !== '';
-            }).length > 0;
-
-            const hasCurrencyInput = $costCenterCurrency.filter(function() {
-                return $(this).val() !== '';
-            }).length > 0;
-
-            $costCenterPercentage.not(':disabled').prop('disabled', !hasPercentageInput && hasCurrencyInput);
-            $costCenterCurrency.not(':disabled').prop('disabled', !hasCurrencyInput && hasPercentageInput);
-
-            if (!hasPercentageInput && !hasCurrencyInput) {
-                $costCenterPercentage.prop('disabled', false);
-                $costCenterCurrency.prop('disabled', false);
-            }
-        }
-        updateApportionmentFields();
-
-        // desabilita botao caso nao tenha sido preenchido cost center corretamente;
-        const $btnAddCostCenter = $('.add-cost-center-btn');
-        const $costCenterSelect = $('.cost-center-container select');
-
-        function toggleCostCenterBtn() {
-            const costCenterContainer = $(this).closest('.cost-center-container');
-
-            const costCenterSelect = costCenterContainer
-                .find('select')
-                .val();
-
-            const costcenterPercentage = costCenterContainer
-                .find('input[name$="[apportionment_percentage]"]')
-                .val()
-
-            const costCenterCurrency = costCenterContainer
-                .find('input[name$="[apportionment_currency]"]')
-                .val()
-
-            const isValidApportionment = Boolean(costCenterSelect && (costcenterPercentage ||
-                costCenterCurrency));
-
-            $btnAddCostCenter.prop('disabled', !isValidApportionment);
-        }
-
-        $(document).on('input change',
-            `${$costCenterSelect.selector}, ${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
-            toggleCostCenterBtn);
-
-        toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
-
-
-        // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
-        $costCenterPercentage.add($costCenterCurrency).on('input', updateApportionmentFields);
-
-        // Add Centro de Custo
-        $('.add-cost-center-btn').click(function() {
-            updateApportionmentFields();
-            const newRow = $('.cost-center-container').last().clone();
-            newRow.find(
-                'select[name^="cost_center_apportionments"], input[name^="cost_center_apportionments"]'
-            ).each(function() {
-                const oldName = $(this).attr('name');
-                const regexNewName = /\[(\d+)\]/;
-                const lastIndex = Number(oldName.match(regexNewName).at(-1));
-                const newName = oldName.replace(regexNewName, `[${lastIndex + 1}]`);
-                $(this).attr('name', newName);
-            });
-
-            newRow.find("input, select").val("");
-            newRow.find('.select2-container').remove();
-            newRow.find('.select2-me').select2();
-
-            $('.cost-center-container').last().after(newRow);
-            newRow.find('.delete-cost-center').removeAttr('hidden');
-            checkCostCenterCount();
-            disableSelectedOptions();
-            toggleCostCenterBtn.bind(this)();
-        });
-
-        $(document).on('click', '.delete-cost-center', function() {
-            $(this).closest('.cost-center-container').remove();
-            updateApportionmentFields();
-            checkCostCenterCount();
-            disableSelectedOptions();
-            toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
-        });
-
-        $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
-
-        // muda data desejada minima quando serviço já prestado
-        const $desiredDate = $('#desired-date');
-        const $serviceAlreadyProvided = $('.radio-already-provided');
-        const currentDate = moment().format('YYYY-MM-DD');
-        const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
-
-        function desiredDateGreaterThanCurrent() {
-            const desiredDate = $desiredDate.val();
-
-            return desiredDate > currentDate;
-        }
-
-        function changeMinDesiredDate() {
-            const isValidDate = desiredDateGreaterThanCurrent();
-            const serviceAlreadyProvided = $serviceAlreadyProvided.filter(':checked').val() === "1";
-
-            const minDate = serviceAlreadyProvided ? minInitialDate : currentDate;
-
-            $desiredDate.attr('min', minDate);
-        }
-
-        $serviceAlreadyProvided
-            .add($desiredDate)
-            .on('change', changeMinDesiredDate)
-            .filter(':checked')
-            .trigger('change');
-
-        // ---
-
-        // trata valor serviço mascara
-        $serviceAmount.on('input', function() {
-            const formattedValue = $(this).val();
-            if (formattedValue !== null) {
-                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
-                const rawValue = parseFloat(processedValue);
-                if (!isNaN(rawValue)) {
-                    $amount.val(rawValue.toFixed(2)).trigger('change');
-                }
-            }
-        });
-
-        // sim está repetindo muito...
-
-        // trata qtd parcelas mascara
-        $formatInputInstallmentsNumber.on('input', function() {
-            const formattedValue = $(this).val();
-            if (formattedValue !== null) {
-                const rawValue = parseInt(formattedValue);
-                if (!isNaN(rawValue)) {
-                    $inputInstallmentsNumber.val(rawValue).trigger('change');
-                }
-            }
-        });
-        // ---
-
-        // sim está repetindo muito...
-
-        // trata valor serviço mascara
-        $editValueInputModal.on('input', function() {
-            const formattedValue = $(this).val();
-            if (formattedValue !== null) {
-                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
-                const rawValue = parseFloat(processedValue);
-                if (!isNaN(rawValue)) {
-                    $editValueHiddenModal.val(rawValue.toFixed(2)).trigger('change');
-                }
-            }
-        });
-        // ---
-
-        // sim está repetindo muito...
-
-        const $selectSupplier = $('.select-supplier');
-        const $paymentMethod = $('#payment-method');
-        const $paymentInfo = $('.payment-info');
-
+    $(() => {
         const purchaseRequest = @json($purchaseRequest);
         const hasSentRequest = @json($hasSentRequest);
-
-
-        // dataTable config - parcelas
-        const $installmentsTable = $('#installments-table-striped').DataTable({
-            data: purchaseRequest?.service?.installments || [],
-            columns: [{
-                    data: "expire_date",
-                    render: function(data, type, row, meta) {
-                        if (!data) {
-                            return "";
-                        }
-                        const formattedDate = moment(data, "YYYY/MM/DD").format("DD/MM/YYYY");
-                        return formattedDate || "";
-                    }
-                },
-                {
-                    data: "value",
-                    render: function(data, type, row, meta) {
-                        const dataWithR$ = "R$" + data;
-                        return dataWithR$;
-                    }
-                },
-                {
-                    data: "observation",
-                },
-                {
-                    data: "status",
-                },
-                {
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        const btnEdit = $(
-                            '<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>'
-                        );
-                        btnEdit.find('button').prop('disabled', hasSentRequest);
-
-                        return btnEdit.html();
-                    }
-                }
-            ],
-            orderable: false,
-            paging: true,
-            pageLength: 12,
-            info: false,
-            searching: false,
-            bLengthChange: false,
-            language: {
-                emptyTable: "Nenhuma parcela adicionada.",
-                paginate: {
-                    previous: "Anterior",
-                    next: "Próximo",
-                },
-            },
-            order: [
-                [0, 'desc']
-            ],
-            createdRow: function(row, data, dataIndex) {
-                const hiddenFormattedDate = $(row).data('hidden-date');
-                $(row).attr('data-hidden-date', hiddenFormattedDate);
-            }
-        });
-
         const isRequestCopy = @json($isCopy);
-        const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
+        const statusValues = @json($statusValues);
+
+        const $amount = $('.amount');
+        const $inputInstallmentsNumber = $('.installments-number');
+        const $radioIsContractedBySupplies = $('.radio-who-wants');
+        const $paymentBlock = $('.payment-block');
+        const $isPrePaid = $('#service-is-prepaid');
+
+        let selectedRowIndex = null;
 
         function fillHiddenInputsWithRowData() {
+            const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
             const tableData = $installmentsTable.data();
             const hiddenInputsContainer = $('.hidden-installments-inputs-container');
 
@@ -979,56 +544,46 @@
 
                     const idInput = document.createElement('input');
                     idInput.type = 'number';
-                    idInput.name = 'service[service_installments][' + index + '][id]';
-                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service
-                        ?.installments[index]?.id : null;
+                    idInput.name = `service[service_installments][${index}][id]`;
+                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]?.id : null;
                     idInput.hidden = true;
                     idInput.className = "no-validation";
 
                     const expireDateInput = document.createElement('input');
                     expireDateInput.type = 'date';
-                    expireDateInput.name = 'service[service_installments][' + index +
-                        '][expire_date]';
+                    expireDateInput.name = `service[service_installments][${index}][expire_date]`;
                     expireDateInput.value = expireDate;
                     expireDateInput.hidden = true;
                     expireDateInput.className = "no-validation";
 
                     const valueInput = document.createElement('input');
                     valueInput.type = 'number';
-                    valueInput.name = 'service[service_installments][' + index + '][value]';
+                    valueInput.name = `service[service_installments][${index}][value]`;
                     valueInput.value = value;
                     valueInput.hidden = true;
                     valueInput.className = "no-validation";
 
                     const observationInput = document.createElement('input');
                     observationInput.type = 'text';
-                    observationInput.name = 'service[service_installments][' + index +
-                        '][observation]';
+                    observationInput.name = `service[service_installments][${index}][observation]`;
                     observationInput.value = observation;
                     observationInput.hidden = true;
                     observationInput.className = "no-validation";
 
                     const statusInput = document.createElement('input');
                     statusInput.type = 'text';
-                    statusInput.name = 'service[service_installments][' + index + '][status]';
+                    statusInput.name = `service[service_installments][${index}][status]`;
                     statusInput.value = status;
                     statusInput.hidden = true;
                     statusInput.className = "no-validation";
 
-                    hiddenInputsContainer.append(
-                        idInput,
-                        expireDateInput,
-                        valueInput,
-                        observationInput,
-                        statusInput,
-                    );
+                    hiddenInputsContainer.append( idInput, expireDateInput, valueInput, observationInput, statusInput );
                 });
             } else {
                 const idInput = document.createElement('input');
                 idInput.type = 'number';
                 idInput.name = 'service[service_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]
-                    ?.id : null;
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]?.id : null;
                 idInput.hidden = true;
                 idInput.className = "no-validation";
 
@@ -1061,19 +616,13 @@
                 statusInput.hidden = true;
                 statusInput.className = 'no-validation';
 
-                hiddenInputsContainer.append(
-                    idInput,
-                    expireDateInput,
-                    valueInput,
-                    observationInput,
-                    statusInput,
-                );
+                hiddenInputsContainer.append( idInput, expireDateInput, valueInput, observationInput, statusInput, );
             }
         }
 
         function deleteHiddenInputs(row) {
             const index = $installmentsTable.row(row).index();
-            $('input[name^="service[service_installments][' + index + ']"]').remove();
+            $(`input[name^="service[service_installments][${index}]"]`).remove();
         }
 
         function updateHiddenInputIndex() {
@@ -1081,7 +630,7 @@
                 const currentName = $(this).attr('name');
                 const newIndex = currentName.replace(/\[(\d+)\]/, function(match, index) {
                     const currentIndex = parseInt(index);
-                    return '[' + (currentIndex - 1) + ']';
+                    return `[${currentIndex - 1}]`;
                 });
                 $(this).attr('name', newIndex);
             });
@@ -1150,9 +699,8 @@
                 const installmentData = {
                     expire_date: "",
                     value: installmentValue,
-                    observation: "Parcela " + i + "/" + numberOfInstallments,
+                    observation: `Parcela ${i}/${numberOfInstallments}`,
                     status: "PENDENTE",
-                    //installmentDate
                 };
 
                 installmentsData.push(installmentData);
@@ -1166,23 +714,8 @@
 
             fillHiddenInputsWithRowData();
 
-            //$installmentsTable.draw();
             $installmentsTable.clear().rows.add(rowsData).draw();
         }
-
-        let selectedRowIndex = null;
-
-        $('#installments-table-striped tbody').on('click', 'tr', function(event) {
-            event.preventDefault();
-
-            if ($(event.target).closest('.btn-edit-installment').length) {
-                const rowData = $installmentsTable.row(this).data();
-                selectedRowIndex = $installmentsTable.row(this).index();
-                openModalForEdit(rowData);
-            }
-        });
-
-        const statusValues = @json($statusValues);
 
         // modal edit installment
         function openModalForEdit(rowData) {
@@ -1192,11 +725,6 @@
             const value = $('#edit-value');
             const status = $('#edit-status');
             const observation = $('#edit-observation');
-
-            // const disabled = selectedRowIndex !== 0;
-            // value.prop({
-            //     disabled
-            // });
 
             if (rowData.expire_date) {
                 const formattedDate = new Date(rowData.expire_date.split('/').reverse().join('-'));
@@ -1212,10 +740,10 @@
                 event.preventDefault();
 
                 const expireDate = $('#edit-expire-date').val();
-
                 const value = $('#edit-value').val();
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
+                const editButton = '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
 
                 // insere valores editados na tabela
                 if (selectedRowIndex !== null) {
@@ -1225,29 +753,6 @@
                     $installmentsTable.cell(selectedRowIndex, 3).data(status);
                     $installmentsTable.cell(selectedRowIndex, 4).data(editButton);
                     $installmentsTable.draw();
-
-                    // comentado recalculo de parcelas para facilitar no futuro
-
-                    // if (selectedRowIndex === 0) {
-                    //     const amount = parseFloat($amount.val());
-                    //     const rows = $installmentsTable.rows().data();
-                    //     const selectedRowData = rows[selectedRowIndex];
-                    //     const selectedValue = parseFloat(selectedRowData.value);
-
-                    //     // Recalcula o valor das parcelas restantes
-                    //     const recalculatedValue = (amount - selectedValue) / (rows.length - 1);
-
-                    //     rows.each(function(rowData, index) {
-                    //         if (index !== selectedRowIndex) {
-                    //             $installmentsTable.cell(index, 1).data(recalculatedValue
-                    //                 .toFixed(2));
-                    //         }
-                    //     });
-
-                    //     $installmentsTable.draw();
-                    // }
-
-                    // ---------------------------------------------------------------
                 }
 
                 selectedRowIndex = null;
@@ -1261,6 +766,104 @@
                 $('#modal-edit-service-installment').modal('hide');
             });
         }
+
+        // dataTable config - parcelas
+        const $installmentsTable = $('#installments-table-striped').DataTable({
+            data: purchaseRequest?.service?.installments || [],
+            columns: [{
+                    data: "expire_date",
+                    render: function(data, type, row, meta) {
+                        if (!data) {
+                            return "";
+                        }
+                        const formattedDate = moment(data, "YYYY/MM/DD").format("DD/MM/YYYY");
+                        return formattedDate || "";
+                    }
+                },
+                {
+                    data: "value",
+                    render: function(data, type, row, meta) {
+                        const dataWithR$ = "R$" + data;
+                        return dataWithR$;
+                    }
+                },
+                {
+                    data: "observation",
+                },
+                {
+                    data: "status",
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        const btnEdit = $( '<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>' );
+                        btnEdit.find('button').prop('disabled', hasSentRequest);
+
+                        return btnEdit.html();
+                    }
+                }
+            ],
+            orderable: false,
+            paging: true,
+            pageLength: 12,
+            info: false,
+            searching: false,
+            bLengthChange: false,
+            language: {
+                emptyTable: "Nenhuma parcela adicionada.",
+                paginate: {
+                    previous: "Anterior",
+                    next: "Próximo",
+                },
+            },
+            order: [
+                [0, 'desc']
+            ],
+            createdRow: function(row, data, dataIndex) {
+                const hiddenFormattedDate = $(row).data('hidden-date');
+                $(row).attr('data-hidden-date', hiddenFormattedDate);
+            }
+        });
+
+        fillHiddenInputsWithRowData();
+
+        // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
+        $radioIsContractedBySupplies.on('change', function() {
+            const isContractedBySupplies = $(this).val() === "1";
+            const $suppliersBlock = $('.suppliers-block');
+            const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
+            const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
+
+            // muda label
+            const supplierSelect = $suppliersBlock.find('select');
+            const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
+
+            supplierSelect.siblings(`label[for="${supplierSelect.attr('name')}"]`).text(newLabel);
+            supplierSelect.data('rule-required', !isContractedBySupplies);
+
+            // desabilita pagamento
+            $paymentBlock.find('input, textarea').prop('readonly', isContractedBySupplies);
+
+            $paymentBlock.find('select').prop('disabled', isContractedBySupplies).trigger('change.select2');
+
+            if (isContractedBySupplies) {
+                $installmentsTable.clear().draw();
+            }
+        });
+
+        if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
+            $radioIsContractedBySupplies.filter(':checked').trigger('change');
+        }
+
+        $('#installments-table-striped tbody').on('click', 'tr', function(event) {
+            event.preventDefault();
+
+            if ($(event.target).closest('.btn-edit-installment').length) {
+                const rowData = $installmentsTable.row(this).data();
+                selectedRowIndex = $installmentsTable.row(this).index();
+                openModalForEdit(rowData);
+            }
+        });
 
         // gerar parcelas a partir do change de varios inputs
         $amount.add($inputInstallmentsNumber).on('change', function() {
@@ -1277,10 +880,11 @@
             generateInstallments(numberOfInstallments);
         });
 
-        const $isPrePaid = $('#service-is-prepaid');
-        const $paymentInfoDescription = $('#payment-info-description');
-
         $isPrePaid.on('change', function() {
+            const $serviceAmount = $('#format-amount');
+            const $formatInputInstallmentsNumber = $('.format-installments-number');
+            const $paymentMethod = $('.payment-method');
+            const $paymentInfoDescription = $('#payment-info-description');
             const isPrePaid = $(this).val() === "1";
 
             $paymentMethod.next().removeAttr('data-rule-required');
@@ -1311,73 +915,11 @@
             $isPrePaid.filter(':selected').trigger('change.select2');
         }
 
-        // btns
-        const $btnSubmitRequest = $('.btn-submit-request');
-        const $sendAction = $('#action');
-
-        $btnSubmitRequest.on('click', function(event) {
-            event.preventDefault();
-
-            bootbox.confirm({
-                message: "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?",
-                buttons: {
-                    confirm: {
-                        label: 'Sim, enviar solicitação',
-                        className: 'btn-success'
-                    },
-                    cancel: {
-                        label: 'Cancelar',
-                        className: 'btn-danger'
-                    }
-                },
-                callback: function(result) {
-                    if (result) {
-                        $sendAction.val('submit-request');
-                        $('#request-form').trigger('submit');
-                    }
-                }
-            });
-        });
-
-        $fileRemove.click(async (e) => {
-            const target = $(e.target);
-            const li = target.closest('li');
-            const idPurchaseRequestFile = li.data("id-purchase-request-file");
-
-            try {
-                const response = await fetch("/request/remove-file/" + idPurchaseRequestFile, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    }
-                });
-                if (response.ok) {
-                    li.remove();
-                    $filesGroup.find('div.alert-success').fadeIn(500).fadeOut(2500);
-                } else {
-                    $filesGroup.find('div.alert-danger').fadeIn(500).fadeOut(2500);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        });
-
-
         // desabilita todos os campos do form caso solicitacao ja enviada
-        if (hasSentRequest) {
-            $('#request-form')
-                .find('input, textarea, checkbox')
-                .prop('disabled', hasSentRequest);
-
-            $('#request-form')
-                .find('select')
-                .prop('disabled', hasSentRequest);
-
-            $('.file-remove').prop('disabled', hasSentRequest);
-
-            $('.add-cost-center-btn').prop('disabled', hasSentRequest);
-            $('.delete-cost-center').prop('disabled', hasSentRequest);
+        if(hasSentRequest) {
+            $('#request-form').find('input, textarea, checkbox').prop('disabled', true);
+            $('#request-form').find('select').prop('disabled', true);
+            $('.file-remove').prop('disabled', true);
         }
-
     });
 </script>
