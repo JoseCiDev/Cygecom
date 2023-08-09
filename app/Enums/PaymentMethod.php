@@ -8,6 +8,7 @@ enum PaymentMethod: string implements EnumInterface
 {
     case PIX  = 'pix';
     case BOLETO  = 'boleto';
+    case CHEQUE  = 'cheque';
     case DINHEIRO = 'dinheiro';
     case DEPOSITO_BANCARIO = 'deposito_bancario';
     case CARTAO_CREDITO  = 'cartao_credito';
@@ -24,6 +25,7 @@ enum PaymentMethod: string implements EnumInterface
         return match ($value) {
             self::PIX  => 'Pix',
             self::BOLETO  => 'Boleto',
+            self::CHEQUE  => 'Cheque',
             self::DINHEIRO => 'Dinheiro',
             self::DEPOSITO_BANCARIO => 'Depósito bancário',
             self::CARTAO_CREDITO => 'Cartão de crédito',

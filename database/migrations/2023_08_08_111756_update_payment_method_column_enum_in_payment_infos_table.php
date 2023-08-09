@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payment_infos', function (Blueprint $table) {
-            $table->enum('payment_method', ['pix', 'boleto', 'dinheiro', 'deposito_bancario', 'cartao_credito', 'cartao_debito'])->nullable()->change();
+            $table->enum('payment_method', ['pix', 'boleto', 'cheque', 'dinheiro', 'deposito_bancario', 'cartao_credito', 'cartao_debito'])->nullable()->change();
         });
     }
 
