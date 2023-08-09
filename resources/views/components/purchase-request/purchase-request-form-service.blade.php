@@ -575,7 +575,7 @@
                 </div>
             </div>
 
-            <hr style="margin-top: 30px; margin-bottom: 25px;">
+            <hr style="margin-top: 20px; margin-bottom: 20px;">
 
             {{-- ARQUIVOS --}}
             <div class="row justify-content-center">
@@ -1121,10 +1121,15 @@
                 .trigger('change.select2');
 
             if (isContractedBySupplies) {
+                supplierSelect.removeRequired();
+                supplierSelect.closest('.form-group').removeClass('has-error');
+                $suppliersBlock.find('.help-block').remove();
                 //$paymentBlock.find('.form-group').removeClass('has-error');
                 //$paymentBlock.find('input').valid();
                 $installmentsTable.clear().draw();
+                return;
             }
+            supplierSelect.makeRequired();
         });
 
         if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {

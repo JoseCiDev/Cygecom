@@ -1255,7 +1255,6 @@
             const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
 
             supplierSelect.siblings('label[for="' + supplierSelect.attr('name') + '"]').text(newLabel);
-            supplierSelect.data('rule-required', !isContractedBySupplies);
 
             // desabilita pagamento
             $paymentBlock
@@ -1273,10 +1272,15 @@
 
 
             if (isContractedBySupplies) {
+                supplierSelect.removeRequired();
+                supplierSelect.closest('.form-group').removeClass('has-error');
+                $suppliersBlock.find('.help-block').remove();
                 //$paymentBlock.find('.form-group').removeClass('has-error').valid();
                 $installmentsTable.clear().draw();
+                return;
             }
 
+            supplierSelect.makeRequired();
         });
 
         if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
