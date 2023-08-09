@@ -794,6 +794,35 @@
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
 
+
+        // muda data desejada minima quando produto já comprado
+        const $desiredDate = $('#desired-date');
+        const $productAlreadyPurchased = $('.radio-already-purchased');
+        const currentDate = moment().format('YYYY-MM-DD');
+        const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
+
+        function desiredDateGreaterThanCurrent() {
+            const desiredDate = $desiredDate.val();
+
+            return desiredDate > currentDate;
+        }
+
+        function changeMinDesiredDate() {
+            const isValidDate = desiredDateGreaterThanCurrent();
+            const productAlreadyPurchased = $productAlreadyPurchased.filter(':checked').val() === "1";
+
+            const minDate = productAlreadyPurchased ? minInitialDate : currentDate;
+
+            $desiredDate.attr('min', minDate);
+        }
+
+        $productAlreadyPurchased
+            .add($desiredDate)
+            .on('change', changeMinDesiredDate)
+            .filter(':checked')
+            .trigger('change');
+
+
         // trata valor serviço mascara
         $serviceAmount.on('input', function() {
             const formattedValue = $(this).val();
