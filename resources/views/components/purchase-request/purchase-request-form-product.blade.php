@@ -36,8 +36,11 @@
     }
 
     .product-row hr {
-        border-top: 5px solid rgb(178, 177, 177);
         margin: 0px;
+    }
+
+    .supplier-block .product-container .product-row:nth-of-type(odd) {
+        background-color:rgb(208, 208, 208);
     }
 </style>
 
@@ -1076,6 +1079,7 @@
         $radioIsContractedBySupplies.on('change', function() {
             const isContractedBySupplies = $(this).val() === "1";
 
+
             // muda label
             const supplierSelect = $suppliersBlock.find('select');
             const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
@@ -1092,7 +1096,6 @@
             $paymentBlock
                 .find('select')
                 .prop('disabled', isContractedBySupplies)
-                //.data('rule-required', !isContractedBySupplies)
                 .trigger('change.select2');
 
             if (isContractedBySupplies) {
@@ -1298,7 +1301,8 @@
         function checkProductRows() {
             $('.supplier-block').each(function() {
                 const $productContainer = $(this).find('.product-container');
-                const productRowCount = $productContainer.find('.product-row').length;
+                const $productRow = $productContainer.find('.product-row');
+                const productRowCount = $productRow.length;
 
                 $productContainer.find('.delete-product').prop('disabled', productRowCount <= 1);
             });
