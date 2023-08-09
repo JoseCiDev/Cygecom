@@ -1097,9 +1097,9 @@
         fillHiddenInputsWithRowData();
 
 
-        // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
+        // verifica AREA ou SUPRIMENTOS (desabilitar pagamento)
         const $radioIsContractedBySupplies = $('.radio-who-wants');
-        const $suppliersBlock = $('.suppliers-block');
+        const $supplierBlock = $('.supplier-block');
         const $paymentBlock = $('.payment-block');
 
         const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
@@ -1108,19 +1108,18 @@
         $radioIsContractedBySupplies.on('change', function() {
             const isContractedBySupplies = $(this).val() === "1";
 
-
             // muda label
-            const supplierSelect = $suppliersBlock.find('select');
+            const supplierSelect = $('select.select-supplier');
             const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
 
-            supplierSelect.siblings('label[for="' + supplierSelect.attr('name') + '"]').text(newLabel);
-            supplierSelect.data('rule-required', !isContractedBySupplies);
+            supplierSelect.siblings('label').text(newLabel);
+
+            supplierSelect.before().removeAttr('data-rule-required');
 
             // desabilita pagamento
             $paymentBlock
                 .find('input, textarea')
                 .prop('readonly', isContractedBySupplies);
-            //.data('rule-required', !isContractedBySupplies);
 
             $paymentBlock
                 .find('select')
@@ -1128,10 +1127,15 @@
                 .trigger('change.select2');
 
             if (isContractedBySupplies) {
-                //$paymentBlock.find('.form-group').removeClass('has-error');
-                //$paymentBlock.find('input').valid();
+                supplierSelect.removeRequired();
+                supplierSelect.closest('.form-group').removeClass('has-error');
+                $supplierBlock.find('.help-block').remove();
+
                 $installmentsTable.clear().draw();
+
+                return;
             }
+            supplierSelect.makeRequired();
         });
 
         if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
@@ -1288,14 +1292,6 @@
         $isPrePaid.on('change', function() {
             const isPrePaid = $(this).val() === "1";
 
-            $paymentMethod.next().removeAttr('data-rule-required');
-
-            $serviceAmount
-                .add($paymentMethod)
-                .add($formatInputInstallmentsNumber)
-                .add($paymentInfoDescription)
-                .makeRequired();
-
             if (!isPrePaid) {
                 $serviceAmount
                     .add($paymentMethod)
@@ -1306,7 +1302,16 @@
                     .removeRequired();
 
                 $paymentBlock.find('.help-block').remove();
+
+                return;
             }
+
+            $serviceAmount
+                .add($paymentMethod)
+                .add($formatInputInstallmentsNumber)
+                .add($paymentInfoDescription)
+                .makeRequired();
+
         }).trigger('change');
 
         if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {

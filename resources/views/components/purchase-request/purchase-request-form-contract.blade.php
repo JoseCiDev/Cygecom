@@ -1275,8 +1275,9 @@
                 supplierSelect.removeRequired();
                 supplierSelect.closest('.form-group').removeClass('has-error');
                 $suppliersBlock.find('.help-block').remove();
-                //$paymentBlock.find('.form-group').removeClass('has-error').valid();
+
                 $installmentsTable.clear().draw();
+
                 return;
             }
 
@@ -1499,14 +1500,6 @@
         $isPrePaid.on('change', function() {
             const isPrePaid = $(this).val() === "1";
 
-            $contractAmount
-                .add($paymentMethod)
-                .add($payday)
-                .add($paymentInfoDescription)
-                .add($recurrence)
-                .add($inputStartDate)
-                .makeRequired();
-
             if (!isPrePaid) {
                 $contractAmount
                     .add($paymentMethod)
@@ -1519,7 +1512,18 @@
                     .removeRequired();
 
                 $paymentBlock.find('.help-block').remove();
+
+                return;
             }
+
+            $contractAmount
+                .add($paymentMethod)
+                .add($payday)
+                .add($paymentInfoDescription)
+                .add($recurrence)
+                .add($inputStartDate)
+                .makeRequired();
+
         }).trigger('change');
 
         if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {

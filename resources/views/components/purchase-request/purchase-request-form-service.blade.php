@@ -1106,27 +1106,24 @@
             const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
 
             supplierSelect.siblings('label[for="' + supplierSelect.attr('name') + '"]').text(newLabel);
-            supplierSelect.data('rule-required', !isContractedBySupplies);
 
             // desabilita pagamento
             $paymentBlock
                 .find('input, textarea')
                 .prop('readonly', isContractedBySupplies);
-            //.data('rule-required', !isContractedBySupplies);
 
             $paymentBlock
                 .find('select')
                 .prop('disabled', isContractedBySupplies)
-                //.data('rule-required', !isContractedBySupplies)
                 .trigger('change.select2');
 
             if (isContractedBySupplies) {
                 supplierSelect.removeRequired();
                 supplierSelect.closest('.form-group').removeClass('has-error');
                 $suppliersBlock.find('.help-block').remove();
-                //$paymentBlock.find('.form-group').removeClass('has-error');
-                //$paymentBlock.find('input').valid();
+
                 $installmentsTable.clear().draw();
+
                 return;
             }
             supplierSelect.makeRequired();
@@ -1288,12 +1285,6 @@
 
             $paymentMethod.next().removeAttr('data-rule-required');
 
-            $serviceAmount
-                .add($paymentMethod)
-                .add($formatInputInstallmentsNumber)
-                .add($paymentInfoDescription)
-                .makeRequired();
-
             if (!isPrePaid) {
                 $serviceAmount
                     .add($paymentMethod)
@@ -1304,7 +1295,16 @@
                     .removeRequired();
 
                 $paymentBlock.find('.help-block').remove();
+
+                return;
             }
+
+            $serviceAmount
+                .add($paymentMethod)
+                .add($formatInputInstallmentsNumber)
+                .add($paymentInfoDescription)
+                .makeRequired();
+
         }).trigger('change');
 
         if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
