@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Person;
 use App\Models\PurchaseRequest;
 use App\Models\User;
+use App\Observers\PersonObserver;
 use App\Observers\PurchaseRequestObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
@@ -30,6 +32,7 @@ class EventServiceProvider extends ServiceProvider
     {
         PurchaseRequest::observe(PurchaseRequestObserver::class);
         User::observe(UserObserver::class);
+        Person::observe(PersonObserver::class);
     }
 
     /**
