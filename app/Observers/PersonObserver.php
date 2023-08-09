@@ -13,7 +13,15 @@ class PersonObserver
      */
     public function created(Person $person): void
     {
-        $this->createLog('create', $person);
+        $changes = [
+            'name' => $person->name,
+            'cpf_cnpj' => $person->cpf_cnpj,
+            'birthdate' => $person->birthdate,
+            'cost_center_id' => $person->cost_center_id,
+            'phone_id' => $person->phone_id,
+        ];
+
+        $this->createLog('create', $person, $changes);
     }
 
     /**

@@ -13,7 +13,17 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        $this->createLog('create', $user);
+        $changes = [
+            'email' => $user->email,
+            'password' => $user->password,
+            'is_buyer' => $user->is_buyer,
+            'profile_id' => $user->profile_id,
+            'person_id' => $user->person_id,
+            'approver_user_id' => $user->approver_user_id,
+            'approve_limit' => $user->approve_limit
+        ];
+
+        $this->createLog('create', $user, $changes);
     }
 
     /**
