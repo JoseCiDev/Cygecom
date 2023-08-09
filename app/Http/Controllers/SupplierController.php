@@ -123,6 +123,11 @@ class SupplierController extends Controller
     public function update(Request $request, int $id)
     {
         $data = $request->all();
+
+        if (isset($data['cpf_cnpj'])) {
+            $data['cpf_cnpj'] = preg_replace('/[^0-9]/', '', $data['cpf_cnpj']);
+        }
+
         $data['updated_by'] = auth()->user()->id;
 
         $validator = $this->validatorService->supplierUpdate($data);
