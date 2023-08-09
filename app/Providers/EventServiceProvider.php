@@ -2,12 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Person;
-use App\Models\PurchaseRequest;
-use App\Models\User;
-use App\Observers\PersonObserver;
-use App\Observers\PurchaseRequestObserver;
-use App\Observers\UserObserver;
+use App\Models\{Person, PurchaseRequest, Supplier, User};
+use App\Observers\{PersonObserver, PurchaseRequestObserver, SupplierObserver, UserObserver};
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -33,6 +29,7 @@ class EventServiceProvider extends ServiceProvider
         PurchaseRequest::observe(PurchaseRequestObserver::class);
         User::observe(UserObserver::class);
         Person::observe(PersonObserver::class);
+        Supplier::observe(SupplierObserver::class);
     }
 
     /**
