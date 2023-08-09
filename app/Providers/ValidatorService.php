@@ -361,6 +361,22 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         $messages  = $this->messagesForPurchaseRequest;
         $validator = Validator::make($data, $rules, $messages);
 
+        $validator->after(function ($validator) use ($data) {
+            $totalPercentage = 0;
+            $hasPercentage = false;
+
+            foreach ($data['cost_center_apportionments'] as $apportionment) {
+                if (isset($apportionment['apportionment_percentage'])) {
+                    $totalPercentage += $apportionment['apportionment_percentage'];
+                    $hasPercentage = true;
+                }
+            }
+
+            if ($hasPercentage && $totalPercentage !== 100) {
+                $validator->errors()->add('cost_center_apportionments', 'A soma das porcentagens de rateio deve ser igual a 100%.');
+            }
+        });
+
         return $validator;
     }
 }
