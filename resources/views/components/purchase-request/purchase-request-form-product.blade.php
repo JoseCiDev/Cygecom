@@ -635,7 +635,7 @@
         const $editValueInputModal = $('#edit-value');
         const $editValueHiddenModal = $('#edit-value-hidden');
 
-        $editValueInputModal.imask({
+        editValueInputModalMasked = $editValueInputModal.imask({
             mask: Number,
             scale: 2,
             thousandsSeparator: '.',
@@ -833,10 +833,9 @@
         $editValueInputModal.on('input', function() {
             const formattedValue = $(this).val();
             if (formattedValue !== null) {
-                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
-                const rawValue = parseFloat(processedValue);
-                if (!isNaN(rawValue)) {
-                    $editValueHiddenModal.val(rawValue.toFixed(2)).trigger('change');
+                const processedValue = editValueInputModalMasked.unmaskedValue;
+                if (!isNaN(processedValue)) {
+                    $editValueHiddenModal.val(processedValue);
                 }
             }
         });
@@ -854,6 +853,7 @@
 
         // dataTable config - parcelas
         const $installmentsTable = $('#installments-table-striped').DataTable({
+            defer: true,
             data: purchaseRequest?.product?.installments || [],
             columns: [{
                     data: "expire_date",
@@ -917,112 +917,58 @@
             const hiddenInputsContainer = $('.hidden-installments-inputs-container');
 
             hiddenInputsContainer.empty();
+            tableData.each(function(rowData, index) {
+                const expireDate = rowData.expire_date;
+                const value = rowData.value;
+                const observation = rowData.observation;
+                const status = rowData.status;
 
-            if (tableData.length > 0) {
-                tableData.each(function(rowData, index) {
-                    const expireDate = rowData.expire_date;
-
-                    const value = rowData.value;
-                    const observation = rowData.observation;
-                    const status = rowData.status;
-
-                    const idInput = document.createElement('input');
-                    idInput.type = 'number';
-                    idInput.name = 'product[product_installments][' + index + '][id]';
-                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.product
-                        ?.installments[index]?.id : null;
-                    idInput.hidden = true;
-                    idInput.className = "no-validation";
-                    idInput.setAttribute('data-cy', 'product-product_installments-' + index + '-id');
-
-                    const expireDateInput = document.createElement('input');
-                    expireDateInput.type = 'date';
-                    expireDateInput.name = 'product[product_installments][' + index +
-                        '][expire_date]';
-                    expireDateInput.value = expireDate;
-                    expireDateInput.hidden = true;
-                    expireDateInput.className = "no-validation";
-                    expireDateInput.setAttribute('data-cy', 'product-product_installments-' + index +
-                        '-expire_date');
-
-                    const valueInput = document.createElement('input');
-                    valueInput.type = 'number';
-                    valueInput.name = 'product[product_installments][' + index + '][value]';
-                    valueInput.value = value;
-                    valueInput.hidden = true;
-                    valueInput.className = "no-validation";
-                    valueInput.setAttribute('data-cy', 'product-product_installments-' + index +
-                        '-value');
-
-                    const observationInput = document.createElement('input');
-                    observationInput.type = 'text';
-                    observationInput.name = 'product[product_installments][' + index +
-                        '][observation]';
-                    observationInput.value = observation;
-                    observationInput.hidden = true;
-                    observationInput.className = "no-validation";
-                    observationInput.setAttribute('data-cy', 'product-product_installments-' + index +
-                        '-observation');
-
-                    const statusInput = document.createElement('input');
-                    statusInput.type = 'text';
-                    statusInput.name = 'product[product_installments][' + index + '][status]';
-                    statusInput.value = status;
-                    statusInput.hidden = true;
-                    statusInput.className = "no-validation";
-                    statusInput.setAttribute('data-cy', 'product-product_installments-' + index +
-                        '-status');
-
-                    hiddenInputsContainer.append(
-                        idInput,
-                        expireDateInput,
-                        valueInput,
-                        observationInput,
-                        statusInput,
-                    );
-                });
-            } else {
                 const idInput = document.createElement('input');
                 idInput.type = 'number';
-                idInput.name = 'product[product_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.product?.installments[0]
-                    ?.id : null;
+                idInput.name = 'product[product_installments][' + index + '][id]';
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.product
+                    ?.installments[index]?.id : null;
                 idInput.hidden = true;
                 idInput.className = "no-validation";
-                idInput.setAttribute('data-cy', 'product-product_installments-0-id');
+                idInput.setAttribute('data-cy', 'product-product_installments-' + index + '-id');
 
                 const expireDateInput = document.createElement('input');
                 expireDateInput.type = 'date';
-                expireDateInput.name = 'product[product_installments][0][expire_date]';
-                expireDateInput.value = "";
+                expireDateInput.name = 'product[product_installments][' + index +
+                    '][expire_date]';
+                expireDateInput.value = expireDate;
                 expireDateInput.hidden = true;
                 expireDateInput.className = "no-validation";
-                expireDateInput.setAttribute('data-cy', 'product-product_installments-0-expire_date');
-
+                expireDateInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                    '-expire_date');
 
                 const valueInput = document.createElement('input');
                 valueInput.type = 'number';
-                valueInput.name = 'product[product_installments][0][value]';
-                valueInput.value = "";
+                valueInput.name = 'product[product_installments][' + index + '][value]';
+                valueInput.value = value;
                 valueInput.hidden = true;
                 valueInput.className = "no-validation";
-                valueInput.setAttribute('data-cy', 'product-product_installments-0-value');
+                valueInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                    '-value');
 
                 const observationInput = document.createElement('input');
                 observationInput.type = 'text';
-                observationInput.name = 'product[product_installments][0][observation]';
-                observationInput.value = "";
+                observationInput.name = 'product[product_installments][' + index +
+                    '][observation]';
+                observationInput.value = observation;
                 observationInput.hidden = true;
                 observationInput.className = "no-validation";
-                observationInput.setAttribute('data-cy', 'product-product_installments-0-observation');
+                observationInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                    '-observation');
 
                 const statusInput = document.createElement('input');
                 statusInput.type = 'text';
-                statusInput.name = 'product[product_installments][0][status]';
-                statusInput.value = "";
+                statusInput.name = 'product[product_installments][' + index + '][status]';
+                statusInput.value = status;
                 statusInput.hidden = true;
-                statusInput.className = 'no-validation';
-                statusInput.setAttribute('data-cy', 'product-product_installments-0-status');
+                statusInput.className = "no-validation";
+                statusInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                    '-status');
 
                 hiddenInputsContainer.append(
                     idInput,
@@ -1031,7 +977,7 @@
                     observationInput,
                     statusInput,
                 );
-            }
+            });
         }
 
         function deleteHiddenInputs(row) {
@@ -1154,7 +1100,7 @@
             $('#modal-edit-product-installment').modal('show');
 
             const expireDate = $('#edit-expire-date');
-            const value = $('#edit-value');
+            const $editValue = $('#edit-value');
             const status = $('#edit-status');
             const observation = $('#edit-observation');
 
@@ -1163,7 +1109,11 @@
                 expireDate.val(formattedDate.toISOString().split('T')[0]);
             }
 
-            value.val(rowData.value);
+            editValueInputModalMasked.value = rowData.value.replace('.', ',');
+            $editValue.val(editValueInputModalMasked.value);
+
+            $editValueInputModal.trigger('input');
+
             observation.val(rowData.observation);
 
             status.select2('val', statusValues.find((status) => status.description === rowData.status).id);
@@ -1173,14 +1123,14 @@
 
                 const expireDate = $('#edit-expire-date').val();
 
-                const value = $('#edit-value').val();
+                const value = parseFloat($('#edit-value-hidden').val());
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
 
                 // insere valores editados na tabela
                 if (selectedRowIndex !== null) {
                     $installmentsTable.cell(selectedRowIndex, 0).data(expireDate);
-                    $installmentsTable.cell(selectedRowIndex, 1).data(value);
+                    $installmentsTable.cell(selectedRowIndex, 1).data(value.toFixed(2));
                     $installmentsTable.cell(selectedRowIndex, 2).data(observation);
                     $installmentsTable.cell(selectedRowIndex, 3).data(status);
                     $installmentsTable.cell(selectedRowIndex, 4).data(editButton);
