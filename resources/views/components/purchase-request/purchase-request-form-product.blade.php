@@ -663,18 +663,6 @@
         const $filesGroup = $('fieldset#files-group');
         const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-
-        // Verifica quem vai cotar e aplica regra em campo description
-        $('input[name="is_supplies_quote"]').change(function() {
-            if ($('#supplie_quote').is(':checked')) {
-                $('#description').prop('required', true)
-                $('.description-span').show()
-            } else {
-                $('#description').prop('required', false)
-                $('.description-span').hide()
-            }
-        });
-
         function disableSelectedOptions() {
             const selectedValues = $.map($('.cost-center-container select'), (self) => {
                 return $(self).val();
@@ -1170,11 +1158,6 @@
             const status = $('#edit-status');
             const observation = $('#edit-observation');
 
-            // const disabled = selectedRowIndex !== 0;
-            // value.prop({
-            //     disabled
-            // });
-
             if (rowData.expire_date) {
                 const formattedDate = new Date(rowData.expire_date.split('/').reverse().join('-'));
                 expireDate.val(formattedDate.toISOString().split('T')[0]);
@@ -1202,29 +1185,6 @@
                     $installmentsTable.cell(selectedRowIndex, 3).data(status);
                     $installmentsTable.cell(selectedRowIndex, 4).data(editButton);
                     $installmentsTable.draw();
-
-                    // comentado recalculo de parcelas para facilitar no futuro
-
-                    // if (selectedRowIndex === 0) {
-                    //     const amount = parseFloat($amount.val());
-                    //     const rows = $installmentsTable.rows().data();
-                    //     const selectedRowData = rows[selectedRowIndex];
-                    //     const selectedValue = parseFloat(selectedRowData.value);
-
-                    //     // Recalcula o valor das parcelas restantes
-                    //     const recalculatedValue = (amount - selectedValue) / (rows.length - 1);
-
-                    //     rows.each(function(rowData, index) {
-                    //         if (index !== selectedRowIndex) {
-                    //             $installmentsTable.cell(index, 1).data(recalculatedValue
-                    //                 .toFixed(2));
-                    //         }
-                    //     });
-
-                    //     $installmentsTable.draw();
-                    // }
-
-                    // ---------------------------------------------------------------
                 }
 
                 selectedRowIndex = null;
@@ -1334,18 +1294,9 @@
                 const lastIndex = Number(oldName.match(regexNewName).at(1));
                 const anotherRegex = /\[\d+\]/;
 
-                // poderia ser (e foi mermo)
                 const newName = oldName
                     .replaceAll(/\[\d+\]/g, `[0]`)
                     .replace(/\[\d+\]/, `[${lastIndex + 1}]`);
-                // assinado: --get
-
-                // POWER OF GAMBIARRATION (venceu) será?
-                // const newName = oldName
-                //     .replace(regexNewName, `purchase_request_products[${lastIndex + 1}]$2`
-                //         // função para fazer replace nas demais ocorrências (exceto a primeira);
-                //         .replace(anotherRegex, (i => m => !i++ ? m : '')(0))
-                //     );
 
                 $(this).attr('name', newName);
             });
@@ -1400,6 +1351,7 @@
                 const lastIndex = Number(oldName.match(regexNewName).at(1));
                 const newName = oldName.replace(regexNewName, `[products][${lastIndex + 1}]`);
                 $(this).attr('name', newName);
+                $(this).attr('data-cy', newName);
             });
 
             newRow.find("input, select").val("");

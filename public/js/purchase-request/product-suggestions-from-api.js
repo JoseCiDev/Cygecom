@@ -3,7 +3,7 @@ $(() => {
     let typingTimer;
     let autoCompleteVisible = false;
 
-    $('[name^="purchase_request_products"]').on('input', function () {
+    $(document).on('input', '[name^="purchase_request_products"]', function () {
         clearTimeout(typingTimer);
         const $autocompleteElement = $(this).closest('.product-row').find('.product-suggestion-autocomplete');
         const category_id = $(this).closest('.product-row').find('select').val();
@@ -27,7 +27,7 @@ $(() => {
         }.bind(this), doneTypingInterval);
     });
 
-    $('.product-suggestion-autocomplete').on('click', 'li', function () {
+    $(document).on('click', '.product-suggestion-autocomplete li', function () {
         const suggestion = $(this).text();
         $(this).closest('.product-row').find('[name$="[name]"]').val(suggestion);
         $(this).closest('.product-suggestion-autocomplete').hide();

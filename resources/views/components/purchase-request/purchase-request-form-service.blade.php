@@ -54,8 +54,6 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right">
             <x-modalDelete />
-            <button data-cy="btn-delete-request" data-route="purchaseRequests"
-                data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
             <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
                 title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
@@ -80,7 +78,6 @@
         </div>
 
         {{-- CENTRO DE CUSTOS --}}
-        <x-CostCenterApportionment :purchaseRequest="$purchaseRequest" />
         <x-CostCenterApportionment :purchaseRequest="$purchaseRequest" />
 
         <hr>
@@ -502,7 +499,6 @@
     </form>
 
     <x-ModalEditServiceInstallment :statusValues="$statusValues" />
-    <x-ModalEditServiceInstallment :statusValues="$statusValues" />
 
     <x-ModalSupplierRegister />
 
@@ -530,7 +526,6 @@
         let selectedRowIndex = null;
 
         function fillHiddenInputsWithRowData() {
-            const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
             const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
             const tableData = $installmentsTable.data();
             const hiddenInputsContainer = $('.hidden-installments-inputs-container');
