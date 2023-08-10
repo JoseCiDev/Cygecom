@@ -53,9 +53,6 @@
     <div class="request-details">
         <div class="details-content">
             <header class="request-details-header">
-                <img class="request-details-header-logo"
-                    src="https://s3.amazonaws.com/gupy5/production/companies/32213/career/73435/images/2022-06-29_14-57_logo.jpg"
-                    alt="Logo Essentia Group">
                 <h1>Solicitação de produto nº {{ $request->id }}</h1>
                 <div>
                     <span>Criado em: {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</span> |
