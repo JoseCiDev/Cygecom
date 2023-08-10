@@ -1,6 +1,5 @@
 @php
-    use App\Enums\PurchaseRequestStatus;
-    use App\Enums\PaymentMethod;
+    use App\Enums\{PurchaseRequestStatus, PaymentMethod, ContractRecurrence};
 
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
@@ -496,7 +495,7 @@
                                 data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($recurrenceOptions as $recurrence)
-                                    <option value="{{ $recurrence->value }}" @selected($recurrence->value === $recurrenceSelected->value)>
+                                    <option value="{{ $recurrence->value }}" @selected($recurrence->value === $recurrenceSelected?->value)>
                                         {{ $recurrence->label() }}
                                     </option>
                                 @endforeach
