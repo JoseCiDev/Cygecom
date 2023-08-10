@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductSuggestionController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,5 +24,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::group(['prefix' => 'suppliers'], function () {
         Route::get('/', [SupplierController::class, 'indexAPI'])->name('api.suppliers.index');
         Route::post('/register', [SupplierController::class, 'registerAPI'])->name('api.supplier.register');
+    });
+
+    Route::group(['prefix' => 'products'], function () {
+        Route::get('/suggestion', [ProductSuggestionController::class, 'index'])->name('api.product.suggestion.index');
     });
 });

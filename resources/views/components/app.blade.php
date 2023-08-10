@@ -40,6 +40,7 @@
     <link rel="stylesheet" href="{{ asset('css/modal-supplies.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootbox.custom.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom-modal-dialog.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/purchase-request/product-suggestion-autocomplete.css') }}">
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
