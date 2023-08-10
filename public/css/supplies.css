@@ -85,7 +85,7 @@
 }
 
 .request-supplier-group {
-    border: 5px solid rgb(221, 221, 221);
+    border: 1px solid rgb(221, 221, 221);
 }
 
 .request-details-content-box-supplier {
@@ -99,4 +99,12 @@
 .request-details-content-box-products-product {
     flex-grow: 1;
     padding: 10px;
+}
+
+.zebra-bg-even {
+    background-color: #c5c5c5;
+}
+
+.zebra-bg-odd {
+    background-color: #eaeaea;
 }

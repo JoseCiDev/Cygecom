@@ -7,32 +7,39 @@
 
             const elements = element.find('*');
             for (let i = 0; i < elements.length; i++) {
-                elements[i].style.fontSize = '12px';
+                elements[i].style.fontSize = '10px';
+                elements[i].style.padding = '0';
+                elements[i].style.margin = '0';
             }
 
-            const paragraphs = element.find('p');
-            paragraphs.css({
-                'margin': '0',
-                'font-size': '12px',
+            const detailsTitle = element.find('.box-title .request-title');
+            detailsTitle.css({
+                'font-size': '10px',
+                'font-weight': '400',
+                'line-height': '9px',
+                'text-align': 'center',
+                'letter-spacing': '7px',
+                'max-width': '840px',
+                'margin': '3px 0',
+                'color': '#333',
+                'text-transform': 'uppercase',
             });
 
-            const tabContent = element.find('.tab-content');
-            tabContent.css({
-                'padding': '0',
+            const boxTitle = element.find('.box-title');
+            boxTitle.css({
+                'margin': '3px 0',
             });
 
-            const requestDetailsContentBox = element.find('.request-details-content-box');
-            requestDetailsContentBox.css({
-                'padding': '5px',
+            const requestDetailsContent = element.find('.request-details-content');
+            requestDetailsContent.css({
+                'margin': '1px 0',
             });
 
             const opt = {
-                margin : 1,
+                margin : 4,
                 filename: '{{$fileName}}' + '.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
             html2pdf().from(element[0]).set(opt).save().then(() => location.reload());
