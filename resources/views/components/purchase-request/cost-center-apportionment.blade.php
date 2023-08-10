@@ -9,9 +9,14 @@
                     class='select2-me' data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
                     <option value=""></option>
                     @foreach ($costCenters as $costCenter)
-                        @php $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id; @endphp
+                        @php 
+                            $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id; 
+                            $companyName = $costCenter->company->name;
+                            $costCenterName = $costCenter->name;
+                            $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
+                        @endphp
                         <option value="{{ $costCenter->id }}" @selected($isApportionmentSelect)>
-                            {{ $costCenter->name }}
+                            {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
                         </option>
                     @endforeach
                 </select>

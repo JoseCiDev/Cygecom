@@ -13,7 +13,7 @@
                             </div>
                         @endif
                         <h1>Bem-vindo!</h1>
-                        <p>Este é o portal de gerenciamento de compras dao grupo Essentia!</p>
+                        <p>Este é o portal de gerenciamento de compras dão grupo Essentia!</p>
                         
                         @if (config('app.env') === 'local' && auth()->user()->profile->name === 'admin')
                             <p>TESTE E-MAIL</p>
