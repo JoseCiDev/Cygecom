@@ -107,6 +107,24 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
+        $.fn.makeRequired = function() {
+            this.filter(function() {
+                return $(this).closest('.form-group').find('label').first().find('sup').length === 0;
+            }).each(function() {
+                const $label = $(this).closest('.form-group').find('label').first();
+                $label.append('<sup style="color:red">*</sup>');
+                $(this).attr('data-rule-required', true)
+            });
+        }
+
+        $.fn.removeRequired = function() {
+            this.each(function() {
+                const $sup = $(this).closest('.form-group').find('label').first().find('sup');
+                $sup.remove();
+                $(this).attr('data-rule-required', false)
+            });
+        }
+
         $(() => {
             // required style
             $('[data-rule-required]').each(function() {
@@ -156,7 +174,8 @@
 
                     @if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios' || $currentProfile === 'gestor_fornecedores')
                         <li>
-                            <a href="#" data-toggle="dropdown" class='dropdown-toggle' data-cy="dropdown-cadastros">
+                            <a href="#" data-toggle="dropdown" class='dropdown-toggle'
+                                data-cy="dropdown-cadastros">
                                 <span>CADASTROS</span>
                                 <span class="caret"></span>
                             </a>
@@ -175,30 +194,39 @@
                         </li>
                     @endif
                     <li>
-                        <a href="#" data-toggle="dropdown" class='dropdown-toggle' data-cy="dropdown-solicitacoes">
+                        <a href="#" data-toggle="dropdown" class='dropdown-toggle'
+                            data-cy="dropdown-solicitacoes">
                             <span>SOLICITAÇÕES</span>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ route('request.links') }}" data-cy="dropdown-solicitacoes-novas">Nova Solicitação</a></li>
-                            <li><a href="{{ route('requests.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas Solicitações</a></li>
+                            <li><a href="{{ route('request.links') }}" data-cy="dropdown-solicitacoes-novas">Nova
+                                    Solicitação</a></li>
+                            <li><a href="{{ route('requests.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas
+                                    Solicitações</a></li>
                             @if ($currentProfile === 'admin')
-                                <li><a href="{{ route('requests') }}" data-cy="dropdown-solicitacoes-gerais">Solicitações Gerais</a></li>
+                                <li><a href="{{ route('requests') }}"
+                                        data-cy="dropdown-solicitacoes-gerais">Solicitações Gerais</a></li>
                             @endif
                         </ul>
                     </li>
                     @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp' || $currentProfile === 'suprimentos_hkm')
                         <li>
-                            <a href="#" data-toggle="dropdown" class='dropdown-toggle' data-cy="dropdown-suprimentos">
+                            <a href="#" data-toggle="dropdown" class='dropdown-toggle'
+                                data-cy="dropdown-suprimentos">
                                 <span>SUPRIMENTOS</span>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ route('supplies.index') }}" data-cy="dropdown-suprimentos-dashboard">Dashboard</a></li>
+                                <li><a href="{{ route('supplies.index') }}"
+                                        data-cy="dropdown-suprimentos-dashboard">Dashboard</a></li>
                                 @if ($currentProfile === 'admin')
-                                    <li><a href="{{ route('supplies.product') }}" data-cy="dropdown-suprimentos-produtos">Produtos</a></li>
-                                    <li><a href="{{ route('supplies.service') }}" data-cy="dropdown-suprimentos-servicos">Serviços</a></li>
-                                    <li><a href="{{ route('supplies.contract') }}" data-cy="dropdown-suprimentos-contratos">Contratos</a></li>
+                                    <li><a href="{{ route('supplies.product') }}"
+                                            data-cy="dropdown-suprimentos-produtos">Produtos</a></li>
+                                    <li><a href="{{ route('supplies.service') }}"
+                                            data-cy="dropdown-suprimentos-servicos">Serviços</a></li>
+                                    <li><a href="{{ route('supplies.contract') }}"
+                                            data-cy="dropdown-suprimentos-contratos">Contratos</a></li>
                                 @endif
                             </ul>
                         </li>

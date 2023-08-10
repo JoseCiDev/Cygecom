@@ -4,20 +4,20 @@ $(() =>{
     $('#modal-supplies').on('show.bs.modal', function(event) {
         const list = $('.modal-body-dynamic-list')
         list.text('')
-    
+
         const modal = $(this);
         const button = $(event.relatedTarget);
         const name = button.data('modal-name');
-    
+
         modal.find('.modal-name').text(name);
-    
+
         const dateFormatter = (date, execeptionMessage) => date ? new Date(date).toLocaleDateString('pt-br') : (execeptionMessage || '---');
         const booleanFormatter = (value, truthyMessage, falsyMessage) => value ? (truthyMessage || 'Verdadeiro') : (falsyMessage || 'Falso');
-    
+
         const mappedBasicInfoEntries = {
             id: (value) => value,
             status: (value) => {
-                const status = { 
+                const status = {
                     pendente: 'Pendente',
                     em_tratativa: 'Em tratativa',
                     em_cotacao: 'Em cotação',
@@ -48,23 +48,23 @@ $(() =>{
             is_comex: (value) => booleanFormatter(value, 'Sim', 'Não'),
             is_supplies_contract: (value) => booleanFormatter(value, 'Suprimentos', 'Solicitante'),
         }
-    
+
         const mappedUserEntries = {
             email: (value) =>  value,
             is_buyer: (value) => booleanFormatter(value, 'Autorizado', 'Não autorizado'),
         }
-    
+
         const mappedSuppliesUserEntries = {
             email: (value) =>  value,
             person: (value) => value?.name
         }
-    
+
         const request = button.data('request');
         const requestUser = request.user
         const requestSuppliesUser = request.supplies_user
-    
+
         const costCenterApportionment = request.cost_center_apportionment
-        
+
         const elementCostCenterApportionment = $('.costCenterApportionment');
         elementCostCenterApportionment.empty();
         costCenterApportionment.forEach(element => {
@@ -81,18 +81,18 @@ $(() =>{
             entries.forEach(element => {
                 const [key, value] = element
                 const getElement = $(`.${selector + key}`)
-    
+
                 if (!getElement.length) {
                     return
                 }
-    
+
                 if(mappedEntries[key]) {
                     const content = mappedEntries[key](value)
                     getElement.html(content)
                 }
             });
         }
-    
+
         mapObjectAndReturnContent(request, mappedBasicInfoEntries)
         mapObjectAndReturnContent(requestUser, mappedUserEntries, 'user-')
         if(requestSuppliesUser) {

@@ -1,5 +1,6 @@
 @php
     use App\Enums\PurchaseRequestStatus;
+    use App\Enums\PaymentMethod;
 
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
@@ -35,8 +36,11 @@
     }
 
     .product-row hr {
-        border-top: 5px solid rgb(178, 177, 177);
         margin: 0px;
+    }
+
+    .supplier-block .product-container .product-row:nth-of-type(odd) {
+        background-color: rgb(208, 208, 208);
     }
 </style>
 
@@ -92,10 +96,13 @@
                                 @foreach ($costCenters as $costCenter)
                                     @php
                                         $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
+                                        $companyName = $costCenter->company->name;
+                                        $costCenterName = $costCenter->name;
+                                        $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
                                     @endphp
                                     <option value="{{ $costCenter->id }}"
                                         {{ $isApportionmentSelect ? 'selected' : '' }}>
-                                        {{ $costCenter->name }}
+                                        {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
                                     </option>
                                 @endforeach
                             </select>
@@ -313,9 +320,27 @@
                     </div>
                 </div>
 
+                {{-- PRODUTO JÁ COMPRADO --}}
+                <div class="col-sm-3" style="width: 20%">
+                    <label for="form-check" class="control-label" style="padding-right:10px">
+                        Você já realizou a compra deste produto?
+                    </label>
+                    <div class="form-check">
+                        <input name="product[already_purchased]" value="1" class="radio-already-purchased"
+                            id="already-purchased" data-cy="already-purchased" type="radio"
+                            @checked(isset($purchaseRequest) && (bool) $purchaseRequest->product->already_purchased)>
+                        <label class="form-check-label" for="already-purchased">Sim</label>
+
+                        <input name="product[already_purchased]" value="0" class="radio-already-purchased"
+                            type="radio" id="not-provided" data-cy="not-provided" style="margin-left: 7px;"
+                            @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->product->already_purchased) || !isset($purchaseRequest))>
+                        <label class="form-check-label" for="not-provided">Não</label>
+                    </div>
+                </div>
+
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label for="desired-date" class="control-label">Data desejada do serviço</label>
+                        <label for="desired-date" class="control-label">Data desejada entrega do produto</label>
                         <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
                             class="form-control" min="2023-07-24"
                             value="{{ $purchaseRequest->desired_date ?? null }}">
@@ -382,25 +407,20 @@
                         <div class="form-group">
                             <label class="control-label">Forma de pagamento</label>
                             @php
-                                $paymentMethod = null;
+                                $selectedPaymentMethod = null;
                                 if (isset($purchaseRequest->product) && isset($purchaseRequest->product->paymentInfo)) {
-                                    $paymentMethod = $purchaseRequest->product->paymentInfo->payment_method;
+                                    $selectedPaymentMethod = $purchaseRequest->product->paymentInfo->payment_method;
                                 }
                             @endphp
                             <select name="product[payment_info][payment_method]" id="payment-method"
                                 data-cy="payment-method" class='select2-me payment-method'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="PIX" {{ $paymentMethod === 'PIX' ? 'selected' : '' }}>PIX</option>
-                                <option value="DEPÓSITO BANCÁRIO"
-                                    {{ $paymentMethod === 'DEPÓSITO BANCÁRIO' ? 'selected' : '' }}>DEPÓSITO BANCÁRIO
-                                </option>
-                                <option value="BOLETO" {{ $paymentMethod === 'BOLETO' ? 'selected' : '' }}>BOLETO
-                                </option>
-                                <option value="CARTÃO CRÉDITO"
-                                    {{ $paymentMethod === 'CARTÃO CRÉDITO' ? 'selected' : '' }}>CARTÃO CRÉDITO</option>
-                                <option value="CARTÃO DÉBITO"
-                                    {{ $paymentMethod === 'CARTÃO DÉBITO' ? 'selected' : '' }}>CARTÃO DÉBITO</option>
+                                @foreach ($paymentMethods as $paymentMethod)
+                                    <option value="{{ $paymentMethod->value }}" @selected($paymentMethod->value === $selectedPaymentMethod)>
+                                        {{ $paymentMethod->label() }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -513,7 +533,7 @@
         <hr style="margin-top: 30px; margin-bottom: 25px;">
 
         {{-- ARQUIVOS --}}
-        <div class="row justify-content-center" >
+        <div class="row justify-content-center">
             <div class="col-sm-12">
                 <fieldset id="files-group">
                     <h4 style="margin-bottom: 20px;">
@@ -580,7 +600,7 @@
 
 </div>
 
-{{-- <script src="{{ asset('js/supplies/select2-custom.js') }}"></script> --}}
+<script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
         hasSentRequest = @json($hasSentRequest);
@@ -631,8 +651,9 @@
             mask: IMask.MaskedRange,
             from: 1,
             to: 60,
-            autofix: false,
+            autofix: 'pad'
         });
+
 
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
@@ -693,6 +714,37 @@
         }
         updateApportionmentFields();
 
+        // desabilita botao caso nao tenha sido preenchido cost center corretamente;
+        const $btnAddCostCenter = $('.add-cost-center-btn');
+        const $costCenterSelect = $('.cost-center-container select');
+
+        function toggleCostCenterBtn() {
+            const costCenterContainer = $(this).closest('.cost-center-container');
+
+            const costCenterSelect = costCenterContainer
+                .find('select')
+                .val();
+
+            const costcenterPercentage = costCenterContainer
+                .find('input[name$="[apportionment_percentage]"]')
+                .val()
+
+            const costCenterCurrency = costCenterContainer
+                .find('input[name$="[apportionment_currency]"]')
+                .val()
+
+            const isValidApportionment = Boolean(costCenterSelect && (costcenterPercentage ||
+                costCenterCurrency));
+
+            $btnAddCostCenter.prop('disabled', !isValidApportionment);
+        }
+
+        $(document).on('input change',
+            `${$costCenterSelect.selector}, ${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
+            toggleCostCenterBtn);
+
+        toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
+
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
         $costCenterPercentage.add($costCenterCurrency).on('input', updateApportionmentFields);
 
@@ -718,6 +770,7 @@
             newRow.find('.delete-cost-center').removeAttr('hidden');
             checkCostCenterCount();
             disableSelectedOptions();
+            toggleCostCenterBtn.bind(this)();
         });
 
         $(document).on('click', '.delete-cost-center', function() {
@@ -725,9 +778,39 @@
             updateApportionmentFields();
             checkCostCenterCount();
             disableSelectedOptions();
+            toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
         });
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
+
+
+        // muda data desejada minima quando produto já comprado
+        const $desiredDate = $('#desired-date');
+        const $productAlreadyPurchased = $('.radio-already-purchased');
+        const currentDate = moment().format('YYYY-MM-DD');
+        const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
+
+        function desiredDateGreaterThanCurrent() {
+            const desiredDate = $desiredDate.val();
+
+            return desiredDate > currentDate;
+        }
+
+        function changeMinDesiredDate() {
+            const isValidDate = desiredDateGreaterThanCurrent();
+            const productAlreadyPurchased = $productAlreadyPurchased.filter(':checked').val() === "1";
+
+            const minDate = productAlreadyPurchased ? minInitialDate : currentDate;
+
+            $desiredDate.attr('min', minDate);
+        }
+
+        $productAlreadyPurchased
+            .add($desiredDate)
+            .on('change', changeMinDesiredDate)
+            .filter(':checked')
+            .trigger('change');
+
 
         // trata valor serviço mascara
         $serviceAmount.on('input', function() {
@@ -773,26 +856,8 @@
         // sim está repetindo muito...
 
         const $selectSupplier = $('.select-supplier');
-        const $paymentMethod = $('.payment-method');
+        const $paymentMethod = $('#payment-method');
         const $paymentInfo = $('.payment-info');
-
-        // desabilita todos os campos do form caso solicitacao ja enviada
-        $('#request-form')
-            .find('input, textarea, checkbox')
-            .prop('disabled', hasSentRequest);
-
-        $('#request-form')
-            .find('select')
-            .prop('disabled', hasSentRequest);
-
-        $('.file-remove').prop('disabled', hasSentRequest);
-
-        $('.add-supplier-btn').prop('disabled', hasSentRequest);
-        $('.delete-supplier').prop('disabled', hasSentRequest);
-
-        $('.add-product').prop('disabled', hasSentRequest);
-        $('.delete-product').prop('disabled', hasSentRequest);
-
 
         const purchaseRequest = @json($purchaseRequest);
         const isRequestCopy = @json($isCopy);
@@ -999,9 +1064,9 @@
         fillHiddenInputsWithRowData();
 
 
-        // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
+        // verifica AREA ou SUPRIMENTOS (desabilitar pagamento)
         const $radioIsContractedBySupplies = $('.radio-who-wants');
-        const $suppliersBlock = $('.suppliers-block');
+        const $supplierBlock = $('.supplier-block');
         const $paymentBlock = $('.payment-block');
 
         const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
@@ -1011,29 +1076,33 @@
             const isContractedBySupplies = $(this).val() === "1";
 
             // muda label
-            const supplierSelect = $suppliersBlock.find('select');
+            const supplierSelect = $('select.select-supplier');
             const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
 
-            supplierSelect.siblings('label[for="' + supplierSelect.attr('name') + '"]').text(newLabel);
-            supplierSelect.data('rule-required', !isContractedBySupplies);
+            supplierSelect.siblings('label').text(newLabel);
+
+            supplierSelect.before().removeAttr('data-rule-required');
 
             // desabilita pagamento
             $paymentBlock
                 .find('input, textarea')
                 .prop('readonly', isContractedBySupplies);
-            //.data('rule-required', !isContractedBySupplies);
 
             $paymentBlock
                 .find('select')
                 .prop('disabled', isContractedBySupplies)
-                //.data('rule-required', !isContractedBySupplies)
                 .trigger('change.select2');
 
             if (isContractedBySupplies) {
-                //$paymentBlock.find('.form-group').removeClass('has-error');
-                //$paymentBlock.find('input').valid();
+                supplierSelect.removeRequired();
+                supplierSelect.closest('.form-group').removeClass('has-error');
+                $supplierBlock.find('.help-block').remove();
+
                 $installmentsTable.clear().draw();
+
+                return;
             }
+            supplierSelect.makeRequired();
         });
 
         if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
@@ -1184,26 +1253,33 @@
             generateInstallments(numberOfInstallments);
         });
 
-        const $isPrePaid = $('#service-is-prepaid');
+        const $isPrePaid = $('#product-is-prepaid');
         const $paymentInfoDescription = $('#payment-info-description');
 
         $isPrePaid.on('change', function() {
             const isPrePaid = $(this).val() === "1";
-            $serviceAmount.data('rule-required', isPrePaid);
-            $paymentMethod.data('rule-required', isPrePaid);
-            $formatInputInstallmentsNumber.data('rule-required', isPrePaid);
-            $paymentInfoDescription.data('rule-required', isPrePaid);
 
             if (!isPrePaid) {
-                $serviceAmount.closest('.form-group').removeClass('has-error');
-                $paymentMethod.closest('.form-group').removeClass('has-error');
-                $formatInputInstallmentsNumber.closest('.form-group').removeClass('has-error');
-                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
-                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
+                $serviceAmount
+                    .add($paymentMethod)
+                    .add($formatInputInstallmentsNumber)
+                    .add($paymentInfoDescription)
+                    .closest('.form-group')
+                    .removeClass('has-error')
+                    .removeRequired();
 
                 $paymentBlock.find('.help-block').remove();
+
+                return;
             }
-        });
+
+            $serviceAmount
+                .add($paymentMethod)
+                .add($formatInputInstallmentsNumber)
+                .add($paymentInfoDescription)
+                .makeRequired();
+
+        }).trigger('change');
 
         if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
             $isPrePaid.filter(':selected').trigger('change.select2');
@@ -1217,7 +1293,6 @@
         function checkSuppliersContainerLength() {
             const suppliersCount = $supplierContainer.find('.supplier-block').length;
             const suppliersCountGreaterThanOne = suppliersCount > 1;
-            console.log(suppliersCountGreaterThanOne);
             $('.delete-supplier').prop('disabled', !suppliersCountGreaterThanOne);
         }
 
@@ -1227,7 +1302,8 @@
         function checkProductRows() {
             $('.supplier-block').each(function() {
                 const $productContainer = $(this).find('.product-container');
-                const productRowCount = $productContainer.find('.product-row').length;
+                const $productRow = $productContainer.find('.product-row');
+                const productRowCount = $productRow.length;
 
                 $productContainer.find('.delete-product').prop('disabled', productRowCount <= 1);
             });
@@ -1283,6 +1359,10 @@
 
             checkSuppliersContainerLength();
             checkProductRows();
+
+            const $selectSupplier = $newContainer.find('select').first();
+
+            addBtnSupplierSelect($selectSupplier);
         });
 
         $(document).on('click', '.delete-supplier', function() {
@@ -1389,5 +1469,28 @@
                 console.error(error);
             }
         });
+
+
+        // desabilita todos os campos do form caso solicitacao ja enviada
+        if (hasSentRequest) {
+            $('#request-form')
+                .find('input, textarea, checkbox')
+                .prop('disabled', hasSentRequest);
+
+            $('#request-form')
+                .find('select')
+                .prop('disabled', hasSentRequest);
+
+            $('.file-remove').prop('disabled', hasSentRequest);
+
+            $('.add-supplier-btn').prop('disabled', hasSentRequest);
+            $('.delete-supplier').prop('disabled', hasSentRequest);
+
+            $('.add-product-btn').prop('disabled', hasSentRequest);
+            $('.delete-product').prop('disabled', hasSentRequest);
+
+            $('.add-cost-center-btn').prop('disabled', hasSentRequest);
+            $('.delete-cost-center').prop('disabled', hasSentRequest);
+        }
     });
 </script>

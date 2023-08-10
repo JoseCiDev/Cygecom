@@ -51,5 +51,6 @@ class Product extends Model
         'updated_by',
         'deleted_by',
         'deleted_at',
+        'already_purchased'
     ];
 }

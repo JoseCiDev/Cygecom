@@ -26,7 +26,7 @@
                                     <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
                                     @foreach (\App\Enums\PurchaseRequestStatus::cases() as $statusCase)
                                         @if ($statusCase->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
-                                            <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}} 
+                                            <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}}
                                                 value="{{ $statusCase->value }}" @selected($statusCase->value === $status?->value)>
                                                 {{ $statusCase->label() }}
                                             </option>
@@ -43,11 +43,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($products as $index => $product)
-                            @php 
-                                $groups = $product->CostCenterApportionment->pluck('costCenter.Company.group')->unique(); 
+                        @foreach ($products as $index => $product),
+                            @php
+                                $groups = $product->CostCenterApportionment->pluck('costCenter.Company.group')->unique();
                                 $concatenatedGroups = $groups->map(function ($item) {
-                                        return $item->label(); 
+                                        return $item->label();
                                     })->implode(', ');
                             @endphp
                             <tr>
@@ -57,14 +57,14 @@
                                 <td class="hidden-1280">{{$product->responsibility_marked_at ? \Carbon\Carbon::parse($product->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td>{{$product->status->label()}}</td>
                                 <td >{{$product->purchaseRequestProduct->first()->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
-                                <td class="hidden-1024">{{$product->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
+                                <td class="hidden-1024">{{$product->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1280">{{$concatenatedGroups}}</td>
 
                                 <td class="hidden-1440">{{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td class="hidden-1440">{{ $product->updated_at ? \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') : '---'}}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
-                                    <button 
+                                    <button
                                         data-modal-name="{{ 'Analisando Solicitação de Produto - Nº ' . $product->id }}"
                                         data-id="{{ $product->id }}"
                                         data-request="{{json_encode($product)}}"
