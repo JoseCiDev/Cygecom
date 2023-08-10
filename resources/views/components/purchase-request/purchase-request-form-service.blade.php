@@ -54,7 +54,8 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right">
             <x-modalDelete />
-            <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
+            <button data-cy="btn-delete-request" data-route="purchaseRequests"
+                data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
                 title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
                 Excluir solicitação
@@ -505,10 +506,10 @@
 </div>
 
 <script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
-<script src="{{asset('js/service-form/desired-date-config.js')}}"></script>
-<script src="{{asset('js/service-form/file-remove-button-config.js')}}"></script>
-<script src="{{asset('js/service-form/submit-buttons-config.js')}}"></script>
-<script src="{{asset('js/service-form/imasks.js')}}"></script>
+<script src="{{ asset('js/service-form/desired-date-config.js') }}"></script>
+<script src="{{ asset('js/service-form/file-remove-button-config.js') }}"></script>
+<script src="{{ asset('js/service-form/submit-buttons-config.js') }}"></script>
+<script src="{{ asset('js/service-form/imasks.js') }}"></script>
 
 <script>
     $(() => {
@@ -523,7 +524,20 @@
         const $paymentBlock = $('.payment-block');
         const $isPrePaid = $('#service-is-prepaid');
 
+        const $editValueInputModal = $('#edit-value');
+        const $editValueHiddenModal = $('#edit-value-hidden');
+
         let selectedRowIndex = null;
+
+        editValueInputModalMasked = $editValueInputModal.imask({
+            mask: Number,
+            scale: 2,
+            thousandsSeparator: '.',
+            normalizeZeros: true,
+            padFractionalZeros: true,
+            min: 0,
+            max: 1000000000,
+        });
 
         function fillHiddenInputsWithRowData() {
             const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
@@ -531,95 +545,54 @@
             const hiddenInputsContainer = $('.hidden-installments-inputs-container');
 
             hiddenInputsContainer.empty();
+            tableData.each(function(rowData, index) {
+                const expireDate = rowData.expire_date;
+                const value = rowData.value;
+                const observation = rowData.observation;
+                const status = rowData.status;
 
-            if (tableData.length > 0) {
-                tableData.each(function(rowData, index) {
-                    const expireDate = rowData.expire_date;
-
-                    const value = rowData.value;
-                    const observation = rowData.observation;
-                    const status = rowData.status;
-
-                    const idInput = document.createElement('input');
-                    idInput.type = 'number';
-                    idInput.name = `service[service_installments][${index}][id]`;
-                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]?.id : null;
-                    idInput.hidden = true;
-                    idInput.className = "no-validation";
-
-                    const expireDateInput = document.createElement('input');
-                    expireDateInput.type = 'date';
-                    expireDateInput.name = `service[service_installments][${index}][expire_date]`;
-                    expireDateInput.name = `service[service_installments][${index}][expire_date]`;
-                    expireDateInput.value = expireDate;
-                    expireDateInput.hidden = true;
-                    expireDateInput.className = "no-validation";
-
-                    const valueInput = document.createElement('input');
-                    valueInput.type = 'number';
-                    valueInput.name = `service[service_installments][${index}][value]`;
-                    valueInput.name = `service[service_installments][${index}][value]`;
-                    valueInput.value = value;
-                    valueInput.hidden = true;
-                    valueInput.className = "no-validation";
-
-                    const observationInput = document.createElement('input');
-                    observationInput.type = 'text';
-                    observationInput.name = `service[service_installments][${index}][observation]`;
-                    observationInput.name = `service[service_installments][${index}][observation]`;
-                    observationInput.value = observation;
-                    observationInput.hidden = true;
-                    observationInput.className = "no-validation";
-
-                    const statusInput = document.createElement('input');
-                    statusInput.type = 'text';
-                    statusInput.name = `service[service_installments][${index}][status]`;
-                    statusInput.name = `service[service_installments][${index}][status]`;
-                    statusInput.value = status;
-                    statusInput.hidden = true;
-                    statusInput.className = "no-validation";
-
-                    hiddenInputsContainer.append( idInput, expireDateInput, valueInput, observationInput, statusInput );
-                });
-            } else {
                 const idInput = document.createElement('input');
                 idInput.type = 'number';
-                idInput.name = 'service[service_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]?.id : null;
+                idInput.name = `service[service_installments][${index}][id]`;
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service
+                    ?.installments[index]?.id : null;
                 idInput.hidden = true;
                 idInput.className = "no-validation";
 
                 const expireDateInput = document.createElement('input');
                 expireDateInput.type = 'date';
-                expireDateInput.name = 'service[service_installments][0][expire_date]';
-                expireDateInput.value = "";
+                expireDateInput.name = `service[service_installments][${index}][expire_date]`;
+                expireDateInput.name = `service[service_installments][${index}][expire_date]`;
+                expireDateInput.value = expireDate;
                 expireDateInput.hidden = true;
                 expireDateInput.className = "no-validation";
 
-
                 const valueInput = document.createElement('input');
                 valueInput.type = 'number';
-                valueInput.name = 'service[service_installments][0][value]';
-                valueInput.value = "";
+                valueInput.name = `service[service_installments][${index}][value]`;
+                valueInput.name = `service[service_installments][${index}][value]`;
+                valueInput.value = value;
                 valueInput.hidden = true;
                 valueInput.className = "no-validation";
 
                 const observationInput = document.createElement('input');
                 observationInput.type = 'text';
-                observationInput.name = 'service[service_installments][0][observation]';
-                observationInput.value = "";
+                observationInput.name = `service[service_installments][${index}][observation]`;
+                observationInput.name = `service[service_installments][${index}][observation]`;
+                observationInput.value = observation;
                 observationInput.hidden = true;
                 observationInput.className = "no-validation";
 
                 const statusInput = document.createElement('input');
                 statusInput.type = 'text';
-                statusInput.name = 'service[service_installments][0][status]';
-                statusInput.value = "";
+                statusInput.name = `service[service_installments][${index}][status]`;
+                statusInput.name = `service[service_installments][${index}][status]`;
+                statusInput.value = status;
                 statusInput.hidden = true;
-                statusInput.className = 'no-validation';
-
-                hiddenInputsContainer.append( idInput, expireDateInput, valueInput, observationInput, statusInput, );
-            }
+                statusInput.className = "no-validation";
+                hiddenInputsContainer.append(idInput, expireDateInput, valueInput, observationInput,
+                    statusInput);
+            });
         }
 
         function deleteHiddenInputs(row) {
@@ -677,7 +650,7 @@
             $('#modal-edit-service-installment').modal('show');
 
             const expireDate = $('#edit-expire-date');
-            const value = $('#edit-value');
+            const $editValue = $('#edit-value');
             const status = $('#edit-status');
             const observation = $('#edit-observation');
 
@@ -686,7 +659,11 @@
                 expireDate.val(formattedDate.toISOString().split('T')[0]);
             }
 
-            value.val(rowData.value);
+            editValueInputModalMasked.value = rowData.value.replace('.', ',');
+            $editValue.val(editValueInputModalMasked.value);
+
+            $editValueInputModal.trigger('input');
+
             observation.val(rowData.observation);
 
             status.select2('val', statusValues.find((status) => status.description === rowData.status).id);
@@ -695,15 +672,16 @@
                 event.preventDefault();
 
                 const expireDate = $('#edit-expire-date').val();
-                const value = $('#edit-value').val();
+                const value = parseFloat($('#edit-value-hidden').val());
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
-                const editButton = '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
+                const editButton =
+                    '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
 
                 // insere valores editados na tabela
                 if (selectedRowIndex !== null) {
                     $installmentsTable.cell(selectedRowIndex, 0).data(expireDate);
-                    $installmentsTable.cell(selectedRowIndex, 1).data(value);
+                    $installmentsTable.cell(selectedRowIndex, 1).data(value.toFixed(2));
                     $installmentsTable.cell(selectedRowIndex, 2).data(observation);
                     $installmentsTable.cell(selectedRowIndex, 3).data(status);
                     $installmentsTable.cell(selectedRowIndex, 4).data(editButton);
@@ -751,7 +729,9 @@
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        const btnEdit = $( '<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>' );
+                        const btnEdit = $(
+                            '<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>'
+                            );
                         btnEdit.find('button').prop('disabled', hasSentRequest);
 
                         return btnEdit.html();
@@ -799,7 +779,8 @@
             // desabilita pagamento
             $paymentBlock.find('input, textarea').prop('readonly', isContractedBySupplies);
 
-            $paymentBlock.find('select').prop('disabled', isContractedBySupplies).trigger('change.select2');
+            $paymentBlock.find('select').prop('disabled', isContractedBySupplies).trigger(
+                'change.select2');
 
             if (isContractedBySupplies) {
                 $installmentsTable.clear().draw();
@@ -869,7 +850,7 @@
         }
 
         // desabilita todos os campos do form caso solicitacao ja enviada
-        if(hasSentRequest) {
+        if (hasSentRequest) {
             $('#request-form').find('input, textarea, checkbox').prop('disabled', true);
             $('#request-form').find('select').prop('disabled', true);
             $('.file-remove').prop('disabled', true);

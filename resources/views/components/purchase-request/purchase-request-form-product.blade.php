@@ -1127,8 +1127,6 @@
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
 
-                console.log(value);
-
                 // insere valores editados na tabela
                 if (selectedRowIndex !== null) {
                     $installmentsTable.cell(selectedRowIndex, 0).data(expireDate);
