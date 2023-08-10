@@ -1,4 +1,6 @@
 $(() =>{
+    const formatCnpj = (cnpj) => cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
+
     $('#modal-supplies').on('show.bs.modal', function(event) {
         const list = $('.modal-body-dynamic-list')
         list.text('')
@@ -68,7 +70,8 @@ $(() =>{
         costCenterApportionment.forEach(element => {
             const liElement = `<li style="margin-bottom: 10px;">
                 <strong>Centro de custo:</strong> ${element.cost_center.name}<br>
-                <strong>CNPJ:</strong> ${element.cost_center.company.cnpj}
+                <strong>CNPJ:</strong> ${formatCnpj(element.cost_center.company.cnpj)}<br>
+                <strong>Empresa:</strong> ${element.cost_center.company.name}
             </li>`;
             elementCostCenterApportionment.append(liElement);
         });
