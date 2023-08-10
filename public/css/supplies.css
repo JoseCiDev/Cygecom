@@ -100,3 +100,11 @@
     flex-grow: 1;
     padding: 10px;
 }
+
+.zebra-bg-even {
+    background-color: #c5c5c5;
+}
+
+.zebra-bg-odd {
+    background-color: #eaeaea;
+}

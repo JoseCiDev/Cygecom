@@ -350,7 +350,7 @@
                                                         <p><strong><i class="glyphicon glyphicon-th-large"></i> Categoria:</strong> {{$productCategory}}</p>
 
                                                         @foreach ($products as $index => $productItem)
-                                                            <div class="request-details-content-box-products-product">
+                                                            <div class="request-details-content-box-products-product {{ $index % 2 === 0 ? 'zebra-bg-even' : 'zebra-bg-odd' }}">
                                                                 <p><strong><i class="glyphicon glyphicon-tag"></i> Produto nº {{ $index + 1 }}:</strong></p>
 
                                                                 <div class="row">
