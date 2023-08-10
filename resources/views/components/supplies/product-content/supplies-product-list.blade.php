@@ -43,7 +43,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($products as $index => $product)
+                        @foreach ($products as $index => $product),
                             @php
                                 $groups = $product->CostCenterApportionment->pluck('costCenter.Company.group')->unique();
                                 $concatenatedGroups = $groups->map(function ($item) {

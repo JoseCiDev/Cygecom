@@ -40,7 +40,7 @@
     }
 
     .supplier-block .product-container .product-row:nth-of-type(odd) {
-        background-color:rgb(208, 208, 208);
+        background-color: rgb(208, 208, 208);
     }
 </style>
 
@@ -859,28 +859,6 @@
         const $paymentMethod = $('#payment-method');
         const $paymentInfo = $('.payment-info');
 
-        // desabilita todos os campos do form caso solicitacao ja enviada
-        if (hasSentRequest) {
-            $('#request-form')
-                .find('input, textarea, checkbox')
-                .prop('disabled', hasSentRequest);
-
-            $('#request-form')
-                .find('select')
-                .prop('disabled', hasSentRequest);
-
-            $('.file-remove').prop('disabled', hasSentRequest);
-
-            $('.add-supplier-btn').prop('disabled', hasSentRequest);
-            $('.delete-supplier').prop('disabled', hasSentRequest);
-
-            $('.add-product').prop('disabled', hasSentRequest);
-            $('.delete-product').prop('disabled', hasSentRequest);
-
-            $('.add-cost-center-btn').prop('disabled', hasSentRequest);
-            $('.delete-cost-center').prop('disabled', hasSentRequest);
-        }
-
         const purchaseRequest = @json($purchaseRequest);
         const isRequestCopy = @json($isCopy);
         const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
@@ -1491,5 +1469,28 @@
                 console.error(error);
             }
         });
+
+
+        // desabilita todos os campos do form caso solicitacao ja enviada
+        if (hasSentRequest) {
+            $('#request-form')
+                .find('input, textarea, checkbox')
+                .prop('disabled', hasSentRequest);
+
+            $('#request-form')
+                .find('select')
+                .prop('disabled', hasSentRequest);
+
+            $('.file-remove').prop('disabled', hasSentRequest);
+
+            $('.add-supplier-btn').prop('disabled', hasSentRequest);
+            $('.delete-supplier').prop('disabled', hasSentRequest);
+
+            $('.add-product-btn').prop('disabled', hasSentRequest);
+            $('.delete-product').prop('disabled', hasSentRequest);
+
+            $('.add-cost-center-btn').prop('disabled', hasSentRequest);
+            $('.delete-cost-center').prop('disabled', hasSentRequest);
+        }
     });
 </script>

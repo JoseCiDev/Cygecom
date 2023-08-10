@@ -228,8 +228,8 @@
         <div class="col-sm-4">
             <div class="form-group">
                 <label for="email" class="control-label">E-mail</label>
-                <input value="{{ $supplier?->email }}" type="email" name="email" id="email"
-                    data-cy="email" placeholder="user_email@fornecedor.com.br" class="form-control" data-rule-email="true"
+                <input value="{{ $supplier?->email }}" type="email" name="email" id="email" data-cy="email"
+                    placeholder="user_email@fornecedor.com.br" class="form-control" data-rule-email="true"
                     data-rule-required="true">
             </div>
         </div>

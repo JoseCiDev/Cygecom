@@ -64,7 +64,7 @@
                 </select>
             </div>
         </div>
- 
+
         <div class="col-sm-2">
             <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label"> Rateio (%) </label>
             <div class="input-group">
@@ -73,16 +73,16 @@
                     id="cost_center_apportionments[0][apportionment_percentage]" data-cy="cost_center_apportionments[0][apportionment_percentage]">
             </div>
         </div>
- 
+
         <div class="col-sm-2">
             <label for="cost_center_apportionments[0][apportionment_currency]" class="control-label"> Rateio (R$) </label>
             <div class="input-group">
                 <span class="input-group-addon">R$</span>
-                <input type="number" name="cost_center_apportionments[0][apportionment_currency]" id="cost_center_apportionments[0][apportionment_currency]" 
+                <input type="number" name="cost_center_apportionments[0][apportionment_currency]" id="cost_center_apportionments[0][apportionment_currency]"
                      data-cy="cost_center_apportionments[0][apportionment_currency]" placeholder="0.00" class="form-control" min="0">
             </div>
         </div>
- 
+
         <div class="col-sm-1" style="margin-top: 28px;">
             <button class="btn btn-icon btn-small btn-danger delete-cost-center" data-cy="btn-delete-cost-center-0">
                 <i class="fa fa-trash-o"></i>
@@ -124,7 +124,7 @@
                 $costCenterPercentage.prop('disabled', true);
                 $costCenterPercentage.val(null);
             }
-            
+
             if(disabledCurrencyInputs) {
                 $costCenterCurrency.prop('disabled', true);
                 $costCenterCurrency.val(null);
@@ -227,19 +227,19 @@
             disableSelectedOptions();
             toggleCostCenterBtn()
         });
-        
+
         $(document).on('input', '.cost-center-container .select2-me', disableSelectedOptions);
-       
+
         // Vincular eventos de input e change aos elementos
         $(document).on('change', $costCenterSelect.selector, toggleCostCenterBtn);
         $(document).on('input focus', $costCenterCurrency.selector, toggleCostCenterBtn);
         $(document).on('input focus', $costCenterPercentage.selector, toggleCostCenterBtn);
-        
+
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
         $(document).on('input focus', `${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`, updateApportionmentFields);
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
-        
+
         updateApportionmentFields();
         toggleCostCenterBtn();
         checkCostCenterCount();

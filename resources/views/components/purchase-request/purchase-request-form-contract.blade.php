@@ -8,7 +8,7 @@
     $contractInstallments = $purchaseRequest?->contract?->installments;
     $contractPayday = $purchaseRequest?->contract?->payday;
     $purchaseRequestContractAmount = $purchaseRequest?->contract?->amount === null ? null : (float) $purchaseRequest?->contract?->amount;
-    $recurrence = $purchaseRequest?->contract?->recurrence ?? null;
+    $recurrenceSelected = $purchaseRequest?->contract?->recurrence ?? null;
 
     // verifica status para desabilitar campos para o usuário
     $requestAlreadySent = $purchaseRequest?->status !== PurchaseRequestStatus::RASCUNHO;
@@ -72,7 +72,8 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-sm-6 pull-right">
             <x-modalDelete />
-            <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
+            <button data-cy="btn-delete-request" data-route="purchaseRequests"
+                data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
                 title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
                 Excluir solicitação
@@ -490,17 +491,15 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="control-label">Recorrência</label>
-                            <select name="recurrence" id="recurrence" data-cy="recurrence"
+                            <select name="contract[recurrence]" id="recurrence" data-cy="recurrence"
                                 class="select2-me recurrence" style="width: 100%; padding-top: 2px;"
                                 data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="unique" {{ $recurrence?->value === 'unique' ? 'selected' : '' }}>ÚNICA
-                                </option>
-                                <option value="monthly" {{ $recurrence?->value === 'monthly' ? 'selected' : '' }}>
-                                    MENSAL
-                                </option>
-                                <option value="yearly" {{ $recurrence?->value === 'yearly' ? 'selected' : '' }}>ANUAL
-                                </option>
+                                @foreach ($recurrenceOptions as $recurrence)
+                                    <option value="{{ $recurrence->value }}" @selected($recurrence->value === $recurrenceSelected->value)>
+                                        {{ $recurrence->label() }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -568,7 +567,7 @@
                         <i class="fa fa-dollar"></i>
                         Parcelas deste contrato
                     </h4>
-                    <div class="col-sm-6 div-btn-add-installment" hidden>
+                    <div class="col-sm-6 div-btn-add-installment" style="margin-top:15px;" hidden>
                         <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
                             data-cy="btn-add-installment" data-route="user" rel="tooltip"
                             title="Adicionar Parcela">
@@ -1556,5 +1555,22 @@
                 }
             });
         });
+
+        if (hasSentRequest) {
+            $('#request-form')
+                .find('input, textarea, checkbox')
+                .prop('disabled', hasSentRequest);
+
+            $('#request-form')
+                .find('select')
+                .prop('disabled', hasSentRequest);
+
+            $('.file-remove').prop('disabled', hasSentRequest);
+
+            $('.btn-add-installment').prop('disabled', hasSentRequest);
+
+            $('.add-cost-center-btn').prop('disabled', hasSentRequest);
+            $('.delete-cost-center').prop('disabled', hasSentRequest);
+        }
     });
 </script>

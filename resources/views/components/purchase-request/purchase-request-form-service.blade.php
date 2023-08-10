@@ -54,7 +54,8 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right">
             <x-modalDelete />
-            <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
+            <button data-cy="btn-delete-request" data-route="purchaseRequests"
+                data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
                 title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
                 Excluir solicitação
@@ -280,10 +281,7 @@
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentMethods as $paymentMethod)
-                                    <option
-                                        value="{{ $paymentMethod->value }}"
-                                        @selected($paymentMethod->value === $selectedPaymentMethod)
-                                    >
+                                    <option value="{{ $paymentMethod->value }}" @selected($paymentMethod->value === $selectedPaymentMethod)>
                                         {{ $paymentMethod->label() }}
                                     </option>
                                 @endforeach
@@ -387,8 +385,9 @@
                         <label for="service[supplier_id]" style="display:block;" class="control-label">
                             Fornecedor (CNPJ - RAZÃO SOCIAL)
                         </label>
-                        <select name="service[supplier_id]" class='select2-me select-supplier' data-cy="service[supplier_id]"
-                            data-placeholder="Escolha um fornecedor" style="width:100%;">
+                        <select name="service[supplier_id]" class='select2-me select-supplier'
+                            data-cy="service[supplier_id]" data-placeholder="Escolha um fornecedor"
+                            style="width:100%;">
                             <option value=""></option>
                             @foreach ($suppliers as $supplier)
                                 @php $supplierSelected = isset($purchaseRequest->service) && $purchaseRequest->service->supplier_id === $supplier->id; @endphp
@@ -502,15 +501,15 @@
 
     <x-ModalEditServiceInstallment :statusValues="$statusValues" />
 
-    <x-ModalSupplierRegister/>
+    <x-ModalSupplierRegister />
 
 </div>
 
 <script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
-<script src="{{asset('js/service-form/desired-date-config.js')}}"></script>
-<script src="{{asset('js/service-form/file-remove-button-config.js')}}"></script>
-<script src="{{asset('js/service-form/submit-buttons-config.js')}}"></script>
-<script src="{{asset('js/service-form/imasks.js')}}"></script>
+<script src="{{ asset('js/service-form/desired-date-config.js') }}"></script>
+<script src="{{ asset('js/service-form/file-remove-button-config.js') }}"></script>
+<script src="{{ asset('js/service-form/submit-buttons-config.js') }}"></script>
+<script src="{{ asset('js/service-form/imasks.js') }}"></script>
 
 <script>
     $(() => {
@@ -520,12 +519,131 @@
         const statusValues = @json($statusValues);
 
         const $amount = $('.amount');
+        const $serviceAmount = $('#format-amount');
         const $inputInstallmentsNumber = $('.installments-number');
         const $radioIsContractedBySupplies = $('.radio-who-wants');
         const $paymentBlock = $('.payment-block');
         const $isPrePaid = $('#service-is-prepaid');
+        const $supplierBlock = $('.supplier-block');
+        const $paymentMethod = $('#payment-method');
+        const $paymentInfo = $('.payment-info');
+        const $paymentInfoDescription = $('#payment-info-description');
+
+        const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
+        const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
+        const $formatInputInstallmentsNumber = $('.format-installments-number');
 
         let selectedRowIndex = null;
+
+        // dataTable config - parcelas
+        const $installmentsTable = $('#installments-table-striped').DataTable({
+            data: purchaseRequest?.service?.installments || [],
+            columns: [{
+                    data: "expire_date",
+                    render: function(data, type, row, meta) {
+                        if (!data) {
+                            return "";
+                        }
+                        const formattedDate = moment(data, "YYYY/MM/DD").format("DD/MM/YYYY");
+                        return formattedDate || "";
+                    }
+                },
+                {
+                    data: "value",
+                    render: function(data, type, row, meta) {
+                        const dataWithR$ = "R$" + data;
+                        return dataWithR$;
+                    }
+                },
+                {
+                    data: "observation",
+                },
+                {
+                    data: "status",
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        const btnEdit = $(
+                            '<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>'
+                        );
+                        btnEdit.find('button').prop('disabled', hasSentRequest);
+
+                        return btnEdit.html();
+                    }
+                }
+            ],
+            orderable: false,
+            paging: true,
+            pageLength: 12,
+            info: false,
+            searching: false,
+            bLengthChange: false,
+            language: {
+                emptyTable: "Nenhuma parcela adicionada.",
+                paginate: {
+                    previous: "Anterior",
+                    next: "Próximo",
+                },
+            },
+            order: [
+                [0, 'desc']
+            ],
+            createdRow: function(row, data, dataIndex) {
+                const hiddenFormattedDate = $(row).data('hidden-date');
+                $(row).attr('data-hidden-date', hiddenFormattedDate);
+            }
+        });
+
+        fillHiddenInputsWithRowData();
+
+        // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
+        $radioIsContractedBySupplies.on('change', function() {
+            const isContractedBySupplies = $(this).val() === "1";
+
+            // muda label
+            const supplierSelect = $('select.select-supplier');
+            const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
+
+            supplierSelect.siblings('label').text(newLabel);
+
+            supplierSelect.before().removeAttr('data-rule-required');
+
+            // desabilita pagamento
+            $paymentBlock
+                .find('input, textarea')
+                .prop('readonly', isContractedBySupplies);
+
+            $paymentBlock
+                .find('select')
+                .prop('disabled', isContractedBySupplies)
+                .trigger('change.select2');
+
+            if (isContractedBySupplies) {
+                supplierSelect.removeRequired();
+                supplierSelect.closest('.form-group').removeClass('has-error');
+                $supplierBlock.find('.help-block').remove();
+
+                $installmentsTable.clear().draw();
+
+                return;
+            }
+            supplierSelect.makeRequired();
+        });
+
+        if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
+            $radioIsContractedBySupplies.filter(':checked').trigger('change');
+        }
+
+        $('#installments-table-striped tbody').on('click', 'tr', function(event) {
+            event.preventDefault();
+
+            if ($(event.target).closest('.btn-edit-installment').length) {
+                const rowData = $installmentsTable.row(this).data();
+                selectedRowIndex = $installmentsTable.row(this).index();
+                openModalForEdit(rowData);
+            }
+        });
 
         function fillHiddenInputsWithRowData() {
             const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
@@ -545,7 +663,8 @@
                     const idInput = document.createElement('input');
                     idInput.type = 'number';
                     idInput.name = `service[service_installments][${index}][id]`;
-                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]?.id : null;
+                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service
+                        ?.installments[index]?.id : null;
                     idInput.hidden = true;
                     idInput.className = "no-validation";
 
@@ -577,13 +696,15 @@
                     statusInput.hidden = true;
                     statusInput.className = "no-validation";
 
-                    hiddenInputsContainer.append( idInput, expireDateInput, valueInput, observationInput, statusInput );
+                    hiddenInputsContainer.append(idInput, expireDateInput, valueInput, observationInput,
+                        statusInput);
                 });
             } else {
                 const idInput = document.createElement('input');
                 idInput.type = 'number';
                 idInput.name = 'service[service_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]?.id : null;
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.service?.installments[index]
+                    ?.id : null;
                 idInput.hidden = true;
                 idInput.className = "no-validation";
 
@@ -616,7 +737,8 @@
                 statusInput.hidden = true;
                 statusInput.className = 'no-validation';
 
-                hiddenInputsContainer.append( idInput, expireDateInput, valueInput, observationInput, statusInput, );
+                hiddenInputsContainer.append(idInput, expireDateInput, valueInput, observationInput,
+                    statusInput, );
             }
         }
 
@@ -635,55 +757,6 @@
                 $(this).attr('name', newIndex);
             });
         }
-
-        fillHiddenInputsWithRowData();
-
-
-        // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
-        const $radioIsContractedBySupplies = $('.radio-who-wants');
-        const $suppliersBlock = $('.suppliers-block');
-        const $paymentBlock = $('.payment-block');
-
-        const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
-        const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
-
-        $radioIsContractedBySupplies.on('change', function() {
-            const isContractedBySupplies = $(this).val() === "1";
-
-            // muda label
-            const supplierSelect = $suppliersBlock.find('select');
-            const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
-
-            supplierSelect.siblings('label[for="' + supplierSelect.attr('name') + '"]').text(newLabel);
-
-            // desabilita pagamento
-            $paymentBlock
-                .find('input, textarea')
-                .prop('readonly', isContractedBySupplies);
-
-            $paymentBlock
-                .find('select')
-                .prop('disabled', isContractedBySupplies)
-                .trigger('change.select2');
-
-            if (isContractedBySupplies) {
-                supplierSelect.removeRequired();
-                supplierSelect.closest('.form-group').removeClass('has-error');
-                $suppliersBlock.find('.help-block').remove();
-
-                $installmentsTable.clear().draw();
-
-                return;
-            }
-            supplierSelect.makeRequired();
-        });
-
-        if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
-            $radioIsContractedBySupplies.filter(':checked').trigger('change');
-        }
-
-        const editButton =
-            '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
 
         function generateInstallments(numberOfInstallments) {
             const installmentValue = ($amount.val() / numberOfInstallments).toFixed(2);
@@ -743,7 +816,8 @@
                 const value = $('#edit-value').val();
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
-                const editButton = '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
+                const editButton =
+                    '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
 
                 // insere valores editados na tabela
                 if (selectedRowIndex !== null) {
@@ -767,104 +841,6 @@
             });
         }
 
-        // dataTable config - parcelas
-        const $installmentsTable = $('#installments-table-striped').DataTable({
-            data: purchaseRequest?.service?.installments || [],
-            columns: [{
-                    data: "expire_date",
-                    render: function(data, type, row, meta) {
-                        if (!data) {
-                            return "";
-                        }
-                        const formattedDate = moment(data, "YYYY/MM/DD").format("DD/MM/YYYY");
-                        return formattedDate || "";
-                    }
-                },
-                {
-                    data: "value",
-                    render: function(data, type, row, meta) {
-                        const dataWithR$ = "R$" + data;
-                        return dataWithR$;
-                    }
-                },
-                {
-                    data: "observation",
-                },
-                {
-                    data: "status",
-                },
-                {
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        const btnEdit = $( '<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>' );
-                        btnEdit.find('button').prop('disabled', hasSentRequest);
-
-                        return btnEdit.html();
-                    }
-                }
-            ],
-            orderable: false,
-            paging: true,
-            pageLength: 12,
-            info: false,
-            searching: false,
-            bLengthChange: false,
-            language: {
-                emptyTable: "Nenhuma parcela adicionada.",
-                paginate: {
-                    previous: "Anterior",
-                    next: "Próximo",
-                },
-            },
-            order: [
-                [0, 'desc']
-            ],
-            createdRow: function(row, data, dataIndex) {
-                const hiddenFormattedDate = $(row).data('hidden-date');
-                $(row).attr('data-hidden-date', hiddenFormattedDate);
-            }
-        });
-
-        fillHiddenInputsWithRowData();
-
-        // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
-        $radioIsContractedBySupplies.on('change', function() {
-            const isContractedBySupplies = $(this).val() === "1";
-            const $suppliersBlock = $('.suppliers-block');
-            const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
-            const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
-
-            // muda label
-            const supplierSelect = $suppliersBlock.find('select');
-            const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
-
-            supplierSelect.siblings(`label[for="${supplierSelect.attr('name')}"]`).text(newLabel);
-            supplierSelect.data('rule-required', !isContractedBySupplies);
-
-            // desabilita pagamento
-            $paymentBlock.find('input, textarea').prop('readonly', isContractedBySupplies);
-
-            $paymentBlock.find('select').prop('disabled', isContractedBySupplies).trigger('change.select2');
-
-            if (isContractedBySupplies) {
-                $installmentsTable.clear().draw();
-            }
-        });
-
-        if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
-            $radioIsContractedBySupplies.filter(':checked').trigger('change');
-        }
-
-        $('#installments-table-striped tbody').on('click', 'tr', function(event) {
-            event.preventDefault();
-
-            if ($(event.target).closest('.btn-edit-installment').length) {
-                const rowData = $installmentsTable.row(this).data();
-                selectedRowIndex = $installmentsTable.row(this).index();
-                openModalForEdit(rowData);
-            }
-        });
-
         // gerar parcelas a partir do change de varios inputs
         $amount.add($inputInstallmentsNumber).on('change', function() {
             const changeableInputs = [
@@ -881,13 +857,7 @@
         });
 
         $isPrePaid.on('change', function() {
-            const $serviceAmount = $('#format-amount');
-            const $formatInputInstallmentsNumber = $('.format-installments-number');
-            const $paymentMethod = $('.payment-method');
-            const $paymentInfoDescription = $('#payment-info-description');
             const isPrePaid = $(this).val() === "1";
-
-            $paymentMethod.next().removeAttr('data-rule-required');
 
             if (!isPrePaid) {
                 $serviceAmount
@@ -915,11 +885,21 @@
             $isPrePaid.filter(':selected').trigger('change.select2');
         }
 
-        // desabilita todos os campos do form caso solicitacao ja enviada
-        if(hasSentRequest) {
-            $('#request-form').find('input, textarea, checkbox').prop('disabled', true);
-            $('#request-form').find('select').prop('disabled', true);
-            $('.file-remove').prop('disabled', true);
+
+        if (hasSentRequest) {
+            $('#request-form')
+                .find('input, textarea, checkbox')
+                .prop('disabled', hasSentRequest);
+
+            $('#request-form')
+                .find('select')
+                .prop('disabled', hasSentRequest);
+
+            $('.file-remove').prop('disabled', hasSentRequest);
+
+            $('.add-cost-center-btn').prop('disabled', hasSentRequest);
+            $('.delete-cost-center').prop('disabled', hasSentRequest);
         }
+
     });
 </script>

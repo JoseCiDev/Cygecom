@@ -5,7 +5,7 @@ namespace App\View\Components;
 use App\Models\{Company, CostCenter, Supplier};
 use App\Providers\PurchaseRequestService;
 use Closure;
-use App\Enums\PaymentMethod;
+use App\Enums\{PaymentMethod, ContractRecurrence};
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use Illuminate\Database\Eloquent\Collection;
@@ -34,6 +34,7 @@ class PurchaseRequestFormContract extends Component
         $suppliers       = Supplier::all();
         $userCostCenters = auth()->user()->userCostCenterPermission;
         $paymentMethods = PaymentMethod::cases();
+        $recurrenceOptions = ContractRecurrence::cases();
         $costCenters     = CostCenter::whereIn('id', $userCostCenters->pluck('cost_center_id'))->get();
         $statusValues    = [
             [
@@ -55,6 +56,7 @@ class PurchaseRequestFormContract extends Component
             'costCenters'  => $costCenters,
             'suppliers'    => $suppliers,
             "paymentMethods" => $paymentMethods,
+            "recurrenceOptions" => $recurrenceOptions,
             'statusValues' => $statusValues,
         ];
 
