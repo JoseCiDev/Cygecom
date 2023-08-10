@@ -1,0 +1,27 @@
+.product-suggestion-autocomplete {
+    max-height: 200px;
+    padding: 0 0 0 4px;
+    margin: 4px 4px 4px 0;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+    color: #000000;
+    font-size: 13px;
+    background-color: white;
+    position: absolute;
+    z-index: 2;
+}
+
+.product-suggestion-autocomplete li {
+    padding: 3px 7px 4px;
+    margin: 0;
+    cursor: pointer;
+    min-height: 1em;
+}
+
+.product-suggestion-autocomplete li:focus,
+.product-suggestion-autocomplete li:hover {
+    background-color: #3875d7;
+    color: white;
+}
