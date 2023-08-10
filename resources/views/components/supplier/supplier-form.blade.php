@@ -6,9 +6,9 @@
 @php
     $route = $isRegister ? route('supplier.register') : route('supplier.update', ['id' => $id]);
 @endphp
-<form method="POST" action="{{$route}}" class="form-validate" id="supplier-form" data-cy="supplier-form">
+<form method="POST" action="{{ $route }}" class="form-validate" id="supplier-form" data-cy="supplier-form">
     @csrf
-    
+
     <div class="row center-block" style="padding-bottom: 12px;">
         <div class="col-sm-6">
             <h4>DADOS FISCAIS</h4>
@@ -16,7 +16,9 @@
         <div class="col-sm-6">
             <div class="pull-right">
                 <fieldset> Consulte aqui o cartão CNPJ: </fieldset>
-                <a style="display: block" href="https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/cnpjreva_solicitacao.asp" target="_blank" rel="noopener noreferrer">Clique aqui para a pesquisa do cartão CNPJ</a>
+                <a style="display: block"
+                    href="https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/cnpjreva_solicitacao.asp"
+                    target="_blank" rel="noopener noreferrer">Clique aqui para a pesquisa do cartão CNPJ</a>
             </div>
         </div>
     </div>
@@ -33,9 +35,9 @@
         <div class="col-sm-5">
             <div class="form-group">
                 <label for="corporate_name" class="control-label">Razão social</label>
-                <input value="{{ $supplier?->corporate_name }}" type="text" name="corporate_name" id="corporate_name" data-cy="corporate_name"
-                    placeholder="Informe a razão social deste fornecedor" class="form-control" data-rule-required="true"
-                    data-rule-minlength="3">
+                <input value="{{ $supplier?->corporate_name }}" type="text" name="corporate_name" id="corporate_name"
+                    data-cy="corporate_name" placeholder="Informe a razão social deste fornecedor" class="form-control"
+                    data-rule-required="true" data-rule-minlength="3">
             </div>
         </div>
 
@@ -52,8 +54,8 @@
         <div class="col-sm-6">
             <div class="form-group">
                 <label for="description" class="control-label">Descrição</label>
-                <textarea name="description" id="description" data-cy="description" placeholder="Descreva a função da empresa" rows="3"
-                    class="form-control no-resize">{{ $supplier?->description }}</textarea>
+                <textarea name="description" id="description" data-cy="description" placeholder="Descreva a função da empresa"
+                    rows="3" class="form-control no-resize">{{ $supplier?->description }}</textarea>
             </div>
         </div>
         <div class="col-sm-3">
@@ -118,24 +120,24 @@
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="country" class="control-label">País</label>
-                <input value="{{ $supplier?->address->country }}" type="text" name="country"
-                    id="country" data-cy="country" placeholder="País" class="form-control" data-rule-required="true">
+                <input value="{{ $supplier?->address->country }}" type="text" name="country" id="country"
+                    data-cy="country" placeholder="País" class="form-control" data-rule-required="true">
             </div>
         </div>
         {{-- ESTADO UF --}}
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="state" class="control-label">Estado/UF</label>
-                <input value="{{ $supplier?->address->state }}" type="text" name="state" id="state" data-cy="state"
-                    placeholder="UF" class="form-control" data-rule-required="true">
+                <input value="{{ $supplier?->address->state }}" type="text" name="state" id="state"
+                    data-cy="state" placeholder="UF" class="form-control" data-rule-required="true">
             </div>
         </div>
         {{-- CIDADE --}}
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="city" class="control-label">Cidade</label>
-                <input value="{{ $supplier?->address->city }}" type="text" name="city" id="city" data-cy="city"
-                    placeholder="Cidade" class="form-control" data-rule-required="true">
+                <input value="{{ $supplier?->address->city }}" type="text" name="city" id="city"
+                    data-cy="city" placeholder="Cidade" class="form-control" data-rule-required="true">
             </div>
         </div>
     </div>
@@ -145,15 +147,16 @@
             <div class="form-group">
                 <label for="neighborhood" class="control-label">Bairro</label>
                 <input value="{{ $supplier?->address->neighborhood }}" type="text" name="neighborhood"
-                    id="neighborhood" data-cy="neighborhood" placeholder="Bairro" class="form-control" data-rule-required="true">
+                    id="neighborhood" data-cy="neighborhood" placeholder="Bairro" class="form-control"
+                    data-rule-required="true">
             </div>
         </div>
         {{-- RUA --}}
         <div class="col-sm-4">
             <div class="form-group">
                 <label for="street" class="control-label">Rua</label>
-                <input value="{{ $supplier?->address->street }}" type="text" name="street"
-                    id="street" data-cy="street" placeholder="Rua/Avenida/Servidão" class="form-control"
+                <input value="{{ $supplier?->address->street }}" type="text" name="street" id="street"
+                    data-cy="street" placeholder="Rua/Avenida/Servidão" class="form-control"
                     data-rule-required="true">
             </div>
         </div>
@@ -161,13 +164,9 @@
         <div class="col-sm-2">
             <div class="form-group" style="margin-bottom:5px;">
                 <label for="street_number" class="control-label">Número</label>
-                <input
-                    value="{{ $supplier?->address->street_number }}"
-                    @readonly(collect($supplier)->isNotEmpty() && $supplier->address->street_number === null)
-                    type="text" name="street_number"
-                    id="street_number" data-cy="street_number" placeholder="Nº" class="form-control street-number"
-                    data-rule-required="true"
-                >
+                <input value="{{ $supplier?->address->street_number }}" @readonly(collect($supplier)->isNotEmpty() && $supplier->address->street_number === null) type="text"
+                    name="street_number" id="street_number" data-cy="street_number" placeholder="Nº"
+                    class="form-control street-number" data-rule-required="true">
                 {{-- checkbox sem numero --}}
                 <div class="no-limit"
                     style="
@@ -176,10 +175,8 @@
                     margin-top: 5px;
                     gap: 5px;
                 ">
-                    <input type="checkbox" id="checkbox-has-no-street-number" data-cy="checkbox-has-no-street-number" class="checkbox-has-no-street-number"
-                        style="margin:0"
-                        @checked(collect($supplier)->isNotEmpty() && $supplier->address->street_number === null)
-                    >
+                    <input type="checkbox" id="checkbox-has-no-street-number" data-cy="checkbox-has-no-street-number"
+                        class="checkbox-has-no-street-number" style="margin:0" @checked(collect($supplier)->isNotEmpty() && $supplier->address->street_number === null)>
                     <label for="checkbox-has-no-street-number" style="margin:0; font-size:13px">
                         Sem número.
                     </label>
@@ -205,8 +202,27 @@
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="number" class="control-label">Telefone</label>
-                <input value="{{ $supplier?->phone?->number }}" type="text" name="number" id="number" data-cy="number"
-                    placeholder="(00) 0000-0000" class="form-control phone-number" minLength="14">
+                <input value="{{ $supplier?->phone?->number }}" type="text" name="number" id="number"
+                    data-cy="number" placeholder="(00) 0000-0000" class="form-control phone-number"
+                    data-rule-required="true" minLength="10" maxLength="20">
+                <input type="hidden" name="phone_type" id="commercial" value="commercial" data-cy="commercial">
+
+                {{-- checkbox numero estrangeiro --}}
+                <div class="international-number"
+                    style="
+                        display: flex;
+                        align-items: center;
+                        margin-top: 5px;
+                        gap: 5px;
+                    ">
+                    <input type="checkbox" id="checkbox-international-number" data-cy="checkbox-international-number"
+                        value="{{ $supplier?->phone?->isInternational ? '1' : '0' }}" @checked($supplier?->phone?->isInternational)
+                        class="checkbox-international-number" style="margin:0" name="isInternational">
+                    <label for="checkbox-international-number" style="margin:0; font-size:13px">
+                        Número de telefone Internacional.
+                    </label>
+                </div>
+
             </div>
         </div>
         <div class="col-sm-4">
@@ -283,18 +299,52 @@
             $streetNumber.prop('readonly', isChecked).val(currentValue).valid();
         });
 
-        // masks
         $streetNumber.imask({
             mask: Number,
         });
-        $phoneNumber.imask({
-            mask: [{
-                    mask: '(00) 0000-0000'
-                },
-                {
-                    mask: '(00) 00000-0000'
+
+        // checkbox número internacional (mudança mascara)
+        const $checkboxInternationalNumber = $('#checkbox-international-number');
+        const checkboxInternationalNumberValue = $checkboxInternationalNumber.val();
+
+        let phoneMask;
+
+        if (checkboxInternationalNumberValue === "0") {
+            phoneMask = $phoneNumber.imask({
+                mask: [{
+                        mask: '(00) 0000-0000'
+                    },
+                    {
+                        mask: '(00) 00000-0000'
+                    }
+                ]
+            });
+        }
+
+        $checkboxInternationalNumber.on('click', function() {
+            const isChecked = $(this).is(':checked');
+            $phoneNumber.valid();
+
+            const valueToSend = isChecked ? "1" : "0";
+            $(this).val(valueToSend);
+
+            if (isChecked) {
+                if ($phoneNumber.val()) {
+                    $(this).closest('.form-group').removeClass('has-error');
+                    $(this).closest('.form-group').removeClass('has-success');
                 }
-            ]
-        });
+                phoneMask.destroy();
+            } else {
+                phoneMask = $phoneNumber.imask({
+                    mask: [{
+                            mask: '(00) 0000-0000'
+                        },
+                        {
+                            mask: '(00) 00000-0000'
+                        }
+                    ]
+                });
+            }
+        })
     });
 </script>

@@ -44,7 +44,7 @@
                                 <tr>
                                     <td>{{$purchaseRequest->id}}</td>
                                     <td>{{$purchaseRequest->user->person->name}}</td>
-                                    <td>{{$purchaseRequest->is_supplies_quote ? 'Suprimentos' : 'Área Solicitante'}}</td>
+                                    <td>{{$purchaseRequest->is_supplies_contract ? 'Suprimentos' : 'Área Solicitante'}}</td>
                                     <td>{{$purchaseRequest->type->label()}}</td>
                                     <td>{{$purchaseRequest->status->label()}}</td>
                                     <td>{{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}</td>

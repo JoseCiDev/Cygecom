@@ -26,7 +26,7 @@
                                     <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
                                     @foreach (\App\Enums\PurchaseRequestStatus::cases() as $statusCase)
                                         @if ($statusCase->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
-                                            <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}} 
+                                            <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}}
                                                 value="{{ $statusCase->value }}" @selected($statusCase->value === $status?->value)>
                                                 {{ $statusCase->label() }}
                                             </option>
@@ -47,10 +47,10 @@
                     </thead>
                     <tbody>
                         @foreach ($contracts as $index => $contract)
-                            @php 
-                                $groups = $contract->CostCenterApportionment->pluck('costCenter.Company.group')->unique(); 
+                            @php
+                                $groups = $contract->CostCenterApportionment->pluck('costCenter.Company.group')->unique();
                                 $concatenatedGroups = $groups->map(function ($item) {
-                                        return $item->label(); 
+                                        return $item->label();
                                     })->implode(', ');
                             @endphp
                             <tr>
@@ -64,14 +64,14 @@
 
                                 <td>{{$contract->contract->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
                                 <td>{{$contract->contract->already_provided ? 'Executado' : 'Não executado'}}</td>
-                                <td class="hidden-1024">{{$contract->is_supplies_quote ? 'Suprimentos' : 'Solicitante'}}</td>
+                                <td class="hidden-1024">{{$contract->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1440">{{$concatenatedGroups}}</td>
 
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($contract->desired_date)->format('d/m/Y') }}</td>
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($contract->updated_at)->format('d/m/Y h:m:s') }}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
-                                    <button 
+                                    <button
                                         data-modal-name="{{ 'Analisando Solicitação de Contrato - Nº ' . $contract->id }}"
                                         data-id="{{ $contract->id }}"
                                         data-request="{{json_encode($contract)}}"

@@ -1,5 +1,6 @@
 @php
     use App\Enums\PurchaseRequestStatus;
+    use App\Enums\PaymentMethod;
 
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
@@ -53,6 +54,8 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right">
             <x-modalDelete />
+            <button data-cy="btn-delete-request" data-route="purchaseRequests"
+                data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
             <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
                 title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
@@ -78,6 +81,7 @@
 
         {{-- CENTRO DE CUSTOS --}}
         <x-CostCenterApportionment :purchaseRequest="$purchaseRequest" />
+        <x-CostCenterApportionment :purchaseRequest="$purchaseRequest" />
 
         <hr>
 
@@ -95,11 +99,13 @@
                     </label>
                     <div class="form-check">
                         <input name="is_supplies_contract"value="1" class="radio-who-wants"
-                            id="is-supplies-contract" data-cy="is-supplies-contract" type="radio" @checked((isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract) || !isset($purchaseRequest))>
+                            id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
+                            @checked((isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract) || !isset($purchaseRequest))>
                         <label class="form-check-label" for="is-supplies-contract">Suprimentos</label>
 
                         <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio"
-                            id="is-area-contract" data-cy="is-area-contract" style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
+                            id="is-area-contract" data-cy="is-area-contract" style="margin-left: 7px;"
+                            @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
                         <label class="form-check-label" for="is-area-contract"> Área solicitante</label>
                     </div>
                 </div>
@@ -110,11 +116,11 @@
                         Contrato se enquadra na categoria COMEX?
                     </label>
                     <div class="form-check">
-                        <input name="is_comex" data-cy="is_comex_true" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex"
-                            type="radio" data-skin="minimal">
+                        <input name="is_comex" data-cy="is_comex_true" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex)
+                            class="radio-comex" type="radio" data-skin="minimal">
                         <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
-                        <input name="is_comex" data-cy="is_comex_false" value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest)) class="radio-comex"
-                            type="radio" data-skin="minimal">
+                        <input name="is_comex" data-cy="is_comex_false" value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest))
+                            class="radio-comex" type="radio" data-skin="minimal">
                         <label class="form-check-label" for="">Não</label>
                     </div>
                 </div>
@@ -144,7 +150,8 @@
                 <div class="col-sm-8">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
-                        <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description" rows="4"
+                        <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
+                            rows="4"
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
@@ -179,11 +186,13 @@
                     </label>
                     <div class="form-check">
                         <input name="service[already_provided]" value="1" class="radio-already-provided"
-                            id="already-provided" data-cy="already-provided" type="radio" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided)>
+                            id="already-provided" data-cy="already-provided" type="radio"
+                            @checked(isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided)>
                         <label class="form-check-label" for="already-provided">Sim</label>
 
                         <input name="service[already_provided]" value="0" class="radio-already-provided"
-                            type="radio" id="not-provided" data-cy="not-provided" style="margin-left: 7px;" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided) || !isset($purchaseRequest))>
+                            type="radio" id="not-provided" data-cy="not-provided" style="margin-left: 7px;"
+                            @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided) || !isset($purchaseRequest))>
                         <label class="form-check-label" for="not-provided">Não</label>
                     </div>
                 </div>
@@ -191,8 +200,9 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="control-label">Data desejada do serviço</label>
-                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date" class="form-control"
-                            min="2023-07-24" value="{{ $purchaseRequest->desired_date ?? null }}">
+                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
+                            class="form-control" min="2023-07-24"
+                            value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
 
@@ -204,8 +214,8 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="support_links" class="control-label">Links de apoio / sugestão</label>
-                        <textarea placeholder="Adicone um ou mais links válidos para apoio ou sugestão." rows="3"
-                            name="support_links" id="support_links" data-cy="support_links" class="form-control text-area no-resize">{{ isset($purchaseRequest->support_links) && $purchaseRequest->support_links ? $purchaseRequest->support_links : '' }}</textarea>
+                        <textarea placeholder="Adicone um ou mais links válidos para apoio ou sugestão." rows="3" name="support_links"
+                            id="support_links" data-cy="support_links" class="form-control text-area no-resize">{{ isset($purchaseRequest->support_links) && $purchaseRequest->support_links ? $purchaseRequest->support_links : '' }}</textarea>
                     </div>
                 </div>
 
@@ -263,25 +273,20 @@
                         <div class="form-group">
                             <label class="control-label">Forma de pagamento</label>
                             @php
-                                $paymentMethod = null;
+                                $selectedPaymentMethod = null;
                                 if (isset($purchaseRequest->service) && isset($purchaseRequest->service->paymentInfo)) {
-                                    $paymentMethod = $purchaseRequest->service->paymentInfo->payment_method;
+                                    $selectedPaymentMethod = $purchaseRequest->service->paymentInfo->payment_method;
                                 }
                             @endphp
-                            <select name="service[payment_info][payment_method]" id="payment-method" data-cy="payment-method"
-                                class='select2-me payment-method' style="width:100%; padding-top:2px;"
-                                data-placeholder="Escolha uma opção">
+                            <select name="service[payment_info][payment_method]" id="payment-method"
+                                data-cy="payment-method" class='select2-me payment-method'
+                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="PIX" {{ $paymentMethod === 'PIX' ? 'selected' : '' }}>PIX</option>
-                                <option value="DEPÓSITO BANCÁRIO"
-                                    {{ $paymentMethod === 'DEPÓSITO BANCÁRIO' ? 'selected' : '' }}>DEPÓSITO BANCÁRIO
-                                </option>
-                                <option value="BOLETO" {{ $paymentMethod === 'BOLETO' ? 'selected' : '' }}>BOLETO
-                                </option>
-                                <option value="CARTÃO CRÉDITO"
-                                    {{ $paymentMethod === 'CARTÃO CRÉDITO' ? 'selected' : '' }}>CARTÃO CRÉDITO</option>
-                                <option value="CARTÃO DÉBITO"
-                                    {{ $paymentMethod === 'CARTÃO DÉBITO' ? 'selected' : '' }}>CARTÃO DÉBITO</option>
+                                @foreach ($paymentMethods as $paymentMethod)
+                                    <option value="{{ $paymentMethod->value }}" @selected($paymentMethod->value === $selectedPaymentMethod)>
+                                        {{ $paymentMethod->label() }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -292,10 +297,11 @@
                     <div class="col-sm-1">
                         <div class="form-group">
                             <label class="control-label">Nº de parcelas</label>
-                            <input type="text" class="form-control format-installments-number" data-cy="format-installments-number"
-                                placeholder="Ex: 24" value="{{ $serviceQuantityOfInstallments }}">
-                            <input type="hidden" name="service[quantity_of_installments]" id="installments-number" data-cy="installments-number"
-                                class="installments-number no-validation"
+                            <input type="text" class="form-control format-installments-number"
+                                data-cy="format-installments-number" placeholder="Ex: 24"
+                                value="{{ $serviceQuantityOfInstallments }}">
+                            <input type="hidden" name="service[quantity_of_installments]" id="installments-number"
+                                data-cy="installments-number" class="installments-number no-validation"
                                 value="{{ $serviceQuantityOfInstallments }}">
                         </div>
                     </div>
@@ -306,8 +312,8 @@
                             <label for="payment-info-description" class="control-label">
                                 Detalhes do pagamento
                             </label>
-                            <textarea name="service[payment_info][description]" id="payment-info-description" data-cy="payment-info-description" rows="3"
-                                placeholder="Informações sobre pagamento. Ex: Chave PIX, dados bancários do fornecedor, etc..."
+                            <textarea name="service[payment_info][description]" id="payment-info-description" data-cy="payment-info-description"
+                                rows="3" placeholder="Informações sobre pagamento. Ex: Chave PIX, dados bancários do fornecedor, etc..."
                                 class="form-control text-area no-resize">{{ $purchaseRequest->service->paymentInfo->description ?? null }}</textarea>
                         </div>
                     </div>
@@ -320,8 +326,9 @@
                         PARCELAS DESTE SERVIÇO
                     </h4>
                     <div class="col-sm-6 btn-add-installment" hidden>
-                        <button type="button" class="btn btn-success pull-right btn-small btn-add-installment" data-cy="btn-add-installment"
-                            data-route="user" rel="tooltip" title="Adicionar Parcela">
+                        <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
+                            data-cy="btn-add-installment" data-route="user" rel="tooltip"
+                            title="Adicionar Parcela">
                             + Adicionar parcela
                         </button>
                     </div>
@@ -380,8 +387,9 @@
                         <label for="service[supplier_id]" style="display:block;" class="control-label">
                             Fornecedor (CNPJ - RAZÃO SOCIAL)
                         </label>
-                        <select name="service[supplier_id]" class='select2-me' data-cy="service[supplier_id]"
-                            data-placeholder="Escolha um fornecedor" style="width:100%;">
+                        <select name="service[supplier_id]" class='select2-me select-supplier'
+                            data-cy="service[supplier_id]" data-placeholder="Escolha um fornecedor"
+                            style="width:100%;">
                             <option value=""></option>
                             @foreach ($suppliers as $supplier)
                                 @php $supplierSelected = isset($purchaseRequest->service) && $purchaseRequest->service->supplier_id === $supplier->id; @endphp
@@ -424,7 +432,7 @@
                 </div>
             </div>
 
-            <hr style="margin-top: 30px; margin-bottom: 25px;">
+            <hr style="margin-top: 20px; margin-bottom: 20px;">
 
             {{-- ARQUIVOS --}}
             <div class="row justify-content-center">
@@ -470,7 +478,8 @@
                 @if (!$hasSentRequest)
                     <input type="hidden" name="action" id="action" data-cy="action" value="">
 
-                    <button type="submit" data-cy="save-draft" class="btn btn-primary btn-draft" style="margin-right: 10px">
+                    <button type="submit" data-cy="save-draft" class="btn btn-primary btn-draft"
+                        style="margin-right: 10px">
                         Salvar rascunho
                     </button>
 
@@ -484,7 +493,8 @@
                 @endif
 
                 @if ($hasSentRequest)
-                    <a href="{{ route('requests.own') }}" class="btn btn-primary btn-large" data-cy="btn-back">VOLTAR</a>
+                    <a href="{{ route('requests.own') }}" class="btn btn-primary btn-large"
+                        data-cy="btn-back">VOLTAR</a>
                 @endif
             </div>
 
@@ -492,16 +502,17 @@
     </form>
 
     <x-ModalEditServiceInstallment :statusValues="$statusValues" />
+    <x-ModalEditServiceInstallment :statusValues="$statusValues" />
 
     <x-ModalSupplierRegister />
 
 </div>
 
 <script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
-<script src="{{asset('js/service-form/desired-date-config.js')}}"></script>    
-<script src="{{asset('js/service-form/file-remove-button-config.js')}}"></script>    
-<script src="{{asset('js/service-form/submit-buttons-config.js')}}"></script>    
-<script src="{{asset('js/service-form/imasks.js')}}"></script>    
+<script src="{{asset('js/service-form/desired-date-config.js')}}"></script>
+<script src="{{asset('js/service-form/file-remove-button-config.js')}}"></script>
+<script src="{{asset('js/service-form/submit-buttons-config.js')}}"></script>
+<script src="{{asset('js/service-form/imasks.js')}}"></script>
 
 <script>
     $(() => {
@@ -519,6 +530,7 @@
         let selectedRowIndex = null;
 
         function fillHiddenInputsWithRowData() {
+            const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
             const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
             const tableData = $installmentsTable.data();
             const hiddenInputsContainer = $('.hidden-installments-inputs-container');
@@ -543,12 +555,14 @@
                     const expireDateInput = document.createElement('input');
                     expireDateInput.type = 'date';
                     expireDateInput.name = `service[service_installments][${index}][expire_date]`;
+                    expireDateInput.name = `service[service_installments][${index}][expire_date]`;
                     expireDateInput.value = expireDate;
                     expireDateInput.hidden = true;
                     expireDateInput.className = "no-validation";
 
                     const valueInput = document.createElement('input');
                     valueInput.type = 'number';
+                    valueInput.name = `service[service_installments][${index}][value]`;
                     valueInput.name = `service[service_installments][${index}][value]`;
                     valueInput.value = value;
                     valueInput.hidden = true;
@@ -557,12 +571,14 @@
                     const observationInput = document.createElement('input');
                     observationInput.type = 'text';
                     observationInput.name = `service[service_installments][${index}][observation]`;
+                    observationInput.name = `service[service_installments][${index}][observation]`;
                     observationInput.value = observation;
                     observationInput.hidden = true;
                     observationInput.className = "no-validation";
 
                     const statusInput = document.createElement('input');
                     statusInput.type = 'text';
+                    statusInput.name = `service[service_installments][${index}][status]`;
                     statusInput.name = `service[service_installments][${index}][status]`;
                     statusInput.value = status;
                     statusInput.hidden = true;
@@ -614,6 +630,7 @@
         function deleteHiddenInputs(row) {
             const index = $installmentsTable.row(row).index();
             $(`input[name^="service[service_installments][${index}]"]`).remove();
+            $(`input[name^="service[service_installments][${index}]"]`).remove();
         }
 
         function updateHiddenInputIndex() {
@@ -621,6 +638,7 @@
                 const currentName = $(this).attr('name');
                 const newIndex = currentName.replace(/\[(\d+)\]/, function(match, index) {
                     const currentIndex = parseInt(index);
+                    return `[${currentIndex - 1}]`;
                     return `[${currentIndex - 1}]`;
                 });
                 $(this).attr('name', newIndex);
@@ -641,7 +659,7 @@
                 const installmentData = {
                     expire_date: "",
                     value: installmentValue,
-                    observation: `Parcela ${i}/${numberOfInstallments}`, 
+                    observation: `Parcela ${i}/${numberOfInstallments}`,
                     status: "PENDENTE",
                 };
 
@@ -780,7 +798,7 @@
             const supplierSelect = $suppliersBlock.find('select');
             const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
 
-            supplierSelect.siblings(`label[for="${supplierSelect.attr('name')}"]`).text(newLabel); 
+            supplierSelect.siblings(`label[for="${supplierSelect.attr('name')}"]`).text(newLabel);
             supplierSelect.data('rule-required', !isContractedBySupplies);
 
             // desabilita pagamento
@@ -828,21 +846,28 @@
             const $paymentMethod = $('.payment-method');
             const $paymentInfoDescription = $('#payment-info-description');
             const isPrePaid = $(this).val() === "1";
-            $serviceAmount.data('rule-required', isPrePaid);
-            $paymentMethod.data('rule-required', isPrePaid);
-            $formatInputInstallmentsNumber.data('rule-required', isPrePaid);
-            $paymentInfoDescription.data('rule-required', isPrePaid);
 
             if (!isPrePaid) {
-                $serviceAmount.closest('.form-group').removeClass('has-error');
-                $paymentMethod.closest('.form-group').removeClass('has-error');
-                $formatInputInstallmentsNumber.closest('.form-group').removeClass('has-error');
-                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
-                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
+                $serviceAmount
+                    .add($paymentMethod)
+                    .add($formatInputInstallmentsNumber)
+                    .add($paymentInfoDescription)
+                    .closest('.form-group')
+                    .removeClass('has-error')
+                    .removeRequired();
 
                 $paymentBlock.find('.help-block').remove();
+
+                return;
             }
-        });
+
+            $serviceAmount
+                .add($paymentMethod)
+                .add($formatInputInstallmentsNumber)
+                .add($paymentInfoDescription)
+                .makeRequired();
+
+        }).trigger('change');
 
         if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
             $isPrePaid.filter(':selected').trigger('change.select2');

@@ -346,9 +346,9 @@ class PurchaseRequestService extends ServiceProvider
         $serviceData = $data['service'];
 
         // caso disabled os campos do form define como null
-        $serviceInstallmentsData = $serviceData['service_installments'] ?? null;
-        $paymentInfoData = $serviceData['payment_info'] ?? null;
-        $supplierId = $serviceData['supplier_id'] ?? null;
+        $serviceInstallmentsData = $serviceData['service_installments'] ?? [];
+        $paymentInfoData = $serviceData['payment_info'] ?? [];
+        $supplierId = $serviceData['supplier_id'] ?? [];
 
         if (count($paymentInfoData) > 0) {
             $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
@@ -434,9 +434,9 @@ class PurchaseRequestService extends ServiceProvider
         $contractData = $data['contract'];
 
         // caso disabled os campos do form define como null
-        $contractsInstallmentsData = $contractData['contract_installments'] ?? null;
-        $paymentInfoData = $contractData['payment_info'] ?? null;
-        $supplierId = $contractData['supplier_id'] ?? null;
+        $contractsInstallmentsData = $contractData['contract_installments'] ?? [];
+        $paymentInfoData = $contractData['payment_info'] ?? [];
+        $supplierId = $contractData['supplier_id'] ?? [];
 
         if (count($paymentInfoData) > 0) {
             $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
@@ -460,7 +460,7 @@ class PurchaseRequestService extends ServiceProvider
      *
      * @param $existingInstallments é uma ocorrência do Model Installment
      */
-    private function updateNumberOfInstallments($existingInstallments, array $installmentsData)
+    private function updateNumberOfInstallments($existingInstallments, ?array $installmentsData)
     {
         if (count($existingInstallments) > count($installmentsData)) {
             $installmentsToDelete = $existingInstallments->slice(count($installmentsData));
