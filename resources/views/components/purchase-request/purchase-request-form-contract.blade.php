@@ -795,7 +795,7 @@
         const $editValueInputModal = $('#edit-value');
         const $editValueHiddenModal = $('#edit-value-hidden');
 
-        $editValueInputModal.imask({
+        editValueInputModalMasked = $editValueInputModal.imask({
             mask: Number,
             scale: 2,
             thousandsSeparator: '.',
@@ -916,14 +916,12 @@
         $editValueInputModal.on('input', function() {
             const formattedValue = $(this).val();
             if (formattedValue !== null) {
-                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
-                const rawValue = parseFloat(processedValue);
-                if (!isNaN(rawValue)) {
-                    $editValueHiddenModal.val(rawValue.toFixed(2)).trigger('change');
+                const processedValue = editValueInputModalMasked.unmaskedValue;
+                if (!isNaN(processedValue)) {
+                    $editValueHiddenModal.val(processedValue);
                 }
             }
         });
-        // ---
 
         $valueModalAdd.on('input', function() {
             const formattedValue = $(this).val();
@@ -1021,12 +1019,15 @@
                             return "";
                         }
                         const formattedDate = moment(data, "YYYY/MM/DD").format("DD/MM/YYYY");
-                        return formattedDate || null;
+                        return formattedDate || "";
                     }
                 },
                 {
                     data: "value",
                     render: function(data, type, row, meta) {
+                        if (!data) {
+                            return null;
+                        }
                         const dataWithR$ = "R$" + data;
                         return dataWithR$;
                     }
@@ -1084,86 +1085,43 @@
 
             hiddenInputsContainer.empty();
 
-            if (tableData.length > 0) {
-                tableData.each(function(rowData, index) {
-                    const expireDate = rowData.expire_date;
+            tableData.each(function(rowData, index) {
+                const expireDate = rowData.expire_date;
+                const value = rowData.value;
+                const observation = rowData.observation;
+                const status = rowData.status;
 
-                    const value = rowData.value;
-                    const observation = rowData.observation;
-                    const status = rowData.status;
-
-                    const idInput = document.createElement('input');
-                    idInput.type = 'number';
-                    idInput.name = 'contract[contract_installments][' + index + '][id]';
-                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.contract
-                        ?.installments[index]?.id : null;
-                    idInput.hidden = true;
-
-                    const expireDateInput = document.createElement('input');
-                    expireDateInput.type = 'date';
-                    expireDateInput.name = 'contract[contract_installments][' + index +
-                        '][expire_date]';
-                    expireDateInput.value = expireDate;
-                    expireDateInput.hidden = true;
-
-                    const valueInput = document.createElement('input');
-                    valueInput.type = 'number';
-                    valueInput.name = 'contract[contract_installments][' + index + '][value]';
-                    valueInput.value = value;
-                    valueInput.hidden = true;
-
-                    const observationInput = document.createElement('input');
-                    observationInput.type = 'text';
-                    observationInput.name = 'contract[contract_installments][' + index +
-                        '][observation]';
-                    observationInput.value = observation;
-                    observationInput.hidden = true;
-
-                    const statusInput = document.createElement('input');
-                    statusInput.type = 'text';
-                    statusInput.name = 'contract[contract_installments][' + index + '][status]';
-                    statusInput.value = status;
-                    statusInput.hidden = true;
-
-                    hiddenInputsContainer.append(
-                        idInput,
-                        expireDateInput,
-                        valueInput,
-                        observationInput,
-                        statusInput,
-                    );
-                });
-            } else {
                 const idInput = document.createElement('input');
-                idInput.type = 'text';
-                idInput.name = 'contract[contract_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.contract?.installments[0]
-                    ?.id :
-                    null;
+                idInput.type = 'number';
+                idInput.name = 'contract[contract_installments][' + index + '][id]';
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.contract
+                    ?.installments[index]?.id : null;
                 idInput.hidden = true;
 
                 const expireDateInput = document.createElement('input');
-                expireDateInput.type = 'text';
-                expireDateInput.name = 'contract[contract_installments][0][expire_date]';
-                expireDateInput.value = "";
+                expireDateInput.type = 'date';
+                expireDateInput.name = 'contract[contract_installments][' + index +
+                    '][expire_date]';
+                expireDateInput.value = expireDate;
                 expireDateInput.hidden = true;
 
                 const valueInput = document.createElement('input');
-                valueInput.type = 'text';
-                valueInput.name = 'contract[contract_installments][0][value]';
-                valueInput.value = "";
+                valueInput.type = 'number';
+                valueInput.name = 'contract[contract_installments][' + index + '][value]';
+                valueInput.value = value;
                 valueInput.hidden = true;
 
                 const observationInput = document.createElement('input');
                 observationInput.type = 'text';
-                observationInput.name = 'contract[contract_installments][0][observation]';
-                observationInput.value = "";
+                observationInput.name = 'contract[contract_installments][' + index +
+                    '][observation]';
+                observationInput.value = observation;
                 observationInput.hidden = true;
 
                 const statusInput = document.createElement('input');
                 statusInput.type = 'text';
-                statusInput.name = 'contract[contract_installments][0][status]';
-                statusInput.value = "";
+                statusInput.name = 'contract[contract_installments][' + index + '][status]';
+                statusInput.value = status;
                 statusInput.hidden = true;
 
                 hiddenInputsContainer.append(
@@ -1173,7 +1131,7 @@
                     observationInput,
                     statusInput,
                 );
-            }
+            });
         }
 
         function deleteHiddenInputs(row) {
@@ -1414,7 +1372,7 @@
             $('#modal-edit-installment').modal('show');
 
             const expireDate = $('#edit-expire-date');
-            const value = $('#edit-value');
+            const $editValue = $('#edit-value');
             const status = $('#edit-status');
             const observation = $('#edit-observation');
 
@@ -1423,7 +1381,11 @@
                 expireDate.val(formattedDate.toISOString().split('T')[0]);
             }
 
-            value.val(rowData.value);
+            editValueInputModalMasked.value = rowData.value.replace('.', ',');
+            $editValue.val(editValueInputModalMasked.value);
+
+            $editValueInputModal.trigger('input');
+
             observation.val(rowData.observation);
 
             status.select2('val', statusValues.find((status) => status.description === rowData.status).id);
@@ -1433,13 +1395,13 @@
 
                 const expireDateInput = $('#edit-expire-date').val();
 
-                const value = $('#edit-value').val();
+                const value = parseFloat($('#edit-value-hidden').val());
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
 
                 if (selectedRowIndex !== null) {
                     $installmentsTable.cell(selectedRowIndex, 0).data(expireDateInput);
-                    $installmentsTable.cell(selectedRowIndex, 1).data(value);
+                    $installmentsTable.cell(selectedRowIndex, 1).data(value.toFixed(2));
                     $installmentsTable.cell(selectedRowIndex, 2).data(observation);
                     $installmentsTable.cell(selectedRowIndex, 3).data(status);
                     $installmentsTable.draw();
