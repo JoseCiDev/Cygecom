@@ -282,7 +282,7 @@
                                                 <hr>
                                                 <p>
                                                     <strong>Recorrência do pagamento:</strong>
-                                                    {{ $request->contract->recurrence->label() }}
+                                                    {{ $request->contract->recurrence?->label() ?? '---' }}
                                                 </p>
                                                 <p>
                                                     @php
