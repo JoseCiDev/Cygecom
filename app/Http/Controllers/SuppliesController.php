@@ -78,7 +78,7 @@ class SuppliesController extends Controller
             return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
         }
 
-        return view('components.supplies.product', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
+        return view('components.supplies.product.page', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 
     public function service()
@@ -93,7 +93,7 @@ class SuppliesController extends Controller
             return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
         }
 
-        return view('components.supplies.service', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
+        return view('components.supplies.service.page', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 
     public function contract()
@@ -108,7 +108,7 @@ class SuppliesController extends Controller
             return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
         }
 
-        return view('components.supplies.contract', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
+        return view('components.supplies.contract.page', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 
     private function getComexAndDesiredTodayCounts($products, $services, $contracts, $today)

@@ -3,7 +3,7 @@ $(() => {
     let typingTimer;
     let autoCompleteVisible = false;
 
-    $(document).on('input', '[name^="purchase_request_products"]', function () {
+    $(document).on('input', '[name^="purchase_request_products"][name$="[name]"]', function () {
         clearTimeout(typingTimer);
         const $autocompleteElement = $(this).closest('.product-row').find('.product-suggestion-autocomplete');
         const category_id = $(this).closest('.product-row').find('select').val();

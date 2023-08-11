@@ -172,7 +172,7 @@ class ProductController extends Controller
             return throw new Exception('Não foi possível acessar essa solicitação.');
         }
 
-        return view('components.supplies.product-content.product-details', compact('product', 'allRequestStatus', 'files'));
+        return view('components.supplies.product.details', compact('product', 'allRequestStatus', 'files'));
     }
 
     private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool

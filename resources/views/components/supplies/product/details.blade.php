@@ -53,9 +53,6 @@
     <div class="request-details">
         <div class="details-content">
             <header class="request-details-header">
-                <img class="request-details-header-logo"
-                    src="https://s3.amazonaws.com/gupy5/production/companies/32213/career/73435/images/2022-06-29_14-57_logo.jpg"
-                    alt="Logo Essentia Group">
                 <h1>Solicitação de produto nº {{ $product->id }}</h1>
                 <div>
                     <span>Criado em: {{ \Carbon\Carbon::parse($product->created_at)->format('d/m/Y h:m:s') }}</span> |
@@ -353,7 +350,7 @@
                                                         <p><strong><i class="glyphicon glyphicon-th-large"></i> Categoria:</strong> {{$productCategory}}</p>
 
                                                         @foreach ($products as $index => $productItem)
-                                                            <div class="request-details-content-box-products-product">
+                                                            <div class="request-details-content-box-products-product {{ $index % 2 === 0 ? 'zebra-bg-even' : 'zebra-bg-odd' }}">
                                                                 <p><strong><i class="glyphicon glyphicon-tag"></i> Produto nº {{ $index + 1 }}:</strong></p>
 
                                                                 <div class="row">
@@ -405,8 +402,6 @@
             </main>
         </div>
 
-        <hr>
-
         <div class="row">
             <div class="col-md-12">
                  <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
@@ -421,8 +416,6 @@
                  @endif
             </div>
         </div>
-
-        <hr>
 
         <div class="row">
             <div class="col-md-12">

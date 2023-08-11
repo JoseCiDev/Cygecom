@@ -39,6 +39,6 @@ class SuppliesServiceList extends Component
             $services = $this->supplierService->filterRequestByCompanyGroup($services, $this->suppliesGroup);
         }
 
-        return view('components.supplies.service-content.supplies-service-list', ['services' => $services, 'suppliesGroup' => $this->suppliesGroup, 'status' => $this->status]);
+        return view('components.supplies.service.list', ['services' => $services, 'suppliesGroup' => $this->suppliesGroup, 'status' => $this->status]);
     }
 }
