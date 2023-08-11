@@ -39,6 +39,6 @@ class SuppliesContractList extends Component
             $contracts = $this->supplierService->filterRequestByCompanyGroup($contracts, $this->suppliesGroup);
         }
 
-        return view('components.supplies.contract-content.supplies-contract-list', ['contracts' => $contracts, 'suppliesGroup' => $this->suppliesGroup, 'status' => $this->status]);
+        return view('components.supplies.contract.list', ['contracts' => $contracts, 'suppliesGroup' => $this->suppliesGroup, 'status' => $this->status]);
     }
 }
