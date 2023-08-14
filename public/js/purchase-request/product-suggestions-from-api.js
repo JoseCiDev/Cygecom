@@ -17,7 +17,6 @@ $(() => {
             $.ajax({
                 url: '/api/products/suggestion',
                 method: 'GET',
-                headers: { 'Authorization': 'Bearer ' + USER_ACCESS_TOKEN },
                 data: { category_id, search_term },
                 success: function (data) {
                     const suggestions = data.response.map(item => item.name);

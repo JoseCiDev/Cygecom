@@ -31,7 +31,6 @@ $(() => {
         $.ajax({
             url: '/api/suppliers/register',
             method: 'POST',
-            headers: { 'Authorization': 'Bearer ' + USER_ACCESS_TOKEN },
             data: formData,
             success: showSuccessAlertAndCloseModal,
             error: showFailAlert
