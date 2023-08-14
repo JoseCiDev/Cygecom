@@ -28,7 +28,13 @@ $(() => {
         const form = $("#supplier-form");
         const formData = form.serialize();
 
-        $.post("/api/suppliers/register", formData, showSuccessAlertAndCloseModal).fail(showFailAlert)
+        $.ajax({
+            url: '/api/suppliers/register',
+            method: 'POST',
+            data: formData,
+            success: showSuccessAlertAndCloseModal,
+            error: showFailAlert
+        });
     };
 
     $("#supplier-form").on("submit", submitFormToAPI);

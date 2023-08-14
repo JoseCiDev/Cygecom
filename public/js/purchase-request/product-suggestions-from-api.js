@@ -14,16 +14,20 @@ $(() => {
         }
 
         typingTimer = setTimeout(function () {
-            $.get('/api/products/suggestion', { category_id, search_term },
-            function (data) {
-                const suggestions = data.response.map(item => item.name);
-                $autocompleteElement.empty();
-
-                suggestions.forEach(suggestion => $autocompleteElement.append(`<li>${suggestion}</li>`));
-
-                $autocompleteElement.show();
-                autoCompleteVisible = true;
-            }.bind(this));
+            $.ajax({
+                url: '/api/products/suggestion',
+                method: 'GET',
+                data: { category_id, search_term },
+                success: function (data) {
+                    const suggestions = data.response.map(item => item.name);
+                    $autocompleteElement.empty();
+            
+                    suggestions.forEach(suggestion => $autocompleteElement.append(`<li>${suggestion}</li>`));
+            
+                    $autocompleteElement.show();
+                    autoCompleteVisible = true;
+                },
+            });
         }.bind(this), doneTypingInterval);
     });
 

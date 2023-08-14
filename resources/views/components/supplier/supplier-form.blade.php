@@ -276,7 +276,7 @@
 </form>
 
 @if ($isAPI)
-    <script src="{{ asset('js/supplies/submit-to-api.js') }}"></script>
+    <script src="{{ asset('js/supplies/register-supplier-by-api.js') }}"></script>
 @endif
 
 <script>
