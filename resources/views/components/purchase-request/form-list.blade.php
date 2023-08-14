@@ -12,21 +12,23 @@
         </div>
         <div class="box-content">
             <div class="col-sm-12" style="display:flex; margin-top: 20px; justify-content:center; gap: 50px">
-                <div class="col-sm-4 products" style="display:flex; flex-direction:column; align-items:center">
+                <div class="col-sm-3 products" style="display:flex; flex-direction:column; align-items:center">
                     <p class="text-center">
-                        Compra de produtos no geral. Exemplo: Material de escritório, limpeza, copa e cozinha, maquinário, equipamentos, etc.
+                        Compra de produtos no geral. Exemplo: Material de escritório, limpeza, copa e cozinha, máquinário, equipamentos, etc.
                     </p>
-                    <a data-cy="btn-products" href="{{ route('request.product.register') }}" class="btn btn-success btn-large btn-products" >
+                    <a data-cy="btn-products" href="{{ route('request.product.register') }}"
+                        class="btn btn-success btn-large btn-products"
+                    >
                         PRODUTOS
                     </a>
                 </div>
-                <div class="col-sm-4 services" style="display:flex; flex-direction:column; align-items:center">
+                <div class="col-sm-3 services" style="display:flex; flex-direction:column; align-items:center">
                     <p class="text-center">
                         Contratação de Serviços, sem contrato vinculado. Exemplo: Contratação de uma limpeza no vidro, contratação de consultoria única, etc.
                     </p>
                     <a data-cy="btn-services" href="{{ route('request.service.register') }}" class="btn btn-inverse btn-large btn-services">SERVIÇOS</a>
                 </div>
-                <div class="col-sm-4 contracts" style="display:flex; flex-direction:column; align-items:center">
+                <div class="col-sm-3 contracts" style="display:flex; flex-direction:column; align-items:center">
                     <p class="text-center">
                         Produto ou Serviço, que tenha um contrato vinculado. Exemplo: Serviço de limpeza diária, Vale Alimentação, Manutenção do ar condicionado, etc.
                     </p>

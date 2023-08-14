@@ -341,7 +341,7 @@
                     <div class="form-group">
                         <label for="approver_user_id" id="cost-center-permissions" class="control-label">Centros de custos permitidos</label>
                         <select @disabled(!$currentProfile === 'admin') name="user_cost_center_permissions[]" id="user_cost_center_permissions" data-cy="user_cost_center_permissions" multiple="multiple"
-                            class="chosen-select form-control cost-centers-permissions" placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras">
+                            class="chosen-select form-control cost-centers-permissions" placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras" required data-rule-required="true">
                             @foreach ($costCenters as $costCenter)
                                 @php
                                     $companyName = $costCenter->company->name;

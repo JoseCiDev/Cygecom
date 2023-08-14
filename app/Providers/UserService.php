@@ -90,9 +90,10 @@ class UserService extends ServiceProvider implements UserServiceInterface
 
         try {
             $currentProfile = auth()->user()->profile->name;
-            $user   = $this->getUserById($userId);
+            $user = $this->getUserById($userId);
             $person = $user->person;
-            $phone  = $user->person->phone;
+            $phone = $user->person->phone;
+            $isOwnUser = auth()->user()->id === $user->id;
 
             $this->saveUser($user, $data);
             $this->savePerson($person, $data);
@@ -100,6 +101,10 @@ class UserService extends ServiceProvider implements UserServiceInterface
 
             if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios') {
                 $costCenterPermissions = $data['user_cost_center_permissions'] ?? null;
+
+                if (!$costCenterPermissions && !$isOwnUser) {
+                    throw new Exception('Não foi possível o atualizar usuário. Por favor, adicione no mínimo um centro de custo.');
+                }
 
                 if ($costCenterPermissions !== null) {
                     $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
