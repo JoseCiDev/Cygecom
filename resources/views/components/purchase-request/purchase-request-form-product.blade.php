@@ -232,38 +232,52 @@
                 <h4>DADOS DA SOLICITAÇÃO</h4>
             </div>
 
-            <div class="row" style="margin-bottom:20px; margin-top:5px;">
+            <div class="row" style="margin-bottom:10px; margin-top:5px;">
 
                 {{-- RESPONSÁVEL CONTRATAÇÃO --}}
-                <div class="col-sm-3">
-                    <label for="form-check" class="control-label" style="padding-right:10px;">
-                        Quem está responsável por esta contratação?
-                    </label>
-                    <div class="form-check">
-                        <input name="is_supplies_contract"value="1" class="radio-who-wants"
-                            id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
-                            @checked((isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract) || !isset($purchaseRequest))>
-                        <label class="form-check-label" for="is-supplies-contract">Suprimentos</label>
-
-                        <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio"
-                            id="is-area-contract" data-cy="is-area-contract" style="margin-left: 7px;"
-                            @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
-                        <label class="form-check-label" for="is-area-contract"> Área solicitante (você)</label>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label class="control-label">Quem está responsável por esta contratação?</label>
+                        <fieldset data-rule-required="true">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <input name="is_supplies_contract"value="1" class="radio-who-wants" required
+                                        id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
+                                        @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
+                                    <label class="form-check-label" for="is-supplies-contract">Suprimentos</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input name="is_supplies_contract" value="0" class="radio-who-wants"
+                                        type="radio" required id="is-area-contract" data-cy="is-area-contract"
+                                        style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
+                                    <label class="form-check-label" for="is-area-contract"> Área solicitante</label>
+                                </div>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
 
                 {{-- COMEX --}}
                 <div class="col-sm-4">
-                    <label for="form-check" class="control-label" style="padding-right:10px;">
-                        Contrato se enquadra na categoria COMEX?
-                    </label>
-                    <div class="form-check">
-                        <input name="is_comex" data-cy="is-comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex)
-                            class="radio-comex" type="radio" data-skin="minimal">
-                        <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
-                        <input name="is_comex" data-cy="is-not-comex" value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest))
-                            class="radio-comex" type="radio" data-skin="minimal">
-                        <label class="form-check-label" for="">Não</label>
+                    <div class="form-group">
+                        <label for="form-check" class="control-label" style="padding-right:10px;">
+                            Contrato se enquadra na categoria COMEX?
+                        </label>
+                        <fieldset data-rule-required="true">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <input name="is_comex" data-cy="is-comex" value="1"
+                                        @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
+                                        data-skin="minimal" required>
+                                    <label class="form-check-label" for="services"
+                                        style="margin-right:15px;">Sim</label>
+                                    <input name="is_comex" data-cy="is-not-comex" value="0"
+                                        @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
+                                        data-skin="minimal" required>
+                                    <label class="form-check-label" for="">Não</label>
+                                </div>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
 
@@ -272,7 +286,7 @@
             <div class="row" style="margin-bottom:5px;">
 
                 {{-- MOTIVO --}}
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     <div class="form-group">
                         <label for="reason" class="control-label">
                             Motivo da solicitação
@@ -289,7 +303,7 @@
                 </div>
 
                 {{-- DESCRICAO --}}
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
                         <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
@@ -321,20 +335,21 @@
                 </div>
 
                 {{-- PRODUTO JÁ COMPRADO --}}
-                <div class="col-sm-3" style="width: 20%">
-                    <label for="form-check" class="control-label" style="padding-right:10px">
-                        Você já realizou a compra deste produto?
-                    </label>
-                    <div class="form-check">
-                        <input name="product[already_purchased]" value="1" class="radio-already-purchased"
-                            id="already-purchased" data-cy="already-purchased" type="radio"
-                            @checked(isset($purchaseRequest) && (bool) $purchaseRequest->product->already_purchased)>
-                        <label class="form-check-label" for="already-purchased">Sim</label>
-
-                        <input name="product[already_purchased]" value="0" class="radio-already-purchased"
-                            type="radio" id="not-provided" data-cy="not-provided" style="margin-left: 7px;"
-                            @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->product->already_purchased) || !isset($purchaseRequest))>
-                        <label class="form-check-label" for="not-provided">Não</label>
+                <div class="col-sm-3" style="width: 22%">
+                    <div class="form-group">
+                        <label for="form-check" class="control-label" style="padding-right:10px">
+                            Você já realizou a compra deste produto?
+                        </label>
+                        <fieldset data-rule-required="true">
+                            <input name="product[already_purchased]" value="1" class="radio-already-purchased"
+                                required id="already-purchased" data-cy="already-purchased" type="radio"
+                                @checked(isset($purchaseRequest) && (bool) $purchaseRequest->product->already_purchased)>
+                            <label class="form-check-label" for="already-purchased">Sim</label>
+                            <input name="product[already_purchased]" value="0" class="radio-already-purchased"
+                                required type="radio" id="not-provided" data-cy="not-provided"
+                                style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->product->already_purchased)>
+                            <label class="form-check-label" for="not-provided">Não</label>
+                        </fieldset>
                     </div>
                 </div>
 
@@ -600,7 +615,7 @@
 
 </div>
 
-<script src="{{asset('js/purchase-request/product-suggestions-from-api.js')}}"></script>
+<script src="{{ asset('js/purchase-request/product-suggestions-from-api.js') }}"></script>
 <script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
@@ -1007,6 +1022,16 @@
         const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
         const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
 
+        // desabilita pagamento ao entrar em register
+        $paymentBlock
+            .find('input, textarea')
+            .prop('readonly', true);
+
+        $paymentBlock
+            .find('select')
+            .prop('disabled', true)
+            .trigger('change.select2');
+
         $radioIsContractedBySupplies.on('change', function() {
             const isContractedBySupplies = $(this).val() === "1";
 
@@ -1167,7 +1192,7 @@
         const $isPrePaid = $('#product-is-prepaid');
         const $paymentInfoDescription = $('#payment-info-description');
 
-        $isPrePaid.on('change', function() {
+        $(document).on('change', '#product-is-prepaid', function() {
             const isPrePaid = $(this).val() === "1";
 
             if (!isPrePaid) {
@@ -1175,9 +1200,9 @@
                     .add($paymentMethod)
                     .add($formatInputInstallmentsNumber)
                     .add($paymentInfoDescription)
+                    .removeRequired()
                     .closest('.form-group')
-                    .removeClass('has-error')
-                    .removeRequired();
+                    .removeClass('has-error');
 
                 $paymentBlock.find('.help-block').remove();
 
@@ -1189,6 +1214,8 @@
                 .add($formatInputInstallmentsNumber)
                 .add($paymentInfoDescription)
                 .makeRequired();
+
+
 
         }).trigger('change');
 

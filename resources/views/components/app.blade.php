@@ -108,22 +108,27 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
+        // adiciona required style em elemento jquery e torna required pra validacao
         $.fn.makeRequired = function() {
             this.filter(function() {
                 return $(this).closest('.form-group').find('label').first().find('sup').length === 0;
             }).each(function() {
                 const $label = $(this).closest('.form-group').find('label').first();
                 $label.append('<sup style="color:red">*</sup>');
-                $(this).attr('data-rule-required', true)
+                $(this).data('rule-required', true);
             });
+
+            return $(this);
         }
 
         $.fn.removeRequired = function() {
             this.each(function() {
                 const $sup = $(this).closest('.form-group').find('label').first().find('sup');
                 $sup.remove();
-                $(this).attr('data-rule-required', false)
+                $(this).data('rule-required', false);
             });
+
+            return $(this);
         }
 
         $(() => {
