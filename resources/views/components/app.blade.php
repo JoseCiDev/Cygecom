@@ -250,6 +250,8 @@
     </div>
 
     <script>
+        const USER_ACCESS_TOKEN = "{{auth()->user()->tokens()->where('personal_access_tokens.name',  'accessToken')->first()->token}}";
+
         $(() => {
             // datatable language
             $('#DataTables_Table_0').DataTable({
