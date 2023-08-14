@@ -7,12 +7,18 @@
     $isCopy ??= null;
 
     $allProducts = $purchaseRequest?->purchaseRequestProduct ?? null;
-
     if ($allProducts) {
         $productSuppliers = [];
         foreach ($allProducts as $product) {
             $productSuppliers[$product['supplier_id']][] = $product;
         }
+    }
+
+    $selectedPaymentMethod = null;
+    $selectedPaymentTerm = null;
+    if (isset($purchaseRequest->product) && isset($purchaseRequest->product->paymentInfo)) {
+        $selectedPaymentMethod = $purchaseRequest->product->paymentInfo->payment_method;
+        $selectedPaymentTerm = $purchaseRequest->product->paymentInfo->payment_terms;
     }
 
     $purchaseRequestProductAmount = $purchaseRequest?->product?->amount === null ? null : (float) $purchaseRequest?->product?->amount;
@@ -378,12 +384,15 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="control-label">Condição de pagamento</label>
-                            <select name="product[is_prepaid]" id="product-is-prepaid" data-cy="product-is-prepaid"
-                                class='select2-me product[is_prepaid]' style="width:100%; padding-top:2px;"
-                                data-placeholder="Escolha uma opção">
+                            <select name="product[payment_info][payment_terms]" id="payment-terms"
+                                data-cy="payment-terms" class='select2-me product[payment_info][payment_terms]'
+                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="1" @selected(isset($purchaseRequest->product) && (bool) $purchaseRequest->product->is_prepaid)>Pagamento antecipado</option>
-                                <option value="0" @selected(isset($purchaseRequest->product) && !(bool) $purchaseRequest->product->is_prepaid)>Pagamento após execução</option>
+                                @foreach ($paymentTerms as $paymentTerm)
+                                    <option value="{{ $paymentTerm->value }}" @selected($paymentTerm->value === $selectedPaymentTerm)>
+                                        {{ $paymentTerm->label() }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -406,12 +415,6 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="control-label">Forma de pagamento</label>
-                            @php
-                                $selectedPaymentMethod = null;
-                                if (isset($purchaseRequest->product) && isset($purchaseRequest->product->paymentInfo)) {
-                                    $selectedPaymentMethod = $purchaseRequest->product->paymentInfo->payment_method;
-                                }
-                            @endphp
                             <select name="product[payment_info][payment_method]" id="payment-method"
                                 data-cy="payment-method" class='select2-me payment-method'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
@@ -426,12 +429,13 @@
                     </div>
 
                     <input type="hidden" id="product-payment-info-id" data-cy="product-payment-info-id"
-                        class="no-validation" value="" name="product[payment_info][id]">
+                        class="no-validation" value="{{ $purchaseRequest?->product?->paymentInfo?->id ?? null }}"
+                        name="product[payment_info][id]">
 
                     {{-- Nº PARCELAS --}}
                     <div class="col-sm-1">
                         <div class="form-group">
-                            <label class="control-label">Nº de parcelas</label>
+                            <label class="control-label">Nº parcelas</label>
                             <input type="text" class="form-control format-installments-number"
                                 placeholder="Ex: 24" value="{{ $productQuantityOfInstallments }}">
                             <input type="hidden" name="product[quantity_of_installments]" id="installments-number"
@@ -600,7 +604,7 @@
 
 </div>
 
-<script src="{{asset('js/purchase-request/product-suggestions-from-api.js')}}"></script>
+<script src="{{ asset('js/purchase-request/product-suggestions-from-api.js') }}"></script>
 <script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
@@ -1164,13 +1168,13 @@
             generateInstallments(numberOfInstallments);
         });
 
-        const $isPrePaid = $('#product-is-prepaid');
+        const $paymentTerm = $('#payment-terms');
         const $paymentInfoDescription = $('#payment-info-description');
 
-        $isPrePaid.on('change', function() {
-            const isPrePaid = $(this).val() === "1";
+        $paymentTerm.on('change', function() {
+            const paymentTerm = $(this).val() === "anticipated";
 
-            if (!isPrePaid) {
+            if (!paymentTerm) {
                 $serviceAmount
                     .add($paymentMethod)
                     .add($formatInputInstallmentsNumber)
@@ -1192,8 +1196,8 @@
 
         }).trigger('change');
 
-        if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
-            $isPrePaid.filter(':selected').trigger('change.select2');
+        if (!hasSentRequest || $paymentTerm.filter(':selected').val() === "1") {
+            $paymentTerm.filter(':selected').trigger('change.select2');
         }
 
 

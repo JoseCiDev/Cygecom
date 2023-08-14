@@ -255,11 +255,11 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <p>
-                                                    <strong>Descrição:</strong> 
+                                                    <strong>Descrição:</strong>
                                                     {{ $request->service->supplier->description ?? '---' }}
                                                 </p>
                                                 <p>
-                                                    <strong>Observações tributárias:</strong> 
+                                                    <strong>Observações tributárias:</strong>
                                                     {{ $request->service->supplier->tributary_observation ?? '---' }}
                                                 </p>
                                             </div>
@@ -273,8 +273,8 @@
                                     <div class="tab-content padding">
                                         <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações</strong></h4>
                                         <p>
-                                            <strong>Tipo de quitação:</strong> Pgto.
-                                            {{ $request->service->is_prepaid ? 'antecipado' : 'pós-pago' }}
+                                            <strong>Condição de pagamento: </strong>
+                                            {{ $request->service->paymentInfo?->payment_terms?->label() ?? '---' }}
                                         </p>
                                         <p>
                                             <strong>Dia do pagamento:</strong>

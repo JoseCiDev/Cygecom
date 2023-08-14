@@ -1,4 +1,6 @@
 @php
+    use \App\Enums\PaymentTerm;
+
     if (isset($contract)) {
         $request = $contract;
     } elseif (isset($product)) {
@@ -10,6 +12,8 @@
     }
 
     $requestIsFromLogged = $request->user_id === auth()->user()->id;
+
+    $paymentTermContract = $request->contract->paymentInfo->payment_terms;
 @endphp
 
 <x-app>
@@ -250,11 +254,11 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <p>
-                                                    <strong>Descrição:</strong> 
+                                                    <strong>Descrição:</strong>
                                                     {{ $request->contract->supplier->description ?? '---' }}
                                                 </p>
                                                 <p>
-                                                    <strong>Observações tributárias:</strong> 
+                                                    <strong>Observações tributárias:</strong>
                                                     {{ $request->contract->supplier->tributary_observation ?? '---' }}
                                                 </p>
                                             </div>
@@ -291,12 +295,12 @@
                                                             $isFixedPayment = 'Pgto. variável';
                                                         }
                                                     @endphp
-                                                    <strong>Flexibilidade do pagamento:</strong> 
+                                                    <strong>Flexibilidade do pagamento:</strong>
                                                     {{$isFixedPayment}}
                                                 </p>
                                                 <p>
-                                                    <strong>Tipo de quitação:</strong> Pgto.
-                                                    {{ $request->contract->is_prepaid ? 'antecipado' : 'pós-pago' }}
+                                                    <strong>Condição de pagamento:</strong>
+                                                    {{ $paymentTermContract->label() ?? "---"}}
                                                 </p>
                                                 <p>
                                                     <strong>Local do serviço:</strong>

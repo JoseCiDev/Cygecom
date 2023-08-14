@@ -10,6 +10,8 @@
     }
 
     $requestIsFromLogged = $request->user_id === auth()->user()->id;
+
+    $paymentTermProduct = $request->product->paymentInfo->payment_terms;
 @endphp
 
 <x-app>
@@ -220,8 +222,8 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <p>
-                                                <strong>Quitação:</strong>
-                                                Pgto. {{ $request->product->is_prepaid ? 'antecipado' : 'pós-pago' }}
+                                                <strong>Condição de pagamento: </strong>
+                                                {{ $paymentTermProduct->label() ?? '---' }}
                                             </p>
                                         </div>
                                     </div>
