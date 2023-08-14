@@ -1179,9 +1179,9 @@
                     .add($paymentMethod)
                     .add($formatInputInstallmentsNumber)
                     .add($paymentInfoDescription)
+                    .removeRequired()
                     .closest('.form-group')
-                    .removeClass('has-error')
-                    .removeRequired();
+                    .removeClass('has-error');
 
                 $paymentBlock.find('.help-block').remove();
 
