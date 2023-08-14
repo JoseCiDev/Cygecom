@@ -18,7 +18,7 @@ enum ContractRecurrence: string implements EnumInterface
     public static function getLabel($value): string
     {
         return match ($value) {
-            self::UNIQUE     => 'Único',
+            self::UNIQUE     => 'Única',
             self::MONTHLY    => 'Mensal',
             self::YEARLY => 'Anual',
             default           => '---',

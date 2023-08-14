@@ -9,6 +9,11 @@ class ProductCategory extends Model
 {
     use HasFactory;
 
+    public function productSugestion()
+    {
+        return $this->hasOne(ProductSugestion::class);
+    }
+
     public function purchaseRequestProduct()
     {
         return $this->belongsTo(PurchaseRequestProduct::class, 'purchase_request_id');

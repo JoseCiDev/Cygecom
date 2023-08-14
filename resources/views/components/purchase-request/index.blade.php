@@ -29,7 +29,7 @@
                         data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>Nº</th>
                                 <th>Solicitante</th>
                                 <th>Contratação por</th>
                                 <th>Tipo de solicitação</th>
@@ -44,7 +44,7 @@
                                 <tr>
                                     <td>{{$purchaseRequest->id}}</td>
                                     <td>{{$purchaseRequest->user->person->name}}</td>
-                                    <td>{{$purchaseRequest->is_supplies_quote ? 'Suprimentos' : 'Área Solicitante'}}</td>
+                                    <td>{{$purchaseRequest->is_supplies_contract ? 'Suprimentos' : 'Área Solicitante'}}</td>
                                     <td>{{$purchaseRequest->type->label()}}</td>
                                     <td>{{$purchaseRequest->status->label()}}</td>
                                     <td>{{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}</td>
@@ -74,7 +74,7 @@
                                         </a>
                                         @if($purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value)
                                             <button data-route="purchaseRequests"
-                                                data-name="{{'Solicitação de compra - ID ' . $purchaseRequest->id}}"
+                                                data-name="{{'Solicitação de compra - Nº ' . $purchaseRequest->id}}"
                                                 data-id="{{$purchaseRequest->id}}"
                                                 rel="tooltip"
                                                 title="Excluir"

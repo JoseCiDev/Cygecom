@@ -63,7 +63,6 @@ class PurchaseRequest extends Model
     protected $fillable = [
         'status',
         'type',
-        'is_supplies_quote',
         'is_comex',
         'local_description',
         'is_supplies_contract',

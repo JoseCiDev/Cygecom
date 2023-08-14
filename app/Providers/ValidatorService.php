@@ -104,7 +104,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'street_number' => ['nullable', 'string', 'max:20', 'min:0'],
         'complement'    => ['nullable', 'string', 'max:255'],
 
-        'number'     => ['nullable', 'string', 'max:15', 'min:8'],
+        'number'     => ['nullable', 'string', 'max:20', 'min:8'],
         'phone_type' => ['nullable', 'string', 'max:20'],
     ];
 
@@ -124,6 +124,101 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'market_type.string'   => 'O Tipo de Mercado deve ser uma string.',
 
         'corporate_name.unique' => 'O campo Razão Social deve ser único.',
+        'corporate_name.required' => 'O campo Razão Social é obrigatório.',
+        'corporate_name.string'   => 'A Razão Social deve ser uma string.',
+        'corporate_name.max'      => 'A Razão Social deve ter no máximo :max caracteres.',
+
+        'name.string' => 'O nome deve ser uma string.',
+        'name.max'    => 'O nome deve ter no máximo :max caracteres.',
+
+        'email.email' => 'Digite um endereço de e-mail válido.',
+
+        'representative.string' => 'O representante deve ser uma string.',
+
+        'postal_code.required' => 'O campo CEP é obrigatório.',
+        'postal_code.string'   => 'O CEP deve ser uma string.',
+        'postal_code.max'      => 'O CEP deve ter no máximo :max caracteres.',
+        'postal_code.min'      => 'O CEP deve ter no mínimo :min caracteres.',
+
+        'country.required' => 'O campo País é obrigatório.',
+        'country.string'   => 'O país deve ser uma string.',
+        'country.max'      => 'O país deve ter no máximo :max caracteres.',
+        'country.min'      => 'O país deve ter no mínimo :min caracteres.',
+
+        'state.required' => 'O campo Estado é obrigatório.',
+        'state.string'   => 'O estado deve ser uma string.',
+        'state.max'      => 'O estado deve ter no máximo :max caracteres.',
+
+        'city.required' => 'O campo Cidade é obrigatório.',
+        'city.string'   => 'A cidade deve ser uma string.',
+        'city.max'      => 'A cidade deve ter no máximo :max caracteres.',
+        'city.min'      => 'A cidade deve ter no mínimo :min caracteres.',
+
+        'neighborhood.required' => 'O campo Bairro é obrigatório.',
+        'neighborhood.string'   => 'O bairro deve ser uma string.',
+        'neighborhood.max'      => 'O bairro deve ter no máximo :max caracteres.',
+
+        'street.required' => 'O campo Rua é obrigatório.',
+        'street.string'   => 'A rua deve ser uma string.',
+        'street.max'      => 'A rua deve ter no máximo :max caracteres.',
+        'street.min'      => 'A rua deve ter no minimo :min caracteres.',
+
+        'street_number.max' => 'O número da rua deve ter no máximo :max caracteres.',
+        'street_number.min' => 'O número da rua deve ter no mínimo :min caracteres.',
+
+        'complement.string' => 'O complemento deve ser uma string.',
+        'complement.max'    => 'O complemento deve ter no máximo :max caracteres.',
+
+        'number.required' => 'O campo Telefone é obrigatório.',
+        'number.string'   => 'O número de Telefone deve ser uma string.',
+        'number.max'      => 'O número de Telefone deve ter no máximo :max caracteres.',
+        'number.min'      => 'O número de Telefone deve ter no mínimo :min caracteres.',
+
+        'phone_type.required' => 'O campo Tipo de Telefone é obrigatório.',
+        'phone_type.string'   => 'O tipo de Telefone deve ser uma string.',
+        'phone_type.max'      => 'O tipo de Telefone deve ter no máximo :max caracteres.',
+    ];
+
+    public $rulesForSupplierUpdate = [
+        "cpf_cnpj"            => ['required', 'string', 'min:11'],
+        "entity_type"         => ['required', 'string', 'in:PF,PJ'],
+        "supplier_indication" => ['required', 'string'],
+        "market_type"         => ['required', 'string'],
+        "corporate_name"      => ['required', 'string', 'max:255'],
+        "name"                => ['nullable', 'string', 'max:255'],
+        "email"               => ['nullable', 'email'],
+        "representative"      => ['nullable', 'string'],
+        "senior_code"         => ['nullable', 'string'],
+        "callisto_code"         => ['nullable', 'string'],
+
+        'postal_code'   => ['required', 'string', 'max:20', 'min:7'],
+        'country'       => ['required', 'string', 'max:255', 'min:3'],
+        'state'         => ['required', 'string', 'max:255'],
+        'city'          => ['required', 'string', 'max:255', 'min:3'],
+        'neighborhood'  => ['required', 'string', 'max:255'],
+        'street'        => ['required', 'string', 'max:255', 'min:1'],
+        'street_number' => ['nullable', 'string', 'max:20', 'min:0'],
+        'complement'    => ['nullable', 'string', 'max:255'],
+
+        'number'     => ['nullable', 'string', 'max:15', 'min:8'],
+        'phone_type' => ['nullable', 'string', 'max:20'],
+    ];
+
+    public $messagesForSupplierUpdate = [
+        'cpf_cnpj.required' => 'O campo CPF/CNPJ é obrigatório.',
+        'cpf_cnpj.string'   => 'O CPF/CNPJ deve ser uma string.',
+        'cpf_cnpj.min'      => 'O CPF/CNPJ deve ter no mínimo :min caracteres.',
+
+        'entity_type.required' => 'O campo Tipo de Entidade é obrigatório.',
+        'entity_type.string'   => 'O Tipo de Entidade deve ser uma string.',
+        'entity_type.in'       => 'O Tipo de Entidade deve ser "PF" ou "PJ".',
+
+        'supplier_indication.required' => 'O campo Indicação do Fonecedor é obrigatório.',
+        'supplier_indication.string'   => 'O Indicação do Fonecedor deve ser uma string.',
+
+        'market_type.required' => 'O campo Tipo de Mercado é obrigatório.',
+        'market_type.string'   => 'O Tipo de Mercado deve ser uma string.',
+
         'corporate_name.required' => 'O campo Razão Social é obrigatório.',
         'corporate_name.string'   => 'A Razão Social deve ser uma string.',
         'corporate_name.max'      => 'A Razão Social deve ter no máximo :max caracteres.',
@@ -233,8 +328,8 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
 
     public function updateValidator(int $id, array $data)
     {
-        $rules          = $this->rulesForUserUpdate;
-        $messages       = $this->rulesForUserUpdateMessages;
+        $rules = $this->rulesForUserUpdate;
+        $messages = $this->rulesForUserUpdateMessages;
         $rules['email'] = ['nullable', 'email', 'max:255', 'unique:users,email,' . $id];
 
         $validator = Validator::make($data, $rules, $messages);
@@ -244,8 +339,17 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
 
     public function supplier(array $data)
     {
-        $rules     = $this->rulesForSupplier;
+        $rules = $this->rulesForSupplier;
         $messages  = $this->messagesForSupplier;
+        $validator = Validator::make($data, $rules, $messages);
+
+        return $validator;
+    }
+
+    public function supplierUpdate(array $data)
+    {
+        $rules = $this->rulesForSupplierUpdate;
+        $messages  = $this->messagesForSupplierUpdate;
         $validator = Validator::make($data, $rules, $messages);
 
         return $validator;
@@ -253,9 +357,25 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
 
     public function purchaseRequest(array $data)
     {
-        $rules     = $this->rulesForPurchaseRequest;
+        $rules = $this->rulesForPurchaseRequest;
         $messages  = $this->messagesForPurchaseRequest;
         $validator = Validator::make($data, $rules, $messages);
+
+        $validator->after(function ($validator) use ($data) {
+            $totalPercentage = 0;
+            $hasPercentage = false;
+
+            foreach ($data['cost_center_apportionments'] as $apportionment) {
+                if (isset($apportionment['apportionment_percentage'])) {
+                    $totalPercentage += $apportionment['apportionment_percentage'];
+                    $hasPercentage = true;
+                }
+            }
+
+            if ($hasPercentage && $totalPercentage !== 100) {
+                $validator->errors()->add('cost_center_apportionments', 'A soma das porcentagens de rateio deve ser igual a 100%.');
+            }
+        });
 
         return $validator;
     }

@@ -1,5 +1,6 @@
 @php
     use App\Enums\PurchaseRequestStatus;
+    use App\Enums\PaymentMethod;
 
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
@@ -35,8 +36,11 @@
     }
 
     .product-row hr {
-        border-top: 5px solid rgb(178, 177, 177);
         margin: 0px;
+    }
+
+    .supplier-block .product-container .product-row:nth-of-type(odd) {
+        background-color: rgb(208, 208, 208);
     }
 </style>
 
@@ -59,17 +63,6 @@
         @endif
     </div>
 
-    {{-- @if (isset($purchaseRequest))
-        <div class="col-md-6 pull-right">
-            <x-modalDelete />
-            <button data-route="purchaseRequests"
-                data-name="{{ 'Solicitação de compra - ID ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
-                title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
-                Excluir solicitação
-            </button>
-        </div>
-    @endif --}}
 </div>
 
 <hr style="margin-top:5px; margin-bottom:30px;">
@@ -103,10 +96,13 @@
                                 @foreach ($costCenters as $costCenter)
                                     @php
                                         $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
+                                        $companyName = $costCenter->company->name;
+                                        $costCenterName = $costCenter->name;
+                                        $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
                                     @endphp
                                     <option value="{{ $costCenter->id }}"
                                         {{ $isApportionmentSelect ? 'selected' : '' }}>
-                                        {{ $costCenter->name }}
+                                        {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
                                     </option>
                                 @endforeach
                             </select>
@@ -324,6 +320,24 @@
                     </div>
                 </div>
 
+                {{-- PRODUTO JÁ COMPRADO --}}
+                <div class="col-sm-3" style="width: 20%">
+                    <label for="form-check" class="control-label" style="padding-right:10px">
+                        Você já realizou a compra deste produto?
+                    </label>
+                    <div class="form-check">
+                        <input name="product[already_purchased]" value="1" class="radio-already-purchased"
+                            id="already-purchased" data-cy="already-purchased" type="radio"
+                            @checked(isset($purchaseRequest) && (bool) $purchaseRequest->product->already_purchased)>
+                        <label class="form-check-label" for="already-purchased">Sim</label>
+
+                        <input name="product[already_purchased]" value="0" class="radio-already-purchased"
+                            type="radio" id="not-provided" data-cy="not-provided" style="margin-left: 7px;"
+                            @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->product->already_purchased) || !isset($purchaseRequest))>
+                        <label class="form-check-label" for="not-provided">Não</label>
+                    </div>
+                </div>
+
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="control-label">Data desejada entrega do produto</label>
@@ -341,7 +355,7 @@
                         <label for="support-links" class="control-label">Links de apoio /
                             sugestão</label>
                         <textarea placeholder="Adicone um ou mais links válidos. Ex: Contrato disponibilizado pelo fornecedor" rows="3"
-                            name="support_Links" id="support-links" data-cy="support-links" class="form-control text-area no-resize">{{ $purchaseRequest?->support_links ?? null }}</textarea>
+                            name="support_links" id="support-links" data-cy="support-links" class="form-control text-area no-resize">{{ $purchaseRequest?->support_links ?? null }}</textarea>
                     </div>
                 </div>
 
@@ -393,25 +407,20 @@
                         <div class="form-group">
                             <label class="control-label">Forma de pagamento</label>
                             @php
-                                $paymentMethod = null;
+                                $selectedPaymentMethod = null;
                                 if (isset($purchaseRequest->product) && isset($purchaseRequest->product->paymentInfo)) {
-                                    $paymentMethod = $purchaseRequest->product->paymentInfo->payment_method;
+                                    $selectedPaymentMethod = $purchaseRequest->product->paymentInfo->payment_method;
                                 }
                             @endphp
                             <select name="product[payment_info][payment_method]" id="payment-method"
                                 data-cy="payment-method" class='select2-me payment-method'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="PIX" {{ $paymentMethod === 'PIX' ? 'selected' : '' }}>PIX</option>
-                                <option value="DEPÓSITO BANCÁRIO"
-                                    {{ $paymentMethod === 'DEPÓSITO BANCÁRIO' ? 'selected' : '' }}>DEPÓSITO BANCÁRIO
-                                </option>
-                                <option value="BOLETO" {{ $paymentMethod === 'BOLETO' ? 'selected' : '' }}>BOLETO
-                                </option>
-                                <option value="CARTÃO CRÉDITO"
-                                    {{ $paymentMethod === 'CARTÃO CRÉDITO' ? 'selected' : '' }}>CARTÃO CRÉDITO</option>
-                                <option value="CARTÃO DÉBITO"
-                                    {{ $paymentMethod === 'CARTÃO DÉBITO' ? 'selected' : '' }}>CARTÃO DÉBITO</option>
+                                @foreach ($paymentMethods as $paymentMethod)
+                                    <option value="{{ $paymentMethod->value }}" @selected($paymentMethod->value === $selectedPaymentMethod)>
+                                        {{ $paymentMethod->label() }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -524,7 +533,7 @@
         <hr style="margin-top: 30px; margin-bottom: 25px;">
 
         {{-- ARQUIVOS --}}
-        <div class="row justify-content-center" >
+        <div class="row justify-content-center">
             <div class="col-sm-12">
                 <fieldset id="files-group">
                     <h4 style="margin-bottom: 20px;">
@@ -591,7 +600,8 @@
 
 </div>
 
-{{-- <script src="{{ asset('js/supplies/select2-custom.js') }}"></script> --}}
+<script src="{{asset('js/purchase-request/product-suggestions-from-api.js')}}"></script>
+<script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
         hasSentRequest = @json($hasSentRequest);
@@ -625,7 +635,7 @@
         const $editValueInputModal = $('#edit-value');
         const $editValueHiddenModal = $('#edit-value-hidden');
 
-        $editValueInputModal.imask({
+        editValueInputModalMasked = $editValueInputModal.imask({
             mask: Number,
             scale: 2,
             thousandsSeparator: '.',
@@ -642,8 +652,9 @@
             mask: IMask.MaskedRange,
             from: 1,
             to: 60,
-            autofix: false,
+            autofix: 'pad'
         });
+
 
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
@@ -651,18 +662,6 @@
         const $fileRemove = $('button.file-remove');
         const $filesGroup = $('fieldset#files-group');
         const csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-
-        // Verifica quem vai cotar e aplica regra em campo description
-        $('input[name="is_supplies_quote"]').change(function() {
-            if ($('#supplie_quote').is(':checked')) {
-                $('#description').prop('required', true)
-                $('.description-span').show()
-            } else {
-                $('#description').prop('required', false)
-                $('.description-span').hide()
-            }
-        });
 
         function disableSelectedOptions() {
             const selectedValues = $.map($('.cost-center-container select'), (self) => {
@@ -704,6 +703,37 @@
         }
         updateApportionmentFields();
 
+        // desabilita botao caso nao tenha sido preenchido cost center corretamente;
+        const $btnAddCostCenter = $('.add-cost-center-btn');
+        const $costCenterSelect = $('.cost-center-container select');
+
+        function toggleCostCenterBtn() {
+            const costCenterContainer = $(this).closest('.cost-center-container');
+
+            const costCenterSelect = costCenterContainer
+                .find('select')
+                .val();
+
+            const costcenterPercentage = costCenterContainer
+                .find('input[name$="[apportionment_percentage]"]')
+                .val()
+
+            const costCenterCurrency = costCenterContainer
+                .find('input[name$="[apportionment_currency]"]')
+                .val()
+
+            const isValidApportionment = Boolean(costCenterSelect && (costcenterPercentage ||
+                costCenterCurrency));
+
+            $btnAddCostCenter.prop('disabled', !isValidApportionment);
+        }
+
+        $(document).on('input change',
+            `${$costCenterSelect.selector}, ${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
+            toggleCostCenterBtn);
+
+        toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
+
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
         $costCenterPercentage.add($costCenterCurrency).on('input', updateApportionmentFields);
 
@@ -729,6 +759,7 @@
             newRow.find('.delete-cost-center').removeAttr('hidden');
             checkCostCenterCount();
             disableSelectedOptions();
+            toggleCostCenterBtn.bind(this)();
         });
 
         $(document).on('click', '.delete-cost-center', function() {
@@ -736,9 +767,39 @@
             updateApportionmentFields();
             checkCostCenterCount();
             disableSelectedOptions();
+            toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
         });
 
         $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
+
+
+        // muda data desejada minima quando produto já comprado
+        const $desiredDate = $('#desired-date');
+        const $productAlreadyPurchased = $('.radio-already-purchased');
+        const currentDate = moment().format('YYYY-MM-DD');
+        const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
+
+        function desiredDateGreaterThanCurrent() {
+            const desiredDate = $desiredDate.val();
+
+            return desiredDate > currentDate;
+        }
+
+        function changeMinDesiredDate() {
+            const isValidDate = desiredDateGreaterThanCurrent();
+            const productAlreadyPurchased = $productAlreadyPurchased.filter(':checked').val() === "1";
+
+            const minDate = productAlreadyPurchased ? minInitialDate : currentDate;
+
+            $desiredDate.attr('min', minDate);
+        }
+
+        $productAlreadyPurchased
+            .add($desiredDate)
+            .on('change', changeMinDesiredDate)
+            .filter(':checked')
+            .trigger('change');
+
 
         // trata valor serviço mascara
         $serviceAmount.on('input', function() {
@@ -772,10 +833,9 @@
         $editValueInputModal.on('input', function() {
             const formattedValue = $(this).val();
             if (formattedValue !== null) {
-                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
-                const rawValue = parseFloat(processedValue);
-                if (!isNaN(rawValue)) {
-                    $editValueHiddenModal.val(rawValue.toFixed(2)).trigger('change');
+                const processedValue = editValueInputModalMasked.unmaskedValue;
+                if (!isNaN(processedValue)) {
+                    $editValueHiddenModal.val(processedValue);
                 }
             }
         });
@@ -784,26 +844,8 @@
         // sim está repetindo muito...
 
         const $selectSupplier = $('.select-supplier');
-        const $paymentMethod = $('.payment-method');
+        const $paymentMethod = $('#payment-method');
         const $paymentInfo = $('.payment-info');
-
-        // desabilita todos os campos do form caso solicitacao ja enviada
-        $('#request-form')
-            .find('input, textarea, checkbox')
-            .prop('disabled', hasSentRequest);
-
-        $('#request-form')
-            .find('select')
-            .prop('disabled', hasSentRequest);
-
-        $('.file-remove').prop('disabled', hasSentRequest);
-
-        $('.add-supplier-btn').prop('disabled', hasSentRequest);
-        $('.delete-supplier').prop('disabled', hasSentRequest);
-
-        $('.add-product').prop('disabled', hasSentRequest);
-        $('.delete-product').prop('disabled', hasSentRequest);
-
 
         const purchaseRequest = @json($purchaseRequest);
         const isRequestCopy = @json($isCopy);
@@ -811,6 +853,7 @@
 
         // dataTable config - parcelas
         const $installmentsTable = $('#installments-table-striped').DataTable({
+            defer: true,
             data: purchaseRequest?.product?.installments || [],
             columns: [{
                     data: "expire_date",
@@ -874,112 +917,58 @@
             const hiddenInputsContainer = $('.hidden-installments-inputs-container');
 
             hiddenInputsContainer.empty();
+            tableData.each(function(rowData, index) {
+                const expireDate = rowData.expire_date;
+                const value = rowData.value;
+                const observation = rowData.observation;
+                const status = rowData.status;
 
-            if (tableData.length > 0) {
-                tableData.each(function(rowData, index) {
-                    const expireDate = rowData.expire_date;
-
-                    const value = rowData.value;
-                    const observation = rowData.observation;
-                    const status = rowData.status;
-
-                    const idInput = document.createElement('input');
-                    idInput.type = 'number';
-                    idInput.name = 'product[product_installments][' + index + '][id]';
-                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.product
-                        ?.installments[index]?.id : null;
-                    idInput.hidden = true;
-                    idInput.className = "no-validation";
-                    idInput.setAttribute('data-cy', 'product-product_installments-' + index + '-id');
-
-                    const expireDateInput = document.createElement('input');
-                    expireDateInput.type = 'date';
-                    expireDateInput.name = 'product[product_installments][' + index +
-                        '][expire_date]';
-                    expireDateInput.value = expireDate;
-                    expireDateInput.hidden = true;
-                    expireDateInput.className = "no-validation";
-                    expireDateInput.setAttribute('data-cy', 'product-product_installments-' + index +
-                        '-expire_date');
-
-                    const valueInput = document.createElement('input');
-                    valueInput.type = 'number';
-                    valueInput.name = 'product[product_installments][' + index + '][value]';
-                    valueInput.value = value;
-                    valueInput.hidden = true;
-                    valueInput.className = "no-validation";
-                    valueInput.setAttribute('data-cy', 'product-product_installments-' + index +
-                        '-value');
-
-                    const observationInput = document.createElement('input');
-                    observationInput.type = 'text';
-                    observationInput.name = 'product[product_installments][' + index +
-                        '][observation]';
-                    observationInput.value = observation;
-                    observationInput.hidden = true;
-                    observationInput.className = "no-validation";
-                    observationInput.setAttribute('data-cy', 'product-product_installments-' + index +
-                        '-observation');
-
-                    const statusInput = document.createElement('input');
-                    statusInput.type = 'text';
-                    statusInput.name = 'product[product_installments][' + index + '][status]';
-                    statusInput.value = status;
-                    statusInput.hidden = true;
-                    statusInput.className = "no-validation";
-                    statusInput.setAttribute('data-cy', 'product-product_installments-' + index +
-                        '-status');
-
-                    hiddenInputsContainer.append(
-                        idInput,
-                        expireDateInput,
-                        valueInput,
-                        observationInput,
-                        statusInput,
-                    );
-                });
-            } else {
                 const idInput = document.createElement('input');
                 idInput.type = 'number';
-                idInput.name = 'product[product_installments][0][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.product?.installments[0]
-                    ?.id : null;
+                idInput.name = 'product[product_installments][' + index + '][id]';
+                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.product
+                    ?.installments[index]?.id : null;
                 idInput.hidden = true;
                 idInput.className = "no-validation";
-                idInput.setAttribute('data-cy', 'product-product_installments-0-id');
+                idInput.setAttribute('data-cy', 'product-product_installments-' + index + '-id');
 
                 const expireDateInput = document.createElement('input');
                 expireDateInput.type = 'date';
-                expireDateInput.name = 'product[product_installments][0][expire_date]';
-                expireDateInput.value = "";
+                expireDateInput.name = 'product[product_installments][' + index +
+                    '][expire_date]';
+                expireDateInput.value = expireDate;
                 expireDateInput.hidden = true;
                 expireDateInput.className = "no-validation";
-                expireDateInput.setAttribute('data-cy', 'product-product_installments-0-expire_date');
-
+                expireDateInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                    '-expire_date');
 
                 const valueInput = document.createElement('input');
                 valueInput.type = 'number';
-                valueInput.name = 'product[product_installments][0][value]';
-                valueInput.value = "";
+                valueInput.name = 'product[product_installments][' + index + '][value]';
+                valueInput.value = value;
                 valueInput.hidden = true;
                 valueInput.className = "no-validation";
-                valueInput.setAttribute('data-cy', 'product-product_installments-0-value');
+                valueInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                    '-value');
 
                 const observationInput = document.createElement('input');
                 observationInput.type = 'text';
-                observationInput.name = 'product[product_installments][0][observation]';
-                observationInput.value = "";
+                observationInput.name = 'product[product_installments][' + index +
+                    '][observation]';
+                observationInput.value = observation;
                 observationInput.hidden = true;
                 observationInput.className = "no-validation";
-                observationInput.setAttribute('data-cy', 'product-product_installments-0-observation');
+                observationInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                    '-observation');
 
                 const statusInput = document.createElement('input');
                 statusInput.type = 'text';
-                statusInput.name = 'product[product_installments][0][status]';
-                statusInput.value = "";
+                statusInput.name = 'product[product_installments][' + index + '][status]';
+                statusInput.value = status;
                 statusInput.hidden = true;
-                statusInput.className = 'no-validation';
-                statusInput.setAttribute('data-cy', 'product-product_installments-0-status');
+                statusInput.className = "no-validation";
+                statusInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                    '-status');
 
                 hiddenInputsContainer.append(
                     idInput,
@@ -988,7 +977,7 @@
                     observationInput,
                     statusInput,
                 );
-            }
+            });
         }
 
         function deleteHiddenInputs(row) {
@@ -1010,9 +999,9 @@
         fillHiddenInputsWithRowData();
 
 
-        // verifica EU ou SUPRIMENTOS (desabilitar fornecedores e pagamento)
+        // verifica AREA ou SUPRIMENTOS (desabilitar pagamento)
         const $radioIsContractedBySupplies = $('.radio-who-wants');
-        const $suppliersBlock = $('.suppliers-block');
+        const $supplierBlock = $('.supplier-block');
         const $paymentBlock = $('.payment-block');
 
         const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
@@ -1022,29 +1011,33 @@
             const isContractedBySupplies = $(this).val() === "1";
 
             // muda label
-            const supplierSelect = $suppliersBlock.find('select');
+            const supplierSelect = $('select.select-supplier');
             const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
 
-            supplierSelect.siblings('label[for="' + supplierSelect.attr('name') + '"]').text(newLabel);
-            supplierSelect.data('rule-required', !isContractedBySupplies);
+            supplierSelect.siblings('label').text(newLabel);
+
+            supplierSelect.before().removeAttr('data-rule-required');
 
             // desabilita pagamento
             $paymentBlock
                 .find('input, textarea')
                 .prop('readonly', isContractedBySupplies);
-            //.data('rule-required', !isContractedBySupplies);
 
             $paymentBlock
                 .find('select')
                 .prop('disabled', isContractedBySupplies)
-                //.data('rule-required', !isContractedBySupplies)
                 .trigger('change.select2');
 
             if (isContractedBySupplies) {
-                //$paymentBlock.find('.form-group').removeClass('has-error');
-                //$paymentBlock.find('input').valid();
+                supplierSelect.removeRequired();
+                supplierSelect.closest('.form-group').removeClass('has-error');
+                $supplierBlock.find('.help-block').remove();
+
                 $installmentsTable.clear().draw();
+
+                return;
             }
+            supplierSelect.makeRequired();
         });
 
         if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
@@ -1107,21 +1100,20 @@
             $('#modal-edit-product-installment').modal('show');
 
             const expireDate = $('#edit-expire-date');
-            const value = $('#edit-value');
+            const $editValue = $('#edit-value');
             const status = $('#edit-status');
             const observation = $('#edit-observation');
-
-            // const disabled = selectedRowIndex !== 0;
-            // value.prop({
-            //     disabled
-            // });
 
             if (rowData.expire_date) {
                 const formattedDate = new Date(rowData.expire_date.split('/').reverse().join('-'));
                 expireDate.val(formattedDate.toISOString().split('T')[0]);
             }
 
-            value.val(rowData.value);
+            editValueInputModalMasked.value = rowData.value.replace('.', ',');
+            $editValue.val(editValueInputModalMasked.value);
+
+            $editValueInputModal.trigger('input');
+
             observation.val(rowData.observation);
 
             status.select2('val', statusValues.find((status) => status.description === rowData.status).id);
@@ -1131,41 +1123,18 @@
 
                 const expireDate = $('#edit-expire-date').val();
 
-                const value = $('#edit-value').val();
+                const value = parseFloat($('#edit-value-hidden').val());
                 const status = $('#edit-status').find(':selected').text();
                 const observation = $('#edit-observation').val();
 
                 // insere valores editados na tabela
                 if (selectedRowIndex !== null) {
                     $installmentsTable.cell(selectedRowIndex, 0).data(expireDate);
-                    $installmentsTable.cell(selectedRowIndex, 1).data(value);
+                    $installmentsTable.cell(selectedRowIndex, 1).data(value.toFixed(2));
                     $installmentsTable.cell(selectedRowIndex, 2).data(observation);
                     $installmentsTable.cell(selectedRowIndex, 3).data(status);
                     $installmentsTable.cell(selectedRowIndex, 4).data(editButton);
                     $installmentsTable.draw();
-
-                    // comentado recalculo de parcelas para facilitar no futuro
-
-                    // if (selectedRowIndex === 0) {
-                    //     const amount = parseFloat($amount.val());
-                    //     const rows = $installmentsTable.rows().data();
-                    //     const selectedRowData = rows[selectedRowIndex];
-                    //     const selectedValue = parseFloat(selectedRowData.value);
-
-                    //     // Recalcula o valor das parcelas restantes
-                    //     const recalculatedValue = (amount - selectedValue) / (rows.length - 1);
-
-                    //     rows.each(function(rowData, index) {
-                    //         if (index !== selectedRowIndex) {
-                    //             $installmentsTable.cell(index, 1).data(recalculatedValue
-                    //                 .toFixed(2));
-                    //         }
-                    //     });
-
-                    //     $installmentsTable.draw();
-                    // }
-
-                    // ---------------------------------------------------------------
                 }
 
                 selectedRowIndex = null;
@@ -1195,26 +1164,33 @@
             generateInstallments(numberOfInstallments);
         });
 
-        const $isPrePaid = $('#service-is-prepaid');
+        const $isPrePaid = $('#product-is-prepaid');
         const $paymentInfoDescription = $('#payment-info-description');
 
         $isPrePaid.on('change', function() {
             const isPrePaid = $(this).val() === "1";
-            $serviceAmount.data('rule-required', isPrePaid);
-            $paymentMethod.data('rule-required', isPrePaid);
-            $formatInputInstallmentsNumber.data('rule-required', isPrePaid);
-            $paymentInfoDescription.data('rule-required', isPrePaid);
 
             if (!isPrePaid) {
-                $serviceAmount.closest('.form-group').removeClass('has-error');
-                $paymentMethod.closest('.form-group').removeClass('has-error');
-                $formatInputInstallmentsNumber.closest('.form-group').removeClass('has-error');
-                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
-                $paymentInfoDescription.closest('.form-group').removeClass('has-error');
+                $serviceAmount
+                    .add($paymentMethod)
+                    .add($formatInputInstallmentsNumber)
+                    .add($paymentInfoDescription)
+                    .closest('.form-group')
+                    .removeClass('has-error')
+                    .removeRequired();
 
                 $paymentBlock.find('.help-block').remove();
+
+                return;
             }
-        });
+
+            $serviceAmount
+                .add($paymentMethod)
+                .add($formatInputInstallmentsNumber)
+                .add($paymentInfoDescription)
+                .makeRequired();
+
+        }).trigger('change');
 
         if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
             $isPrePaid.filter(':selected').trigger('change.select2');
@@ -1228,7 +1204,6 @@
         function checkSuppliersContainerLength() {
             const suppliersCount = $supplierContainer.find('.supplier-block').length;
             const suppliersCountGreaterThanOne = suppliersCount > 1;
-            console.log(suppliersCountGreaterThanOne);
             $('.delete-supplier').prop('disabled', !suppliersCountGreaterThanOne);
         }
 
@@ -1238,7 +1213,8 @@
         function checkProductRows() {
             $('.supplier-block').each(function() {
                 const $productContainer = $(this).find('.product-container');
-                const productRowCount = $productContainer.find('.product-row').length;
+                const $productRow = $productContainer.find('.product-row');
+                const productRowCount = $productRow.length;
 
                 $productContainer.find('.delete-product').prop('disabled', productRowCount <= 1);
             });
@@ -1268,18 +1244,9 @@
                 const lastIndex = Number(oldName.match(regexNewName).at(1));
                 const anotherRegex = /\[\d+\]/;
 
-                // poderia ser (e foi mermo)
                 const newName = oldName
                     .replaceAll(/\[\d+\]/g, `[0]`)
                     .replace(/\[\d+\]/, `[${lastIndex + 1}]`);
-                // assinado: --get
-
-                // POWER OF GAMBIARRATION (venceu) será?
-                // const newName = oldName
-                //     .replace(regexNewName, `purchase_request_products[${lastIndex + 1}]$2`
-                //         // função para fazer replace nas demais ocorrências (exceto a primeira);
-                //         .replace(anotherRegex, (i => m => !i++ ? m : '')(0))
-                //     );
 
                 $(this).attr('name', newName);
             });
@@ -1294,6 +1261,10 @@
 
             checkSuppliersContainerLength();
             checkProductRows();
+
+            const $selectSupplier = $newContainer.find('select').first();
+
+            addBtnSupplierSelect($selectSupplier);
         });
 
         $(document).on('click', '.delete-supplier', function() {
@@ -1330,6 +1301,7 @@
                 const lastIndex = Number(oldName.match(regexNewName).at(1));
                 const newName = oldName.replace(regexNewName, `[products][${lastIndex + 1}]`);
                 $(this).attr('name', newName);
+                $(this).attr('data-cy', newName);
             });
 
             newRow.find("input, select").val("");
@@ -1400,5 +1372,28 @@
                 console.error(error);
             }
         });
+
+
+        // desabilita todos os campos do form caso solicitacao ja enviada
+        if (hasSentRequest) {
+            $('#request-form')
+                .find('input, textarea, checkbox')
+                .prop('disabled', hasSentRequest);
+
+            $('#request-form')
+                .find('select')
+                .prop('disabled', hasSentRequest);
+
+            $('.file-remove').prop('disabled', hasSentRequest);
+
+            $('.add-supplier-btn').prop('disabled', hasSentRequest);
+            $('.delete-supplier').prop('disabled', hasSentRequest);
+
+            $('.add-product-btn').prop('disabled', hasSentRequest);
+            $('.delete-product').prop('disabled', hasSentRequest);
+
+            $('.add-cost-center-btn').prop('disabled', hasSentRequest);
+            $('.delete-cost-center').prop('disabled', hasSentRequest);
+        }
     });
 </script>

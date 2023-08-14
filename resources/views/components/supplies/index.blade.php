@@ -50,15 +50,15 @@
                                         <span>solicitações existentes</span>
 
                                         @if ($currentProfile === 'admin')
-                                            <a href="{{route('supplies.product')}}" class="btn btn-grey-4" data-cy="btn-all-products">Todos de produtos</a>
+                                            <a href="{{route('supplies.product')}}" class="btn btn-grey-4" data-cy="btn-all-products">Todas solicitações</a>
                                         @endif
 
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-products">Produtos HKM</a>
+                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-products">Ver solicitações {{$currentProfile === 'admin' ? 'HKM' : ''}} <i class="fa fa-external-link"></i></a>
                                         @endif
                                         
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
-                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-products">Produtos INP</a>
+                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-products">Ver solicitações {{$currentProfile === 'admin' ? 'INP' : ''}} <i class="fa fa-external-link"></i></a>
                                         @endif
 
                                     </div>
@@ -79,15 +79,15 @@
                                         <span>solicitações existentes</span>
 
                                         @if ($currentProfile === 'admin')
-                                            <a href="{{route('supplies.service')}}" class="btn btn-grey-4" data-cy="btn-all-services">Todos serviços</a>
+                                            <a href="{{route('supplies.service')}}" class="btn btn-grey-4" data-cy="btn-all-services">Todas solicitações</a>
                                         @endif
 
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-services">Serviços HKM</a>
+                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-services">Ver solicitações {{ $currentProfile === 'admin' ? 'HKM' : ''}} <i class="fa fa-external-link"></i></a>
                                         @endif
 
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
-                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-services">Serviços INP</a>
+                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-services">Ver solicitações {{ $currentProfile === 'admin' ? 'INP' : ''}} <i class="fa fa-external-link"></i></a>
                                         @endif
                                     </div>
                                 </li>
@@ -107,15 +107,15 @@
                                         <span>solicitações existentes</span>
 
                                         @if ($currentProfile === 'admin')
-                                            <a href="{{route('supplies.contract')}}" class="btn btn-grey-4" data-cy="btn-all-contracts">Todos de contratos</a>
+                                            <a href="{{route('supplies.contract')}}" class="btn btn-grey-4" data-cy="btn-all-contracts">Todas solicitações</a>
                                         @endif
 
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-contracts">Contratos HKM</a>
+                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-contracts">Ver solicitações {{$currentProfile === 'admin' ? 'HKM' : ''}} <i class="fa fa-external-link"></i></a>
                                         @endif
 
                                         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
-                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-contracts">Contratos INP</a>
+                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-contracts">Ver solicitações {{$currentProfile === 'admin' ? 'INP' : ''}} <i class="fa fa-external-link"></i></a>
                                         @endif
                                     </div>
                                 </li>

@@ -24,7 +24,10 @@ class UserService extends ServiceProvider implements UserServiceInterface
     {
         $loggedId = auth()->user()->id;
 
-        return User::with('person', 'profile')->where('id', '!=', $loggedId)->whereNull('deleted_at')->get();
+        return User::with('person', 'profile')->where('id', '!=', $loggedId)->whereNull('deleted_at')
+            ->whereHas('profile', function ($query) {
+                $query->where('name', '!=', 'admin');
+            })->get();
     }
 
     /**
@@ -53,6 +56,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
     public function registerUser(array $request): User
     {
         return DB::transaction(function () use ($request) {
+            $currentProfile = auth()->user()->profile->name;
             $phoneId = $this->createPhone($request);
             $request['phone_id'] = $phoneId;
             $person = $this->createPerson($request);
@@ -68,7 +72,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
 
             $user->save();
 
-            if (auth()->user()->profile->name === 'admin') {
+            if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios') {
                 $costCenterPermissions = $request['user_cost_center_permissions'] ?? null;
 
                 if ($costCenterPermissions !== null) {
@@ -85,16 +89,22 @@ class UserService extends ServiceProvider implements UserServiceInterface
         DB::beginTransaction();
 
         try {
-            $user   = $this->getUserById($userId);
+            $currentProfile = auth()->user()->profile->name;
+            $user = $this->getUserById($userId);
             $person = $user->person;
-            $phone  = $user->person->phone;
+            $phone = $user->person->phone;
+            $isOwnUser = auth()->user()->id === $user->id;
 
             $this->saveUser($user, $data);
             $this->savePerson($person, $data);
             $this->savePhone($phone, $data);
 
-            if (auth()->user()->profile->name === 'admin') {
+            if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios') {
                 $costCenterPermissions = $data['user_cost_center_permissions'] ?? null;
+
+                if (!$costCenterPermissions && !$isOwnUser) {
+                    throw new Exception('Não foi possível o atualizar usuário. Por favor, adicione no mínimo um centro de custo.');
+                }
 
                 if ($costCenterPermissions !== null) {
                     $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);

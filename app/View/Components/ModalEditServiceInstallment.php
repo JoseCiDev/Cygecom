@@ -8,12 +8,11 @@ use Illuminate\View\Component;
 
 class ModalEditServiceInstallment extends Component
 {
-    public function __construct(public $statusValues)
+    public function __construct(private $statusValues)
     {
-
     }
     public function render(): View|Closure|string
     {
-        return view('components.modal-edit-service-installment');
+        return view('components.modal-edit-service-installment', ['statusValues' => $this->statusValues]);
     }
 }

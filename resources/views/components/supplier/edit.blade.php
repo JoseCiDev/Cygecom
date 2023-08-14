@@ -10,7 +10,7 @@
                 <div class="box-title">
                     <div class="row">
                         <div class="col-md-6">
-                            <h3 class="pull-left">Cadastrar novo</h3>
+                            <h3 class="pull-left">Editar fornecedor</h3>
                         </div>
                     </div>
                 </div>
