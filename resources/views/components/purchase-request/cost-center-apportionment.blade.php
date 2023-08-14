@@ -1,3 +1,16 @@
+<style>
+    .percentage-span-warning,
+    .currency-span-warning{
+        display: none;
+        color: red;
+    }
+
+    #validator-apportionment-fields{
+        height: 0;
+        width: 0;
+    }
+</style>
+
 @php $costCenterApportionment = $purchaseRequest->costCenterApportionment ?? []; @endphp
 @forelse ($costCenterApportionment as $index => $apportionment)
     <div class="row cost-center-container">
@@ -24,20 +37,22 @@
         </div>
 
         <div class="col-sm-2">
-            <label for="cost_center_apportionments[{{ $index }}][apportionment_percentage]" class="control-label"> Rateio (%) </label>
-            <div class="input-group">
-                <span class="input-group-addon">%</span>
-                <input type="number" placeholder="0.00" class="form-control" min="0" max="100" name="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                    id="cost_center_apportionments[{{ $index }}][apportionment_percentage]" data-cy="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                    value="{{ $apportionment->apportionment_percentage }}">
+            <div class="form-group">
+                <label for="cost_center_apportionments[{{ $index }}][apportionment_percentage]" class="control-label"> Rateio (%) </label>
+                <div class="input-group">
+                    <label class="input-group-addon">%</label>
+                    <input type="number" placeholder="0.00" class="form-control" min="1" max="100" name="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
+                        id="cost_center_apportionments[{{ $index }}][apportionment_percentage]" data-cy="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
+                        value="{{ $apportionment->apportionment_percentage }}">
+                </div>
             </div>
         </div>
 
         <div class="col-sm-2">
             <label for="cost_center_apportionments[{{ $index }}][apportionment_currency]" class="control-label"> Rateio (R$) </label>
             <div class="input-group">
-                <span class="input-group-addon">R$</span>
-                <input type="number" placeholder="0.00" class="form-control" min="0" max="500000" id="cost_center_apportionments[{{ $index }}][apportionment_currency]"
+                <label class="input-group-addon">R$</label>
+                <input type="number" placeholder="0.00" class="form-control" min="1" max="500000" id="cost_center_apportionments[{{ $index }}][apportionment_currency]"
                     name="cost_center_apportionments[{{ $index }}][apportionment_currency]" data-cy="cost_center_apportionments[{{ $index }}][apportionment_currency]" value="{{ $apportionment->apportionment_currency }}">
             </div>
         </div>
@@ -74,7 +89,7 @@
             <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label"> Rateio (%) </label>
             <div class="input-group">
                 <span class="input-group-addon">%</span>
-                <input type="number" placeholder="0.00" class="form-control apportionment-percentage" min="0" name="cost_center_apportionments[0][apportionment_percentage]"
+                <input type="number" placeholder="0.00" class="form-control apportionment-percentage" min="1" max="100" name="cost_center_apportionments[0][apportionment_percentage]"
                     id="cost_center_apportionments[0][apportionment_percentage]" data-cy="cost_center_apportionments[0][apportionment_percentage]">
             </div>
         </div>
@@ -84,7 +99,7 @@
             <div class="input-group">
                 <span class="input-group-addon">R$</span>
                 <input type="number" name="cost_center_apportionments[0][apportionment_currency]" id="cost_center_apportionments[0][apportionment_currency]"
-                     data-cy="cost_center_apportionments[0][apportionment_currency]" placeholder="0.00" class="form-control" min="0">
+                     data-cy="cost_center_apportionments[0][apportionment_currency]" placeholder="0.00" class="form-control" min="1" max="500000">
             </div>
         </div>
 
@@ -97,16 +112,26 @@
 @endforelse
 
 {{-- ADICIONAR CENTRO DE CUSTO --}}
-<button type="button" class="btn btn-small btn-primary add-cost-center-btn" data-cy="btn-add-cost-center">
-   Adicionar linha
-</button>
+<div class="row">
+    <input type="hidden" id="validator-apportionment-fields" required value="1">
+    <div class="col-md-6">
+        <button type="button" class="btn btn-small btn-primary add-cost-center-btn" data-cy="btn-add-cost-center">
+            Adicionar linha
+         </button>
+    </div>
+    <div class="col-md-2">
+        <span class="percentage-span-warning">A soma da porcentagem deve ser 100%.</span>
+    </div>
+    <div class="col-md-2">
+        <span class="currency-span-warning">Todos campos de rateio (R$) devem ser preenchidos.</span>
+    </div>
+</div>
 
 <script>
     $(() => {
         const $costCenterSelect = $('.cost-center-container select[name^="cost_center_apportionments"]');
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
-
         const $btnAddCostCenter = $('.add-cost-center-btn');
 
         function manageApportionmentState() {
@@ -222,6 +247,104 @@
             });
         }
 
+        function verifyPercentage() {
+            const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
+            const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
+            const $percentageSpanWarning = $('.percentage-span-warning');
+            const $inputValidator = $('#validator-apportionment-fields');
+
+            let totalPercentage = 0;
+            let existPercentageValue = false;
+            let hasEmptyPercentage = false;
+
+            $costCenterPercentage.each(function() {
+                const percentage = parseFloat($(this).val());
+                if (!isNaN(percentage)) {
+                    totalPercentage += percentage;
+                    existPercentageValue = true;
+                } else {
+                    return hasEmptyPercentage = true;
+                }
+            });
+
+            const difference = 100 - totalPercentage;
+            const isValidPercentage = difference === 0 && existPercentageValue && !hasEmptyPercentage;
+
+            $percentageSpanWarning.toggle(!isValidPercentage || !existPercentageValue);
+
+            $inputValidator.val(isValidPercentage ? true : null);
+
+            if(existPercentageValue) {
+                $costCenterCurrency.each(function() {
+                    $(this).val('');
+                    $(this).removeRequired();
+                    $(this).valid();
+                });
+            } else {
+                $percentageSpanWarning.hide();
+                $inputValidator.val(true);
+            }
+
+            $costCenterPercentage.each(function() {
+                if(isValidPercentage) {
+                    $(this).removeRequired();
+                    $(this).valid();
+                }
+                else { 
+                    $(this).makeRequired();
+                }
+            });
+        }
+        
+        function verifyCurrency() {
+            const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
+            const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
+            const $currencySpanWarning = $('.currency-span-warning');
+            const $inputValidator = $('#validator-apportionment-fields');
+
+            let totalValue = 0;
+            let isCurrencyFilled = false;
+
+            $costCenterCurrency.each(function() {
+                const value = parseFloat($(this).val());
+                if (!isNaN(value)) {
+                    totalValue += value;
+                    isCurrencyFilled = true;
+                } else {
+                    return isCurrencyFilled = false;
+                }
+            });
+
+            const isValidAmount = totalValue > 0 && isCurrencyFilled;
+            
+            $currencySpanWarning.toggle(!isValidAmount || !isCurrencyFilled);
+            
+            $inputValidator.val(isValidAmount ? true : null);
+
+            if(totalValue > 0) {
+                $costCenterPercentage.each(function() {
+                    $(this).val('');
+                    $(this).removeRequired();
+                    $(this).valid();
+                });
+
+                $costCenterCurrency.each(function() {
+                    if(isValidAmount) {
+                        $(this).removeRequired();
+                        $(this).valid();
+                    }
+                    else { 
+                        $(this).makeRequired();
+                    }
+                });
+            } 
+
+            if(!totalValue && !isCurrencyFilled) {
+                $currencySpanWarning.hide();
+                $inputValidator.val(true);
+            }
+        }
+
         $('.add-cost-center-btn').click(function() {
             manageApportionmentState();
             const newRow = $('.cost-center-container').last().clone();
@@ -246,6 +369,8 @@
             manageBtnDeleteState();
             disableSelectedOptions();
             manageCostCenterBtnState();
+            verifyPercentage();
+            verifyCurrency();
         });
 
         $(document).on('click', '.delete-cost-center', function() {
@@ -255,17 +380,27 @@
             disableSelectedOptions();
             manageCostCenterBtnState();
             setCalculetedPercentage();
+            verifyPercentage();
+            verifyCurrency();
         });
 
         // Vincular eventos de input e change aos elementos
         $(document).on('change', $costCenterSelect.selector, manageCostCenterBtnState);
         $(document).on('input focus', $costCenterCurrency.selector, manageCostCenterBtnState);
         $(document).on('input focus', $costCenterPercentage.selector, manageCostCenterBtnState);
-
+        
         // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
         $(document).on('input focus', `${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`, manageApportionmentState);
-
+        
         $(document).on('input change', '.cost-center-container .select2-me', disableSelectedOptions);
+
+        $(document).on('change focus', $costCenterSelect.selector, verifyPercentage);
+        $(document).on('input focus', $costCenterPercentage.selector, verifyPercentage);
+        $(document).on('input focus', $costCenterCurrency.selector, verifyPercentage);
+
+        $(document).on('change focus', $costCenterSelect.selector, verifyCurrency);
+        $(document).on('input focus', $costCenterPercentage.selector, verifyCurrency);
+        $(document).on('input focus', $costCenterCurrency.selector, verifyCurrency);
 
         manageApportionmentState();
         manageCostCenterBtnState();
