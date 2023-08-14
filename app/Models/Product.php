@@ -40,7 +40,6 @@ class Product extends Model
     }
 
     protected $fillable = [
-        'is_prepaid',
         'seller',
         'phone',
         'email',

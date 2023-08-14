@@ -48,7 +48,6 @@ class Contract extends Model
         'end_date',
         'recurrence',
         'is_fixed_payment',
-        'is_prepaid',
         'seller',
         'phone',
         'email',

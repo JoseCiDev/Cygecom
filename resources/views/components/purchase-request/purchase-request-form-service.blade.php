@@ -9,6 +9,13 @@
     $purchaseRequestServicePrice = $purchaseRequest?->service?->price === null ? null : (float) $purchaseRequest?->service?->price;
     $serviceQuantityOfInstallments = $purchaseRequest?->service?->quantity_of_installments === null ? null : (int) $purchaseRequest?->service?->quantity_of_installments;
 
+    $selectedPaymentMethod = null;
+    $selectedPaymentTerm = null;
+    if (isset($purchaseRequest->service) && isset($purchaseRequest->service->paymentInfo)) {
+        $selectedPaymentMethod = $purchaseRequest->service->paymentInfo->payment_method;
+        $selectedPaymentTerm = $purchaseRequest->service->paymentInfo->payment_terms;
+    }
+
     // verifica status para desabilitar campos para o usuário
     $requestAlreadySent = $purchaseRequest?->status !== PurchaseRequestStatus::RASCUNHO;
     // ve se tem request e não foi enviada
@@ -259,12 +266,15 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="control-label">Condição de pagamento</label>
-                            <select name="service[is_prepaid]" id="service-is-prepaid" data-cy="service-is-prepaid"
-                                class='select2-me service[is_prepaid]' style="width:100%; padding-top:2px;"
-                                data-placeholder="Escolha uma opção">
+                            <select name="service[payment_info][payment_terms]" id="payment-terms"
+                                data-cy="payment-terms" class='select2-me service[payment_info][payment_terms]'
+                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="1" @selected(isset($purchaseRequest->service) && (bool) $purchaseRequest->service->is_prepaid)>Pagamento antecipado</option>
-                                <option value="0" @selected(isset($purchaseRequest->service) && !(bool) $purchaseRequest->service->is_prepaid)>Pagamento após execução</option>
+                                @foreach ($paymentTerms as $paymentTerm)
+                                    <option value="{{ $paymentTerm->value }}" @selected($paymentTerm->value === $selectedPaymentTerm)>
+                                        {{ $paymentTerm->label() }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -287,12 +297,6 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="control-label">Forma de pagamento</label>
-                            @php
-                                $selectedPaymentMethod = null;
-                                if (isset($purchaseRequest->service) && isset($purchaseRequest->service->paymentInfo)) {
-                                    $selectedPaymentMethod = $purchaseRequest->service->paymentInfo->payment_method;
-                                }
-                            @endphp
                             <select name="service[payment_info][payment_method]" id="payment-method"
                                 data-cy="payment-method" class='select2-me payment-method'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
@@ -306,7 +310,8 @@
                         </div>
                     </div>
 
-                    <input type="hidden" class="no-validation" value="" name="service[payment_info][id]">
+                    <input type="hidden" class="no-validation" value="{{ $purchaseRequest?->service?->paymentInfo?->id ?? null }}"
+                        name="service[payment_info][id]">
 
                     {{-- Nº PARCELAS --}}
                     <div class="col-sm-1">
@@ -539,7 +544,7 @@
         const $inputInstallmentsNumber = $('.installments-number');
         const $radioIsContractedBySupplies = $('.radio-who-wants');
         const $paymentBlock = $('.payment-block');
-        const $isPrePaid = $('#service-is-prepaid');
+        const $paymentTerm = $('#payment-terms');
 
         const $editValueInputModal = $('#edit-value');
         const $editValueHiddenModal = $('#edit-value-hidden');
@@ -843,14 +848,14 @@
             generateInstallments(numberOfInstallments);
         });
 
-        $isPrePaid.on('change', function() {
+        $paymentTerm.on('change', function() {
             const $serviceAmount = $('#format-amount');
             const $formatInputInstallmentsNumber = $('.format-installments-number');
             const $paymentMethod = $('.payment-method');
             const $paymentInfoDescription = $('#payment-info-description');
-            const isPrePaid = $(this).val() === "1";
+            const paymentTerm = $(this).val() === "anticipated";
 
-            if (!isPrePaid) {
+            if (!paymentTerm) {
                 $serviceAmount
                     .add($paymentMethod)
                     .add($formatInputInstallmentsNumber)
@@ -858,7 +863,6 @@
                     .removeRequired()
                     .closest('.form-group')
                     .removeClass('has-error');
-
 
                 $paymentBlock.find('.help-block').remove();
 
@@ -873,8 +877,8 @@
 
         }).trigger('change');
 
-        if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
-            $isPrePaid.filter(':selected').trigger('change.select2');
+        if (!hasSentRequest || $paymentTerm.filter(':selected').val() === "anticipated") {
+            $paymentTerm.filter(':selected').trigger('change.select2');
         }
 
         // desabilita todos os campos do form caso solicitacao ja enviada

@@ -10,6 +10,15 @@
     $recurrenceSelected = $purchaseRequest?->contract?->recurrence ?? null;
     $isFixedPayment = isset($purchaseRequest->contract) && $purchaseRequest->contract->is_fixed_payment;
 
+
+    $selectedPaymentMethod = null;
+    $selectedPaymentTerm = null;
+    if (isset($purchaseRequest->contract) && isset($purchaseRequest->contract->paymentInfo)) {
+        $selectedPaymentMethod = $purchaseRequest->contract->paymentInfo->payment_method;
+        $selectedPaymentTerm = $purchaseRequest->contract->paymentInfo->payment_terms;
+    }
+
+
     // verifica status para desabilitar campos para o usuário
     $requestAlreadySent = $purchaseRequest?->status !== PurchaseRequestStatus::RASCUNHO;
     // ve se tem request e não foi enviada
@@ -442,13 +451,16 @@
                     {{-- CONDIÇÃO DE PAGAMENTO --}}
                     <div class="col-sm-2" style="margin-top:-10px;">
                         <div class="form-group">
-                            <label for="contract[is_prepaid]" class="control-label">Condição de pagamento</label>
-                            <select name="contract[is_prepaid]" id="contract-is-prepaid"
-                                data-cy="contract-is-prepaid" class='select2-me contract[is_prepaid]'
+                            <label class="control-label">Condição de pagamento</label>
+                            <select name="contract[payment_info][payment_terms]" id="payment-terms"
+                                data-cy="payment-terms" class='select2-me'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="1" @selected(isset($purchaseRequest->contract) && (bool) $purchaseRequest->contract->is_prepaid)>Pagamento antecipado</option>
-                                <option value="0" @selected(isset($purchaseRequest->contract) && !(bool) $purchaseRequest->contract->is_prepaid)>Pagamento após execução</option>
+                                @foreach ($paymentTerms as $paymentTerm)
+                                    <option value="{{ $paymentTerm->value }}" @selected($paymentTerm->value === $selectedPaymentTerm)>
+                                        {{ $paymentTerm->label() }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -537,12 +549,6 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="control-label">Forma de pagamento</label>
-                            @php
-                                $selectedPaymentMethod = null;
-                                if (isset($purchaseRequest->contract) && isset($purchaseRequest->contract->paymentInfo)) {
-                                    $selectedPaymentMethod = $purchaseRequest->contract->paymentInfo->payment_method;
-                                }
-                            @endphp
                             <select name="contract[payment_info][payment_method]" id="payment-method"
                                 data-cy="payment-method" class='select2-me payment-method'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
@@ -568,8 +574,8 @@
                         </div>
                     </div>
 
-                    <input type="hidden" value="" name="contract[payment_info][id]"
-                        data-cy="contract[payment_info][id]">
+                    <input type="hidden" value="{{ $purchaseRequest?->contract?->paymentInfo?->id ?? null }}"
+                    name="contract[payment_info][id]" data-cy="contract[payment_info][id]">
 
                     <input type="hidden" value="" name="contract[quantity_of_installments]"
                         id="qtd-installments" data-cy="qtd-installments">
@@ -1480,15 +1486,15 @@
 
         $installmentsTable.on('draw.dt', calculateQtdInstallmentsToSend);
 
-        const $isPrePaid = $('#contract-is-prepaid');
+        const $paymentTerm = $('#payment-terms');
         const $paymentInfoDescription = $('#payment-info-description');
         const $paymentMethod = $('#payment-method');
         const $payday = $('#contract-payday');
 
-        $isPrePaid.on('change', function() {
-            const isPrePaid = $(this).val() === "1";
+        $paymentTerm.on('change', function() {
+            const paymentTerm = $(this).val() === "anticipated";
 
-            if (!isPrePaid) {
+            if (!paymentTerm) {
                 $contractAmount
                     .add($paymentMethod)
                     .add($payday)
@@ -1514,8 +1520,8 @@
 
         }).trigger('change');
 
-        if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
-            $isPrePaid.filter(':selected').trigger('change.select2');
+        if (!hasSentRequest || $paymentTerm.filter(':selected').val() === "anticipated") {
+            $paymentTerm.filter(':selected').trigger('change.select2');
         }
 
         // btns
