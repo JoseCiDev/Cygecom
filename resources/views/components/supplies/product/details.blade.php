@@ -223,7 +223,7 @@
                                         <div class="col-sm-4">
                                             <p>
                                                 <strong>Condição de pagamento: </strong>
-                                                {{ $paymentTermProduct->label() ?? '---' }}
+                                                {{ $paymentTermProduct?->label() ?? '---' }}
                                             </p>
                                         </div>
                                     </div>

@@ -6,9 +6,9 @@ use App\Contracts\EnumInterface;
 
 enum ContractRecurrence: string implements EnumInterface
 {
-    case UNIQUE     = 'unique';
-    case MONTHLY    = 'monthly';
-    case YEARLY = 'yearly';
+    case ANUAL = 'yearly';
+    case MENSAL = 'monthly';
+    case ÚNICA = 'unique';
 
     public function label(): string
     {
@@ -18,10 +18,10 @@ enum ContractRecurrence: string implements EnumInterface
     public static function getLabel($value): string
     {
         return match ($value) {
-            self::UNIQUE     => 'Única',
-            self::MONTHLY    => 'Mensal',
-            self::YEARLY => 'Anual',
-            default           => '---',
+            self::ANUAL => 'Anual',
+            self::MENSAL => 'Mensal',
+            self::ÚNICA => 'Única',
+            default => '---',
         };
     }
 }

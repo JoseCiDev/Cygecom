@@ -256,7 +256,7 @@
                                     <input name="is_supplies_contract" value="0" class="radio-who-wants"
                                         type="radio" required id="is-area-contract" data-cy="is-area-contract"
                                         style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label" for="is-area-contract"> Área solicitante</label>
+                                    <label class="form-check-label" for="is-area-contract"> Área solicitante (Eu)</label>
                                 </div>
                             </div>
                         </fieldset>
@@ -404,7 +404,7 @@
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentTerms as $paymentTerm)
-                                    <option value="{{ $paymentTerm->value }}" @selected($paymentTerm->value === $selectedPaymentTerm)>
+                                    <option value="{{ $paymentTerm->value }}" @selected($paymentTerm->value === $selectedPaymentTerm?->value)>
                                         {{ $paymentTerm->label() }}
                                     </option>
                                 @endforeach
@@ -435,7 +435,7 @@
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentMethods as $paymentMethod)
-                                    <option value="{{ $paymentMethod->value }}" @selected($paymentMethod->value === $selectedPaymentMethod)>
+                                    <option value="{{ $paymentMethod->value }}" @selected($paymentMethod->value === $selectedPaymentMethod?->value)>
                                         {{ $paymentMethod->label() }}
                                     </option>
                                 @endforeach

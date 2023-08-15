@@ -115,7 +115,8 @@
                                     <input name="is_supplies_contract" value="0" class="radio-who-wants"
                                         type="radio" required id="is-area-contract" data-cy="is-area-contract"
                                         style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label" for="is-area-contract"> Área solicitante</label>
+                                    <label class="form-check-label" for="is-area-contract"> Área solicitante
+                                        (Eu)</label>
                                 </div>
                             </div>
                         </fieldset>
@@ -271,7 +272,7 @@
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentTerms as $paymentTerm)
-                                    <option value="{{ $paymentTerm->value }}" @selected($paymentTerm->value === $selectedPaymentTerm)>
+                                    <option value="{{ $paymentTerm->value }}" @selected($paymentTerm->value === $selectedPaymentTerm?->value)>
                                         {{ $paymentTerm->label() }}
                                     </option>
                                 @endforeach
@@ -302,7 +303,7 @@
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentMethods as $paymentMethod)
-                                    <option value="{{ $paymentMethod->value }}" @selected($paymentMethod->value === $selectedPaymentMethod)>
+                                    <option value="{{ $paymentMethod->value }}" @selected($paymentMethod->value === $selectedPaymentMethod?->value)>
                                         {{ $paymentMethod->label() }}
                                     </option>
                                 @endforeach
@@ -310,7 +311,8 @@
                         </div>
                     </div>
 
-                    <input type="hidden" class="no-validation" value="{{ $purchaseRequest?->service?->paymentInfo?->id ?? null }}"
+                    <input type="hidden" class="no-validation"
+                        value="{{ $purchaseRequest?->service?->paymentInfo?->id ?? null }}"
                         name="service[payment_info][id]">
 
                     {{-- Nº PARCELAS --}}
@@ -806,7 +808,6 @@
             const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
 
             supplierSelect.siblings(`label[for="${supplierSelect.attr('name')}"]`).text(newLabel);
-            supplierSelect.data('rule-required', !isContractedBySupplies);
 
             // desabilita pagamento
             $paymentBlock.find('input, textarea').prop('readonly', isContractedBySupplies);
@@ -815,8 +816,16 @@
                 'change.select2');
 
             if (isContractedBySupplies) {
+                supplierSelect.removeRequired();
+                supplierSelect.closest('.form-group').removeClass('has-error');
+                $suppliersBlock.find('.help-block').remove();
+
                 $installmentsTable.clear().draw();
+
+                return;
             }
+
+            supplierSelect.makeRequired();
         });
 
         if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
@@ -851,7 +860,7 @@
         $paymentTerm.on('change', function() {
             const $serviceAmount = $('#format-amount');
             const $formatInputInstallmentsNumber = $('.format-installments-number');
-            const $paymentMethod = $('.payment-method');
+            const $paymentMethod = $('#payment-method');
             const $paymentInfoDescription = $('#payment-info-description');
             const paymentTerm = $(this).val() === "anticipated";
 
