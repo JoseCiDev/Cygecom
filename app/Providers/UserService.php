@@ -36,7 +36,9 @@ class UserService extends ServiceProvider implements UserServiceInterface
     public function getApprovers(string $action, int $id = null)
     {
         $isUserUpdate = $action === 'user.update';
-        $query        = User::with(['person'])->where('profile_id', 1)->whereNull('deleted_at');
+        $query = User::whereHas('profile', function ($query) {
+            $query->where('name', 'diretor');
+        })->whereNull('deleted_at')->with('profile');
 
         if ($isUserUpdate && $id !== null) {
             $query->where('id', '!=', $id);

@@ -16,6 +16,7 @@ class PopulateUserProfiles extends Seeder
             ['name' => 'suprimentos_hkm', 'is_admin' => null],
             ['name' => 'gestor_usuarios', 'is_admin' => null],
             ['name' => 'gestor_fornecedores', 'is_admin' => null],
+            ['name' => 'diretor', 'is_admin' => null],
         ]);
     }
 }
