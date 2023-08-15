@@ -344,7 +344,7 @@
                 <div class="col-sm-3" style="width: 22%">
                     <div class="form-group">
                         <label for="form-check" class="control-label" style="padding-right:10px">
-                            Você já realizou a compra deste produto?
+                            Você já realizou esta compra?
                         </label>
                         <fieldset data-rule-required="true">
                             <input name="product[already_purchased]" value="1" class="radio-already-purchased"
