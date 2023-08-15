@@ -300,7 +300,7 @@
                                                 </p>
                                                 <p>
                                                     <strong>Condição de pagamento:</strong>
-                                                    {{ $paymentTermContract->label() ?? "---"}}
+                                                    {{ $paymentTermContract?->label() ?? "---"}}
                                                 </p>
                                                 <p>
                                                     <strong>Local do serviço:</strong>
