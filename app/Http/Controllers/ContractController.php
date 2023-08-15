@@ -45,7 +45,7 @@ class ContractController extends Controller
             // MUDAR
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
-                $msg = "Solicitação de contrato criada e enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de contrato nº $purchaseRequest->id criada e enviada ao setor de suprimentos responsável!";
             }
 
             $route = 'requests.own';
