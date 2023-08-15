@@ -23,10 +23,14 @@ class UserService extends ServiceProvider implements UserServiceInterface
     public function getUsers()
     {
         $loggedId = auth()->user()->id;
+        $isAdmin = auth()->user()->profile->name === 'admin';
 
         return User::with('person', 'profile')->where('id', '!=', $loggedId)->whereNull('deleted_at')
-            ->whereHas('profile', function ($query) {
+            ->whereHas('profile', function ($query) use ($isAdmin) {
                 $query->where('name', '!=', 'admin');
+                if (!$isAdmin) {
+                    $query->where('name', '!=', 'diretor');
+                }
             })->get();
     }
 
