@@ -1,3 +1,16 @@
+<style>
+    .percentage-span-warning,
+    .currency-span-warning{
+        display: none;
+        color: red;
+    }
+
+    #validator-apportionment-fields{
+        height: 0;
+        width: 0;
+    }
+</style>
+
 @php $costCenterApportionment = $purchaseRequest->costCenterApportionment ?? []; @endphp
 @forelse ($costCenterApportionment as $index => $apportionment)
     <div class="row cost-center-container">
@@ -24,21 +37,25 @@
         </div>
 
         <div class="col-sm-2">
-            <label for="cost_center_apportionments[{{ $index }}][apportionment_percentage]" class="control-label"> Rateio (%) </label>
-            <div class="input-group">
-                <span class="input-group-addon">%</span>
-                <input type="number" placeholder="0.00" class="form-control" min="0" max="100" name="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                    id="cost_center_apportionments[{{ $index }}][apportionment_percentage]" data-cy="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                    value="{{ $apportionment->apportionment_percentage }}">
+            <div class="form-group">
+                <label for="cost_center_apportionments[{{ $index }}][apportionment_percentage]" class="control-label"> Rateio (%) </label>
+                <div class="input-group">
+                    <label class="input-group-addon">%</label>
+                    <input type="number" placeholder="0.00" class="form-control" min="1" max="100" name="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
+                        id="cost_center_apportionments[{{ $index }}][apportionment_percentage]" data-cy="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
+                        value="{{ $apportionment->apportionment_percentage }}">
+                </div>
             </div>
         </div>
 
         <div class="col-sm-2">
-            <label for="cost_center_apportionments[{{ $index }}][apportionment_currency]" class="control-label"> Rateio (R$) </label>
-            <div class="input-group">
-                <span class="input-group-addon">R$</span>
-                <input type="number" placeholder="0.00" class="form-control" min="0" max="500000" id="cost_center_apportionments[{{ $index }}][apportionment_currency]"
-                    name="cost_center_apportionments[{{ $index }}][apportionment_currency]" data-cy="cost_center_apportionments[{{ $index }}][apportionment_currency]" value="{{ $apportionment->apportionment_currency }}">
+            <div class="form-group">
+                <label for="cost_center_apportionments[{{ $index }}][apportionment_currency]" class="control-label"> Rateio (R$) </label>
+                <div class="input-group">
+                    <label class="input-group-addon">R$</label>
+                    <input type="number" placeholder="0.00" class="form-control" min="1" max="500000" id="cost_center_apportionments[{{ $index }}][apportionment_currency]"
+                        name="cost_center_apportionments[{{ $index }}][apportionment_currency]" data-cy="cost_center_apportionments[{{ $index }}][apportionment_currency]" value="{{ $apportionment->apportionment_currency }}">
+                </div>
             </div>
         </div>
 
@@ -71,20 +88,24 @@
         </div>
 
         <div class="col-sm-2">
-            <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label"> Rateio (%) </label>
-            <div class="input-group">
-                <span class="input-group-addon">%</span>
-                <input type="number" placeholder="0.00" class="form-control apportionment-percentage" min="0" name="cost_center_apportionments[0][apportionment_percentage]"
-                    id="cost_center_apportionments[0][apportionment_percentage]" data-cy="cost_center_apportionments[0][apportionment_percentage]">
+            <div class="form-group">
+                <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label"> Rateio (%) </label>
+                <div class="input-group">
+                    <span class="input-group-addon">%</span>
+                    <input type="number" placeholder="0.00" class="form-control apportionment-percentage" min="1" max="100" name="cost_center_apportionments[0][apportionment_percentage]"
+                        id="cost_center_apportionments[0][apportionment_percentage]" data-cy="cost_center_apportionments[0][apportionment_percentage]">
+                </div>
             </div>
         </div>
 
         <div class="col-sm-2">
-            <label for="cost_center_apportionments[0][apportionment_currency]" class="control-label"> Rateio (R$) </label>
-            <div class="input-group">
-                <span class="input-group-addon">R$</span>
-                <input type="number" name="cost_center_apportionments[0][apportionment_currency]" id="cost_center_apportionments[0][apportionment_currency]"
-                     data-cy="cost_center_apportionments[0][apportionment_currency]" placeholder="0.00" class="form-control" min="0">
+            <div class="form-group">
+                <label for="cost_center_apportionments[0][apportionment_currency]" class="control-label"> Rateio (R$) </label>
+                <div class="input-group">
+                    <span class="input-group-addon">R$</span>
+                    <input type="number" name="cost_center_apportionments[0][apportionment_currency]" id="cost_center_apportionments[0][apportionment_currency]"
+                        data-cy="cost_center_apportionments[0][apportionment_currency]" placeholder="0.00" class="form-control" min="1" max="500000">
+                </div>
             </div>
         </div>
 
@@ -97,178 +118,319 @@
 @endforelse
 
 {{-- ADICIONAR CENTRO DE CUSTO --}}
-<button type="button" class="btn btn-small btn-primary add-cost-center-btn" data-cy="btn-add-cost-center">
-   Adicionar linha
-</button>
+<div class="row">
+    <input type="hidden" id="validator-apportionment-fields" required value="1">
+    <div class="col-md-6">
+        <button type="button" class="btn btn-small btn-primary add-cost-center-btn" data-cy="btn-add-cost-center">
+            Adicionar linha
+         </button>
+    </div>
+    <div class="col-md-2">
+        <span class="percentage-span-warning">A soma da porcentagem deve ser 100%.</span>
+    </div>
+    <div class="col-md-2">
+        <span class="currency-span-warning">Todos campos de rateio (R$) devem ser preenchidos.</span>
+    </div>
+</div>
 
 <script>
-    $(() => {
+    const $costCenterSelect = $('.cost-center-container select[name^="cost_center_apportionments"]');
+    const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
+    const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
+    const $btnAddCostCenter = $('.add-cost-center-btn');
+
+    function manageApportionmentState() {
         const $costCenterSelect = $('.cost-center-container select[name^="cost_center_apportionments"]');
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
 
+        const hasPercentageInputFilled = $costCenterPercentage.filter(function() {
+            return $(this).val() !== '';
+        }).length > 0;
+
+        const hasCurrencyInputFilled = $costCenterCurrency.filter(function() {
+            return $(this).val() !== '';
+        }).length > 0;
+
+        const disablePercentageInputs = !hasPercentageInputFilled && hasCurrencyInputFilled;
+        const disableCurrencyInputs = !hasCurrencyInputFilled && hasPercentageInputFilled;
+
+        if(disablePercentageInputs) {
+            $costCenterPercentage.prop('disabled', true);
+            $costCenterPercentage.val(null);
+        } else if(disableCurrencyInputs) {
+            $costCenterCurrency.prop('disabled', true);
+            $costCenterCurrency.val(null);
+        } else if (!hasPercentageInputFilled && !hasCurrencyInputFilled) {
+            $costCenterPercentage.prop('disabled', false);
+            $costCenterCurrency.prop('disabled', false);
+        }
+    }
+
+    function manageBtnDeleteState() {
+        const costCenterCount = $('.cost-center-container').length;
+
+        costCenterCount > 1 ? $('.delete-cost-center').prop('disabled', false) : $('.delete-cost-center').prop('disabled', true);
+    }
+
+    function disableSelectedOptions() {
+        const selectedValues = $.map($('.cost-center-container select'), (self) => {
+            return $(self).val();
+        });
+
+        $('.cost-center-container option').each((_, option) => {
+            const includedValues = selectedValues.includes($(option).prop('value'));
+            const isSelectedOption = $(option).is(':selected');
+            const disabled = includedValues && !isSelectedOption;
+            $(option).prop({
+                disabled
+            });
+        })
+    }
+
+    function manageCostCenterBtnState() {
+        const costCenterContainers = $('.cost-center-container');
         const $btnAddCostCenter = $('.add-cost-center-btn');
 
-        function manageApportionmentState() {
-            const $costCenterSelect = $('.cost-center-container select[name^="cost_center_apportionments"]');
-            const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
-            const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
+        let allSelectsSelected = true;
+        costCenterContainers.each(function() {
+            const costCenterSelect = $(this).find('select');
+            const isSelectSelected = Boolean(costCenterSelect.val());
 
-            const hasPercentageInputFilled = $costCenterPercentage.filter(function() {
-                return $(this).val() !== '';
-            }).length > 0;
-
-            const hasCurrencyInputFilled = $costCenterCurrency.filter(function() {
-                return $(this).val() !== '';
-            }).length > 0;
-
-            const disablePercentageInputs = !hasPercentageInputFilled && hasCurrencyInputFilled;
-            const disableCurrencyInputs = !hasCurrencyInputFilled && hasPercentageInputFilled;
-
-            if(disablePercentageInputs) {
-                $costCenterPercentage.prop('disabled', true);
-                $costCenterPercentage.val(null);
-            } else if(disableCurrencyInputs) {
-                $costCenterCurrency.prop('disabled', true);
-                $costCenterCurrency.val(null);
-            } else if (!hasPercentageInputFilled && !hasCurrencyInputFilled) {
-                $costCenterPercentage.prop('disabled', false);
-                $costCenterCurrency.prop('disabled', false);
+            if (!isSelectSelected) {
+                allSelectsSelected = false;
+                return false;
             }
-        }
-
-        function manageBtnDeleteState() {
-            const costCenterCount = $('.cost-center-container').length;
-
-            costCenterCount > 1 ? $('.delete-cost-center').prop('disabled', false) : $('.delete-cost-center').prop('disabled', true);
-        }
-
-        function disableSelectedOptions() {
-            const selectedValues = $.map($('.cost-center-container select'), (self) => {
-                return $(self).val();
-            });
-
-            $('.cost-center-container option').each((_, option) => {
-                const includedValues = selectedValues.includes($(option).prop('value'));
-                const isSelectedOption = $(option).is(':selected');
-                const disabled = includedValues && !isSelectedOption;
-                $(option).prop({
-                    disabled
-                });
-            })
-        }
-
-        function manageCostCenterBtnState() {
-            const costCenterContainers = $('.cost-center-container');
-            const $btnAddCostCenter = $('.add-cost-center-btn');
-
-            let allSelectsSelected = true;
-            costCenterContainers.each(function() {
-                const costCenterSelect = $(this).find('select');
-                const isSelectSelected = Boolean(costCenterSelect.val());
-
-                if (!isSelectSelected) {
-                    allSelectsSelected = false;
-                    return false;
-                }
-            });
-
-            let allCostCenterPercentageFilled = true;
-            let allCostCenterCurrencyFilled = true;
-
-            costCenterContainers.each(function() {
-                const percentageInput = $(this).find('input[name$="[apportionment_percentage]"]');
-                const currencyInput = $(this).find('input[name$="[apportionment_currency]"]');
-
-                if (!percentageInput.val()) {
-                    allCostCenterPercentageFilled = false;
-                }
-
-                if (!currencyInput.val()) {
-                    allCostCenterCurrencyFilled = false;
-                }
-            });
-
-            const isValidApportionment = allSelectsSelected && (allCostCenterPercentageFilled || allCostCenterCurrencyFilled);
-
-            // desabilita botao caso nao tenha sido preenchido cost center corretamente;
-            $btnAddCostCenter.prop('disabled', !isValidApportionment);
-        }
-
-        function setCalculetedPercentage() {
-            const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
-            let totalPercentage = 0;
-            let fieldsWithValues = [];
-
-            $costCenterPercentage.each(function() {
-                const percentage = parseFloat($(this).val());
-                if (!isNaN(percentage)) {
-                    totalPercentage += percentage;
-                    fieldsWithValues.push($(this))
-                }
-            });
-
-            const difference = 100 - totalPercentage;
-            const distribution = Math.floor(difference / fieldsWithValues.length);
-            const remaining = difference - (distribution * fieldsWithValues.length);
-
-            fieldsWithValues.forEach(function($field, index) {
-                let adjustedValue = parseFloat($field.val()) + distribution;
-                if (index < remaining) {
-                    adjustedValue += 1;
-                }
-
-                $field.val(adjustedValue);
-            });
-        }
-
-        $('.add-cost-center-btn').click(function() {
-            manageApportionmentState();
-            const newRow = $('.cost-center-container').last().clone();
-            newRow.find('select[name^="cost_center_apportionments"], input[name^="cost_center_apportionments"]')
-            .each(function() {
-                const oldName = $(this).attr('name');
-                const regexNewName = /\[(\d+)\]/;
-                const lastIndex = Number(oldName.match(regexNewName).at(-1));
-                const newName = oldName.replace(regexNewName, `[${lastIndex + 1}]`);
-                $(this).attr('name', newName);
-                $(this).attr('id', newName);
-                $(this).attr('data-cy', newName);
-            });
-
-            newRow.find("input, select").val(null);
-            newRow.find('.select2-container').remove();
-            newRow.find('.select2-me').select2();
-
-            $('.cost-center-container').last().after(newRow);
-            newRow.find('.delete-cost-center').removeAttr('hidden');
-
-            manageBtnDeleteState();
-            disableSelectedOptions();
-            manageCostCenterBtnState();
         });
 
-        $(document).on('click', '.delete-cost-center', function() {
-            $(this).closest('.cost-center-container').remove();
-            manageApportionmentState();
-            manageBtnDeleteState();
-            disableSelectedOptions();
-            manageCostCenterBtnState();
-            setCalculetedPercentage();
+        let allCostCenterPercentageFilled = true;
+        let allCostCenterCurrencyFilled = true;
+
+        costCenterContainers.each(function() {
+            const percentageInput = $(this).find('input[name$="[apportionment_percentage]"]');
+            const currencyInput = $(this).find('input[name$="[apportionment_currency]"]');
+
+            if (!percentageInput.val()) {
+                allCostCenterPercentageFilled = false;
+            }
+
+            if (!currencyInput.val()) {
+                allCostCenterCurrencyFilled = false;
+            }
         });
 
-        // Vincular eventos de input e change aos elementos
-        $(document).on('change', $costCenterSelect.selector, manageCostCenterBtnState);
-        $(document).on('input focus', $costCenterCurrency.selector, manageCostCenterBtnState);
-        $(document).on('input focus', $costCenterPercentage.selector, manageCostCenterBtnState);
+        const isValidApportionment = allSelectsSelected && (allCostCenterPercentageFilled || allCostCenterCurrencyFilled);
 
-        // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
-        $(document).on('input focus', `${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`, manageApportionmentState);
+        // desabilita botao caso nao tenha sido preenchido cost center corretamente;
+        $btnAddCostCenter.prop('disabled', !isValidApportionment);
+    }
 
-        $(document).on('input change', '.cost-center-container .select2-me', disableSelectedOptions);
+    function setCalculetedPercentage() {
+        const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
+        let totalPercentage = 0;
+        let fieldsWithValues = [];
 
+        $costCenterPercentage.each(function() {
+            const percentage = parseFloat($(this).val());
+            if (!isNaN(percentage)) {
+                totalPercentage += percentage;
+                fieldsWithValues.push($(this))
+            }
+        });
+
+        const difference = 100 - totalPercentage;
+        const distribution = Math.floor(difference / fieldsWithValues.length);
+        const remaining = difference - (distribution * fieldsWithValues.length);
+
+        fieldsWithValues.forEach(function($field, index) {
+            let adjustedValue = parseFloat($field.val()) + distribution;
+            if (index < remaining) {
+                adjustedValue += 1;
+            }
+
+            $field.val(adjustedValue);
+        });
+    }
+
+    function setInputValidator(value) {
+        const $inputValidator = $('#validator-apportionment-fields');
+        $inputValidator.val(value);
+    }
+
+    function cleanApportionment (apportionments) {
+        apportionments.each(function() {
+                $(this).val('');
+                $(this).removeRequired();
+                $(this).valid();
+            });
+    }
+
+    function updateInputValidator() {
+        const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
+        const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
+        
+        const $percentageSpanWarning = $('.percentage-span-warning');
+        const $currencySpanWarning = $('.currency-span-warning');
+        
+        const areAllFieldsEmpty = $costCenterCurrency.filter(function() {
+            return $(this).val() !== "";
+        }).length === 0 && $costCenterPercentage.filter(function() {
+            return $(this).val() !== "";
+        }).length === 0;
+        
+        const percentageValid = !$percentageSpanWarning.is(':visible');
+        const currencyValid = !$currencySpanWarning.is(':visible');
+        
+        let finalValidatorValue = areAllFieldsEmpty ? null : (percentageValid && currencyValid);
+        if (finalValidatorValue === false) {
+            finalValidatorValue = null;
+        }
+        
+        setInputValidator(finalValidatorValue);
+    }
+
+    function verifyPercentage() {
+        const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
+        const $percentageSpanWarning = $('.percentage-span-warning');
+
+        let totalPercentage = 0;
+        let existPercentageValue = false;
+        let hasEmptyPercentage = false;
+
+        $costCenterPercentage.each(function() {
+            const percentage = parseFloat($(this).val());
+            if (!isNaN(percentage)) {
+                totalPercentage += percentage;
+                existPercentageValue = true;
+            } else {
+                return hasEmptyPercentage = true;
+            }
+        });
+
+        const difference = 100 - totalPercentage;
+        const isValidPercentage = difference === 0 && existPercentageValue && !hasEmptyPercentage;
+
+        $percentageSpanWarning.toggle(!isValidPercentage || !existPercentageValue);
+
+        if(existPercentageValue) {
+            cleanApportionment($('.cost-center-container input[name$="[apportionment_currency]"]'))
+        } else {
+            $percentageSpanWarning.hide();
+        }
+
+        $costCenterPercentage.each(function() {
+            if(isValidPercentage) {
+                $(this).removeRequired();
+                $(this).valid();
+            }
+            else { 
+                $(this).makeRequired();
+            }
+        });
+
+        updateInputValidator();
+    }
+
+    function verifyCurrency() {
+        const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
+        const $currencySpanWarning = $('.currency-span-warning');
+
+        let totalValue = 0;
+        let isCurrencyFilled = false;
+
+        $costCenterCurrency.each(function() {
+            const value = parseFloat($(this).val());
+            if (!isNaN(value)) {
+                totalValue += value;
+                isCurrencyFilled = true;
+            } else {
+                return isCurrencyFilled = false;
+            }
+        });
+
+        const isValidAmount = totalValue > 0 && isCurrencyFilled;
+        
+        $currencySpanWarning.toggle(!isValidAmount || !isCurrencyFilled);
+        
+        if(totalValue > 0) {
+            cleanApportionment($('.cost-center-container input[name$="[apportionment_percentage]"]'))
+
+            $costCenterCurrency.each(function() {
+                if(isValidAmount) {
+                    $(this).removeRequired();
+                    $(this).valid();
+                }
+                else { 
+                    $(this).makeRequired();
+                }
+            });
+        } 
+
+        if(!totalValue && !isCurrencyFilled) {
+            $currencySpanWarning.hide();
+        }
+
+        updateInputValidator();
+    }
+
+    $('.add-cost-center-btn').click(function() {
         manageApportionmentState();
-        manageCostCenterBtnState();
+        const newRow = $('.cost-center-container').last().clone();
+        newRow.find('select[name^="cost_center_apportionments"], input[name^="cost_center_apportionments"]')
+        .each(function() {
+            const oldName = $(this).attr('name');
+            const regexNewName = /\[(\d+)\]/;
+            const lastIndex = Number(oldName.match(regexNewName).at(-1));
+            const newName = oldName.replace(regexNewName, `[${lastIndex + 1}]`);
+            $(this).attr('name', newName);
+            $(this).attr('id', newName);
+            $(this).attr('data-cy', newName);
+        });
+
+        newRow.find("input, select").val(null);
+        newRow.find('.select2-container').remove();
+        newRow.find('.select2-me').select2();
+
+        $('.cost-center-container').last().after(newRow);
+        newRow.find('.delete-cost-center').removeAttr('hidden');
+
         manageBtnDeleteState();
+        disableSelectedOptions();
+        manageCostCenterBtnState();
+        verifyPercentage();
+        verifyCurrency();
     });
+
+    $(document).on('click', '.delete-cost-center', function() {
+        $(this).closest('.cost-center-container').remove();
+        manageApportionmentState();
+        manageBtnDeleteState();
+        disableSelectedOptions();
+        manageCostCenterBtnState();
+        setCalculetedPercentage();
+        verifyPercentage();
+        verifyCurrency();
+    });
+
+    // Vincular eventos de input e change aos elementos
+    $(document).on('change', $costCenterSelect.selector, manageCostCenterBtnState);
+    $(document).on('input focus', $costCenterCurrency.selector, manageCostCenterBtnState);
+    $(document).on('input focus', $costCenterPercentage.selector, manageCostCenterBtnState);
+
+    // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
+    $(document).on('input focus', `${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`, manageApportionmentState);
+
+    $(document).on('input change', '.cost-center-container .select2-me', disableSelectedOptions);
+
+    $(document).on('change focus', $costCenterSelect.selector, verifyPercentage);
+    $(document).on('input focus', $costCenterPercentage.selector, verifyPercentage);
+    $(document).on('input focus', $costCenterCurrency.selector, verifyPercentage);
+
+    $(document).on('change focus', $costCenterSelect.selector, verifyCurrency);
+    $(document).on('input focus', $costCenterPercentage.selector, verifyCurrency);
+    $(document).on('input focus', $costCenterCurrency.selector, verifyCurrency);
+
+    manageApportionmentState();
+    manageCostCenterBtnState();
+    manageBtnDeleteState();
 </script>
