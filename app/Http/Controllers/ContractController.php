@@ -8,7 +8,6 @@ use App\Models\PurchaseRequestFile;
 use App\Enums\PurchaseRequestStatus;
 use Illuminate\Http\{RedirectResponse, Request};
 use App\Models\{Company, CostCenter, PurchaseRequest};
-use Symfony\Component\Mailer\Exception\TransportException;
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 
 class ContractController extends Controller
@@ -155,11 +154,6 @@ class ContractController extends Controller
         if ($this->isAuthorizedToUpdate($purchaseRequest)) {
             $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
             $purchaseRequestUpdated = $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
-            try {
-                $this->emailService->sendResponsibleAssignedEmail($purchaseRequestUpdated);
-            } catch (TransportException $transportException) {
-                // Tratar erro de envio de email aqui, se necessário.
-            }
         }
 
         $contract = $this->purchaseRequestService->purchaseRequestById($id);

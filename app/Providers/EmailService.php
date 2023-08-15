@@ -9,15 +9,23 @@ class EmailService extends ServiceProvider
 {
     public function sendPendingApprovalEmail($purchaseRequest, $approver)
     {
+        $supplieUser = $purchaseRequest->suppliesUser;
+
         $subject = "Solicitação de " . $purchaseRequest->type->label() . " nº " . $purchaseRequest->id . ' - Aprovação pendente';
-        $message = "Olá, aprovador " . $purchaseRequest->user->approver->person->name . '! '
+        $message = "Olá, aprovador " . $approver->person->name . '! '
             . "A solicitação de " . $purchaseRequest->type->label() . " nº " . $purchaseRequest->id . " está pendente."
             . "Solicitante: " . $purchaseRequest->user->person->name . ". "
             . "E-mail do solicitante: " . $purchaseRequest->user->email . ". "
-            . "Telefone/celular do solicitante: " . $purchaseRequest->user->person->phone->first()->number . ". "
-            . "Atribuição de responsável: " . $purchaseRequest->suppliesUser->person->name . '. '
-            . "E-mail do responsável: " . $purchaseRequest->suppliesUser->email . '. '
-            . "Telefone/celular do responsável: " . $purchaseRequest->suppliesUser->person->phone->first()->number . '. ';
+            . "Telefone/celular do solicitante: " . $purchaseRequest->user->person->phone->first()->number . ". ";
+
+        if ($supplieUser) {
+            $message .= "Atribuição de responsável: " . $purchaseRequest->suppliesUser?->person->name . '. '
+                . "E-mail do responsável: " . $purchaseRequest->suppliesUser?->email . '. '
+                . "Telefone/celular do responsável: " . $purchaseRequest->suppliesUser?->person->phone->first()->number . '. ';
+        } else {
+            $message .= "No setor de suprimentos ainda não foi atribuído um responsável pela solicitação.";
+        }
+
 
         $email = new GenericEmail($subject, $message, $approver->email);
         $email->sendMail();

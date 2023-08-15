@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PurchaseRequestStatus;
 use App\Enums\PurchaseRequestType;
 use App\Models\PurchaseRequestFile;
 use App\Models\PurchaseRequest;
@@ -11,7 +10,6 @@ use App\Providers\PurchaseRequestService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\Mailer\Exception\TransportException;
 
 class PurchaseRequestController extends Controller
 {
@@ -87,7 +85,6 @@ class PurchaseRequestController extends Controller
 
     public function updateStatusFromSupplies(Request $request, int $id): RedirectResponse
     {
-        $sendEmail = true;
         $data = $request->all();
         try {
             $purchaseRequest = $this->validatePurchaseRequest($id);
@@ -95,31 +92,11 @@ class PurchaseRequestController extends Controller
             $this->authorizePurchaseRequest($purchaseRequest);
 
             $purchaseRequest = $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
-
-            $approver = $purchaseRequest->user->approver;
-            $isPendingStatus = $purchaseRequest->status->value === PurchaseRequestStatus::PENDENTE->value;
-            $mailFailed = false;
-
-            try {
-                if ($approver && $sendEmail && $isPendingStatus) {
-                    $this->emailService->sendPendingApprovalEmail($purchaseRequest, $approver);
-                }
-
-                if ($sendEmail) {
-                    $this->emailService->sendStatusUpdatedEmail($purchaseRequest);
-                }
-            } catch (TransportException $transportException) {
-                $mailFailed = true;
-            }
         } catch (Exception $error) {
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
         }
 
         session()->flash('success', "Solicitação de serviço atualizada com sucesso!");
-
-        if ($mailFailed) {
-            return back()->withInput()->withErrors('Desculpe, estamos com problemas no envio de e-mail. Não foi possível enviar a notificação. ');
-        }
 
         return back();
     }
