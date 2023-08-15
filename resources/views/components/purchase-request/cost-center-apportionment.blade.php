@@ -2,7 +2,7 @@
     .percentage-span-warning,
     .currency-span-warning {
         display: none;
-        color: red;
+        color: #a94442;
     }
 
     #validator-apportionment-fields {

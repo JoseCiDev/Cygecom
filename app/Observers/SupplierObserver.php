@@ -83,10 +83,15 @@ class SupplierObserver
 
     private function createLog($action, $supplier, ?array $changes = null)
     {
+        $userId = Auth::id();
+        if (!$userId) {
+            return;
+        }
+
         SupplierLog::create([
             'changed_supplier_id' => $supplier->id,
             'action' => $action,
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'changes' => $changes,
         ]);
     }
