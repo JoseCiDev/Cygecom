@@ -55,17 +55,21 @@
     <div class="request-details">
         <div class="details-content">
             <header class="request-details-header">
-                <h1>Solicitação de produto nº {{ $product->id }}</h1>
+                <h1 class="text-highlight"><strong>Solicitação de produto nº {{ $product->id }}</strong></h1>
                 <div>
                     <span>Criado em: {{ \Carbon\Carbon::parse($product->created_at)->format('d/m/Y h:m:s') }}</span> |
                     <span>Atualizado: {{ \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') }}</span>
                 </div>
-                <p>Desejado para:
+                <h4 class="text-highlight"><strong>Data desejada:</strong>
                     {{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y') : '---' }}
-                </p>
+                </h4>
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Responsável pela solicitação: {{$request->suppliesUser?->person->name ?? '---'}} / {{$request->suppliesUser?->email ?? "---"}}</h4>
+                        <br>
+                        <h4 class="text-highlight"><strong>Responsável pela solicitação (suprimentos):</strong> {{$request->suppliesUser?->person->name ?? '---'}} / {{$request->suppliesUser?->email ?? "---"}}</h4>
+                        <br>
+                        <h4 class="text-highlight"><strong>Responsável pela contratação:</strong> {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }} </h4>
+                        <br>
                     </div>
                </div>
             </header>
@@ -84,8 +88,8 @@
                                     <div class="tab-content padding">
                                         <p><strong>Status de aprovação:</strong> {{ $request->status->label() }}</p>
                                         <p><strong>Tipo de solicitação:</strong> {{ $request->type->label() }}</p>
-                                        <p><strong>Contratação deve ser por:</strong>
-                                            {{ $request->is_supplies_contract ? 'Suprimentos' : 'Centro de custo solicitante' }}
+                                        <p><strong>Responsável pela contratação:</strong>
+                                            {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }}
                                         </p>
                                         <p><strong>COMEX:</strong> {{ $request->is_comex ? 'Sim' : 'Não' }}</p>
                                         <p><strong>Motivo da solicitação:</strong> {{ $request->reason }} </p>
@@ -152,6 +156,8 @@
                                 </div>
                             </div>
 
+                            <br>
+
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <h4>
@@ -193,6 +199,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <br>
 
                             <div class="request-details-content-box">
 
@@ -260,6 +268,8 @@
                                 </div>
                             </div>
 
+                            <br>
+
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <div class="tab-content">
@@ -274,7 +284,7 @@
 
                                         @foreach ($productsGroupedBySupplier as $supplierIndex => $supplierGroup)
                                             @if ($loopIndex > 0)
-                                                <hr class="pagebreak">
+                                            <br><hr>
                                             @endif
                                             <div class="request-supplier-group">
                                                 <div class="request-details-content-box-supplier">
@@ -348,7 +358,7 @@
                                                     @endphp
 
                                                     @foreach ($productCategoryGroups as $productCategory => $products)
-                                                        <hr>
+                                                        <br><hr>
                                                         <p><strong><i class="glyphicon glyphicon-th-large"></i> Categoria:</strong> {{$productCategory}}</p>
 
                                                         @foreach ($products as $index => $productItem)

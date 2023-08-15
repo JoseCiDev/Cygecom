@@ -53,19 +53,23 @@
     <div class="request-details">
         <div class="details-content">
             <header class="request-details-header">
-                <h1>Solicitação de serviço nº {{ $request->id }}</h1>
+                <h1 class="text-highlight"><strong>Solicitação de serviço nº {{ $request->id }}</strong></h1>
                 <div>
                     <span>Criado em: {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</span> |
                     <span>Atualizado: {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}</span>
                 </div>
-                <p>Serviço desejado para:
+                <h4 class="text-highlight"><strong>Data desejada:</strong>
                     {{ $request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : '---' }}
-                </p>
-               <div class="row">
+                </h4>
+                <div class="row">
                     <div class="col-md-12">
-                        <h4>Responsável pela solicitação: {{$request->suppliesUser?->person->name ?? '---'}} / {{$request->suppliesUser?->email ?? "---"}}</h4>
+                        <br>
+                        <h4 class="text-highlight"><strong>Responsável pela solicitação (suprimentos):</strong> {{$request->suppliesUser?->person->name ?? '---'}} / {{$request->suppliesUser?->email ?? "---"}}</h4>
+                        <br>
+                        <h4 class="text-highlight"><strong>Responsável pela contratação:</strong> {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }} </h4>
+                        <br>
                     </div>
-               </div>
+                </div>
             </header>
             <main>
                 <div class="row">
@@ -85,10 +89,6 @@
                                         </p>
                                         <p>
                                             <strong>Tipo de solicitação:</strong> {{ $request->type->label() }}
-                                        </p>
-                                        <p>
-                                            <strong>Contratação deve ser por:</strong>
-                                            {{ $request->is_supplies_contract ? 'Suprimentos' : 'Centro de custo solicitante' }}
                                         </p>
                                         <p>
                                             <strong>COMEX:</strong> {{ $request->is_comex ? 'Sim' : 'Não' }}
@@ -114,7 +114,6 @@
                                         </p>
                                     </div>
                                 </div>
-
                                 <div class="request-details-content-box">
                                     <h4><i class="fa fa-user"></i><strong> Informações do solicitante</strong></h4>
                                     <hr>
@@ -167,6 +166,8 @@
 
                             </div>
 
+                            <br>
+
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <h4><i class="fa fa-money"></i> <strong>Centro de custo e rateio</strong></h4>
@@ -209,6 +210,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <br>
 
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
@@ -267,6 +270,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <br>
 
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
@@ -338,6 +343,8 @@
                                     </p>
                                 </div>
                             </div>
+
+                            <br>
 
                             <div class="request-details-content-box">
                                 <div class="request-details-content-box-service">

@@ -35,6 +35,16 @@
                 'margin': '1px 0',
             });
 
+            const textToHighlight = element.find('.text-highlight');
+            textToHighlight.css({
+                'font-size': '12px',
+            });
+
+            const subTextToHighlight = element.find('.text-highlight strong');
+            subTextToHighlight.css({
+                'font-size': '12px',
+            });
+
             const opt = {
                 margin : 4,
                 filename: '{{$fileName}}' + '.pdf',
