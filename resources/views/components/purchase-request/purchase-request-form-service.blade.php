@@ -115,7 +115,7 @@
                                     <input name="is_supplies_contract" value="0" class="radio-who-wants"
                                         type="radio" required id="is-area-contract" data-cy="is-area-contract"
                                         style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label" for="is-area-contract"> Área solicitante</label>
+                                    <label class="form-check-label" for="is-area-contract"> Área solicitante (Eu)</label>
                                 </div>
                             </div>
                         </fieldset>
@@ -851,7 +851,7 @@
         $paymentTerm.on('change', function() {
             const $serviceAmount = $('#format-amount');
             const $formatInputInstallmentsNumber = $('.format-installments-number');
-            const $paymentMethod = $('.payment-method');
+            const $paymentMethod = $('#payment-method');
             const $paymentInfoDescription = $('#payment-info-description');
             const paymentTerm = $(this).val() === "anticipated";
 
