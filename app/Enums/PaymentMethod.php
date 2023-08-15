@@ -6,14 +6,13 @@ use App\Contracts\EnumInterface;
 
 enum PaymentMethod: string implements EnumInterface
 {
-    case PIX  = 'pix';
-    case BOLETO  = 'boleto';
-    case CHEQUE  = 'cheque';
-    case DINHEIRO = 'dinheiro';
+    case BOLETO = 'boleto';
+    case CARTAO_CREDITO = 'cartao_credito';
+    case CARTAO_DEBITO = 'cartao_debito';
+    case CHEQUE = 'cheque';
     case DEPOSITO_BANCARIO = 'deposito_bancario';
-    case CARTAO_CREDITO  = 'cartao_credito';
-    case CARTAO_DEBITO  = 'cartao_debito';
-
+    case DINHEIRO = 'dinheiro';
+    case PIX = 'pix';
 
     public function label(): string
     {
@@ -23,13 +22,13 @@ enum PaymentMethod: string implements EnumInterface
     public static function getLabel($value): string
     {
         return match ($value) {
-            self::PIX  => 'Pix',
-            self::BOLETO  => 'Boleto',
-            self::CHEQUE  => 'Cheque',
-            self::DINHEIRO => 'Dinheiro',
-            self::DEPOSITO_BANCARIO => 'Depósito bancário',
+            self::BOLETO => 'Boleto',
             self::CARTAO_CREDITO => 'Cartão de crédito',
             self::CARTAO_DEBITO => 'Cartão de débito',
+            self::CHEQUE => 'Cheque',
+            self::DEPOSITO_BANCARIO => 'Depósito bancário',
+            self::DINHEIRO => 'Dinheiro',
+            self::PIX => 'Pix',
         };
     }
 }
