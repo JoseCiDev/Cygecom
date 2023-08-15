@@ -8,6 +8,16 @@
     $contractPayday = $purchaseRequest?->contract?->payday;
     $purchaseRequestContractAmount = $purchaseRequest?->contract?->amount === null ? null : (float) $purchaseRequest?->contract?->amount;
     $recurrenceSelected = $purchaseRequest?->contract?->recurrence ?? null;
+    $isFixedPayment = isset($purchaseRequest->contract) && $purchaseRequest->contract->is_fixed_payment;
+
+
+    $selectedPaymentMethod = null;
+    $selectedPaymentTerm = null;
+    if (isset($purchaseRequest->contract) && isset($purchaseRequest->contract->paymentInfo)) {
+        $selectedPaymentMethod = $purchaseRequest->contract->paymentInfo->payment_method;
+        $selectedPaymentTerm = $purchaseRequest->contract->paymentInfo->payment_terms;
+    }
+
 
     // verifica status para desabilitar campos para o usuário
     $requestAlreadySent = $purchaseRequest?->status !== PurchaseRequestStatus::RASCUNHO;
@@ -271,35 +281,51 @@
 
             <div class="row" style="margin-bottom:15px; margin-top:5px;">
 
-                <div class="col-sm-3">
-                    <label for="form-check" class="control-label" style="padding-right:10px;">
-                        Quem está responsável por esta contratação?
-                    </label>
-                    <div class="form-check">
-                        <input name="is_supplies_contract"value="1" class="radio-who-wants"
-                            id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
-                            @checked((isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract) || !isset($purchaseRequest))>
-                        <label class="form-check-label" for="is-supplies-contract">Suprimentos</label>
-
-                        <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio"
-                            id="is-area-contract" data-cy="is-area-contract" style="margin-left: 7px;"
-                            @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
-                        <label class="form-check-label" for="is-area-contract"> Área solicitante</label>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="form-check" class="control-label" style="padding-right:10px;">
+                            Quem está responsável por esta contratação?
+                        </label>
+                        <fieldset data-rule-required="true">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <input name="is_supplies_contract"value="1" class="radio-who-wants" required
+                                        id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
+                                        @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
+                                    <label class="form-check-label" for="is-supplies-contract">Suprimentos</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input name="is_supplies_contract" value="0" class="radio-who-wants"
+                                        type="radio" required id="is-area-contract" data-cy="is-area-contract"
+                                        style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
+                                    <label class="form-check-label" for="is-area-contract"> Área solicitante</label>
+                                </div>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
 
                 {{-- COMEX --}}
                 <div class="col-sm-4">
-                    <label for="form-check" class="control-label" style="padding-right:10px;">
-                        Contrato se enquadra na categoria COMEX?
-                    </label>
-                    <div class="form-check">
-                        <input name="is_comex" data-cy="is_comex_true" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex)
-                            class="radio-comex" type="radio" data-skin="minimal">
-                        <label class="form-check-label" for="services" style="margin-right:15px;">Sim</label>
-                        <input name="is_comex" data-cy="is_comex_false" value="0" @checked((isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) || !isset($purchaseRequest))
-                            class="radio-comex" type="radio" data-skin="minimal">
-                        <label class="form-check-label" for="">Não</label>
+                    <div class="form-group">
+                        <label for="form-check" class="control-label" style="padding-right:10px;">
+                            Contrato se enquadra na categoria COMEX?
+                        </label>
+                        <fieldset data-rule-required="true">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <input name="is_comex" data-cy="is_comex_true" value="1"
+                                        @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
+                                        data-skin="minimal" required>
+                                    <label class="form-check-label" for="services"
+                                        style="margin-right:15px;">Sim</label>
+                                    <input name="is_comex" data-cy="is_comex_false" value="0"
+                                        @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
+                                        data-skin="minimal" required>
+                                    <label class="form-check-label" for="">Não</label>
+                                </div>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
 
@@ -308,7 +334,7 @@
             <div class="row" style="margin-bottom:5px;">
 
                 {{-- MOTIVO --}}
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     <div class="form-group">
                         <label for="reason" class="control-label">
                             Motivo da solicitação
@@ -325,7 +351,7 @@
                 </div>
 
                 {{-- DESCRICAO --}}
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     <div class="form-group">
                         <label for="description" class="control-label">Descrição</label>
                         <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
@@ -399,41 +425,42 @@
 
                 <div class="row" style="margin-bottom: 20px;">
                     <div class="col-sm-4">
-                        <label for="form-check" class="control-label" style="padding-right:10px;">
-                            Valor do contrato será:
-                        </label>
-                        @php
-                            $isFixedPayment = isset($purchaseRequest->contract) && $purchaseRequest->contract->is_fixed_payment;
-                        @endphp
-                        <div class="form-check" style="12px; display:inline;">
-                            {{-- FIXO --}}
-                            <input name="contract[is_fixed_payment]" data-cy="contract[is_fixed_payment]-true"
-                                value="1" class="radio-is-fixed-value" type="radio" data-skin="minimal"
-                                @checked(
-                                    (isset($purchaseRequest->contract->is_fixed_payment) && $isFixedPayment) ||
-                                        !isset($purchaseRequest->contract->is_fixed_payment))>
-                            <label class="form-check-label" for="services" style="margin-right:15px;">FIXO</label>
-                            {{-- VARIAVEL --}}
-                            <input name="contract[is_fixed_payment]" data-cy="contract[is_fixed_payment]-false"
-                                value="0" class="radio-is-fixed-value" type="radio" data-skin="minimal"
-                                @checked(isset($purchaseRequest->contract->is_fixed_payment) && !$isFixedPayment)>
-                            <label class="form-check-label" for="">VARIÁVEL</label>
-                        </div>
-                        <div class="small" style="color:rgb(85, 85, 85);">
-                            <p>(Se o valor final do contrato não estiver definido, será VARIÁVEL).</p>
+                        <div class="form-group">
+                            <fieldset data-rule-required="true">
+                                <label for="form-check" class="control-label" style="padding-right:10px;">
+                                    Valor do contrato será:
+                                </label>
+                                {{-- FIXO --}}
+                                <input name="contract[is_fixed_payment]" data-cy="contract[is_fixed_payment]-true"
+                                    value="1" class="radio-is-fixed-value" type="radio" data-skin="minimal"
+                                    required @checked(isset($purchaseRequest->contract->is_fixed_payment) && $isFixedPayment)>
+                                <label class="form-check-label" for="services"
+                                    style="margin-right:15px;">FIXO</label>
+                                {{-- VARIAVEL --}}
+                                <input name="contract[is_fixed_payment]" data-cy="contract[is_fixed_payment]-false"
+                                    value="0" class="radio-is-fixed-value" type="radio" data-skin="minimal"
+                                    required @checked(isset($purchaseRequest->contract->is_fixed_payment) && !$isFixedPayment)>
+                                <label class="form-check-label" for="">VARIÁVEL</label>
+                                <fieldset>
+                                    <div class="small" style="color:rgb(85, 85, 85);">
+                                        <p>(Se o valor final do contrato não estiver definido, será VARIÁVEL).</p>
+                                    </div>
                         </div>
                     </div>
 
                     {{-- CONDIÇÃO DE PAGAMENTO --}}
                     <div class="col-sm-2" style="margin-top:-10px;">
                         <div class="form-group">
-                            <label for="contract[is_prepaid]" class="control-label">Condição de pagamento</label>
-                            <select name="contract[is_prepaid]" id="contract-is-prepaid"
-                                data-cy="contract-is-prepaid" class='select2-me contract[is_prepaid]'
+                            <label class="control-label">Condição de pagamento</label>
+                            <select name="contract[payment_info][payment_terms]" id="payment-terms"
+                                data-cy="payment-terms" class='select2-me'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
-                                <option value="1" @selected(isset($purchaseRequest->contract) && (bool) $purchaseRequest->contract->is_prepaid)>Pagamento antecipado</option>
-                                <option value="0" @selected(isset($purchaseRequest->contract) && !(bool) $purchaseRequest->contract->is_prepaid)>Pagamento após execução</option>
+                                @foreach ($paymentTerms as $paymentTerm)
+                                    <option value="{{ $paymentTerm->value }}" @selected($paymentTerm->value === $selectedPaymentTerm?->value)>
+                                        {{ $paymentTerm->label() }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -522,18 +549,12 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="control-label">Forma de pagamento</label>
-                            @php
-                                $selectedPaymentMethod = null;
-                                if (isset($purchaseRequest->contract) && isset($purchaseRequest->contract->paymentInfo)) {
-                                    $selectedPaymentMethod = $purchaseRequest->contract->paymentInfo->payment_method;
-                                }
-                            @endphp
                             <select name="contract[payment_info][payment_method]" id="payment-method"
                                 data-cy="payment-method" class='select2-me payment-method'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentMethods as $paymentMethod)
-                                    <option value="{{ $paymentMethod->value }}" @selected($paymentMethod->value === $selectedPaymentMethod)>
+                                    <option value="{{ $paymentMethod->value }}" @selected($paymentMethod->value === $selectedPaymentMethod?->value)>
                                         {{ $paymentMethod->label() }}
                                     </option>
                                 @endforeach
@@ -553,8 +574,8 @@
                         </div>
                     </div>
 
-                    <input type="hidden" value="" name="contract[payment_info][id]"
-                        data-cy="contract[payment_info][id]">
+                    <input type="hidden" value="{{ $purchaseRequest?->contract?->paymentInfo?->id ?? null }}"
+                    name="contract[payment_info][id]" data-cy="contract[payment_info][id]">
 
                     <input type="hidden" value="" name="contract[quantity_of_installments]"
                         id="qtd-installments" data-cy="qtd-installments">
@@ -1202,6 +1223,20 @@
         const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
         const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
 
+        // desabilita pagamento ao entrar em register
+        $paymentBlock
+            .find('input, textarea')
+            .prop('readonly', true);
+
+        $paymentBlock
+            .find('input[type="checkbox"], input[type="radio"]')
+            .prop('disabled', true);
+
+        $paymentBlock
+            .find('select')
+            .prop('disabled', true)
+            .trigger('change.select2');
+
         $radioIsContractedBySupplies.on('change', function() {
             const isContractedBySupplies = $(this).val() === "1";
 
@@ -1451,24 +1486,24 @@
 
         $installmentsTable.on('draw.dt', calculateQtdInstallmentsToSend);
 
-        const $isPrePaid = $('#contract-is-prepaid');
+        const $paymentTerm = $('#payment-terms');
         const $paymentInfoDescription = $('#payment-info-description');
         const $paymentMethod = $('#payment-method');
         const $payday = $('#contract-payday');
 
-        $isPrePaid.on('change', function() {
-            const isPrePaid = $(this).val() === "1";
+        $paymentTerm.on('change', function() {
+            const paymentTerm = $(this).val() === "anticipated";
 
-            if (!isPrePaid) {
+            if (!paymentTerm) {
                 $contractAmount
                     .add($paymentMethod)
                     .add($payday)
                     .add($paymentInfoDescription)
                     .add($recurrence)
                     .add($inputStartDate)
+                    .removeRequired()
                     .closest('.form-group')
-                    .removeClass('has-error')
-                    .removeRequired();
+                    .removeClass('has-error');
 
                 $paymentBlock.find('.help-block').remove();
 
@@ -1485,8 +1520,8 @@
 
         }).trigger('change');
 
-        if (!hasSentRequest || $isPrePaid.filter(':selected').val() === "1") {
-            $isPrePaid.filter(':selected').trigger('change.select2');
+        if (!hasSentRequest || $paymentTerm.filter(':selected').val() === "anticipated") {
+            $paymentTerm.filter(':selected').trigger('change.select2');
         }
 
         // btns

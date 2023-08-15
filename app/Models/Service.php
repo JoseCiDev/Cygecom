@@ -40,7 +40,6 @@ class Service extends Model
     }
 
     protected $fillable = [
-        'is_prepaid',
         'already_provided',
         'local_service',
         'price',

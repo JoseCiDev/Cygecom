@@ -13,8 +13,8 @@
                             </div>
                         @endif
                         <h1>Bem-vindo!</h1>
-                        <p>Este é o portal de gerenciamento de compras dão grupo Essentia!</p>
-                        
+                        <p>Este é o portal de gerenciamento de compras do grupo Essentia!</p>
+
                         @if (config('app.env') === 'local' && auth()->user()->profile->name === 'admin')
                             <p>TESTE E-MAIL</p>
                             <a class="btn btn-primary" href="{{ route('email') }}">E-mail</a>

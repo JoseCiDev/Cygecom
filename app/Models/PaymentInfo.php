@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\{PaymentTerm, PaymentMethod};
 
 class PaymentInfo extends Model
 {
@@ -37,7 +38,13 @@ class PaymentInfo extends Model
     protected $fillable = [
         'payment_method',
         'description',
+        'payment_terms',
         'updated_by',
         'deleted_by',
+    ];
+
+    protected $casts = [
+        'payment_method' => PaymentMethod::class,
+        'payment_terms' => PaymentTerm::class
     ];
 }

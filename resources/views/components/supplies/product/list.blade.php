@@ -34,7 +34,7 @@
                                     @endforeach
                                 </select>
                             </th>
-                            <th >Tipo de quitação</th>
+                            <th >Condição de pgto.</th>
                             <th class="hidden-1024">Contratação por</th>
                             <th class="hidden-1280">Grupo de custo</th>
                             <th class="hidden-1440">Data desejada</th>
@@ -56,7 +56,7 @@
                                 <td>{{$product->suppliesUser?->person->name ?? '---'}}</td>
                                 <td class="hidden-1280">{{$product->responsibility_marked_at ? \Carbon\Carbon::parse($product->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td>{{$product->status->label()}}</td>
-                                <td >{{$product->purchaseRequestProduct->first()->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
+                                <td >{{$product->product->paymentInfo?->payment_terms?->label() ?? '---'}}</td>
                                 <td class="hidden-1024">{{$product->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1280">{{$concatenatedGroups}}</td>
 

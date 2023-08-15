@@ -3,7 +3,7 @@
 namespace App\View\Components;
 
 use Closure;
-use App\Enums\PaymentMethod;
+use App\Enums\{PaymentMethod, PaymentTerm};
 use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
 use App\Providers\PurchaseRequestService;
@@ -34,6 +34,7 @@ class PurchaseRequestFormProduct extends Component
         $suppliers         = Supplier::all();
         $productCategories = ProductCategory::all();
         $paymentMethods = PaymentMethod::cases();
+        $paymentTerms = PaymentTerm::cases();
         $userCostCenters   = auth()->user()->userCostCenterPermission;
         $costCenters       = CostCenter::whereIn('id', $userCostCenters->pluck('cost_center_id'))->get();
         $statusValues    = [
@@ -57,6 +58,7 @@ class PurchaseRequestFormProduct extends Component
             'suppliers' => $suppliers,
             "productCategories" => $productCategories,
             "paymentMethods" => $paymentMethods,
+            "paymentTerms" => $paymentTerms,
             'statusValues' => $statusValues,
         ];
 

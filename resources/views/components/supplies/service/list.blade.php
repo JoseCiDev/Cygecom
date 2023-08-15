@@ -38,7 +38,7 @@
                             <th>Fornecedor</th>
                             <th class="hidden-1280">Qualif. fornecedor</th>
 
-                            <th>Tipo de quitação</th>
+                            <th>Condição de pgto.</th>
                             <th>Progresso</th>
                             <th>Contratação por</th>
 
@@ -66,7 +66,7 @@
                                 <td>{{$service->service->Supplier?->cpf_cnpj ?? '---'}}</td>
                                 <td class="hidden-1280">{{$service->service->Supplier?->qualification->label() ?? '---'}}</td>
 
-                                <td>{{$service->service->is_prepaid ? 'Pgto. Antecipado' : 'Pgto. pós-pago'}}</td>
+                                <td>{{$service->service->paymentInfo?->payment_terms?->label() ?? '---' }}</td>
                                 <td>{{$service->service->already_provided ? 'Executado' : 'Não executado'}}</td>
                                 <td>{{$service->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1440">{{$concatenatedGroups}}</td>
