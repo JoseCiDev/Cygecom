@@ -266,7 +266,7 @@
                                         <h4><i class="fa fa-tags"></i> <strong>Produto(s) - Informações</strong></h4>
                                         @php
                                             $productsGroupedBySupplier = $request->purchaseRequestProduct->groupBy(function ($item) {
-                                                return $item->supplier->id;
+                                                return $item->supplier?->id;
                                             });
 
                                             $loopIndex = 0;
@@ -282,60 +282,60 @@
 
                                                     <div class="row">
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Nome fantasia:</strong> {{ $supplierGroup->first()->supplier->name }}
+                                                            <strong>Nome fantasia:</strong> {{ $supplierGroup->first()->supplier?->name ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>CNPJ/CPF:</strong> {{ $supplierGroup->first()->supplier->cpf_cnpj }}
+                                                            <strong>CNPJ/CPF:</strong> {{ $supplierGroup->first()->supplier?->cpf_cnpj ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Razão social:</strong> {{ $supplierGroup->first()->supplier->corporate_name }}
+                                                            <strong>Razão social:</strong> {{ $supplierGroup->first()->supplier?->corporate_name ?? '---' }}
                                                         </p>
                                                     </div>
 
                                                     <div class="row">
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Indicação do fornecedor:</strong> {{ $supplierGroup->first()->supplier->supplier_indication }}
+                                                            <strong>Indicação do fornecedor:</strong> {{ $supplierGroup->first()->supplier?->supplier_indication ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Tipo de mercado:</strong> {{ $supplierGroup->first()->supplier->market_type }}
+                                                            <strong>Tipo de mercado:</strong> {{ $supplierGroup->first()->supplier?->market_type ?? '---' }}
                                                         </p>
 
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Qualificação:</strong> {{ $supplierGroup->first()->supplier->qualification->label() }}
+                                                            <strong>Qualificação:</strong> {{ $supplierGroup->first()->supplier?->qualification->label() ?? '---' }}
                                                         </p>
                                                     </div>
 
                                                     <div class="row" >
                                                         <p class="col-sm-4" style="margin: 0">
                                                             <strong>Tipo de pessoa:</strong>
-                                                            {{ $supplierGroup->first()->supplier->entity_type }}
+                                                            {{ $supplierGroup->first()->supplier?->entity_type ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Representante:</strong> {{ $supplierGroup->first()->supplier->representative ?? '---' }}
+                                                            <strong>Representante:</strong> {{ $supplierGroup->first()->supplier?->representative ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>E-mail:</strong> {{ $supplierGroup->first()->supplier->email ?? '---' }}
-                                                        </p>
-                                                    </div>
-
-                                                    <div class="row">
-                                                        <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Registro estadual:</strong> {{ $supplierGroup->first()->supplier->state_registration }}
-                                                        </p>
-                                                        <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Descrição:</strong> {{ $supplierGroup->first()->supplier->description ?? '---' }}
-                                                        </p>
-                                                        <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Fornecedor criado em:</strong> {{ $supplierGroup->first()->supplier->created_at }}
+                                                            <strong>E-mail:</strong> {{ $supplierGroup->first()->supplier?->email ?? '---' }}
                                                         </p>
                                                     </div>
 
                                                     <div class="row">
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Fornecedor atualizado em:</strong> {{ $supplierGroup->first()->supplier->updated_at }}
+                                                            <strong>Registro estadual:</strong> {{ $supplierGroup->first()->supplier?->state_registration ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Observações tributárias:</strong> {{ $supplierGroup->first()->supplier->tributary_observation ?? '---' }}
+                                                            <strong>Descrição:</strong> {{ $supplierGroup->first()->supplier?->description ?? '---' }}
+                                                        </p>
+                                                        <p class="col-sm-4" style="margin: 0">
+                                                            <strong>Fornecedor criado em:</strong> {{ $supplierGroup->first()->supplier?->created_at ?? '---'}}
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <p class="col-sm-4" style="margin: 0">
+                                                            <strong>Fornecedor atualizado em:</strong> {{ $supplierGroup->first()->supplier?->updated_at ?? '---' }}
+                                                        </p>
+                                                        <p class="col-sm-4" style="margin: 0">
+                                                            <strong>Observações tributárias:</strong> {{ $supplierGroup->first()->supplier?->tributary_observation ?? '---' }}
                                                         </p>
                                                     </div>
 
