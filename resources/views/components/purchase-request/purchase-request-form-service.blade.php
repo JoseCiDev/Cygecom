@@ -335,7 +335,7 @@
                                 Detalhes do pagamento
                             </label>
                             <textarea name="service[payment_info][description]" id="payment-info-description" data-cy="payment-info-description"
-                                rows="3" placeholder="Informações sobre pagamento. Ex: Chave PIX, dados bancários do fornecedor, etc..."
+                                rows="3" placeholder="Ex: chave PIX, dados bancários do fornecedor, etc."
                                 class="form-control text-area no-resize">{{ $purchaseRequest->service->paymentInfo->description ?? null }}</textarea>
                         </div>
                     </div>

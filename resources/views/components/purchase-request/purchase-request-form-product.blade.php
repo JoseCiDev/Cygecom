@@ -126,7 +126,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="form-check" class="control-label" style="padding-right:10px;">
-                            Contrato se enquadra na categoria COMEX?
+                            Este(s) produto(s) será importado (COMEX)
                         </label>
                         <fieldset data-rule-required="true">
                             <div class="row">
@@ -167,40 +167,8 @@
                     </div>
                 </div>
 
-                {{-- DESCRICAO --}}
-                <div class="col-sm-7">
-                    <div class="form-group">
-                        <label for="description" class="control-label">Descrição</label>
-                        <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
-                            rows="4"
-                            placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
-                            class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
-                    </div>
-                    <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
-                        <p>* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação.
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="row">
-
-                <div class="col-sm-6" style="margin-bottom:8px;">
-                    <div class="form-group product-input" id="product-input">
-                        <label for="local-description" class="control-label">
-                            Local de entrega do produto
-                        </label>
-                        <input name="local_description"
-                            value="@if (isset($purchaseRequest)) {{ $purchaseRequest->local_description }} @endif"
-                            type="text" id="local-description" data-cy="local-description"
-                            placeholder="Informe em qual local / sala ficará o produto" class="form-control"
-                            data-rule-required="true" data-rule-minlength="2">
-                    </div>
-                </div>
-
                 {{-- PRODUTO JÁ COMPRADO --}}
-                <div class="col-sm-3" style="width: 22%">
+                <div class="col-sm-4" style="width: 22%">
                     <div class="form-group">
                         <label for="form-check" class="control-label" style="padding-right:10px">
                             Você já realizou esta compra?
@@ -212,7 +180,7 @@
                             <label class="form-check-label" for="already-purchased">Sim</label>
                             <input name="product[already_purchased]" value="0" class="radio-already-purchased"
                                 required type="radio" id="not-provided" data-cy="not-provided"
-                                style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->product->already_purchased)>
+                                style="margin-left: 12px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->product->already_purchased)>
                             <label class="form-check-label" for="not-provided">Não</label>
                         </fieldset>
                     </div>
@@ -227,14 +195,43 @@
                     </div>
                 </div>
 
+                <div class="col-sm-6" style="margin-top:-12px;">
+                    <div class="form-group product-input" id="product-input">
+                        <label for="local-description" class="control-label">
+                            Local de entrega do produto
+                        </label>
+                        <input name="local_description"
+                            value="@if (isset($purchaseRequest)) {{ $purchaseRequest->local_description }} @endif"
+                            type="text" id="local-description" data-cy="local-description"
+                            placeholder="Informe em qual local / sala ficará o produto" class="form-control"
+                            data-rule-required="true" data-rule-minlength="2">
+                    </div>
+                </div>
+
+                {{-- DESCRICAO - (HIDDEN COM VALOR DEFAULT) --}}
+                <div class="col-sm-7" hidden>
+                    <div class="form-group">
+                        <label for="description" class="control-label">Descrição</label>
+                        <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
+                            rows="4"
+                            placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
+                            class="form-control text-area no-resize">Solicitação de produto(s).</textarea>
+                    </div>
+                    <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
+                        <p>* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação.
+                        </p>
+                    </div>
+                </div>
+
             </div>
+
 
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="support-links" class="control-label">Links de apoio /
-                            sugestão</label>
-                        <textarea placeholder="Adicone um ou mais links válidos. Ex: Contrato disponibilizado pelo fornecedor" rows="3"
+                        <label for="support-links" class="control-label">Links de apoio / sugestão
+                        </label>
+                        <textarea placeholder="Adicione link(s) de sugestão de compra, site do fornecedor, etc." rows="3"
                             name="support_links" id="support-links" data-cy="support-links" class="form-control text-area no-resize">{{ $purchaseRequest?->support_links ?? null }}</textarea>
                     </div>
                 </div>
@@ -243,7 +240,7 @@
                     <div class="form-group">
                         <label for="observation" class="control-label"> Observação </label>
                         <textarea name="observation" id="request-observation" data-cy="request-observation" rows="3"
-                            placeholder="Observação" class="form-control text-area no-resize"></textarea>
+                            placeholder="Informações complementares desta solicitação" class="form-control text-area no-resize"></textarea>
                     </div>
                 </div>
             </div>
@@ -325,7 +322,7 @@
                                 Detalhes do pagamento
                             </label>
                             <textarea name="product[payment_info][description]" id="payment-info-description" data-cy="payment-info-description"
-                                rows="3" placeholder="Informações sobre pagamento. Ex: Chave PIX, dados bancários do fornecedor, etc..."
+                                rows="3" placeholder="Ex: chave PIX, dados bancários do fornecedor, etc."
                                 class="form-control text-area no-resize">{{ $purchaseRequest->product->paymentInfo->description ?? null }}</textarea>
                         </div>
                     </div>
