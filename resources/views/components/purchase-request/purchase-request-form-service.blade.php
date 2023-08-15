@@ -895,6 +895,9 @@
             $('#request-form').find('input, textarea, checkbox').prop('disabled', true);
             $('#request-form').find('select').prop('disabled', true);
             $('.file-remove').prop('disabled', true);
+
+            $('.add-cost-center-btn').prop('disabled', true);
+            $('.delete-cost-center').prop('disabled', true);
         }
     });
 </script>

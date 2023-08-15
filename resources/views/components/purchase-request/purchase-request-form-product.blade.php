@@ -34,7 +34,7 @@
 
 <style>
     .cost-center-container {
-        margin-bottom: 5px
+        margin-bottom: 5px;
     }
 
     h4 {
@@ -87,149 +87,7 @@
         </div>
 
         {{-- CENTRO DE CUSTOS --}}
-        @if (isset($purchaseRequest))
-            @foreach ($purchaseRequest->costCenterApportionment as $index => $apportionment)
-                <div class="row cost-center-container">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label style="display:block;" class="control-label">Centro de custo da
-                                despesa</label>
-                            <select name="cost_center_apportionments[{{ $index }}][cost_center_id]"
-                                id="select-cost-center" data-cy="cost-center-apportionments-{{ $index }}"
-                                class='select2-me @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                                data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
-                                <option value=""></option>
-                                @foreach ($costCenters as $costCenter)
-                                    @php
-                                        $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
-                                        $companyName = $costCenter->company->name;
-                                        $costCenterName = $costCenter->name;
-                                        $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
-                                    @endphp
-                                    <option value="{{ $costCenter->id }}"
-                                        {{ $isApportionmentSelect ? 'selected' : '' }}>
-                                        {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-2">
-                        <label for="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                            class="control-label">
-                            Rateio (%)
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-addon">%</span>
-                            <input type="number" placeholder="0.00" class="form-control" min="0"
-                                name="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                                id="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                                data-cy="cost-center-apportionments-{{ $index }}-apportionment_percentage"
-                                value="{{ $apportionment->apportionment_percentage }}">
-                            @error('cost_center_apportionments[{{ $index }}][apportionment_percentage]')
-                                <p><strong>{{ $message }}</strong></p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-sm-2">
-                        <label for="cost_center_apportionments[{{ $index }}][apportionment_currency]"
-                            class="control-label">
-                            Rateio (R$)
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-addon">R$</span>
-                            <input type="number" placeholder="0.00" class="form-control" min="0"
-                                name="cost_center_apportionments[{{ $index }}][apportionment_currency]"
-                                id="cost_center_apportionments[{{ $index }}][apportionment_currency]"
-                                data-cy="cost-center-apportionments-{{ $index }}-apportionment_currency"
-                                value="{{ $apportionment->apportionment_currency }}">
-                            @error('cost_center_apportionments[{{ $index }}][apportionment_currency]')
-                                <p><strong>{{ $message }}</strong></p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-sm-1" style="margin-top: 28px;">
-                        <button class="btn btn-icon btn-small btn-danger delete-cost-center"
-                            data-cy="delete-cost-center"><i class="fa fa-trash-o"></i>
-                        </button>
-                    </div>
-                </div>
-            @endforeach
-        @else
-            <div class="row cost-center-container">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label class="control-label" style="display:block">
-                            Centro de custo da despesa
-                        </label>
-                        <select style="width:100%" id="select-cost-center" data-cy="select-cost-center"
-                            name="cost_center_apportionments[0][cost_center_id]"
-                            class='select2-me
-                                    @error('cost_center_id_{{ $index }}') is-invalid @enderror'
-                            required data-rule-required="true" placeholder="Ex: Almoxarifado">
-                            <option value="" disalbed></option>
-                            @foreach ($costCenters as $costCenter)
-                                @php
-                                    $isUserCostCenter = isset($user->person->costCenter) && $user->person->costCenter->id == $costCenter->id;
-                                    $companyName = $costCenter->company->name;
-                                    $costCenterName = $costCenter->name;
-                                    $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
-                                @endphp
-                                <option value="{{ $costCenter->id }}" @selected($isUserCostCenter)>
-                                    {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-sm-2">
-                    <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label">
-                        Rateio (%)
-                    </label>
-                    <div class="input-group">
-                        <span class="input-group-addon">%</span>
-                        <input type="number" placeholder="0.00" class="form-control apportionment-percentage"
-                            min="0" name="cost_center_apportionments[0][apportionment_percentage]"
-                            id="cost_center_apportionments[0][apportionment_percentage]"
-                            data-cy="cost_center_apportionments-0-apportionment_percentage">
-                        @error('cost_center_apportionments[0][apportionment_percentage]')
-                            <p><strong>{{ $message }}</strong></p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="col-sm-2">
-                    <label for="cost_center_apportionments[0][apportionment_currency]" class="control-label">
-                        Rateio (R$)
-                    </label>
-                    <div class="input-group">
-                        <span class="input-group-addon">R$</span>
-                        <input type="number" name="cost_center_apportionments[0][apportionment_currency]"
-                            id="cost_center_apportionments[0][apportionment_currency]"
-                            data-cy="cost_center_apportionments-0-apportionment_currency" placeholder="0.00"
-                            class="form-control" min="0">
-                        @error('cost_center_apportionments[0][apportionment_currency]')
-                            <p><strong>{{ $message }}</strong></p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="col-sm-1" style="margin-top: 28px;">
-                    <button class="btn btn-icon btn-small btn-danger delete-cost-center">
-                        <i class="fa fa-trash-o"></i>
-                    </button>
-                </div>
-            </div>
-        @endif
-
-        {{-- ADICIONAR CENTRO DE CUSTO --}}
-        <button type="button" class="btn btn-small btn-primary add-cost-center-btn" data-cy="add-cost-center-btn">
-            Adicionar linha
-        </button>
+        <x-CostCenterApportionment :purchaseRequest="$purchaseRequest" />
 
         <hr>
 
@@ -256,7 +114,8 @@
                                     <input name="is_supplies_contract" value="0" class="radio-who-wants"
                                         type="radio" required id="is-area-contract" data-cy="is-area-contract"
                                         style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label" for="is-area-contract"> Área solicitante (Eu)</label>
+                                    <label class="form-check-label" for="is-area-contract"> Área solicitante
+                                        (Eu)</label>
                                 </div>
                             </div>
                         </fieldset>
@@ -674,123 +533,9 @@
             autofix: 'pad'
         });
 
-
-        const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
-        const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
-
         const $fileRemove = $('button.file-remove');
         const $filesGroup = $('fieldset#files-group');
         const csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-        function disableSelectedOptions() {
-            const selectedValues = $.map($('.cost-center-container select'), (self) => {
-                return $(self).val();
-            });
-            $('.cost-center-container option').each((_, option) => {
-                const includedValues = selectedValues.includes($(option).prop('value'));
-                const isSelectedOption = $(option).is(':selected');
-                const disabled = includedValues && !isSelectedOption;
-                $(option).prop({
-                    disabled
-                });
-            })
-        }
-
-        function checkCostCenterCount() {
-            const costCenterCount = $('.cost-center-container').length;
-            costCenterCount > 1 ? $('.delete-cost-center').prop('disabled', false) : $('.delete-cost-center')
-                .prop('disabled', true);
-        }
-        checkCostCenterCount()
-
-        function updateApportionmentFields() {
-            const hasPercentageInput = $costCenterPercentage.filter(function() {
-                return $(this).val() !== '';
-            }).length > 0;
-
-            const hasCurrencyInput = $costCenterCurrency.filter(function() {
-                return $(this).val() !== '';
-            }).length > 0;
-
-            $costCenterPercentage.not(':disabled').prop('disabled', !hasPercentageInput && hasCurrencyInput);
-            $costCenterCurrency.not(':disabled').prop('disabled', !hasCurrencyInput && hasPercentageInput);
-
-            if (!hasPercentageInput && !hasCurrencyInput) {
-                $costCenterPercentage.prop('disabled', false);
-                $costCenterCurrency.prop('disabled', false);
-            }
-        }
-        updateApportionmentFields();
-
-        // desabilita botao caso nao tenha sido preenchido cost center corretamente;
-        const $btnAddCostCenter = $('.add-cost-center-btn');
-        const $costCenterSelect = $('.cost-center-container select');
-
-        function toggleCostCenterBtn() {
-            const costCenterContainer = $(this).closest('.cost-center-container');
-
-            const costCenterSelect = costCenterContainer
-                .find('select')
-                .val();
-
-            const costcenterPercentage = costCenterContainer
-                .find('input[name$="[apportionment_percentage]"]')
-                .val()
-
-            const costCenterCurrency = costCenterContainer
-                .find('input[name$="[apportionment_currency]"]')
-                .val()
-
-            const isValidApportionment = Boolean(costCenterSelect && (costcenterPercentage ||
-                costCenterCurrency));
-
-            $btnAddCostCenter.prop('disabled', !isValidApportionment);
-        }
-
-        $(document).on('input change',
-            `${$costCenterSelect.selector}, ${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
-            toggleCostCenterBtn);
-
-        toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
-
-        // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
-        $costCenterPercentage.add($costCenterCurrency).on('input', updateApportionmentFields);
-
-        // Add Centro de Custo
-        $('.add-cost-center-btn').click(function() {
-            updateApportionmentFields();
-            const newRow = $('.cost-center-container').last().clone();
-            newRow.find(
-                'select[name^="cost_center_apportionments"], input[name^="cost_center_apportionments"]'
-            ).each(function() {
-                const oldName = $(this).attr('name');
-                const regexNewName = /\[(\d+)\]/;
-                const lastIndex = Number(oldName.match(regexNewName).at(-1));
-                const newName = oldName.replace(regexNewName, `[${lastIndex + 1}]`);
-                $(this).attr('name', newName);
-            });
-
-            newRow.find("input, select").val("");
-            newRow.find('.select2-container').remove();
-            newRow.find('.select2-me').select2();
-
-            $('.cost-center-container').last().after(newRow);
-            newRow.find('.delete-cost-center').removeAttr('hidden');
-            checkCostCenterCount();
-            disableSelectedOptions();
-            toggleCostCenterBtn.bind(this)();
-        });
-
-        $(document).on('click', '.delete-cost-center', function() {
-            $(this).closest('.cost-center-container').remove();
-            updateApportionmentFields();
-            checkCostCenterCount();
-            disableSelectedOptions();
-            toggleCostCenterBtn.bind($('.cost-center-container').last()[0])();
-        });
-
-        $(document).on('change', '.cost-center-container .select2-me', disableSelectedOptions);
-
 
         // muda data desejada minima quando produto já comprado
         const $desiredDate = $('#desired-date');
