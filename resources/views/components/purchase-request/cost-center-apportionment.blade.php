@@ -1,11 +1,11 @@
 <style>
     .percentage-span-warning,
-    .currency-span-warning{
+    .currency-span-warning {
         display: none;
         color: red;
     }
 
-    #validator-apportionment-fields{
+    #validator-apportionment-fields {
         height: 0;
         width: 0;
     }
@@ -18,12 +18,13 @@
         <div class="col-sm-6">
             <div class="form-group">
                 <label style="display:block;" class="control-label">Centro de custo da despesa</label>
-                <select name="cost_center_apportionments[{{ $index }}][cost_center_id]" id="select-cost-center" data-cy="select-cost-center"
-                    class='select2-me' data-rule-required="true" style="width:100%;" placeholder="Ex: Almoxarifado">
+                <select name="cost_center_apportionments[{{ $index }}][cost_center_id]" id="select-cost-center"
+                    data-cy="select-cost-center" class='select2-me' data-rule-required="true" style="width:100%;"
+                    placeholder="Ex: Almoxarifado">
                     <option value=""></option>
                     @foreach ($costCenters as $costCenter)
-                        @php 
-                            $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id; 
+                        @php
+                            $isApportionmentSelect = isset($apportionment) && $apportionment->cost_center_id === $costCenter->id;
                             $companyName = $costCenter->company->name;
                             $costCenterName = $costCenter->name;
                             $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
@@ -38,11 +39,14 @@
 
         <div class="col-sm-2">
             <div class="form-group">
-                <label for="cost_center_apportionments[{{ $index }}][apportionment_percentage]" class="control-label"> Rateio (%) </label>
+                <label for="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
+                    class="control-label"> Rateio (%) </label>
                 <div class="input-group">
                     <label class="input-group-addon">%</label>
-                    <input type="number" placeholder="0.00" class="form-control" min="1" max="100" name="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                        id="cost_center_apportionments[{{ $index }}][apportionment_percentage]" data-cy="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
+                    <input type="number" placeholder="0.00" class="form-control" min="1" max="100"
+                        name="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
+                        id="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
+                        data-cy="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
                         value="{{ $apportionment->apportionment_percentage }}">
                 </div>
             </div>
@@ -50,17 +54,22 @@
 
         <div class="col-sm-2">
             <div class="form-group">
-                <label for="cost_center_apportionments[{{ $index }}][apportionment_currency]" class="control-label"> Rateio (R$) </label>
+                <label for="cost_center_apportionments[{{ $index }}][apportionment_currency]"
+                    class="control-label"> Rateio (R$) </label>
                 <div class="input-group">
                     <label class="input-group-addon">R$</label>
-                    <input type="number" placeholder="0.00" class="form-control" min="1" max="500000" id="cost_center_apportionments[{{ $index }}][apportionment_currency]"
-                        name="cost_center_apportionments[{{ $index }}][apportionment_currency]" data-cy="cost_center_apportionments[{{ $index }}][apportionment_currency]" value="{{ $apportionment->apportionment_currency }}">
+                    <input type="number" placeholder="0.00" class="form-control" min="1" max="500000"
+                        id="cost_center_apportionments[{{ $index }}][apportionment_currency]"
+                        name="cost_center_apportionments[{{ $index }}][apportionment_currency]"
+                        data-cy="cost_center_apportionments[{{ $index }}][apportionment_currency]"
+                        value="{{ $apportionment->apportionment_currency }}">
                 </div>
             </div>
         </div>
 
         <div class="col-sm-1" style="margin-top: 28px;">
-            <button class="btn btn-icon btn-small btn-danger delete-cost-center" data-cy="btn-delete-cost-center-{{$index}}"><i class="fa fa-trash-o"></i></button>
+            <button class="btn btn-icon btn-small btn-danger delete-cost-center"
+                data-cy="btn-delete-cost-center-{{ $index }}"><i class="fa fa-trash-o"></i></button>
         </div>
 
     </div>
@@ -69,8 +78,9 @@
         <div class="col-sm-6">
             <div class="form-group">
                 <label class="control-label" style="display:block"> Centro de custo da despesa </label>
-                <select style="width:100%" id="select-cost-center" name="cost_center_apportionments[0][cost_center_id]" data-cy="cost_center_apportionments[0][cost_center_id]"
-                    class='select2-me' required data-rule-required="true" placeholder="Ex: Almoxarifado">
+                <select style="width:100%" id="select-cost-center" name="cost_center_apportionments[0][cost_center_id]"
+                    data-cy="cost_center_apportionments[0][cost_center_id]" class='select2-me' required
+                    data-rule-required="true" placeholder="Ex: Almoxarifado">
                     <option value=""></option>
                     @foreach ($costCenters as $costCenter)
                         @php
@@ -89,22 +99,28 @@
 
         <div class="col-sm-2">
             <div class="form-group">
-                <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label"> Rateio (%) </label>
+                <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label"> Rateio (%)
+                </label>
                 <div class="input-group">
                     <span class="input-group-addon">%</span>
-                    <input type="number" placeholder="0.00" class="form-control apportionment-percentage" min="1" max="100" name="cost_center_apportionments[0][apportionment_percentage]"
-                        id="cost_center_apportionments[0][apportionment_percentage]" data-cy="cost_center_apportionments[0][apportionment_percentage]">
+                    <input type="number" placeholder="0.00" class="form-control apportionment-percentage"
+                        min="1" max="100" name="cost_center_apportionments[0][apportionment_percentage]"
+                        id="cost_center_apportionments[0][apportionment_percentage]"
+                        data-cy="cost_center_apportionments[0][apportionment_percentage]">
                 </div>
             </div>
         </div>
 
         <div class="col-sm-2">
             <div class="form-group">
-                <label for="cost_center_apportionments[0][apportionment_currency]" class="control-label"> Rateio (R$) </label>
+                <label for="cost_center_apportionments[0][apportionment_currency]" class="control-label"> Rateio (R$)
+                </label>
                 <div class="input-group">
                     <span class="input-group-addon">R$</span>
-                    <input type="number" name="cost_center_apportionments[0][apportionment_currency]" id="cost_center_apportionments[0][apportionment_currency]"
-                        data-cy="cost_center_apportionments[0][apportionment_currency]" placeholder="0.00" class="form-control" min="1" max="500000">
+                    <input type="number" name="cost_center_apportionments[0][apportionment_currency]"
+                        id="cost_center_apportionments[0][apportionment_currency]"
+                        data-cy="cost_center_apportionments[0][apportionment_currency]" placeholder="0.00"
+                        class="form-control" min="1" max="500000">
                 </div>
             </div>
         </div>
@@ -123,7 +139,7 @@
     <div class="col-md-6">
         <button type="button" class="btn btn-small btn-primary add-cost-center-btn" data-cy="btn-add-cost-center">
             Adicionar linha
-         </button>
+        </button>
     </div>
     <div class="col-md-2">
         <span class="percentage-span-warning">A soma da porcentagem deve ser 100%.</span>
@@ -155,10 +171,10 @@
         const disablePercentageInputs = !hasPercentageInputFilled && hasCurrencyInputFilled;
         const disableCurrencyInputs = !hasCurrencyInputFilled && hasPercentageInputFilled;
 
-        if(disablePercentageInputs) {
+        if (disablePercentageInputs) {
             $costCenterPercentage.prop('disabled', true);
             $costCenterPercentage.val(null);
-        } else if(disableCurrencyInputs) {
+        } else if (disableCurrencyInputs) {
             $costCenterCurrency.prop('disabled', true);
             $costCenterCurrency.val(null);
         } else if (!hasPercentageInputFilled && !hasCurrencyInputFilled) {
@@ -170,7 +186,8 @@
     function manageBtnDeleteState() {
         const costCenterCount = $('.cost-center-container').length;
 
-        costCenterCount > 1 ? $('.delete-cost-center').prop('disabled', false) : $('.delete-cost-center').prop('disabled', true);
+        costCenterCount > 1 ? $('.delete-cost-center').prop('disabled', false) : $('.delete-cost-center').prop(
+            'disabled', true);
     }
 
     function disableSelectedOptions() {
@@ -219,7 +236,8 @@
             }
         });
 
-        const isValidApportionment = allSelectsSelected && (allCostCenterPercentageFilled || allCostCenterCurrencyFilled);
+        const isValidApportionment = allSelectsSelected && (allCostCenterPercentageFilled ||
+            allCostCenterCurrencyFilled);
 
         // desabilita botao caso nao tenha sido preenchido cost center corretamente;
         $btnAddCostCenter.prop('disabled', !isValidApportionment);
@@ -257,35 +275,35 @@
         $inputValidator.val(value);
     }
 
-    function cleanApportionment (apportionments) {
+    function cleanApportionment(apportionments) {
         apportionments.each(function() {
-                $(this).val('');
-                $(this).removeRequired();
-                $(this).valid();
-            });
+            $(this).val('');
+            $(this).removeRequired();
+            $(this).valid();
+        });
     }
 
     function updateInputValidator() {
         const $costCenterCurrency = $('.cost-center-container input[name$="[apportionment_currency]"]');
         const $costCenterPercentage = $('.cost-center-container input[name$="[apportionment_percentage]"]');
-        
+
         const $percentageSpanWarning = $('.percentage-span-warning');
         const $currencySpanWarning = $('.currency-span-warning');
-        
+
         const areAllFieldsEmpty = $costCenterCurrency.filter(function() {
             return $(this).val() !== "";
         }).length === 0 && $costCenterPercentage.filter(function() {
             return $(this).val() !== "";
         }).length === 0;
-        
+
         const percentageValid = !$percentageSpanWarning.is(':visible');
         const currencyValid = !$currencySpanWarning.is(':visible');
-        
+
         let finalValidatorValue = areAllFieldsEmpty ? null : (percentageValid && currencyValid);
         if (finalValidatorValue === false) {
             finalValidatorValue = null;
         }
-        
+
         setInputValidator(finalValidatorValue);
     }
 
@@ -312,18 +330,17 @@
 
         $percentageSpanWarning.toggle(!isValidPercentage || !existPercentageValue);
 
-        if(existPercentageValue) {
+        if (existPercentageValue) {
             cleanApportionment($('.cost-center-container input[name$="[apportionment_currency]"]'))
         } else {
             $percentageSpanWarning.hide();
         }
 
         $costCenterPercentage.each(function() {
-            if(isValidPercentage) {
+            if (isValidPercentage) {
                 $(this).removeRequired();
                 $(this).valid();
-            }
-            else { 
+            } else {
                 $(this).makeRequired();
             }
         });
@@ -349,24 +366,23 @@
         });
 
         const isValidAmount = totalValue > 0 && isCurrencyFilled;
-        
+
         $currencySpanWarning.toggle(!isValidAmount || !isCurrencyFilled);
-        
-        if(totalValue > 0) {
+
+        if (totalValue > 0) {
             cleanApportionment($('.cost-center-container input[name$="[apportionment_percentage]"]'))
 
             $costCenterCurrency.each(function() {
-                if(isValidAmount) {
+                if (isValidAmount) {
                     $(this).removeRequired();
                     $(this).valid();
-                }
-                else { 
+                } else {
                     $(this).makeRequired();
                 }
             });
-        } 
+        }
 
-        if(!totalValue && !isCurrencyFilled) {
+        if (!totalValue && !isCurrencyFilled) {
             $currencySpanWarning.hide();
         }
 
@@ -377,15 +393,15 @@
         manageApportionmentState();
         const newRow = $('.cost-center-container').last().clone();
         newRow.find('select[name^="cost_center_apportionments"], input[name^="cost_center_apportionments"]')
-        .each(function() {
-            const oldName = $(this).attr('name');
-            const regexNewName = /\[(\d+)\]/;
-            const lastIndex = Number(oldName.match(regexNewName).at(-1));
-            const newName = oldName.replace(regexNewName, `[${lastIndex + 1}]`);
-            $(this).attr('name', newName);
-            $(this).attr('id', newName);
-            $(this).attr('data-cy', newName);
-        });
+            .each(function() {
+                const oldName = $(this).attr('name');
+                const regexNewName = /\[(\d+)\]/;
+                const lastIndex = Number(oldName.match(regexNewName).at(-1));
+                const newName = oldName.replace(regexNewName, `[${lastIndex + 1}]`);
+                $(this).attr('name', newName);
+                $(this).attr('id', newName);
+                $(this).attr('data-cy', newName);
+            });
 
         newRow.find("input, select").val(null);
         newRow.find('.select2-container').remove();
@@ -418,7 +434,8 @@
     $(document).on('input focus', $costCenterPercentage.selector, manageCostCenterBtnState);
 
     // Desabilita os outros campos de "rateio" de outro tipo quando um tipo é selecionado
-    $(document).on('input focus', `${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`, manageApportionmentState);
+    $(document).on('input focus', `${$costCenterPercentage.selector}, ${$costCenterCurrency.selector}`,
+        manageApportionmentState);
 
     $(document).on('input change', '.cost-center-container .select2-me', disableSelectedOptions);
 

@@ -1,6 +1,6 @@
 <x-app>
     <x-slot name="title">
-        <h1>Nova Solicitação de Produto</h1>
+        <h1>Solicitação de Produto</h1>
     </x-slot>
 
     <div class="row">
