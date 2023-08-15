@@ -6,6 +6,7 @@
     'isCopy' => false
 ])
 
+
 <div class="product-row" style="padding:0px;">
     <div class="row" style="padding-top:15px;">
         <div class="col-sm-1" style="margin-top: 23px; margin-left:10px; width:5.3%;" disabled>
@@ -22,7 +23,7 @@
                     data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][product_category_id]"
                     class='select2-me' style="width:100%;" data-placeholder="Escolha uma categoria para este produto">
                     <option value=""></option>
-                    @foreach ($productCategories as $productCategory)
+                    @foreach ($productCategories->sortBy('name') as $productCategory)
                         @php
                             $categoryWithDescription = $productCategory->name . ' - ' . $productCategory->description;
                             $categoryOption = $productCategory->description ? $categoryWithDescription : $productCategory->name;
@@ -38,7 +39,7 @@
         <div class="col-sm-6">
             <div class="form-group">
                 <label class="control-label">  Nome/Descrição </label>
-                <input class="form-control" type="text" placeholder="" name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][name]" 
+                <input class="form-control" type="text" placeholder="" name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][name]"
                     data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][name]" value="{{ $product->name ?? null }}">
                 <ul class="product-suggestion-autocomplete" data-cy="product-suggestion-autocomplete" style="display: none;"></ul>
             </div>
