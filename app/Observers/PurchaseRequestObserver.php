@@ -2,17 +2,25 @@
 
 namespace App\Observers;
 
+use App\Enums\PurchaseRequestStatus;
 use App\Models\PurchaseRequest;
 use App\Models\PurchaseRequestsLog;
+use App\Providers\EmailService;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\Mailer\Exception\TransportException;
 
 class PurchaseRequestObserver
 {
+    public function __construct(private EmailService $emailService)
+    {
+    }
+
     /**
      * Handle the PurchaseRequest "created" event.
      */
     public function created(PurchaseRequest $purchaseRequest): void
     {
+        $this->sendEmail($purchaseRequest);
         $this->createLog('create', $purchaseRequest);
     }
 
@@ -44,6 +52,14 @@ class PurchaseRequestObserver
                 $this->createLog('soft-delete', $purchaseRequest, $changes);
             } else {
                 $this->createLog('update', $purchaseRequest, $changes);
+
+                if (array_key_exists('status', $changes)) {
+                    $this->sendEmail($purchaseRequest);
+                }
+
+                if (array_key_exists('supplies_user_id', $changes)) {
+                    $this->emailService->sendResponsibleAssignedEmail($purchaseRequest);
+                }
             }
         }
     }
@@ -56,5 +72,29 @@ class PurchaseRequestObserver
             'user_id' => Auth::id(),
             'changes' => $changes,
         ]);
+    }
+
+    private function sendEmail(PurchaseRequest $purchaseRequest)
+    {
+        $isAllowedToSendEmail = true;
+        $status = $purchaseRequest->status?->value;
+
+        if ($status && $isAllowedToSendEmail) {
+            $approver = $purchaseRequest->user->approver;
+            $isPendingStatus = $status === PurchaseRequestStatus::PENDENTE->value;
+            $isDraft = $status === PurchaseRequestStatus::RASCUNHO->value;
+
+            try {
+                if ($approver && $isPendingStatus) {
+                    $this->emailService->sendPendingApprovalEmail($purchaseRequest, $approver);
+                }
+
+                if (!$isDraft && !$isPendingStatus) {
+                    $this->emailService->sendStatusUpdatedEmail($purchaseRequest);
+                }
+            } catch (TransportException $transportException) {
+                // Tratar erro de envio de email aqui, se necessário.
+            }
+        }
     }
 }
