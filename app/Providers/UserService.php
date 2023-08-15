@@ -26,7 +26,8 @@ class UserService extends ServiceProvider implements UserServiceInterface
 
         return User::with('person', 'profile')->where('id', '!=', $loggedId)->whereNull('deleted_at')
             ->whereHas('profile', function ($query) {
-                $query->where('name', '!=', 'admin');
+                $query->where('name', '!=', 'admin')
+                    ->where('name', '!=', 'diretor');
             })->get();
     }
 
