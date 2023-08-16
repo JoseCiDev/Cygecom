@@ -1,5 +1,5 @@
 @php
-    use \App\Enums\PaymentTerm;
+    use \App\Enums\{PaymentTerm, LogAction};
 
     if (isset($contract)) {
         $request = $contract;
@@ -482,5 +482,33 @@
                 <p class="support_links" style="max-height: 300px; overflow:auto">{!! $supportLinks !!}</p>
             </div>
         </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h5><i class="glyphicon glyphicon-list-alt"></i> <strong> Histórico de alterações:</strong></h5>
+                @foreach ($logs as $index => $log)
+                    @if ($log->action->value !== LogAction::CREATE->value)
+                        <div class="row log-item {{ $index % 2 === 0 ? 'zebra-bg-even' : 'zebra-bg-odd' }}">
+                            <div class="col-sm-3">
+                                @if ($log->changes)
+                                    <span class="span-log-changes-view" rel="tooltip" title="{{json_encode($log->changes)}}" > <i class="glyphicon glyphicon-eye-open"></i> Visualizar alterações</span>
+                                @else
+                                    ---
+                                @endif
+                            </div>
+                            <div class="col-sm-3">
+                                <span>Feito em: {{ \Carbon\Carbon::parse($log->created_at)->format('d/m/Y - H:m:s')}}</span>
+                            </div>
+                            <div class="col-sm-6">
+                                <span>Alterado por: {{$log->user->email}}</span>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+        
     </div>
 </x-app>
