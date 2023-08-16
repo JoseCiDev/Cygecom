@@ -1,5 +1,5 @@
 @php
-    use App\Enums\PurchaseRequestLogAction;
+    use App\Enums\LogAction;
 
     if (isset($contract)) {
         $request = $contract;
@@ -424,7 +424,7 @@
             <div class="col-md-6">
                 <h5><i class="glyphicon glyphicon-list-alt"></i> <strong> Histórico de alterações:</strong></h5>
                 @foreach ($logs as $index => $log)
-                    @if ($log->action->value !== PurchaseRequestLogAction::CREATE->value)
+                    @if ($log->action->value !== LogAction::CREATE->value)
                         <div class="row log-item {{ $index % 2 === 0 ? 'zebra-bg-even' : 'zebra-bg-odd' }}">
                             <div class="col-sm-3">
                                 @if ($log->changes)

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\PurchaseRequestLogAction;
+use App\Enums\LogAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,6 +31,6 @@ class PurchaseRequestsLog extends Model
 
     protected $casts = [
         'changes' => 'array',
-        'action' => PurchaseRequestLogAction::class,
+        'action' => LogAction::class,
     ];
 }

@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use App\Contracts\EnumInterface;
 
-enum PurchaseRequestLogAction: string implements EnumInterface
+enum LogAction: string implements EnumInterface
 {
     case CREATE = 'create';
     case UPDATE = 'update';
@@ -18,10 +18,10 @@ enum PurchaseRequestLogAction: string implements EnumInterface
     public static function getLabel($value): string
     {
         return match ($value) {
-            self::CREATE  => 'Criado',
-            self::UPDATE  => 'Atualizado',
+            self::CREATE => 'Criado',
+            self::UPDATE => 'Atualizado',
             self::DELETE => 'Excluído',
-            default        => '---',
+            default => '---',
         };
     }
 }

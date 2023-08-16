@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Person;
-use App\Models\PersonLog;
+use App\Enums\LogAction;
+use App\Models\{Person, PersonLog};
 use Illuminate\Support\Facades\Auth;
 
 class PersonObserver
@@ -21,7 +21,7 @@ class PersonObserver
             'phone_id' => $person->phone_id,
         ];
 
-        $this->createLog('create', $person, $changes);
+        $this->createLog(LogAction::CREATE, $person, $changes);
     }
 
     /**
@@ -52,18 +52,18 @@ class PersonObserver
             $isDelete = $person->wasChanged('deleted_at') && $person->deleted_at !== null;
 
             if ($isDelete) {
-                $this->createLog('soft-delete', $person, $changes);
+                $this->createLog(LogAction::DELETE, $person, $changes);
             } else {
-                $this->createLog('update', $person, $changes);
+                $this->createLog(LogAction::UPDATE, $person, $changes);
             }
         }
     }
 
-    private function createLog($action, $person, ?array $changes = null)
+    private function createLog(LogAction $action, $person, ?array $changes = null)
     {
         PersonLog::create([
             'changed_person_id' => $person->id,
-            'action' => $action,
+            'action' => $action->value,
             'user_id' => Auth::id(),
             'changes' => $changes,
         ]);

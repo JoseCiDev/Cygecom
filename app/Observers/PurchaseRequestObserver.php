@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Enums\{PurchaseRequestStatus, PurchaseRequestLogAction};
+use App\Enums\{PurchaseRequestStatus, LogAction};
 use App\Models\{PurchaseRequest, PurchaseRequestsLog};
 use App\Providers\EmailService;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +20,7 @@ class PurchaseRequestObserver
     public function created(PurchaseRequest $purchaseRequest): void
     {
         $this->sendEmail($purchaseRequest);
-        $this->createLog(PurchaseRequestLogAction::CREATE, $purchaseRequest);
+        $this->createLog(LogAction::CREATE, $purchaseRequest);
     }
 
     /**
@@ -48,9 +48,9 @@ class PurchaseRequestObserver
             $isDelete = $purchaseRequest->wasChanged('deleted_at') && $purchaseRequest->deleted_at !== null;
 
             if ($isDelete) {
-                $this->createLog(PurchaseRequestLogAction::DELETE, $purchaseRequest, $changes);
+                $this->createLog(LogAction::DELETE, $purchaseRequest, $changes);
             } else {
-                $this->createLog(PurchaseRequestLogAction::UPDATE, $purchaseRequest, $changes);
+                $this->createLog(LogAction::UPDATE, $purchaseRequest, $changes);
 
                 if (array_key_exists('status', $changes)) {
                     $this->sendEmail($purchaseRequest);
@@ -63,7 +63,7 @@ class PurchaseRequestObserver
         }
     }
 
-    private function createLog(PurchaseRequestLogAction $action, $purchaseRequest, ?array $changes = null)
+    private function createLog(LogAction $action, $purchaseRequest, ?array $changes = null)
     {
         PurchaseRequestsLog::create([
             'purchase_request_id' => $purchaseRequest->id,
