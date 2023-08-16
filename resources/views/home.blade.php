@@ -13,7 +13,10 @@
                             </div>
                         @endif
                         <h1>Bem-vindo!</h1>
-                        <p>Este é o portal de gerenciamento de compras do grupo Essentia!</p>
+                        <p>
+                            Este portal tem como objetivo fazer com que suprimentos efetue e finalize todas as
+                            solicitações de compras e contratações de serviços do Grupo Essentia.
+                        </p>
 
                         @if (config('app.env') === 'local' && auth()->user()->profile->name === 'admin')
                             <p>TESTE E-MAIL</p>
