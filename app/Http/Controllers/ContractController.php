@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use App\Enums\PurchaseRequestStatus;
 use Illuminate\Http\{RedirectResponse, Request};
-use App\Models\{Company, CostCenter, PurchaseRequest, PurchaseRequestsLog, PurchaseRequestFile};
+use App\Models\{Company, CostCenter, PurchaseRequest, PurchaseRequestFile};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 
 class ContractController extends Controller
@@ -163,9 +163,7 @@ class ContractController extends Controller
             return throw new Exception('Não foi possível acessar essa solicitação.');
         }
 
-        $logs = PurchaseRequestsLog::where('purchase_request_id', $id)->get();
-
-        return view('components.supplies.contract.details', compact('contract', 'allRequestStatus', 'files', 'logs'));
+        return view('components.supplies.contract.details', compact('contract', 'allRequestStatus', 'files'));
     }
 
     private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool
