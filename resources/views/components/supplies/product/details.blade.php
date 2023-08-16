@@ -448,7 +448,7 @@
         <hr>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h5><i class="glyphicon glyphicon-list-alt"></i> <strong> Histórico de alterações:</strong></h5>
                 @foreach ($logs as $index => $log)
                     @if ($log->action->value !== LogAction::CREATE->value)
