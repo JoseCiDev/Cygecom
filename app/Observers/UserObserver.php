@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\User;
-use App\Models\UserLog;
+use App\Enums\LogAction;
+use App\Models\{User, UserLog};
 use Illuminate\Support\Facades\Auth;
 
 class UserObserver
@@ -23,7 +23,7 @@ class UserObserver
             'approve_limit' => $user->approve_limit
         ];
 
-        $this->createLog('create', $user, $changes);
+        $this->createLog(LogAction::CREATE, $user, $changes);
     }
 
     /**
@@ -55,18 +55,18 @@ class UserObserver
             $isDelete = $user->wasChanged('deleted_at') && $user->deleted_at !== null;
 
             if ($isDelete) {
-                $this->createLog('soft-delete', $user, $changes);
+                $this->createLog(LogAction::DELETE, $user, $changes);
             } else {
-                $this->createLog('update', $user, $changes);
+                $this->createLog(LogAction::UPDATE, $user, $changes);
             }
         }
     }
 
-    private function createLog($action, $user, ?array $changes = null)
+    private function createLog(LogAction $action, $user, ?array $changes = null)
     {
         UserLog::create([
             'changed_user_id' => $user->id,
-            'action' => $action,
+            'action' => $action->value,
             'user_id' => Auth::id(),
             'changes' => $changes,
         ]);
