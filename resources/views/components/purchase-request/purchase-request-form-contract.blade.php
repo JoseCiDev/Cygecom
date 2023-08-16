@@ -167,7 +167,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="form-check" class="control-label" style="padding-right:10px;">
-                            Contrato se enquadra na categoria COMEX?
+                            Este contrato será importado (COMEX)?
                         </label>
                         <fieldset data-rule-required="true">
                             <div class="row">

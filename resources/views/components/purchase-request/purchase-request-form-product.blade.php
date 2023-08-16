@@ -157,13 +157,11 @@
                             Motivo da solicitação
                         </label>
                         <textarea data-rule-required="true" minlength="20" name="reason" id="reason" data-cy="reason" rows="4"
-                            placeholder="Ex: Ar condicionado da sala de reuniões do atrium apresenta defeitos de funcionamento"
+                            placeholder="Ex.: Devido aumento da demanda de produção, necessário a compra de uma máquina/equipamento."
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
                     <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
-                        <p>* Por favor, forneça uma breve descrição do motivo pelo qual você está solicitando esta
-                            compra.
-                        </p>
+                        <p>*Informe o motivo que você está solicitando essa compra.</p>
                     </div>
                 </div>
 

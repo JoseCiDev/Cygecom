@@ -127,7 +127,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="form-check" class="control-label" style="padding-right:10px;">
-                            Contrato se enquadra na categoria COMEX?
+                            Este serviço será importado (COMEX)?
                         </label>
                         <fieldset data-rule-required="true">
                             <div class="row">
@@ -174,12 +174,11 @@
                         <label for="description" class="control-label">Descrição</label>
                         <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
                             rows="4"
-                            placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
+                            placeholder="Ex.: Contratação de serviço para conserto de uma máquina da produção que está apresentando defeitos."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
                     <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
-                        <p>* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação.
-                        </p>
+                        <p>*Descreva com detalhes o tipo de serviço que está solicitando.</p>
                     </div>
                 </div>
 
