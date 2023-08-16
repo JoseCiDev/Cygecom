@@ -21,16 +21,16 @@
                         }
                     @endphp
 
-                    <span> Alteração: {{$change}} </span>
+                    <span> Descrição: {{$change}} </span>
                 @else
                     ---
                 @endif
             </div>
             <div class="col-sm-3">
-                <span>Feito em: {{ \Carbon\Carbon::parse($log->created_at)->format('d/m/Y - H:m:s')}}</span>
+                <span>Data: {{ \Carbon\Carbon::parse($log->created_at)->format('d/m/Y - H:m:s')}}</span>
             </div>
             <div class="col-sm-5">
-                <span>Alterado por: {{$log->user->email}}</span>
+                <span>Responsável: {{$log->user->email}}</span>
             </div>
         </div>
     @endif
