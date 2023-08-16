@@ -1,0 +1,16 @@
+.log-item {
+    padding: 4px 0;
+}
+
+.span-log-changes-view {
+    border: 1px solid #333333;
+    cursor: help;
+    margin: 0 15px;
+    padding: 0 5px;
+    border-radius: 4px;
+}
+
+.span-log-changes-view:hover {
+    color: #3333335f;
+    border: 1px solid #3333335f;
+}
