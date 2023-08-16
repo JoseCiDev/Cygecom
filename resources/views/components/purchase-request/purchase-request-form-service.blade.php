@@ -233,8 +233,8 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="support_links" class="control-label">Links de apoio / sugestão</label>
-                        <textarea placeholder="Adicone um ou mais links válidos para apoio ou sugestão." rows="3" name="support_links"
-                            id="support_links" data-cy="support_links" class="form-control text-area no-resize">{{ isset($purchaseRequest->support_links) && $purchaseRequest->support_links ? $purchaseRequest->support_links : '' }}</textarea>
+                        <textarea rows="3" name="support_links" id="support_links" data-cy="support_links"
+                            class="form-control text-area no-resize">{{ isset($purchaseRequest->support_links) && $purchaseRequest->support_links ? $purchaseRequest->support_links : '' }}</textarea>
                     </div>
                 </div>
 

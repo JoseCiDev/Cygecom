@@ -39,8 +39,8 @@
         {{-- NOME / DESCRIÇÃO --}}
         <div class="col-sm-6">
             <div class="form-group">
-                <label class="control-label">  Nome/Descrição </label>
-                <input class="form-control product-description" type="text" placeholder="" data-rule-required="true"
+                <label class="control-label">Nome/Descrição</label>
+                <input class="form-control product-description" type="text" placeholder="" data-rule-required="true" maxlength="250"
                     name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][name]"
                     data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][name]" value="{{ $product->name ?? null }}">
                 <ul class="product-suggestion-autocomplete" data-cy="product-suggestion-autocomplete" style="display: none;"></ul>

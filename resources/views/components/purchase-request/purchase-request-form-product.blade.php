@@ -994,10 +994,12 @@
         checkProductRows();
 
         $(document).on('click', '.add-supplier-btn', function() {
-            const $supplierContainerTemplate = $(this).closest('.supplier-container').find(
-                '.supplier-block').last();
-
-            const $newContainer = $supplierContainerTemplate.clone();
+            @php
+                $viewPath = 'components.purchase-request.product.supplier.index';
+                $viewWithParams = view($viewPath, compact('productCategories', 'suppliers'));
+            @endphp
+            const $newContainer = $( @json($viewWithParams->render()) );
+            const $currentSupplierBlock = $('.supplier-container').find('.supplier-block').last();
 
             const [_, ...rest] = $newContainer
                 .find('.product-row').toArray();
@@ -1005,11 +1007,12 @@
                 $(element).remove();
             });
 
-
             $newContainer.find(
                 'select[name^="purchase_request_products"], input[name^="purchase_request_products"]'
             ).each(function() {
-                const oldName = $(this).attr('name');
+                //const oldName = $(this).attr('name');
+                const lastFoundClass = Array.from(this.classList).at(-1);
+                const oldName = $currentSupplierBlock.find('.' + lastFoundClass).last().attr('name');
                 const regexNewName = /purchase_request_products\[(\d+)\](.*)/;
                 const lastIndex = Number(oldName.match(regexNewName).at(1));
                 const anotherRegex = /\[\d+\]/;
@@ -1021,10 +1024,11 @@
                 $(this).attr('name', newName);
             });
 
-
             $newContainer.find("input, select").val("");
             $newContainer.find('.select2-container').remove();
             $newContainer.find('.select2-me').select2();
+
+            $newContainer.find('[data-rule-required]').makeRequired();
 
             $('.supplier-block').last().after($newContainer);
             $newContainer.find('.delete-supplier').removeAttr('hidden');
@@ -1060,16 +1064,11 @@
 
 
         $(document).on('click', '.add-product-btn', function() {
-            // const $productRowTemplate = $(this).closest('.product-container').find('.product-row')
-            //     .last();
-            // const newRow = $productRowTemplate.clone();
-
             @php
                 $viewPath = 'components.purchase-request.product.product.index';
                 $viewWithParams = view($viewPath, compact('productCategories'));
             @endphp
             const newRow = $( @json($viewWithParams->render()) );
-
             const $currentSupplierBlock = $(this).closest('.supplier-block');
 
             newRow.find(
@@ -1104,7 +1103,6 @@
         });
 
         // salvar rascunho ou enviar
-
         const $btnSubmitRequest = $('.btn-submit-request');
         const $sendAction = $('#action');
 
