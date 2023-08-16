@@ -981,7 +981,6 @@
         }
 
         const $productContainer = $('.product-container');
-        const $addProductBtn = $('.add-product-btn');
 
         function checkProductRows() {
             $('.supplier-block').each(function() {
@@ -1063,13 +1062,24 @@
 
 
         $(document).on('click', '.add-product-btn', function() {
-            const $productRowTemplate = $(this).closest('.product-container').find('.product-row')
-                .last();
-            const newRow = $productRowTemplate.clone();
+            // const $productRowTemplate = $(this).closest('.product-container').find('.product-row')
+            //     .last();
+            // const newRow = $productRowTemplate.clone();
+
+            @php
+                $viewPath = 'components.purchase-request.product.product.index';
+                $viewWithParams = view($viewPath, compact('productCategories'));
+            @endphp
+            const newRow = $( @json($viewWithParams->render()) );
+
+            const $currentSupplierBlock = $(this).closest('.supplier-block');
+
             newRow.find(
                 'select[name^="purchase_request_products"], input[name^="purchase_request_products"]'
             ).each(function() {
-                const oldName = $(this).attr('name');
+                const lastFoundClass = Array.from(this.classList).at(-1);
+                const $lastProductRow = $currentSupplierBlock.find('.product-row').last();
+                const oldName = $lastProductRow.find('.' + lastFoundClass).last().attr('name');
                 const regexNewName = /\[products\]\[(\d+)\]/;
                 const lastIndex = Number(oldName.match(regexNewName).at(1));
                 const newName = oldName.replace(regexNewName, `[products][${lastIndex + 1}]`);
@@ -1080,6 +1090,8 @@
             newRow.find("input, select").val("");
             newRow.find('.select2-container').remove();
             newRow.find('.select2-me').select2();
+
+            newRow.find('[data-rule-required]').makeRequired();
 
             $(this).siblings('.product-row').last().after(newRow);
             newRow.find('.delete-product').removeAttr('hidden');
@@ -1093,7 +1105,7 @@
             checkProductRows();
         });
 
-        // salvar rascunho ou
+        // salvar rascunho ou enviar
 
         const $btnSubmitRequest = $('.btn-submit-request');
         const $sendAction = $('#action');
