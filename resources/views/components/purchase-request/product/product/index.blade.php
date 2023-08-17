@@ -1,7 +1,7 @@
 @props([
-    'supplierIndex',
-    'productIndex',
-    'productCategories',
+    'supplierIndex' => 0,
+    'productIndex' => 0,
+    'productCategories' => collect(),
     'product' => null,
     'isCopy' => false
 ])
@@ -14,14 +14,15 @@
         </div>
         <input type="hidden" name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][id]"
             data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][id]"
-            value="{{ $isCopy ? null : $product?->id}}">
+            value="{{ $isCopy ? null : $product?->id}}" class="product-id">
         {{-- CATEGORIA PRODUTO --}}
         <div class="col-sm-5" style="margin-left:-10px;">
             <div class="form-group">
-                <label for="product-category" class="control-label"> Categoria do produto </label>
-                <select name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][product_category_id]"
+                <label for="product-category" class="control-label">Categoria do produto</label>
+                <select data-rule-required="true"
+                    name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][product_category_id]"
                     data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][product_category_id]"
-                    class='select2-me' style="width:100%;" data-placeholder="Escolha uma categoria para este produto">
+                    class='select2-me product-category' style="width:100%;" data-placeholder="Escolha uma categoria para este produto">
                     <option value=""></option>
                     @foreach ($productCategories->sortBy('name') as $productCategory)
                         @php
@@ -38,8 +39,9 @@
         {{-- NOME / DESCRIÇÃO --}}
         <div class="col-sm-6">
             <div class="form-group">
-                <label class="control-label">  Nome/Descrição </label>
-                <input class="form-control" type="text" placeholder="" name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][name]"
+                <label class="control-label">Nome/Descrição</label>
+                <input class="form-control product-description" type="text" placeholder="" data-rule-required="true" maxlength="250"
+                    name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][name]"
                     data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][name]" value="{{ $product->name ?? null }}">
                 <ul class="product-suggestion-autocomplete" data-cy="product-suggestion-autocomplete" style="display: none;"></ul>
             </div>
@@ -50,9 +52,10 @@
         <div class="col-sm-2">
             <div class="form-group" style="margin-top:-10px">
                 <label for="qtd" class="control-label">Quantidade</label>
-                <input name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][quantity]"
+                <input data-rule-required="true"
+                    name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][quantity]"
                     data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][quantity]"
-                    type="number" placeholder="00" class="form-control" value="{{ $product->quantity ?? null }}">
+                    type="number" class="form-control product-quantity" value="{{ $product->quantity ?? null }}">
             </div>
         </div>
         {{-- COR --}}
@@ -61,7 +64,7 @@
                 <label for="" class="control-label">Cor</label>
                 <input type="text" name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex}}][color]"
                     data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex}}][color]"
-                    class="form-control" value="{{ $product->color ?? null }}">
+                    class="form-control product-color" value="{{ $product->color ?? null }}">
             </div>
         </div>
         {{-- TAMANHO --}}
@@ -70,7 +73,7 @@
                 <label for="" class="control-label">Tamanho</label>
                 <input type="text" data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][size]"
                     name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][size]"
-                    class="form-control" value="{{ $product->size ?? null }}">
+                    class="form-control product-size" value="{{ $product->size ?? null }}">
             </div>
         </div>
         <div class="col-sm-4">
@@ -78,7 +81,7 @@
                 <label for="" class="control-label">Modelo</label>
                 <input type="text" data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][model]"
                     name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][model]"
-                    class="form-control" value="{{ $product->model ?? null }}">
+                    class="form-control product-model" value="{{ $product->model ?? null }}">
             </div>
         </div>
     </div>

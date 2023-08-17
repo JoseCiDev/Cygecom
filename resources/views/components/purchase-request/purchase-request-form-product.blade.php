@@ -157,13 +157,11 @@
                             Motivo da solicitação
                         </label>
                         <textarea data-rule-required="true" minlength="20" name="reason" id="reason" data-cy="reason" rows="4"
-                            placeholder="Ex: Ar condicionado da sala de reuniões do atrium apresenta defeitos de funcionamento"
+                            placeholder="Ex.: Devido aumento da demanda de produção, necessário a compra de uma máquina/equipamento."
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
                     <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
-                        <p>* Por favor, forneça uma breve descrição do motivo pelo qual você está solicitando esta
-                            compra.
-                        </p>
+                        <p>*Informe o motivo que você está solicitando essa compra.</p>
                     </div>
                 </div>
 
@@ -949,7 +947,6 @@
         }
 
         const $productContainer = $('.product-container');
-        const $addProductBtn = $('.add-product-btn');
 
         function checkProductRows() {
             $('.supplier-block').each(function() {
@@ -965,10 +962,12 @@
         checkProductRows();
 
         $(document).on('click', '.add-supplier-btn', function() {
-            const $supplierContainerTemplate = $(this).closest('.supplier-container').find(
-                '.supplier-block').last();
-
-            const $newContainer = $supplierContainerTemplate.clone();
+            @php
+                $viewPath = 'components.purchase-request.product.supplier.index';
+                $viewWithParams = view($viewPath, compact('productCategories', 'suppliers'));
+            @endphp
+            const $newContainer = $(@json($viewWithParams->render()));
+            const $currentSupplierBlock = $('.supplier-container').find('.supplier-block').last();
 
             const [_, ...rest] = $newContainer
                 .find('.product-row').toArray();
@@ -976,11 +975,13 @@
                 $(element).remove();
             });
 
-
             $newContainer.find(
                 'select[name^="purchase_request_products"], input[name^="purchase_request_products"]'
             ).each(function() {
-                const oldName = $(this).attr('name');
+                //const oldName = $(this).attr('name');
+                const lastFoundClass = Array.from(this.classList).at(-1);
+                const oldName = $currentSupplierBlock.find('.' + lastFoundClass).last().attr(
+                    'name');
                 const regexNewName = /purchase_request_products\[(\d+)\](.*)/;
                 const lastIndex = Number(oldName.match(regexNewName).at(1));
                 const anotherRegex = /\[\d+\]/;
@@ -992,10 +993,11 @@
                 $(this).attr('name', newName);
             });
 
-
             $newContainer.find("input, select").val("");
             $newContainer.find('.select2-container').remove();
             $newContainer.find('.select2-me').select2();
+
+            //$newContainer.find('select.select-supplier').makeRequired();
 
             $('.supplier-block').last().after($newContainer);
             $newContainer.find('.delete-supplier').removeAttr('hidden');
@@ -1006,38 +1008,99 @@
             const $selectSupplier = $newContainer.find('select').first();
 
             addBtnSupplierSelect($selectSupplier);
+
+            if (!$radioIsContractedBySupplies.is(':checked')) {
+                return;
+            }
+
+            $radioIsContractedBySupplies.filter(':checked').trigger('change');
         });
 
-        $(document).on('click', '.delete-supplier', function() {
-            $(this).closest('.supplier-block').remove();
+        // $(document).on('click', '.delete-supplier', function() {
+        //     $(this).closest('.supplier-block').remove();
 
-            // Atualizar os índices dos fornecedores restantes
-            const $supplierBlocks = $('.supplier-block');
-            $supplierBlocks.each(function(index) {
-                $(this).find(
-                    'select[name^="purchase_request_suppliers"], input[name^="purchase_request_suppliers"]'
-                ).each(function() {
-                    const oldName = $(this).attr('name');
-                    const regexNewName = /purchase_request_suppliers\[(\d+)\](.*)/;
-                    const newName = oldName.replace(regexNewName,
-                        `purchase_request_suppliers[${index}]$2`);
-                    $(this).attr('name', newName);
-                });
+        //     // Atualizar os índices dos fornecedores restantes
+        //     const $supplierBlocks = $('.supplier-block');
+        //     $supplierBlocks.each(function(index) {
+        //         $(this).find(
+        //             'select[name^="purchase_request_suppliers"], input[name^="purchase_request_suppliers"]'
+        //         ).each(function() {
+        //             const oldName = $(this).attr('name');
+        //             const regexNewName = /purchase_request_suppliers\[(\d+)\](.*)/;
+        //             const newName = oldName.replace(regexNewName,
+        //                 `purchase_request_suppliers[${index}]$2`);
+        //             $(this).attr('name', newName);
+        //         });
+        //     });
+
+        //     checkSuppliersContainerLength();
+        //     checkProductRows();
+        // });
+
+        $(document).on('click', '.delete-supplier', function(event) {
+            event.preventDefault();
+
+            const $supplierBlock = $(this).closest('.supplier-block');
+
+            bootbox.confirm({
+                title: 'Atenção!',
+                message: "Ao remover este fornecedor, todos os produtos associados serão excluídos. Esta ação não poderá ser desfeita.",
+                buttons: {
+                    confirm: {
+                        label: 'Excluir',
+                        className: 'btn-danger'
+                    },
+                    cancel: {
+                        label: 'Cancelar',
+                        className: 'btn'
+                    }
+                },
+                callback: function(result) {
+                    if (!result) {
+                        return;
+                    }
+
+                    $supplierBlock.remove();
+
+                    // atualiza os índices dos fornecedores restantes
+                    const $supplierBlocks = $('.supplier-block');
+                    $supplierBlocks.each(function(index) {
+                        $(this).find(
+                            'select[name^="purchase_request_suppliers"], input[name^="purchase_request_suppliers"]'
+                        ).each(function() {
+                            const oldName = $(this).attr('name');
+                            const regexNewName =
+                                /purchase_request_suppliers\[(\d+)\](.*)/;
+                            const newName = oldName.replace(
+                                regexNewName,
+                                `purchase_request_suppliers[${index}]$2`
+                            );
+                            $(this).attr('name', newName);
+                        });
+                    });
+
+                    checkSuppliersContainerLength();
+                    checkProductRows();
+                }
             });
-
-            checkSuppliersContainerLength();
-            checkProductRows();
         });
+
 
 
         $(document).on('click', '.add-product-btn', function() {
-            const $productRowTemplate = $(this).closest('.product-container').find('.product-row')
-                .last();
-            const newRow = $productRowTemplate.clone();
+            @php
+                $viewPath = 'components.purchase-request.product.product.index';
+                $viewWithParams = view($viewPath, compact('productCategories'));
+            @endphp
+            const newRow = $(@json($viewWithParams->render()));
+            const $currentSupplierBlock = $(this).closest('.supplier-block');
+
             newRow.find(
                 'select[name^="purchase_request_products"], input[name^="purchase_request_products"]'
             ).each(function() {
-                const oldName = $(this).attr('name');
+                const lastFoundClass = Array.from(this.classList).at(-1);
+                const $lastProductRow = $currentSupplierBlock.find('.product-row').last();
+                const oldName = $lastProductRow.find('.' + lastFoundClass).last().attr('name');
                 const regexNewName = /\[products\]\[(\d+)\]/;
                 const lastIndex = Number(oldName.match(regexNewName).at(1));
                 const newName = oldName.replace(regexNewName, `[products][${lastIndex + 1}]`);
@@ -1048,6 +1111,8 @@
             newRow.find("input, select").val("");
             newRow.find('.select2-container').remove();
             newRow.find('.select2-me').select2();
+
+            newRow.find('[data-rule-required]').makeRequired();
 
             $(this).siblings('.product-row').last().after(newRow);
             newRow.find('.delete-product').removeAttr('hidden');
@@ -1061,8 +1126,7 @@
             checkProductRows();
         });
 
-        // salvar rascunho ou
-
+        // salvar rascunho ou enviar
         const $btnSubmitRequest = $('.btn-submit-request');
         const $sendAction = $('#action');
 

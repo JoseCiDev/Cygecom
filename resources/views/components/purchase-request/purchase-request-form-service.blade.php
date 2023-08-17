@@ -127,7 +127,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="form-check" class="control-label" style="padding-right:10px;">
-                            Contrato se enquadra na categoria COMEX?
+                            Este serviço será importado (COMEX)?
                         </label>
                         <fieldset data-rule-required="true">
                             <div class="row">
@@ -158,13 +158,10 @@
                             Motivo da solicitação
                         </label>
                         <textarea data-rule-required="true" minlength="20" name="reason" id="reason" data-cy="reason" rows="4"
-                            placeholder="Ex: Ar condicionado da sala de reuniões do atrium apresenta defeitos de funcionamento"
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
                     <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
-                        <p>* Por favor, forneça uma breve descrição do motivo pelo qual você está solicitando esta
-                            compra.
-                        </p>
+                        <p>*Informe o motivo pelo qual você está solicitando esta contratação </p>
                     </div>
                 </div>
 
@@ -174,12 +171,11 @@
                         <label for="description" class="control-label">Descrição</label>
                         <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
                             rows="4"
-                            placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
+                            placeholder="Ex.: Contratação de serviço para conserto de uma máquina da produção que está apresentando defeitos."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
                     <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
-                        <p>* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação.
-                        </p>
+                        <p>*Descreva com detalhes o tipo de serviço que está solicitando.</p>
                     </div>
                 </div>
 
@@ -237,8 +233,8 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="support_links" class="control-label">Links de apoio / sugestão</label>
-                        <textarea placeholder="Adicone um ou mais links válidos para apoio ou sugestão." rows="3" name="support_links"
-                            id="support_links" data-cy="support_links" class="form-control text-area no-resize">{{ isset($purchaseRequest->support_links) && $purchaseRequest->support_links ? $purchaseRequest->support_links : '' }}</textarea>
+                        <textarea rows="3" name="support_links" id="support_links" data-cy="support_links"
+                            class="form-control text-area no-resize">{{ isset($purchaseRequest->support_links) && $purchaseRequest->support_links ? $purchaseRequest->support_links : '' }}</textarea>
                     </div>
                 </div>
 

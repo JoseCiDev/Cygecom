@@ -118,7 +118,7 @@
                     <input type="text" id="contract-title" data-cy="contract-title" name="contract[name]"
                         placeholder="Digite aqui um nome para este contrato... Ex: Contrato Work DB - 07/23 até 07/24"
                         class="form-control" data-rule-required="true" minlength="15"
-                        value="@if (isset($purchaseRequest->contract) && $purchaseRequest->contract->name) {{ $purchaseRequest->contract->name }} @endif">
+                        value="@if(isset($purchaseRequest->contract) && $purchaseRequest->contract->name){{ $purchaseRequest->contract->name }}@endif">
                 </div>
             </div>
         </div>
@@ -167,7 +167,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="form-check" class="control-label" style="padding-right:10px;">
-                            Contrato se enquadra na categoria COMEX?
+                            Este contrato será importado (COMEX)?
                         </label>
                         <fieldset data-rule-required="true">
                             <div class="row">
