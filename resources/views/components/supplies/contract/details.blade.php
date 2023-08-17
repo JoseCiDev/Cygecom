@@ -1,5 +1,5 @@
 @php
-    use \App\Enums\PaymentTerm;
+    use \App\Enums\{PaymentTerm, LogAction};
 
     if (isset($contract)) {
         $request = $contract;
@@ -57,19 +57,23 @@
     <div class="request-details">
         <div class="details-content">
             <header class="request-details-header">
-                <h1>Solicitação de produto nº {{ $request->id }}</h1>
+                <h1 class="text-highlight"><strong>Solicitação de contrato nº {{ $request->id }}</strong></h1>
                 <div>
                     <span>Criado em: {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</span> |
                     <span>Atualizado: {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}</span>
                 </div>
-                <p>Produto(s) desejado(s) para:
+                <h4 class="text-highlight"><strong>Data desejada:</strong>
                     {{ $request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : '---' }}
-                </p>
+                </h4>
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Responsável pela solicitação: {{$request->suppliesUser?->person->name ?? '---'}} / {{$request->suppliesUser?->email ?? "---"}}</h4>
+                        <br>
+                        <h4 class="text-highlight"><strong>Responsável pela solicitação (suprimentos):</strong> {{$request->suppliesUser?->person->name ?? '---'}} / {{$request->suppliesUser?->email ?? "---"}}</h4>
+                        <br>
+                        <h4 class="text-highlight"><strong>Responsável pela contratação:</strong> {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }} </h4>
+                        <br>
                     </div>
-               </div>
+                </div>
             </header>
             <main>
                 <div class="row">
@@ -86,8 +90,8 @@
                                     <div class="tab-content padding">
                                         <p><strong>Status de aprovação:</strong> {{ $request->status->label() }}</p>
                                         <p><strong>Tipo de solicitação:</strong> {{ $request->type->label() }}</p>
-                                        <p><strong>Contratação deve ser por:</strong>
-                                            {{ $request->is_supplies_contract ? 'Suprimentos' : 'Centro de custo solicitante' }}
+                                        <p><strong>Responsável pela contratação:</strong>
+                                            {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }}
                                         </p>
                                         <p><strong>COMEX:</strong> {{ $request->is_comex ? 'Sim' : 'Não' }}</p>
                                         <p>
@@ -163,6 +167,8 @@
                                 </div>
                             </div>
 
+                            <br>
+
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <h4><i class="fa fa-money"></i> <strong>Centro de custo e rateio</strong></h4>
@@ -208,6 +214,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <br>
 
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
@@ -266,6 +274,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <br>
 
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
@@ -397,37 +407,40 @@
                                             </div>
                                         </div>
 
-                                        <div class="request-details-content-box-contract">
-                                            <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
-                                            @foreach ($request->contract->installments as $installmentIndex => $installment)
-                                            <div class="request-details-content-box-contract-installment">
-                                                <div class="row">
-                                                    <p class="col-xs-3">
-                                                        <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
-                                                    </p>
-                                                    <p class="col-xs-3">
-                                                        <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
-                                                    </p>
-                                                    <p class="col-xs-3">
-                                                        <strong>Serviço executado:</strong> {{ $installment->already_provided ? 'Sim' : 'Não' }}
-                                                    </p>
-                                                </div>
-                                                <div class="row">
-                                                    <p class="col-xs-3">
-                                                        <strong>Valor:</strong> {{ $installment->value }}
-                                                    </p>
-                                                    <p class="col-xs-3">
-                                                        <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
-                                                    </p>
-                                                    <p class="col-xs-6">
-                                                        <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            @endforeach
-                                        </div>
-
                                     </div>
+
+                                    <br>
+
+                                    <div class="request-details-content-box-contract">
+                                        <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
+                                        @foreach ($request->contract->installments as $installmentIndex => $installment)
+                                        <div class="request-details-content-box-contract-installment">
+                                            <div class="row">
+                                                <p class="col-xs-3">
+                                                    <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
+                                                </p>
+                                                <p class="col-xs-3">
+                                                    <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
+                                                </p>
+                                                <p class="col-xs-3">
+                                                    <strong>Serviço executado:</strong> {{ $installment->already_provided ? 'Sim' : 'Não' }}
+                                                </p>
+                                            </div>
+                                            <div class="row">
+                                                <p class="col-xs-3">
+                                                    <strong>Valor:</strong> {{ $installment->value }}
+                                                </p>
+                                                <p class="col-xs-3">
+                                                    <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
+                                                </p>
+                                                <p class="col-xs-6">
+                                                    <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    
                                 </div>
                             </div>
 
@@ -469,5 +482,14 @@
                 <p class="support_links" style="max-height: 300px; overflow:auto">{!! $supportLinks !!}</p>
             </div>
         </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-12">
+                <x-SuppliesLogList :purchaseRequestId="$request->id" />
+            </div>
+        </div>
+        
     </div>
 </x-app>

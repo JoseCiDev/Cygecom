@@ -45,8 +45,7 @@
             <div class="form-group">
                 <label for="name" class="control-label">Nome fantasia</label>
                 <input value="{{ $supplier?->name }}" type="text" name="name" id="name" data-cy="name"
-                    placeholder="Informe o nome fantasia deste fornecedor" class="form-control"
-                    data-rule-required="true" data-rule-minlength="3">
+                    placeholder="Informe o nome fantasia deste fornecedor" class="form-control" data-rule-minlength="3">
             </div>
         </div>
     </div>

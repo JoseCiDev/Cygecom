@@ -1,5 +1,7 @@
 <input value="{{ $cnpj }}" type="text" name="{{$name}}" id="{{$id}}" data-cy="{{$dataCy}}" placeholder="00.000.000/0000-00" 
-class="form-control cpf-cnpj" data-rule-required="true" minLength="18">
+class="form-control cpf-cnpj" minLength="18">
+<span class="cnpj-span-warning">CNPJ inválido!</span>
+<input type="hidden" id="cnpj-validator" value="" required data-rule-required="true">
 
 <script>
     const $identificationDocument = $('.cpf-cnpj');
@@ -44,12 +46,18 @@ class="form-control cpf-cnpj" data-rule-required="true" minLength="18">
     }
 
     $(() => {
+        const $inputCnpjValidator = $('#cnpj-validator');
+        const $cnpjSpanWarning = $('.cnpj-span-warning');
         $('#{{$id}}').on('input', function () {
             const cnpj = $(this).val();
             if (cnpj.length === 18) {
                 const isValid = validateCNPJ(cnpj);
                 if(!isValid) {
-                    $(this).val('');
+                    $inputCnpjValidator.val('');
+                    $cnpjSpanWarning.show();
+                } else {
+                    $inputCnpjValidator.val(true);
+                     $cnpjSpanWarning.hide();
                 }
             } 
         });

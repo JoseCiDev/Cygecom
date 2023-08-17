@@ -248,7 +248,7 @@ class PurchaseRequestService extends ServiceProvider
     {
         DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
-            $this->saveService($purchaseRequest->id, $data);
+            $this->saveService($purchaseRequest->id, $data, $purchaseRequest->service->id);
         });
     }
 
@@ -272,7 +272,7 @@ class PurchaseRequestService extends ServiceProvider
     {
         DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
-            $this->saveContract($purchaseRequest->id, $data);
+            $this->saveContract($purchaseRequest->id, $data, $purchaseRequest->contract->id);
         });
     }
 
@@ -337,7 +337,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar service.
      * Recomendado executar com o método específico registerServiceRequest ou updateServiceRequest
      */
-    private function saveService(int $purchaseRequestId, array $data): void
+    private function saveService(int $purchaseRequestId, array $data, ?int $serviceId = null): void
     {
         if (!isset($data['type']) && $data['type'] !== "service") {
             return;
@@ -355,7 +355,7 @@ class PurchaseRequestService extends ServiceProvider
             $serviceData['payment_info_id'] = $paymentInfoResponse->id;
         }
 
-        $service = Service::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $supplierId], $serviceData);
+        $service = Service::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'id' => $serviceId], $serviceData);
 
         $existingInstallments = ServiceInstallment::where('service_id', $service->id)->get();
 
@@ -425,7 +425,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar contrato.
      * Recomendado executar com o método específico registerContractRequest ou updateContractRequest
      */
-    private function saveContract(int $purchaseRequestId, array $data)
+    private function saveContract(int $purchaseRequestId, array $data, ?int $contractId = null)
     {
         if (!isset($data['type']) && $data['type'] !== "contract") {
             return;
@@ -443,8 +443,7 @@ class PurchaseRequestService extends ServiceProvider
             $contractData['payment_info_id'] = $paymentInfoResponse->id;
         }
 
-        $contract = Contract::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'supplier_id' => $supplierId], $contractData);
-
+        $contract = Contract::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'id' => $contractId], $contractData);
         $existingInstallments = ContractInstallment::where('contract_id', $contract->id)->get();
 
         $this->updateNumberOfInstallments($existingInstallments, $contractsInstallmentsData);

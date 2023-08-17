@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Supplier;
-use App\Models\SupplierLog;
+use App\Enums\LogAction;
+use App\Models\{Supplier, SupplierLog};
 use Illuminate\Support\Facades\Auth;
 
 class SupplierObserver
@@ -32,7 +32,7 @@ class SupplierObserver
             'senior_code' => $supplier->senior_code,
         ];
 
-        $this->createLog('create', $supplier, $changes);
+        $this->createLog(LogAction::CREATE, $supplier, $changes);
     }
 
     /**
@@ -74,19 +74,24 @@ class SupplierObserver
             $isDelete = $supplier->wasChanged('deleted_at') && $supplier->deleted_at !== null;
 
             if ($isDelete) {
-                $this->createLog('soft-delete', $supplier, $changes);
+                $this->createLog(LogAction::DELETE, $supplier, $changes);
             } else {
-                $this->createLog('update', $supplier, $changes);
+                $this->createLog(LogAction::UPDATE, $supplier, $changes);
             }
         }
     }
 
-    private function createLog($action, $supplier, ?array $changes = null)
+    private function createLog(LogAction $action, $supplier, ?array $changes = null)
     {
+        $userId = Auth::id();
+        if (!$userId) {
+            return;
+        }
+
         SupplierLog::create([
             'changed_supplier_id' => $supplier->id,
-            'action' => $action,
-            'user_id' => Auth::id(),
+            'action' => $action->value,
+            'user_id' => $userId,
             'changes' => $changes,
         ]);
     }

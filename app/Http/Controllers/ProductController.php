@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Support\Facades\DB;
-use App\Models\PurchaseRequestFile;
 use App\Enums\PurchaseRequestStatus;
 use Illuminate\Http\{RedirectResponse, Request};
-use App\Models\{Company, CostCenter, PurchaseRequest};
+use App\Models\{Company, CostCenter, PurchaseRequest, PurchaseRequestFile};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 
 class ProductController extends Controller
@@ -41,7 +40,7 @@ class ProductController extends Controller
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
-                $msg = "Solicitação de produto criada e enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de produto nº $purchaseRequest->id criada e enviada ao setor de suprimentos responsável!";
             }
 
             DB::commit();

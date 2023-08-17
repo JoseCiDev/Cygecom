@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Support\Facades\DB;
-use App\Models\PurchaseRequestFile;
 use App\Enums\PurchaseRequestStatus;
 use Illuminate\Http\{RedirectResponse, Request};
-use App\Models\{Company, CostCenter, PurchaseRequest};
+use App\Models\{Company, CostCenter, PurchaseRequest, PurchaseRequestFile};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 
 class ContractController extends Controller
@@ -45,7 +44,7 @@ class ContractController extends Controller
             // MUDAR
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
-                $msg = "Solicitação de contrato criada e enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de contrato nº $purchaseRequest->id criada e enviada ao setor de suprimentos responsável!";
             }
 
             $route = 'requests.own';
