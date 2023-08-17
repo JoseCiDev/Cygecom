@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "target": "es5",
+    "lib": ["es5", "dom"]
+  },
+  "include": [
+    "**/*.ts",
+    "./support/cypress.d.ts"
+  ]
+}

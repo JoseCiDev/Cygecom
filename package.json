@@ -1,0 +1,19 @@
+{
+  "name": "cygecom",
+  "version": "1.0.0",
+  "description": "Testes automatizados em Gerenciador de Compras",
+  "main": "index.ts",
+  "scripts": {
+    "test": "npx cypress run"
+  },
+  "author": "Cypress",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "cypress": "^12.17.3",
+    "faker": "^5.5.3",
+    "faker-br": "^0.4.1",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6"
+  }
+}
