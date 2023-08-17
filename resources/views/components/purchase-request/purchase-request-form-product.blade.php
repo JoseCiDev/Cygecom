@@ -1028,7 +1028,7 @@
             $newContainer.find('.select2-container').remove();
             $newContainer.find('.select2-me').select2();
 
-            $newContainer.find('[data-rule-required]').makeRequired();
+            //$newContainer.find('select.select-supplier').makeRequired();
 
             $('.supplier-block').last().after($newContainer);
             $newContainer.find('.delete-supplier').removeAttr('hidden');
@@ -1039,6 +1039,12 @@
             const $selectSupplier = $newContainer.find('select').first();
 
             addBtnSupplierSelect($selectSupplier);
+
+            if (!$radioIsContractedBySupplies.is(':checked')) {
+                return;
+            }
+
+            $radioIsContractedBySupplies.filter(':checked').trigger('change');
         });
 
         $(document).on('click', '.delete-supplier', function() {
