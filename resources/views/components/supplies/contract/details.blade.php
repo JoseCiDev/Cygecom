@@ -314,15 +314,15 @@
                                                 </p>
                                                 <p>
                                                     <strong>Local do serviço:</strong>
-                                                    {{ $request->contract->local_service ?? '---' }}
+                                                    {{ $request?->local_description ?? '---' }}
                                                 </p>
                                                 <p>
                                                     <strong>Valor total do contrato:</strong>
-                                                    {{ $request->contract->total_ammount ?? '---' }}
+                                                    {{ $request->contract?->amount ?? '---' }}
                                                 </p>
                                                 <p>
                                                     <strong>Qtd. de parcelas:</strong>
-                                                    {{ $request->contract->quantity_of_installments ?? '---' }}
+                                                    {{ $request->contract?->installments->count() ?? '---' }}
                                                 </p>
                                                 <p>
                                                     <strong>Representante:</strong>
@@ -402,7 +402,7 @@
                                                 <hr>
                                                 <p>
                                                     <strong>Descrição: </strong>
-                                                    {{ $request->contract->description ?? '---' }}
+                                                    {{ $request?->description ?? '---' }}
                                                 </p>
                                             </div>
                                         </div>

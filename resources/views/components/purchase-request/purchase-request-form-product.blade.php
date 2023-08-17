@@ -238,7 +238,7 @@
                     <div class="form-group">
                         <label for="observation" class="control-label"> Observação </label>
                         <textarea name="observation" id="request-observation" data-cy="request-observation" rows="3"
-                            placeholder="Informações complementares desta solicitação" class="form-control text-area no-resize"></textarea>
+                            placeholder="Informações complementares desta solicitação" class="form-control text-area no-resize">{{ $purchaseRequest?->observation ?? null }}</textarea>
                     </div>
                 </div>
             </div>
