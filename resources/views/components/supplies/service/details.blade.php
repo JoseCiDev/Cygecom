@@ -322,7 +322,7 @@
                                         <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações de pagamento</strong></h4>
                                         <p>
                                             <strong>Tipo do pagamento:</strong>
-                                            {{ $request->service->paymentInfo->payment_method->label() ?? '---' }}
+                                            {{ $request->service->paymentInfo->payment_method?->label() ?? '---' }}
                                         </p>
                                         <p>
                                             <strong>Detalhes:</strong>
@@ -341,7 +341,7 @@
                                     <hr>
                                     <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Descrição</strong></h4>
                                     <p>
-                                        <strong>Descrição do serviço:</strong> {{ $request->service->description ?? '---' }}
+                                        <strong>Descrição do serviço:</strong> {{ $request->description ?? '---' }}
                                     </p>
                                 </div>
                             </div>

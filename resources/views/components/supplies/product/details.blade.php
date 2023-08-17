@@ -210,27 +210,15 @@
                                 <hr>
                                 <div class="tab-content">
                                     <div class="row">
-                                        <div class="col-sm-4">
-                                            <p>
-                                                <strong>Vendedor:</strong>
-                                                {{ $request->product->seller ?? '---' }}
-                                            </p>
-                                            <p>
-                                                <strong>Celular de contato:</strong>
-                                                {{ $request->product->phone ?? '---' }}
-                                            </p>
-                                        </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-12">
                                             <p>
                                                 <strong>Nº de parcelas:</strong>
                                                 {{ $request->product->quantity_of_installments ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>Valor total:</strong>
-                                                R$ {{ $request->product->amout ?? '---' }}
+                                                R$ {{ $request->product->amount ?? '---' }}
                                             </p>
-                                        </div>
-                                        <div class="col-sm-4">
                                             <p>
                                                 <strong>Condição de pagamento: </strong>
                                                 {{ $paymentTermProduct?->label() ?? '---' }}
