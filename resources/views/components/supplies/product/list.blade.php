@@ -77,12 +77,17 @@
                                     >
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    @php $isToShow = !(bool)$product->suppliesUser?->person->name &&  !(bool)$product->responsibility_marked_at @endphp
+                                    @php
+                                        $existSuppliesUser = (bool) $product->suppliesUser?->person->name;
+                                        $existResponsibility = (bool) $product->responsibility_marked_at;
+                                        $isOwnUserRequest = $product->user->id === auth()->user()->id;
+                                        $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest 
+                                     @endphp
                                     <a href="{{route('supplies.product.detail', ['id' => $product->id])}}"
                                         class="btn btn-link openDetail"
                                         rel="tooltip"
                                         title="Abrir"
-                                        isToShow="{{$isToShow ? 'true' : 'false'}}"
+                                        data-is-to-show="{{$isToShow ? 'true' : 'false'}}"
                                         data-cy="btn-open-details-{{$index}}"
                                     >
                                         <i class="fa fa-external-link"></i>
