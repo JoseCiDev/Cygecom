@@ -1,8 +1,8 @@
 
 @props([
-    'supplierIndex' => null,
-    'productCategories',
-    'suppliers',
+    'supplierIndex' => 0,
+    'productCategories' => collect(),
+    'suppliers' => collect(),
     'supplierId' => null,
     'products' => null,
     'isCopy' => false
