@@ -1075,7 +1075,8 @@
             const $supplierBlock = $(this).closest('.supplier-block');
 
             bootbox.confirm({
-                message: "Ao remover este fornecedor, todos os produtos associados serão exlcuídos. Confirmar exclusão?",
+                title: 'Atenção!',
+                message: "Ao remover este fornecedor, todos os produtos associados serão excluídos. Esta ação não poderá ser desfeita.",
                 buttons: {
                     confirm: {
                         label: 'Excluir',
