@@ -29,7 +29,6 @@ class ServiceInstallment extends Model
         'value',
         'observation',
         'status',
-        'already_provided',
         'service_id',
         'updated_by',
         'deleted_by',

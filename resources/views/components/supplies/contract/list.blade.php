@@ -37,7 +37,6 @@
                             <th>Fornecedor</th>
                             <th class="hidden-1280">Qualif. fornecedor</th>
                             <th>Condição de pgto.</th>
-                            <th>Progresso</th>
                             <th class="hidden-1024">Contratação por</th>
                             <th class="hidden-1440">Grupo de custo</th>
                             <th class="hidden-1440">Data desejada</th>
@@ -63,7 +62,6 @@
                                 <td class="hidden-1280">{{$contract->contract->supplier?->qualification->label() ?? '---'}}</td>
 
                                 <td>{{$contract->contract->paymentInfo?->payment_terms?->label() ?? '---'}}</td>
-                                <td>{{$contract->contract->already_provided ? 'Executado' : 'Não executado'}}</td>
                                 <td class="hidden-1024">{{$contract->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1440">{{$concatenatedGroups}}</td>
 
