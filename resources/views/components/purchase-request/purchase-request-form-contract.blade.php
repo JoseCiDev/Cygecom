@@ -537,7 +537,7 @@
                         <div class="form-group">
                             <label for="phone-number" class="control-label">Telefone</label>
                             <input type="text" name="contract[phone]" id="phone-number" data-cy="phone-number"
-                                placeholder="(00) 0000-0000" class="form-control mask_phone"
+                                placeholder="(00) 0000-0000" class="form-control"
                                 value="{{ $purchaseRequest?->contract?->phone ?? null }}">
                         </div>
                     </div>
@@ -600,6 +600,12 @@
 </div>
 
 <script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
+<script>
+    $(() => {
+        const $phoneNumber = $('#phone-number');
+        $phoneNumber.imask({ mask: [ {  mask: '(00) 0000-0000' }, { mask: '(00) 00000-0000' } ] });
+    });
+</script>
 
 <script>
     $(document).ready(function() {
