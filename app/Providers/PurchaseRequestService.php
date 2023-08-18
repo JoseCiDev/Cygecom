@@ -50,6 +50,7 @@ class PurchaseRequestService extends ServiceProvider
             'updatedByUser',
             'service.paymentInfo',
             'purchaseRequestProduct.category',
+            'purchaseRequestProduct.supplier',
             'contract.installments',
             'product.installments'
         ])->whereNull('deleted_at')->get();
@@ -71,6 +72,7 @@ class PurchaseRequestService extends ServiceProvider
             'updatedByUser',
             'service.paymentInfo',
             'purchaseRequestProduct.category',
+            'purchaseRequestProduct.supplier',
             'contract.installments',
             'product.installments'
         ])->whereNull('deleted_at')->where('user_id', $id)->get();
@@ -90,6 +92,7 @@ class PurchaseRequestService extends ServiceProvider
             'updatedByUser',
             'service.paymentInfo',
             'purchaseRequestProduct.category',
+            'purchaseRequestProduct.supplier',
             'contract.installments',
             'product.installments'
         ])->whereNull('deleted_at')->where('status', $status->value);
@@ -109,6 +112,7 @@ class PurchaseRequestService extends ServiceProvider
             'updatedByUser',
             'service.paymentInfo',
             'purchaseRequestProduct.category',
+            'purchaseRequestProduct.supplier',
             'contract.installments',
             'product.installments'
         ])->whereNull('deleted_at')->where('id', $id)->first();
