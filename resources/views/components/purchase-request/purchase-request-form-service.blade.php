@@ -509,6 +509,8 @@
         const $radioIsContractedBySupplies = $('.radio-who-wants');
         const $paymentBlock = $('.payment-block');
         const $paymentTerm = $('#payment-terms');
+        const $serviceAlreadyProvided = $('.radio-already-provided')
+        const $desiredDate = $('#desired-date');
 
         const $editValueInputModal = $('#edit-value');
         const $editValueHiddenModal = $('#edit-value-hidden');
@@ -762,14 +764,19 @@
         $radioIsContractedBySupplies.on('change', function() {
             const isContractedBySupplies = $(this).val() === "1";
             const $suppliersBlock = $('.suppliers-block');
+            const supplierSelect = $suppliersBlock.find('select');
+
+            // muda label fornecedor
             const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
             const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
-
-            // muda label
-            const supplierSelect = $suppliersBlock.find('select');
             const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
-
             supplierSelect.siblings(`label[for="${supplierSelect.attr('name')}"]`).text(newLabel);
+
+            // muda label data desejada
+            const labelDesiredDateAlreadyProvided = "Data da prestação do serviço";
+            const labelDesiredDateDefault = "Data desejada do serviço";
+            const newLabelDate = !isContractedBySupplies ? labelDesiredDateAlreadyProvided : labelDesiredDateDefault;
+            $desiredDate.siblings('label').text(newLabelDate);
 
             // desabilita pagamento
             $paymentBlock.find('input, textarea').prop('readonly', isContractedBySupplies);
@@ -790,9 +797,10 @@
             supplierSelect.makeRequired();
         });
 
-        if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
+        if (!hasSentRequest || $radioIsContractedBySupplies.is(':checked')) {
             $radioIsContractedBySupplies.filter(':checked').trigger('change');
         }
+
 
         $('#installments-table-striped tbody').on('click', 'tr', function(event) {
             event.preventDefault();

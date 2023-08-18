@@ -10,14 +10,12 @@
     $recurrenceSelected = $purchaseRequest?->contract?->recurrence ?? null;
     $isFixedPayment = isset($purchaseRequest->contract) && $purchaseRequest->contract->is_fixed_payment;
 
-
     $selectedPaymentMethod = null;
     $selectedPaymentTerm = null;
     if (isset($purchaseRequest->contract) && isset($purchaseRequest->contract->paymentInfo)) {
         $selectedPaymentMethod = $purchaseRequest->contract->paymentInfo->payment_method;
         $selectedPaymentTerm = $purchaseRequest->contract->paymentInfo->payment_terms;
     }
-
 
     // verifica status para desabilitar campos para o usuário
     $requestAlreadySent = $purchaseRequest?->status !== PurchaseRequestStatus::RASCUNHO;
@@ -118,7 +116,7 @@
                     <input type="text" id="contract-title" data-cy="contract-title" name="contract[name]"
                         placeholder="Digite aqui um nome para este contrato... Ex: Contrato Work DB - 07/23 até 07/24"
                         class="form-control" data-rule-required="true" minlength="15"
-                        value="@if(isset($purchaseRequest->contract) && $purchaseRequest->contract->name){{ $purchaseRequest->contract->name }}@endif">
+                        value="@if (isset($purchaseRequest->contract) && $purchaseRequest->contract->name) {{ $purchaseRequest->contract->name }} @endif">
                 </div>
             </div>
         </div>
@@ -156,7 +154,8 @@
                                     <input name="is_supplies_contract" value="0" class="radio-who-wants"
                                         type="radio" required id="is-area-contract" data-cy="is-area-contract"
                                         style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label" for="is-area-contract"> Área solicitante (Eu)</label>
+                                    <label class="form-check-label" for="is-area-contract"> Área solicitante
+                                        (Eu)</label>
                                 </div>
                             </div>
                         </fieldset>
@@ -311,8 +310,8 @@
                         <div class="form-group">
                             <label class="control-label">Condição de pagamento</label>
                             <select name="contract[payment_info][payment_terms]" id="payment-terms"
-                                data-cy="payment-terms" class='select2-me'
-                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
+                                data-cy="payment-terms" class='select2-me' style="width:100%; padding-top:2px;"
+                                data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentTerms as $paymentTerm)
                                     <option value="{{ $paymentTerm->value }}" @selected($paymentTerm->value === $selectedPaymentTerm?->value)>
@@ -433,7 +432,7 @@
                     </div>
 
                     <input type="hidden" value="{{ $purchaseRequest?->contract?->paymentInfo?->id ?? null }}"
-                    name="contract[payment_info][id]" data-cy="contract[payment_info][id]">
+                        name="contract[payment_info][id]" data-cy="contract[payment_info][id]">
 
                     <input type="hidden" value="" name="contract[quantity_of_installments]"
                         id="qtd-installments" data-cy="qtd-installments">
@@ -918,9 +917,6 @@
         const $paymentBlock = $('.payment-block');
         const $suppliersBlock = $('.suppliers-block');
 
-        const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
-        const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
-
         // desabilita pagamento ao entrar em register
         $paymentBlock
             .find('input, textarea')
@@ -938,9 +934,17 @@
         $radioIsContractedBySupplies.on('change', function() {
             const isContractedBySupplies = $(this).val() === "1";
 
-            // muda label
+            // muda label fornecedor
+            const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
+            const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
             const supplierSelect = $suppliersBlock.find('select');
             const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
+
+            // muda label data desejada
+            const labelDesiredDateAlreadyProvided = "Data da contratação";
+            const labelDesiredDateDefault = "Data desejada da contratação";
+            const newLabelDate = !isContractedBySupplies ? labelDesiredDateAlreadyProvided : labelDesiredDateDefault;
+            $desiredDate.siblings('label').text(newLabelDate);
 
             supplierSelect.siblings('label[for="' + supplierSelect.attr('name') + '"]').text(newLabel);
 
@@ -972,7 +976,7 @@
             supplierSelect.makeRequired();
         });
 
-        if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
+        if (!hasSentRequest || $radioIsContractedBySupplies.is(':checked')) {
             $radioIsContractedBySupplies.filter(':checked').trigger('change');
         }
 

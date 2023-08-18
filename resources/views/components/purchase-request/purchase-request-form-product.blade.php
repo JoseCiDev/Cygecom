@@ -755,6 +755,12 @@
 
             supplierSelect.before().removeAttr('data-rule-required');
 
+            // muda label data desejada
+            const labelDesiredDateAlreadyProvided = "Data da entrega do produto";
+            const labelDesiredDateDefault = "Data desejada entrega do produto";
+            const newLabelDate = !isContractedBySupplies ? labelDesiredDateAlreadyProvided : labelDesiredDateDefault;
+            $desiredDate.siblings('label').text(newLabelDate);
+
             // desabilita pagamento
             $paymentBlock
                 .find('input, textarea')
@@ -777,7 +783,7 @@
             supplierSelect.makeRequired();
         });
 
-        if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
+        if (!hasSentRequest || $radioIsContractedBySupplies.is(':checked')) {
             $radioIsContractedBySupplies.filter(':checked').trigger('change');
         }
 
