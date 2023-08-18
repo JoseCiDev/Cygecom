@@ -196,7 +196,7 @@
                 <div class="col-sm-6" style="margin-top:-12px;">
                     <div class="form-group product-input" id="product-input">
                         <label for="local-description" class="control-label">
-                            Local de entrega do produto
+                            Em qual sala/prédio ficará o produto solicitado
                         </label>
                         <input name="local_description"
                             value="@if (isset($purchaseRequest)) {{ $purchaseRequest->local_description }} @endif"
