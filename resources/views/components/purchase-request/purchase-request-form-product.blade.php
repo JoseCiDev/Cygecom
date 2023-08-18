@@ -755,7 +755,14 @@
 
             supplierSelect.before().removeAttr('data-rule-required');
 
-            // desabilita pagamento
+            // muda label data desejada
+            const labelDesiredDateAlreadyProvided = "Data da entrega do produto";
+            const labelDesiredDateDefault = "Data desejada entrega do produto";
+            const newLabelDate = !isContractedBySupplies ? labelDesiredDateAlreadyProvided :
+                labelDesiredDateDefault;
+            $desiredDate.siblings('label').text(newLabelDate);
+
+            // desabilita e limpa inputs pagamento
             $paymentBlock
                 .find('input, textarea')
                 .prop('readonly', isContractedBySupplies);
@@ -770,6 +777,14 @@
                 supplierSelect.closest('.form-group').removeClass('has-error');
                 $supplierBlock.find('.help-block').remove();
 
+                $paymentBlock
+                    .find('input, textarea')
+                    .val('');
+                $paymentBlock
+                    .find('select')
+                    .val('')
+                    .trigger('change.select2');
+
                 $installmentsTable.clear().draw();
 
                 return;
@@ -777,7 +792,7 @@
             supplierSelect.makeRequired();
         });
 
-        if (!hasSentRequest || $radioIsContractedBySupplies.filter(':checked').val() === "1") {
+        if (!hasSentRequest || $radioIsContractedBySupplies.is(':checked')) {
             $radioIsContractedBySupplies.filter(':checked').trigger('change');
         }
 
