@@ -317,7 +317,7 @@
                                                     {{ $request?->local_description ?? '---' }}
                                                 </p>
                                                 <p>
-                                                    <strong>Valor total do contrato:</strong>
+                                                    <strong>Valor total do contrato (R$):</strong>
                                                     {{ $request->contract?->amount ?? '---' }}
                                                 </p>
                                                 <p>
@@ -422,8 +422,8 @@
                                                 <p class="col-xs-3">
                                                     <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
                                                 </p>
-                                                <p class="col-xs-3">
-                                                    <strong>Serviço executado:</strong> {{ $installment->already_provided ? 'Sim' : 'Não' }}
+                                                <p class="col-xs-6">
+                                                    <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
                                                 </p>
                                             </div>
                                             <div class="row">
@@ -432,9 +432,6 @@
                                                 </p>
                                                 <p class="col-xs-3">
                                                     <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
-                                                </p>
-                                                <p class="col-xs-6">
-                                                    <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
                                                 </p>
                                             </div>
                                         </div>

@@ -238,8 +238,8 @@
                                             <p class="col-xs-3">
                                                 <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
                                             </p>
-                                            <p class="col-xs-3">
-                                                <strong>Serviço executado:</strong> {{ $installment->already_provided ? 'Sim' : 'Não' }}
+                                            <p class="col-xs-6">
+                                                <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
                                             </p>
                                         </div>
                                         <div class="row">
@@ -249,9 +249,7 @@
                                             <p class="col-xs-3">
                                                 <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
                                             </p>
-                                            <p class="col-xs-6">
-                                                <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
-                                            </p>
+                                            
                                         </div>
                                     </div>
                                     @endforeach

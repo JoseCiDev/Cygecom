@@ -224,15 +224,6 @@ class PurchaseRequestService extends ServiceProvider
     {
         $type = 'request-' . $purchcaseRequestType->value;
 
-        $uploadedFilesData = [];
-
-        foreach ($files as $index => $file) {
-            $uploadedFilesData[] = [
-                'file' => $file,
-                'original_name' => $originalNames[$index], // Pegar o nome original do arquivo a partir do array
-            ];
-        }
-
         $uploadFiles = S3::sendFiles($files, $type, $requestId);
 
         if (!$uploadFiles->success) {
