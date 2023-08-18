@@ -1,10 +1,10 @@
 $(() => {
-    const btnOpenDetail = $('.openDetail');
+    const $btnOpenDetail = $('.openDetail');
 
-    btnOpenDetail.on('click', function(e) {
-        e.preventDefault();
+    $(document).on('click', $btnOpenDetail.selector, function(event) {
+        event.preventDefault();
         const url = $(this).attr('href');
-        const isToShowString = $(this).attr('isToShow');
+        const isToShowString = $(this).data('is-to-show');
         const isToShow = JSON.parse(isToShowString);
         
         if(!isToShow) {
@@ -34,5 +34,5 @@ $(() => {
                 } 
             }
         });
-    });
+    })
 });
