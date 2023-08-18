@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Contracts\ValidatorServiceInterface;
-use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
@@ -315,15 +314,9 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'purchase_request_files.*.path.string' => 'O caminho do arquivo deve ser uma string.',
     ];
 
-    public function registerValidator(array $data)
+    public function registerValidator(array $data): \Illuminate\Contracts\Validation\Validator
     {
-        try {
-            $validator = Validator::make($data, $this->requiredRulesForUser, $this->requiredRulesForUserMessages);
-
-            return $validator;
-        } catch (Exception $error) {
-            return back()->withErrors($error->getMessage())->withInput();
-        }
+        return Validator::make($data, $this->requiredRulesForUser, $this->requiredRulesForUserMessages);
     }
 
     public function updateValidator(int $id, array $data)

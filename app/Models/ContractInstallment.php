@@ -29,7 +29,6 @@ class ContractInstallment extends Model
         'value',
         'observation',
         'status',
-        'already_provided',
         'contract_id',
         'updated_by',
         'deleted_by',

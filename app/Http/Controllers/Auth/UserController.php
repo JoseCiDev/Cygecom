@@ -7,8 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\{UserService, ValidatorService};
 use Exception;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Http\Request;
+use Illuminate\Http\{JsonResponse, Request};
 
 class UserController extends Controller implements UserControllerInterface
 {
@@ -32,17 +33,26 @@ class UserController extends Controller implements UserControllerInterface
      */
     public function create(array $data): User|string
     {
-        try {
-            $this->validator($data);
-            $user = $this->userService->registerUser($data);
-            session()->flash('success', "Usuário cadastrado com sucesso!");
+        $user = $this->userService->registerUser($data);
+        return $user->first();
+    }
 
-            return $user->first();
-        } catch (Exception $error) {
-            redirect()->back()->withErrors(['Não foi possível fazer o registro no banco de dados.', $error->getMessage()]);
-
-            return auth()->user();
+    public function register(Request $request)
+    {
+        $validator = $this->validator($request->all());
+        if ($validator->fails()) {
+            return redirect()->back()->withInput($request->all())->withErrors($validator->errors()->getMessages());
         }
+
+        event(new Registered($user = $this->create($request->all())));
+
+        session()->flash('success', "Usuário cadastrado com sucesso! E-mail: $request->email");
+
+        if ($response = $this->registered($request, $user)) {
+            return $response;
+        }
+
+        return $request->wantsJson() ? new JsonResponse([], 201) : redirect($this->redirectPath());
     }
 
     public function showRegistrationForm()
@@ -139,7 +149,8 @@ class UserController extends Controller implements UserControllerInterface
 
     /**
      * @abstract função necessária para sobreescrever validator padrão;
-     * @param array $data Recebe array da request para validação;
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator 
      */
     private function validator(array $data)
     {

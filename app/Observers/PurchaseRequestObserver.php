@@ -19,8 +19,21 @@ class PurchaseRequestObserver
      */
     public function created(PurchaseRequest $purchaseRequest): void
     {
+        $changes = [
+            'type' => $purchaseRequest->type,
+            'is_comex' => $purchaseRequest->is_comex,
+            'local_description' => $purchaseRequest->local_description,
+            'is_supplies_contract' => $purchaseRequest->is_supplies_contract,
+            'reason' => $purchaseRequest->reason,
+            'user_id' => $purchaseRequest->user_id,
+            'description' => $purchaseRequest->description,
+            'observation' => $purchaseRequest->observation,
+            'desired_date' => $purchaseRequest->desired_date,
+            'support_links' => $purchaseRequest->support_links,
+        ];
+
         $this->sendEmail($purchaseRequest);
-        $this->createLog(LogAction::CREATE, $purchaseRequest);
+        $this->createLog(LogAction::CREATE, $purchaseRequest, $changes);
     }
 
     /**

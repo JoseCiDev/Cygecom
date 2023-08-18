@@ -52,10 +52,9 @@
         <div class="col-sm-2">
             <div class="form-group" style="margin-top:-10px">
                 <label for="qtd" class="control-label">Quantidade</label>
-                <input data-rule-required="true"
-                    name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][quantity]"
-                    data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][quantity]"
-                    type="number" class="form-control product-quantity" value="{{ $product->quantity ?? null }}">
+                <input min="1" max="10000" step="1" data-rule-required="true" type="text" class="form-control product-quantity" value="{{ $product->quantity ?? null }}"
+                        name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][quantity]"
+                        data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][quantity]">
             </div>
         </div>
         {{-- COR --}}

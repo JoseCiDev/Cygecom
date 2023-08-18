@@ -536,7 +536,7 @@
                         <div class="form-group">
                             <label for="phone-number" class="control-label">Telefone</label>
                             <input type="text" name="contract[phone]" id="phone-number" data-cy="phone-number"
-                                placeholder="(00) 0000-0000" class="form-control mask_phone"
+                                placeholder="(00) 0000-0000" class="form-control"
                                 value="{{ $purchaseRequest?->contract?->phone ?? null }}">
                         </div>
                     </div>
@@ -599,6 +599,12 @@
 </div>
 
 <script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
+<script>
+    $(() => {
+        const $phoneNumber = $('#phone-number');
+        $phoneNumber.imask({ mask: [ {  mask: '(00) 0000-0000' }, { mask: '(00) 00000-0000' } ] });
+    });
+</script>
 
 <script>
     $(document).ready(function() {
@@ -789,10 +795,6 @@
             order: [
                 [0, 'desc']
             ],
-            // createdRow: function(row, data, dataIndex) {
-            //     const hiddenFormattedDate = $(row).data('hidden-date');
-            //     $(row).attr('data-hidden-date', hiddenFormattedDate);
-            // }
         });
 
         const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
@@ -1073,7 +1075,7 @@
             const observation = $('#observation').val();
 
             const installmentModalData = {
-                expireDateFormatted,
+                'expire_date': expireDateFormatted,
                 value,
                 observation,
                 status,
@@ -1087,6 +1089,8 @@
 
             $(this).find('input, select').val('');
             $(this).find('textarea').val('');
+
+            $('#status').val('').trigger('change');
 
             $('#modal-add-installment').modal('hide');
         });
