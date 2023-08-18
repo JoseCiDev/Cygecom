@@ -38,10 +38,10 @@ $(() => {
         }
 
         const totalFileSizeMB = totalFileSize / (1024 * 1024);
-        const qtdFillable = getFilesQtdFillable(input);
+        let qtdFillable = getFilesQtdFillable(input);
 
-        const infoFilesMessage = `Você já anexou ${maxFilesQtd - qtdFillable} arquivo(s). Ainda é possível adicionar mais ${qtdFillable} anexo(s).`;
-        const infoFilesMessageLimit = `Você atingiu o limite máximo de ${maxFilesQtd} anexos.`;
+        let infoFilesMessage = `Você já anexou ${maxFilesQtd - qtdFillable} arquivo(s). Ainda é possível adicionar mais ${qtdFillable} anexo(s).`;
+        let infoFilesMessageLimit = `Você atingiu o limite máximo de ${maxFilesQtd} anexos.`;
 
         if (isLimitOverflow(input)) {
             bootbox.alert({
@@ -56,9 +56,13 @@ $(() => {
             bootbox.alert({
                 title: "Tamanho máximo de arquivo excedido!",
                 message: `O tamanho total dos arquivos selecionados não pode exceder ${maxFileSizeMB} MB.`,
-                className: 'bootbox-custom-warning'
+                className: 'bootbox-custom-warning',
+                callback: function() {
+                    $filesToUpload.val('');
+                    validateFilesToUpload({ target: $filesToUpload[0] });
+                    return;
+                }
             });
-            $filesToUpload.val('');
         }
 
         $spanInfoFiles.text(qtdFillable ? infoFilesMessage : infoFilesMessageLimit);
