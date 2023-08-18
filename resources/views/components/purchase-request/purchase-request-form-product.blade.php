@@ -758,10 +758,11 @@
             // muda label data desejada
             const labelDesiredDateAlreadyProvided = "Data da entrega do produto";
             const labelDesiredDateDefault = "Data desejada entrega do produto";
-            const newLabelDate = !isContractedBySupplies ? labelDesiredDateAlreadyProvided : labelDesiredDateDefault;
+            const newLabelDate = !isContractedBySupplies ? labelDesiredDateAlreadyProvided :
+                labelDesiredDateDefault;
             $desiredDate.siblings('label').text(newLabelDate);
 
-            // desabilita pagamento
+            // desabilita e limpa inputs pagamento
             $paymentBlock
                 .find('input, textarea')
                 .prop('readonly', isContractedBySupplies);
@@ -775,6 +776,14 @@
                 supplierSelect.removeRequired();
                 supplierSelect.closest('.form-group').removeClass('has-error');
                 $supplierBlock.find('.help-block').remove();
+
+                $paymentBlock
+                    .find('input, textarea')
+                    .val('');
+                $paymentBlock
+                    .find('select')
+                    .val('')
+                    .trigger('change.select2');
 
                 $installmentsTable.clear().draw();
 

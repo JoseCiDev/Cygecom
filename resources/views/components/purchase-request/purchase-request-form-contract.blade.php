@@ -968,6 +968,14 @@
                 supplierSelect.closest('.form-group').removeClass('has-error');
                 $suppliersBlock.find('.help-block').remove();
 
+                $paymentBlock
+                    .find('input, textarea')
+                    .val('');
+                $paymentBlock
+                    .find('select')
+                    .val('')
+                    .trigger('change.select2');
+
                 $installmentsTable.clear().draw();
 
                 return;
