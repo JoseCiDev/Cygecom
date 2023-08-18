@@ -682,6 +682,8 @@
                 $(this).find('input, select').val('');
                 $(this).find('textarea').val('');
 
+                $('#status').val('').trigger('change');
+
                 $('#modal-edit-service-installment').modal('hide');
             });
         }
