@@ -445,6 +445,23 @@
 <script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
 
 <script>
+    $(() => {
+        const $productQuantity = $('.product-quantity');
+    
+        $productQuantity.each(function() {
+            const maskOptions = {
+                mask: Number,
+                min: 1,
+                max: 10000,
+                thousandsSeparator: ''
+            };
+            
+            const mask = IMask(this, maskOptions);
+        });
+    });
+</script>
+
+<script>
     $(document).ready(function() {
         hasSentRequest = @json($hasSentRequest);
 
