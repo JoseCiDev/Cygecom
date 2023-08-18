@@ -1,5 +1,5 @@
 @php
-    use App\Enums\PurchaseRequestStatus;
+    use App\Enums\{PurchaseRequestStatus, PurchaseRequestType};
 @endphp
 <x-app>
     <x-slot name="title">
@@ -33,6 +33,7 @@
                                 <th>Solicitante</th>
                                 <th>Contratação por</th>
                                 <th>Tipo de solicitação</th>
+                                <th>Fornecedor(es)</th>
                                 <th>Status</th>
                                 <th>Data desejada</th>
                                 <th>Atualizado em</th>
@@ -41,11 +42,28 @@
                         </thead>
                         <tbody>
                             @foreach ($purchaseRequests as $index => $purchaseRequest)
+                                @php
+                                    $supplier = null;
+                                    $msg = '';
+                                    if ($purchaseRequest->type === PurchaseRequestType::SERVICE) {
+                                        $supplier = $purchaseRequest->service->supplier ?? null;
+                                    } elseif ($purchaseRequest->type === PurchaseRequestType::CONTRACT) {
+                                        $supplier = $purchaseRequest->contract->supplier ?? null;
+                                    } else  {
+                                        $countSuppliers = count($purchaseRequest?->purchaseRequestProduct?->groupBy('supplier_id'));
+
+                                        if ($countSuppliers > 1) {
+                                            $msg = ' (+' . ($countSuppliers -1) . ')';
+                                        }
+                                        $supplier = $purchaseRequest?->purchaseRequestProduct->first()->supplier ?? null;
+                                    }
+                                @endphp
                                 <tr>
                                     <td>{{$purchaseRequest->id}}</td>
                                     <td>{{$purchaseRequest->user->person->name}}</td>
                                     <td>{{$purchaseRequest->is_supplies_contract ? 'Suprimentos' : 'Área Solicitante'}}</td>
                                     <td>{{$purchaseRequest->type->label()}}</td>
+                                    <td>{{$supplier?->corporate_name . $msg}}</td>
                                     <td>{{$purchaseRequest->status->label()}}</td>
                                     <td>{{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($purchaseRequest->updated_at)->format('d/m/Y h:m:s') }}</td>
