@@ -317,7 +317,7 @@
                                                     {{ $request?->local_description ?? '---' }}
                                                 </p>
                                                 <p>
-                                                    <strong>Valor total do contrato:</strong>
+                                                    <strong>Valor total do contrato (R$):</strong>
                                                     {{ $request->contract?->amount ?? '---' }}
                                                 </p>
                                                 <p>

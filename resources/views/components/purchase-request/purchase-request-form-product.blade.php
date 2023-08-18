@@ -1018,27 +1018,6 @@
             $radioIsContractedBySupplies.filter(':checked').trigger('change');
         });
 
-        // $(document).on('click', '.delete-supplier', function() {
-        //     $(this).closest('.supplier-block').remove();
-
-        //     // Atualizar os índices dos fornecedores restantes
-        //     const $supplierBlocks = $('.supplier-block');
-        //     $supplierBlocks.each(function(index) {
-        //         $(this).find(
-        //             'select[name^="purchase_request_suppliers"], input[name^="purchase_request_suppliers"]'
-        //         ).each(function() {
-        //             const oldName = $(this).attr('name');
-        //             const regexNewName = /purchase_request_suppliers\[(\d+)\](.*)/;
-        //             const newName = oldName.replace(regexNewName,
-        //                 `purchase_request_suppliers[${index}]$2`);
-        //             $(this).attr('name', newName);
-        //         });
-        //     });
-
-        //     checkSuppliersContainerLength();
-        //     checkProductRows();
-        // });
-
         $(document).on('click', '.delete-supplier', function(event) {
             event.preventDefault();
 
