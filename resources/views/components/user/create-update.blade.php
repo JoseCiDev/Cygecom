@@ -49,7 +49,7 @@
                     <label for="name" class="control-label required">Nome</label>
                     <input type="text" name="name" id="name" data-cy="name" placeholder="Nome Completo" class="form-control" @disabled($isDisabled)
                         data-rule-required="true" data-rule-minlength="2" 
-                        @if (isset($user)) value="{{ $user->person->name }}" @endif>
+                        value="{{ old('name', isset($user) ? $user->person->name : '') }}">
                     @error('name')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -60,7 +60,7 @@
                 <div class="form-group">
                     <label for="birthdate" class="control-label">Data de nascimento</label>
                     <input type="date" name="birthdate" id="birthdate" data-cy="birthdate" class="form-control" @disabled($isDisabled) 
-                        @if (isset($user)) value="{{ $user['person']['birthdate'] }}" @endif>
+                        value="{{ old('birthdate', isset($user) ? $user['person']['birthdate'] : '') }}">
                 </div>
             </div>
             {{-- DOCUMENTO --}}
@@ -69,7 +69,7 @@
                     <label for="cpf_cnpj" class="control-label">Nº CPF/CNPJ</label>
                     <input type="text" name="cpf_cnpj" id="cpf_cnpj" data-cy="cpf_cnpj" data-rule-required="true" minlength="14" @disabled($isDisabled)
                         placeholder="Ex: 000.000.000-00" class="form-control cpf_cnpj"
-                        @if (isset($user)) value="{{ $user->person->cpf_cnpj }}" @endif>
+                        value="{{ old('cpf_cnpj', isset($user) ? $user->person->cpf_cnpj : '') }}">
                     @error('cpf_cnpj')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -83,7 +83,7 @@
                     </label>
                     <input type="text" name="number" id="number" data-cy="number" placeholder="Ex: (00) 0000-0000" @disabled($isDisabled)
                         class="form-control phone_number" data-rule-required="true" minlength="14"
-                        @if (isset($user)) value="{{ $user->person->phone->number }}" @endif>
+                        value="{{ old('number', isset($user) ? $user->person->phone->number : '') }}">
                     @error('number')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -114,8 +114,8 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label for="email" class="control-label">E-mail</label>
-                    <input type="email" name="email" id="email" data-cy="email" placeholder="user_email@essentia.com.br" @disabled($isDisabled)
-                        @if (isset($user)) value="{{ $user->email }}" @endif class="form-control @error('email') is-invalid @enderror" data-rule-required="true" data-rule-email="true">
+                    <input type="email" name="email" id="email" data-cy="email" placeholder="user_email@essentia.com.br" @disabled($isDisabled) data-rule-required="true" data-rule-email="true"
+                        value="{{ old('email', (isset($user)) ? $user->email : '') }}" class="form-control @error('email') is-invalid @enderror">
                     @error('email')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -129,13 +129,10 @@
                         <label for="password" class="control-label">Senha</label>
                         <input type="password" name="password" id="password" data-cy="password"
                             placeholder="Deve conter ao menos 8 digitos"
-                            @if (!isset($user)) required
-                                data-rule-required="true"
-                                data-rule-minlength="8"
-                                class="form-control @error('password') is-invalid @enderror"
+                            @if (!isset($user)) 
+                                required data-rule-required="true" data-rule-minlength="8" class="form-control @error('password') is-invalid @enderror"
                             @else
-                                class="form-control @error('password') is-invalid @enderror" @endif
-                            autocomplete="new-password">
+                                class="form-control @error('password') is-invalid @enderror" @endif autocomplete="new-password">
                         @error('password')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -188,7 +185,6 @@
                                 @if (!isset($user)) checked @endif>
                                 <label class="form-check-label" for="personal">Padrão</label>
                             </div>
-                            
                         </div>
 
                         <div class="col-md-4">
@@ -272,8 +268,9 @@
                                         $companyName = $costCenter->company->name;
                                         $costCenterName = $costCenter->name;
                                         $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
+                                        $isSelected = old('cost_center_id') == $costCenter->id;
                                     @endphp 
-                                    <option value="{{ $costCenter->id }}">
+                                    <option value="{{ $costCenter->id }}" @selected($isSelected)>
                                         {{ $formattedCnpj . ' - ' . $companyName . ' / ' . $costCenterName }}
                                     </option>
                                 @endforeach
@@ -297,7 +294,10 @@
                         <select name="approver_user_id" id="approver_user_id" data-cy="approver_user_id" class="chosen-select form-control">
                             <option value="" disabled selected>Selecione uma opção </option>
                             @foreach ($approvers as $approver)
-                                <option value="{{ $approver->id }}">
+                                @php
+                                    $isSelected = old('approver_user_id') == $approver->id;
+                                @endphp
+                                <option value="{{ $approver->id }}" @selected($isSelected)>
                                     {{ $approver->person->name }}
                                 </option>
                             @endforeach
@@ -320,8 +320,9 @@
                         @else
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
-                                <input type="text" id="format-approve-limit" data-cy="format-approve-limit" placeholder="Ex: 100,00" class="form-control format-approve-limit" data-rule-required="true">
-                                <input type="hidden" name="approve_limit" id="approve_limit" data-cy="approve_limit" class="approve_limit no-validation">
+                                <input type="text" id="format-approve-limit" data-cy="format-approve-limit" placeholder="Ex: 100,00" class="form-control format-approve-limit" data-rule-required="true"
+                                    value="{{ old('approve_limit') }}">
+                                <input type="hidden" name="approve_limit" id="approve_limit" data-cy="approve_limit" class="approve_limit no-validation" value="{{ old('approve_limit') }}">
                             </div>
                         @endif
                         <div class="no-limit"
@@ -332,7 +333,7 @@
                                 margin-top: 3px;
                             ">
                             <input type="checkbox" id="checkbox-has-no-approve-limit" data-cy="checkbox-has-no-approve-limit" class="checkbox-has-no-approve-limit" style="margin:0"
-                                @checked(isset($user) && $user->approve_limit === null)>
+                                @checked((isset($user) && $user->approve_limit === null) || old('checkbox-has-no-approve-limit'))>
                             <label for="checkbox-has-no-approve-limit" style="margin:0; font-size: 11px;">
                                 Sem limite de aprovação
                             </label>
@@ -353,7 +354,12 @@
                                     $costCenterName = $costCenter->name;
                                 @endphp 
 
-                                <option value="{{ $costCenter->id }}" @selected(isset($user) && collect($user->userCostCenterPermission)->contains('costCenter.id', $costCenter->id))>
+                                <option value="{{ $costCenter->id }}"
+                                    @if (old('user_cost_center_permissions') !== null)
+                                        {{ in_array($costCenter->id, old('user_cost_center_permissions')) ? 'selected' : '' }}
+                                    @elseif (isset($user) && collect($user->userCostCenterPermission)->contains('costCenter.id', $costCenter->id))
+                                        selected
+                                    @endif>
                                     {{ $companyName . ' / ' . $costCenterName }}
                                 </option>
                             @endforeach
