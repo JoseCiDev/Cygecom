@@ -5,16 +5,24 @@ namespace App\Providers;
 use Exception;
 use Carbon\Carbon;
 use App\Services\S3;
-use App\Models\Product;
-use App\Models\Supplier;
 use Illuminate\Http\UploadedFile;
-use App\Enums\PurchaseRequestType;
-use App\Models\ProductInstallment;
-use App\Models\ServiceInstallment;
 use Illuminate\Support\Facades\DB;
-use App\Enums\PurchaseRequestStatus;
 use Illuminate\Support\ServiceProvider;
-use App\Models\{Contract, ContractInstallment, CostCenterApportionment, PaymentInfo, PurchaseRequest, PurchaseRequestFile, PurchaseRequestProduct, Service};
+use App\Enums\{PurchaseRequestType, PurchaseRequestStatus};
+use App\Models\{
+    ProductInstallment,
+    ServiceInstallment,
+    Product,
+    Contract,
+    ContractInstallment,
+    CostCenterApportionment,
+    PaymentInfo,
+    PurchaseRequest,
+    PurchaseRequestFile,
+    PurchaseRequestProduct,
+    RequestSuppliesFiles,
+    Service
+};
 
 class PurchaseRequestService extends ServiceProvider
 {
@@ -220,9 +228,9 @@ class PurchaseRequestService extends ServiceProvider
         });
     }
 
-    private function uploadFilesToS3(UploadedFile|array $files, PurchaseRequestType $purchcaseRequestType, int $requestId, array $originalNames): void
+    public function uploadFilesToS3(UploadedFile|array $files, PurchaseRequestType $purchaseRequestType, int $requestId, array $originalNames, ?bool $isSupplies = false): void
     {
-        $type = 'request-' . $purchcaseRequestType->value;
+        $type = 'request-' . ($isSupplies ? "supplies-" : '') . $purchaseRequestType->value;
 
         $uploadFiles = S3::sendFiles($files, $type, $requestId);
 
@@ -231,7 +239,7 @@ class PurchaseRequestService extends ServiceProvider
             throw new Exception($msg);
         }
         foreach ($uploadFiles->urls_bucket as $index => $filePath) {
-            $this->savePurchaseRequestFile($requestId, $filePath, $originalNames[$index]);
+            $isSupplies ? $this->saveRequestSuppliesFiles($requestId, $filePath, $originalNames[$index]) : $this->savePurchaseRequestFile($requestId, $filePath, $originalNames[$index]);
         }
     }
 
@@ -327,6 +335,20 @@ class PurchaseRequestService extends ServiceProvider
         PurchaseRequestFile::create($purchaseRequestFile);
     }
 
+    /**
+     * @abstract Responsável por criar ou atualizar purchaseRequestFile.
+     * Recomendado executar com o método específico registerProductRequest ou updateProductRequest
+     */
+    private function saveRequestSuppliesFiles(int $purchaseRequestId, $filePath, string $originalName)
+    {
+        $requestSuppliesFiles['path'] = $filePath;
+        $requestSuppliesFiles['purchase_request_id'] = $purchaseRequestId;
+        $requestSuppliesFiles['updated_by'] = auth()->user()->id;
+        $requestSuppliesFiles['original_name'] = $originalName;
+
+        RequestSuppliesFiles::create($requestSuppliesFiles);
+    }
+
 
     /**
      * @abstract Responsável por criar ou atualizar service.
@@ -334,10 +356,6 @@ class PurchaseRequestService extends ServiceProvider
      */
     private function saveService(int $purchaseRequestId, array $data, ?int $serviceId = null): void
     {
-        if (!isset($data['type']) && $data['type'] !== "service") {
-            return;
-        }
-
         $serviceData = $data['service'];
 
         // caso disabled os campos do form define como null
@@ -368,10 +386,6 @@ class PurchaseRequestService extends ServiceProvider
      */
     private function saveProducts(int $purchaseRequestId, array $data)
     {
-        if (!isset($data['type']) && $data['type'] !== "product") {
-            return;
-        }
-
         $productData = $data['product'];
         $productInstallmentsData = $productData['product_installments'] ?? [];
         $paymentInfoData = $productData['payment_info'] ?? [];
@@ -422,10 +436,6 @@ class PurchaseRequestService extends ServiceProvider
      */
     private function saveContract(int $purchaseRequestId, array $data, ?int $contractId = null)
     {
-        if (!isset($data['type']) && $data['type'] !== "contract") {
-            return;
-        }
-
         $contractData = $data['contract'];
 
         // caso disabled os campos do form define como null
