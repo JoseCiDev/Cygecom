@@ -18,7 +18,8 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                       <form action="{{ route('supplies.service')}}" method="GET">
+                       <form action="{{ route('supplies.service')}}" method="GET" class="form-status-filter">
+                            <button class="btn btn-primary btn-small" id="status-filter-btn" type="submit">Filtrar status</button>
                             @if ($suppliesGroup)
                                 <input type="hidden" name="suppliesGroup" value="{{ $suppliesGroup->value }}">
                             @endif
@@ -36,8 +37,6 @@
                                 @endif
 
                             @endforeach
-
-                            <button class="btn btn-primary btn-small" id="status-filter-btn" type="submit">Filtrar status</button>
                        </form>
                     </div>
                 </div>
