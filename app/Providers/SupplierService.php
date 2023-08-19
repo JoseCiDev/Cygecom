@@ -74,9 +74,9 @@ class SupplierService extends ServiceProvider
     public function filterRequestByCompanyGroup(Collection $requests, CompanyGroup $companyGroup)
     {
         return $requests->filter(function ($item) use ($companyGroup) {
-            $costCenterApportionments = $item->CostCenterApportionment;
+            $costCenterApportionments = $item->costCenterApportionment;
             return $costCenterApportionments->contains(function ($apportionment) use ($companyGroup) {
-                return $apportionment->costCenter->Company->group->value === $companyGroup->value;
+                return $apportionment->costCenter->company->group->value === $companyGroup->value;
             });
         });
     }

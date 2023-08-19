@@ -7,7 +7,7 @@ Route::middleware(['auth', 'profile:suprimentos_hkm,suprimentos_inp'])->group(fu
     Route::group(['prefix' => 'supplies'], function () {
         Route::get('index', [App\Http\Controllers\SuppliesController::class, 'index'])->name('supplies.index');
 
-        Route::middleware(['supplies.group:inp,hkm'])->group(function () {
+        Route::middleware(['supplies.group:suprimentos_inp,suprimentos_hkm'])->group(function () {
             Route::get('service', [App\Http\Controllers\SuppliesController::class, 'service'])->name('supplies.service');
             Route::get('product', [App\Http\Controllers\SuppliesController::class, 'product'])->name('supplies.product');
             Route::get('contract', [App\Http\Controllers\SuppliesController::class, 'contract'])->name('supplies.contract');
