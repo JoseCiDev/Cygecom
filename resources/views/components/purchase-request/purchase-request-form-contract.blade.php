@@ -210,10 +210,10 @@
                 {{-- DESCRICAO --}}
                 <div class="col-sm-7">
                     <div class="form-group">
-                        <label for="description" class="control-label">Descrição</label>
+                        <label for="description" class="control-label">Detalhes do contrato</label>
                         <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
                             rows="4"
-                            placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
+                            placeholder="Descreva com detalhes o objetivo do contrato"
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
                     <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
