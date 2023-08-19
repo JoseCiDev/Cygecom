@@ -166,7 +166,7 @@
                 </div>
 
                 {{-- PRODUTO JÁ COMPRADO --}}
-                <div class="col-sm-4" style="width: 22%">
+                <div class="col-sm-4 div-already-purchased" hidden style="width: 22%">
                     <div class="form-group">
                         <label for="form-check" class="control-label" style="padding-right:10px">
                             Você já realizou esta compra?
@@ -193,7 +193,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6" style="margin-top:-12px;">
+                <div class="col-sm-6" style="margin-top:-6px;">
                     <div class="form-group product-input" id="product-input">
                         <label for="local-description" class="control-label">
                             Em qual sala/prédio ficará o produto solicitado
@@ -447,7 +447,7 @@
 <script>
     $(() => {
         const $productQuantity = $('.product-quantity');
-    
+
         $productQuantity.each(function() {
             const maskOptions = {
                 mask: Number,
@@ -455,7 +455,7 @@
                 max: 10000,
                 thousandsSeparator: ''
             };
-            
+
             const mask = IMask(this, maskOptions);
         });
     });
@@ -656,10 +656,10 @@
             }
         });
 
+        const hiddenInputsContainer = $('.hidden-installments-inputs-container');
+
         function fillHiddenInputsWithRowData() {
             const tableData = $installmentsTable.data();
-            const hiddenInputsContainer = $('.hidden-installments-inputs-container');
-
             hiddenInputsContainer.empty();
             tableData.each(function(rowData, index) {
                 const expireDate = rowData.expire_date;
@@ -761,6 +761,9 @@
             .prop('disabled', true)
             .trigger('change.select2');
 
+
+        const $divAlreadyPurchased = $('.div-already-purchased');
+
         $radioIsContractedBySupplies.on('change', function() {
             const isContractedBySupplies = $(this).val() === "1";
 
@@ -790,6 +793,13 @@
                 .trigger('change.select2');
 
             if (isContractedBySupplies) {
+                $productAlreadyPurchased
+                    .last()
+                    .attr('checked', true);
+
+                $divAlreadyPurchased
+                    .attr('hidden', true);
+
                 supplierSelect.removeRequired();
                 supplierSelect.closest('.form-group').removeClass('has-error');
                 $supplierBlock.find('.help-block').remove();
@@ -803,9 +813,25 @@
                     .trigger('change.select2');
 
                 $installmentsTable.clear().draw();
+                hiddenInputsContainer.empty();
 
                 return;
+            } else {
+                /*
+                    ## solução previa ##
+                    tem um problema que é quando for edição e mover de suprimentos para area solicitante
+                    o radio button vem selecionado, ao invés de vazio, como acontece em um registro novo.
+                */
+                if (!purchaseRequest) {
+                    $productAlreadyPurchased
+                        .last()
+                        .attr('checked', false);
+                }
+
+                $divAlreadyPurchased
+                    .attr('hidden', false);
             }
+
             supplierSelect.makeRequired();
         });
 
