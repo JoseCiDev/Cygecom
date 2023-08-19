@@ -89,7 +89,7 @@ class PurchaseRequestService extends ServiceProvider
     /**
      * @return mixed Pelo status da solicitação retorna todas com suas relações, exceto deletadas.
      */
-    public function purchaseRequestsByStatus(PurchaseRequestStatus $status)
+    public function requestsByStatus(array $status)
     {
         return PurchaseRequest::with([
             'user.person.costCenter',
@@ -103,7 +103,7 @@ class PurchaseRequestService extends ServiceProvider
             'purchaseRequestProduct.supplier',
             'contract.installments',
             'product.installments'
-        ])->whereNull('deleted_at')->where('status', $status->value);
+        ])->whereNull('deleted_at')->whereIn('status', $status);
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Enums\PurchaseRequestStatus;
 use App\Enums\PurchaseRequestType;
 use App\Providers\PurchaseRequestService;
 use App\Providers\SupplierService;
+use Illuminate\Http\Request;
 
 class SuppliesController extends Controller
 {
@@ -66,13 +67,16 @@ class SuppliesController extends Controller
         return view('components.supplies.index', $params);
     }
 
-    public function product()
+    public function product(Request $request)
     {
-        $queryStatus = request()->query('status');
+        $statusData = $request->input('status');
         $querySuppliesGroup = request()->query('suppliesGroup');
 
+        $status = $statusData ? array_map(function ($item) {
+            return PurchaseRequestStatus::tryFrom($item);
+        }, $statusData) : [];
+
         try {
-            $status = $queryStatus ? PurchaseRequestStatus::from($queryStatus) : null;
             $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
         } catch (\ValueError $error) {
             return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
@@ -81,13 +85,16 @@ class SuppliesController extends Controller
         return view('components.supplies.product.page', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 
-    public function service()
+    public function service(Request $request)
     {
-        $queryStatus = request()->query('status');
+        $statusData = $request->input('status');
         $querySuppliesGroup = request()->query('suppliesGroup');
 
+        $status = $statusData ? array_map(function ($item) {
+            return PurchaseRequestStatus::tryFrom($item);
+        }, $statusData) : [];
+
         try {
-            $status = $queryStatus ? PurchaseRequestStatus::from($queryStatus) : null;
             $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
         } catch (\ValueError $error) {
             return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
@@ -96,13 +103,16 @@ class SuppliesController extends Controller
         return view('components.supplies.service.page', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
     }
 
-    public function contract()
+    public function contract(Request $request)
     {
-        $queryStatus = request()->query('status');
+        $statusData = $request->input('status');
         $querySuppliesGroup = request()->query('suppliesGroup');
 
+        $status = $statusData ? array_map(function ($item) {
+            return PurchaseRequestStatus::tryFrom($item);
+        }, $statusData) : [];
+
         try {
-            $status = $queryStatus ? PurchaseRequestStatus::from($queryStatus) : null;
             $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
         } catch (\ValueError $error) {
             return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");

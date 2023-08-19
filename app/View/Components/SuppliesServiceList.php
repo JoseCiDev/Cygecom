@@ -2,11 +2,8 @@
 
 namespace App\View\Components;
 
-use App\Enums\CompanyGroup;
-use App\Enums\PurchaseRequestStatus;
-use App\Enums\PurchaseRequestType;
-use App\Providers\PurchaseRequestService;
-use App\Providers\SupplierService;
+use App\Enums\{PurchaseRequestStatus, PurchaseRequestType, CompanyGroup};
+use App\Providers\{PurchaseRequestService, SupplierService};
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -17,16 +14,26 @@ class SuppliesServiceList extends Component
         private PurchaseRequestService $purchaseRequestService,
         private SupplierService $supplierService,
         private CompanyGroup|null $suppliesGroup,
-        private PurchaseRequestStatus|null $status
+        private array|null $status
     ) {
     }
 
     public function render(): View|Closure|string
     {
+        $params = [
+            'suppliesGroup' => $this->suppliesGroup,
+            'status' => $this->status,
+        ];
+
         if ($this->status) {
-            $purchaseRequests = $this->purchaseRequestService->purchaseRequestsByStatus($this->status)->whereNotIn('status', ['rascunho'])->get();
+            $purchaseRequests = $this->purchaseRequestService->requestsByStatus($this->status)->whereNotIn('status', [PurchaseRequestStatus::RASCUNHO->value])->get();
         } else {
-            $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()->whereNotIn('status', ['rascunho'])->whereNull('deleted_at')->get();
+            $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()
+                ->whereNotIn('status', [
+                    PurchaseRequestStatus::RASCUNHO->value,
+                    PurchaseRequestStatus::FINALIZADA->value,
+                    PurchaseRequestStatus::CANCELADA->value
+                ])->whereNull('deleted_at')->get();
         }
 
         $services = $purchaseRequests->filter(function ($item) {
@@ -39,6 +46,8 @@ class SuppliesServiceList extends Component
             $services = $this->supplierService->filterRequestByCompanyGroup($services, $this->suppliesGroup);
         }
 
-        return view('components.supplies.service.list', ['services' => $services, 'suppliesGroup' => $this->suppliesGroup, 'status' => $this->status]);
+        $params['services'] = $services;
+
+        return view('components.supplies.service.list', $params);
     }
 }

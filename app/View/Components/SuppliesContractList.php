@@ -17,16 +17,26 @@ class SuppliesContractList extends Component
         private PurchaseRequestService $purchaseRequestService,
         private SupplierService $supplierService,
         private CompanyGroup|null $suppliesGroup,
-        private PurchaseRequestStatus|null $status
+        private array|null $status
     ) {
     }
 
     public function render(): View|Closure|string
     {
+        $params = [
+            'suppliesGroup' => $this->suppliesGroup,
+            'status' => $this->status,
+        ];
+
         if ($this->status) {
-            $purchaseRequests = $this->purchaseRequestService->purchaseRequestsByStatus($this->status)->whereNotIn('status', ['rascunho'])->get();
+            $purchaseRequests = $this->purchaseRequestService->requestsByStatus($this->status)->whereNotIn('status', [PurchaseRequestStatus::RASCUNHO->value])->get();
         } else {
-            $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()->whereNotIn('status', ['rascunho'])->whereNull('deleted_at')->get();
+            $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()
+                ->whereNotIn('status', [
+                    PurchaseRequestStatus::RASCUNHO->value,
+                    PurchaseRequestStatus::FINALIZADA->value,
+                    PurchaseRequestStatus::CANCELADA->value
+                ])->whereNull('deleted_at')->get();
         }
 
         $contracts = $purchaseRequests->filter(function ($item) {
@@ -39,6 +49,8 @@ class SuppliesContractList extends Component
             $contracts = $this->supplierService->filterRequestByCompanyGroup($contracts, $this->suppliesGroup);
         }
 
-        return view('components.supplies.contract.list', ['contracts' => $contracts, 'suppliesGroup' => $this->suppliesGroup, 'status' => $this->status]);
+        $params['contracts'] = $contracts;
+
+        return view('components.supplies.contract.list', $params);
     }
 }
