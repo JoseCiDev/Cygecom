@@ -15,6 +15,11 @@ class PurchaseRequest extends Model
         return $this->hasMany(PurchaseRequestFile::class);
     }
 
+    public function requestSuppliesFiles()
+    {
+        return $this->hasMany(RequestSuppliesFiles::class);
+    }
+
     public function service()
     {
         return $this->hasOne(Service::class);
