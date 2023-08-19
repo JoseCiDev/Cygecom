@@ -46,7 +46,7 @@ $(() => {
         if (isLimitOverflow(input)) {
             bootbox.alert({
                 title: "Limite de anexos excedido!",
-                message: infoFilesMessageLimit + " Por favor, tente selecionar menos arquivos ou remover alguns já enviados para adicionar novos anexos.",
+                message: infoFilesMessageLimit + (!IS_SUPPLIES_FILES ? " Por favor, tente selecionar menos arquivos ou remover alguns já enviados para adicionar novos anexos." : ' Não é possível enviar mais arquivos.'),
                 className: 'bootbox-custom-warning'
             });
             $filesToUpload.val('');

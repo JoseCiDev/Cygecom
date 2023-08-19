@@ -1,5 +1,5 @@
 @php
-    use \App\Enums\{PaymentTerm, LogAction};
+    use \App\Enums\{PaymentTerm, LogAction, PurchaseRequestType};
 
     if (isset($contract)) {
         $request = $contract;
@@ -461,6 +461,12 @@
                 @else
                     <p>Nenhum registro encontrado.</p>
                  @endif
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::CONTRACT" />
             </div>
         </div>
 

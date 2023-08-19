@@ -1,5 +1,5 @@
 @php
-    use App\Enums\LogAction;
+    use App\Enums\{LogAction, PurchaseRequestType};
 
     if (isset($contract)) {
         $request = $contract;
@@ -412,11 +412,17 @@
                         @endforeach
                     </ul>
                  @else
-                    <p>Ainda não há registros aqui.</p>
+                    <p>Nenhum registro encontrado.</p>
                  @endif
             </div>
         </div>
 
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::PRODUCT" />
+            </div>
+        </div>
+      
         <div class="row">
             <div class="col-md-12">
                 <h4><i class="glyphicon glyphicon-link"></i> <strong>Links de apoio/sugestão:</strong></h4>
