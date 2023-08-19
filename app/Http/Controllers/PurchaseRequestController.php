@@ -100,6 +100,24 @@ class PurchaseRequestController extends Controller
         return back();
     }
 
+    public function uploadSuppliesFilesAPI(Request $request)
+    {
+        $isSupplies = true;
+        $purchaseRequestId = $request->input('purchase_request_id');
+        $files = $request->file('arquivos');
+        $purchaseRequestType = PurchaseRequestType::tryFrom($request->purchaseRequestType);
+
+        if (collect($files)->count()) {
+            foreach ($files as $file) {
+                $originalNames[] = $file->getClientOriginalName();
+            }
+
+            $this->purchaseRequestService->uploadFilesToS3($files,  $purchaseRequestType,  $purchaseRequestId, $originalNames, $isSupplies);
+        }
+
+        return response()->json(['message' => 'Anexos atualizados com sucesso']);
+    }
+
     private function validatePurchaseRequest(int $id): PurchaseRequest
     {
         $purchaseRequest = PurchaseRequest::find($id);

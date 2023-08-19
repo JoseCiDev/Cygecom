@@ -91,7 +91,7 @@ class ServiceController extends Controller
         $data = $request->all();
         $action = $request->input('action');
 
-        $validator = $this->validatorService->purchaseRequest($data);
+        $validator = $this->validatorService->purchaseRequestUpdate($data);
         $files = $request->file('arquivos');
 
         if ($validator->fails()) {
@@ -123,7 +123,7 @@ class ServiceController extends Controller
             $this->purchaseRequestService->updateServiceRequest($id, $data, $files);
 
             if ($action === 'submit-request') {
-                $purchaseRequest->update(['status' => 'pendente']);
+                $purchaseRequest->update(['status' => PurchaseRequestStatus::PENDENTE->value]);
                 $msg = "Solicitação de serviço enviada ao setor de suprimentos responsável!";
             }
 

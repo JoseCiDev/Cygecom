@@ -94,7 +94,7 @@ class ContractController extends Controller
         $data = $request->all();
         $action = $request->input('action');
 
-        $validator = $this->validatorService->purchaseRequest($data);
+        $validator = $this->validatorService->purchaseRequestUpdate($data);
         $files = $request->file('arquivos');
 
         if ($validator->fails()) {

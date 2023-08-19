@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\ProductSuggestionController;
-use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\{ProductSuggestionController, PurchaseRequestController, SupplierController};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,5 +27,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::group(['prefix' => 'products'], function () {
         Route::get('/suggestion', [ProductSuggestionController::class, 'index'])->name('api.product.suggestion.index');
+    });
+
+    Route::group(['prefix' => 'supplies'], function () {
+        Route::post('/files/uppload', [PurchaseRequestController::class, 'uploadSuppliesFilesAPI'])->name('api.supplies.files.upload');
     });
 });

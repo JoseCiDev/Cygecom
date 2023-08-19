@@ -1,5 +1,5 @@
 @php
-    use App\Enums\PurchaseRequestStatus;
+    use App\Enums\{PurchaseRequestStatus, PurchaseRequestType};
 
     if (isset($contract)) {
         $request = $contract;
@@ -393,8 +393,14 @@
                         @endforeach
                     </ul>
                  @else
-                    <p>Ainda não há registros aqui.</p>
+                    <p>Nenhum registro encontrado.</p>
                  @endif
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::SERVICE" />
             </div>
         </div>
 
