@@ -398,6 +398,8 @@
             </div>
         </div>
 
+        <hr>
+
         <div class="row justify-content-center">
             <div class="col-sm-12">
                 <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::SERVICE" />

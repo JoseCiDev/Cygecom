@@ -402,6 +402,8 @@
             </main>
         </div>
 
+        <hr>
+
         <div class="row">
             <div class="col-md-12">
                  <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
@@ -417,12 +419,16 @@
             </div>
         </div>
 
+        <hr>
+
         <div class="row justify-content-center">
             <div class="col-sm-12">
                 <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::PRODUCT" />
             </div>
         </div>
       
+        <hr>
+
         <div class="row">
             <div class="col-md-12">
                 <h4><i class="glyphicon glyphicon-link"></i> <strong>Links de apoio/sugestão:</strong></h4>
