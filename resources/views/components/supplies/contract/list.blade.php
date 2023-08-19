@@ -20,7 +20,6 @@
                             <th>Nº</th>
                             <th>Solicitante</th>
                             <th>Responsável</th>
-                            <th class="hidden-1440">Responsável em</th>
                             <th class="col-xs-2">
                                 <select id="filterStatus" data-cy="filterStatus" class="form-control">
                                     <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
@@ -40,7 +39,6 @@
                             <th class="hidden-1024">Contratação por</th>
                             <th class="hidden-1440">Grupo de custo</th>
                             <th class="hidden-1440">Data desejada</th>
-                            <th class="hidden-1440">Atualizado em</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -56,7 +54,6 @@
                                 <td>{{$contract->id}}</td>
                                 <td>{{$contract->user->person->name}}</td>
                                 <td>{{$contract->suppliesUser?->person->name ?? '---'}}</td>
-                                <td class="hidden-1440">{{$contract->responsibility_marked_at ? \Carbon\Carbon::parse($contract->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td>{{$contract->status->label()}}</td>
                                 <td>{{$contract->contract->supplier?->cpf_cnpj ?? '---'}}</td>
                                 <td class="hidden-1280">{{$contract->contract->supplier?->qualification->label() ?? '---'}}</td>
@@ -66,7 +63,6 @@
                                 <td class="hidden-1440">{{$concatenatedGroups}}</td>
 
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($contract->desired_date)->format('d/m/Y') }}</td>
-                                <td class="hidden-1440">{{ \Carbon\Carbon::parse($contract->updated_at)->format('d/m/Y h:m:s') }}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button

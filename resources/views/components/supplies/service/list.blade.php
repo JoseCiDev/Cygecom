@@ -21,7 +21,6 @@
 
                             <th>Solicitante</th>
                             <th>Responsável</th>
-                            <th class="hidden-1280">Resp. em</th>
                             <th class="col-xs-2">
                                 <select id="filterStatus" data-cy="filterStatus" class="form-control">
                                     <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
@@ -44,7 +43,6 @@
 
                             <th class="hidden-1440">Grupo de custo</th>
                             <th class="hidden-1440">Data desejada</th>
-                            <th class="hidden-1440">Atualizado em</th>
 
                             <th>Ações</th>
                         </tr>
@@ -61,7 +59,6 @@
                                 <td>{{$service->id}}</td>
                                 <td>{{$service->user->person->name}}</td>
                                 <td>{{$service->suppliesUser?->person->name ?? '---'}}</td>
-                                <td class="hidden-1280">{{$service->responsibility_marked_at ? \Carbon\Carbon::parse($service->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td>{{$service->status->label()}}</td>
                                 <td>{{$service->service->Supplier?->cpf_cnpj ?? '---'}}</td>
                                 <td class="hidden-1280">{{$service->service->Supplier?->qualification->label() ?? '---'}}</td>
@@ -71,7 +68,6 @@
                                 <td>{{$service->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1440">{{$concatenatedGroups}}</td>
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($service->desired_date)->format('d/m/Y') }}</td>
-                                <td class="hidden-1440">{{ \Carbon\Carbon::parse($service->updated_at)->format('d/m/Y h:m:s') }}</td>
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
                                         data-modal-name="{{ 'Analisando Solicitação de Serviço - Nº ' . $service->id }}"

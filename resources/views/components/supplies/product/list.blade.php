@@ -20,7 +20,6 @@
                             <th>Nº</th>
                             <th>Solicitante</th>
                             <th>Responsável</th>
-                            <th class="hidden-1280">Responsável em</th>
                             <th class="col-xs-2">
                                 <select id="filterStatus" data-cy="filterStatus" class="form-control">
                                     <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
@@ -38,7 +37,6 @@
                             <th class="hidden-1024">Contratação por</th>
                             <th class="hidden-1280">Grupo de custo</th>
                             <th class="hidden-1440">Data desejada</th>
-                            <th class="hidden-1440">Atualizado em</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -54,14 +52,12 @@
                                 <td>{{$product->id}}</td>
                                 <td >{{$product->user->person->name}}</td>
                                 <td>{{$product->suppliesUser?->person->name ?? '---'}}</td>
-                                <td class="hidden-1280">{{$product->responsibility_marked_at ? \Carbon\Carbon::parse($product->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
                                 <td>{{$product->status->label()}}</td>
                                 <td >{{$product->product->paymentInfo?->payment_terms?->label() ?? '---'}}</td>
                                 <td class="hidden-1024">{{$product->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1280">{{$concatenatedGroups}}</td>
 
                                 <td class="hidden-1440">{{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y h:m:s') : '---'}}</td>
-                                <td class="hidden-1440">{{ $product->updated_at ? \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') : '---'}}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
