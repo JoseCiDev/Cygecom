@@ -797,11 +797,13 @@
             ],
         });
 
+        const hiddenInputsContainer = $('.hidden-installments-inputs-container');
+
         const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
 
         function fillHiddenInputsWithRowData() {
             const tableData = $installmentsTable.data();
-            const hiddenInputsContainer = $('.hidden-installments-inputs-container');
+
 
             hiddenInputsContainer.empty();
 
@@ -979,6 +981,7 @@
                     .trigger('change.select2');
 
                 $installmentsTable.clear().draw();
+                hiddenInputsContainer.empty();
 
                 return;
             }

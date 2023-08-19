@@ -198,7 +198,7 @@
                 </div>
 
                 {{-- SERVIÇO JÁ PRESTADO --}}
-                <div class="col-sm-2">
+                <div class="col-sm-2 div-already-provided" hidden>
                     <div class="form-group">
                         <label for="form-check" class="control-label" style="padding-right:10px;">
                             Este serviço já foi prestado?
@@ -505,11 +505,13 @@
         const statusValues = @json($statusValues);
 
         const $amount = $('.amount');
+        const hiddenInputsContainer = $('.hidden-installments-inputs-container');
         const $inputInstallmentsNumber = $('.installments-number');
         const $radioIsContractedBySupplies = $('.radio-who-wants');
         const $paymentBlock = $('.payment-block');
         const $paymentTerm = $('#payment-terms');
         const $serviceAlreadyProvided = $('.radio-already-provided')
+        const $divAlreadyProvided = $('.div-already-provided');
         const $desiredDate = $('#desired-date');
 
         const $editValueInputModal = $('#edit-value');
@@ -530,7 +532,6 @@
         function fillHiddenInputsWithRowData() {
             const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
             const tableData = $installmentsTable.data();
-            const hiddenInputsContainer = $('.hidden-installments-inputs-container');
 
             hiddenInputsContainer.empty();
             tableData.each(function(rowData, index) {
@@ -777,19 +778,31 @@
             // muda label data desejada
             const labelDesiredDateAlreadyProvided = "Data da prestação do serviço";
             const labelDesiredDateDefault = "Data desejada do serviço";
-            const newLabelDate = !isContractedBySupplies ? labelDesiredDateAlreadyProvided : labelDesiredDateDefault;
+            const newLabelDate = !isContractedBySupplies ? labelDesiredDateAlreadyProvided :
+                labelDesiredDateDefault;
             $desiredDate.siblings('label').text(newLabelDate);
 
             // desabilita pagamento
             $paymentBlock.find('input, textarea').prop('readonly', isContractedBySupplies);
-
             $paymentBlock.find('select').prop('disabled', isContractedBySupplies).trigger(
                 'change.select2');
 
             if (isContractedBySupplies) {
+                $serviceAlreadyProvided
+                    .last()
+                    .attr('checked', true);
+
+                $divAlreadyProvided
+                    .attr('hidden', true);
+
                 supplierSelect.removeRequired();
-                supplierSelect.closest('.form-group').removeClass('has-error');
-                $suppliersBlock.find('.help-block').remove();
+                supplierSelect
+                    .closest('.form-group')
+                    .removeClass('has-error');
+
+                $suppliersBlock
+                    .find('.help-block')
+                    .remove();
 
                 $paymentBlock
                     .find('input, textarea')
@@ -800,8 +813,23 @@
                     .trigger('change.select2');
 
                 $installmentsTable.clear().draw();
+                hiddenInputsContainer.empty();
 
                 return;
+            } else {
+                /*
+                    ## solução previa ##
+                    tem um problema que é quando for edição e mover de suprimentos para area solicitante
+                    o radio button vem selecionado, ao invés de vazio, como acontece em um registro novo.
+                */
+                if (!purchaseRequest) {
+                    $serviceAlreadyProvided
+                        .last()
+                        .attr('checked', false);
+                }
+
+                $divAlreadyProvided
+                    .attr('hidden', false);
             }
 
             supplierSelect.makeRequired();
