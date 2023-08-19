@@ -311,6 +311,43 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'desired_date.date' => 'A data desejada deve estar em um formato válido.',
 
         'purchase_request_files.array'         => 'Os arquivos de solicitação de cotação devem ser um array.',
+
+        'purchase_request_files.*.path.string' => 'O caminho do arquivo deve ser uma string.',
+    ];
+    public $rulesForPurchaseRequestUpdate = [
+        'cost_center_apportionments'                            => ['nullable', 'array'],
+        'cost_center_apportionments.*.cost_center_id'           => ['nullable', 'numeric', 'min:1'],
+        'cost_center_apportionments.*.apportionment_percentage' => ['required_without:cost_center_apportionments.*.apportionment_currency', 'nullable', 'numeric', 'min:0', 'max:100'],
+        'cost_center_apportionments.*.apportionment_currency'   => ['required_without:cost_center_apportionments.*.apportionment_percentage', 'nullable', 'numeric', 'min:0'],
+        'is_comex'                                              => ['nullable', 'boolean'],
+        'reason'                                                => ['nullable', 'string'],
+        'description'                                           => ['nullable', 'string'],
+        'desired_date'                                          => ['nullable', 'date'],
+        'purchase_request_files'                                => ['nullable', 'array'],
+        'purchase_request_files.*.path'                         => ['nullable', 'string'],
+    ];
+
+    public $messagesForPurchaseRequestUpdate = [
+        'cost_center_apportionments.array'                                       => 'O campo de rateios de centro de custo deve ser um array.',
+        'cost_center_apportionments.*.cost_center_id.numeric'                    => 'O ID do centro de custo deve ser um número.',
+        'cost_center_apportionments.*.cost_center_id.min'                        => 'O ID do centro de custo deve ser no mínimo :min.',
+        'cost_center_apportionments.*.apportionment_percentage.required_without' => 'Informe o percentual de rateio ou o valor de rateio.',
+        'cost_center_apportionments.*.apportionment_percentage.numeric'          => 'O percentual de rateio deve ser um número.',
+        'cost_center_apportionments.*.apportionment_percentage.min'              => 'O percentual de rateio deve ser no mínimo :min.',
+        'cost_center_apportionments.*.apportionment_percentage.max'              => 'O percentual de rateio deve ser no máximo :max.',
+        'cost_center_apportionments.*.apportionment_currency.required_without'   => 'Informe o percentual de rateio ou o valor de rateio.',
+        'cost_center_apportionments.*.apportionment_currency.numeric'            => 'O valor de rateio deve ser um número.',
+        'cost_center_apportionments.*.apportionment_currency.min'                => 'O valor de rateio deve ser no mínimo :min.',
+
+        'is_comex.boolean'  => 'O campo de comex deve ser um valor booleano.',
+
+        'reason.string'   => 'o motivo da compra deve ser uma string.',
+
+        'description.string' => 'A descrição deve ser uma string.',
+
+        'desired_date.date' => 'A data desejada deve estar em um formato válido.',
+
+        'purchase_request_files.array'         => 'Os arquivos de solicitação de cotação devem ser um array.',
         'purchase_request_files.*.path.string' => 'O caminho do arquivo deve ser uma string.',
     ];
 
@@ -369,6 +406,33 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
                 $validator->errors()->add('cost_center_apportionments', 'A soma das porcentagens de rateio deve ser igual a 100%.');
             }
         });
+
+        return $validator;
+    }
+
+    public function purchaseRequestUpdate(array $data)
+    {
+        $rules = $this->rulesForPurchaseRequestUpdate;
+        $messages  = $this->messagesForPurchaseRequestUpdate;
+        $validator = Validator::make($data, $rules, $messages);
+
+        if (isset($data['cost_center_apportionments'])) {
+            $validator->after(function ($validator) use ($data) {
+                $totalPercentage = 0;
+                $hasPercentage = false;
+
+                foreach ($data['cost_center_apportionments'] as $apportionment) {
+                    if (isset($apportionment['apportionment_percentage'])) {
+                        $totalPercentage += $apportionment['apportionment_percentage'];
+                        $hasPercentage = true;
+                    }
+                }
+
+                if ($hasPercentage && $totalPercentage !== 100) {
+                    $validator->errors()->add('cost_center_apportionments', 'A soma das porcentagens de rateio deve ser igual a 100%.');
+                }
+            });
+        }
 
         return $validator;
     }
