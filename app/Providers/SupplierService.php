@@ -5,9 +5,7 @@ namespace App\Providers;
 use App\Enums\CompanyGroup;
 use App\Models\{Address, Phone, Supplier};
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\{Collection, Facades\DB, ServiceProvider};
 
 class SupplierService extends ServiceProvider
 {
