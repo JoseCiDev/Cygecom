@@ -47,8 +47,9 @@
                             <th>Nº</th>
                             <th>Solicitante</th>
                             <th>Responsável</th>
+                            <th class="col-sm-3">Categorias</th>
                             <th>Status</th>
-                            <th >Condição de pgto.</th>
+                            <th>Condição de pgto.</th>
                             <th class="hidden-1024">Contratação por</th>
                             <th class="hidden-1280">Grupo de custo</th>
                             <th class="hidden-1440">Data desejada</th>
@@ -62,11 +63,23 @@
                                 $concatenatedGroups = $groups->map(function ($item) {
                                         return $item->label();
                                     })->implode(', ');
+                                
+                                $categories = $product->purchaseRequestProduct->groupBy('category.name')->keys();
+                                $categoriesQtd = $categories->count();
                             @endphp
                             <tr>
                                 <td>{{$product->id}}</td>
                                 <td >{{$product->user->person->name}}</td>
                                 <td>{{$product->suppliesUser?->person->name ?? '---'}}</td>
+                                <td>
+                                    <div class="tag-category">
+                                        @forelse ($categories as $index => $category)
+                                            <span class="tag-category-item">{{$category}}</span>
+                                        @empty
+                                            ---
+                                        @endforelse
+                                    </div>
+                                </td>
                                 <td>{{$product->status->label()}}</td>
                                 <td >{{$product->product->paymentInfo?->payment_terms?->label() ?? '---'}}</td>
                                 <td class="hidden-1024">{{$product->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
