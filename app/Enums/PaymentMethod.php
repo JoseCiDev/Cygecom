@@ -12,6 +12,7 @@ enum PaymentMethod: string implements EnumInterface
     case CHEQUE = 'cheque';
     case DEPOSITO_BANCARIO = 'deposito_bancario';
     case DINHEIRO = 'dinheiro';
+    case INTERNACIONAL = 'internacional';
     case PIX = 'pix';
 
     public function label(): string
@@ -28,6 +29,7 @@ enum PaymentMethod: string implements EnumInterface
             self::CHEQUE => 'Cheque',
             self::DEPOSITO_BANCARIO => 'Depósito bancário',
             self::DINHEIRO => 'Dinheiro',
+            self::INTERNACIONAL => 'Internacional',
             self::PIX => 'Pix',
         };
     }

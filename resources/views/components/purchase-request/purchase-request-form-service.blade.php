@@ -16,6 +16,14 @@
         $selectedPaymentTerm = $purchaseRequest->service->paymentInfo->payment_terms;
     }
 
+    $paymentMethods = array_map(
+        fn($item) => [
+            'text' => $item->label(),
+            'value' => $item->value,
+        ],
+        $paymentMethods,
+    );
+
     // verifica status para desabilitar campos para o usuário
     $requestAlreadySent = $purchaseRequest?->status !== PurchaseRequestStatus::RASCUNHO;
     // ve se tem request e não foi enviada
@@ -299,8 +307,8 @@
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentMethods as $paymentMethod)
-                                    <option value="{{ $paymentMethod->value }}" @selected($paymentMethod->value === $selectedPaymentMethod?->value)>
-                                        {{ $paymentMethod->label() }}
+                                    <option value="{{ $paymentMethod['value'] }}" @selected($paymentMethod['value'] === $selectedPaymentMethod?->value)>
+                                        {{ $paymentMethod['text'] }}
                                     </option>
                                 @endforeach
                             </select>
@@ -503,8 +511,11 @@
         const hasSentRequest = @json($hasSentRequest);
         const isRequestCopy = @json($isCopy);
         const statusValues = @json($statusValues);
+        const selectedPaymentMethod = @json($selectedPaymentMethod);
+        const paymentMethodsIsComex = @json($paymentMethods);
 
         const $amount = $('.amount');
+        const $paymentMethod = $('#payment-method');
         const hiddenInputsContainer = $('.hidden-installments-inputs-container');
         const $inputInstallmentsNumber = $('.installments-number');
         const $radioIsContractedBySupplies = $('.radio-who-wants');
@@ -868,7 +879,6 @@
         $paymentTerm.on('change', function() {
             const $serviceAmount = $('#format-amount');
             const $formatInputInstallmentsNumber = $('.format-installments-number');
-            const $paymentMethod = $('#payment-method');
             const $paymentInfoDescription = $('#payment-info-description');
             const paymentTerm = $(this).val() === "anticipated";
 
@@ -896,6 +906,57 @@
 
         if (!hasSentRequest || $paymentTerm.filter(':selected').val() === "anticipated") {
             $paymentTerm.filter(':selected').trigger('change.select2');
+        }
+
+
+        const paymentMethodsNotComex = paymentMethodsIsComex
+            .filter(function({
+                value
+            }) {
+                return value !== 'internacional';
+            });
+
+        const $radioComex = $('.radio-comex');
+
+        $radioComex.on('change', function() {
+            const isComex = $(this).val() === "1";
+
+            $paymentMethod.empty();
+
+            const emptyOption = new Option();
+            $paymentMethod.append(emptyOption);
+
+            if (!isComex) {
+                paymentMethodsNotComex.forEach(function({
+                    text,
+                    value
+                }) {
+                    const option = new Option(text, value);
+                    if (value === selectedPaymentMethod) {
+                        option.selected = true;
+                    }
+                    $paymentMethod.append(option);
+                });
+            } else {
+                paymentMethodsIsComex.forEach(function({
+                    text,
+                    value
+                }) {
+                    const option = new Option(text, value);
+                    if (value === selectedPaymentMethod) {
+                        option.selected = true;
+                    }
+                    $paymentMethod.append(option);
+                });
+            }
+
+            // Destruir e recriar o Select2
+            $paymentMethod.select2('destroy');
+            $paymentMethod.select2();
+        });
+
+        if (!hasSentRequest && $radioComex.is(':checked')) {
+            $radioComex.filter(':checked').trigger('change');
         }
 
         // desabilita todos os campos do form caso solicitacao ja enviada
