@@ -51,6 +51,7 @@
                             <th>Fornecedor</th>
                             <th class="hidden-1280">Qualif. fornecedor</th>
                             <th>Condição de pgto.</th>
+                            <th>Valor</th>
                             <th class="hidden-1024">Contratação por</th>
                             <th class="hidden-1440">Grupo de custo</th>
                             <th class="hidden-1440">Data desejada</th>
@@ -64,6 +65,8 @@
                                 $concatenatedGroups = $groups->map(function ($item) {
                                         return $item->label();
                                     })->implode(', ');
+                                $amount = $contract->contract->amount;
+                                $amountFormated = $amount !== null ? number_format($amount, 2, ',', '.') : '---';
                             @endphp
                             <tr>
                                 <td>{{$contract->id}}</td>
@@ -74,6 +77,7 @@
                                 <td class="hidden-1280">{{$contract->contract->supplier?->qualification->label() ?? '---'}}</td>
 
                                 <td>{{$contract->contract->paymentInfo?->payment_terms?->label() ?? '---'}}</td>
+                                <td>R$ {{$amountFormated}}</td>
                                 <td class="hidden-1024">{{$contract->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1440">{{$concatenatedGroups}}</td>
 
