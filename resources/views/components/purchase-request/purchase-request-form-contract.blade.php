@@ -514,9 +514,11 @@
                             style="width:100%;">
                             <option value=""></option>
                             @foreach ($suppliers as $supplier)
-                                @php $supplierSelected = isset($purchaseRequest->contract) && $purchaseRequest->contract->supplier_id === $supplier->id; @endphp
-                                <option value="{{ $supplier->id }}" @selected($supplierSelected)>
-                                    {{ "$supplier->cpf_cnpj - $supplier->corporate_name" }}</option>
+                                @php 
+                                    $supplierSelected = isset($purchaseRequest->contract) && $purchaseRequest->contract->supplier_id === $supplier->id; 
+                                    $cnpj = $supplier->cpf_cnpj ?? 'CNPJ indefinido'
+                                @endphp
+                                <option value="{{ $supplier->id }}" @selected($supplierSelected)>{{ "$cnpj - $supplier->corporate_name" }}</option>
                             @endforeach
                         </select>
                     </div>

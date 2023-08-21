@@ -30,9 +30,13 @@
                             data-placeholder="Informe um fornecedor ou cadastre um novo" style="width:100%;">
                             <option value=""></option>
                             @foreach ($suppliers as $supplier)
-                                <option value="{{ $supplier->id }}"
-                                    @if (isset($supplierId)) @selected($supplier->id === $supplierId) @endif>
-                                    {{ "$supplier->cpf_cnpj - $supplier->corporate_name" }}</option>
+                                @php 
+                                    $isSelected = $supplier->id === $supplierId;
+                                    $cnpj = $supplier->cpf_cnpj ?? 'CNPJ indefinido'
+                                @endphp
+                                <option value="{{ $supplier->id }}" @selected($isSelected)>
+                                    {{ "$cnpj  - $supplier->corporate_name" }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
