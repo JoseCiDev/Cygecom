@@ -25,10 +25,7 @@
     <div class="row">
 
         <div class="col-sm-2">
-            <div class="form-group">
-                <label for="cpf_cnpj" class="control-label">CNPJ</label>
-                <x-InputCnpj :cnpj="$supplier?->cpf_cnpj" name="cpf_cnpj" id="cpf_cnpj" data-cy="cpf_cnpj" />
-            </div>
+            <x-InputCnpj :cnpj="$supplier?->cpf_cnpj" name="cpf_cnpj" id="cpf_cnpj" data-cy="cpf_cnpj" />
             <input type="hidden" name="entity_type" value="PJ" data-cy="entity_type">
         </div>
 
@@ -277,6 +274,18 @@
 @if ($isAPI)
     <script src="{{ asset('js/supplies/register-supplier-by-api.js') }}"></script>
 @endif
+
+<script>
+    $(() => {
+        function setAddressRules() {
+            const isChecked = $(this).is(':checked');
+            const $address = $('#postal_code, #state, #city, #neighborhood, #street, #street_number');
+            isChecked ? $address.removeRequired() : $address.makeRequired();
+        }
+
+        $('#is-international-supplier').on('change', setAddressRules)
+    });
+</script>
 
 <script>
     $(() => {
