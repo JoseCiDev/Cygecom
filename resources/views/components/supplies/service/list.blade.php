@@ -54,7 +54,7 @@
                             <th class="hidden-1280">Qualif. fornecedor</th>
 
                             <th class="hidden-1024">Condição de pgto.</th>
-                            <th class="hidden-1024">Valor</th>
+                            <th class="hidden-1024">Valor total</th>
                             <th class="hidden-1024">Progresso</th>
                             <th>Contratação por</th>
 
