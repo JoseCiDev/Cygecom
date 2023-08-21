@@ -90,9 +90,6 @@
                                     <div class="tab-content padding">
                                         <p><strong>Status de aprovação:</strong> {{ $request->status->label() }}</p>
                                         <p><strong>Tipo de solicitação:</strong> {{ $request->type->label() }}</p>
-                                        <p><strong>Responsável pela contratação:</strong>
-                                            {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }}
-                                        </p>
                                         <p><strong>COMEX:</strong> {{ $request->is_comex ? 'Sim' : 'Não' }}</p>
                                         <p><strong>Motivo da solicitação:</strong> {{ $request->reason }} </p>
                                         <p><strong>Observação:</strong> {{ $request->observation ?? '---' }}</p>
@@ -136,7 +133,6 @@
                                             <strong>Aprovação limite:</strong>
                                             {{ $request->user->approver_limit ?? 'Sem limite' }}
                                         </p>
-
                                         <p>
                                             <strong>Usuário aprovador:</strong>
                                             {{ $request->user->approver->person->name ?? 'Sem aprovador' }}

@@ -152,7 +152,7 @@
                                         </p>
                                         <p>
                                             <strong>Usuário aprovador:</strong>
-                                            {{ $request->user->approver_user_id ?? 'Sem aprovador' }}
+                                            {{ $request->user->approver->person->name ?? 'Sem aprovador' }}
                                         </p>
                                         <hr>
                                         <p>
