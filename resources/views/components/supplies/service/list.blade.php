@@ -53,9 +53,9 @@
                             <th>Fornecedor</th>
                             <th class="hidden-1280">Qualif. fornecedor</th>
 
-                            <th>Condição de pgto.</th>
-                            <th>Valor</th>
-                            <th>Progresso</th>
+                            <th class="hidden-1024">Condição de pgto.</th>
+                            <th class="hidden-1024">Valor</th>
+                            <th class="hidden-1024">Progresso</th>
                             <th>Contratação por</th>
 
                             <th class="hidden-1440">Grupo de custo</th>
@@ -82,9 +82,9 @@
                                 <td>{{$service->service->Supplier?->cpf_cnpj ?? '---'}}</td>
                                 <td class="hidden-1280">{{$service->service->Supplier?->qualification->label() ?? '---'}}</td>
 
-                                <td>{{$service->service->paymentInfo?->payment_terms?->label() ?? '---' }}</td>
-                                <td>R$ {{$amountFormated}}</td>
-                                <td>{{$service->service->already_provided ? 'Executado' : 'Não executado'}}</td>
+                                <td class="hidden-1024">{{$service->service->paymentInfo?->payment_terms?->label() ?? '---' }}</td>
+                                <td class="hidden-1024">R$ {{$amountFormated}}</td>
+                                <td class="hidden-1024">{{$service->service->already_provided ? 'Executado' : 'Não executado'}}</td>
                                 <td>{{$service->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1440">{{$concatenatedGroups}}</td>
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($service->desired_date)->format('d/m/Y') }}</td>
