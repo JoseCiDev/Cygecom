@@ -1,5 +1,5 @@
 @php
-    use App\Enums\PurchaseRequestStatus;
+    use App\Enums\{PurchaseRequestStatus, PurchaseRequestType};
 
     if (isset($contract)) {
         $request = $contract;
@@ -152,7 +152,7 @@
                                         </p>
                                         <p>
                                             <strong>Usuário aprovador:</strong>
-                                            {{ $request->user->approver_user_id ?? 'Sem aprovador' }}
+                                            {{ $request->user->approver->person->name ?? 'Sem aprovador' }}
                                         </p>
                                         <hr>
                                         <p>
@@ -393,8 +393,16 @@
                         @endforeach
                     </ul>
                  @else
-                    <p>Ainda não há registros aqui.</p>
+                    <p>Nenhum registro encontrado.</p>
                  @endif
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::SERVICE" />
             </div>
         </div>
 

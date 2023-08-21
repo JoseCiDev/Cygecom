@@ -1,5 +1,5 @@
 @php
-    use \App\Enums\{PaymentTerm, LogAction};
+    use \App\Enums\{PaymentTerm, LogAction, PurchaseRequestType};
 
     if (isset($contract)) {
         $request = $contract;
@@ -90,9 +90,6 @@
                                     <div class="tab-content padding">
                                         <p><strong>Status de aprovação:</strong> {{ $request->status->label() }}</p>
                                         <p><strong>Tipo de solicitação:</strong> {{ $request->type->label() }}</p>
-                                        <p><strong>Responsável pela contratação:</strong>
-                                            {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }}
-                                        </p>
                                         <p><strong>COMEX:</strong> {{ $request->is_comex ? 'Sim' : 'Não' }}</p>
                                         <p>
                                             <strong>Motivo da solicitação:</strong> {{ $request->reason }}
@@ -151,8 +148,8 @@
                                             {{ $request->user->approver_limit ?? 'Sem limite' }}
                                         </p>
                                         <p>
-                                            <strong>Nº do aprovador:</strong>
-                                            {{ $request->user->approver_user_id ?? 'Sem aprovador' }}
+                                            <strong>Usuário aprovador:</strong>
+                                            {{ $request->user->approver->person->name ?? 'Sem aprovador' }}
                                         </p>
                                         <hr>
                                         <p>
@@ -461,6 +458,14 @@
                 @else
                     <p>Nenhum registro encontrado.</p>
                  @endif
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::CONTRACT" />
             </div>
         </div>
 

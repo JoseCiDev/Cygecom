@@ -1,5 +1,5 @@
 @php
-    use App\Enums\LogAction;
+    use App\Enums\{LogAction, PurchaseRequestType};
 
     if (isset($contract)) {
         $request = $contract;
@@ -90,9 +90,6 @@
                                     <div class="tab-content padding">
                                         <p><strong>Status de aprovação:</strong> {{ $request->status->label() }}</p>
                                         <p><strong>Tipo de solicitação:</strong> {{ $request->type->label() }}</p>
-                                        <p><strong>Responsável pela contratação:</strong>
-                                            {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }}
-                                        </p>
                                         <p><strong>COMEX:</strong> {{ $request->is_comex ? 'Sim' : 'Não' }}</p>
                                         <p><strong>Motivo da solicitação:</strong> {{ $request->reason }} </p>
                                         <p><strong>Observação:</strong> {{ $request->observation ?? '---' }}</p>
@@ -136,7 +133,6 @@
                                             <strong>Aprovação limite:</strong>
                                             {{ $request->user->approver_limit ?? 'Sem limite' }}
                                         </p>
-
                                         <p>
                                             <strong>Usuário aprovador:</strong>
                                             {{ $request->user->approver->person->name ?? 'Sem aprovador' }}
@@ -402,6 +398,8 @@
             </main>
         </div>
 
+        <hr>
+
         <div class="row">
             <div class="col-md-12">
                  <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
@@ -412,10 +410,20 @@
                         @endforeach
                     </ul>
                  @else
-                    <p>Ainda não há registros aqui.</p>
+                    <p>Nenhum registro encontrado.</p>
                  @endif
             </div>
         </div>
+
+        <hr>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::PRODUCT" />
+            </div>
+        </div>
+      
+        <hr>
 
         <div class="row">
             <div class="col-md-12">

@@ -1,3 +1,7 @@
+@php
+    use App\Enums\PurchaseRequestStatus;
+@endphp
+
 <div class="row">
     <div class="col-sm-12">
         <div class="box box-color box-bordered">
@@ -12,33 +16,43 @@
 
             <div class="box-content nopadding">
 
-                <table
-                    class="table table-hover table-nomargin table-bordered dataTable"
-                    data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
+                <div class="row">
+                    <div class="col-md-12">
+                       <form action="{{ route('supplies.service')}}" method="GET" class="form-status-filter">
+                            <button class="btn btn-primary btn-small" id="status-filter-btn" type="submit">Filtrar status</button>
+                            @if ($suppliesGroup)
+                                <input type="hidden" name="suppliesGroup" value="{{ $suppliesGroup->value }}">
+                            @endif
+                            @foreach (PurchaseRequestStatus::cases() as $statusCase)
+                                @php
+                                    $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
+                                    $isChecked = count($status) ? collect($status)->contains($statusCase) : $statusDefaultFilter;
+                                @endphp
+                                
+                                @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
+                                        {{ $statusCase->label() }}
+                                    </label>
+                                @endif
+
+                            @endforeach
+                       </form>
+                    </div>
+                </div>
+
+                <table class="table table-hover table-nomargin table-bordered dataTable" data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                     <thead>
                         <tr>
                             <th>Nº</th>
                             <th>Solicitante</th>
                             <th>Responsável</th>
-                            <th class="hidden-1280">Responsável em</th>
-                            <th class="col-xs-2">
-                                <select id="filterStatus" data-cy="filterStatus" class="form-control">
-                                    <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup])}}>Status</option>
-                                    @foreach (\App\Enums\PurchaseRequestStatus::cases() as $statusCase)
-                                        @if ($statusCase->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
-                                            <option data-href={{route(request()->route()->getName(), ['suppliesGroup'=> $suppliesGroup, 'status' => $statusCase->value])}}
-                                                value="{{ $statusCase->value }}" @selected($statusCase->value === $status?->value)>
-                                                {{ $statusCase->label() }}
-                                            </option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </th>
-                            <th >Condição de pgto.</th>
+                            <th class="col-sm-3">Categorias</th>
+                            <th>Status</th>
+                            <th>Condição de pgto.</th>
                             <th class="hidden-1024">Contratação por</th>
                             <th class="hidden-1280">Grupo de custo</th>
                             <th class="hidden-1440">Data desejada</th>
-                            <th class="hidden-1440">Atualizado em</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -49,19 +63,29 @@
                                 $concatenatedGroups = $groups->map(function ($item) {
                                         return $item->label();
                                     })->implode(', ');
+                                
+                                $categories = $product->purchaseRequestProduct->groupBy('category.name')->keys();
+                                $categoriesQtd = $categories->count();
                             @endphp
                             <tr>
                                 <td>{{$product->id}}</td>
                                 <td >{{$product->user->person->name}}</td>
                                 <td>{{$product->suppliesUser?->person->name ?? '---'}}</td>
-                                <td class="hidden-1280">{{$product->responsibility_marked_at ? \Carbon\Carbon::parse($product->responsibility_marked_at)->format('d/m/Y h:m:s') : '---'}}</td>
+                                <td>
+                                    <div class="tag-category">
+                                        @forelse ($categories as $index => $category)
+                                            <span class="tag-category-item">{{$category}}</span>
+                                        @empty
+                                            ---
+                                        @endforelse
+                                    </div>
+                                </td>
                                 <td>{{$product->status->label()}}</td>
                                 <td >{{$product->product->paymentInfo?->payment_terms?->label() ?? '---'}}</td>
                                 <td class="hidden-1024">{{$product->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1280">{{$concatenatedGroups}}</td>
 
                                 <td class="hidden-1440">{{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y h:m:s') : '---'}}</td>
-                                <td class="hidden-1440">{{ $product->updated_at ? \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') : '---'}}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
@@ -103,4 +127,3 @@
 </div>
 
 <script src="{{asset('js/supplies/modal-confirm-supplies-responsability.js')}}"></script>
-<script src="{{asset('js/supplies/redirect-route-by-request-status.js')}}"></script>
