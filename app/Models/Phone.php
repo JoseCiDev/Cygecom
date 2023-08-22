@@ -35,6 +35,6 @@ class Phone extends Model
         'updated_by',
         'deleted_by',
         'deleted_at',
-        'isInternational'
+        'is_international'
     ];
 }

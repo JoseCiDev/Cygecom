@@ -24,7 +24,7 @@ class RegisterAdmin extends Seeder
         DB::table('users')->insert([
             'email'      => 'gecom_admin@essentia.com.br',
             'password'   => '$2y$10$ZV1gao3lgBrZZkuK6fqaFu3aSKBuzyVsJ0ny8QQCH5THPweL1fHKS',
-            'profile_id' => 1,
+            'user_profile_id' => 1,
             'person_id'  => $personId,
             'is_buyer'   => true,
         ]);
