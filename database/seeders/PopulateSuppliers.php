@@ -21,7 +21,7 @@ class PopulateSuppliers extends SeederFromImporter
         DB::transaction(function () use ($suppliersData) {
             try {
                 foreach ($suppliersData as $data) {
-                    $validator = $this->validatorService->supplier($data);
+                    $validator = $this->validatorService->supplier($data, $data['cpf_cnpj']);
                     if ($validator->fails()) {
                         continue;
                     }
