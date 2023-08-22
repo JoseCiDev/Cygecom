@@ -16,7 +16,7 @@
         <div class="col-sm-6">
             <div class="pull-right">
                 <fieldset> Consulte aqui o cartão CNPJ: </fieldset>
-                <a style="display: block"
+                <a style="display: block; color: #c49f51"
                     href="https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/cnpjreva_solicitacao.asp"
                     target="_blank" rel="noopener noreferrer">Clique aqui para a pesquisa do cartão CNPJ</a>
             </div>

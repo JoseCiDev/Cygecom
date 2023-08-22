@@ -43,41 +43,41 @@
                 </div>
             </div>
 
-            <div class="col-sm-12 product-container">
-                <div class="box-title"
-                    style="background-color:rgba(129, 129, 129, 0.531); border: 1px solid rgb(158, 158, 158); ">
-                    <h3 style="color:rgb(46, 46, 46)"> <i class="glyphicon glyphicon-tag"></i> Produtos
-                    </h3>
-                </div>
-                <div class="box-content nopadding"
-                    style="background-color:rgba(244, 244, 244, 0.531); border: 1px solid rgb(179, 179, 179); border-top: 0px; ">
-
-                    @php $productIndex = 0 @endphp
-                    @if ($products)
-                        @foreach($products as $product)
+            <div class="row">
+                <div class="col-sm-12 product-container">
+                    <div class="box-title" style="background-color:transparent; border: none; padding: 0 10px 0 0">
+                        <h3 style="color: #141414;"> Produtos </h3>
+                    </div>
+                    <div class="box-content nopadding"
+                        style="background-color:rgba(244, 244, 244, 0.531); border: 1px solid rgb(179, 179, 179);">
+    
+                        @php $productIndex = 0 @endphp
+                        @if ($products)
+                            @foreach($products as $product)
+                                <x-purchase-request.product.product
+                                    :productCategories="$productCategories"
+                                    :product="$product"
+                                    :productIndex="$productIndex"
+                                    :supplierIndex="$supplierIndex"
+                                    :isCopy="$isCopy"
+                                />
+                                @php $productIndex++; @endphp
+                            @endforeach
+                        @else
                             <x-purchase-request.product.product
                                 :productCategories="$productCategories"
-                                :product="$product"
                                 :productIndex="$productIndex"
                                 :supplierIndex="$supplierIndex"
-                                :isCopy="$isCopy"
                             />
-                            @php $productIndex++; @endphp
-                        @endforeach
-                    @else
-                        <x-purchase-request.product.product
-                            :productCategories="$productCategories"
-                            :productIndex="$productIndex"
-                            :supplierIndex="$supplierIndex"
-                        />
-                    @endif
-
-                    <button type="button"
-                        style="background-color:rgba(162, 162, 162, 0.531); color:rgb(46, 46, 46); margin:10px;"
-                        class="btn btn-success add-product-btn">
-                        <i class="glyphicon glyphicon-plus"></i>
-                        Adicionar produto
-                    </button>
+                        @endif
+    
+                        <button type="button"
+                            style="background-color:#ffffff; color: #141414; margin:10px; border: 1px solid #141414; border-radius: 4px"
+                            class="btn add-product-btn">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            Adicionar produto
+                        </button>
+                    </div>
                 </div>
             </div>
 

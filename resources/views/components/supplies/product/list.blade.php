@@ -6,14 +6,6 @@
     <div class="col-sm-12">
         <div class="box box-color box-bordered">
 
-            <div class="box-title">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h3 class="pull-left">Solicitações de Produtos</h3>
-                    </div>
-                </div>
-            </div>
-
             <div class="box-content nopadding">
 
                 <div class="row">
