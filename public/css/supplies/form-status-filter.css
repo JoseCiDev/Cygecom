@@ -1,9 +1,8 @@
 .form-status-filter {
     display: flex;
     gap: 20px;
-    padding: 15px 10px;
+    padding: 15px 0;
     align-items: center;
-    border-bottom: 1px solid #204e81
 }
 
 .form-status-filter .checkbox-label {

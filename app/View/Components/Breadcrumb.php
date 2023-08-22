@@ -28,9 +28,6 @@ class Breadcrumb extends Component
             ['route' => 'users', 'label' => 'Usuários'],
             ['route' => 'register', 'label' => 'Cadastro de usuário'],
         ],
-        'home' => [
-            ['route' => 'home', 'label' => 'Home'],
-        ],
         'email' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'email', 'label' => 'Envio de e-mail'],
@@ -145,7 +142,8 @@ class Breadcrumb extends Component
     {
         $route       = Route::getCurrentRoute();
         $routeName   = $route->getName();
-        $this->items = $this->itemsMap[$routeName] ?? $this->itemsMap['home'];
+
+        $this->items = $routeName !== 'home' ? $this->itemsMap[$routeName] : [];
     }
 
     public function render()

@@ -343,7 +343,7 @@
             </div>
             {{-- CENTRO DE CUSTOS PERMITIDOS --}}
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-9">
                     <div class="form-group">
                         <label for="approver_user_id" id="cost-center-permissions" class="control-label">Centros de custos permitidos</label>
                         <select @disabled(!$currentProfile === 'admin') name="user_cost_center_permissions[]" id="user_cost_center_permissions" data-cy="user_cost_center_permissions" multiple="multiple"
@@ -370,11 +370,11 @@
                     <div class="row">
                         <div class="col-sm-2">
                             <a href="#cost-center-permissions" class="btn btn-small btn-primary btn-select-all-cost-centers" data-cy="btn-select-all-cost-centers"
-                                style="font-size:12px;">
+                                style="font-size:14px;">
                                 Selecionar todos
                             </a>
                             <button type="button" class="btn btn-small btn-primary btn-clear-cost-centers" data-cy="btn-clear-cost-centers"
-                                style="font-size:12px;">
+                                style="font-size:14px;">
                                 Limpar
                             </button>
                         </div>
@@ -386,10 +386,10 @@
 
     {{-- SALVAR/CANCELAR --}}
     <div class="form-actions pull-right">
+        <a href="{{ route('users') }}" class="btn btn-large" data-cy="btn-cancelar">Cancelar</a>
         @if (!$userToChangeIsAdmin)
-            <button type="submit" class="btn btn-primary" data-cy="btn-submit-salvar">Salvar</button>
+            <button type="submit" class="btn btn-primary btn-large" data-cy="btn-submit-salvar">Salvar</button>
         @endif
-        <a href="{{ route('users') }}" class="btn" data-cy="btn-cancelar">Cancelar</a>
     </div>
     </form>
 </div>
