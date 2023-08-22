@@ -35,7 +35,7 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <p>Encontrado {{$contracts->count()}} registro(s).</p>
+                        <p>Encontrado {{$services->count()}} registro(s).</p>
                     </div>
                 </div>
 
