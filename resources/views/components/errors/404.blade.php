@@ -18,7 +18,7 @@
 
 </head>
 
-<body class='login theme-darkblue'>
+<body class='login theme-grey'>
 	<div class="wrapper">
 		<h1 style="color: #ffffff">Página não encontrada!<h1>
         <a href="{{ route('home') }}" data-cy="voltar-ao-inicio">

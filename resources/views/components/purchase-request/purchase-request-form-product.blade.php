@@ -54,7 +54,10 @@
     }
 
     .supplier-block .product-container .product-row:nth-of-type(odd) {
-        background-color: rgb(208, 208, 208);
+        background-color: #f7f7f7;
+    }
+    .supplier-block .product-container .product-row:nth-of-type(even) {
+        background-color: #ffffff;
     }
 </style>
 
@@ -421,20 +424,19 @@
         </div>
 
         <div class="form-actions pull-right" style="margin-top:50px; padding-bottom:20px">
+            <a style="margin-right: 10px" href="{{ route('requests.own') }}" class="btn btn-large">Cancelar</a>
+
             @if (!$hasSentRequest)
                 <input type="hidden" name="action" id="action" value="">
 
-                <button type="submit" class="btn btn-primary btn-draft" style="margin-right: 10px">
+                <button type="submit" class="btn btn-primary btn-large btn-draft" style="margin-right: 10px">
                     Salvar rascunho
                 </button>
 
-                <button type="submit" name="submit_request" style="margin-right: 10px"
-                    class="btn btn-success btn-submit-request" value="submit-request">
+                <button type="submit" name="submit_request" style="background: #c49f51"
+                    class="btn btn-success btn-large btn-submit-request" value="submit-request">
                     Salvar e enviar solicitação
-                    <i class="fa fa-paper-plane"></i>
                 </button>
-
-                <a href="{{ route('requests.own') }}" class="btn">Cancelar</a>
             @endif
 
             @if ($hasSentRequest)

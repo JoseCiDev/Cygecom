@@ -25,7 +25,6 @@ $(() => {
                 },
                 cancel: {
                     label: 'Não',
-                    className: 'btn-danger'
                 }
             },
             callback: function(result) {

@@ -75,9 +75,11 @@ class SupplierController extends Controller
     public function register(Request $request)
     {
         $data = $request->all();
-        $data['cpf_cnpj'] = preg_replace('/[^0-9]/', '', $data['cpf_cnpj']);
+        $cnpj = $request->cpf_cnpj;
 
-        $validator = $this->validatorService->supplier($data);
+        $data['cpf_cnpj'] = $cnpj ? preg_replace('/[^0-9]/', '', $cnpj) : null;
+
+        $validator = $this->validatorService->supplier($data, $cnpj);
 
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
@@ -97,7 +99,8 @@ class SupplierController extends Controller
     public function registerAPI(Request $request)
     {
         $data = $request->all();
-        $validator = $this->validatorService->supplier($data);
+        $cnpj = $request->cpf_cnpj;
+        $validator = $this->validatorService->supplier($data, $cnpj);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
@@ -111,7 +114,7 @@ class SupplierController extends Controller
 
         return response()->json([
             'message' => 'Fornecedor cadastrado com sucesso!',
-            'cpf_cnpj' => $data['cpf_cnpj'],
+            'cpf_cnpj' => isset($data['cpf_cnpj']) ? $data['cpf_cnpj'] : 'CNPJ indefinido',
             'id' => $supplier->id,
             'corporate_name' => $supplier->corporate_name,
             'representative' => $supplier->representative,

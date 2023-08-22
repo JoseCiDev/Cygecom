@@ -7,16 +7,13 @@
 ])
 
 
-<div class="product-row" style="padding:0px;">
-    <div class="row" style="padding-top:15px;">
-        <div class="col-sm-1" style="margin-top: 23px; margin-left:10px; width:5.3%;" disabled>
-            <button type="button" class="btn btn-icon btn-danger delete-product" data-cy="delete-product"><i  class="fa fa-trash-o"></i></button>
-        </div>
+<div class="product-row" style="padding: 10px 0; border-bottom: 1px solid rgb(179, 179, 179)">
+    <div class="row" style="padding: 15px 20px 0 20px;">
         <input type="hidden" name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][id]"
             data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][id]"
             value="{{ $isCopy ? null : $product?->id}}" class="product-id">
         {{-- CATEGORIA PRODUTO --}}
-        <div class="col-sm-5" style="margin-left:-10px;">
+        <div class="col-sm-5">
             <div class="form-group">
                 <label for="product-category" class="control-label">Categoria do produto</label>
                 <select data-rule-required="true"
@@ -46,9 +43,11 @@
                 <ul class="product-suggestion-autocomplete" data-cy="product-suggestion-autocomplete" style="display: none;"></ul>
             </div>
         </div>
+        <div class="col-sm-1" style="margin-top: 23px; width:5.3%;" disabled>
+            <button type="button" class="btn btn-icon btn-danger delete-product" data-cy="delete-product"><i  class="fa fa-trash-o"></i></button>
+        </div>
     </div>
-    <div class="row">
-        <div class="col-sm-1" style="width:5.3%;"></div>
+    <div class="row" style="padding: 0 20px 15px 20px">
         <div class="col-sm-2">
             <div class="form-group" style="margin-top:-10px">
                 <label for="qtd" class="control-label">Quantidade</label>
@@ -84,5 +83,4 @@
             </div>
         </div>
     </div>
-    <hr>
 </div>

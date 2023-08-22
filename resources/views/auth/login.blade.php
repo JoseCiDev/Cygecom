@@ -47,7 +47,7 @@
 
 </head>
 
-<body class='login theme-darkblue'>
+<body class='login theme-grey'>
 	<div class="wrapper">
 		<h1 style="color: #ffffff">GECOM</h1>
 		<div class="login-body">
@@ -66,7 +66,7 @@
 					</div>
 				</div>
 				<div class="submit" style="padding-bottom: 10px;">
-					<input type="submit" data-cy="btn-login-entrar" value="Entrar" class='btn btn-primary'>
+					<input type="submit" data-cy="btn-login-entrar" value="Entrar" class='btn btn-large btn-primary'>
 				</div>
 			</form>
 		</div>

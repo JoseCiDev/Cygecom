@@ -90,7 +90,7 @@
                     data: 'cpf_cnpj',
                     render: (value) => {
                         const cnpjRegex = /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/;
-                        return cnpjRegex.test(value)  ? value.replace(cnpjRegex, '$1.$2.$3/$4-$5') : value + " - inválido";
+                        return cnpjRegex.test(value)  ? value.replace(cnpjRegex, '$1.$2.$3/$4-$5') : "---";
                     }
                 },
                 { data: 'corporate_name'},

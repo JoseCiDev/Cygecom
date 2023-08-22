@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Contracts\ValidatorServiceInterface;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rule;
 
 class ValidatorService extends ServiceProvider implements ValidatorServiceInterface
 {
@@ -83,7 +84,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
     ];
 
     public $rulesForSupplier = [
-        "cpf_cnpj"            => ['required', 'string', 'min:11'],
+        "cpf_cnpj"            => ['nullable', 'string', 'min:11'],
         "entity_type"         => ['required', 'string', 'in:PF,PJ'],
         "supplier_indication" => ['required', 'string'],
         "market_type"         => ['required', 'string'],
@@ -92,14 +93,14 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         "email"               => ['nullable', 'email'],
         "representative"      => ['nullable', 'string'],
         "senior_code"         => ['nullable', 'string'],
-        "callisto_code"         => ['nullable', 'string'],
+        "callisto_code"       => ['nullable', 'string'],
 
-        'postal_code'   => ['required', 'string', 'max:20', 'min:7'],
+        'postal_code'   => ['nullable', 'string', 'max:20', 'min:7'],
         'country'       => ['required', 'string', 'max:255', 'min:3'],
-        'state'         => ['required', 'string', 'max:255'],
-        'city'          => ['required', 'string', 'max:255', 'min:3'],
-        'neighborhood'  => ['required', 'string', 'max:255'],
-        'street'        => ['required', 'string', 'max:255', 'min:1'],
+        'state'         => ['nullable', 'string', 'max:255'],
+        'city'          => ['nullable', 'string', 'max:255', 'min:3'],
+        'neighborhood'  => ['nullable', 'string', 'max:255'],
+        'street'        => ['nullable', 'string', 'max:255', 'min:1'],
         'street_number' => ['nullable', 'string', 'max:20', 'min:0'],
         'complement'    => ['nullable', 'string', 'max:255'],
 
@@ -108,9 +109,9 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
     ];
 
     public $messagesForSupplier = [
-        'cpf_cnpj.required' => 'O campo CPF/CNPJ é obrigatório.',
         'cpf_cnpj.string'   => 'O CPF/CNPJ deve ser uma string.',
         'cpf_cnpj.min'      => 'O CPF/CNPJ deve ter no mínimo :min caracteres.',
+        'cpf_cnpj.unique' => "O CNPJ já existe em nosso banco de dados e deve ser único. Por favor, verifique novamente o campo.",
 
         'entity_type.required' => 'O campo Tipo de Entidade é obrigatório.',
         'entity_type.string'   => 'O Tipo de Entidade deve ser uma string.',
@@ -134,7 +135,6 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
 
         'representative.string' => 'O representante deve ser uma string.',
 
-        'postal_code.required' => 'O campo CEP é obrigatório.',
         'postal_code.string'   => 'O CEP deve ser uma string.',
         'postal_code.max'      => 'O CEP deve ter no máximo :max caracteres.',
         'postal_code.min'      => 'O CEP deve ter no mínimo :min caracteres.',
@@ -144,20 +144,16 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'country.max'      => 'O país deve ter no máximo :max caracteres.',
         'country.min'      => 'O país deve ter no mínimo :min caracteres.',
 
-        'state.required' => 'O campo Estado é obrigatório.',
         'state.string'   => 'O estado deve ser uma string.',
         'state.max'      => 'O estado deve ter no máximo :max caracteres.',
 
-        'city.required' => 'O campo Cidade é obrigatório.',
         'city.string'   => 'A cidade deve ser uma string.',
         'city.max'      => 'A cidade deve ter no máximo :max caracteres.',
         'city.min'      => 'A cidade deve ter no mínimo :min caracteres.',
 
-        'neighborhood.required' => 'O campo Bairro é obrigatório.',
         'neighborhood.string'   => 'O bairro deve ser uma string.',
         'neighborhood.max'      => 'O bairro deve ter no máximo :max caracteres.',
 
-        'street.required' => 'O campo Rua é obrigatório.',
         'street.string'   => 'A rua deve ser uma string.',
         'street.max'      => 'A rua deve ter no máximo :max caracteres.',
         'street.min'      => 'A rua deve ter no minimo :min caracteres.',
@@ -179,7 +175,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
     ];
 
     public $rulesForSupplierUpdate = [
-        "cpf_cnpj"            => ['required', 'string', 'min:11'],
+        "cpf_cnpj"            => ['nullable', 'string', 'min:11'],
         "entity_type"         => ['required', 'string', 'in:PF,PJ'],
         "supplier_indication" => ['required', 'string'],
         "market_type"         => ['required', 'string'],
@@ -190,12 +186,12 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         "senior_code"         => ['nullable', 'string'],
         "callisto_code"         => ['nullable', 'string'],
 
-        'postal_code'   => ['required', 'string', 'max:20', 'min:7'],
+        'postal_code'   => ['nullable', 'string', 'max:20', 'min:7'],
         'country'       => ['required', 'string', 'max:255', 'min:3'],
-        'state'         => ['required', 'string', 'max:255'],
-        'city'          => ['required', 'string', 'max:255', 'min:3'],
-        'neighborhood'  => ['required', 'string', 'max:255'],
-        'street'        => ['required', 'string', 'max:255', 'min:1'],
+        'state'         => ['nullable', 'string', 'max:255'],
+        'city'          => ['nullable', 'string', 'max:255', 'min:3'],
+        'neighborhood'  => ['nullable', 'string', 'max:255'],
+        'street'        => ['nullable', 'string', 'max:255', 'min:1'],
         'street_number' => ['nullable', 'string', 'max:20', 'min:0'],
         'complement'    => ['nullable', 'string', 'max:255'],
 
@@ -204,7 +200,6 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
     ];
 
     public $messagesForSupplierUpdate = [
-        'cpf_cnpj.required' => 'O campo CPF/CNPJ é obrigatório.',
         'cpf_cnpj.string'   => 'O CPF/CNPJ deve ser uma string.',
         'cpf_cnpj.min'      => 'O CPF/CNPJ deve ter no mínimo :min caracteres.',
 
@@ -229,7 +224,6 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
 
         'representative.string' => 'O representante deve ser uma string.',
 
-        'postal_code.required' => 'O campo CEP é obrigatório.',
         'postal_code.string'   => 'O CEP deve ser uma string.',
         'postal_code.max'      => 'O CEP deve ter no máximo :max caracteres.',
         'postal_code.min'      => 'O CEP deve ter no mínimo :min caracteres.',
@@ -239,20 +233,16 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'country.max'      => 'O país deve ter no máximo :max caracteres.',
         'country.min'      => 'O país deve ter no mínimo :min caracteres.',
 
-        'state.required' => 'O campo Estado é obrigatório.',
         'state.string'   => 'O estado deve ser uma string.',
         'state.max'      => 'O estado deve ter no máximo :max caracteres.',
 
-        'city.required' => 'O campo Cidade é obrigatório.',
         'city.string'   => 'A cidade deve ser uma string.',
         'city.max'      => 'A cidade deve ter no máximo :max caracteres.',
         'city.min'      => 'A cidade deve ter no mínimo :min caracteres.',
 
-        'neighborhood.required' => 'O campo Bairro é obrigatório.',
         'neighborhood.string'   => 'O bairro deve ser uma string.',
         'neighborhood.max'      => 'O bairro deve ter no máximo :max caracteres.',
 
-        'street.required' => 'O campo Rua é obrigatório.',
         'street.string'   => 'A rua deve ser uma string.',
         'street.max'      => 'A rua deve ter no máximo :max caracteres.',
         'street.min'      => 'A rua deve ter no minimo :min caracteres.',
@@ -367,10 +357,19 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         return $validator;
     }
 
-    public function supplier(array $data)
+    public function supplier(array $data, $cnpj)
     {
         $rules = $this->rulesForSupplier;
         $messages  = $this->messagesForSupplier;
+
+        if (!empty($cnpj)) {
+            $uniqueRule = Rule::unique('suppliers')->where(function ($query) use ($data) {
+                return $query->where('cpf_cnpj', $data['cpf_cnpj']);
+            });
+
+            $rules['cpf_cnpj'][] = $uniqueRule;
+        }
+
         $validator = Validator::make($data, $rules, $messages);
 
         return $validator;
