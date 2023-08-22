@@ -20,7 +20,7 @@ return new class() extends Migration
             $table->text('tributary_observation')->nullable();
             $table->string('market_type')->default('nacional')->nullable();
             $table->string('name')->nullable();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->string('state_registration')->nullable();
             $table->string('representative')->nullable();
             $table->string('email')->nullable();
