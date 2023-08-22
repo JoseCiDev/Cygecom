@@ -33,6 +33,12 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Encontrado {{$contracts->count()}} registro(s).</p>
+                    </div>
+                </div>
+
                 <table class="table table-hover table-nomargin table-bordered dataTable" data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                     <thead>
                         <tr>
