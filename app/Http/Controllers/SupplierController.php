@@ -100,6 +100,9 @@ class SupplierController extends Controller
     {
         $data = $request->all();
         $cnpj = $request->cpf_cnpj;
+
+        $data['cpf_cnpj'] = $cnpj ? preg_replace('/[^0-9]/', '', $cnpj) : null;
+
         $validator = $this->validatorService->supplier($data, $cnpj);
 
         if ($validator->fails()) {
