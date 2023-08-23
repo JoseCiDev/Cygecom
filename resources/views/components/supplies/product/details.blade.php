@@ -14,6 +14,7 @@
     $requestIsFromLogged = $request->user_id === auth()->user()->id;
 
     $paymentTermProduct = $request->product->paymentInfo->payment_terms;
+    $paymentMethod = $request->product->paymentInfo->payment_method;
 @endphp
 
 <x-app>
@@ -62,7 +63,7 @@
                     <span>Criado em: {{ \Carbon\Carbon::parse($product->created_at)->format('d/m/Y h:m:s') }}</span> |
                     <span>Atualizado: {{ \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') }}</span>
                 </div>
-                <h4 class="text-highlight"><strong>Data desejada:</strong>
+                <h4 class="text-highlight"><strong>Data desejada de entrega do produto:</strong>
                     {{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y') : '---' }}
                 </h4>
                 <div class="row">
@@ -92,15 +93,9 @@
                                         <p><strong>Tipo de solicitação:</strong> {{ $request->type->label() }}</p>
                                         <p><strong>COMEX:</strong> {{ $request->is_comex ? 'Sim' : 'Não' }}</p>
                                         <p><strong>Motivo da solicitação:</strong> {{ $request->reason }} </p>
+                                        <p><strong>Em qual sala/prédio ficará o produto:</strong> {{ $request->local_description }} </p>
+                                        <p><strong>Compra já realizada:</strong> {{ $request->product->already_purchased ? 'Sim' : 'Não' }} </p>
                                         <p><strong>Observação:</strong> {{ $request->observation ?? '---' }}</p>
-                                        <hr>
-                                        <p><strong>Solicitação criada em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</p>
-                                        <p><strong>Solicitação atualizada em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}</p>
-                                        <p><strong>Solicitação desejada para:</strong>
-                                            {{ $request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : '---' }}
-                                        </p>
                                     </div>
                                 </div>
 
@@ -206,7 +201,7 @@
                                 <hr>
                                 <div class="tab-content">
                                     <div class="row">
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-6">
                                             <p>
                                                 <strong>Nº de parcelas:</strong>
                                                 {{ $request->product->quantity_of_installments ?? '---' }}
@@ -218,6 +213,16 @@
                                             <p>
                                                 <strong>Condição de pagamento: </strong>
                                                 {{ $paymentTermProduct?->label() ?? '---' }}
+                                            </p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <p>
+                                                <strong>Forma de pagamento: </strong>
+                                                {{ $paymentMethod?->label() ?? '---' }}
+                                            </p>
+                                            <p>
+                                                <strong>Detalhes de pagamento: </strong>
+                                                {{ $request->product->paymentInfo->description ?? '---' }}
                                             </p>
                                         </div>
                                     </div>
@@ -240,7 +245,7 @@
                                         </div>
                                         <div class="row">
                                             <p class="col-xs-3">
-                                                <strong>Valor:</strong> {{ $installment->value }}
+                                                <strong>Valor:</strong> R$ {{ $installment->value }}
                                             </p>
                                             <p class="col-xs-3">
                                                 <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
@@ -272,7 +277,7 @@
                                             @endif
                                             <div class="request-supplier-group">
                                                 <div class="request-details-content-box-supplier">
-                                                    <h4><i class="fa fa-truck"></i> <strong>Fornecedor nº: {{ $supplierIndex }}</strong></h4>
+                                                    <h4><i class="fa fa-truck"></i> <strong>Fornecedor {{$supplierIndex !== "" ? "nº" : ""}}: {{ $supplierIndex }}</strong></h4>
 
                                                     <div class="row">
                                                         <p class="col-sm-4" style="margin: 0">
@@ -307,11 +312,11 @@
                                                         <p class="col-sm-4" style="margin: 0">
                                                             <strong>Representante:</strong> {{ $supplierGroup->first()->supplier?->representative ?? '---' }}
                                                         </p>
-                                                        <p class="col-sm-4" style="margin: 0">
-                                                            <strong>E-mail:</strong> {{ $supplierGroup->first()->supplier?->email ?? '---' }}
+                                                        <p  class="col-sm-4" style="margin: 0">
+                                                            <strong>Celular/Telefone do responsável:</strong>
+                                                            {{ $request->product->phone ?? '---' }}
                                                         </p>
                                                     </div>
-
                                                     <div class="row">
                                                         <p class="col-sm-4" style="margin: 0">
                                                             <strong>Registro estadual:</strong> {{ $supplierGroup->first()->supplier?->state_registration ?? '---' }}
@@ -320,16 +325,20 @@
                                                             <strong>Descrição:</strong> {{ $supplierGroup->first()->supplier?->description ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Fornecedor criado em:</strong> {{ $supplierGroup->first()->supplier?->created_at ?? '---'}}
+                                                            <strong>Vendedor/Atendente responsável:</strong>
+                                                            {{ $request->product->seller ?? '---' }}
                                                         </p>
                                                     </div>
 
                                                     <div class="row">
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Fornecedor atualizado em:</strong> {{ $supplierGroup->first()->supplier?->updated_at ?? '---' }}
+                                                            <strong>Observações tributárias:</strong> {{ $supplierGroup->first()->supplier?->tributary_observation ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Observações tributárias:</strong> {{ $supplierGroup->first()->supplier?->tributary_observation ?? '---' }}
+                                                            <strong>E-mail:</strong> {{ $supplierGroup->first()->supplier?->email ?? '---' }}
+                                                        </p>
+                                                        <p class="col-sm-4" style="margin: 0">
+                                                            <strong>E-mail do responsável:</strong> {{ $request->product->email ?? '---' }}
                                                         </p>
                                                     </div>
 
@@ -357,28 +366,16 @@
                                                                         <strong>Tamanho e dimensões do produto:</strong> {{ $productItem->size ?? '---' }}
                                                                     </p>
                                                                     <p class="col-xs-4" style="margin: 0">
-                                                                        <strong>Preço total:</strong> {{ $productItem->unit_price ? $productItem->unit_price * $productItem->quantity : 'Indefinido' }}
+                                                                        <strong>Quantidade:</strong> {{ $productItem->quantity }}
                                                                     </p>
                                                                 </div>
 
                                                                 <div class="row">
                                                                     <p class="col-xs-4" style="margin: 0">
-                                                                        <strong>Quantidade:</strong> {{ $productItem->quantity }}
+                                                                        <strong>Cor do produto:</strong> {{ $productItem->color ?? '---' }}
                                                                     </p>
                                                                     <p class="col-xs-4" style="margin: 0">
                                                                         <strong>Modelo do produto:</strong> {{ $productItem->model ?? '---' }}
-                                                                    </p>
-                                                                    <p class="col-xs-4" style="margin: 0">
-                                                                        <strong>Descrição do produto:</strong> {{ $productItem->description ?? '---' }}
-                                                                    </p>
-                                                                </div>
-
-                                                                <div class="row">
-                                                                    <p class="col-xs-4" style="margin: 0">
-                                                                        <strong>Preço unitário:</strong> {{ $productItem->unit_price ?? '---' }}
-                                                                    </p>
-                                                                    <p class="col-xs-4" style="margin: 0">
-                                                                        <strong>Cor do produto:</strong> {{ $productItem->color ?? '---' }}
                                                                     </p>
                                                                 </div>
                                                             </div>

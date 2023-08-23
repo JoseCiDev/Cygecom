@@ -42,6 +42,7 @@
     <link rel="stylesheet" href="{{ asset('css/custom-modal-dialog.css') }}">
     <link rel="stylesheet" href="{{ asset('css/purchase-request/product-suggestion-autocomplete.css') }}">
     <link rel="stylesheet" href="{{ asset('css/purchase-request/log.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/purchase-request/request-dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies/form-status-filter.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies/category-column-tags.css') }}">
 

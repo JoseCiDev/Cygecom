@@ -62,7 +62,14 @@
                     <span>Criado em: {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</span> |
                     <span>Atualizado: {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}</span>
                 </div>
-                <h4 class="text-highlight"><strong>Data desejada:</strong>
+                <h4 class="text-highlight">
+                    <strong>Nome do contrato:</strong>
+                    {{ $request->contract->name }}
+                </h4>
+                <h4 class="text-highlight">
+                    <strong>
+                        {{$request->is_supplies_contract ? "Data desejada da contratação:" : "Data da contratação:"}}
+                    </strong>
                     {{ $request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : '---' }}
                 </h4>
                 <div class="row">
@@ -231,19 +238,21 @@
                                                 </p>
                                                 <p>
                                                     <strong>CPF/CNPJ:</strong>
-                                                    {{ $request->contract?->supplier->cpf_cnpj ?? '---' }}
+                                                    @php
+                                                        $cnpj = $request->contract?->supplier->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $request->contract?->supplier->cpf_cnpj) : 'CNPJ indefinido'
+                                                    @endphp
+                                                    {{$cnpj}}
                                                 </p>
                                                 <p>
                                                     <strong>Indicação:</strong>
                                                     {{ $request->contract?->supplier->supplier_indication ?? '---' }}
                                                 </p>
-
-                                            </div>
-                                            <div class="col-sm-4">
                                                 <p>
                                                     <strong>Qualifacação:</strong>
                                                     {{ $request->contract->supplier?->qualification->label() ?? '---' }}
                                                 </p>
+                                            </div>
+                                            <div class="col-sm-4">
                                                 <p>
                                                     <strong>Tipo de mercado:</strong>
                                                     {{ $request->contract?->supplier->market_type ?? '---' }}
@@ -253,11 +262,9 @@
                                                     {{ $request->contract?->supplier->representative ?? '---' }}
                                                 </p>
                                                 <p>
-                                                    <strong>E-mail:</strong>
+                                                    <strong>E-mail do fornecedor:</strong>
                                                     {{ $request->contract?->supplier->email ?? '---' }}
                                                 </p>
-                                            </div>
-                                            <div class="col-sm-4">
                                                 <p>
                                                     <strong>Descrição:</strong>
                                                     {{ $request->contract->supplier->description ?? '---' }}
@@ -265,6 +272,29 @@
                                                 <p>
                                                     <strong>Observações tributárias:</strong>
                                                     {{ $request->contract->supplier->tributary_observation ?? '---' }}
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p>
+                                                    <strong>Tipo de pessoa:</strong>
+                                                    {{ $request->contract->supplier?->entity_type ?? '---'}}
+                                                </p>
+                                                <p>
+                                                    <strong>Registro estadual:</strong>
+                                                    {{ $request->contract->supplier->state_registration ?? '---' }}
+                                                </p>
+                                                <hr>
+                                                <p>
+                                                    <strong>Vendedor/Atendente:</strong>
+                                                    {{ $request->contract->seller ?? '---' }}
+                                                </p>
+                                                <p>
+                                                    <strong>Telefone do vendedor:</strong>
+                                                    {{ $request->contract->phone ?? '---' }}
+                                                </p>
+                                                <p>
+                                                    <strong>E-mail do vendedor:</strong>
+                                                    {{ $request->contract->email ?? '---' }}
                                                 </p>
                                             </div>
                                         </div>
@@ -280,14 +310,6 @@
                                     <div class="tab-content padding">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <p>
-                                                    <strong>Nome do contrato:</strong> {{ $request->contract->name }}
-                                                </p>
-                                                <p>
-                                                    <strong>Status do contrato:</strong>
-                                                    {{ $request->contract->is_active ? 'Ativo' : 'Inativo' }}
-                                                </p>
-                                                <hr>
                                                 <p>
                                                     <strong>Recorrência do pagamento:</strong>
                                                     {{ $request->contract->recurrence?->label() ?? '---' }}
@@ -310,7 +332,7 @@
                                                     {{ $paymentTermContract?->label() ?? "---"}}
                                                 </p>
                                                 <p>
-                                                    <strong>Local do serviço:</strong>
+                                                    <strong>Local da prestação serviço:</strong>
                                                     {{ $request?->local_description ?? '---' }}
                                                 </p>
                                                 <p>
@@ -321,55 +343,26 @@
                                                     <strong>Qtd. de parcelas:</strong>
                                                     {{ $request->contract?->installments->count() ?? '---' }}
                                                 </p>
+                                               
+                                            </div>
+                                            <div class="col-md-4">
                                                 <p>
-                                                    <strong>Representante:</strong>
-                                                    {{ $request->contract->supplier->representative ?? '---' }}
+                                                    <strong>Forma do pagamento:</strong>
+                                                    {{ $request->contract->paymentInfo->payment_method?->label() ?? '---' }}
                                                 </p>
                                                 <p>
-                                                    <strong>E-mail:</strong>
-                                                    {{ $request->contract->supplier->email ?? '---' }}
+                                                    <strong>Detalhes de pagamento:</strong>
+                                                    {{ $request->contract->paymentInfo->description ?? '---' }}
+                                                </p>
+                                                <hr>
+                                                <p>
+                                                    <strong>Detalhes do contrato: </strong>
+                                                    {{ $request?->description ?? '---' }}
                                                 </p>
                                             </div>
                                             <div class="col-md-4">
                                                 <p>
-                                                    <strong>Razão social:</strong>
-                                                    {{ $request->contract->supplier?->corporate_name ?? '---'}}
-                                                </p>
-                                                <p>
-                                                    <strong>Nome fantasia:</strong>
-                                                    {{ $request->contract->supplier?->name ?? '---'}}
-                                                </p>
-                                                <p>
-                                                    <strong>CNPJ/CPF:</strong> {{ $request->contract->supplier?->cpf_cnpj ?? '---'}}
-                                                </p>
-                                                <p>
-                                                    <strong>Tipo de pessoa:</strong>
-                                                    {{ $request->contract->supplier?->entity_type ?? '---'}}
-                                                </p>
-                                                <p>
-                                                    <strong>Indicação do fornecedor:</strong>
-                                                    {{ $request->contract->supplier?->supplier_indication ?? '---'}}
-                                                </p>
-                                                <p>
-                                                    <strong>Tipo de mercado:</strong>
-                                                    {{ $request->contract->supplier?->market_type ?? '---'}}
-                                                </p>
-                                                <p>
-                                                    <strong>Qualificação:</strong>
-                                                    {{ $request->contract->supplier?->qualification->label() ?? '---'}}
-                                                </p>
-                                                <p>
-                                                    <strong>Registro estadual:</strong>
-                                                    {{ $request->contract->supplier->state_registration ?? '---' }}
-                                                </p>
-                                                <p>
-                                                    <strong>Descrição do fornecedor:</strong>
-                                                    {{ $request->contract->supplier->description ?? '---' }}
-                                                </p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <p>
-                                                    <strong>Dia de pagamento:</strong>
+                                                    <strong>Dia de vencimento:</strong>
                                                     {{ $request->contract->payday ? Carbon\Carbon::parse($request->contract->payday)->format('d/m/Y') : '---' }}
                                                 </p>
                                                 <p>
@@ -378,28 +371,7 @@
                                                 </p>
                                                 <p>
                                                     <strong>Vigência - Dia de fim:</strong>
-                                                    {{ $request->contract->end_date ? Carbon\Carbon::parse($request->contract->end_date)->format('d/m/Y') : '---' }}
-                                                </p>
-                                                <p>
-                                                    <strong>Contrato criado em:</strong>
-                                                    {{ Carbon\Carbon::parse($request->contract->created_at)->format('d/m/Y') }}
-                                                </p>
-                                                <p>
-                                                    <strong>Contrato atualizado em:</strong>
-                                                    {{ Carbon\Carbon::parse($request->contract->updated_at)->format('d/m/Y') }}
-                                                </p>
-                                                <p>
-                                                    <strong>Fornecedor criado em:</strong>
-                                                    {{ $request->contract->supplier?->created_at ?? '---'}}
-                                                </p>
-                                                <p>
-                                                    <strong>Fornecedor atualizado em:</strong>
-                                                    {{ $request->contract->supplier?->updated_at ?? '---'}}
-                                                </p>
-                                                <hr>
-                                                <p>
-                                                    <strong>Descrição: </strong>
-                                                    {{ $request?->description ?? '---' }}
+                                                    {{ $request->contract->end_date ? Carbon\Carbon::parse($request->contract->end_date)->format('d/m/Y') : 'Indeterminada' }}
                                                 </p>
                                             </div>
                                         </div>

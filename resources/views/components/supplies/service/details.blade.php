@@ -60,7 +60,10 @@
                     <span>Criado em: {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</span> |
                     <span>Atualizado: {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}</span>
                 </div>
-                <h4 class="text-highlight"><strong>Data desejada:</strong>
+                <h4 class="text-highlight">
+                    <strong>
+                        Data da prestação do serviço:
+                    </strong>
                     {{ $request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : '---' }}
                 </h4>
                 <div class="row">
@@ -280,7 +283,7 @@
                                     <div class="tab-content padding">
                                         <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações</strong></h4>
                                         <p>
-                                            <strong>Condição de pagamento: </strong>
+                                            <strong>Tipo de pagamento: </strong>
                                             {{ $request->service->paymentInfo?->payment_terms?->label() ?? '---' }}
                                         </p>
                                         <p>
@@ -291,14 +294,10 @@
                                             <strong>Preço total:</strong> R$ {{ $request->service->price ?? '---' }}
                                         </p>
                                         <p>
-                                            <strong>Serviço já executado:</strong>  {{ $request->service->already_provided ? 'Sim' : 'Não' }}
+                                            <strong>Este serviço já foi prestado:</strong>  {{ $request->service->already_provided ? 'Sim' : 'Não' }}
                                         </p>
                                         <p>
-                                            <strong>Horas trabalhadas:</strong>
-                                            {{ $request->service->hours_performed ?? '---' }}
-                                        </p>
-                                        <p>
-                                            <strong>Local do serviço:</strong>
+                                            <strong>Local de prestação do serviço:</strong>
                                             {{ $request->service->local_service ?? '---' }}
                                         </p>
                                         <hr>
@@ -326,15 +325,6 @@
                                         <p>
                                             <strong>Detalhes:</strong>
                                             {{ $request->service->paymentInfo->description ?? '---' }}
-                                        </p>
-                                        <hr>
-                                        <p>
-                                            <strong>Informações criadas em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->service->paymentInfo->created_at)->format('d/m/Y h:m:s') }}
-                                        </p>
-                                        <p>
-                                            <strong>Informações atualizado em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->service->paymentInfo->updated_at)->format('d/m/Y h:m:s') }}
                                         </p>
                                     </div>
                                     <hr>

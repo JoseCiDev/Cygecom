@@ -47,28 +47,49 @@
 
 </head>
 
+<style>
+	.login-logo{
+		margin-bottom: 20px;
+		width: 360px;
+	}
+	#login-form{
+		box-sizing: border-box;
+		background-color: #FFFFFF;
+		border-radius: 4px;
+		padding: 10px;
+		width: 100%;
+		width: 360px;
+	}
+
+	#login-form #btn-login-entrar.btn{
+		width: 100%;
+		border-radius: 4px!important;
+		background-color: #333333;
+	}
+	#login-form #btn-login-entrar.btn:hover{
+		background-color: #cccccc
+	}
+</style>
+
 <body class='login theme-grey'>
 	<div class="wrapper">
-		<h1 style="color: #ffffff">GECOM</h1>
-		<div class="login-body">
-			<h2>Dados de acesso</h2>
-			<x-alert/>
-			<form method="POST" action="{{ route('login') }}">
-                @csrf
-				<div class="form-group">
-					<div class="email controls">
-						<input type="email" name='email' data-cy="email" placeholder="Email" class='form-control' @error('email') is-invalid @enderror name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-					</div>
+		<img class="login-logo" src="{{asset('img/gecom/logo-login.svg')}}" alt="">
+		<x-alert/>
+		<form method="POST" action="{{ route('login') }}" id="login-form">
+			@csrf
+			<div class="form-group">
+				<div class="email controls">
+					<input type="email" name='email' data-cy="email" placeholder="Email" class='form-control' @error('email') is-invalid @enderror name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 				</div>
-				<div class="form-group">
-					<div class="pw controls">
-						<input type="password" name="password" data-cy="password" placeholder="Senha" class='form-control' @error('password') is-invalid @enderror name="password" required autocomplete="current-password">
-					</div>
+			</div>
+			<div class="form-group">
+				<div class="pw controls">
+					<input type="password" name="password" data-cy="password" placeholder="Senha" class='form-control' @error('password') is-invalid @enderror name="password" required autocomplete="current-password">
 				</div>
-				<div class="submit" style="padding-bottom: 10px;">
-					<input type="submit" data-cy="btn-login-entrar" value="Entrar" class='btn btn-large btn-primary'>
-				</div>
-			</form>
-		</div>
+			</div>
+			<div class="submit" style="padding-bottom: 10px;">
+				<input type="submit" data-cy="btn-login-entrar" id="btn-login-entrar" value="Entrar" class='btn btn-large btn-primary'>
+			</div>
+		</form>
 	</div>
 </body>

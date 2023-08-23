@@ -9,6 +9,12 @@
     --grey-primary-color: #333333;
     --grey-secondary-color: #cccccc;
     --grey-tertiary-color: #f7f7f7;
+
+    --black-color: #141414;
+
+    --product-color: #35ce86;
+    --service-color: #f9a164;
+    --contract-color: #73cee0;
 }
 
 input[type=checkbox] {
@@ -5418,6 +5424,7 @@ textarea {
     background: #333333;
     position: relative;
     z-index: 100;
+    padding: 15px;
 }
 
 #navigation.navbar-fixed-top {
@@ -5470,14 +5477,12 @@ textarea {
 
 #navigation #brand {
     float: left;
-    color: #fff;
-    font-size: 20px;
-    margin-top: 9px;
-    padding-right: 69px;
-    padding-left: 35px;
-    padding-bottom: 2px;
-    line-height: 20px;
-    background: url("../img/logo.png") no-repeat;
+    margin-right: 50px;
+    margin-top: 3px;
+    width: 120px;
+    height: 30px;
+    background-image: url("../img/gecom/logo-navbar.svg");
+    background-size: contain;
 }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
@@ -5734,6 +5739,9 @@ textarea {
     float: left;
     position: relative;
     margin: 0;
+    font-size: 16px;
+    line-height: 20px;
+    color: #E8E8E8;
 }
 
 #navigation .main-nav>li.active>a {
@@ -8615,7 +8623,7 @@ body.error .wrapper .buttons {
 }
 
 .login {
-    background: #333333;
+    background: linear-gradient(to bottom, #333333, #575757);
 }
 
 .login .wrapper {
