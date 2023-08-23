@@ -130,7 +130,9 @@ class SupplierController extends Controller
     {
         $data = $request->all();
 
-        if (isset($data['cpf_cnpj'])) {
+        if (!isset($data['cpf_cnpj'])) {
+            $data['cpf_cnpj'] = null;
+        } else {
             $data['cpf_cnpj'] = preg_replace('/[^0-9]/', '', $data['cpf_cnpj']);
         }
 
