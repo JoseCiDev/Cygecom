@@ -174,7 +174,7 @@
                                     <label class="form-check-label" for="profile_admin">Administrador</label>
                                 </div>
                                 <div>
-                                    <input @checked(isset($user) && $user->profile->name === 'admin') class="icheck-me"
+                                    <input @checked(isset($user) && $user->profile->name === 'diretor') class="icheck-me"
                                         type="radio" name="profile_type" id="profile_diretor" data-cy="profile_diretor" value="diretor" data-skin="minimal">
                                     <label class="form-check-label" for="profile_diretor">Diretor</label>
                                 </div>

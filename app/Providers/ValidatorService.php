@@ -14,7 +14,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'email'                        => ['required', 'string', 'email', 'max:255', 'unique:users'],
         'password'                     => ['required', 'string', 'min:8', 'confirmed'],
         'profile_type'                 => ['required', 'string', 'max:255'],
-        'cpf_cnpj'                     => ['required', 'string'],
+        'cpf_cnpj'                     => ['required', 'string', 'unique:people'],
         'number'                       => ['required', 'string'],
         'phone_type'                   => ['required', 'string'],
         'cost_center_id'               => ['required', 'string'],
@@ -41,6 +41,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'birthdate.date' => 'Data inválida',
 
         'cpf_cnpj.required' => '"CPF/CNPJ" é obrigatório.',
+        'cpf_cnpj.unique' => 'Desculpe, já existe um usuário cadastrado com esse CPF/CNPJ. Por favor, verifique o campo novamente.',
 
         'number.required' => '"Telefone/Celular" é obrigatório.',
 
@@ -56,7 +57,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'email'                        => ['nullable', 'email', 'max:255', 'unique:users,email'],
         'password'                     => ['nullable', 'string', 'min:8', 'confirmed'],
         'password_confirmation'        => ['nullable', 'required_with:password', 'same:password'],
-        'profile_type'                 => ['nullable', 'in:admin,normal,suprimentos_hkm,suprimentos_inp'],
+        'profile_type'                 => ['nullable', 'in:admin,normal,diretor,gestor_fornecedores,gestor_usuarios,suprimentos_hkm,suprimentos_inp'],
         'approver_user_id'             => ['nullable', 'numeric', 'min:1', 'exists:users,id'],
         'approve_limit'                => ['nullable', 'numeric', 'min:100'],
         'birthdate'                    => ['nullable', 'date'],
@@ -388,6 +389,12 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
     {
         $rules = $this->rulesForPurchaseRequest;
         $messages  = $this->messagesForPurchaseRequest;
+
+        if (isset($data['contract']['name'])) {
+            $rules['contract.name'] = ['unique:contracts,name,' . $data['contract']['name']];
+            $messages['contract.name.unique'] = 'Desculpe, já existe outro contrato com esse nome.';
+        }
+
         $validator = Validator::make($data, $rules, $messages);
 
         $validator->after(function ($validator) use ($data) {
