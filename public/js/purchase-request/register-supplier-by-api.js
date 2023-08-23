@@ -27,7 +27,29 @@ $(() => {
     };
 
     const showFailAlert = (response) => {
-        alert('Não foi possível registrar novo fornecedor. Por favor, verifique novamente os campos do formulário.');
+        const erros = response.responseJSON.error;
+
+        let errorMessage = "<ul>";
+        $.each(erros, function(field, errors) {
+            $.each(errors, function(index, error) {
+                errorMessage += "<li>" + error + "</li>";
+            });
+        });
+        errorMessage += "</ul>"
+
+        bootbox.alert({
+            title: "Não foi possível registrar novo fornecedor!",
+            message: errorMessage,
+            className: 'bootbox-custom-warning',
+            callback: function() {
+                const $modalSupplierRegister = $("#modal-supplier-register").first();
+                const $firstInputSupplier = $modalSupplierRegister.find('.form-control:input').first();
+                setTimeout(() => {
+                    $firstInputSupplier.trigger("focus");
+                    $("body").addClass("modal-open");
+                }, 100)
+            }
+        });
     };
 
     const submitFormToAPI = (event) => {
