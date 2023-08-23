@@ -25,7 +25,7 @@
     <div class="row">
 
         <div class="col-sm-2">
-            <x-InputCnpj :cnpj="$supplier?->cpf_cnpj" name="cpf_cnpj" id="cpf_cnpj" data-cy="cpf_cnpj" />
+            <x-InputCnpj :cnpj="$supplier?->cpf_cnpj" :supplier="$supplier?->id" name="cpf_cnpj" id="cpf_cnpj" data-cy="cpf_cnpj" />
             <input type="hidden" name="entity_type" value="PJ" data-cy="entity_type">
         </div>
 
