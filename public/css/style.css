@@ -5465,7 +5465,7 @@ textarea {
 }
 
 #navigation .toggle-nav:hover {
-    background-color: #1b67af;
+    background-color: var(--gold-primary-color);
 }
 
 #navigation #brand {
@@ -5493,7 +5493,7 @@ textarea {
 
 #navigation .toggle-mobile {
     color: #fff;
-    background: #1b67af;
+    background: var(--gold-primary-color);
     display: block;
     padding: 11px 10px 9px 10px;
     text-decoration: none;
@@ -5540,7 +5540,7 @@ textarea {
 
 #navigation .mobile-nav.open>li>a {
     display: block;
-    background: #1b67af;
+    background: var(--gold-primary-color);
     padding: 8px 12px;
     color: #fff;
     text-decoration: none;
@@ -5552,7 +5552,7 @@ textarea {
 }
 
 #navigation .mobile-nav.open>li>ul {
-    background: #1b67af;
+    background: var(--gold-primary-color);
     list-style-type: none;
     margin: 0;
     padding: 0 0 10px 0;
@@ -5694,7 +5694,7 @@ textarea {
 }
 
 #navigation .user .icon-nav>li>a:hover {
-    background: #1b67af;
+    background: var(--gold-primary-color);
     text-decoration: none;
 }
 
@@ -5708,7 +5708,7 @@ textarea {
 }
 
 #navigation .user .dropdown.open {
-    background: #1b67af;
+    background: var(--gold-primary-color);
 }
 
 #navigation .user .dropdown>a {
@@ -5995,7 +5995,7 @@ textarea {
 }
 
 .blog-widget-tags>li>a:hover {
-    background: #1b67af;
+    background: var(--gold-primary-color);
 }
 
 .blog-list-post {
@@ -8433,7 +8433,7 @@ body.error .wrapper .input-group .btn {
 }
 
 body.error .wrapper .input-group .btn:hover {
-    background: #1b67af;
+    background: var(--gold-primary-color);
 }
 
 body.error .wrapper .buttons {
@@ -8571,7 +8571,7 @@ body.error .wrapper .buttons {
 .locked .pull-left a {
     color: #fff;
     display: block;
-    background: #1b67af;
+    background: var(--gold-primary-color);
     text-align: center;
     padding: 4px 8px;
     text-decoration: none;
@@ -10342,7 +10342,7 @@ div.DTS div.dataTables_scrollBody {
 }
 
 .editable-input .datepicker table tr td.active:hover {
-    background: #1b67af;
+    background: var(--gold-primary-color);
 }
 
 .editable-address {

@@ -23,7 +23,7 @@ class User extends Authenticatable
 
     public function profile()
     {
-        return $this->belongsTo(UserProfile::class, 'profile_id');
+        return $this->belongsTo(UserProfile::class, 'user_profile_id');
     }
 
     public function userCostCenterPermission()
@@ -65,7 +65,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_buyer',
-        'profile_id',
+        'user_profile_id',
         'person_id',
         'approver_user_id',
         'approve_limit',

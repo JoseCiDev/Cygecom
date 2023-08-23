@@ -17,7 +17,7 @@ class UserObserver
             'email' => $user->email,
             'password' => $user->password,
             'is_buyer' => $user->is_buyer,
-            'profile_id' => $user->profile_id,
+            'user_profile_id' => $user->user_profile_id,
             'person_id' => $user->person_id,
             'approver_user_id' => $user->approver_user_id,
             'approve_limit' => $user->approve_limit
@@ -39,7 +39,7 @@ class UserObserver
             'email' => $user->email,
             'password' => $user->password,
             'is_buyer' => $user->is_buyer,
-            'profile_id' => $user->profile_id,
+            'user_profile_id' => $user->user_profile_id,
             'approver_user_id' => $user->approver_user_id,
             'approve_limit' => $user->approve_limit,
             'deleted_at' => $user->deleted_at,

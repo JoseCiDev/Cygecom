@@ -1,0 +1,2 @@
+#!/bin/bash
+docker exec php8-projects /bin/bash -c "cd /var/www/html/gerenciador-compras && php artisan make:migration ${1} && chmod -R 777 ."

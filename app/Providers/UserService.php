@@ -70,7 +70,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user = new User();
             $user->email = $request['email'];
             $user->password  = Hash::make($request['password']);
-            $user->profile_id = $this->getProfileId($request);
+            $user->user_profile_id = $this->getProfileId($request);
             $user->person_id = $person->id;
             $user->approver_user_id = $request['approver_user_id'] ?? null;
             $user->approve_limit = $request['approve_limit'];
@@ -151,7 +151,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
         $user->update([
             'email' => $email,
             'password' => $password,
-            'profile_id' => $profileId,
+            'user_profile_id' => $profileId,
             'approver_user_id' => $approverUserId,
             'approve_limit' => $approveLimit,
             'is_buyer' => $isBuyer,

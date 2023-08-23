@@ -212,8 +212,8 @@
                         gap: 5px;
                     ">
                     <input type="checkbox" id="checkbox-international-number" data-cy="checkbox-international-number"
-                        value="{{ $supplier?->phone?->isInternational ? '1' : '0' }}" @checked($supplier?->phone?->isInternational)
-                        class="checkbox-international-number" style="margin:0" name="isInternational">
+                        value="{{ $supplier?->phone?->is_international ? '1' : '0' }}" @checked($supplier?->phone?->is_international)
+                        class="checkbox-international-number" style="margin:0" name="is_international">
                     <label for="checkbox-international-number" style="margin:0; font-size:13px">
                         Número de telefone Internacional.
                     </label>
