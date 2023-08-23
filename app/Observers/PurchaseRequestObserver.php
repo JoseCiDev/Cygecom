@@ -98,7 +98,8 @@ class PurchaseRequestObserver
 
             try {
                 if ($approver && $isPendingStatus) {
-                    $this->emailService->sendPendingApprovalEmail($purchaseRequest, $approver);
+                    // Envio de e-mail para aprovador desativado;
+                    // $this->emailService->sendPendingApprovalEmail($purchaseRequest, $approver);
                 }
 
                 if (!$isDraft && !$isPendingStatus) {
