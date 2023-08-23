@@ -56,6 +56,7 @@
     .supplier-block .product-container .product-row:nth-of-type(odd) {
         background-color: #f7f7f7;
     }
+
     .supplier-block .product-container .product-row:nth-of-type(even) {
         background-color: #ffffff;
     }
@@ -199,8 +200,7 @@
                     <div class="form-group">
                         <label for="desired-date" class="control-label">Data desejada entrega do produto</label>
                         <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
-                            class="form-control" min="2023-07-24"
-                            value="{{ $purchaseRequest->desired_date ?? null }}">
+                            class="form-control" value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
 
@@ -527,32 +527,28 @@
         const $filesGroup = $('fieldset#files-group');
         const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-        // muda data desejada minima quando produto já comprado
-        const $desiredDate = $('#desired-date');
         const $productAlreadyPurchased = $('.radio-already-purchased');
-        const currentDate = moment().format('YYYY-MM-DD');
+
+        // muda data desejada mínima quando serviço já prestado
+        const $desiredDate = $('#desired-date');
+        const currentDate = moment();
         const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
 
-        function desiredDateGreaterThanCurrent() {
-            const desiredDate = $desiredDate.val();
-
-            return desiredDate > currentDate;
-        }
+        $desiredDate.attr('min', currentDate.format('YYYY-MM-DD'))
 
         function changeMinDesiredDate() {
-            const isValidDate = desiredDateGreaterThanCurrent();
-            const productAlreadyPurchased = $productAlreadyPurchased.filter(':checked').val() === "1";
+            const productAlreadyPurchased = $(this).val() === "1";
 
-            const minDate = productAlreadyPurchased ? minInitialDate : currentDate;
+            const minDate = productAlreadyPurchased ? minInitialDate : currentDate.format('YYYY-MM-DD');
 
-            $desiredDate.attr('min', minDate);
+            $desiredDate.attr('min', minDate)
+
+            $desiredDate.rules('add', {
+                min: minDate
+            });
         }
 
-        $productAlreadyPurchased
-            .add($desiredDate)
-            .on('change', changeMinDesiredDate)
-            .filter(':checked')
-            .trigger('change');
+        $productAlreadyPurchased.on('change', changeMinDesiredDate).filter(':checked').trigger('change');
 
 
         // trata valor serviço mascara
