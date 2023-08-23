@@ -2,9 +2,6 @@
     use App\Enums\{PurchaseRequestStatus, PurchaseRequestType};
 @endphp
 <x-app>
-    {{-- <x-slot name="title">
-        
-    </x-slot> --}}
     <x-modalDelete/>
 
     <div class="row">

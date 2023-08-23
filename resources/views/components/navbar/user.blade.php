@@ -1,7 +1,7 @@
 <div class="user">
     <div class="dropdown">
         <a href="#" class='dropdown-toggle' data-toggle="dropdown" data-cy="profile-dropdown" style="display: flex; align-items:center; gap: 5px">
-            <img src="{{ asset('img/demo/default-user.png') }}" alt="" width="25" style="border-radius: 100%">
+            <img src="{{ asset('img/gecom/gecom_usuario.svg') }}" alt="" width="25" style="border-radius: 100%">
             {{ auth()->user()->person->name }}
         </a>
         <ul class="dropdown-menu pull-right">

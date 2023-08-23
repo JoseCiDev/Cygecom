@@ -1,43 +1,32 @@
 <x-app>
-    <x-slot name="title">
-        <h1>Nova Solicitação</h1>
-    </x-slot>
 
+    <div class="request-dashboard">
+        <h1 class="request-dashboard-title">Nova solicitação</h1>
+        <span class="request-dashboard-subtitle">O que você deseja solicitar?</span>
 
-    <div class="box">
-        <div class="box-title">
-            <h3>
-                O que você deseja solicitar?
-            </h3>
-        </div>
-        <div class="box-content">
-            <div class="col-sm-12" style="display:flex; margin-top: 20px; justify-content:center; gap: 50px">
-                <div class="col-sm-3 products" style="display:flex; flex-direction:column; align-items:center">
-                    <p class="text-center">
-                        Compra de produtos em geral. Exemplo: Material de escritório, material de
-                        limpeza, material de copa e cozinha, máquinário, equipamentos, etc.
-                    </p>
-                    <a data-cy="btn-products" href="{{ route('request.product.register') }}"
-                        class="btn btn-success btn-large btn-products"
-                    >
-                        PRODUTOS
-                    </a>
-                </div>
-                <div class="col-sm-3 services" style="display:flex; flex-direction:column; align-items:center">
-                    <p class="text-center">
-                        Contratação de Serviços sem contrato vinculado. Exemplo: Contratação de uma limpeza no vidro,
-                        contratação de consultoria única, etc.
-                    </p>
-                    <a data-cy="btn-services" href="{{ route('request.service.register') }}" class="btn btn-inverse btn-large btn-services">SERVIÇOS</a>
-                </div>
-                <div class="col-sm-3 contracts" style="display:flex; flex-direction:column; align-items:center">
-                    <p class="text-center">
-                        Produto ou Serviço que tenha um contrato com vigência determinada ou não. Exemplo: Serviço de limpeza diária,
-                        Vale Alimentação, Manutenção regular do ar condicionado, etc.
-                    </p>
-                    <a data-cy="btn-contracts" href="{{ route('request.contract.register') }}" class="btn btn-info btn-large btn-contracts">CONTRATOS</a>
-                </div>
+        <div class="request-dashboard-requests">
+
+            <div class="request-dashboard-requests-item">
+                <h2 class="request-dashboard-requests-item-title">Produtos</h2>
+                <p class="request-dashboard-requests-item-subtitle">Compra de produtos em geral.</p>
+                <p class="request-dashboard-requests-item-description">Exemplo: Lista de material de escritório, lista de material de limpeza, materiais de copa e cozinha, maquinário. equipamentos, etc.</p>
+                <a class="request-dashboard-requests-item-btn bg-product-color" href="{{ route('request.product.register') }}">Solicitação de produto</a>
             </div>
+
+            <div class="request-dashboard-requests-item">
+                <h2 class="request-dashboard-requests-item-title">Serviços</h2>
+                <p class="request-dashboard-requests-item-subtitle">Contratação de serviços sem contrato vinculado e/ou serviços pontuais.</p>
+                <p class="request-dashboard-requests-item-description">Exemplo: contratações de limpeza para vidros, consultoria única, etc.</p>
+                <a class="request-dashboard-requests-item-btn bg-service-color" href="{{ route('request.service.register') }}" >Solicitação de serviço</a>
+            </div>
+
+            <div class="request-dashboard-requests-item">
+                <h2 class="request-dashboard-requests-item-title">Contratos</h2>
+                <p class="request-dashboard-requests-item-subtitle">Contratos de serviços ou produtos com vigência determinada ou indeterminada.</p>
+                <p class="request-dashboard-requests-item-description">Exemplo: serviço de limpeza diária, vale alimentação, manutenção regular de ar condicionados, etc.</p>
+                <a class="request-dashboard-requests-item-btn bg-contract-color" href="{{ route('request.contract.register') }}" >Solicitação de contrato</a>
+            </div>
+
         </div>
     </div>
 

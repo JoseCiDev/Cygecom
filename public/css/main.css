@@ -38,3 +38,15 @@ strong {
     display: none;
     color: #a94442;
 }
+
+.bg-product-color {
+    background-color: var(--product-color);
+}
+
+.bg-service-color {
+    background-color: var(--service-color);
+}
+
+.bg-contract-color {
+    background-color: var(--contract-color);
+}
