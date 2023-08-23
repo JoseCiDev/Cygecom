@@ -4,22 +4,21 @@ $(() => {
     const $desiredDate = $('#desired-date');
     const $serviceAlreadyProvided = $('.radio-already-provided');
     const currentDate = moment();
-    const minInitialDate = moment('2020-01-01');
+    const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
 
-    function desiredDateGreaterThanCurrent() {
-        const desiredDate = moment($desiredDate.val());
-
-        return desiredDate.isAfter(currentDate);
-    }
+    $desiredDate.attr('min', currentDate.format('YYYY-MM-DD'))
 
     function changeMinDesiredDate() {
-        const isValidDate = desiredDateGreaterThanCurrent();
-        const serviceAlreadyProvided = $serviceAlreadyProvided.filter(':checked').val() === "1";
+        const serviceAlreadyProvided = $(this).val() === "1";
 
-        const minDate = serviceAlreadyProvided ? minInitialDate : currentDate;
+        const minDate = serviceAlreadyProvided ? minInitialDate : currentDate.format('YYYY-MM-DD');
 
-        $desiredDate.attr('min', minDate.format('YYYY-MM-DD'));
+        $desiredDate.attr('min', minDate);
+
+        $desiredDate.rules('add', {
+            min: minDate
+        });
     }
 
-    $serviceAlreadyProvided.add($desiredDate).on('change', changeMinDesiredDate).filter(':checked').trigger('change');
+    $serviceAlreadyProvided.on('change', changeMinDesiredDate).filter(':checked').trigger('change');
 });
