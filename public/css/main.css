@@ -1,0 +1,52 @@
+* {
+    scroll-behavior: smooth;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.user-item-list {
+    border: 1px solid;
+    margin-bottom: 5px;
+    padding: 10px 0;
+}
+
+.border-red {
+    border: 1px solid red;
+}
+
+.no-resize {
+    resize: none;
+}
+
+.container-fluid {
+    padding: 0 25px;
+}
+
+strong {
+    font-weight: 700;
+}
+
+.cnpj-span-warning {
+    display: none;
+    color: #a94442;
+}
+
+.bg-product-color {
+    background-color: var(--product-color);
+}
+
+.bg-service-color {
+    background-color: var(--service-color);
+}
+
+.bg-contract-color {
+    background-color: var(--contract-color);
+}

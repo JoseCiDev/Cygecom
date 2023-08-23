@@ -1,0 +1,236 @@
+.panel-widget .panel.darkblue {
+  border: 2px solid #204e81;
+}
+.panel-widget .panel.darkblue:hover {
+  border-color: #163558 !important;
+}
+.panel-widget .panel.darkblue .panel-heading {
+  background: #204e81 !important;
+}
+.panel-widget .panel.darkblue .panel-heading .panel-title > a {
+  color: #fff;
+}
+.panel-widget .panel.darkblue .panel-heading:hover {
+  background: #163558 !important;
+}
+
+.font-darkblue {
+  color: #204e81;
+}
+
+ul > li.darkblue, .label-darkblue {
+  background: #204e81;
+}
+
+.progress .bar.bar-darkblue {
+  background: #204e81;
+}
+
+.pricing-tables .pricing.darkblue > li.head {
+  background: #204e81;
+}
+.pricing-tables .pricing.darkblue > li.head .info {
+  background: #255a95;
+}
+.pricing-tables .pricing.darkblue > li.head .name {
+  background: #163558;
+}
+
+.btn.btn-darkblue {
+  background: #204e81;
+  color: #fff !important;
+}
+.btn.btn-darkblue:hover {
+  background: #163558;
+}
+
+.box.box-color.darkblue .box-title {
+  background: #204e81 !important;
+}
+.box.box-color.darkblue .box-title .actions > a:hover {
+  color: #204e81;
+}
+.box.box-color.darkblue .form-wizard .wizard-steps li.active .single-step .title {
+  background: #204e81;
+}
+.box.box-color.darkblue .btn.btn-primary {
+  background: #204e81;
+}
+.box.box-bordered.box-color.darkblue .box-title {
+  border-color: #204e81 !important;
+}
+.box.box-bordered.box-color.darkblue .box-content {
+  border-color: #204e81 !important;
+}
+.box.box-bordered.box-color.darkblue .slimScrollDiv {
+  border-bottom: 2px solid #204e81;
+}
+
+.timeline > li .timeline-content .left .icon.darkblue {
+  background: #204e81;
+}
+
+.theme-darkblue .daterangepicker .active {
+  background: #204e81;
+}
+.theme-darkblue .mobile-sidebar-toggle {
+  color: #fff;
+}
+.theme-darkblue #navigation .dropdown-menu {
+  border-color: #204e81;
+}
+.theme-darkblue #navigation .dropdown-menu > li.dropdown-submenu .dropdown-menu {
+  border-top: 2px solid #204e81;
+}
+.theme-darkblue #navigation .dropdown-menu > li.dropdown-submenu:hover > a, .theme-darkblue #navigation .dropdown-menu > li.dropdown-submenu:focus > a {
+  background: #204e81;
+}
+.theme-darkblue #navigation .dropdown-menu > li > a:hover {
+  background: #204e81;
+}
+.theme-darkblue .datepicker.datepicker-dropdown .datepicker-days .active, .theme-darkblue .datepicker.datepicker-dropdown .datepicker-years .active, .theme-darkblue .datepicker.datepicker-dropdown .datepicker-months .active {
+  background: #204e81;
+}
+.theme-darkblue .datepicker.datepicker-dropdown .datepicker-days .active:hover, .theme-darkblue .datepicker.datepicker-dropdown .datepicker-years .active:hover, .theme-darkblue .datepicker.datepicker-dropdown .datepicker-months .active:hover {
+  background: #163558;
+}
+.theme-darkblue .form-wizard .wizard-steps li.active .single-step .title {
+  background: #204e81;
+}
+.theme-darkblue .btn.btn-primary {
+  background: #204e81;
+}
+.theme-darkblue.login {
+  background: #204e81;
+}
+.theme-darkblue a {
+  color: #204e81;
+}
+.theme-darkblue .btn {
+  color: #333;
+}
+.theme-darkblue .btn.btn-primary {
+  background: #204e81;
+  color: #fff;
+}
+.theme-darkblue .btn.btn-inverse, .theme-darkblue .btn.btn-success, .theme-darkblue .btn.btn-danger {
+  color: #fff;
+}
+.theme-darkblue.locked {
+  background: #204e81 !important;
+}
+.theme-darkblue.locked .pull-left a {
+  background: #112944;
+}
+.theme-darkblue.locked .pull-left a:hover {
+  background: #07101b;
+}
+.theme-darkblue #navigation {
+  background: #204e81;
+}
+.theme-darkblue #navigation .toggle-mobile {
+  background: #112944;
+}
+.theme-darkblue #navigation .mobile-nav.open {
+  background: #204e81;
+}
+.theme-darkblue #navigation .mobile-nav.open > li.active > a {
+  background: #07101b;
+}
+.theme-darkblue #navigation .mobile-nav.open > li.active > ul {
+  background: #07101b;
+}
+.theme-darkblue #navigation .mobile-nav.open > li > a {
+  background: #112944;
+}
+.theme-darkblue #navigation .mobile-nav.open > li > ul {
+  background: #112944;
+}
+.theme-darkblue #navigation .main-nav > li.active > a:hover {
+  background: #fff;
+}
+.theme-darkblue #navigation .main-nav > li.active.open > a {
+  background: #fff;
+}
+.theme-darkblue #navigation .main-nav > li.open > a {
+  background: #112944;
+}
+.theme-darkblue #navigation .main-nav > li > a:hover {
+  background: #112944;
+}
+.theme-darkblue #navigation .user .icon-nav > li > a:hover {
+  background: #112944;
+}
+.theme-darkblue #navigation .user .dropdown.open {
+  background: #112944;
+}
+.theme-darkblue #navigation .user .dropdown > a:hover {
+  background: #112944;
+}
+.theme-darkblue #navigation .dropdown-menu {
+  border-color: #204e81;
+}
+.theme-darkblue #navigation .dropdown-menu > li > a:hover {
+  background: #204e81;
+}
+.theme-darkblue .search-form .search-pane button[type="submit"] {
+  background: #204e81;
+}
+.theme-darkblue .messages > li.insert .submit button {
+  background: #204e81;
+}
+.theme-darkblue .messages > li.right .name {
+  color: black;
+}
+.theme-darkblue .messages > li.right .message {
+  background: #8bb4e2;
+}
+.theme-darkblue .messages > li.right .message p {
+  color: #020406;
+}
+.theme-darkblue .messages > li.right .message .time {
+  color: #020406;
+}
+.theme-darkblue .messages > li.right .message .caret {
+  border-left: 7px solid #8bb4e2;
+}
+.theme-darkblue .letterbox .letter > li.active {
+  background: #204e81;
+}
+.theme-darkblue .calendar .fc-content .fc-event .fc-event-inner {
+  background: #204e81;
+}
+.theme-darkblue .calendar .fc-button.fc-state-active {
+  background: #204e81;
+}
+.theme-darkblue .calendar .fc-button.fc-state-active:hover {
+  background: #204e81;
+}
+.theme-darkblue .table.table-user tr.alpha td.alpha-val span {
+  background: #204e81;
+}
+.theme-darkblue .tagsinput#textfield_tagsinput .tag, .theme-darkblue .ms-container .multi-custom-header, .theme-darkblue .slider .ui-slider-handle, .theme-darkblue .form-wizard .wizard-steps li.active .single-step .title, .theme-darkblue .user-list h4, .theme-darkblue .nav.nav-pills > li.active > a, .theme-darkblue .nav.nav-list > li.active > a, .theme-darkblue .table.table-colored-header thead th, .theme-darkblue .table.table-colored-header thead td, .theme-darkblue .dataTables_wrapper .dataTables_paginate > span > a.paginate_active, .theme-darkblue .elfinder-navbar .ui-state-active, .theme-darkblue .pagination.pagination-custom li.active a:hover, .theme-darkblue .pagination.pagination-custom li.active a {
+  background: #204e81;
+}
+.theme-darkblue .elfinder-navbar .ui-state-active {
+  border-color: #204e81;
+}
+.theme-darkblue #main .box .box-title .tabs > li.active > a {
+  background: #204e81;
+}
+.theme-darkblue #main .box.box-color .box-title {
+  background: #204e81;
+}
+.theme-darkblue #main .box.box-color .box-title .tabs > li.active > a {
+  background: #fff;
+  color: #204e81;
+}
+.theme-darkblue #main .box.box-color .box-title .tabs > li > a:hover {
+  color: #204e81;
+}
+.theme-darkblue #main .box.box-bordered.box-color .box-title {
+  border-color: #204e81;
+}
+.theme-darkblue #main .box.box-bordered.box-color .box-content {
+  border-color: #204e81;
+}

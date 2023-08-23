@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# configura o padrao de entrada de dados tty (terminal)
+exec < /dev/tty
+
+# Cores
+NC='\033[0m'
+BBlue='\033[1;34m'
+BRed='\033[1;31m'
+
+REGEX_ISSUE_ID="ED-[0-9]+|develop"
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+ISSUE_ID=$(echo "$BRANCH_NAME" | grep -o -E "$REGEX_ISSUE_ID")
+COMMIT_MESSAGE=$(cat "$1")
+
+if [ -z "$ISSUE_ID" ]; then
+    echo -e "${BRed}Branch não está no padrão que deveria... ${NC}"
+    echo -n "Confirmar commit mesmo assim? [y/N]:"
+    confirm=$(sed 1q)
+    confirm=$(echo $confirm | tr '[:lower:]' '[:upper:]')
+    if [[ $confirm != "Y" ]]; then
+        echo "Commit cancelado!"
+        exit 1
+    fi
+fi
+
+if [[ $COMMIT_MESSAGE == $ISSUE_ID* ]]; then
+    exit 0
+fi
+
+echo "$ISSUE_ID $COMMIT_MESSAGE" >$1
