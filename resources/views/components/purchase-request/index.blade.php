@@ -42,6 +42,7 @@
                                 <tbody>
                                     @foreach ($purchaseRequests as $index => $purchaseRequest)
                                         @php
+                                            $isDraft = $purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value;
                                             $supplier = null;
                                             $msg = '';
                                             if ($purchaseRequest->type === PurchaseRequestType::SERVICE) {
@@ -72,10 +73,14 @@
                                                 <a href="{{route('request.edit', ['type'=> $purchaseRequest->type, 'id' => $purchaseRequest->id])}}"
                                                     class="btn"
                                                     rel="tooltip"
-                                                    title="Editar"
+                                                    title="{{$isDraft ? 'Editar' : 'Visualizar'}}"
                                                     data-cy="btn-edit-request-{{$index}}"
                                                 >
-                                                    <i class="fa fa-edit"></i>
+                                                    @if($isDraft)
+                                                        <i class="fa fa-edit"></i>
+                                                    @else
+                                                        <i class="fa fa-eye"></i>
+                                                    @endif
                                                 </a>
                                                 @php
                                                     $endpoint = $purchaseRequest->type->value;
