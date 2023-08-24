@@ -250,8 +250,8 @@
 
         {{-- ENV --}}
         @if (!App::isProduction())
-            <div class="env" style="background-color: rgb(251, 52, 52)">
-                <h3 style="text-align: center; margin: 0px; color: black">
+            <div class="env" style="background-color: rgb(251, 52, 52); padding: 5px;">
+                <h3 style="text-align: center; margin: 0px; color: black;">
                     {{ App::environment() }}
                 </h3>
             </div>
