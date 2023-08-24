@@ -424,7 +424,7 @@
             <div class="col-sm-12">
                 <h4 style="margin-bottom: 15px"><i class="glyphicon glyphicon-edit"></i> <strong>Editar solicitação</strong></h4>
                 <form class="form-validate" data-cy="form-request-status" method="POST"
-                    action="{{ route('supplies.request.service.amount.update', ['id' => $request->id]) }}">
+                    action="{{ route('supplies.request.service.update', ['id' => $request->id]) }}">
                     @csrf
                     <div class="form-group">
                         <label class="control-label" for="amount">Editar valor total desta solicitação</label>
