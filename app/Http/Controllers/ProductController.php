@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use App\Enums\PurchaseRequestStatus;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Http\{RedirectResponse, Request};
 use App\Models\{Company, CostCenter, PurchaseRequest, PurchaseRequestFile};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
@@ -20,7 +21,7 @@ class ProductController extends Controller
 
     public function registerProduct(Request $request): RedirectResponse
     {
-        $route      = 'requests';
+        $route = 'requests.own';
         $data       = $request->all();
         // captura o botão submit clicado (se for submit_request update status);
         $action = $request->input('action');
@@ -44,8 +45,6 @@ class ProductController extends Controller
             }
 
             DB::commit();
-
-            $route           = 'requests.own';
         } catch (Exception $error) {
             $msg = 'Não foi possível fazer o registro no banco de dados.';
             DB::rollBack();
@@ -84,7 +83,7 @@ class ProductController extends Controller
 
     public function updateProduct(Request $request, int $id): RedirectResponse
     {
-        $route     = 'request.edit';
+        $route     = 'request.own';
         $data      = $request->all();
         $action = $request->input('action');
 
@@ -108,6 +107,7 @@ class ProductController extends Controller
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
+            $isDraft = $purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value;
 
             $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
 
@@ -117,7 +117,7 @@ class ProductController extends Controller
 
             DB::beginTransaction();
 
-            $this->purchaseRequestService->updateProductRequest($id, $data, $files);
+            $purchaseRequest = $this->purchaseRequestService->updateProductRequest($id, $data, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
@@ -130,16 +130,24 @@ class ProductController extends Controller
             }
             DB::commit();
 
-            $route           = 'requests.own';
+            $route = 'requests.own';
         } catch (Exception $error) {
             DB::rollBack();
             $msg = 'Não foi possível atualizar o registro no banco de dados.';
             return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
         }
 
+        $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === '/supplies';
+
+        if(!$isDraft && $isSuppliesRoute ) {
+            $msg = 'Valor total da solicitação atualizado com sucesso!';
+            session()->flash('success', $msg);
+            return back();
+        }
+
         session()->flash('success', $msg);
 
-        return redirect()->route($route, ['type' => $purchaseRequest->type, 'id' => $id]);
+        return redirect()->route($route);
     }
 
     public function details(int $id)

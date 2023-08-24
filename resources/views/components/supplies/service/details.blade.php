@@ -21,43 +21,28 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <form class="form-validate" data-cy="form-request-status" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
-            @csrf
+            <form class="form-validate" data-cy="form-request-status" method="POST"
+                action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
+                @csrf
                 <div class="row">
-                   <div class="col-md-12">
+                    <div class="col-md-12">
                         <label for="status">Status da solicitação</label>
-                   </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <select name="status" data-cy="status" @disabled($requestIsFromLogged)>
                             @foreach ($allRequestStatus as $status)
-                                @if ($status->value !== PurchaseRequestStatus::RASCUNHO->value);
-                                    <option @selected($request->status === $status) value="{{$status}}">{{$status->label()}}</option>
+                                @if ($status->value !== PurchaseRequestStatus::RASCUNHO->value)
+                                    ;
+                                    <option @selected($request->status === $status) value="{{ $status }}">
+                                        {{ $status->label() }}</option>
                                 @endif
                             @endforeach
                         </select>
-                        <button ata-cy="btn-apply-status" type="submit" class="btn btn-icon btn-small btn-primary" @disabled($requestIsFromLogged)> Aplicar status </button>
+                        <button ata-cy="btn-apply-status" type="submit" class="btn btn-icon btn-small btn-primary"
+                            @disabled($requestIsFromLogged)> Aplicar status </button>
                     </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12">
-            <form class="form-validate" data-cy="form-request-status" method="POST" action="{{ route('supplies.request.service.amount.update', ['id' => $request->id]) }}">
-            @csrf
-                <div class="row">
-                   <div class="col-md-12">
-                        <label for="status">Preço total da solicitação</label>
-                   </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <input type="text" name="service[price]" id="amount" data-cy="amount" class="amount no-validation">
-                    </div>
-                    <button ata-cy="btn-apply-status" type="submit" class="btn btn-icon btn-small btn-primary" @disabled($requestIsFromLogged)> Aplicar status </button>
                 </div>
             </form>
         </div>
@@ -66,7 +51,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="pull-right">
-                <x-PdfGeneratorButton print-by-selector=".details-content" :file-name="'solicitacao_servico_'.$request->id . now()->format('dmY_His_u')"/>
+                <x-PdfGeneratorButton print-by-selector=".details-content" :file-name="'solicitacao_servico_' . $request->id . now()->format('dmY_His_u')" />
             </div>
         </div>
     </div>
@@ -88,9 +73,12 @@
                 <div class="row">
                     <div class="col-md-12">
                         <br>
-                        <h4 class="text-highlight"><strong>Responsável pela solicitação (suprimentos):</strong> {{$request->suppliesUser?->person->name ?? '---'}} / {{$request->suppliesUser?->email ?? "---"}}</h4>
+                        <h4 class="text-highlight"><strong>Responsável pela solicitação (suprimentos):</strong>
+                            {{ $request->suppliesUser?->person->name ?? '---' }} /
+                            {{ $request->suppliesUser?->email ?? '---' }}</h4>
                         <br>
-                        <h4 class="text-highlight"><strong>Responsável pela contratação:</strong> {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }} </h4>
+                        <h4 class="text-highlight"><strong>Responsável pela contratação:</strong>
+                            {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }} </h4>
                         <br>
                     </div>
                 </div>
@@ -153,7 +141,8 @@
                                             {{ $request->user->person->cpf_cnpj }}
                                         </p>
                                         <p>
-                                            <strong>Celular/Telefone:</strong> {{ $request->user->person->phone->number }}
+                                            <strong>Celular/Telefone:</strong>
+                                            {{ $request->user->person->phone->number }}
                                         </p>
                                         <p>
                                             <strong>Centro de custo do solicitante:</strong>
@@ -313,7 +302,8 @@
                                             <strong>Preço total:</strong> R$ {{ $request->service->price ?? '---' }}
                                         </p>
                                         <p>
-                                            <strong>Este serviço já foi prestado:</strong>  {{ $request->service->already_provided ? 'Sim' : 'Não' }}
+                                            <strong>Este serviço já foi prestado:</strong>
+                                            {{ $request->service->already_provided ? 'Sim' : 'Não' }}
                                         </p>
                                         <p>
                                             <strong>Local de prestação do serviço:</strong>
@@ -329,14 +319,16 @@
                                             {{ $request->service->phone ?? '---' }}
                                         </p>
                                         <p>
-                                            <strong>E-mail do responsável:</strong> {{ $request->service->email ?? '---' }}
+                                            <strong>E-mail do responsável:</strong>
+                                            {{ $request->service->email ?? '---' }}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div class="request-details-content-box">
                                     <div class="tab-content padding">
-                                        <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações de pagamento</strong></h4>
+                                        <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações de
+                                                pagamento</strong></h4>
                                         <p>
                                             <strong>Tipo do pagamento:</strong>
                                             {{ $request->service->paymentInfo->payment_method?->label() ?? '---' }}
@@ -358,29 +350,32 @@
 
                             <div class="request-details-content-box">
                                 <div class="request-details-content-box-service">
-                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
+                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong>
+                                            Parcelas</strong></h4>
                                     @foreach ($request->service->installments as $installmentIndex => $installment)
-                                    <div class="request-details-content-box-service-installment">
-                                        <div class="row">
-                                            <p class="col-xs-3">
-                                                <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
-                                            </p>
-                                            <p class="col-xs-3">
-                                                <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
-                                            </p>
-                                            <p class="col-xs-6">
-                                                <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
-                                            </p>
+                                        <div class="request-details-content-box-service-installment">
+                                            <div class="row">
+                                                <p class="col-xs-3">
+                                                    <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
+                                                </p>
+                                                <p class="col-xs-3">
+                                                    <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
+                                                </p>
+                                                <p class="col-xs-6">
+                                                    <strong>Observação do pagamento:</strong>
+                                                    <span>{{ $installment->observation ?? '---' }}</span>
+                                                </p>
+                                            </div>
+                                            <div class="row">
+                                                <p class="col-xs-3">
+                                                    <strong>Valor (R$):</strong> {{ $installment->value }}
+                                                </p>
+                                                <p class="col-xs-3">
+                                                    <strong>Vencimento:</strong>
+                                                    {{ $installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---' }}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div class="row">
-                                            <p class="col-xs-3">
-                                                <strong>Valor (R$):</strong> {{ $installment->value }}
-                                            </p>
-                                            <p class="col-xs-3">
-                                                <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
-                                            </p>
-                                        </div>
-                                    </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -394,35 +389,27 @@
 
         <div class="row">
             <div class="col-md-12">
-                 <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
-                 @if ($files->count())
+                <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
+                @if ($files->count())
                     <ul>
                         @foreach ($files as $index => $file)
-                            <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank" rel="noopener noreferrer">{{ $file->original_name }}</a></li>
+                            <li><a style="font-size: 16px" data-cy="link-{{ $index }}"
+                                    href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank"
+                                    rel="noopener noreferrer">{{ $file->original_name }}</a></li>
                         @endforeach
                     </ul>
-                 @else
+                @else
                     <p>Nenhum registro encontrado.</p>
-                 @endif
+                @endif
             </div>
         </div>
-
-        <hr>
-
-        <div class="row justify-content-center">
-            <div class="col-sm-12">
-                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::SERVICE" />
-            </div>
-        </div>
-
-        <hr>
 
         <div class="row">
             <div class="col-md-12">
                 <h4><i class="glyphicon glyphicon-link"></i> <strong>Links de apoio/sugestão:</strong></h4>
                 @php
                     $supportLinks = 'Não há links para serem exibidos aqui.';
-                    if( $request?->support_links) {
+                    if ($request?->support_links) {
                         $supportLinks = str_replace(' ', '<br>', $request->support_links);
                         $supportLinks = nl2br($supportLinks);
                     }
@@ -434,10 +421,49 @@
         <hr>
 
         <div class="row">
+            <div class="col-sm-12">
+                <h4 style="margin-bottom: 15px"><i class="glyphicon glyphicon-edit"></i> <strong>Editar solicitação</strong></h4>
+                <form class="form-validate" data-cy="form-request-status" method="POST"
+                    action="{{ route('supplies.request.service.amount.update', ['id' => $request->id]) }}">
+                    @csrf
+                    <div class="form-group">
+                        <label class="control-label" for="amount">Editar valor total desta solicitação</label>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <input type="text" placeholder="0,00" class="form-control format-amount"
+                                    id="format-amount" data-cy="format-amount"
+                                    value="{{ $request->service->price }}">
+                                <input type="hidden" name="service[price]" id="amount" data-cy="amount"
+                                    class="amount no-validation" value="{{ $request->service->price }}">
+                            </div>
+                            <button ata-cy="btn-apply-new_amount" type="submit" @disabled($requestIsFromLogged)
+                                class="btn btn-icon btn-primary"> Atualizar valor
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::SERVICE" />
+            </div>
+        </div>
+
+
+        <hr>
+
+        <div class="row">
             <div class="col-md-12">
                 <x-SuppliesLogList :purchaseRequestId="$request->id" />
             </div>
         </div>
 
     </div>
+
+    <x-slot:scripts>
+        <script src="{{ asset('js/supplies/details-purchase-request-amount.js') }}"></script>
+    </x-slot:scripts>
+
 </x-app>

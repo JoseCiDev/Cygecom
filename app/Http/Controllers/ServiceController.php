@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PurchaseRequestFile;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use App\Models\PurchaseRequestFile;
 use App\Enums\PurchaseRequestStatus;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Http\{RedirectResponse, Request};
 use App\Models\{Company, CostCenter, PurchaseRequest};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
@@ -110,6 +111,7 @@ class ServiceController extends Controller
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
+            $isDraft = $purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value;
 
             $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
 
@@ -120,7 +122,7 @@ class ServiceController extends Controller
             // MUDAR
             DB::beginTransaction();
 
-            $this->purchaseRequestService->updateServiceRequest($id, $data, $files);
+            $purchaseRequest = $this->purchaseRequestService->updateServiceRequest($id, $data, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => PurchaseRequestStatus::PENDENTE->value]);
@@ -132,6 +134,14 @@ class ServiceController extends Controller
             DB::rollBack();
             $msg = 'Não foi possível atualizar o registro no banco de dados.';
             return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
+        }
+
+        $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === '/supplies';
+
+        if(!$isDraft && $isSuppliesRoute ) {
+            $msg = 'Valor total da solicitação atualizado com sucesso!';
+            session()->flash('success', $msg);
+            return back();
         }
 
         session()->flash('success', $msg);

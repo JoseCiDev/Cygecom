@@ -283,6 +283,8 @@
             $("form").attr('autocomplete', 'off');
         })
     </script>
+
+    {{ $scripts ?? null }}
 </body>
 
 </html>

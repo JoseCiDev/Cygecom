@@ -97,11 +97,6 @@ class PurchaseRequestObserver
             $isDraft = $status === PurchaseRequestStatus::RASCUNHO->value;
 
             try {
-                if ($approver && $isPendingStatus) {
-                    // Envio de e-mail para aprovador desativado;
-                    // $this->emailService->sendPendingApprovalEmail($purchaseRequest, $approver);
-                }
-
                 if (!$isDraft && !$isPendingStatus) {
                     $this->emailService->sendStatusUpdatedEmail($purchaseRequest);
                 }
