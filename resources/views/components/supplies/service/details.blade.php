@@ -20,33 +20,12 @@
     </x-slot>
 
     <div class="row">
-        <div class="col-sm-12">
-            <form class="form-validate" data-cy="form-request-status" method="POST"
-                action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
-                @csrf
-                <div class="row">
-                    <div class="col-md-12">
-                        <label for="status">Status da solicitação</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <select name="status" data-cy="status" @disabled($requestIsFromLogged)>
-                            @foreach ($allRequestStatus as $status)
-                                @if ($status->value !== PurchaseRequestStatus::RASCUNHO->value)
-                                    ;
-                                    <option @selected($request->status === $status) value="{{ $status }}">
-                                        {{ $status->label() }}</option>
-                                @endif
-                            @endforeach
-                        </select>
-                        <button ata-cy="btn-apply-status" type="submit" class="btn btn-icon btn-small btn-primary"
-                            @disabled($requestIsFromLogged)> Aplicar status </button>
-                    </div>
-                </div>
-            </form>
+        <div class="col-md-12">
+            <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::SERVICE" :request-id="$request->id" :request-status="$request->status" :amount="$request->service->price"/>
         </div>
     </div>
+
+    <hr>
 
     <div class="row">
         <div class="col-md-12">
@@ -420,37 +399,11 @@
 
         <hr>
 
-        <div class="row">
-            <div class="col-sm-12">
-                <h4 style="margin-bottom: 15px"><i class="glyphicon glyphicon-edit"></i> <strong>Editar solicitação</strong></h4>
-                <form class="form-validate" data-cy="form-request-status" method="POST"
-                    action="{{ route('supplies.request.service.update', ['id' => $request->id]) }}">
-                    @csrf
-                    <div class="form-group">
-                        <label class="control-label" for="amount">Editar valor total desta solicitação</label>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <input type="text" placeholder="0,00" class="form-control format-amount"
-                                    id="format-amount" data-cy="format-amount"
-                                    value="{{ $request->service->price }}">
-                                <input type="hidden" name="service[price]" id="amount" data-cy="amount"
-                                    class="amount no-validation" value="{{ $request->service->price }}">
-                            </div>
-                            <button ata-cy="btn-apply-new_amount" type="submit" @disabled($requestIsFromLogged)
-                                class="btn btn-icon btn-primary"> Atualizar valor
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
         <div class="row justify-content-center">
             <div class="col-sm-12">
                 <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::SERVICE" />
             </div>
         </div>
-
 
         <hr>
 

@@ -1,5 +1,5 @@
 @php
-    use App\Enums\{LogAction, PurchaseRequestType};
+    use App\Enums\{LogAction, PurchaseRequestType, PurchaseRequestStatus};
 
     if (isset($contract)) {
         $request = $contract;
@@ -23,33 +23,12 @@
     </x-slot>
 
     <div class="row">
-        <div class="col-sm-12">
-            <form class="form-validate" data-cy="form-request-status" method="POST"
-                action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
-                @csrf
-                <div class="row">
-                    <div class="col-md-12">
-                        <label for="status">Status da solicitação</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <select name="status" data-cy="status" @disabled($requestIsFromLogged)>
-                            @foreach ($allRequestStatus as $status)
-                                @if ($status->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value)
-                                    ;
-                                    <option @selected($request->status === $status) value="{{ $status }}">
-                                        {{ $status->label() }}</option>
-                                @endif
-                            @endforeach
-                        </select>
-                        <button data-cy="btn-apply-status" type="submit" class="btn btn-icon btn-small btn-primary"
-                            @disabled($requestIsFromLogged)> Aplicar status </button>
-                    </div>
-                </div>
-            </form>
+        <div class="col-md-12">
+            <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::PRODUCT" :request-id="$request->id" :request-status="$request->status" :amount="$request->product->amount"/>
         </div>
     </div>
+
+    <hr>
 
     <div class="row">
         <div class="col-md-12">
@@ -471,34 +450,6 @@
         </div>
 
         <hr>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <h4 style="margin-bottom: 15px"><i class="glyphicon glyphicon-edit"></i> <strong>Editar
-                        solicitação</strong></h4>
-                <form class="form-validate" data-cy="form-request-status" method="POST"
-                    action="{{ route('supplies.request.product.update', ['id' => $request->id]) }}">
-                    @csrf
-                    <div class="form-group">
-                        <label class="control-label" for="amount">Editar valor total desta solicitação</label>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <input type="text" placeholder="0,00" class="form-control format-amount"
-                                    id="format-amount" data-cy="format-amount"
-                                    value="{{ $request->product->amount }}">
-                                <input type="hidden" name="product[amount]" id="amount" data-cy="amount"
-                                    class="amount no-validation" value="{{ $request->product->amount }}">
-                            </div>
-                            <button ata-cy="btn-apply-new_amount" type="submit" class="btn btn-icon btn-primary"
-                                @disabled($requestIsFromLogged) >
-                                Atualizar valor
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
 
         <div class="row justify-content-center">
             <div class="col-sm-12">
