@@ -138,7 +138,7 @@ class ServiceController extends Controller
 
         $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === '/supplies';
 
-        if(!$isDraft && $isSuppliesRoute ) {
+        if (!$isDraft && $isSuppliesRoute) {
             $msg = 'Valor total da solicitação atualizado com sucesso!';
             session()->flash('success', $msg);
             return back();
