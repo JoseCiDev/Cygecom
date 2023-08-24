@@ -43,10 +43,22 @@ strong {
     background-color: var(--product-color);
 }
 
+.bg-product-color:hover {
+    background-color: var(--product-color-hover);
+}
+
 .bg-service-color {
     background-color: var(--service-color);
 }
 
+.bg-service-color:hover {
+    background-color: var(--service-color-hover);
+}
+
 .bg-contract-color {
     background-color: var(--contract-color);
+}
+
+.bg-contract-color:hover {
+    background-color: var(--contract-color-hover);
 }

@@ -1,7 +1,4 @@
 <x-app>
-    <x-slot name="title">
-        <h1>Página Principal</h1>
-    </x-slot>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
