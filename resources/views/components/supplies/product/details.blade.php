@@ -48,6 +48,25 @@
     </div>
 
     <div class="row">
+        <div class="col-sm-12">
+            <form class="form-validate" data-cy="form-request-status" method="POST" action="{{ route('supplies.request.product.amount.update', ['id' => $request->id]) }}">
+            @csrf
+                <div class="row">
+                   <div class="col-md-12">
+                        <label for="status">Preço total da solicitação</label>
+                   </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <input type="text" name="product[amount]" id="amount" data-cy="amount" class="amount no-validation">
+                    </div>
+                    <button ata-cy="btn-apply-status" type="submit" class="btn btn-icon btn-small btn-primary" @disabled($requestIsFromLogged)> Aplicar status </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-12">
             <div class="pull-right">
                 <x-PdfGeneratorButton print-by-selector=".details-content" :file-name="'solicitacao_produto_'.$request->id . now()->format('dmY_His_u')"/>
