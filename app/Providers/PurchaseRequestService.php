@@ -361,9 +361,8 @@ class PurchaseRequestService extends ServiceProvider
         // caso disabled os campos do form define como null
         $serviceInstallmentsData = $serviceData['service_installments'] ?? [];
         $paymentInfoData = $serviceData['payment_info'] ?? [];
-        $supplierId = $serviceData['supplier_id'] ?? [];
 
-        if (count($paymentInfoData) > 0) {
+        if (!empty(array_filter($paymentInfoData))) {
             $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
             $serviceData['payment_info_id'] = $paymentInfoResponse->id;
         }
@@ -390,7 +389,7 @@ class PurchaseRequestService extends ServiceProvider
         $productInstallmentsData = $productData['product_installments'] ?? [];
         $paymentInfoData = $productData['payment_info'] ?? [];
 
-        if (count($paymentInfoData) > 0) {
+        if (!empty(array_filter($paymentInfoData))) {
             $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
             $productData['payment_info_id'] = $paymentInfoResponse->id;
         }
@@ -441,9 +440,8 @@ class PurchaseRequestService extends ServiceProvider
         // caso disabled os campos do form define como null
         $contractsInstallmentsData = $contractData['contract_installments'] ?? [];
         $paymentInfoData = $contractData['payment_info'] ?? [];
-        $supplierId = $contractData['supplier_id'] ?? [];
 
-        if (count($paymentInfoData) > 0) {
+        if (!empty(array_filter($paymentInfoData))) {
             $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
             $contractData['payment_info_id'] = $paymentInfoResponse->id;
         }
