@@ -239,7 +239,7 @@
                                                 <p>
                                                     <strong>CPF/CNPJ:</strong>
                                                     @php
-                                                        $cnpj = $request->contract?->supplier->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $request->contract?->supplier->cpf_cnpj) : 'CNPJ indefinido'
+                                                        $cnpj = $request->contract?->supplier?->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $request->contract?->supplier?->cpf_cnpj) : 'CNPJ indefinido'
                                                     @endphp
                                                     {{$cnpj}}
                                                 </p>
@@ -343,7 +343,7 @@
                                                     <strong>Qtd. de parcelas:</strong>
                                                     {{ $request->contract?->installments->count() ?? '---' }}
                                                 </p>
-                                               
+
                                             </div>
                                             <div class="col-md-4">
                                                 <p>
@@ -406,7 +406,7 @@
                                         </div>
                                         @endforeach
                                     </div>
-                                    
+
                                 </div>
                             </div>
 
@@ -464,6 +464,6 @@
                 <x-SuppliesLogList :purchaseRequestId="$request->id" />
             </div>
         </div>
-        
+
     </div>
 </x-app>
