@@ -801,7 +801,7 @@
             if (isContractedBySupplies) {
                 $productAlreadyPurchased
                     .last()
-                    .prop('checked', true);
+                    .attr('checked', true);
 
                 $divAlreadyPurchased
                     .attr('hidden', true);
@@ -831,7 +831,7 @@
                 if (!purchaseRequest) {
                     $productAlreadyPurchased
                         .last()
-                        .prop('checked', false);
+                        .attr('checked', false);
                 }
 
                 $divAlreadyPurchased
