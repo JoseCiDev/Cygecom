@@ -1,23 +1,5 @@
 @php
     $currentProfile = auth()->user()->profile->name;
-    
-    $productQtdByProfile = [
-        'admin' => $productQtd, 
-        'suprimentos_hkm' => $productsFromHkm->count(), 
-        'suprimentos_inp' => $productsFromInp->count()
-    ];
-    
-    $serviceQtdByProfile = [
-        'admin' => $serviceQtd, 
-        'suprimentos_hkm' => $servicesFromHkm->count(), 
-        'suprimentos_inp' => $servicesFromInp->count()
-    ];
-    
-    $contractQtdByProfile = [
-        'admin' => $contractQtd, 
-        'suprimentos_hkm' => $contractsFromHkm->count(), 
-        'suprimentos_inp' => $contractsFromInp->count()
-    ];
 @endphp
 <x-app>
     <x-slot name="title">
@@ -46,21 +28,10 @@
                                     <div class="name" style="background-color: #339933"><i class="fa fa-tags"></i> Solicitações de produtos</div>
                                     <div class="price" style="background-color: #33993368">
 
-                                        {{$productQtdByProfile[$currentProfile]}}
+                                        {{$productQtd}}
                                         <span>solicitações existentes</span>
 
-                                        @if ($currentProfile === 'admin')
-                                            <a href="{{route('supplies.product')}}" class="btn btn-grey-4" data-cy="btn-all-products">Todas solicitações</a>
-                                        @endif
-
-                                        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-products">Ver solicitações {{$currentProfile === 'admin' ? 'HKM' : ''}} <i class="fa fa-external-link"></i></a>
-                                        @endif
-                                        
-                                        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
-                                            <a href="{{route('supplies.product', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-products">Ver solicitações {{$currentProfile === 'admin' ? 'INP' : ''}} <i class="fa fa-external-link"></i></a>
-                                        @endif
-
+                                        <a href="{{route('supplies.product')}}" class="btn btn-grey-4" data-cy="btn-all-products">Todas solicitações</a>
                                     </div>
                                 </li>
                                 @if ($currentProfile === 'admin')
@@ -75,20 +46,10 @@
                                     <div class="name" style="background-color: #111111"><i class="fa fa-briefcase"></i> Solicitações de serviços</div>
                                     <div class="price" style="background-color: #11111159">
 
-                                        {{$serviceQtdByProfile[$currentProfile]}}
+                                        {{$serviceQtd}}
                                         <span>solicitações existentes</span>
 
-                                        @if ($currentProfile === 'admin')
-                                            <a href="{{route('supplies.service')}}" class="btn btn-grey-4" data-cy="btn-all-services">Todas solicitações</a>
-                                        @endif
-
-                                        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-services">Ver solicitações {{ $currentProfile === 'admin' ? 'HKM' : ''}} <i class="fa fa-external-link"></i></a>
-                                        @endif
-
-                                        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
-                                            <a href="{{route('supplies.service', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-services">Ver solicitações {{ $currentProfile === 'admin' ? 'INP' : ''}} <i class="fa fa-external-link"></i></a>
-                                        @endif
+                                        <a href="{{route('supplies.service')}}" class="btn btn-grey-4" data-cy="btn-all-services">Todas solicitações</a>
                                     </div>
                                 </li>
                                 @if ($currentProfile === 'admin')
@@ -103,20 +64,10 @@
                                     <div class="name" style="background-color: #62a7e7;"><i class="glyphicon glyphicon-list-alt"></i> Solicitações de contratos</div>
                                     <div class="price" style="background-color: #62a7e75c;">
 
-                                        {{$contractQtdByProfile[$currentProfile]}}
+                                        {{$contractQtd}}
                                         <span>solicitações existentes</span>
 
-                                        @if ($currentProfile === 'admin')
-                                            <a href="{{route('supplies.contract')}}" class="btn btn-grey-4" data-cy="btn-all-contracts">Todas solicitações</a>
-                                        @endif
-
-                                        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_hkm')
-                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'hkm'])}}" class="btn btn-grey-4" data-cy="btn-hkm-contracts">Ver solicitações {{$currentProfile === 'admin' ? 'HKM' : ''}} <i class="fa fa-external-link"></i></a>
-                                        @endif
-
-                                        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp')
-                                            <a href="{{route('supplies.contract', ['suppliesGroup' => 'inp'])}}" class="btn btn-grey-4" data-cy="btn-inp-contracts">Ver solicitações {{$currentProfile === 'admin' ? 'INP' : ''}} <i class="fa fa-external-link"></i></a>
-                                        @endif
+                                        <a href="{{route('supplies.contract')}}" class="btn btn-grey-4" data-cy="btn-all-contracts">Todas solicitações</a>
                                     </div>
                                 </li>
                                 @if ($currentProfile === 'admin')

@@ -291,7 +291,7 @@
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
                                 <input type="text" id="format-amount" data-cy="format-amount" placeholder="0.00"
-                                    class="form-control format-amount" value="{{ $purchaseRequestServicePrice }}">
+                                    class="form-control format-amount" value="{{ str_replace('.', ',', $purchaseRequestServicePrice) }}">
                                 <input type="hidden" name="service[price]" id="amount" data-cy="amount"
                                     class="amount no-validation" value="{{ $purchaseRequestServicePrice }}">
                             </div>
@@ -418,8 +418,8 @@
                             style="width:100%;">
                             <option value=""></option>
                             @foreach ($suppliers as $supplier)
-                                @php 
-                                    $supplierSelected = isset($purchaseRequest->service) && $purchaseRequest->service->supplier_id === $supplier->id; 
+                                @php
+                                    $supplierSelected = isset($purchaseRequest->service) && $purchaseRequest->service->supplier_id === $supplier->id;
                                     $cnpj = $supplier->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj) : 'CNPJ indefinido'
                                 @endphp
                                 <option value="{{ $supplier->id }}" @selected($supplierSelected)>{{ "$cnpj - $supplier->corporate_name" }}</option>
@@ -803,7 +803,8 @@
             if (isContractedBySupplies) {
                 $serviceAlreadyProvided
                     .last()
-                    .attr('checked', true);
+                    .prop('checked', true)
+                    .valid();
 
                 $divAlreadyProvided
                     .attr('hidden', true);
@@ -838,7 +839,7 @@
                 if (!purchaseRequest) {
                     $serviceAlreadyProvided
                         .last()
-                        .attr('checked', false);
+                        .prop('checked', false);
                 }
 
                 $divAlreadyProvided
