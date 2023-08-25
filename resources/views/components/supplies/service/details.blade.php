@@ -11,7 +11,6 @@
         $request = null;
     }
 
-    $requestIsFromLogged = $request->user_id === auth()->user()->id;
 @endphp
 
 <x-app>
@@ -21,7 +20,12 @@
 
     <div class="row">
         <div class="col-md-12">
-            <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::SERVICE" :request-id="$request->id" :request-status="$request->status" :amount="$request->service->price"/>
+            <x-SuppliesRequestEditContainer
+                :request-type="PurchaseRequestType::SERVICE"
+                :request-id="$request->id"
+                :request-user-id="$request->user_id"
+                :request-status="$request->status"
+                :amount="$request->service->price"/>
         </div>
     </div>
 

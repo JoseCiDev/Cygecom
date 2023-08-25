@@ -11,8 +11,6 @@
         $request = null;
     }
 
-    $requestIsFromLogged = $request->user_id === auth()->user()->id;
-
     $paymentTermProduct = $request->product->paymentInfo->payment_terms;
     $paymentMethod = $request->product->paymentInfo->payment_method;
 @endphp
@@ -24,7 +22,12 @@
 
     <div class="row">
         <div class="col-md-12">
-            <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::PRODUCT" :request-id="$request->id" :request-status="$request->status" :amount="$request->product->amount"/>
+            <x-SuppliesRequestEditContainer
+                :request-type="PurchaseRequestType::PRODUCT"
+                :request-id="$request->id"
+                :request-user-id="$request->user_id"
+                :request-status="$request->status"
+                :amount="$request->product->amount"/>
         </div>
     </div>
 

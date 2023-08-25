@@ -15,6 +15,7 @@ class SuppliesRequestEditContainer extends Component
      * @var PurchaseRequestStatus[] $allRequestStatus
      */
     public array $allRequestStatus;
+    public array $allowedResponsables;
     public bool $requestIsFromLogged;
     public string $inputName;
 
@@ -22,14 +23,18 @@ class SuppliesRequestEditContainer extends Component
         public PurchaseRequestType $requestType,
         public PurchaseRequestStatus $requestStatus,
         public int $requestId,
+        public int $requestUserId,
         public ?string $amount,
     ) {
         $this->route = "supplies.request." . $this->requestType->value . ".update";
         $this->allRequestStatus = PurchaseRequestStatus::cases();
-        $this->requestIsFromLogged = $this->requestId === auth()->user()->id;
+        $this->requestIsFromLogged = $this->requestUserId === auth()->user()->id;
         $this->inputName = $this->requestType->value === PurchaseRequestType::SERVICE->value
             ? (PurchaseRequestType::SERVICE->value . "[price]")
             : ($this->requestType->value . "[amount]");
+        $this->allowedResponsables = [
+            ["id" => auth()->user()->id, "name" => auth()->user()->person->name]
+        ];
     }
 
     public function render(): View|Closure|string
