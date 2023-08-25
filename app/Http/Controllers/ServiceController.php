@@ -103,11 +103,6 @@ class ServiceController extends Controller
             $msg = "Solicitação de serviço atualizada com sucesso!";
 
             $isAdmin = auth()->user()->profile->name === 'admin';
-            $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
-
-            if (!$isOwnPurchaseRequest && !$isAdmin) {
-                throw new Exception('Não autorizado. Não foi possível acessar essa solicitação.');
-            }
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;

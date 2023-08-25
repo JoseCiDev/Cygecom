@@ -99,11 +99,6 @@ class ProductController extends Controller
             $msg = "Solicitação de produto atualizada com sucesso!";
 
             $isAdmin = auth()->user()->profile->name === 'admin';
-            $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
-
-            if (!$isOwnPurchaseRequest && !$isAdmin) {
-                throw new Exception('Não autorizado. Não foi possível acessar essa solicitação.');
-            }
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
@@ -139,7 +134,7 @@ class ProductController extends Controller
 
         $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === '/supplies';
 
-        if(!$isDraft && $isSuppliesRoute ) {
+        if (!$isDraft && $isSuppliesRoute) {
             $msg = 'Valor total da solicitação atualizado com sucesso!';
             session()->flash('success', $msg);
             return back();
