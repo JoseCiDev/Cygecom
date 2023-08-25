@@ -8,7 +8,7 @@ use App\Enums\{PaymentTerm, PaymentMethod};
 
 class PaymentInfo extends Model
 {
-    use HasFactory;
+    use HasFactory, LogObserverTrait;
 
     public function contract()
     {
