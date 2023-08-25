@@ -14,7 +14,7 @@
     $requestIsFromLogged = $request->user_id === auth()->user()->id;
 
     $paymentTermProduct = $request->product->paymentInfo->payment_terms;
-    $paymentMethod = $request->product->paymentInfo->payment_method;
+    $paymentMethod = $request->product?->paymentInfo?->payment_method;
 @endphp
 
 <x-app>
@@ -250,7 +250,7 @@
                                             <p class="col-xs-3">
                                                 <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
                                             </p>
-                                            
+
                                         </div>
                                     </div>
                                     @endforeach
@@ -419,7 +419,7 @@
                 <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::PRODUCT" />
             </div>
         </div>
-      
+
         <hr>
 
         <div class="row">

@@ -13,7 +13,7 @@
 
     $requestIsFromLogged = $request->user_id === auth()->user()->id;
 
-    $paymentTermContract = $request->contract->paymentInfo->payment_terms;
+    $paymentTermContract = $request->contract?->paymentInfo?->payment_terms;
 @endphp
 
 <x-app>
@@ -343,7 +343,7 @@
                                                     <strong>Qtd. de parcelas:</strong>
                                                     {{ $request->contract?->installments->count() ?? '---' }}
                                                 </p>
-                                               
+
                                             </div>
                                             <div class="col-md-4">
                                                 <p>
@@ -406,7 +406,7 @@
                                         </div>
                                         @endforeach
                                     </div>
-                                    
+
                                 </div>
                             </div>
 
@@ -464,6 +464,6 @@
                 <x-SuppliesLogList :purchaseRequestId="$request->id" />
             </div>
         </div>
-        
+
     </div>
 </x-app>
