@@ -13,16 +13,9 @@ class CheckSuppliesGroupMiddleware
      */
     public function handle($request, Closure $next, ...$allowedSuppliesGroups)
     {
-        $suppliesGroupMappedByProfile = array_combine($allowedSuppliesGroups, ['inp', 'hkm']);
-
         $isAdmin = auth()->user()->profile->name === 'admin';
         $currentProfile = auth()->user()->profile->name;
-        $suppliesGroup = $request->query('suppliesGroup');
-        $isAllowedProfile = collect($allowedSuppliesGroups)->contains($currentProfile) && $suppliesGroupMappedByProfile[$currentProfile] === $suppliesGroup;
-
-        if (!$isAdmin && !$suppliesGroup) {
-            abort(400, 'Parâmetro obrigatório para perfis não administrativos. [Parâmetro: suppliesGroup]');
-        }
+        $isAllowedProfile = collect($allowedSuppliesGroups)->contains($currentProfile);
 
         if (!$isAdmin && !$isAllowedProfile) {
             abort(403, 'Acesso não autorizado para o grupo de suprimentos.');

@@ -803,7 +803,8 @@
             if (isContractedBySupplies) {
                 $serviceAlreadyProvided
                     .last()
-                    .attr('checked', true);
+                    .prop('checked', true)
+                    .valid();
 
                 $divAlreadyProvided
                     .attr('hidden', true);
@@ -838,7 +839,7 @@
                 if (!purchaseRequest) {
                     $serviceAlreadyProvided
                         .last()
-                        .attr('checked', false);
+                        .prop('checked', false);
                 }
 
                 $divAlreadyProvided
