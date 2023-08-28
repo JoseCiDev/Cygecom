@@ -1115,10 +1115,12 @@
             $newContainer.find('.select2-container').remove();
             $newContainer.find('.select2-me').select2();
 
-            //$newContainer.find('select.select-supplier').makeRequired();
+            // $newContainer.find('select.select-supplier').makeRequired();
 
             $('.supplier-block').last().after($newContainer);
             $newContainer.find('.delete-supplier').removeAttr('hidden');
+
+            $newContainer.find('[data-rule-required]').makeRequired();
 
             checkSuppliersContainerLength();
             checkProductRows();
