@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class LogObserver
 {
     /**
-     * Handle the Contract "created" event.
+     * Handle the Model "created" event.
      */
     public function created(Model $model): void
     {
@@ -20,7 +20,7 @@ class LogObserver
     }
 
     /**
-     * Handle the Contract "updated" event.
+     * Handle the Model "updated" event.
      */
     public function updated(Model $model): void
     {
@@ -33,6 +33,11 @@ class LogObserver
             $action = LogAction::tryFrom($action);
             $this->createLog($action, $model, $dirtyAttributes);
         }
+    }
+
+    public function deleted(Model $model): void
+    {
+        $this->createLog(LogAction::DELETE, $model);
     }
 
     private function createLog(LogAction $action, $model, ?array $changes = null)
