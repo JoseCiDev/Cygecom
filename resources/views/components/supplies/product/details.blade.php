@@ -11,7 +11,7 @@
         $request = null;
     }
 
-    $paymentTermProduct = $request->product->paymentInfo->payment_terms;
+    $paymentTermProduct = $request->product->paymentInfo?->payment_terms;
     $paymentMethod = $request->product?->paymentInfo?->payment_method;
 @endphp
 
