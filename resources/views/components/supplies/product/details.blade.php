@@ -1,5 +1,5 @@
 @php
-    use App\Enums\{LogAction, PurchaseRequestType};
+    use App\Enums\{LogAction, PurchaseRequestType, PurchaseRequestStatus};
 
     if (isset($contract)) {
         $request = $contract;
@@ -11,8 +11,6 @@
         $request = null;
     }
 
-    $requestIsFromLogged = $request->user_id === auth()->user()->id;
-
     $paymentTermProduct = $request->product->paymentInfo->payment_terms;
     $paymentMethod = $request->product?->paymentInfo?->payment_method;
 @endphp
@@ -23,34 +21,22 @@
     </x-slot>
 
     <div class="row">
-        <div class="col-sm-12">
-            <form class="form-validate" data-cy="form-request-status" method="POST" action="{{ route('supplies.request.status.update', ['id' => $request->id]) }}">
-            @csrf
-                <div class="row">
-                   <div class="col-md-12">
-                        <label for="status">Status da solicitação</label>
-                   </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <select name="status" data-cy="status" @disabled($requestIsFromLogged)>
-                            @foreach ($allRequestStatus as $status)
-                                @if ($status->value !== \App\Enums\PurchaseRequestStatus::RASCUNHO->value);
-                                    <option @selected($request->status === $status) value="{{$status}}">{{$status->label()}}</option>
-                                @endif
-                            @endforeach
-                        </select>
-                        <button data-cy="btn-apply-status" type="submit" class="btn btn-icon btn-small btn-primary" @disabled($requestIsFromLogged)> Aplicar status </button>
-                    </div>
-                </div>
-            </form>
+        <div class="col-md-12">
+            <x-SuppliesRequestEditContainer
+                :request-type="PurchaseRequestType::PRODUCT"
+                :request-id="$request->id"
+                :request-user-id="$request->user_id"
+                :request-status="$request->status"
+                :amount="$request->product->amount"/>
         </div>
     </div>
+
+    <hr>
 
     <div class="row">
         <div class="col-md-12">
             <div class="pull-right">
-                <x-PdfGeneratorButton print-by-selector=".details-content" :file-name="'solicitacao_produto_'.$request->id . now()->format('dmY_His_u')"/>
+                <x-PdfGeneratorButton print-by-selector=".details-content" :file-name="'solicitacao_produto_' . $request->id . now()->format('dmY_His_u')" />
             </div>
         </div>
     </div>
@@ -69,12 +55,15 @@
                 <div class="row">
                     <div class="col-md-12">
                         <br>
-                        <h4 class="text-highlight"><strong>Responsável pela solicitação (suprimentos):</strong> {{$request->suppliesUser?->person->name ?? '---'}} / {{$request->suppliesUser?->email ?? "---"}}</h4>
+                        <h4 class="text-highlight"><strong>Responsável pela solicitação (suprimentos):</strong>
+                            {{ $request->suppliesUser?->person->name ?? '---' }} /
+                            {{ $request->suppliesUser?->email ?? '---' }}</h4>
                         <br>
-                        <h4 class="text-highlight"><strong>Responsável pela contratação:</strong> {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }} </h4>
+                        <h4 class="text-highlight"><strong>Responsável pela contratação:</strong>
+                            {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }} </h4>
                         <br>
                     </div>
-               </div>
+                </div>
             </header>
             <main>
                 <div class="row">
@@ -93,8 +82,10 @@
                                         <p><strong>Tipo de solicitação:</strong> {{ $request->type->label() }}</p>
                                         <p><strong>COMEX:</strong> {{ $request->is_comex ? 'Sim' : 'Não' }}</p>
                                         <p><strong>Motivo da solicitação:</strong> {{ $request->reason }} </p>
-                                        <p><strong>Em qual sala/prédio ficará o produto:</strong> {{ $request->local_description }} </p>
-                                        <p><strong>Compra já realizada:</strong> {{ $request->product->already_purchased ? 'Sim' : 'Não' }} </p>
+                                        <p><strong>Em qual sala/prédio ficará o produto:</strong>
+                                            {{ $request->local_description }} </p>
+                                        <p><strong>Compra já realizada:</strong>
+                                            {{ $request->product->already_purchased ? 'Sim' : 'Não' }} </p>
                                         <p><strong>Observação:</strong> {{ $request->observation ?? '---' }}</p>
                                     </div>
                                 </div>
@@ -109,7 +100,8 @@
                                             {{ $request->user->person->cpf_cnpj }}
                                         </p>
                                         <p>
-                                            <strong>Celular/Telefone:</strong> {{ $request->user->person->phone->number }}
+                                            <strong>Celular/Telefone:</strong>
+                                            {{ $request->user->person->phone->number }}
                                         </p>
                                         <p>
                                             <strong>Centro de custo do solicitante:</strong>
@@ -168,23 +160,28 @@
                                                 <p>Centro de custo nº {{ $index + 1 }}</p>
                                                 <div class="col-sm-3">
                                                     <p>
-                                                        <strong>Porcentagem (%):</strong> {{ $apportionment->apportionment_percentage ?? '---' }}
+                                                        <strong>Porcentagem (%):</strong>
+                                                        {{ $apportionment->apportionment_percentage ?? '---' }}
                                                     </p>
                                                     <p>
-                                                        <strong>Custo (R$):</strong> {{ $apportionment->apportionment_currency ?? '---' }}
+                                                        <strong>Custo (R$):</strong>
+                                                        {{ $apportionment->apportionment_currency ?? '---' }}
                                                     </p>
                                                 </div>
                                                 <div class="col-sm-5">
                                                     <p>
-                                                        <strong>Centro de custo:</strong> {{ $apportionment->costCenter->name }}
+                                                        <strong>Centro de custo:</strong>
+                                                        {{ $apportionment->costCenter->name }}
                                                     </p>
                                                     <p>
-                                                        <strong>CNPJ:</strong> {{ $apportionment->costCenter->company->cnpj }}
+                                                        <strong>CNPJ:</strong>
+                                                        {{ $apportionment->costCenter->company->cnpj }}
                                                     </p>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <p>
-                                                        <strong>Empresa:</strong> {{ $apportionment->costCenter->company->corporate_name }}
+                                                        <strong>Empresa:</strong>
+                                                        {{ $apportionment->costCenter->company->corporate_name }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -229,30 +226,33 @@
                                 </div>
 
                                 <div class="request-details-content-box-product">
-                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
+                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong>
+                                            Parcelas</strong></h4>
                                     @foreach ($request->product->installments as $installmentIndex => $installment)
-                                    <div class="request-details-content-box-product-installment">
-                                        <div class="row">
-                                            <p class="col-xs-3">
-                                                <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
-                                            </p>
-                                            <p class="col-xs-3">
-                                                <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
-                                            </p>
-                                            <p class="col-xs-6">
-                                                <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
-                                            </p>
-                                        </div>
-                                        <div class="row">
-                                            <p class="col-xs-3">
-                                                <strong>Valor:</strong> R$ {{ $installment->value }}
-                                            </p>
-                                            <p class="col-xs-3">
-                                                <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
-                                            </p>
+                                        <div class="request-details-content-box-product-installment">
+                                            <div class="row">
+                                                <p class="col-xs-3">
+                                                    <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
+                                                </p>
+                                                <p class="col-xs-3">
+                                                    <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
+                                                </p>
+                                                <p class="col-xs-6">
+                                                    <strong>Observação do pagamento:</strong>
+                                                    <span>{{ $installment->observation ?? '---' }}</span>
+                                                </p>
+                                            </div>
+                                            <div class="row">
+                                                <p class="col-xs-3">
+                                                    <strong>Valor:</strong> R$ {{ $installment->value }}
+                                                </p>
+                                                <p class="col-xs-3">
+                                                    <strong>Vencimento:</strong>
+                                                    {{ $installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---' }}
+                                                </p>
 
+                                            </div>
                                         </div>
-                                    </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -273,56 +273,68 @@
 
                                         @foreach ($productsGroupedBySupplier as $supplierIndex => $supplierGroup)
                                             @if ($loopIndex > 0)
-                                            <br><hr>
+                                                <br>
+                                                <hr>
                                             @endif
                                             <div class="request-supplier-group">
                                                 <div class="request-details-content-box-supplier">
-                                                    <h4><i class="fa fa-truck"></i> <strong>Fornecedor {{$supplierIndex !== "" ? "nº" : ""}}: {{ $supplierIndex }}</strong></h4>
+                                                    <h4><i class="fa fa-truck"></i> <strong>Fornecedor
+                                                            {{ $supplierIndex !== '' ? 'nº' : '' }}:
+                                                            {{ $supplierIndex }}</strong></h4>
 
                                                     <div class="row">
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Nome fantasia:</strong> {{ $supplierGroup->first()->supplier?->name ?? '---' }}
+                                                            <strong>Nome fantasia:</strong>
+                                                            {{ $supplierGroup->first()->supplier?->name ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>CNPJ/CPF:</strong> {{ $supplierGroup->first()->supplier?->cpf_cnpj ?? '---' }}
+                                                            <strong>CNPJ/CPF:</strong>
+                                                            {{ $supplierGroup->first()->supplier?->cpf_cnpj ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Razão social:</strong> {{ $supplierGroup->first()->supplier?->corporate_name ?? '---' }}
+                                                            <strong>Razão social:</strong>
+                                                            {{ $supplierGroup->first()->supplier?->corporate_name ?? '---' }}
                                                         </p>
                                                     </div>
 
                                                     <div class="row">
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Indicação do fornecedor:</strong> {{ $supplierGroup->first()->supplier?->supplier_indication ?? '---' }}
+                                                            <strong>Indicação do fornecedor:</strong>
+                                                            {{ $supplierGroup->first()->supplier?->supplier_indication ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Tipo de mercado:</strong> {{ $supplierGroup->first()->supplier?->market_type ?? '---' }}
+                                                            <strong>Tipo de mercado:</strong>
+                                                            {{ $supplierGroup->first()->supplier?->market_type ?? '---' }}
                                                         </p>
 
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Qualificação:</strong> {{ $supplierGroup->first()->supplier?->qualification->label() ?? '---' }}
+                                                            <strong>Qualificação:</strong>
+                                                            {{ $supplierGroup->first()->supplier?->qualification->label() ?? '---' }}
                                                         </p>
                                                     </div>
 
-                                                    <div class="row" >
+                                                    <div class="row">
                                                         <p class="col-sm-4" style="margin: 0">
                                                             <strong>Tipo de pessoa:</strong>
                                                             {{ $supplierGroup->first()->supplier?->entity_type ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Representante:</strong> {{ $supplierGroup->first()->supplier?->representative ?? '---' }}
+                                                            <strong>Representante:</strong>
+                                                            {{ $supplierGroup->first()->supplier?->representative ?? '---' }}
                                                         </p>
-                                                        <p  class="col-sm-4" style="margin: 0">
+                                                        <p class="col-sm-4" style="margin: 0">
                                                             <strong>Celular/Telefone do responsável:</strong>
                                                             {{ $request->product->phone ?? '---' }}
                                                         </p>
                                                     </div>
                                                     <div class="row">
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Registro estadual:</strong> {{ $supplierGroup->first()->supplier?->state_registration ?? '---' }}
+                                                            <strong>Registro estadual:</strong>
+                                                            {{ $supplierGroup->first()->supplier?->state_registration ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Descrição:</strong> {{ $supplierGroup->first()->supplier?->description ?? '---' }}
+                                                            <strong>Descrição:</strong>
+                                                            {{ $supplierGroup->first()->supplier?->description ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
                                                             <strong>Vendedor/Atendente responsável:</strong>
@@ -332,13 +344,16 @@
 
                                                     <div class="row">
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>Observações tributárias:</strong> {{ $supplierGroup->first()->supplier?->tributary_observation ?? '---' }}
+                                                            <strong>Observações tributárias:</strong>
+                                                            {{ $supplierGroup->first()->supplier?->tributary_observation ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>E-mail:</strong> {{ $supplierGroup->first()->supplier?->email ?? '---' }}
+                                                            <strong>E-mail:</strong>
+                                                            {{ $supplierGroup->first()->supplier?->email ?? '---' }}
                                                         </p>
                                                         <p class="col-sm-4" style="margin: 0">
-                                                            <strong>E-mail do responsável:</strong> {{ $request->product->email ?? '---' }}
+                                                            <strong>E-mail do responsável:</strong>
+                                                            {{ $request->product->email ?? '---' }}
                                                         </p>
                                                     </div>
 
@@ -351,31 +366,40 @@
                                                     @endphp
 
                                                     @foreach ($productCategoryGroups as $productCategory => $products)
-                                                        <br><hr>
-                                                        <p><strong><i class="glyphicon glyphicon-th-large"></i> Categoria:</strong> {{$productCategory}}</p>
+                                                        <br>
+                                                        <hr>
+                                                        <p><strong><i class="glyphicon glyphicon-th-large"></i>
+                                                                Categoria:</strong> {{ $productCategory }}</p>
 
                                                         @foreach ($products as $index => $productItem)
-                                                            <div class="request-details-content-box-products-product {{ $index % 2 === 0 ? 'zebra-bg-even' : 'zebra-bg-odd' }}">
-                                                                <p><strong><i class="glyphicon glyphicon-tag"></i> Produto nº {{ $index + 1 }}:</strong></p>
+                                                            <div
+                                                                class="request-details-content-box-products-product {{ $index % 2 === 0 ? 'zebra-bg-even' : 'zebra-bg-odd' }}">
+                                                                <p><strong><i class="glyphicon glyphicon-tag"></i>
+                                                                        Produto nº {{ $index + 1 }}:</strong></p>
 
                                                                 <div class="row">
                                                                     <p class="col-xs-4" style="margin: 0">
-                                                                        <strong>Nome do produto:</strong> {{ $productItem->name }}
+                                                                        <strong>Nome do produto:</strong>
+                                                                        {{ $productItem->name }}
                                                                     </p>
                                                                     <p class="col-xs-4" style="margin: 0">
-                                                                        <strong>Tamanho e dimensões do produto:</strong> {{ $productItem->size ?? '---' }}
+                                                                        <strong>Tamanho e dimensões do produto:</strong>
+                                                                        {{ $productItem->size ?? '---' }}
                                                                     </p>
                                                                     <p class="col-xs-4" style="margin: 0">
-                                                                        <strong>Quantidade:</strong> {{ $productItem->quantity }}
+                                                                        <strong>Quantidade:</strong>
+                                                                        {{ $productItem->quantity }}
                                                                     </p>
                                                                 </div>
 
                                                                 <div class="row">
                                                                     <p class="col-xs-4" style="margin: 0">
-                                                                        <strong>Cor do produto:</strong> {{ $productItem->color ?? '---' }}
+                                                                        <strong>Cor do produto:</strong>
+                                                                        {{ $productItem->color ?? '---' }}
                                                                     </p>
                                                                     <p class="col-xs-4" style="margin: 0">
-                                                                        <strong>Modelo do produto:</strong> {{ $productItem->model ?? '---' }}
+                                                                        <strong>Modelo do produto:</strong>
+                                                                        {{ $productItem->model ?? '---' }}
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -399,16 +423,18 @@
 
         <div class="row">
             <div class="col-md-12">
-                 <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
-                 @if ($files->count())
+                <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
+                @if ($files->count())
                     <ul>
                         @foreach ($files as $index => $file)
-                            <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank" rel="noopener noreferrer">{{ $file->original_name }}</a></li>
+                            <li><a style="font-size: 16px" data-cy="link-{{ $index }}"
+                                    href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank"
+                                    rel="noopener noreferrer">{{ $file->original_name }}</a></li>
                         @endforeach
                     </ul>
-                 @else
+                @else
                     <p>Nenhum registro encontrado.</p>
-                 @endif
+                @endif
             </div>
         </div>
 
@@ -427,12 +453,20 @@
                 <h4><i class="glyphicon glyphicon-link"></i> <strong>Links de apoio/sugestão:</strong></h4>
                 @php
                     $supportLinks = 'Não há links para serem exibidos aqui.';
-                    if( $request?->support_links) {
+                    if ($request?->support_links) {
                         $supportLinks = str_replace(' ', '<br>', $request->support_links);
                         $supportLinks = nl2br($supportLinks);
                     }
                 @endphp
                 <p class="support_links" style="max-height: 300px; overflow:auto">{!! $supportLinks !!}</p>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::PRODUCT" />
             </div>
         </div>
 
@@ -445,4 +479,9 @@
         </div>
 
     </div>
+
+    <x-slot:scripts>
+        <script src="{{ asset('js/supplies/details-purchase-request-amount.js') }}"></script>
+    </x-slot:scripts>
+
 </x-app>

@@ -247,11 +247,13 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de serviço.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveService para atualizar serviço.
      */
-    public function updateServiceRequest(int $id, array $data, UploadedFile|array|null $files)
+    public function updateServiceRequest(int $id, array $data, UploadedFile|array|null $files): PurchaseRequest
     {
-        DB::transaction(function () use ($id, $data, $files) {
+        return DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
             $this->saveService($purchaseRequest->id, $data, $purchaseRequest->service->id);
+
+            return $purchaseRequest;
         });
     }
 
@@ -259,11 +261,13 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de produto(s).
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveProduct para atualizar produto(s).
      */
-    public function updateProductRequest(int $id, array $data,  UploadedFile|array|null $files)
+    public function updateProductRequest(int $id, array $data,  UploadedFile|array|null $files): PurchaseRequest
     {
-        DB::transaction(function () use ($id, $data, $files) {
+        return DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
             $this->saveProducts($purchaseRequest->id, $data);
+
+            return $purchaseRequest;
         });
     }
 
@@ -271,11 +275,13 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de contrato.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveContract para atualizar contrato.
      */
-    public function updateContractRequest(int $id, array $data, UploadedFile|array|null $files)
+    public function updateContractRequest(int $id, array $data, UploadedFile|array|null $files): PurchaseRequest
     {
-        DB::transaction(function () use ($id, $data, $files) {
+        return DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
             $this->saveContract($purchaseRequest->id, $data, $purchaseRequest->contract->id);
+
+            return $purchaseRequest;
         });
     }
 
@@ -296,6 +302,11 @@ class PurchaseRequestService extends ServiceProvider
     private function saveCostCenterApportionment(int $purchaseRequestId, array $data)
     {
         $userId = auth()->user()->id;
+
+        if (!isset($data['cost_center_apportionments'])) {
+            return;
+        }
+
         $apportionmentData = $data['cost_center_apportionments'];
         $existingIds = CostCenterApportionment::where('purchase_request_id', $purchaseRequestId)->pluck('id')->toArray();
 
@@ -405,6 +416,10 @@ class PurchaseRequestService extends ServiceProvider
             ProductInstallment::updateOrCreate(['id' => $installment['id']], $installment);
         }
 
+        if (!isset($data['purchase_request_products'])) {
+            return;
+        }
+
         $suppliers = array_values($data['purchase_request_products']);
 
         $idsArray = collect($suppliers)->pluck('products')->map(function ($products) {
@@ -436,6 +451,8 @@ class PurchaseRequestService extends ServiceProvider
     private function saveContract(int $purchaseRequestId, array $data, ?int $contractId = null)
     {
         $contractData = $data['contract'];
+
+        // dd($contractData);
 
         // caso disabled os campos do form define como null
         $contractsInstallmentsData = $contractData['contract_installments'] ?? [];
