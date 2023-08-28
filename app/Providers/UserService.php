@@ -73,7 +73,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user->user_profile_id = $this->getProfileId($request);
             $user->person_id = $person->id;
             $user->approver_user_id = $request['approver_user_id'] ?? null;
-            $user->approve_limit = $request['approve_limit'];
+            $user->approve_limit = $request['approve_limit'] ?? null;
             $user->is_buyer = $request['is_buyer'] ?? false;
 
             $user->save();
@@ -144,7 +144,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
         $profileId = $profile->id;
 
         $approverUserId = isset($data['approver_user_id']) ? User::find($data['approver_user_id'])->id : $user->approver_user_id;
-        $approveLimit = $data['approve_limit'] ?? $user->approve_limit;
+        $approveLimit = $data['approve_limit'] ?? null;
 
         $isBuyer = $data['is_buyer'] ?? $user->is_buyer;
 
