@@ -265,7 +265,7 @@ class PurchaseRequestService extends ServiceProvider
     {
         return DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
-            $this->saveProducts($purchaseRequest->id, $data);
+            $this->saveProducts($purchaseRequest->id, $data, $purchaseRequest->product->id);
 
             return $purchaseRequest;
         });
@@ -368,8 +368,10 @@ class PurchaseRequestService extends ServiceProvider
     private function saveService(int $purchaseRequestId, array $data, ?int $serviceId = null): void
     {
         $serviceData = $data['service'];
+        if (isset($serviceData['price'])) {
+            $serviceData['price'] = number_format($serviceData['price'], 2, '.', '');
+        }
 
-        // caso disabled os campos do form define como null
         $serviceInstallmentsData = $serviceData['service_installments'] ?? [];
         $paymentInfoData = $serviceData['payment_info'] ?? [];
 
@@ -394,18 +396,21 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar products.
      * Recomendado executar com o método específico registerProductRequest ou updateProductRequest
      */
-    private function saveProducts(int $purchaseRequestId, array $data)
+    private function saveProducts(int $purchaseRequestId, array $data, ?int $productId = null)
     {
         $productData = $data['product'];
         $productInstallmentsData = $productData['product_installments'] ?? [];
         $paymentInfoData = $productData['payment_info'] ?? [];
+        if (isset($productData['amount'])) {
+            $productData['amount'] = number_format($productData['amount'], 2, '.', '');
+        }
 
         if (!empty(array_filter($paymentInfoData))) {
             $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
             $productData['payment_info_id'] = $paymentInfoResponse->id;
         }
 
-        $product = Product::updateOrCreate(['purchase_request_id' => $purchaseRequestId], $productData);
+        $product = Product::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'id' => $productId], $productData);
 
         $existingInstallments = ProductInstallment::where('product_id', $product->id)->get();
 
@@ -451,10 +456,10 @@ class PurchaseRequestService extends ServiceProvider
     private function saveContract(int $purchaseRequestId, array $data, ?int $contractId = null)
     {
         $contractData = $data['contract'];
+        if (isset($contractData['amount'])) {
+            $contractData['amount'] = number_format($contractData['amount'], 2, '.', '');
+        }
 
-        // dd($contractData);
-
-        // caso disabled os campos do form define como null
         $contractsInstallmentsData = $contractData['contract_installments'] ?? [];
         $paymentInfoData = $contractData['payment_info'] ?? [];
 
@@ -464,6 +469,7 @@ class PurchaseRequestService extends ServiceProvider
         }
 
         $contract = Contract::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'id' => $contractId], $contractData);
+
         $existingInstallments = ContractInstallment::where('contract_id', $contract->id)->get();
 
         $this->updateNumberOfInstallments($existingInstallments, $contractsInstallmentsData);
