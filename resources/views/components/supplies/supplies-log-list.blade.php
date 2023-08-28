@@ -1,35 +1,50 @@
 @php
     use App\Enums\PurchaseRequestStatus;
     use App\Models\User;
+    use Carbon\Carbon;
 @endphp
 
 <h5><i class="glyphicon glyphicon-list-alt"></i> <strong> Histórico de alterações:</strong></h5>
-@foreach ($logs as $index => $log)
-    <div class="row log-item {{ $index % 2 === 0 ? 'zebra-bg-even' : 'zebra-bg-odd' }}">
-        <div class="col-sm-4">
-            @if ($log->changes)
-                @php
-                    $change = null;
-                    if (isset($log->changes['status'])) {
-                        $status = PurchaseRequestStatus::from($log->changes['status']);
-                        $change = "Status para [" . $status->label() . "]";
-                    } else {
-                        $supplieUserId = $log->changes['supplies_user_id'];
-                        $supplieUser = User::find($supplieUserId)->email;
-                        $change = "$supplieUser [suprimentos] atribuído como responsável";
-                    }
-                @endphp
 
-                <span> Descrição: {{$change}} </span>
-            @else
-                ---
-            @endif
+@if ($logs->isEmpty())
+    <div class="row log-item">
+        <div class="col-sm-12">
+            <span> Ainda não existe histórico de alterações para essa solicitação. </span>
         </div>
-        <div class="col-sm-3">
-            <span>Data: {{ \Carbon\Carbon::parse($log->created_at)->format('d/m/Y - H:m:s')}}</span>
-        </div>
-        <div class="col-sm-5">
-            <span>Responsável: {{$log->user->email}}</span>
-        </div>
+    </div>
+@endif
+
+@foreach ($logs as $index => $log)
+    @php
+        $logChanges = collect($log->changes);
+        $changes = '';
+
+        if ($logChanges->has('status')) {
+            $status = PurchaseRequestStatus::from($logChanges->get('status'));
+            $changes .= "<li>Status atualizado para [{$status->label()}];</li>";
+        }
+
+        if ($logChanges->has('supplies_user_id')) {
+            $suppliesUser = User::find($logChanges->get('supplies_user_id'))->email;
+            $changes .= "<li>$suppliesUser [suprimentos] atribuído como responsável;</li>";
+        }
+
+        if ($logChanges->has('amount')) {
+            $amount = $logChanges->get('amount');
+            $changes .= "<li>Valor total atualizado para R$ " . number_format($amount, 2, ',', '.') .";</li>";
+        }
+
+        if ($logChanges->has('price')) {
+            $price = $logChanges->get('price');
+            $changes .= "<li>Preço total atualizado para R$ " . number_format($price, 2, ',', '.') . ";</li>";
+        }
+    @endphp
+
+    <div class="log-item">
+        <ul class="log-item-changes">
+            {!! $changes !!}
+        </ul>
+        <p class="log-item-date">Data: {{ Carbon::parse($log->created_at)->format('d/m/Y - H:i:s') }}</p>
+        <p class="log-item-responsable">Responsável: {{ $log->user->email }}</p>
     </div>
 @endforeach
