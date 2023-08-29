@@ -40,8 +40,7 @@ class AppServiceProvider extends ServiceProvider
             /**
              * @var Carbon $this
              */
-
-            return $this->setTimezone('America/Sao_Paulo')->format($format);
+            return $this->setTimezone(env('CUSTOM_TIMEZONE'))->format($format);
         });
     }
 }
