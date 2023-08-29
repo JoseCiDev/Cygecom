@@ -5,7 +5,7 @@
     $isAdmin = $currentProfile === 'admin';
     $isGestorUsuarios = $currentProfile === 'gestor_usuarios';
     $isOwnRequest = isset($user) && auth()->user()->id === $user->id;
-    $isDisabled = $userToChangeIsAdmin || !$isAdmin && (!$isGestorUsuarios || ($isGestorUsuarios && $isOwnRequest)) 
+    $isDisabled = $userToChangeIsAdmin || !$isAdmin && (!$isGestorUsuarios || ($isGestorUsuarios && $isOwnRequest))
 @endphp
 
 <div class="box-title">
@@ -48,7 +48,7 @@
                 <div class="form-group">
                     <label for="name" class="control-label required">Nome</label>
                     <input type="text" name="name" id="name" data-cy="name" placeholder="Nome Completo" class="form-control" @disabled($isDisabled)
-                        data-rule-required="true" data-rule-minlength="2" 
+                        data-rule-required="true" data-rule-minlength="2"
                         value="{{ old('name', isset($user) ? $user->person->name : '') }}">
                     @error('name')
                         <span class="text-danger">{{ $message }}</span>
@@ -59,7 +59,7 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label for="birthdate" class="control-label">Data de nascimento</label>
-                    <input type="date" name="birthdate" id="birthdate" data-cy="birthdate" class="form-control" @disabled($isDisabled) 
+                    <input type="date" name="birthdate" id="birthdate" data-cy="birthdate" class="form-control" @disabled($isDisabled)
                         value="{{ old('birthdate', isset($user) ? $user['person']['birthdate'] : '') }}">
                 </div>
             </div>
@@ -129,7 +129,7 @@
                         <label for="password" class="control-label">Senha</label>
                         <input type="password" name="password" id="password" data-cy="password"
                             placeholder="Deve conter ao menos 8 digitos"
-                            @if (!isset($user)) 
+                            @if (!isset($user))
                                 required data-rule-required="true" data-rule-minlength="8" class="form-control @error('password') is-invalid @enderror"
                             @else
                                 class="form-control @error('password') is-invalid @enderror" @endif autocomplete="new-password">
@@ -147,8 +147,8 @@
                             autocomplete="new-password"
                             @if (!isset($user)) class="form-control"
                                 data-rule-required="true"
-                            @else 
-                                class="form-control no-validation" 
+                            @else
+                                class="form-control no-validation"
                             @endif >
                         @error('password_confirmation')
                             <span class="text-danger">{{ $message }}</span>
@@ -158,7 +158,7 @@
             @endif
 
         </div>
-      
+
         @if (!$isDisabled)
             <div class="row" style="padding: 25px 0">
                 {{-- PERFIL DE USUÁRIO --}}
@@ -225,9 +225,9 @@
                                     class="icheck-me" type="radio" value="1" data-skin="minimal">
                                 <label class="form-check-label" for="is_buyer_true">Autorizado</label>
                             </div>
-    
+
                             <div>
-                                <input @checked(isset($user) && !$user->is_buyer) class="icheck-me" type="radio" name="is_buyer" id="is_buyer_false" 
+                                <input @checked(isset($user) && !$user->is_buyer) class="icheck-me" type="radio" name="is_buyer" id="is_buyer_false"
                                     data-cy="is_buyer_false" value="0" data-skin="minimal" >
                                 <label class="form-check-label" for="is_buyer_false">Não autorizado</label>
                             </div>
@@ -243,7 +243,7 @@
                             <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id"
                                 class='chosen-select form-control @error('cost_center_id') is-invalid @enderror'
                                 data-rule-required="true" required>
-                                
+
                                 <option value="" disabled @selected(!isset($user->person->costCenter))>
                                     Selecione uma opção</option>
                                 @foreach ($costCenters as $costCenter)
@@ -251,7 +251,7 @@
                                         $companyName = $costCenter->company->name;
                                         $costCenterName = $costCenter->name;
                                         $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
-                                    @endphp 
+                                    @endphp
                                     <option value="{{ $costCenter->id }}" @selected(isset($user->person->costCenter) && $user->person->costCenter->id === $costCenter->id)>
                                         {{ $formattedCnpj . ' - ' . $companyName . ' / ' . $costCenterName }}
                                     </option>
@@ -269,7 +269,7 @@
                                         $costCenterName = $costCenter->name;
                                         $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
                                         $isSelected = old('cost_center_id') == $costCenter->id;
-                                    @endphp 
+                                    @endphp
                                     <option value="{{ $costCenter->id }}" @selected($isSelected)>
                                         {{ $formattedCnpj . ' - ' . $companyName . ' / ' . $costCenterName }}
                                     </option>
@@ -352,7 +352,7 @@
                                 @php
                                     $companyName = $costCenter->company->name;
                                     $costCenterName = $costCenter->name;
-                                @endphp 
+                                @endphp
 
                                 <option value="{{ $costCenter->id }}"
                                     @if (old('user_cost_center_permissions') !== null)
@@ -465,11 +465,12 @@
         });
 
         // approve_limit input hidden
-        $approveLimit.on('input', function() {
+        $approveLimit.on('input blur', function() {
             const formattedValue = $(this).val();
             if (formattedValue !== null) {
                 const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
                 const rawValue = parseFloat(processedValue);
+                console.log(rawValue);
                 $('.approve_limit').val(rawValue.toFixed(2));
             }
         });
