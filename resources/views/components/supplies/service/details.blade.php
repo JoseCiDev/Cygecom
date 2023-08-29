@@ -274,7 +274,7 @@
                                     <div class="tab-content padding">
                                         <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações</strong></h4>
                                         <p>
-                                            <strong>Tipo de pagamento: </strong>
+                                            <strong>Condição de pagamento: </strong>
                                             {{ $request->service->paymentInfo?->payment_terms?->label() ?? '---' }}
                                         </p>
                                         <p>
@@ -313,7 +313,7 @@
                                         <h4><i class="fa fa-briefcase"></i> <strong>Serviço - Informações de
                                                 pagamento</strong></h4>
                                         <p>
-                                            <strong>Tipo do pagamento:</strong>
+                                            <strong>Forma de pagamento:</strong>
                                             {{ $request->service->paymentInfo?->payment_method?->label() ?? '---' }}
                                         </p>
                                         <p>
