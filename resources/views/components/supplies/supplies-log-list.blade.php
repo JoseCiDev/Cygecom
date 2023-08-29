@@ -40,11 +40,12 @@
         }
     @endphp
 
-    <div class="log-item">
-        <ul class="log-item-changes">
-            {!! $changes !!}
-        </ul>
-        <p class="log-item-date">Data: {{ Carbon::parse($log->created_at)->format('d/m/Y - H:i:s') }}</p>
-        <p class="log-item-responsable">Responsável: {{ $log->user->email }}</p>
-    </div>
+<div class="log-item">
+    <ul class="log-item-changes">
+        {!! $changes !!}
+    </ul>
+
+    <p class="log-item-date">Data: {{  $log->created_at->formatCustom('d/m/Y H:i:s')}}</p>
+    <p class="log-item-responsable">Responsável: {{ $log->user->email }}</p>
+</div>
 @endforeach

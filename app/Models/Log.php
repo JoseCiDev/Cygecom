@@ -25,6 +25,7 @@ class Log extends Model
     protected $casts = [
         'changes' => 'array',
         'action' => LogAction::class,
+        'created_at' => 'datetime',
     ];
 
     public $timestamps = false;
