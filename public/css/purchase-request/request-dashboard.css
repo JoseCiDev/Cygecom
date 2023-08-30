@@ -1,7 +1,7 @@
 .request-dashboard {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 30px 0 0 0;
+    padding: 0;
 }
 
 .request-dashboard-title {
@@ -9,6 +9,7 @@
     line-height: 39px;
     color: var(--black-color);
     font-weight: bold;
+    margin: 0 0 15px 0;
 }
 
 .request-dashboard-subtitle {
