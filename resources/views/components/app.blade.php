@@ -40,11 +40,13 @@
     <link rel="stylesheet" href="{{ asset('css/modal-supplies.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootbox.custom.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom-modal-dialog.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-breadcrumb.css') }}">
     <link rel="stylesheet" href="{{ asset('css/purchase-request/product-suggestion-autocomplete.css') }}">
     <link rel="stylesheet" href="{{ asset('css/purchase-request/log.css') }}">
     <link rel="stylesheet" href="{{ asset('css/purchase-request/request-dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies/form-status-filter.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies/category-column-tags.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/supplies/dashboard.css') }}">
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -248,9 +250,6 @@
 
         <div id="main">
             <div class="container-fluid">
-                <div class="page-header">
-                    {{ $title ?? null }}
-                </div>
                 <x-breadcrumb />
                 <x-alert />
                 {{ $slot }}
