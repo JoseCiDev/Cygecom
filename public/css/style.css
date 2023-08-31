@@ -4415,7 +4415,8 @@ input[type="color"],
     border: 1px solid var(--grey-primary-color);
 }
 
-.btn-primary:hover {
+.btn.btn-primary:hover,
+.btn.btn-primary:focus {
     background: #7d7a7a;
 }
 

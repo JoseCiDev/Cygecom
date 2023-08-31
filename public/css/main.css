@@ -59,6 +59,10 @@ strong {
     background-color: var(--contract-color);
 }
 
+.bg-contract-color:hover {
+    background-color: var(--contract-color-hover);
+}
+
 .text-product-color {
     color: var(--product-color);
 }
@@ -89,8 +93,4 @@ strong {
     color: var(--black-color);
     font-weight: bold;
     margin: 0;
-}
-
-.bg-contract-color:hover {
-    background-color: var(--contract-color-hover);
 }
