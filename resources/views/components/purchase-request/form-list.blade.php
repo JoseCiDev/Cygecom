@@ -9,7 +9,7 @@
             <div class="request-dashboard-requests-item">
                 <h2 class="request-dashboard-requests-item-title">Produtos</h2>
                 <p class="request-dashboard-requests-item-subtitle">Compra de produtos em geral.</p>
-                <p class="request-dashboard-requests-item-description">Exemplo: Lista de material de escritório, lista de material de limpeza, materiais de copa e cozinha, maquinário. equipamentos, etc.</p>
+                <p class="request-dashboard-requests-item-description">Exemplo: Lista de material de escritório, lista de material de limpeza, materiais de copa e cozinha, maquinário, equipamentos, etc.</p>
                 <a class="request-dashboard-requests-item-btn bg-product-color" href="{{ route('request.product.register') }}">Solicitação de produto</a>
             </div>
 

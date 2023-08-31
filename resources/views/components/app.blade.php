@@ -192,12 +192,14 @@
                             <ul class="dropdown-menu">
                                 @if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios')
                                     <li>
-                                        <a href="{{ route('users') }}" data-cy="dropdown-cadastros-usuarios">Usuários</a>
+                                        <a href="{{ route('users') }}"
+                                            data-cy="dropdown-cadastros-usuarios">Usuários</a>
                                     </li>
                                 @endif
                                 @if ($currentProfile === 'admin' || $currentProfile === 'gestor_fornecedores')
                                     <li>
-                                        <a href="{{ route('suppliers') }}" data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
+                                        <a href="{{ route('suppliers') }}"
+                                            data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
                                     </li>
                                 @endif
                             </ul>
@@ -242,9 +244,18 @@
                         </li>
                     @endif
                 </ul>
-                <x-navbar.user/>
+                <x-navbar.user />
             </div>
         </div>
+
+        {{-- ENV --}}
+        @if (!App::isProduction())
+            <div class="env" style="background-color: rgb(251, 52, 52); padding: 5px;">
+                <h3 style="text-align: center; margin: 0px; color: black;">
+                    {{ App::environment() }}
+                </h3>
+            </div>
+        @endif
 
         <div id="main">
             <div class="container-fluid">
@@ -283,6 +294,8 @@
             $("form").attr('autocomplete', 'off');
         })
     </script>
+
+    {{ $scripts ?? null }}
 </body>
 
 </html>

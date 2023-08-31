@@ -1,5 +1,38 @@
 .log-item {
-    padding: 4px 0;
+    padding: 4px 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.log-item:nth-child(even) {
+    background-color: #c5c5c5;
+}
+
+.log-item:nth-child(odd) {
+    background-color: #eaeaea;
+}
+
+.log-item-changes,
+.log-item-date,
+.log-item-responsable {
+    margin: 0;
+}
+
+.log-item-changes {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    list-style-type: square;
+}
+
+.log-item-date {
+    min-width: 180px;
+    text-align: center;
+}
+
+.log-item-responsable {
+    min-width: 500px;
 }
 
 .span-log-changes-view {
