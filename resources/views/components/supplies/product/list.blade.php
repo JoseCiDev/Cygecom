@@ -20,7 +20,7 @@
                                     $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
                                     $isChecked = count($status) ? collect($status)->contains($statusCase) : $statusDefaultFilter;
                                 @endphp
-                                
+
                                 @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
                                     <label class="checkbox-label">
                                         <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
@@ -61,7 +61,7 @@
                                 $concatenatedGroups = $groups->map(function ($item) {
                                         return $item->label();
                                     })->implode(', ');
-                                
+
                                 $categories = $product->purchaseRequestProduct->groupBy('category.name')->keys();
                                 $categoriesQtd = $categories->count();
                             @endphp
@@ -92,7 +92,7 @@
                                         data-request="{{json_encode($product)}}"
                                         rel="tooltip"
                                         title="Analisar"
-                                        class="btn btn-primary"
+                                        class="btn"
                                         data-toggle="modal"
                                         data-target="#modal-supplies"
                                         data-cy="btn-analisar-{{$index}}"
@@ -103,7 +103,7 @@
                                         $existSuppliesUser = (bool) $product->suppliesUser?->person->name;
                                         $existResponsibility = (bool) $product->responsibility_marked_at;
                                         $isOwnUserRequest = $product->user->id === auth()->user()->id;
-                                        $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest 
+                                        $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest
                                      @endphp
                                     <a href="{{route('supplies.product.detail', ['id' => $product->id])}}"
                                         class="btn btn-link openDetail"

@@ -15,9 +15,6 @@
 @endphp
 
 <x-app>
-    <x-slot name="title">
-        <h1>Página de suprimentos</h1>
-    </x-slot>
 
     <div class="row">
         <div class="col-sm-12">
@@ -37,7 +34,7 @@
                                 @endif
                             @endforeach
                         </select>
-                        <button ata-cy="btn-apply-status" type="submit" class="btn btn-icon btn-small btn-primary" @disabled($requestIsFromLogged)> Aplicar status </button>
+                        <button ata-cy="btn-apply-status" type="submit" class="btn btn-icon btn-primary btn-small" @disabled($requestIsFromLogged)> Aplicar status </button>
                     </div>
                 </div>
             </form>

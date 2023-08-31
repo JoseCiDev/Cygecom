@@ -8,34 +8,26 @@
     $isDisabled = $userToChangeIsAdmin || !$isAdmin && (!$isGestorUsuarios || ($isGestorUsuarios && $isOwnRequest))
 @endphp
 
-<div class="box-title">
-    <div class="row">
-        <div class="col-md-6">
-            <h3 style="color: white; margin-top: 5px">
-                @if (isset($user))
-                    Editar usuário
-                @else
-                    Novo usuário
-                @endif
-            </h3>
-        </div>
-        @if (!$userToChangeIsAdmin && isset($user) && auth()->user()->id !== $user->id)
-            <div class="col-md-6 pull-right">
-                <x-modalDelete />
-                <button data-route="user" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario"
-                    data-toggle="modal" data-target="#modal" rel="tooltip" title="Excluir"
-                    class="btn btn-danger pull-right" style="margin-right: 15px">
-                    Excluir usuário
-                </button>
-            </div>
-        @endif
+<div class="row" style="margin: 0;">
+    <div class="col-md-6">
+        <h1 class="page-title">{{isset($user) ? 'Editar usuário' : 'Novo usuário'}}</h1>
     </div>
+    @if (!$userToChangeIsAdmin && isset($user) && auth()->user()->id !== $user->id)
+        <div class="col-md-6">
+            <x-modalDelete />
+            <button data-route="user" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario"
+                data-toggle="modal" data-target="#modal" rel="tooltip" title="Excluir" class="btn btn-primary btn-small btn-danger pull-right">
+                Excluir usuário
+            </button>
+        </div>
+    @endif
 </div>
+
 <div class="box-content">
     @if (isset($user))
         <form method="POST" action="{{ route($action, $user->id) }}" class="form-validate" id="form-update" data-cy="form-update">
-        @else
-            <form method="POST" action="{{ route('register') }}" class="form-validate" id="form-register" data-cy="form-register">
+    @else
+        <form method="POST" action="{{ route('register') }}" class="form-validate" id="form-register" data-cy="form-register">
     @endif
     @csrf
 
@@ -366,31 +358,26 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-12 cost-center-options">
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <a href="#cost-center-permissions" class="btn btn-small btn-primary btn-select-all-cost-centers" data-cy="btn-select-all-cost-centers"
-                                style="font-size:14px;">
-                                Selecionar todos
-                            </a>
-                            <button type="button" class="btn btn-small btn-primary btn-clear-cost-centers" data-cy="btn-clear-cost-centers"
-                                style="font-size:14px;">
-                                Limpar
-                            </button>
-                        </div>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-9">
+                    <a href="#cost-center-permissions" class="btn btn-secondary btn-small btn-select-all-cost-centers" data-cy="btn-select-all-cost-centers">
+                        Selecionar todos
+                    </a>
+                    <button type="button" class="btn btn-secondary btn-small btn-clear-cost-centers" data-cy="btn-clear-cost-centers">
+                        Limpar
+                    </button>
+                </div>
+
+                <div class="pull-right">
+                    @if (!$userToChangeIsAdmin)
+                        <button type="submit" class="btn btn-primary btn-large" data-cy="btn-submit-salvar">Salvar</button>
+                    @endif
                 </div>
             </div>
         @endif
     </div>
 
-    {{-- SALVAR/CANCELAR --}}
-    <div class="form-actions pull-right">
-        <a href="{{ route('users') }}" class="btn btn-large" data-cy="btn-cancelar">Cancelar</a>
-        @if (!$userToChangeIsAdmin)
-            <button type="submit" class="btn btn-primary btn-large" data-cy="btn-submit-salvar">Salvar</button>
-        @endif
-    </div>
     </form>
 </div>
 </div>

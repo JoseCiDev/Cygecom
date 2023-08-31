@@ -5,7 +5,7 @@
 <x-app>
 
     <div class="supplies-dashboard">
-        <h1 class="supplies-dashboard-title">Dashboard de suprimentos</h1>
+        <h1 class="supplies-dashboard-title page-title">Dashboard de suprimentos</h1>
 
         <div class="supplies-dashboard-requests">
             <div class="supplies-dashboard-requests-item border-product">

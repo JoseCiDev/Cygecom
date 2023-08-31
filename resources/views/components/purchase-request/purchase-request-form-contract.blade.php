@@ -66,11 +66,11 @@
     }
 </style>
 
-<div class="row">
+<div class="row" style="margin: 20px 0 30px;">
 
     <div class="col-sm-6">
         @if ($hasRequestNotSent)
-            <h2>Editar Solicitação</h2>
+            <h1 class="page-title">Editar solicitação de contrato nº {{$purchaseRequest->id}}</h1>
         @elseif ($hasSentRequest)
             <div class="alert alert-info alert-dismissable">
                 <button data-cy="btn-close-alert" type="button" class="close" data-dismiss="alert">&times;</button>
@@ -78,19 +78,18 @@
                     <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
                 </h5>
             </div>
-            <h2>Visualizar Solicitação</h2>
+            <h1 class="page-title">Visualizar solicitação de contrato nº {{$purchaseRequest->id}}</h1>
         @else
-            <h2>Nova Solicitação</h2>
+            <h1 class="page-title">Nova solicitação de contrato</h1>
         @endif
     </div>
 
     @if (isset($purchaseRequest) && !$requestAlreadySent)
-        <div class="col-sm-6 pull-right">
+        <div class="col-md-6 pull-right">
             <x-modalDelete />
-            <button data-cy="btn-delete-request" data-route="purchaseRequests"
-                data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
+            <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
-                title="Excluir" class="btn btn-danger pull-right" style="margin-right: 15px">
+                title="Excluir" class="btn btn-primary btn-danger pull-right">
                 Excluir solicitação
             </button>
         </div>
@@ -452,9 +451,8 @@
                         Parcelas deste contrato
                     </h4>
                     <div class="col-sm-6 div-btn-add-installment" style="margin-top:15px;" hidden>
-                        <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
-                            data-cy="btn-add-installment" data-route="user" rel="tooltip"
-                            title="Adicionar Parcela">
+                        <button type="button" class="btn btn-primary btn-small btn-success pull-right btn-add-installment"
+                            data-cy="btn-add-installment" data-route="user" rel="tooltip" title="Adicionar Parcela">
                             + Adicionar parcela
                         </button>
                     </div>
@@ -583,12 +581,9 @@
                     </button>
 
                     <button type="submit" name="submit_request" data-cy="submit_request" style="margin-right: 10px"
-                        class="btn btn-success btn-submit-request" value="submit-request">
+                        class="btn btn-primary btn-success btn-submit-request" value="submit-request">
                         Salvar e enviar solicitação
-                        <i class="fa fa-paper-plane"></i>
                     </button>
-
-                    <a href="{{ route('requests.own') }}" class="btn" data-cy="btn-cancel">Cancelar</a>
                 @endif
 
                 @if ($hasSentRequest)

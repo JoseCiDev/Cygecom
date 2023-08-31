@@ -62,12 +62,11 @@
     }
 </style>
 
-
-<div class="row">
+<div class="row" style="margin: 20px 0 30px;">
 
     <div class="col-sm-6">
         @if ($hasRequestNotSent)
-            <h2>Editar Solicitação</h2>
+            <h1 class="page-title">Editar solicitação de produto nº {{$purchaseRequest->id}}</h1>
         @elseif ($hasSentRequest)
             <div class="alert alert-info alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -75,11 +74,21 @@
                     <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
                 </h5>
             </div>
-            <h2>Visualizar Solicitação</h2>
+            <h1 class="page-title">Visualizar solicitação de produto nº {{$purchaseRequest->id}}</h1>
         @else
-            <h2>Nova Solicitação</h2>
+            <h1 class="page-title">Nova solicitação de produto</h1>
         @endif
     </div>
+    @if (isset($purchaseRequest) && !$requestAlreadySent)
+        <div class="col-md-6 pull-right">
+            <x-modalDelete />
+            <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
+                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
+                title="Excluir" class="btn btn-primary btn-danger pull-right">
+                Excluir solicitação
+            </button>
+        </div>
+    @endif
 
 </div>
 
@@ -343,13 +352,6 @@
                         <i class="fa fa-dollar"></i>
                         PARCELAS
                     </h4>
-                    <div class="col-sm-6 btn-add-installment" hidden>
-                        <button type="button" class="btn btn-success pull-right btn-small btn-add-installment"
-                            data-route="user" rel="tooltip" title="Adicionar Parcela"
-                            data-cy="btn-add-installment">
-                            + Adicionar parcela
-                        </button>
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
@@ -406,7 +408,7 @@
                     <x-purchase-request.product.supplier :productCategories="$productCategories" :suppliers="$suppliers" :supplierIndex="$supplierIndex" />
                 @endif
 
-                <button type="button" style="margin-top:15px;" class="btn btn-large btn-primary add-supplier-btn">
+                <button type="button" style="margin-top:15px;" class="btn btn-primary btn-small add-supplier-btn">
                     <i class="glyphicon glyphicon-plus"></i>
                     <strong>Adicionar fornecedor</strong>
                 </button>
@@ -424,17 +426,15 @@
         </div>
 
         <div class="form-actions pull-right" style="margin-top:50px; padding-bottom:20px">
-            <a style="margin-right: 10px" href="{{ route('requests.own') }}" class="btn btn-large">Cancelar</a>
-
             @if (!$hasSentRequest)
                 <input type="hidden" name="action" id="action" value="">
 
-                <button type="submit" class="btn btn-primary btn-large btn-draft" style="margin-right: 10px">
+                <button type="submit" class="btn btn-primary btn-draft" style="margin-right: 10px">
                     Salvar rascunho
                 </button>
 
-                <button type="submit" name="submit_request" style="background: #c49f51"
-                    class="btn btn-success btn-large btn-submit-request" value="submit-request">
+                <button type="submit" name="submit_request"
+                    class="btn btn-primary btn-success btn-submit-request" value="submit-request">
                     Salvar e enviar solicitação
                 </button>
             @endif

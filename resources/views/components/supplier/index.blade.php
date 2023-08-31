@@ -2,31 +2,25 @@
     use App\Enums\SupplierQualificationStatus;
 
     $supplierQualificationStatus = SupplierQualificationStatus::cases();
-    
+
     $enumQualification = [];
     foreach ($supplierQualificationStatus as $enum) {
        $enumQualification[$enum->value] = $enum->label();
     }
 @endphp
 <x-app>
-    <x-slot name="title">
-        <h1>Fornecedores</h1>
-    </x-slot>
 
     <x-modalDelete/>
 
         <div class="row">
             <div class="col-sm-12">
                 <div class="box box-color box-bordered">
-
-                    <div class="box-title">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h3 class="pull-left">Todos os fornecedores</h3>
-                            </div>
-                            <div class="col-md-6">
-                                <a data-cy="btn-cadastrar-novo" href="{{ route('supplier.form') }}" class="btn pull-right btn-large" style="margin-right: 15px">Cadastrar novo</a>
-                            </div>
+                    <div class="row" style="margin: 20px 0 30px">
+                        <div class="col-md-6" style="padding: 0">
+                            <h1 class="page-title">Todos os fornecedores</h1>
+                        </div>
+                        <div class="col-md-6" style="padding: 0">
+                            <a data-cy="btn-cadastrar-novo" href="{{ route('supplier.form') }}" class="btn btn-primary btn-large pull-right">Cadastrar novo</a>
                         </div>
                     </div>
 
@@ -48,7 +42,7 @@
                                 {{-- DINÂMICO --}}
                             </tbody>
                         </table>
-                        
+
                     </div>
                 </div>
             </div>
@@ -97,17 +91,17 @@
                 { data: 'name', defaultContent: '---' },
                 { data: 'supplier_indication'},
                 { data: 'market_type'},
-                { 
-                    data: 'qualification', 
+                {
+                    data: 'qualification',
                     render: (value) => {
                         const enumQualification = @json($enumQualification);
                         return enumQualification[value];
-                    } 
+                    }
                 },
                 {
                     data: null,
                     render: (data) => (
-                        '<a href="suppliers/view/' + data.id + '" ' + 'class="btn" rel="tooltip" title="Editar" data-cy="btn-edit-supplier-' + data.id + '"><i class="fa fa-edit"></i></a>' 
+                        '<a href="suppliers/view/' + data.id + '" ' + 'class="btn" rel="tooltip" title="Editar" data-cy="btn-edit-supplier-' + data.id + '"><i class="fa fa-edit"></i></a>'
                         + '<button data-route="supplier" data-name="' + data.corporate_name + '" data-id="' + data.id + '" rel="tooltip" title="Excluir" class="btn" data-toggle="modal" data-target="#modal" data-cy="btn-modal-delete-supplier"><i class="fa fa-times"></i></button>'
                     )
                 }

@@ -4334,16 +4334,22 @@ input[type="color"],
     filter: none;
 }
 
+.btn[disabled] {
+    opacity: .65;
+}
+
 .btn.btn--icon .fa {
     margin-right: 5px;
 }
 
 .btn.btn-large {
-    padding: 10px 16px;
+    min-width: 340px;
+    padding: 10px 15px;
 }
 
 .btn.btn-small {
-    padding: 3px 7px;
+    min-width: 120px;
+    padding: 5px 10px;
 }
 
 .btn.btn-mini {
@@ -4376,69 +4382,96 @@ input[type="color"],
     outline: none;
 }
 
-.btn.btn-primary {
-    background: #333333;
-    color: #fff;
+.btn-primary {
     text-shadow: none;
     filter: none;
+    border-radius: 4px;
+    min-height: 40px;
+    padding: 10px 15px;
+    background-color: var(--grey-primary-color);
+    font-size: 16px;
+    line-height: 24px;
+    color: #ffffff;
 }
 
-.btn.btn-primary:hover {
+.btn-primary[disabled] {
+    background-color: var(--grey-primary-color);
+}
+
+.btn-secondary {
+    text-shadow: none;
+    filter: none;
+    border-radius: 4px;
+    min-height: 40px;
+    padding: 10px 15px;
+    background-color: #ffffff;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--grey-primary-color);
+    border: 1px solid var(--grey-primary-color);
+}
+
+.btn-primary:hover {
     background: #7d7a7a;
 }
 
-.btn.btn-info {
+.btn-info {
     background: #a4ccf1;
     text-shadow: none;
     filter: none;
 }
 
-.btn.btn-info:hover {
+.btn-info:hover {
     background: #62a7e7;
     color: #333;
 }
 
-.btn.btn-warning {
+.btn-warning {
     background: #fab750;
     text-shadow: none;
     filter: none;
 }
 
-.btn.btn-warning:hover {
+.btn-warning:hover {
     background: #f8a31f;
     color: #333;
 }
 
-.btn.btn-danger {
+.btn-danger {
     background-color: #ff4433;
     text-shadow: none;
     color: #fff;
     filter: none;
 }
 
-.btn.btn-danger:hover {
+.btn-danger[disabled] {
+    background-color: #ff4433;
+}
+
+.btn-danger:hover {
     background: #E51400;
 }
 
-.btn.btn-success {
-    background: var(--gold-primary-color);
+.btn-success {
+    background-color: var(--gold-primary-color);
     text-shadow: none;
     color: #fff;
     filter: none;
 }
 
-.btn.btn-success:hover {
+.btn-success:hover,
+.btn-success:focus {
     background: var(--gold-secondary-color);
 }
 
-.btn.btn-inverse {
+.btn-inverse {
     background: #484848;
     text-shadow: none;
     color: #fff;
     filter: none;
 }
 
-.btn.btn-inverse:hover {
+.btn-inverse:hover {
     background: #111;
 }
 

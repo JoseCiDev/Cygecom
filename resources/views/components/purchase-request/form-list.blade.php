@@ -1,7 +1,7 @@
 <x-app>
 
     <div class="request-dashboard">
-        <h1 class="request-dashboard-title">Nova solicitação</h1>
+        <h1 class="request-dashboard-title page-title">Nova solicitação</h1>
         <span class="request-dashboard-subtitle">O que você deseja solicitar?</span>
 
         <div class="request-dashboard-requests">

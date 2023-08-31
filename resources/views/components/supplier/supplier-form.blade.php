@@ -239,9 +239,8 @@
 
     <hr>
 
-    <div class="row">
-
-         @if ($supplier)
+    @if ($supplier)
+        <div class="row">
             <div class="col-sm-3">
                 <label for="qualification" class="control-label">Qualificação do fornecedor</label>
                 <select name="qualification" id="qualification" data-cy="qualification" class="chosen-select form-control">
@@ -261,10 +260,10 @@
                         class="form-control no-resize">{{ $supplier?->tributary_observation }}</textarea>
                 </div>
             </div>
-         @endif
-    </div>
+        </div>
 
-    <hr>
+        <hr>
+    @endif
 
     <div class="col form-actions pull-right">
         <button type="submit" class="btn btn-primary" data-cy="btn-supplier-submit">Salvar</button>

@@ -1,23 +1,17 @@
 <x-app>
-    <x-slot name="title">
-        <h1>Novo Fornecedor</h1>
-    </x-slot>
 
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-color box-bordered">
-
-                <div class="box-title">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h3 class="pull-left">Cadastrar novo</h3>
-                        </div>
+                <div class="row" style="margin: 20px 0 30px">
+                    <div class="col-md-6" style="padding: 0">
+                        <h1 class="page-title">Cadastrar novo fornecedor</h1>
                     </div>
                 </div>
 
                 <div class="box-content">
                     <x-SupplierForm />
-                
+
                     <span>(<span style="color:red"><strong>*</strong></span>) É obrigatório</span>
                 </div>
             </div>

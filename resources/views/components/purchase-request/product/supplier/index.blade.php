@@ -30,7 +30,7 @@
                             data-placeholder="Informe um fornecedor ou cadastre um novo" style="width:100%;">
                             <option value=""></option>
                             @foreach ($suppliers as $supplier)
-                                @php 
+                                @php
                                     $isSelected = $supplier->id === $supplierId;
                                     $cnpj = $supplier->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj) : 'CNPJ indefinido';
                                 @endphp
@@ -50,7 +50,7 @@
                     </div>
                     <div class="box-content nopadding"
                         style="background-color:rgba(244, 244, 244, 0.531); border: 1px solid rgb(179, 179, 179);">
-    
+
                         @php $productIndex = 0 @endphp
                         @if ($products)
                             @foreach($products as $product)
@@ -70,10 +70,8 @@
                                 :supplierIndex="$supplierIndex"
                             />
                         @endif
-    
-                        <button type="button"
-                            style="background-color:#ffffff; color: #141414; margin:10px; border: 1px solid #141414; border-radius: 4px"
-                            class="btn add-product-btn">
+
+                        <button type="button" style="margin:10px;" class="btn btn-secondary btn-small add-product-btn">
                             <i class="glyphicon glyphicon-plus"></i>
                             Adicionar produto
                         </button>

@@ -15,7 +15,7 @@
                             <i class='fa fa-file'></i>
                             <a style='margin-left:5px' href="{{ env('AWS_S3_BASE_URL') . $each->path }}"target="_blank">{{ $filename }}</a>
                         </div>
-                        @if(!$isSupplies) 
+                        @if(!$isSupplies)
                             <div class="col-xs-6 text-right">
                                 <button type="button" class="btn btn-primary file-remove">
                                     <i class='fa fa-trash' style='margin-right:5px'></i>Excluir
@@ -36,7 +36,7 @@
 </fieldset>
 
 @if($isSupplies)
-    <button id="supplies-upload-btn" type="button" class="btn btn-primary btn-draft">
+    <button id="supplies-upload-btn" type="button" class="btn btn-primary btn-small btn-draft">
         Salvar anexos
     </button>
 
@@ -98,7 +98,7 @@
                 $('#files').val('');
             })
         });
-    </script>   
+    </script>
 @endif
 
 <script>

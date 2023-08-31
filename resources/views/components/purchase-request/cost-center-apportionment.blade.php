@@ -67,8 +67,8 @@
             </div>
         </div>
 
-        <div class="col-sm-1" style="margin-top: 28px;">
-            <button class="btn btn-icon btn-small btn-danger delete-cost-center"
+        <div class="col-sm-1" style="margin-top: 20px">
+            <button class="btn btn-secondary btn-small btn-danger delete-cost-center"
                 data-cy="btn-delete-cost-center-{{ $index }}"><i class="fa fa-trash-o"></i></button>
         </div>
 
@@ -125,8 +125,8 @@
             </div>
         </div>
 
-        <div class="col-sm-1" style="margin-top: 28px;">
-            <button class="btn btn-icon btn-small btn-danger delete-cost-center" data-cy="btn-delete-cost-center-0">
+        <div class="col-sm-1" style="margin-top: 20px">
+            <button class="btn btn-danger btn-primary btn-small delete-cost-center" data-cy="btn-delete-cost-center-0">
                 <i class="fa fa-trash-o"></i>
             </button>
         </div>
@@ -137,7 +137,7 @@
 <div class="row">
     <input type="hidden" id="validator-apportionment-fields" required value="1">
     <div class="col-md-6">
-        <button type="button" class="btn btn-small btn-primary add-cost-center-btn" data-cy="btn-add-cost-center">
+        <button type="button" class="btn btn-primary btn-small add-cost-center-btn" data-cy="btn-add-cost-center">
             Adicionar linha
         </button>
     </div>

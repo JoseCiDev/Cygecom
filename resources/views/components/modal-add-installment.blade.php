@@ -54,10 +54,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" data-cy="btn-cancel-installment">
+                    <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal" data-cy="btn-cancel-installment">
                         Cancelar
                     </button>
-                    <button type="submit" class="btn btn-primary btn-save-installment" data-cy="btn-submit-installment">
+                    <button type="submit" class="btn btn-primary btn-small btn-save-installment" data-cy="btn-submit-installment">
                         Salvar
                     </button>
                 </div>
