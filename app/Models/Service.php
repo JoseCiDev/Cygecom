@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
-    use HasFactory;
-
+    use HasFactory, LogObserverTrait;
     public function installments()
     {
         return $this->hasMany(ServiceInstallment::class);

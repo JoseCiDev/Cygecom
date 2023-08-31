@@ -11,8 +11,8 @@
         $request = null;
     }
 
-    $paymentTermProduct = $request->product->paymentInfo->payment_terms;
-    $paymentMethod = $request->product->paymentInfo->payment_method;
+    $paymentTermProduct = $request->product->paymentInfo?->payment_terms;
+    $paymentMethod = $request->product?->paymentInfo?->payment_method;
 @endphp
 
 <x-app>
@@ -437,6 +437,16 @@
                 @endif
             </div>
         </div>
+
+        <hr>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-12">
+                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::PRODUCT" />
+            </div>
+        </div>
+
+        <hr>
 
         <div class="row">
             <div class="col-md-12">

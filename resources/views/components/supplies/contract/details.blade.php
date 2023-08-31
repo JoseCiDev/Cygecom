@@ -11,7 +11,7 @@
         $request = null;
     }
 
-    $paymentTermContract = $request->contract->paymentInfo->payment_terms;
+    $paymentTermContract = $request->contract?->paymentInfo?->payment_terms;
 @endphp
 
 <x-app>
@@ -229,7 +229,7 @@
                                                 <p>
                                                     <strong>CPF/CNPJ:</strong>
                                                     @php
-                                                        $cnpj = $request->contract?->supplier?->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $request->contract?->supplier->cpf_cnpj) : 'CNPJ indefinido';
+                                                        $cnpj = $request->contract?->supplier?->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $request->contract?->supplier?->cpf_cnpj) : 'CNPJ indefinido'
                                                     @endphp
                                                     {{ $cnpj }}
                                                 </p>
@@ -335,6 +335,7 @@
                                                     {{ $request->contract?->installments->count() ?? '---' }}
                                                 </p>
 
+
                                             </div>
                                             <div class="col-md-4">
                                                 <p>
@@ -401,6 +402,7 @@
                                         @endforeach
                                     </div>
 
+
                                 </div>
                             </div>
 
@@ -458,6 +460,7 @@
                 <x-SuppliesLogList :purchaseRequestId="$request->id" />
             </div>
         </div>
+
 
     </div>
 

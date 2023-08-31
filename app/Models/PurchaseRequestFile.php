@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PurchaseRequestFile extends Model
 {
-    use HasFactory;
+    use HasFactory, LogObserverTrait;
 
     public function purchaseRequest()
     {

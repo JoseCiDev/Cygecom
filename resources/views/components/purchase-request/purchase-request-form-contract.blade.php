@@ -336,7 +336,7 @@
                                 <span class="input-group-addon">R$</span>
                                 <input type="text" placeholder="0,00" class="form-control format-amount"
                                     id="format-amount" data-cy="format-amount"
-                                    value="{{ $purchaseRequestContractAmount }}">
+                                    value="{{ str_replace('.', ',', $purchaseRequestContractAmount) }}">
                                 <input type="hidden" name="contract[amount]" id="amount" data-cy="amount"
                                     class="amount no-validation" value="{{ $purchaseRequestContractAmount }}">
                             </div>

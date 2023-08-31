@@ -284,7 +284,7 @@
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
                                 <input type="text" id="format-amount" data-cy="format-amount" placeholder="0.00"
-                                    class="form-control format-amount" value="{{ $purchaseRequestProductAmount }}">
+                                    class="form-control format-amount" value="{{ str_replace('.', ',', $purchaseRequestProductAmount) }}">
                                 <input type="hidden" name="product[amount]" id="amount" data-cy="amount"
                                     class="amount no-validation" value="{{ $purchaseRequestProductAmount }}">
                             </div>
@@ -1115,10 +1115,12 @@
             $newContainer.find('.select2-container').remove();
             $newContainer.find('.select2-me').select2();
 
-            //$newContainer.find('select.select-supplier').makeRequired();
+            // $newContainer.find('select.select-supplier').makeRequired();
 
             $('.supplier-block').last().after($newContainer);
             $newContainer.find('.delete-supplier').removeAttr('hidden');
+
+            $newContainer.find('[data-rule-required]').makeRequired();
 
             checkSuppliersContainerLength();
             checkProductRows();
