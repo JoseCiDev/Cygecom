@@ -1,5 +1,5 @@
 <fieldset id="files-group">
-    <h4 style="margin-bottom: 20px;"><i class="fa fa-paperclip"></i> Anexos {{$isSupplies ? 'de Suprimentos' : ''}} </h4>
+    <h3 style="margin-bottom: 20px;"><i class="fa fa-paperclip"></i> Anexos {{$isSupplies ? 'de Suprimentos' : ''}} </h3>
     <span class="span-info-files"></span>
     <input type="file" class="form-control" name="arquivos[]" id="files" data-cy="files" multiple>
     <ul class="list-group" style="margin-top:15px">

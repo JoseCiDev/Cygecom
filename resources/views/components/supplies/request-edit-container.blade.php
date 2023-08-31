@@ -9,15 +9,14 @@
         <div class="row">
 
             <div class="col-md-2">
-                <label class="control-label" for="amount">Editar valor total desta solicitação</label>
-                <input type="text" placeholder="0,00" class="form-control format-amount"
-                    id="format-amount" data-cy="format-amount" value="{{ $amount }}">
+                <label class="regular-text" for="amount">Editar valor total desta solicitação</label>
+                <input type="text" placeholder="0,00" class="form-control format-amount" id="format-amount" data-cy="format-amount" value="{{ $amount }}">
                 <input type="hidden" name="{{$inputName}}" id="amount" data-cy="amount"
                     class="amount no-validation" value="{{ $amount }}">
             </div>
 
             <div class="col-md-2">
-                <label for="status">Status da solicitação</label>
+                <label for="status" class="regular-text">Status da solicitação</label>
                 <select name="status" data-cy="status" id="status" @disabled($requestIsFromLogged) class='chosen-select form-control'>
                     @foreach ($allRequestStatus as $status)
                         @if ($status->value !== PurchaseRequestStatus::RASCUNHO->value)
@@ -29,7 +28,7 @@
             </div>
 
             <div class="col-md-2">
-                <label for="supplies_user_id">Atribuir responsável pela solicitação</label>
+                <label for="supplies_user_id" class="regular-text">Atribuir responsável pela solicitação</label>
                 <select name="supplies_user_id" data-cy="supplies_user_id" id="supplies_user_id" class='select2-me' style="width: 100%"
                     placeholder="Escolher novo responsável" @disabled($requestIsFromLogged)>
                     @foreach ($allowedResponsables as $user)

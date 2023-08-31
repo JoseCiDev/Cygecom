@@ -37,7 +37,7 @@
         {{-- NOME --}}
         <div class="col-sm-3">
             <div class="form-group">
-                <label for="name" class="control-label required">Nome</label>
+                <label for="name" class="required regular-text">Nome</label>
                 <input type="text" name="name" id="name" data-cy="name" placeholder="Nome Completo" class="form-control" @disabled($isDisabled)
                     data-rule-required="true" data-rule-minlength="2"
                     value="{{ old('name', isset($user) ? $user->person->name : '') }}">
@@ -49,7 +49,7 @@
         {{-- DATA NASCIMENTO --}}
         <div class="col-sm-3">
             <div class="form-group">
-                <label for="birthdate" class="control-label">Data de nascimento</label>
+                <label for="birthdate" class="regular-text">Data de nascimento</label>
                 <input type="date" name="birthdate" id="birthdate" data-cy="birthdate" class="form-control" @disabled($isDisabled)
                     value="{{ old('birthdate', isset($user) ? $user['person']['birthdate'] : '') }}">
             </div>
@@ -57,7 +57,7 @@
         {{-- DOCUMENTO --}}
         <div class="col-sm-3">
             <div class="form-group">
-                <label for="cpf_cnpj" class="control-label">Nº CPF/CNPJ</label>
+                <label for="cpf_cnpj" class="regular-text">Nº CPF/CNPJ</label>
                 <input type="text" name="cpf_cnpj" id="cpf_cnpj" data-cy="cpf_cnpj" data-rule-required="true" minlength="14" @disabled($isDisabled)
                     placeholder="Ex: 000.000.000-00" class="form-control cpf_cnpj"
                     value="{{ old('cpf_cnpj', isset($user) ? $user->person->cpf_cnpj : '') }}">
@@ -69,29 +69,30 @@
         {{-- PHONE --}}
         <div class="col-sm-3">
             <div class="form-group">
-                <label for="number" class="control-label">
-                    Telefone/Celular
-                </label>
+                <label for="number" class="regular-text"> Telefone/Celular </label>
                 <input type="text" name="number" id="number" data-cy="number" placeholder="Ex: (00) 0000-0000" @disabled($isDisabled)
                     class="form-control phone_number" data-rule-required="true" minlength="14"
                     value="{{ old('number', isset($user) ? $user->person->phone->number : '') }}">
-                @error('number')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
-                <div style="margin: 5px 0px -10px 0px;">
+                @error('number') <span class="text-danger">{{ $message }}</span> @enderror
+
+                <div style="margin-top: 10px">
                     {{-- PESSOAL --}}
-                    <input @disabled($isDisabled) @checked(isset($user) && $user->person->phone->phone_type === 'personal')
-                        class="icheck-me" type="radio" name="phone_type" id="personal" data-cy="personal" value="personal" data-skin="minimal">
-                    <label class="form-check-label" for="personal">Pessoal</label>
+                    <label class="form-check-label regular-text" for="personal">
+                        <input @disabled($isDisabled) @checked(isset($user) && $user->person->phone->phone_type === 'personal')
+                            class="icheck-me" type="radio" name="phone_type" id="personal" data-cy="personal" value="personal" data-skin="minimal">
+                        Pessoal
+                    </label>
+
                     {{-- COMERCIAL --}}
-                    <input @disabled($isDisabled) @checked(isset($user) && $user->person->phone->phone_type === 'commercial')
-                        class="icheck-me" type="radio" name="phone_type" id="commercial" data-cy="commercial" value="commercial" data-skin="minimal"
-                    @if (!isset($user)) checked @endif >
-                    <label class="form-check-label" for="commercial">Comercial</label>
+                    <label class="form-check-label regular-text" for="commercial">
+                        <input @disabled($isDisabled) @checked(isset($user) && $user->person->phone->phone_type === 'commercial')
+                            class="icheck-me" type="radio" name="phone_type" id="commercial" data-cy="commercial" value="commercial" data-skin="minimal"
+                            @if (!isset($user)) checked @endif >
+                        Comercial
+                    </label>
                 </div>
-                @error('phone_type')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
+
+                @error('phone_type') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
         </div>
     </div>
@@ -104,7 +105,7 @@
         {{-- E-MAIL --}}
         <div class="col-sm-3">
             <div class="form-group">
-                <label for="email" class="control-label">E-mail</label>
+                <label for="email" class="regular-text">E-mail</label>
                 <input type="email" name="email" id="email" data-cy="email" placeholder="user_email@essentia.com.br" @disabled($isDisabled) data-rule-required="true" data-rule-email="true"
                     value="{{ old('email', (isset($user)) ? $user->email : '') }}" class="form-control @error('email') is-invalid @enderror">
                 @error('email')
@@ -117,7 +118,7 @@
             {{-- SENHA --}}
             <div class="col-sm-3">
                 <div class="form-group">
-                    <label for="password" class="control-label">Senha</label>
+                    <label for="password" class="regular-text">Senha</label>
                     <input type="password" name="password" id="password" data-cy="password"
                         placeholder="Deve conter ao menos 8 digitos"
                         @if (!isset($user))
@@ -132,18 +133,15 @@
             {{-- CONFIRMAR SENHA --}}
             <div class="col-sm-3">
                 <div class="form-group">
-                    <label for="password-confirm" class="control-label">Confirmar
-                        Senha</label>
+                    <label for="password-confirm" class="regular-text">Confirmar senha</label>
                     <input type="password" name="password_confirmation" id="password-confirm" data-cy="password-confirm" placeholder="Digite novamente a senha"
                         autocomplete="new-password"
-                        @if (!isset($user)) class="form-control"
-                            data-rule-required="true"
+                        @if (!isset($user))
+                            class="form-control" data-rule-required="true"
                         @else
                             class="form-control no-validation"
                         @endif >
-                    @error('password_confirmation')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
+                    @error('password_confirmation') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
         @endif
@@ -153,74 +151,74 @@
     @if (!$isDisabled)
         <div class="row" style="padding: 25px 0">
             {{-- PERFIL DE USUÁRIO --}}
-            <div class="col-sm-4">
-                <label for="form-check" style="margin-bottom: 12px;">Perfil de Usuário</label>
+            <div class="col-sm-6">
+                <label for="form-check" style="margin-bottom: 12px;" class="regular-text">Perfil de usuário</label>
                 <div class="form-check row">
 
                     <div class="col-md-4">
                         @if ($isAdmin)
                             <div>
-                                <input @checked(isset($user) && $user->profile->name === 'admin') class="icheck-me"
+                                <label class="form-check-label secondary-text" for="profile_admin"><input @checked(isset($user) && $user->profile->name === 'admin') class="icheck-me"
                                     type="radio" name="profile_type" id="profile_admin" data-cy="profile_admin" value="admin" data-skin="minimal">
-                                <label class="form-check-label" for="profile_admin">Administrador</label>
+                                Administrador</label>
                             </div>
                             <div>
-                                <input @checked(isset($user) && $user->profile->name === 'diretor') class="icheck-me"
+                                <label class="form-check-label secondary-text" for="profile_diretor"><input @checked(isset($user) && $user->profile->name === 'diretor') class="icheck-me"
                                     type="radio" name="profile_type" id="profile_diretor" data-cy="profile_diretor" value="diretor" data-skin="minimal">
-                                <label class="form-check-label" for="profile_diretor">Diretor</label>
+                                Diretor</label>
                             </div>
                         @endif
                         <div>
-                            <input @checked(isset($user) && $user->profile->name === 'normal') class="icheck-me"
+                            <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'normal') class="icheck-me"
                                 type="radio" name="profile_type" id="profile_normal" data-cy="profile_normal" value="normal" data-skin="minimal"
                             @if (!isset($user)) checked @endif>
-                            <label class="form-check-label" for="personal">Padrão</label>
+                            Padrão</label>
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div>
-                            <input @checked(isset($user) && $user->profile->name === 'suprimentos_hkm') class="icheck-me"
+                            <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'suprimentos_hkm') class="icheck-me"
                                 type="radio" name="profile_type" id="profile_suprimentos_hkm" data-cy="profile_suprimentos_hkm" value="suprimentos_hkm" data-skin="minimal">
-                            <label class="form-check-label" for="personal">Suprimentos HKM</label>
+                            Suprimentos HKM</label>
                         </div>
                         <div>
-                            <input @checked(isset($user) && $user->profile->name === 'suprimentos_inp') class="icheck-me"
+                            <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'suprimentos_inp') class="icheck-me"
                                 type="radio" name="profile_type" id="profile_suprimentos_inp" data-cy="profile_suprimentos_inp" value="suprimentos_inp" data-skin="minimal" >
-                            <label class="form-check-label" for="personal">Suprimentos INP</label>
+                            Suprimentos INP</label>
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div>
-                            <input @checked(isset($user) && $user->profile->name === 'gestor_usuarios') class="icheck-me"
+                            <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'gestor_usuarios') class="icheck-me"
                                 type="radio" name="profile_type" id="gestor_usuarios" data-cy="gestor_usuarios" value="gestor_usuarios" data-skin="minimal" >
-                            <label class="form-check-label" for="personal">Gestor de usuários</label>
+                            Gestor de usuários</label>
                         </div>
 
                         <div>
-                            <input @checked(isset($user) && $user->profile->name === 'gestor_fornecedores') class="icheck-me"
+                            <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'gestor_fornecedores') class="icheck-me"
                                 type="radio" name="profile_type" id="gestor_fornecedores" data-cy="gestor_fornecedores" value="gestor_fornecedores" data-skin="minimal" >
-                            <label class="form-check-label" for="personal">Gestor de fornecedores</label>
+                            Gestor de fornecedores</label>
                         </div>
                     </div>
 
                 </div>
             </div>
             <div class="col-sm-4">
-                <label for="form-check" style="margin-bottom: 12px;">Autorização para Solicitar</label>
+                <label for="form-check" style="margin-bottom: 12px;" class="regular-text">Autorização para solicitar</label>
                 <div class="form-check row">
                     <div class="col-md-12">
                         <div>
                             <input @checked(!isset($user) || (isset($user) && $user->is_buyer)) name="is_buyer" id="is_buyer_true" data-cy="is_buyer_true"
                                 class="icheck-me" type="radio" value="1" data-skin="minimal">
-                            <label class="form-check-label" for="is_buyer_true">Autorizado</label>
+                            <label class="form-check-label secondary-text" for="is_buyer_true">Autorizado</label>
                         </div>
 
                         <div>
                             <input @checked(isset($user) && !$user->is_buyer) class="icheck-me" type="radio" name="is_buyer" id="is_buyer_false"
                                 data-cy="is_buyer_false" value="0" data-skin="minimal" >
-                            <label class="form-check-label" for="is_buyer_false">Não autorizado</label>
+                            <label class="form-check-label secondary-text" for="is_buyer_false">Não autorizado</label>
                         </div>
                     </div>
                 </div>
@@ -229,7 +227,7 @@
         <div class="row">
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label for="cost_center_id" class="control-label">Setor</label>
+                    <label for="cost_center_id" class="regular-text">Setor</label>
                     @if (isset($user))
                         <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id"
                             class='chosen-select form-control @error('cost_center_id') is-invalid @enderror'
@@ -271,7 +269,7 @@
             </div>
             {{-- USUÁRIO APROVADOR --}}
             <div class="col-sm-3">
-                <label for="approver_user_id" class="control-label">Usuário aprovador</label>
+                <label for="approver_user_id" class="regular-text">Usuário aprovador</label>
                 @if (isset($user))
                     <select name="approver_user_id" id="approver_user_id" data-cy="approver_user_id" class="chosen-select form-control">
                         <option value="" disabled selected>Selecione uma opção </option>
@@ -296,11 +294,9 @@
                 @endif
             </div>
             {{-- LIMITE DE APROVAÇÃO --}}
-            <div class="col-sm-2">
+            <div class="col-sm-5">
                 <div class="form-group">
-                    <label for="format-approve-limit" class="control-label">
-                        Limite de Aprovação
-                    </label>
+                    <label for="format-approve-limit" class="regular-text"> Limite de aprovação </label>
                     @if (isset($user))
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
@@ -325,9 +321,7 @@
                         ">
                         <input type="checkbox" id="checkbox-has-no-approve-limit" data-cy="checkbox-has-no-approve-limit" class="checkbox-has-no-approve-limit" style="margin:0"
                             @checked((isset($user) && $user->approve_limit === null) || old('checkbox-has-no-approve-limit'))>
-                        <label for="checkbox-has-no-approve-limit" style="margin:0; font-size: 11px;">
-                            Sem limite de aprovação
-                        </label>
+                        <label for="checkbox-has-no-approve-limit" style="margin:0;" class="secondary-text"> Sem limite de aprovação </label>
                     </div>
                 </div>
             </div>
@@ -336,7 +330,7 @@
         <div class="row">
             <div class="col-sm-9">
                 <div class="form-group">
-                    <label for="approver_user_id" id="cost-center-permissions" class="control-label">Centros de custos permitidos</label>
+                    <label for="approver_user_id" id="cost-center-permissions" class="regular-text">Centros de custos permitidos</label>
                     <select @disabled(!$currentProfile === 'admin') name="user_cost_center_permissions[]" id="user_cost_center_permissions" data-cy="user_cost_center_permissions" multiple="multiple"
                         class="chosen-select form-control cost-centers-permissions" placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras" required data-rule-required="true">
                         @foreach ($costCenters as $costCenter)

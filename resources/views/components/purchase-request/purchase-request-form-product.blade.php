@@ -104,7 +104,7 @@
         <input type="hidden" name="type" value="product">
 
         <div class="row center-block" style="padding-bottom: 10px;">
-            <h4>CONTRATANTE</h4>
+            <h3>Contrante</h3>
         </div>
 
         {{-- CENTRO DE CUSTOS --}}
@@ -114,7 +114,7 @@
 
         <div class="full-product-line product-form" data-product="1">
             <div class="row center-block" style="padding-bottom: 10px;">
-                <h4>DADOS DA SOLICITAÇÃO</h4>
+                <h3>Dados da solicitação</h3>
             </div>
 
             <div class="row" style="margin-bottom:10px; margin-top:5px;">
@@ -122,21 +122,21 @@
                 {{-- RESPONSÁVEL CONTRATAÇÃO --}}
                 <div class="col-sm-5">
                     <div class="form-group">
-                        <label class="control-label">Quem está responsável por esta contratação?</label>
+                        <label class="regular-text">Quem está responsável por esta contratação?</label>
                         <fieldset data-rule-required="true">
                             <div class="row">
                                 <div class="col-sm-3">
                                     <input name="is_supplies_contract"value="1" class="radio-who-wants" required
                                         id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
                                         @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label" for="is-supplies-contract">Suprimentos</label>
+                                    <label class="form-check-label secondary-text" for="is-supplies-contract">Suprimentos</label>
                                 </div>
                                 <div class="col-sm-4">
-                                    <input name="is_supplies_contract" value="0" class="radio-who-wants"
-                                        type="radio" required id="is-area-contract" data-cy="is-area-contract"
+                                    <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio" required id="is-area-contract" data-cy="is-area-contract"
                                         style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label" for="is-area-contract"> Área solicitante
-                                        (Eu)</label>
+                                    <label class="form-check-label secondary-text" for="is-area-contract">
+                                        Área solicitante (Eu)
+                                    </label>
                                 </div>
                             </div>
                         </fieldset>
@@ -146,21 +146,18 @@
                 {{-- COMEX --}}
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label for="form-check" class="control-label" style="padding-right:10px;">
+                        <label for="form-check" class="regular-text" style="padding-right:10px;">
                             Este(s) produto(s) será importado (COMEX)
                         </label>
                         <fieldset data-rule-required="true">
                             <div class="row">
                                 <div class="col-sm-5">
-                                    <input name="is_comex" data-cy="is-comex" value="1"
-                                        @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
-                                        data-skin="minimal" required>
-                                    <label class="form-check-label" for="services"
-                                        style="margin-right:15px;">Sim</label>
-                                    <input name="is_comex" data-cy="is-not-comex" value="0"
-                                        @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
-                                        data-skin="minimal" required>
-                                    <label class="form-check-label" for="">Não</label>
+                                    <input name="is_comex" data-cy="is-comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex)
+                                        class="radio-comex" type="radio" data-skin="minimal" required>
+                                    <label class="form-check-label secondary-text" for="services" style="margin-right:15px;">Sim</label>
+                                    <input name="is_comex" data-cy="is-not-comex" value="0" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex)
+                                        class="radio-comex" type="radio" data-skin="minimal" required>
+                                    <label class="form-check-label secondary-text" for="">Não</label>
                                 </div>
                             </div>
                         </fieldset>
@@ -174,40 +171,40 @@
                 {{-- MOTIVO --}}
                 <div class="col-sm-5">
                     <div class="form-group">
-                        <label for="reason" class="control-label">
+                        <label for="reason" class="regular-text">
                             Motivo da solicitação
                         </label>
                         <textarea data-rule-required="true" minlength="20" name="reason" id="reason" data-cy="reason" rows="4"
                             placeholder="Ex.: Devido aumento da demanda de produção, necessário a compra de uma máquina/equipamento."
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
-                    <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
-                        <p>*Informe o motivo que você está solicitando essa compra.</p>
+                    <div class="small" style="margin-top:-10px; margin-bottom:20px;">
+                        <p class="secondary-text">*Informe o motivo que você está solicitando essa compra.</p>
                     </div>
                 </div>
 
                 {{-- PRODUTO JÁ COMPRADO --}}
                 <div class="col-sm-4 div-already-purchased" hidden style="width: 22%">
                     <div class="form-group">
-                        <label for="form-check" class="control-label" style="padding-right:10px">
+                        <label for="form-check" class="regular-text" style="padding-right:10px">
                             Você já realizou esta compra?
                         </label>
                         <fieldset data-rule-required="true">
                             <input name="product[already_purchased]" value="1" class="radio-already-purchased"
                                 required id="already-purchased" data-cy="already-purchased" type="radio"
                                 @checked(isset($purchaseRequest) && (bool) $purchaseRequest->product->already_purchased)>
-                            <label class="form-check-label" for="already-purchased">Sim</label>
+                            <label class="form-check-label secondary-text" for="already-purchased">Sim</label>
                             <input name="product[already_purchased]" value="0" class="radio-already-purchased"
                                 required type="radio" id="not-provided" data-cy="not-provided"
                                 style="margin-left: 12px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->product->already_purchased)>
-                            <label class="form-check-label" for="not-provided">Não</label>
+                            <label class="form-check-label secondary-text" for="not-provided">Não</label>
                         </fieldset>
                     </div>
                 </div>
 
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label for="desired-date" class="control-label">Data desejada entrega do produto</label>
+                        <label for="desired-date" class="regular-text">Data desejada entrega do produto</label>
                         <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
                             class="form-control" value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
@@ -215,7 +212,7 @@
 
                 <div class="col-sm-6" style="margin-top:-6px;">
                     <div class="form-group product-input" id="product-input">
-                        <label for="local-description" class="control-label">
+                        <label for="local-description" class="regular-text">
                             Em qual sala/prédio ficará o produto solicitado
                         </label>
                         <input name="local_description"
@@ -229,7 +226,7 @@
                 {{-- DESCRICAO - (HIDDEN COM VALOR DEFAULT) --}}
                 <div class="col-sm-7" hidden>
                     <div class="form-group">
-                        <label for="description" class="control-label">Descrição</label>
+                        <label for="description" class="regular-text">Descrição</label>
                         <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
                             rows="4"
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
@@ -247,7 +244,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="support-links" class="control-label">Links de apoio / sugestão
+                        <label for="support-links" class="regular-text">Links de apoio / sugestão
                         </label>
                         <textarea placeholder="Adicione link(s) de sugestão de compra, site do fornecedor, etc." rows="3"
                             name="support_links" id="support-links" data-cy="support-links" class="form-control text-area no-resize">{{ $purchaseRequest?->support_links ?? null }}</textarea>
@@ -256,7 +253,7 @@
 
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="observation" class="control-label"> Observação </label>
+                        <label for="observation" class="regular-text"> Observação </label>
                         <textarea name="observation" id="request-observation" data-cy="request-observation" rows="3"
                             placeholder="Informações complementares desta solicitação" class="form-control text-area no-resize">{{ $purchaseRequest?->observation ?? null }}</textarea>
                     </div>
@@ -265,16 +262,15 @@
 
             <div class="payment-block">
                 <div class="row center-block" style="padding-bottom: 10px;">
-                    <h4>PAGAMENTO</h4>
+                    <h3>Pagamento</h3>
                 </div>
 
                 <div class="row" style="margin-bottom: -50;">
                     {{-- CONDIÇÃO DE PAGAMENTO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label class="control-label">Condição de pagamento</label>
-                            <select name="product[payment_info][payment_terms]" id="payment-terms"
-                                data-cy="payment-terms" class='select2-me product[payment_info][payment_terms]'
+                            <label class="regular-text">Condição de pagamento</label>
+                            <select name="product[payment_info][payment_terms]" id="payment-terms" data-cy="payment-terms" class='select2-me product[payment_info][payment_terms]'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentTerms as $paymentTerm)
@@ -289,7 +285,7 @@
                     {{-- VALOR TOTAL --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label for="format-amount" class="control-label">Valor total do(s) produto(s)</label>
+                            <label for="format-amount" class="regular-text">Valor total do(s) produto(s)</label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
                                 <input type="text" id="format-amount" data-cy="format-amount" placeholder="0.00"
@@ -303,7 +299,7 @@
                     {{-- FORMA DE PAGAMENTO --}}
                     <div class="col-sm-2">
                         <div class="form-group">
-                            <label class="control-label">Forma de pagamento</label>
+                            <label class="regular-text">Forma de pagamento</label>
                             <select name="product[payment_info][payment_method]" id="payment-method"
                                 data-cy="payment-method" class='select2-me payment-method'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
@@ -324,7 +320,7 @@
                     {{-- Nº PARCELAS --}}
                     <div class="col-sm-1">
                         <div class="form-group">
-                            <label class="control-label">Nº parcelas</label>
+                            <label class="regular-text">Nº parcelas</label>
                             <input type="text" class="form-control format-installments-number"
                                 placeholder="Ex: 24" value="{{ $productQuantityOfInstallments }}">
                             <input type="hidden" name="product[quantity_of_installments]" id="installments-number"
@@ -336,7 +332,7 @@
                     {{-- DESCRICAO DADOS PAGAMENTO --}}
                     <div class="col-sm-5" style="margin-bottom: -20px;">
                         <div class="form-group">
-                            <label for="payment-info-description" class="control-label">
+                            <label for="payment-info-description" class="regular-text">
                                 Detalhes do pagamento
                             </label>
                             <textarea name="product[payment_info][description]" id="payment-info-description" data-cy="payment-info-description"
@@ -348,38 +344,38 @@
 
                 {{-- TABLE PARCELAS --}}
                 <div class="row" style="display:flex; align-items:center; margin-bottom:7px;">
-                    <h4 class="col-sm-6">
+                    <h3 class="col-sm-6">
                         <i class="fa fa-dollar"></i>
-                        PARCELAS
-                    </h4>
+                        Parcelas
+                    </h3>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="box">
-                            <div class="box-content nopadding">
+                            <div class="box-content nopadding regular-text">
                                 <table class="table table-hover table-nomargin table-striped"
                                     id="installments-table-striped">
                                     <thead>
                                         <tr>
                                             <th class="col-sm-2">
                                                 <i class="fa fa-calendar-o" style="padding-right:5px;"></i>
-                                                VENCIMENTO
+                                                Vencimento
                                             </th>
                                             <th class="col-sm-2">
                                                 <i class="fa fa-money" style="padding-right:5px;"></i>
-                                                VALOR
+                                                Valor
                                             </th>
                                             <th class='col-sm-4 hidden-350'>
                                                 <i class="fa fa-pencil-square" style="padding-right:5px;"></i>
-                                                OBSERVAÇÃO
+                                                Observação
                                             </th>
                                             <th class='col-sm-2 hidden-1024'>
                                                 <i class="fa fa-tasks" style="padding-right:5px;"></i>
-                                                STATUS
+                                                Status
                                             </th>
                                             <th class='col-sm-2 hidden-480'>
                                                 <i class="fa fa-sliders" style="padding-right:5px;"></i>
-                                                AÇÕES
+                                                Ações
                                             </th>
                                         </tr>
                                     </thead>
@@ -1061,7 +1057,8 @@
         function checkSuppliersContainerLength() {
             const suppliersCount = $supplierContainer.find('.supplier-block').length;
             const suppliersCountGreaterThanOne = suppliersCount > 1;
-            $('.delete-supplier').prop('disabled', !suppliersCountGreaterThanOne);
+
+            $('.delete-supplier').prop('disabled', !suppliersCountGreaterThanOne).toggleClass('disabled-button', !suppliersCountGreaterThanOne);
         }
 
         const $productContainer = $('.product-container');
@@ -1143,15 +1140,15 @@
 
             bootbox.confirm({
                 title: 'Atenção!',
-                message: "Ao remover este fornecedor, todos os produtos associados serão excluídos. Esta ação não poderá ser desfeita.",
+                message: "<p>Ao remover este fornecedor, todos os produtos associados serão excluídos. Esta ação não poderá ser desfeita.</p>",
                 buttons: {
                     confirm: {
                         label: 'Excluir',
-                        className: 'btn-danger'
+                        className: 'btn btn-secondary btn-danger'
                     },
                     cancel: {
                         label: 'Cancelar',
-                        className: 'btn'
+                        className: 'btn btn-secondary'
                     }
                 },
                 callback: function(result) {

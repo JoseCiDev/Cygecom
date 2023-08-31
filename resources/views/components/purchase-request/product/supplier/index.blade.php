@@ -11,12 +11,10 @@
 
 <div class="box box-color box-bordered supplier-block">
     <div class="box-title">
-        <h3 class="supplier-title"><i class="glyphicon glyphicon-briefcase"></i>FORNECEDOR</h3>
+        <h3 class="supplier-title"><i class="glyphicon glyphicon-briefcase"></i>Fornecedor</h3>
         <div class="actions">
-            <button class="btn btn-mini delete-supplier"> <i class="fa fa-times"></i> </button>
-            <a class="btn btn-mini content-slideUp">
-                <i class="fa fa-angle-down"></i>
-            </a>
+            <a class="btn btn-secondary btn-mini delete-supplier"> <i class="fa fa-times"></i> </a>
+            <a class="btn btn-secondary btn-mini content-slideUp"> <i class="fa fa-angle-down"></i> </a>
         </div>
     </div>
     <div class="box-content">
@@ -24,8 +22,8 @@
             <div class="row">
                 <div class="col-sm-5">
                     <div class="form-group">
-                        <label class="control-label">
-                            Fornecedor (CNPJ - RAZÃO SOCIAL)</label>
+                        <label class="regular-text">
+                            Fornecedor (CNPJ - Razão social)</label>
                         <select name="purchase_request_products[{{ $supplierIndex }}][supplier_id]" class='select2-me select-supplier'
                             data-placeholder="Informe um fornecedor ou cadastre um novo" style="width:100%;">
                             <option value=""></option>

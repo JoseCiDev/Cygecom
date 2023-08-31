@@ -18,7 +18,7 @@
 
                <div class="row">
                     <div class="col-md-12">
-                        <div class="box-content nopadding">
+                        <div class="box-content nopadding regular-text">
 
                             <table
                                 class="table table-hover table-nomargin table-bordered dataTable"

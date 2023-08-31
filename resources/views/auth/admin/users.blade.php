@@ -13,7 +13,7 @@
                         </div>
                     </div>
 
-                    <div class="box-content nopadding">
+                    <div class="box-content nopadding regular-text">
 
                         <table
                             class="table table-hover table-nomargin table-bordered dataTable"

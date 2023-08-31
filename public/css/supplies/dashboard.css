@@ -11,12 +11,12 @@
 .supplies-dashboard-requests {
     margin: 40px 0 0 0;
     display: flex;
-    gap: 35px;
+    gap: 40px;
+    flex-wrap: wrap;
 }
 
 .supplies-dashboard-requests-item {
-    min-width: 340px;
-    max-width: 500px;
+    max-width: 340px;
     width: 100%;
     border-radius: 4px;
 }

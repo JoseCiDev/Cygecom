@@ -24,14 +24,14 @@
                         </div>
                     </div>
 
-                    <div class="box-content nopadding">
+                    <div class="box-content nopadding regular-text">
 
                         <table id="supplierTable" class="table table-hover table-nomargin table-bordered" data-nosort="0" data-checkall="all">
                             <thead>
                                 <tr>
                                     <th >CNPJ</th>
-                                    <th >Razão Social</th>
-                                    <th >Nome Fantasia</th>
+                                    <th >Razão social</th>
+                                    <th >Nome fantasia</th>
                                     <th >Indicação</th>
                                     <th >Mercado</th>
                                     <th >Situação</th>

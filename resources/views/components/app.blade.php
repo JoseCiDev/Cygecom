@@ -186,22 +186,19 @@
 
                     @if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios' || $currentProfile === 'gestor_fornecedores')
                         <li>
-                            <a href="#" data-toggle="dropdown" class='dropdown-toggle'
-                                data-cy="dropdown-cadastros">
+                            <a href="#" data-toggle="dropdown" class='dropdown-toggle' data-cy="dropdown-cadastros">
                                 <span>CADASTROS</span>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 @if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios')
                                     <li>
-                                        <a href="{{ route('users') }}"
-                                            data-cy="dropdown-cadastros-usuarios">Usuários</a>
+                                        <a href="{{ route('users') }}" data-cy="dropdown-cadastros-usuarios">Usuários</a>
                                     </li>
                                 @endif
                                 @if ($currentProfile === 'admin' || $currentProfile === 'gestor_fornecedores')
                                     <li>
-                                        <a href="{{ route('suppliers') }}"
-                                            data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
+                                        <a href="{{ route('suppliers') }}" data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
                                     </li>
                                 @endif
                             </ul>
@@ -214,13 +211,10 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ route('request.links') }}" data-cy="dropdown-solicitacoes-novas">Nova
-                                    Solicitação</a></li>
-                            <li><a href="{{ route('requests.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas
-                                    Solicitações</a></li>
+                            <li><a href="{{ route('request.links') }}" data-cy="dropdown-solicitacoes-novas">Nova solicitação</a></li>
+                            <li><a href="{{ route('requests.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas solicitações</a></li>
                             @if ($currentProfile === 'admin')
-                                <li><a href="{{ route('requests') }}"
-                                        data-cy="dropdown-solicitacoes-gerais">Solicitações Gerais</a></li>
+                                <li><a href="{{ route('requests') }}" data-cy="dropdown-solicitacoes-gerais">Solicitações gerais</a></li>
                             @endif
                         </ul>
                     </li>
@@ -232,15 +226,11 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ route('supplies.index') }}"
-                                        data-cy="dropdown-suprimentos-dashboard">Dashboard</a></li>
+                                <li><a href="{{ route('supplies.index') }}" data-cy="dropdown-suprimentos-dashboard">Dashboard</a></li>
                                 @if ($currentProfile === 'admin')
-                                    <li><a href="{{ route('supplies.product') }}"
-                                            data-cy="dropdown-suprimentos-produtos">Produtos</a></li>
-                                    <li><a href="{{ route('supplies.service') }}"
-                                            data-cy="dropdown-suprimentos-servicos">Serviços</a></li>
-                                    <li><a href="{{ route('supplies.contract') }}"
-                                            data-cy="dropdown-suprimentos-contratos">Contratos</a></li>
+                                    <li><a href="{{ route('supplies.product') }}" data-cy="dropdown-suprimentos-produtos">Produtos</a></li>
+                                    <li><a href="{{ route('supplies.service') }}" data-cy="dropdown-suprimentos-servicos">Serviços</a></li>
+                                    <li><a href="{{ route('supplies.contract') }}" data-cy="dropdown-suprimentos-contratos">Contratos</a></li>
                                 @endif
                             </ul>
                         </li>
