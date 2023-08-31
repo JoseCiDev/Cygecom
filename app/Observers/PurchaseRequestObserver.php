@@ -2,10 +2,9 @@
 
 namespace App\Observers;
 
-use App\Enums\{PurchaseRequestStatus, LogAction};
-use App\Models\{PurchaseRequest, PurchaseRequestsLog};
+use App\Enums\PurchaseRequestStatus;
+use App\Models\PurchaseRequest;
 use App\Providers\EmailService;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Mailer\Exception\TransportException;
 
 class PurchaseRequestObserver
@@ -19,21 +18,7 @@ class PurchaseRequestObserver
      */
     public function created(PurchaseRequest $purchaseRequest): void
     {
-        $changes = [
-            'type' => $purchaseRequest->type,
-            'is_comex' => $purchaseRequest->is_comex,
-            'local_description' => $purchaseRequest->local_description,
-            'is_supplies_contract' => $purchaseRequest->is_supplies_contract,
-            'reason' => $purchaseRequest->reason,
-            'user_id' => $purchaseRequest->user_id,
-            'description' => $purchaseRequest->description,
-            'observation' => $purchaseRequest->observation,
-            'desired_date' => $purchaseRequest->desired_date,
-            'support_links' => $purchaseRequest->support_links,
-        ];
-
         $this->sendEmail($purchaseRequest);
-        $this->createLog(LogAction::CREATE, $purchaseRequest, $changes);
     }
 
     /**
@@ -41,49 +26,19 @@ class PurchaseRequestObserver
      */
     public function updated(PurchaseRequest $purchaseRequest): void
     {
-        $changes = [];
+        $isDelete = $purchaseRequest->wasChanged('deleted_at') && $purchaseRequest->deleted_at !== null;
+        $statusWasChanged = $purchaseRequest->wasChanged('status');
+        $suppliesUserWasChanged = $purchaseRequest->wasChanged('supplies_user_id');
 
-        $dirtyAttributes = $purchaseRequest->getDirty();
+        if (!$isDelete) {
+            if ($statusWasChanged) {
+                $this->sendEmail($purchaseRequest);
+            }
 
-        $attributesToTrack = [
-            'status' => $purchaseRequest->status->value,
-            'supplies_user_id' => $purchaseRequest->supplies_user_id,
-            'deleted_at' => $purchaseRequest->deleted_at,
-        ];
-
-        foreach ($attributesToTrack as $attribute => $value) {
-            if (array_key_exists($attribute, $dirtyAttributes)) {
-                $changes[$attribute] = $value;
+            if ($suppliesUserWasChanged) {
+                $this->emailService->sendResponsibleAssignedEmail($purchaseRequest);
             }
         }
-
-        if (!empty($changes)) {
-            $isDelete = $purchaseRequest->wasChanged('deleted_at') && $purchaseRequest->deleted_at !== null;
-
-            if ($isDelete) {
-                $this->createLog(LogAction::DELETE, $purchaseRequest, $changes);
-            } else {
-                $this->createLog(LogAction::UPDATE, $purchaseRequest, $changes);
-
-                if (array_key_exists('status', $changes)) {
-                    $this->sendEmail($purchaseRequest);
-                }
-
-                if (array_key_exists('supplies_user_id', $changes)) {
-                    $this->emailService->sendResponsibleAssignedEmail($purchaseRequest);
-                }
-            }
-        }
-    }
-
-    private function createLog(LogAction $action, $purchaseRequest, ?array $changes = null)
-    {
-        PurchaseRequestsLog::create([
-            'purchase_request_id' => $purchaseRequest->id,
-            'action' => $action->value,
-            'user_id' => Auth::id(),
-            'changes' => $changes,
-        ]);
     }
 
     private function sendEmail(PurchaseRequest $purchaseRequest)
@@ -92,16 +47,10 @@ class PurchaseRequestObserver
         $status = $purchaseRequest->status?->value;
 
         if ($status && $isAllowedToSendEmail) {
-            $approver = $purchaseRequest->user->approver;
             $isPendingStatus = $status === PurchaseRequestStatus::PENDENTE->value;
             $isDraft = $status === PurchaseRequestStatus::RASCUNHO->value;
 
             try {
-                if ($approver && $isPendingStatus) {
-                    // Envio de e-mail para aprovador desativado;
-                    // $this->emailService->sendPendingApprovalEmail($purchaseRequest, $approver);
-                }
-
                 if (!$isDraft && !$isPendingStatus) {
                     $this->emailService->sendStatusUpdatedEmail($purchaseRequest);
                 }

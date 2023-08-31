@@ -247,11 +247,13 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de serviço.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveService para atualizar serviço.
      */
-    public function updateServiceRequest(int $id, array $data, UploadedFile|array|null $files)
+    public function updateServiceRequest(int $id, array $data, UploadedFile|array|null $files): PurchaseRequest
     {
-        DB::transaction(function () use ($id, $data, $files) {
+        return DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
             $this->saveService($purchaseRequest->id, $data, $purchaseRequest->service->id);
+
+            return $purchaseRequest;
         });
     }
 
@@ -259,11 +261,13 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de produto(s).
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveProduct para atualizar produto(s).
      */
-    public function updateProductRequest(int $id, array $data,  UploadedFile|array|null $files)
+    public function updateProductRequest(int $id, array $data,  UploadedFile|array|null $files): PurchaseRequest
     {
-        DB::transaction(function () use ($id, $data, $files) {
+        return DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
-            $this->saveProducts($purchaseRequest->id, $data);
+            $this->saveProducts($purchaseRequest->id, $data, $purchaseRequest->product->id);
+
+            return $purchaseRequest;
         });
     }
 
@@ -271,11 +275,13 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de contrato.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveContract para atualizar contrato.
      */
-    public function updateContractRequest(int $id, array $data, UploadedFile|array|null $files)
+    public function updateContractRequest(int $id, array $data, UploadedFile|array|null $files): PurchaseRequest
     {
-        DB::transaction(function () use ($id, $data, $files) {
+        return DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
             $this->saveContract($purchaseRequest->id, $data, $purchaseRequest->contract->id);
+
+            return $purchaseRequest;
         });
     }
 
@@ -296,6 +302,11 @@ class PurchaseRequestService extends ServiceProvider
     private function saveCostCenterApportionment(int $purchaseRequestId, array $data)
     {
         $userId = auth()->user()->id;
+
+        if (!isset($data['cost_center_apportionments'])) {
+            return;
+        }
+
         $apportionmentData = $data['cost_center_apportionments'];
         $existingIds = CostCenterApportionment::where('purchase_request_id', $purchaseRequestId)->pluck('id')->toArray();
 
@@ -357,13 +368,14 @@ class PurchaseRequestService extends ServiceProvider
     private function saveService(int $purchaseRequestId, array $data, ?int $serviceId = null): void
     {
         $serviceData = $data['service'];
+        if (isset($serviceData['price'])) {
+            $serviceData['price'] = number_format($serviceData['price'], 2, '.', '');
+        }
 
-        // caso disabled os campos do form define como null
         $serviceInstallmentsData = $serviceData['service_installments'] ?? [];
         $paymentInfoData = $serviceData['payment_info'] ?? [];
-        $supplierId = $serviceData['supplier_id'] ?? [];
 
-        if (count($paymentInfoData) > 0) {
+        if (!empty(array_filter($paymentInfoData))) {
             $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
             $serviceData['payment_info_id'] = $paymentInfoResponse->id;
         }
@@ -384,18 +396,21 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Responsável por criar ou atualizar products.
      * Recomendado executar com o método específico registerProductRequest ou updateProductRequest
      */
-    private function saveProducts(int $purchaseRequestId, array $data)
+    private function saveProducts(int $purchaseRequestId, array $data, ?int $productId = null)
     {
         $productData = $data['product'];
         $productInstallmentsData = $productData['product_installments'] ?? [];
         $paymentInfoData = $productData['payment_info'] ?? [];
+        if (isset($productData['amount'])) {
+            $productData['amount'] = number_format($productData['amount'], 2, '.', '');
+        }
 
-        if (count($paymentInfoData) > 0) {
+        if (!empty(array_filter($paymentInfoData))) {
             $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
             $productData['payment_info_id'] = $paymentInfoResponse->id;
         }
 
-        $product = Product::updateOrCreate(['purchase_request_id' => $purchaseRequestId], $productData);
+        $product = Product::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'id' => $productId], $productData);
 
         $existingInstallments = ProductInstallment::where('product_id', $product->id)->get();
 
@@ -404,6 +419,10 @@ class PurchaseRequestService extends ServiceProvider
         foreach ($productInstallmentsData as $installment) {
             $installment['product_id'] = $product->id;
             ProductInstallment::updateOrCreate(['id' => $installment['id']], $installment);
+        }
+
+        if (!isset($data['purchase_request_products'])) {
+            return;
         }
 
         $suppliers = array_values($data['purchase_request_products']);
@@ -437,18 +456,20 @@ class PurchaseRequestService extends ServiceProvider
     private function saveContract(int $purchaseRequestId, array $data, ?int $contractId = null)
     {
         $contractData = $data['contract'];
+        if (isset($contractData['amount'])) {
+            $contractData['amount'] = number_format($contractData['amount'], 2, '.', '');
+        }
 
-        // caso disabled os campos do form define como null
         $contractsInstallmentsData = $contractData['contract_installments'] ?? [];
         $paymentInfoData = $contractData['payment_info'] ?? [];
-        $supplierId = $contractData['supplier_id'] ?? [];
 
-        if (count($paymentInfoData) > 0) {
+        if (!empty(array_filter($paymentInfoData))) {
             $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
             $contractData['payment_info_id'] = $paymentInfoResponse->id;
         }
 
         $contract = Contract::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'id' => $contractId], $contractData);
+
         $existingInstallments = ContractInstallment::where('contract_id', $contract->id)->get();
 
         $this->updateNumberOfInstallments($existingInstallments, $contractsInstallmentsData);

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserCostCenterPermission extends Model
 {
-    use HasFactory;
+    use HasFactory, LogObserverTrait;
 
     public $timestamps = false;
 

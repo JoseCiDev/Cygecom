@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Enums\PurchaseRequestStatus;
 use Illuminate\Http\{RedirectResponse, Request};
@@ -105,14 +106,10 @@ class ContractController extends Controller
             $msg = "Solicitação de contrato atualizada com sucesso!";
 
             $isAdmin = auth()->user()->profile->name === 'admin';
-            $isOwnPurchaseRequest = (bool)auth()->user()->purchaseRequest->find($id);
-
-            if (!$isOwnPurchaseRequest && !$isAdmin) {
-                throw new Exception('Não autorizado. Não foi possível acessar essa solicitação.');
-            }
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
+            $isDraft = $purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value;
 
             $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
             if (!$isAuthorized) {
@@ -121,7 +118,7 @@ class ContractController extends Controller
             // MUDAR
             DB::beginTransaction();
 
-            $this->purchaseRequestService->updateContractRequest($id, $data, $files);
+            $purchaseRequest = $this->purchaseRequestService->updateContractRequest($id, $data, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
@@ -133,6 +130,14 @@ class ContractController extends Controller
             DB::rollBack();
             $msg = 'Não foi possível atualizar o registro no banco de dados.';
             return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
+        }
+
+        $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === '/supplies';
+
+        if (!$isDraft && $isSuppliesRoute) {
+            $msg = 'Valor total da solicitação atualizado com sucesso!';
+            session()->flash('success', $msg);
+            return back();
         }
 
         session()->flash('success', $msg);

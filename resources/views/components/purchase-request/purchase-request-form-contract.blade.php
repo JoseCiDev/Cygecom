@@ -1080,10 +1080,8 @@
                 maximumSelectionLength: 1
             });
 
-            const expireDate = new Date($('#expire-date').val());
-            const expireDateFormatted = expireDate.toLocaleDateString('pt-BR', {
-                timeZone: 'UTC'
-            });
+            const expireDate = $('#expire-date').val();
+            const expireDateFormatted = moment(expireDate).format('YYYY-MM-DD')
             const value = $('#value-hidden').val();
             const status = $('#status').find(':selected').text();
             const observation = $('#observation').val();

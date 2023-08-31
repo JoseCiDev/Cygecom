@@ -15,6 +15,10 @@
     --product-color: #35ce86;
     --service-color: #f9a164;
     --contract-color: #73cee0;
+
+    --product-color-hover: #70dda9;
+    --service-color-hover: #ffbc90;
+    --contract-color-hover: #9cdce9;
 }
 
 input[type=checkbox] {
