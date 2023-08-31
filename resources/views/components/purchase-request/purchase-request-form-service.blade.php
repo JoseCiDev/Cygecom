@@ -49,9 +49,9 @@
     }
 </style>
 
-<div class="row" style="margin: 20px 0 30px;">
+<div class="row" style="margin: 0 0 30px;">
 
-    <div class="col-sm-6">
+    <div class="col-sm-6" style="padding: 0">
         @if ($hasRequestNotSent)
             <h1 class="page-title">Editar solicitação de serviço nº {{$purchaseRequest->id}}</h1>
         @elseif ($hasSentRequest)
@@ -67,7 +67,7 @@
         @endif
     </div>
     @if (isset($purchaseRequest) && !$requestAlreadySent)
-        <div class="col-md-6 pull-right">
+        <div class="col-md-6 pull-right" style="padding: 0">
             <x-modalDelete />
             <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
@@ -410,8 +410,8 @@
                             style="width:100%;">
                             <option value=""></option>
                             @foreach ($suppliers as $supplier)
-                                @php 
-                                    $supplierSelected = isset($purchaseRequest->service) && $purchaseRequest->service->supplier_id === $supplier->id; 
+                                @php
+                                    $supplierSelected = isset($purchaseRequest->service) && $purchaseRequest->service->supplier_id === $supplier->id;
                                     $cnpj = $supplier->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj) : 'CNPJ indefinido'
                                 @endphp
                                 <option value="{{ $supplier->id }}" @selected($supplierSelected)>{{ "$cnpj - $supplier->corporate_name" }}</option>

@@ -66,9 +66,9 @@
     }
 </style>
 
-<div class="row" style="margin: 20px 0 30px;">
+<div class="row" style="margin: 0 0 30px;">
 
-    <div class="col-sm-6">
+    <div class="col-sm-6" style="padding: 0">
         @if ($hasRequestNotSent)
             <h1 class="page-title">Editar solicitação de contrato nº {{$purchaseRequest->id}}</h1>
         @elseif ($hasSentRequest)
@@ -85,7 +85,7 @@
     </div>
 
     @if (isset($purchaseRequest) && !$requestAlreadySent)
-        <div class="col-md-6 pull-right">
+        <div class="col-md-6 pull-right" style="padding: 0">
             <x-modalDelete />
             <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"

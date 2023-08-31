@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-color box-bordered">
-                <div class="row" style="margin: 20px 0 30px">
+                <div class="row" style="margin: 0 0 30px">
                     <div class="col-md-6" style="padding: 0">
                         <h1 class="page-title">Solicitações de Compra/Serviço</h1>
                     </div>
