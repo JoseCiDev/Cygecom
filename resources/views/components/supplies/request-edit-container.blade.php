@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <button data-cy="btn-edit-request" id="btn-edit-request" type="submit" class="btn btn-icon btn-primary"
+    <button data-cy="btn-edit-request" id="btn-edit-request" type="submit" class="btn btn-primary btn-small"
         @disabled($requestIsFromLogged) >
         Atualizar solicitação
     </button>
