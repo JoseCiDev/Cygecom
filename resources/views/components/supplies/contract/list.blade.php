@@ -20,7 +20,7 @@
                                     $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
                                     $isChecked = count($status) ? collect($status)->contains($statusCase) : $statusDefaultFilter;
                                 @endphp
-                                
+
                                 @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
                                     <label class="checkbox-label">
                                         <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
@@ -65,6 +65,12 @@
                                     })->implode(', ');
                                 $amount = $contract->contract->amount;
                                 $amountFormated = $amount !== null ? number_format($amount, 2, ',', '.') : '---';
+
+                                $suppliers = $contract->contract->supplier;
+                                $modalData = [
+                                    'request' => $contract,
+                                    'suppliers' => $suppliers
+                                ];
                             @endphp
                             <tr>
                                 <td>{{$contract->id}}</td>
@@ -85,7 +91,7 @@
                                     <button
                                         data-modal-name="{{ 'Analisando Solicitação de Contrato - Nº ' . $contract->id }}"
                                         data-id="{{ $contract->id }}"
-                                        data-request="{{json_encode($contract)}}"
+                                        data-request="{{json_encode($modalData)}}"
                                         rel="tooltip"
                                         title="Analisar"
                                         class="btn btn-primary"
@@ -95,7 +101,7 @@
                                     >
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    @php 
+                                    @php
                                         $existSuppliesUser = (bool) $contract->suppliesUser;
                                         $existResponsibility = (bool) $contract->responsibility_marked_at;
                                         $isOwnUserRequest = $contract->user->id === auth()->user()->id;

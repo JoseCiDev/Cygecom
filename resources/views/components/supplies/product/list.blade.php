@@ -1,5 +1,6 @@
 @php
     use App\Enums\PurchaseRequestStatus;
+    use App\Models\PurchaseRequestProduct;
 @endphp
 
 <div class="row">
@@ -20,7 +21,7 @@
                                     $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
                                     $isChecked = count($status) ? collect($status)->contains($statusCase) : $statusDefaultFilter;
                                 @endphp
-                                
+
                                 @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
                                     <label class="checkbox-label">
                                         <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
@@ -61,9 +62,14 @@
                                 $concatenatedGroups = $groups->map(function ($item) {
                                         return $item->label();
                                     })->implode(', ');
-                                
+
                                 $categories = $product->purchaseRequestProduct->groupBy('category.name')->keys();
                                 $categoriesQtd = $categories->count();
+                                $suppliers = $product->purchaseRequestProduct->pluck('supplier')->unique('id');
+                                $modalData = [
+                                    'request' => $product,
+                                    'suppliers' => $suppliers
+                                ];
                             @endphp
                             <tr>
                                 <td>{{$product->id}}</td>
@@ -89,7 +95,7 @@
                                     <button
                                         data-modal-name="{{ 'Analisando Solicitação de Produto - Nº ' . $product->id }}"
                                         data-id="{{ $product->id }}"
-                                        data-request="{{json_encode($product)}}"
+                                        data-request="{{json_encode($modalData)}}"
                                         rel="tooltip"
                                         title="Analisar"
                                         class="btn btn-primary"
@@ -103,7 +109,7 @@
                                         $existSuppliesUser = (bool) $product->suppliesUser?->person->name;
                                         $existResponsibility = (bool) $product->responsibility_marked_at;
                                         $isOwnUserRequest = $product->user->id === auth()->user()->id;
-                                        $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest 
+                                        $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest
                                      @endphp
                                     <a href="{{route('supplies.product.detail', ['id' => $product->id])}}"
                                         class="btn btn-link openDetail"

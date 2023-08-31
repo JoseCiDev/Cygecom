@@ -20,7 +20,7 @@
                                     $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
                                     $isChecked = count($status) ? collect($status)->contains($statusCase) : $statusDefaultFilter;
                                 @endphp
-                                
+
                                 @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
                                     <label class="checkbox-label">
                                         <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                <table class="table table-hover table-nomargin table-bordered dataTable" data-column_filter_dateformat="dd-mm-yy" 
+                <table class="table table-hover table-nomargin table-bordered dataTable" data-column_filter_dateformat="dd-mm-yy"
                     data-nosort="0" data-checkall="all">
                     <thead>
                         <tr>
@@ -71,6 +71,12 @@
                                     })->implode(', ');
                                 $amount = $service->service->price;
                                 $amountFormated = $amount !== null ? number_format($amount, 2, ',', '.') : '---';
+
+                                $suppliers = $service->service->supplier;
+                                $modalData = [
+                                    'request' => $service,
+                                    'suppliers' => $suppliers
+                                ];
                             @endphp
                             <tr>
                                 <td>{{$service->id}}</td>
@@ -90,7 +96,7 @@
                                     <button
                                         data-modal-name="{{ 'Analisando Solicitação de Serviço - Nº ' . $service->id }}"
                                         data-id="{{ $service->id }}"
-                                        data-request="{{json_encode($service)}}"
+                                        data-request="{{json_encode($modalData)}}"
                                         rel="tooltip"
                                         title="Analisar"
                                         class="btn btn-primary"
@@ -100,11 +106,11 @@
                                     >
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    @php 
+                                    @php
                                         $existSuppliesUser = (bool) $service->suppliesUser?->person->name;
                                         $existResponsibility = (bool) $service->responsibility_marked_at;
                                         $isOwnUserRequest = $service->user->id === auth()->user()->id;
-                                        $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest 
+                                        $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest
                                     @endphp
                                     <a
                                         href="{{route('supplies.service.detail', ['id' => $service->id])}}"
