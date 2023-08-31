@@ -101,10 +101,10 @@
     padding: 10px;
 }
 
-.zebra-bg-even {
+.request-details-content-box-products-product:nth-child(even) {
     background-color: #c5c5c5;
 }
 
-.zebra-bg-odd {
+.request-details-content-box-products-product:nth-child(odd) {
     background-color: #eaeaea;
 }

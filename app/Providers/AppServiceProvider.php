@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -35,6 +36,11 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        //
+        Carbon::macro('formatCustom', function ($format) {
+            /**
+             * @var Carbon $this
+             */
+            return $this->setTimezone(env('CUSTOM_TIMEZONE'))->format($format);
+        });
     }
 }
