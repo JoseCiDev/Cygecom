@@ -101,7 +101,7 @@
     <script src="{{ asset('js/demonstration.min.js') }}"></script>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" />
+    <link rel="shortcut icon" href="{{ asset('img/gecom/favicon.png') }}" />
     <!-- Apple devices Homescreen icon -->
 
     <!-- Validation -->
