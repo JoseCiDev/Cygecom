@@ -4,10 +4,10 @@
 
     <div class="row" style="margin-bottom: 15px">
         <div class="col-md-12 text-left">
-            <h2>Solicitações de produtos</h2>
+            <h1 class="page-title">Solicitações de produtos</h1>
         </div>
     </div>
-    
+
     <x-SuppliesProductList :suppliesGroup="$suppliesGroup" :status="$status" />
 
 </x-app>

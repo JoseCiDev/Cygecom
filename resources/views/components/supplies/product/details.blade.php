@@ -16,9 +16,6 @@
 @endphp
 
 <x-app>
-    <x-slot name="title">
-        <h1>Página de suprimentos</h1>
-    </x-slot>
 
     <div class="row">
         <div class="col-md-12">
@@ -229,30 +226,28 @@
                                     <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong>
                                             Parcelas</strong></h4>
                                     @foreach ($request->product->installments as $installmentIndex => $installment)
-                                        <div class="request-details-content-box-product-installment">
-                                            <div class="row">
-                                                <p class="col-xs-3">
-                                                    <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
-                                                </p>
-                                                <p class="col-xs-3">
-                                                    <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
-                                                </p>
-                                                <p class="col-xs-6">
-                                                    <strong>Observação do pagamento:</strong>
-                                                    <span>{{ $installment->observation ?? '---' }}</span>
-                                                </p>
-                                            </div>
-                                            <div class="row">
-                                                <p class="col-xs-3">
-                                                    <strong>Valor:</strong> R$ {{ $installment->value }}
-                                                </p>
-                                                <p class="col-xs-3">
-                                                    <strong>Vencimento:</strong>
-                                                    {{ $installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---' }}
-                                                </p>
-
-                                            </div>
+                                    <div class="request-details-content-box-product-installment">
+                                        <div class="row">
+                                            <p class="col-xs-3">
+                                                <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
+                                            </p>
+                                            <p class="col-xs-6">
+                                                <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
+                                            </p>
                                         </div>
+                                        <div class="row">
+                                            <p class="col-xs-3">
+                                                <strong>Valor:</strong> R$ {{ $installment->value }}
+                                            </p>
+                                            <p class="col-xs-3">
+                                                <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
+                                            </p>
+
+                                        </div>
+                                    </div>
                                     @endforeach
                                 </div>
                             </div>

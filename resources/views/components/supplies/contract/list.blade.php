@@ -6,7 +6,7 @@
     <div class="col-sm-12">
         <div class="box box-color box-bordered">
 
-            <div class="box-content nopadding">
+            <div class="box-content nopadding regular-text">
 
                 <div class="row">
                     <div class="col-md-12">
@@ -20,9 +20,9 @@
                                     $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
                                     $isChecked = count($status) ? collect($status)->contains($statusCase) : $statusDefaultFilter;
                                 @endphp
-                                
+
                                 @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
-                                    <label class="checkbox-label">
+                                    <label class="checkbox-label secondary-text">
                                         <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
                                         {{ $statusCase->label() }}
                                     </label>
@@ -88,14 +88,14 @@
                                         data-request="{{json_encode($contract)}}"
                                         rel="tooltip"
                                         title="Analisar"
-                                        class="btn btn-primary"
+                                        class="btn"
                                         data-toggle="modal"
                                         data-target="#modal-supplies"
                                         data-cy="btn-analisar-{{$index}}"
                                     >
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    @php 
+                                    @php
                                         $existSuppliesUser = (bool) $contract->suppliesUser;
                                         $existResponsibility = (bool) $contract->responsibility_marked_at;
                                         $isOwnUserRequest = $contract->user->id === auth()->user()->id;

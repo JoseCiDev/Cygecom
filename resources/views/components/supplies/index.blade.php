@@ -1,82 +1,170 @@
 @php
     $currentProfile = auth()->user()->profile->name;
 @endphp
+
 <x-app>
-    <x-slot name="title">
-        <h1>Dashboard de suprimentos</h1>
-    </x-slot>
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <div class="card">
-                <div class="card-body">
-                    <h2>Bem-vindo ao dashboard de suprimentos!</h2>
-                    <p>Este é o portal de gerenciamento de compras do grupo Essentia!</p>
+
+    <div class="supplies-dashboard">
+        <h1 class="supplies-dashboard-title page-title">Dashboard de suprimentos</h1>
+
+        <div class="supplies-dashboard-requests">
+            <div class="supplies-dashboard-requests-item border-product">
+                <h2 class="supplies-dashboard-requests-item-title bg-product-color">Solicitações de produtos</h2>
+                <div class="supplies-dashboard-requests-item-info">
+                    <div class="supplies-dashboard-requests-item-info-top">
+                        <p class="supplies-dashboard-requests-item-info-top-price">
+                            <span class="supplies-dashboard-requests-item-info-top-price-value text-product-color">{{$productQtd}}</span>
+                            solicitações no total
+                        </p>
+                        <div class="supplies-dashboard-requests-item-info-top-btns">
+                            <a href="{{route('supplies.product')}}" class="supplies-dashboard-requests-item-info-top-btns-btn"
+                                data-cy="btn-all-products">
+                                Ver todas
+                            </a>
+                        </div>
+                    </div>
+                    <div class="supplies-dashboard-requests-item-info-bottom">
+                        @if ($currentProfile === 'admin')
+                            <div class="supplies-dashboard-requests-item-info-bottom-row">
+                                <span class="supplies-dashboard-requests-item-info-bottom-row-text-qtd">
+                                    {{$productsFromInp->count()}}
+                                </span>
+                                <p class="supplies-dashboard-requests-item-info-bottom-row-text">
+                                    solicitações para INP/Noorskin/Oasis
+                                </p>
+                            </div>
+                            <div class="supplies-dashboard-requests-item-info-bottom-row">
+                                <span class="supplies-dashboard-requests-item-info-bottom-row-text-qtd">
+                                    {{$productsFromHkm->count()}}
+                                </span>
+                                <p class="supplies-dashboard-requests-item-info-bottom-row-text">
+                                    solicitações para farmácias e demais empresas
+                                </p>
+                            </div>
+                        @endif
+                        <div class="supplies-dashboard-requests-item-info-bottom-row">
+                            <span class="supplies-dashboard-requests-item-info-bottom-row-text-qtd">
+                                {{$productComexQtd}}
+                            </span>
+                            <p class="supplies-dashboard-requests-item-info-bottom-row-text">
+                                COMEX
+                            </p>
+                        </div>
+                        <div class="supplies-dashboard-requests-item-info-bottom-row">
+                            <span class="supplies-dashboard-requests-item-info-bottom-row-text-qtd">
+                                {{$productDesiredTodayQtd}}
+                            </span>
+                            <p class="supplies-dashboard-requests-item-info-bottom-row-text">
+                                desejadas para hoje
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="box">
-                <div class="box-title"> <h3> <i class="fa fa-bars"></i> Tipos de solicitações </h3></div>
-                <div class="box-content">
-                    <div class="row">
-                        <div class="pricing-tables">
-                            <ul class="pricing col-sm-4">
-                                <li class="head">
-                                    <div class="name" style="background-color: #339933"><i class="fa fa-tags"></i> Solicitações de produtos</div>
-                                    <div class="price" style="background-color: #33993368">
+            <div class="supplies-dashboard-requests-item border-service">
+                <h2 class="supplies-dashboard-requests-item-title bg-service-color">Solicitações de serviços</h2>
+                <div class="supplies-dashboard-requests-item-info">
+                    <div class="supplies-dashboard-requests-item-info-top">
+                        <p class="supplies-dashboard-requests-item-info-top-price">
+                            <span class="supplies-dashboard-requests-item-info-top-price-value text-service-color">{{$serviceQtd}}</span>
+                            solicitações no total
+                        </p>
+                        <div class="supplies-dashboard-requests-item-info-top-btns">
+                            <a href="{{route('supplies.service')}}" class="supplies-dashboard-requests-item-info-top-btns-btn"
+                                data-cy="btn-all-services">
+                                Ver todas
+                            </a>
+                        </div>
+                    </div>
+                    <div class="supplies-dashboard-requests-item-info-bottom">
+                        @if ($currentProfile === 'admin')
+                            <div class="supplies-dashboard-requests-item-info-bottom-row">
+                                <span class="supplies-dashboard-requests-item-info-bottom-row-text-qtd">
+                                    {{$servicesFromInp->count()}}
+                                </span>
+                                <p class="supplies-dashboard-requests-item-info-bottom-row-text">
+                                    solicitações para INP/Noorskin/Oasis
+                                </p>
+                            </div>
+                            <div class="supplies-dashboard-requests-item-info-bottom-row">
+                                <span class="supplies-dashboard-requests-item-info-bottom-row-text-qtd">
+                                    {{$servicesFromHkm->count()}}
+                                </span>
+                                <p class="supplies-dashboard-requests-item-info-bottom-row-text">
+                                    solicitações para farmácias e demais empresas
+                                </p>
+                            </div>
+                        @endif
+                        <div class="supplies-dashboard-requests-item-info-bottom-row">
+                            <span class="supplies-dashboard-requests-item-info-bottom-row-text-qtd">
+                                {{$serviceComexQtd}}
+                            </span>
+                            <p class="supplies-dashboard-requests-item-info-bottom-row-text">
+                                COMEX
+                            </p>
+                        </div>
+                        <div class="supplies-dashboard-requests-item-info-bottom-row">
+                            <span class="supplies-dashboard-requests-item-info-bottom-row-text-qtd">
+                                {{$serviceDesiredTodayQtd}}
+                            </span>
+                            <p class="supplies-dashboard-requests-item-info-bottom-row-text">
+                                desejadas para hoje
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                                        {{$productQtd}}
-                                        <span>solicitações existentes</span>
-
-                                        <a href="{{route('supplies.product')}}" class="btn btn-grey-4" data-cy="btn-all-products">Todas solicitações</a>
-                                    </div>
-                                </li>
-                                @if ($currentProfile === 'admin')
-                                    <li>Solicitações para INP/Noorskin/Oasis: <strong>{{$productsFromInp->count()}}</strong></li>
-                                    <li>Solicitações para farmácias e demais empresas: <strong>{{$productsFromHkm->count()}}</strong></li>
-                                @endif
-                                <li>Qtd. de COMEX: <strong>{{$productComexQtd}}</strong></li>
-                                <li>Qtd. desejadas p/ hoje: <strong>{{$productDesiredTodayQtd}}</strong></li>
-                            </ul>
-                            <ul class="pricing green col-sm-4">
-                                <li class="head">
-                                    <div class="name" style="background-color: #111111"><i class="fa fa-briefcase"></i> Solicitações de serviços</div>
-                                    <div class="price" style="background-color: #11111159">
-
-                                        {{$serviceQtd}}
-                                        <span>solicitações existentes</span>
-
-                                        <a href="{{route('supplies.service')}}" class="btn btn-grey-4" data-cy="btn-all-services">Todas solicitações</a>
-                                    </div>
-                                </li>
-                                @if ($currentProfile === 'admin')
-                                    <li>Solicitações para INP/Noorskin/Oasis <strong>{{$servicesFromInp->count()}}</strong></li>
-                                    <li>Solicitações para farmácias e demais empresas: <strong>{{$servicesFromHkm->count()}}</strong></li>
-                                @endif
-                                <li>Qtd. de COMEX: <strong>{{$serviceComexQtd}}</strong></li>
-                                <li>Qtd. desejadas p/ hoje: <strong>{{$serviceDesiredTodayQtd}}</strong></li>
-                            </ul>
-                            <ul class="pricing red col-sm-4">
-                                <li class="head">
-                                    <div class="name" style="background-color: #62a7e7;"><i class="glyphicon glyphicon-list-alt"></i> Solicitações de contratos</div>
-                                    <div class="price" style="background-color: #62a7e75c;">
-
-                                        {{$contractQtd}}
-                                        <span>solicitações existentes</span>
-
-                                        <a href="{{route('supplies.contract')}}" class="btn btn-grey-4" data-cy="btn-all-contracts">Todas solicitações</a>
-                                    </div>
-                                </li>
-                                @if ($currentProfile === 'admin')
-                                    <li>Solicitações para INP/Noorskin/Oasis: <strong>{{$contractsFromInp->count()}}</strong></li>
-                                    <li>Solicitações para farmácias e demais empresas: <strong>{{$contractsFromHkm->count()}}</strong></li>
-                                @endif
-                                <li>Qtd. de COMEX: <strong>{{$contractComexQtd}}</strong></li>
-                                <li>Qtd. desejadas p/ hoje: <strong>{{$contractDesiredTodayQtd}}</strong></li>
-                            </ul>
+            <div class="supplies-dashboard-requests-item border-contract">
+                <h2 class="supplies-dashboard-requests-item-title bg-contract-color">Solicitações de contratos</h2>
+                <div class="supplies-dashboard-requests-item-info">
+                    <div class="supplies-dashboard-requests-item-info-top">
+                        <p class="supplies-dashboard-requests-item-info-top-price">
+                            <span class="supplies-dashboard-requests-item-info-top-price-value text-contract-color">{{$contractQtd}}</span>
+                            solicitações no total
+                        </p>
+                        <div class="supplies-dashboard-requests-item-info-top-btns">
+                            <a href="{{route('supplies.contract')}}" class="supplies-dashboard-requests-item-info-top-btns-btn"
+                                data-cy="btn-all-contracts">
+                                Ver todas
+                            </a>
+                        </div>
+                    </div>
+                    <div class="supplies-dashboard-requests-item-info-bottom">
+                        @if ($currentProfile === 'admin')
+                            <div class="supplies-dashboard-requests-item-info-bottom-row">
+                                <span class="supplies-dashboard-requests-item-info-bottom-row-text-qtd">
+                                    {{$contractsFromInp->count()}}
+                                </span>
+                                <p class="supplies-dashboard-requests-item-info-bottom-row-text">
+                                    solicitações para INP/Noorskin/Oasis
+                                </p>
+                            </div>
+                            <div class="supplies-dashboard-requests-item-info-bottom-row">
+                                <span class="supplies-dashboard-requests-item-info-bottom-row-text-qtd">
+                                    {{$contractsFromHkm->count()}}
+                                </span>
+                                <p class="supplies-dashboard-requests-item-info-bottom-row-text">
+                                    solicitações para farmácias e demais empresas
+                                </p>
+                            </div>
+                        @endif
+                        <div class="supplies-dashboard-requests-item-info-bottom-row">
+                            <span class="supplies-dashboard-requests-item-info-bottom-row-text-qtd">
+                                {{$contractComexQtd}}
+                            </span>
+                            <p class="supplies-dashboard-requests-item-info-bottom-row-text">
+                                COMEX
+                            </p>
+                        </div>
+                        <div class="supplies-dashboard-requests-item-info-bottom-row">
+                            <span class="supplies-dashboard-requests-item-info-bottom-row-text-qtd">
+                                {{$contractDesiredTodayQtd}}
+                            </span>
+                            <p class="supplies-dashboard-requests-item-info-bottom-row-text">
+                                desejadas para hoje
+                            </p>
                         </div>
                     </div>
                 </div>

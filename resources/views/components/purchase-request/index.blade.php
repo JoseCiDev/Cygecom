@@ -7,18 +7,18 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="box box-color box-bordered">
-                <div class="row" style="margin: 20px 0 30px">
-                    <div class="col-md-6">
-                        <h1 style="margin: 0">Solicitações de Compra/Serviço</h1>
+                <div class="row" style="margin: 0 0 30px">
+                    <div class="col-md-6" style="padding: 0">
+                        <h1 class="page-title">Solicitações de Compra/Serviço</h1>
                     </div>
-                    <div class="col-md-6">
-                        <a data-cy="btn-nova-solicitacao" href="{{ route('request.links') }}" class="btn pull-right btn-large pull-rigth" style="background-color: #333333; color: #ffffff">Nova Solicitação</a>
+                    <div class="col-md-6" style="padding: 0">
+                        <a data-cy="btn-nova-solicitacao" href="{{ route('request.links') }}" class="btn btn-primary btn-large pull-right">Nova Solicitação</a>
                     </div>
                 </div>
 
                <div class="row">
                     <div class="col-md-12">
-                        <div class="box-content nopadding">
+                        <div class="box-content nopadding regular-text">
 
                             <table
                                 class="table table-hover table-nomargin table-bordered dataTable"
@@ -48,7 +48,7 @@
                                                 $supplier = $purchaseRequest->contract->supplier ?? null;
                                             } else  {
                                                 $countSuppliers = count($purchaseRequest?->purchaseRequestProduct?->groupBy('supplier_id'));
-        
+
                                                 if ($countSuppliers > 1) {
                                                     $msg = ' (+' . ($countSuppliers -1) . ')';
                                                 }
@@ -64,7 +64,7 @@
                                             <td>{{$purchaseRequest->status->label()}}</td>
                                             <td>{{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($purchaseRequest->updated_at)->format('d/m/Y h:m:s') }}</td>
-        
+
                                             {{-- BTN AÇÕES --}}
                                             <td style="white-space: nowrap;">
                                                 <a href="{{route('request.edit', ['type'=> $purchaseRequest->type, 'id' => $purchaseRequest->id])}}"

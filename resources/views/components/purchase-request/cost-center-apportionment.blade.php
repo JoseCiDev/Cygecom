@@ -17,7 +17,7 @@
 
         <div class="col-sm-6">
             <div class="form-group">
-                <label style="display:block;" class="control-label">Centro de custo da despesa</label>
+                <label style="display:block;" class="regular-text">Centro de custo da despesa</label>
                 <select name="cost_center_apportionments[{{ $index }}][cost_center_id]" id="select-cost-center"
                     data-cy="select-cost-center" class='select2-me' data-rule-required="true" style="width:100%;"
                     placeholder="Ex: Almoxarifado">
@@ -40,7 +40,7 @@
         <div class="col-sm-2">
             <div class="form-group">
                 <label for="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
-                    class="control-label"> Rateio (%) </label>
+                    class="regular-text"> Rateio (%) </label>
                 <div class="input-group">
                     <label class="input-group-addon">%</label>
                     <input type="number" placeholder="0.00" class="form-control" min="1" max="100"
@@ -55,7 +55,7 @@
         <div class="col-sm-2">
             <div class="form-group">
                 <label for="cost_center_apportionments[{{ $index }}][apportionment_currency]"
-                    class="control-label"> Rateio (R$) </label>
+                    class="regular-text"> Rateio (R$) </label>
                 <div class="input-group">
                     <label class="input-group-addon">R$</label>
                     <input type="number" placeholder="0.00" class="form-control" min="1" max="500000"
@@ -67,8 +67,8 @@
             </div>
         </div>
 
-        <div class="col-sm-1" style="margin-top: 28px;">
-            <button class="btn btn-icon btn-small btn-danger delete-cost-center"
+        <div class="col-sm-1" style="margin-top: 20px">
+            <button class="btn btn-secondary btn-small btn-danger delete-cost-center"
                 data-cy="btn-delete-cost-center-{{ $index }}"><i class="fa fa-trash-o"></i></button>
         </div>
 
@@ -77,7 +77,7 @@
     <div class="row cost-center-container">
         <div class="col-sm-6">
             <div class="form-group">
-                <label class="control-label" style="display:block"> Centro de custo da despesa </label>
+                <label class="regular-text" style="display:block"> Centro de custo da despesa </label>
                 <select style="width:100%" id="select-cost-center" name="cost_center_apportionments[0][cost_center_id]"
                     data-cy="cost_center_apportionments[0][cost_center_id]" class='select2-me' required
                     data-rule-required="true" placeholder="Ex: Almoxarifado">
@@ -99,7 +99,7 @@
 
         <div class="col-sm-2">
             <div class="form-group">
-                <label for="cost_center_apportionments[0][apportionment_percentage]" class="control-label"> Rateio (%)
+                <label for="cost_center_apportionments[0][apportionment_percentage]" class="regular-text"> Rateio (%)
                 </label>
                 <div class="input-group">
                     <span class="input-group-addon">%</span>
@@ -113,7 +113,7 @@
 
         <div class="col-sm-2">
             <div class="form-group">
-                <label for="cost_center_apportionments[0][apportionment_currency]" class="control-label"> Rateio (R$)
+                <label for="cost_center_apportionments[0][apportionment_currency]" class="regular-text"> Rateio (R$)
                 </label>
                 <div class="input-group">
                     <span class="input-group-addon">R$</span>
@@ -125,8 +125,8 @@
             </div>
         </div>
 
-        <div class="col-sm-1" style="margin-top: 28px;">
-            <button class="btn btn-icon btn-small btn-danger delete-cost-center" data-cy="btn-delete-cost-center-0">
+        <div class="col-sm-1" style="margin-top: 20px">
+            <button class="btn btn-danger btn-primary btn-small delete-cost-center" data-cy="btn-delete-cost-center-0">
                 <i class="fa fa-trash-o"></i>
             </button>
         </div>
@@ -137,7 +137,7 @@
 <div class="row">
     <input type="hidden" id="validator-apportionment-fields" required value="1">
     <div class="col-md-6">
-        <button type="button" class="btn btn-small btn-primary add-cost-center-btn" data-cy="btn-add-cost-center">
+        <button type="button" class="btn btn-primary btn-small add-cost-center-btn" data-cy="btn-add-cost-center">
             Adicionar linha
         </button>
     </div>

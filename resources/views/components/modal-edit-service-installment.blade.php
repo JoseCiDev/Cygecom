@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="modal-label">Editar Parcela<strong class="name"></strong></h4>
-            </div> 
+            </div>
             <form id="form-modal-edit-service-installment" data-cy="form-modal-edit-service-installment" class="form-validate">
                 <div class="modal-body">
                     <div class="row">
@@ -52,10 +52,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" data-cy="btn-edit-observation-cancel">
+                    <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal" data-cy="btn-edit-observation-cancel">
                         Cancelar
                     </button>
-                    <button type="submit" class="btn btn-primary btn-edit-installment" data-cy="btn-edit-observation-submit">
+                    <button type="submit" class="btn btn-primary btn-small btn-edit-installment" data-cy="btn-edit-observation-submit">
                         Salvar
                     </button>
                 </div>
