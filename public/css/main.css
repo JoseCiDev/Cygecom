@@ -62,3 +62,35 @@ strong {
 .bg-contract-color:hover {
     background-color: var(--contract-color-hover);
 }
+
+.text-product-color {
+    color: var(--product-color);
+}
+
+.text-service-color {
+    color: var(--service-color);
+}
+
+.text-contract-color {
+    color: var(--contract-color);
+}
+
+.border-product {
+    border: 2px solid var(--product-color);
+}
+
+.border-service {
+    border: 2px solid var(--service-color);
+}
+
+.border-contract {
+    border: 2px solid var(--contract-color);
+}
+
+.page-title {
+    font-size: 32px;
+    line-height: 39px;
+    color: var(--black-color);
+    font-weight: bold;
+    margin: 0;
+}
