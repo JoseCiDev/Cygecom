@@ -14,9 +14,6 @@
 @endphp
 
 <x-app>
-    <x-slot name="title">
-        <h1>Página de suprimentos</h1>
-    </x-slot>
 
     <div class="row">
         <div class="col-md-12">

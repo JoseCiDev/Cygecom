@@ -15,7 +15,7 @@
         {{-- CATEGORIA PRODUTO --}}
         <div class="col-sm-5">
             <div class="form-group">
-                <label for="product-category" class="control-label">Categoria do produto</label>
+                <label for="product-category" class="regular-text">Categoria do produto</label>
                 <select data-rule-required="true"
                     name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][product_category_id]"
                     data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][product_category_id]"
@@ -36,7 +36,7 @@
         {{-- NOME / DESCRIÇÃO --}}
         <div class="col-sm-6">
             <div class="form-group">
-                <label class="control-label">Nome/Descrição</label>
+                <label class="regular-text">Nome/Descrição</label>
                 <input class="form-control product-description" type="text" placeholder="" data-rule-required="true" maxlength="250"
                     name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][name]"
                     data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][name]" value="{{ $product->name ?? null }}">
@@ -50,7 +50,7 @@
     <div class="row" style="padding: 0 20px 15px 20px">
         <div class="col-sm-2">
             <div class="form-group" style="margin-top:-10px">
-                <label for="qtd" class="control-label">Quantidade</label>
+                <label for="qtd" class="regular-text">Quantidade</label>
                 <input min="1" max="10000" step="1" data-rule-required="true" type="text" class="form-control product-quantity" value="{{ $product->quantity ?? null }}"
                         name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][quantity]"
                         data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][quantity]">
@@ -59,7 +59,7 @@
         {{-- COR --}}
         <div class="col-sm-2">
             <div class="form-group" style="margin-top:-10px">
-                <label for="" class="control-label">Cor</label>
+                <label for="" class="regular-text">Cor</label>
                 <input type="text" name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex}}][color]"
                     data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex}}][color]"
                     class="form-control product-color" value="{{ $product->color ?? null }}">
@@ -68,7 +68,7 @@
         {{-- TAMANHO --}}
         <div class="col-sm-3">
             <div class="form-group" style="margin-top:-10px">
-                <label for="" class="control-label">Tamanho</label>
+                <label for="" class="regular-text">Tamanho</label>
                 <input type="text" data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][size]"
                     name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][size]"
                     class="form-control product-size" value="{{ $product->size ?? null }}">
@@ -76,7 +76,7 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group" style="margin-top:-10px">
-                <label for="" class="control-label">Modelo</label>
+                <label for="" class="regular-text">Modelo</label>
                 <input type="text" data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][model]"
                     name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][model]"
                     class="form-control product-model" value="{{ $product->model ?? null }}">

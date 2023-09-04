@@ -40,11 +40,13 @@
     <link rel="stylesheet" href="{{ asset('css/modal-supplies.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootbox.custom.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom-modal-dialog.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-breadcrumb.css') }}">
     <link rel="stylesheet" href="{{ asset('css/purchase-request/product-suggestion-autocomplete.css') }}">
     <link rel="stylesheet" href="{{ asset('css/purchase-request/log.css') }}">
     <link rel="stylesheet" href="{{ asset('css/purchase-request/request-dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies/form-status-filter.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies/category-column-tags.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/supplies/dashboard.css') }}">
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -99,7 +101,7 @@
     <script src="{{ asset('js/demonstration.min.js') }}"></script>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" />
+    <link rel="shortcut icon" href="{{ asset('img/gecom/favicon.png') }}" />
     <!-- Apple devices Homescreen icon -->
 
     <!-- Validation -->
@@ -184,22 +186,19 @@
 
                     @if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios' || $currentProfile === 'gestor_fornecedores')
                         <li>
-                            <a href="#" data-toggle="dropdown" class='dropdown-toggle'
-                                data-cy="dropdown-cadastros">
+                            <a href="#" data-toggle="dropdown" class='dropdown-toggle' data-cy="dropdown-cadastros">
                                 <span>CADASTROS</span>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 @if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios')
                                     <li>
-                                        <a href="{{ route('users') }}"
-                                            data-cy="dropdown-cadastros-usuarios">Usuários</a>
+                                        <a href="{{ route('users') }}" data-cy="dropdown-cadastros-usuarios">Usuários</a>
                                     </li>
                                 @endif
                                 @if ($currentProfile === 'admin' || $currentProfile === 'gestor_fornecedores')
                                     <li>
-                                        <a href="{{ route('suppliers') }}"
-                                            data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
+                                        <a href="{{ route('suppliers') }}" data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
                                     </li>
                                 @endif
                             </ul>
@@ -212,13 +211,10 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ route('request.links') }}" data-cy="dropdown-solicitacoes-novas">Nova
-                                    Solicitação</a></li>
-                            <li><a href="{{ route('requests.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas
-                                    Solicitações</a></li>
+                            <li><a href="{{ route('request.links') }}" data-cy="dropdown-solicitacoes-novas">Nova solicitação</a></li>
+                            <li><a href="{{ route('requests.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas solicitações</a></li>
                             @if ($currentProfile === 'admin')
-                                <li><a href="{{ route('requests') }}"
-                                        data-cy="dropdown-solicitacoes-gerais">Solicitações Gerais</a></li>
+                                <li><a href="{{ route('requests') }}" data-cy="dropdown-solicitacoes-gerais">Solicitações gerais</a></li>
                             @endif
                         </ul>
                     </li>
@@ -230,15 +226,11 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ route('supplies.index') }}"
-                                        data-cy="dropdown-suprimentos-dashboard">Dashboard</a></li>
+                                <li><a href="{{ route('supplies.index') }}" data-cy="dropdown-suprimentos-dashboard">Dashboard</a></li>
                                 @if ($currentProfile === 'admin')
-                                    <li><a href="{{ route('supplies.product') }}"
-                                            data-cy="dropdown-suprimentos-produtos">Produtos</a></li>
-                                    <li><a href="{{ route('supplies.service') }}"
-                                            data-cy="dropdown-suprimentos-servicos">Serviços</a></li>
-                                    <li><a href="{{ route('supplies.contract') }}"
-                                            data-cy="dropdown-suprimentos-contratos">Contratos</a></li>
+                                    <li><a href="{{ route('supplies.product') }}" data-cy="dropdown-suprimentos-produtos">Produtos</a></li>
+                                    <li><a href="{{ route('supplies.service') }}" data-cy="dropdown-suprimentos-servicos">Serviços</a></li>
+                                    <li><a href="{{ route('supplies.contract') }}" data-cy="dropdown-suprimentos-contratos">Contratos</a></li>
                                 @endif
                             </ul>
                         </li>
@@ -265,9 +257,6 @@
 
         <div id="main">
             <div class="container-fluid">
-                <div class="page-header">
-                    {{ $title ?? null }}
-                </div>
                 <x-breadcrumb />
                 <x-alert />
                 {{ $slot }}

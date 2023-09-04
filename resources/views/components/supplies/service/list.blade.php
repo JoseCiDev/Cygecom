@@ -6,7 +6,7 @@
     <div class="col-sm-12">
         <div class="box box-color box-bordered">
 
-            <div class="box-content nopadding">
+            <div class="box-content nopadding regular-text">
 
                 <div class="row">
                     <div class="col-md-12">
@@ -22,7 +22,7 @@
                                 @endphp
 
                                 @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
-                                    <label class="checkbox-label">
+                                    <label class="checkbox-label secondary-text">
                                         <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
                                         {{ $statusCase->label() }}
                                     </label>
@@ -99,7 +99,7 @@
                                         data-request="{{json_encode($modalData)}}"
                                         rel="tooltip"
                                         title="Analisar"
-                                        class="btn btn-primary"
+                                        class="btn"
                                         data-toggle="modal"
                                         data-target="#modal-supplies"
                                         data-cy="btn-analisar-{{$index}}"

@@ -12,7 +12,7 @@ function addBtnSupplierSelect(element) {
                 type="button"
                 rel="tooltip"
                 title="Registrar novo fornecedor"
-                class="btn btn-primary"
+                class="btn btn-secondary btn-small"
                 onclick="openSupplierModalAndFocusInput();"
             >
                 <i class="fa fa-plus"></i> Registar novo fornecedor

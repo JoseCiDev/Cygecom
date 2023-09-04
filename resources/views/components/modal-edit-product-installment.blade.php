@@ -53,10 +53,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal">
                         Cancelar
                     </button>
-                    <button type="submit" class="btn btn-primary btn-edit-installment">
+                    <button type="submit" class="btn btn-primary btn-small btn-edit-installment">
                         Salvar
                     </button>
                 </div>

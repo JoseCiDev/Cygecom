@@ -41,16 +41,19 @@
 	<![endif]-->
 
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="{{asset('img/favicon.ico')}}" />
+	<link rel="shortcut icon" href="{{asset('img/gecom/favicon.png')}}" />
 	<!-- Apple devices Homescreen icon -->
-	<link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-precomposed.png" />
+	{{-- <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-precomposed.png" /> --}}
 
 </head>
 
 <style>
+	.login .wrapper {
+		width: 360px;
+	}
 	.login-logo{
 		margin-bottom: 20px;
-		width: 360px;
+		width: 75%;
 	}
 	#login-form{
 		box-sizing: border-box;
@@ -58,7 +61,6 @@
 		border-radius: 4px;
 		padding: 10px;
 		width: 100%;
-		width: 360px;
 	}
 
 	#login-form #btn-login-entrar.btn{
@@ -69,11 +71,18 @@
 	#login-form #btn-login-entrar.btn:hover{
 		background-color: #cccccc
 	}
+
+	.login .wrapper .logo-essentia {
+		display:flex;
+		justify-content:center;
+		margin-top: 60px
+	}
+
 </style>
 
 <body class='login theme-grey'>
 	<div class="wrapper">
-		<img class="login-logo" src="{{asset('img/gecom/logo-login.svg')}}" alt="">
+		<img class="login-logo" src="{{asset('img/gecom/logo-login.svg')}}" alt="login-logo-essentia-group">
 		<x-alert/>
 		<form method="POST" action="{{ route('login') }}" id="login-form">
 			@csrf
@@ -91,5 +100,8 @@
 				<input type="submit" data-cy="btn-login-entrar" id="btn-login-entrar" value="Entrar" class='btn btn-large btn-primary'>
 			</div>
 		</form>
+        <div class="logo-essentia">
+            <img class="essentia-group" src="{{asset('img/gecom/essentia-group.svg')}}" alt="">
+        </div>
 	</div>
 </body>

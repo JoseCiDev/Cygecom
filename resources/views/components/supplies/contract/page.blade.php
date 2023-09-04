@@ -4,7 +4,7 @@
 
     <div class="row" style="margin-bottom: 15px">
         <div class="col-md-12 text-left">
-            <h2>Solicitações de contratos</h2>
+            <h1 class="page-title">Solicitações de contratos</h1>
         </div>
     </div>
 

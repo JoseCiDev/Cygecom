@@ -1,14 +1,11 @@
 .request-dashboard {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 30px 0 0 0;
+    padding: 0;
 }
 
 .request-dashboard-title {
-    font-size: 32px;
-    line-height: 39px;
-    color: var(--black-color);
-    font-weight: bold;
+    margin: 0 0 15px 0;
 }
 
 .request-dashboard-subtitle {
@@ -22,12 +19,14 @@
 .request-dashboard-requests {
     margin: 40px 0 0 0;
     display: flex;
-    gap: 35px;
+    gap: 40px;
+    flex-wrap: wrap;
 }
 
 .request-dashboard-requests-item {
-    min-width: 340px;
+    max-width: 340px;
     width: 100%;
+    max-height: 250px;
 }
 
 .request-dashboard-requests-item-title {
@@ -41,7 +40,7 @@
 .request-dashboard-requests-item-subtitle {
     font-size: 16px;
     line-height: 20px;
-    height: 40px;
+    height: 55px;
     color: var(--black-color);
     font-weight: bold;
     padding-bottom: 12px;
