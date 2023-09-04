@@ -107,8 +107,8 @@
                 {{-- RESPONSÁVEL CONTRATAÇÃO --}}
                 <div class="col-sm-5">
                     <div class="form-group">
-                        <label for="form-check" class="regular-text" style="padding-right:10px;">
-                            Quem está responsável por esta contratação?
+                        <label for="form-check" class="control-label regular-text" style="padding-right:10px;">
+                            Quem fez/fará a contratação deste serviço?
                         </label>
                         <fieldset data-rule-required="true">
                             <div class="row">
@@ -122,9 +122,7 @@
                                     <input name="is_supplies_contract" value="0" class="radio-who-wants"
                                         type="radio" required id="is-area-contract" data-cy="is-area-contract"
                                         style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label secondary-text" for="is-area-contract">
-                                         Área solicitante (Eu)
-                                    </label>
+                                    <label class="form-check-label secondary-text" for="is-area-contract">Eu (Área solicitante)</label>
                                 </div>
                             </div>
                         </fieldset>

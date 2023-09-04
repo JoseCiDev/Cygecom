@@ -26,6 +26,7 @@
 .request-dashboard-requests-item {
     max-width: 340px;
     width: 100%;
+    max-height: 250px;
 }
 
 .request-dashboard-requests-item-title {
@@ -39,7 +40,7 @@
 .request-dashboard-requests-item-subtitle {
     font-size: 16px;
     line-height: 20px;
-    height: 40px;
+    height: 55px;
     color: var(--black-color);
     font-weight: bold;
     padding-bottom: 12px;
