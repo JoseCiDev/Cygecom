@@ -65,6 +65,12 @@
                                     })->implode(', ');
                                 $amount = $contract->contract->amount;
                                 $amountFormated = $amount !== null ? number_format($amount, 2, ',', '.') : '---';
+
+                                $suppliers = $contract->contract->supplier;
+                                $modalData = [
+                                    'request' => $contract,
+                                    'suppliers' => $suppliers
+                                ];
                             @endphp
                             <tr>
                                 <td>{{$contract->id}}</td>
@@ -85,7 +91,7 @@
                                     <button
                                         data-modal-name="{{ 'Analisando Solicitação de Contrato - Nº ' . $contract->id }}"
                                         data-id="{{ $contract->id }}"
-                                        data-request="{{json_encode($contract)}}"
+                                        data-request="{{json_encode($modalData)}}"
                                         rel="tooltip"
                                         title="Analisar"
                                         class="btn"

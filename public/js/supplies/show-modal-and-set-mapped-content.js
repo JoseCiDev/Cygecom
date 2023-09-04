@@ -59,11 +59,12 @@ $(() =>{
             person: (value) => value?.name
         }
 
-        const request = button.data('request');
-        const requestUser = request.user
-        const requestSuppliesUser = request.supplies_user
+        const suppliers = button.data('request').suppliers;
+        const purchaseRequest = button.data('request').request;
+        const requestUser = purchaseRequest.user
+        const requestSuppliesUser = purchaseRequest.supplies_user
 
-        const costCenterApportionment = request.cost_center_apportionment
+        const costCenterApportionment = purchaseRequest.cost_center_apportionment
 
         const elementCostCenterApportionment = $('.costCenterApportionment');
         elementCostCenterApportionment.empty();
@@ -75,6 +76,31 @@ $(() =>{
             </li>`;
             elementCostCenterApportionment.append(liElement);
         });
+
+
+        const elementSuppliersInformation = $('.supplier-information');
+        elementSuppliersInformation.empty();
+        let htmlElement;
+
+        if (Array.isArray(suppliers)) {
+            suppliers.forEach(element => {
+                htmlElement = `
+                    <strong>Razão Social:</strong> ${element?.corporate_name || '---'}<br>
+                    <strong>CNPJ:</strong> ${element?.cpf_cnpj || '---'}<br>
+                    <strong>Tipo de mercado:</strong> ${element?.market_type || '---'}
+                <hr>`;
+                elementSuppliersInformation.append(htmlElement);
+            });
+
+        } else {
+            htmlElement = `
+                <strong>Razão Social:</strong> ${suppliers?.corporate_name || '---'}<br>
+                <strong>CNPJ:</strong> ${suppliers?.cpf_cnpj || '---'}<br>
+                <strong>Tipo de mercado:</strong> ${suppliers?.market_type || '---'}
+            <hr>`;
+            elementSuppliersInformation.append(htmlElement);
+        }
+
 
         const mapObjectAndReturnContent = (object, mappedEntries, selector = '') => {
             const entries = Object.entries(object)
@@ -93,7 +119,7 @@ $(() =>{
             });
         }
 
-        mapObjectAndReturnContent(request, mappedBasicInfoEntries)
+        mapObjectAndReturnContent(purchaseRequest, mappedBasicInfoEntries)
         mapObjectAndReturnContent(requestUser, mappedUserEntries, 'user-')
         if(requestSuppliesUser) {
             mapObjectAndReturnContent(requestSuppliesUser, mappedSuppliesUserEntries, 'supplies-user-')

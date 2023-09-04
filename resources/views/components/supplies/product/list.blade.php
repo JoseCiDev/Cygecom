@@ -1,5 +1,6 @@
 @php
     use App\Enums\PurchaseRequestStatus;
+    use App\Models\PurchaseRequestProduct;
 @endphp
 
 <div class="row">
@@ -64,6 +65,11 @@
 
                                 $categories = $product->purchaseRequestProduct->groupBy('category.name')->keys();
                                 $categoriesQtd = $categories->count();
+                                $suppliers = $product->purchaseRequestProduct->pluck('supplier')->unique('id');
+                                $modalData = [
+                                    'request' => $product,
+                                    'suppliers' => $suppliers
+                                ];
                             @endphp
                             <tr>
                                 <td>{{$product->id}}</td>
@@ -89,7 +95,7 @@
                                     <button
                                         data-modal-name="{{ 'Analisando Solicitação de Produto - Nº ' . $product->id }}"
                                         data-id="{{ $product->id }}"
-                                        data-request="{{json_encode($product)}}"
+                                        data-request="{{json_encode($modalData)}}"
                                         rel="tooltip"
                                         title="Analisar"
                                         class="btn"

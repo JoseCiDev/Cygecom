@@ -71,6 +71,12 @@
                                     })->implode(', ');
                                 $amount = $service->service->price;
                                 $amountFormated = $amount !== null ? number_format($amount, 2, ',', '.') : '---';
+
+                                $suppliers = $service->service->supplier;
+                                $modalData = [
+                                    'request' => $service,
+                                    'suppliers' => $suppliers
+                                ];
                             @endphp
                             <tr>
                                 <td>{{$service->id}}</td>
@@ -90,7 +96,7 @@
                                     <button
                                         data-modal-name="{{ 'Analisando Solicitação de Serviço - Nº ' . $service->id }}"
                                         data-id="{{ $service->id }}"
-                                        data-request="{{json_encode($service)}}"
+                                        data-request="{{json_encode($modalData)}}"
                                         rel="tooltip"
                                         title="Analisar"
                                         class="btn"
