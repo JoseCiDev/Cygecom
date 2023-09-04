@@ -288,7 +288,7 @@
                             <label for="format-amount" class="regular-text">Valor total do(s) produto(s)</label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
-                                <input type="text" id="format-amount" data-cy="format-amount" placeholder="0.00"
+                                <input type="text" id="format-amount" name="format-amount" data-cy="format-amount" placeholder="0.00"
                                     class="form-control format-amount" value="{{ str_replace('.', ',', $purchaseRequestProductAmount) }}">
                                 <input type="hidden" name="product[amount]" id="amount" data-cy="amount"
                                     class="amount no-validation" value="{{ $purchaseRequestProductAmount }}">
@@ -320,8 +320,8 @@
                     {{-- Nº PARCELAS --}}
                     <div class="col-sm-1">
                         <div class="form-group">
-                            <label class="regular-text">Nº parcelas</label>
-                            <input type="text" class="form-control format-installments-number"
+                            <label class="control-label regular-text">Nº parcelas</label>
+                            <input type="text" class="form-control format-installments-number" name="installments-number"
                                 placeholder="Ex: 24" value="{{ $productQuantityOfInstallments }}">
                             <input type="hidden" name="product[quantity_of_installments]" id="installments-number"
                                 data-cy="installments-number" class="installments-number no-validation"
@@ -991,7 +991,7 @@
 
         }).trigger('change');
 
-        if (!hasSentRequest || $paymentTerm.filter(':selected').val() === "1") {
+        if (!hasSentRequest || $paymentTerm.filter(':selected').val() === "anticipated") {
             $paymentTerm.filter(':selected').trigger('change.select2');
         }
 

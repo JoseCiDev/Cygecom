@@ -123,7 +123,7 @@
                     <input type="text" id="contract-title" data-cy="contract-title" name="contract[name]"
                         placeholder="Digite aqui um nome para este contrato... Ex: Contrato Work DB - 07/23 até 07/24"
                         class="form-control" data-rule-required="true" minlength="15"
-                        value="@if (isset($purchaseRequest->contract) && $purchaseRequest->contract->name && !$isCopy){{ $purchaseRequest->contract->name }}@endif">
+                        value="@if (isset($purchaseRequest->contract) && $purchaseRequest->contract->name && !$isCopy) {{ $purchaseRequest->contract->name }} @endif">
                 </div>
             </div>
         </div>
@@ -241,7 +241,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="regular-text">Data desejada da contratação</label>
-                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
+                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"  min="2020-01-01"
                             class="form-control" value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
@@ -323,7 +323,8 @@
                             <label class="regular-text">Valor total do contrato: </label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
-                                <input type="text" placeholder="0,00" class="form-control format-amount" id="format-amount" data-cy="format-amount"
+                                <input type="text" placeholder="0,00" class="form-control format-amount"
+                                    id="format-amount" name="format-amount" data-cy="format-amount"
                                     value="{{ str_replace('.', ',', $purchaseRequestContractAmount) }}">
                                 <input type="hidden" name="contract[amount]" id="amount" data-cy="amount" class="amount no-validation" value="{{ $purchaseRequestContractAmount }}">
                             </div>
@@ -496,9 +497,10 @@
                             @foreach ($suppliers as $supplier)
                                 @php
                                     $supplierSelected = isset($purchaseRequest->contract) && $purchaseRequest->contract->supplier_id === $supplier->id;
-                                    $cnpj = $supplier->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj) : 'CNPJ indefinido'
+                                    $cnpj = $supplier->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj) : 'CNPJ indefinido';
                                 @endphp
-                                <option value="{{ $supplier->id }}" @selected($supplierSelected)>{{ "$cnpj - $supplier->corporate_name" }}</option>
+                                <option value="{{ $supplier->id }}" @selected($supplierSelected)>
+                                    {{ "$cnpj - $supplier->corporate_name" }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -682,6 +684,7 @@
 
         // set desired date min
         const currentDate = moment().format('YYYY-MM-DD');
+        const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
         const $desiredDate = $('#desired-date');
 
         $desiredDate.attr('min', currentDate);
@@ -953,6 +956,12 @@
 
 
             if (isContractedBySupplies) {
+                $desiredDate.attr('min', currentDate);
+
+                $desiredDate.rules('add', {
+                    min: currentDate
+                });
+
                 supplierSelect.removeRequired();
                 supplierSelect.closest('.form-group').removeClass('has-error');
                 $suppliersBlock.find('.help-block').remove();
@@ -970,6 +979,12 @@
 
                 return;
             }
+
+            $desiredDate.attr('min', minInitialDate);
+
+            $desiredDate.rules('add', {
+                min: minInitialDate
+            });
 
             supplierSelect.makeRequired();
         });
