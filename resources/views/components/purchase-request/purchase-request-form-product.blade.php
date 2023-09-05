@@ -122,7 +122,7 @@
                 {{-- RESPONSÁVEL CONTRATAÇÃO --}}
                 <div class="col-sm-5">
                     <div class="form-group">
-                        <label class="control-label regular-text">Quem fez/fará esta compra de produto?<</label>
+                        <label class="control-label regular-text">Quem fez/fará esta compra de produto?</label>
                         <fieldset data-rule-required="true">
                             <div class="row">
                                 <div class="col-sm-3">
