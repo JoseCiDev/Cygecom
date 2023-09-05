@@ -19,12 +19,8 @@
 
     <div class="row">
         <div class="col-md-12">
-            <x-SuppliesRequestEditContainer
-                :request-type="PurchaseRequestType::PRODUCT"
-                :request-id="$request->id"
-                :request-user-id="$request->user_id"
-                :request-status="$request->status"
-                :amount="$request->product->amount"/>
+            <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::PRODUCT" :request-id="$request->id" :request-user-id="$request->user_id" :request-status="$request->status"
+                :amount="$request->product->amount" />
         </div>
     </div>
 
@@ -46,20 +42,32 @@
                     <span>Criado em: {{ \Carbon\Carbon::parse($product->created_at)->format('d/m/Y h:m:s') }}</span> |
                     <span>Atualizado: {{ \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') }}</span>
                 </div>
-                <h4 class="text-highlight"><strong>Data desejada de entrega do produto:</strong>
-                    {{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y') : '---' }}
-                </h4>
-                <div class="row">
-                    <div class="col-md-12">
-                        <br>
-                        <h4 class="text-highlight"><strong>Responsável pela solicitação (suprimentos):</strong>
-                            {{ $request->suppliesUser?->person->name ?? '---' }} /
-                            {{ $request->suppliesUser?->email ?? '---' }}</h4>
-                        <br>
-                        <h4 class="text-highlight"><strong>Responsável pela contratação:</strong>
-                            {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }} </h4>
-                        <br>
+
+                @if ($product->is_only_quotation)
+                    <div class="row only-quotation">
+                        <h3>
+                            <i class="fa fa-warning">
+                                </i><strong> APENAS COTAÇÃO/ORÇAMENTO </strong>
+                            <i class="fa fa-warning"></i>
+                        </h3>
+                        <p>(Não efetuar compra/contratação.)</p>
                     </div>
+                @endif
+
+                <div class="row sub-info-container">
+                    <h4 class="text-highlight"><strong>Data desejada de entrega do produto:</strong>
+                        {{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y') : '---' }}
+                    </h4>
+                    <br>
+                    <h4 class="text-highlight"><strong>Responsável pela solicitação (suprimentos):</strong>
+                        {{ $request->suppliesUser?->person->name ?? '---' }} /
+                        {{ $request->suppliesUser?->email ?? '---' }}
+                    </h4>
+                    <br>
+                    <h4 class="text-highlight"><strong>Responsável pela contratação:</strong>
+                        {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }}
+                    </h4>
+                    <br>
                 </div>
             </header>
             <main>
@@ -226,28 +234,30 @@
                                     <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong>
                                             Parcelas</strong></h4>
                                     @foreach ($request->product->installments as $installmentIndex => $installment)
-                                    <div class="request-details-content-box-product-installment">
-                                        <div class="row">
-                                            <p class="col-xs-3">
-                                                <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
-                                            </p>
-                                            <p class="col-xs-3">
-                                                <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
-                                            </p>
-                                            <p class="col-xs-6">
-                                                <strong>Observação do pagamento:</strong> <span>{{ $installment->observation ?? '---' }}</span>
-                                            </p>
-                                        </div>
-                                        <div class="row">
-                                            <p class="col-xs-3">
-                                                <strong>Valor:</strong> R$ {{ $installment->value }}
-                                            </p>
-                                            <p class="col-xs-3">
-                                                <strong>Vencimento:</strong> {{$installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---'}}
-                                            </p>
+                                        <div class="request-details-content-box-product-installment">
+                                            <div class="row">
+                                                <p class="col-xs-3">
+                                                    <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
+                                                </p>
+                                                <p class="col-xs-3">
+                                                    <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
+                                                </p>
+                                                <p class="col-xs-6">
+                                                    <strong>Observação do pagamento:</strong>
+                                                    <span>{{ $installment->observation ?? '---' }}</span>
+                                                </p>
+                                            </div>
+                                            <div class="row">
+                                                <p class="col-xs-3">
+                                                    <strong>Valor:</strong> R$ {{ $installment->value }}
+                                                </p>
+                                                <p class="col-xs-3">
+                                                    <strong>Vencimento:</strong>
+                                                    {{ $installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---' }}
+                                                </p>
 
+                                            </div>
                                         </div>
-                                    </div>
                                     @endforeach
                                 </div>
                             </div>

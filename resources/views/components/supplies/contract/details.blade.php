@@ -45,27 +45,38 @@
                     <span>Criado em: {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</span> |
                     <span>Atualizado: {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}</span>
                 </div>
-                <h4 class="text-highlight">
-                    <strong>Nome do contrato:</strong>
-                    {{ $request->contract->name }}
-                </h4>
-                <h4 class="text-highlight">
-                    <strong>
-                        {{ $request->is_supplies_contract ? 'Data desejada da contratação:' : 'Data da contratação:' }}
-                    </strong>
-                    {{ $request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : '---' }}
-                </h4>
-                <div class="row">
-                    <div class="col-md-12">
-                        <br>
-                        <h4 class="text-highlight"><strong>Responsável pela solicitação (suprimentos):</strong>
-                            {{ $request->suppliesUser?->person->name ?? '---' }} /
-                            {{ $request->suppliesUser?->email ?? '---' }}</h4>
-                        <br>
-                        <h4 class="text-highlight"><strong>Responsável pela contratação:</strong>
-                            {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }} </h4>
-                        <br>
+
+                @if ($contract->is_only_quotation)
+                    <div class="row only-quotation">
+                        <h3>
+                            <i class="fa fa-warning">
+                                </i><strong> APENAS COTAÇÃO/ORÇAMENTO </strong>
+                            <i class="fa fa-warning"></i>
+                        </h3>
+                        <p>(Não efetuar compra/contratação.)</p>
                     </div>
+                @endif
+
+                <div class="row sub-info-container">
+                    <h4 class="text-highlight">
+                        <strong>Nome do contrato:</strong>
+                        {{ $request->contract->name }}
+                    </h4>
+                    <br>
+                    <h4 class="text-highlight">
+                        <strong>
+                            {{ $request->is_supplies_contract ? 'Data desejada da contratação:' : 'Data da contratação:' }}
+                        </strong>
+                        {{ $request->desired_date ? \Carbon\Carbon::parse($request->desired_date)->format('d/m/Y') : '---' }}
+                    </h4>
+                    <br>
+                    <h4 class="text-highlight"><strong>Responsável pela solicitação (suprimentos):</strong>
+                        {{ $request->suppliesUser?->person->name ?? '---' }} /
+                        {{ $request->suppliesUser?->email ?? '---' }}</h4>
+                    <br>
+                    <h4 class="text-highlight"><strong>Responsável pela contratação:</strong>
+                        {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }} </h4>
+                    <br>
                 </div>
             </header>
             <main>
