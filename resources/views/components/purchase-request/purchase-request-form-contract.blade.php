@@ -144,9 +144,19 @@
 
             <div class="row" style="margin-bottom:15px; margin-top:5px;">
 
-                <div class="col-sm-5">
+                <div class="col-sm-2">
+                    <div class="form-group" style="display: flex">
+                        <input name="is_only_quotation"
+                            type="checkbox" id="checkbox-only-quotation" data-cy="checkbox-only-quotation"
+                            class="checkbox-only-quotation no-validation" style="margin:0"
+                            @checked((bool) $purchaseRequest?->is_only_quotation) >
+                        <label for="checkbox-only-quotation" class="regular-text form-check-label icheck-me" style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
                     <div class="form-group">
-                        <label for="form-check" class="control-label regular-text" style="padding-right:10px;">
+                        <label for="form-check" class="control-label regular-text">
                             Quem fez/fará esta contratação?
                         </label>
                         <fieldset data-rule-required="true">

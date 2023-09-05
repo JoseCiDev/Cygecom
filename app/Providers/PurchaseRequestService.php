@@ -134,6 +134,10 @@ class PurchaseRequestService extends ServiceProvider
     {
         return DB::transaction(function () use ($data, $files) {
             $data['user_id'] = auth()->user()->id;
+
+            $isSetOnlyQuotation = isset($data['is_only_quotation']);
+            $data['is_only_quotation'] = $isSetOnlyQuotation ? 1 : 0;
+
             $purchaseRequest = PurchaseRequest::create($data);
 
             $type = $purchaseRequest->type;
@@ -206,6 +210,10 @@ class PurchaseRequestService extends ServiceProvider
         return DB::transaction(function () use ($id, $data, $isSuppliesUpdate, $files) {
             $purchaseRequest = PurchaseRequest::find($id);
             $purchaseRequest->updated_by = auth()->user()->id;
+
+            $isSetOnlyQuotation = isset($data['is_only_quotation']);
+            $data['is_only_quotation'] = $isSetOnlyQuotation ? 1 : 0;
+
             $purchaseRequest->fill($data);
             $purchaseRequest->save();
             $type = $purchaseRequest->type;
