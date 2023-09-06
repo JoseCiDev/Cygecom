@@ -120,18 +120,16 @@
             <div class="row" style="margin-bottom:10px; margin-top:5px;">
 
                 {{-- RESPONSÁVEL CONTRATAÇÃO --}}
-                <div class="col-sm-5">
+                <div class="col-sm-4">
                     <div class="form-group">
-                        <label class="control-label regular-text">Quem fez/fará esta compra de produto?<</label>
+                        <label class="control-label regular-text">Quem fez/fará esta compra de produto?</label>
                         <fieldset data-rule-required="true">
                             <div class="row">
-                                <div class="col-sm-3">
+                                <div class="col-sm-12">
                                     <input name="is_supplies_contract"value="1" class="radio-who-wants" required
                                         id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
                                         @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
                                     <label class="form-check-label secondary-text" for="is-supplies-contract">Suprimentos</label>
-                                </div>
-                                <div class="col-sm-4">
                                     <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio" required id="is-area-contract" data-cy="is-area-contract"
                                         style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
                                     <label class="form-check-label secondary-text" for="is-area-contract">Eu (Área solicitante)</label>
