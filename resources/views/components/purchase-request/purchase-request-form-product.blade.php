@@ -122,7 +122,7 @@
                 {{-- RESPONSÁVEL CONTRATAÇÃO --}}
                 <div class="col-sm-5">
                     <div class="form-group">
-                        <label class="control-label regular-text">Quem fez/fará esta compra de produto?<</label>
+                        <label class="regular-text">Quem fez/fará esta compra de produto?</label>
                         <fieldset data-rule-required="true">
                             <div class="row">
                                 <div class="col-sm-3">
@@ -203,7 +203,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="regular-text">Data desejada entrega do produto</label>
-                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
+                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date" max="2100-01-01"
                             class="form-control" value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
