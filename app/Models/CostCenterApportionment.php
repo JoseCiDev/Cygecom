@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CostCenterApportionment extends Model
 {
-    use HasFactory;
+    use HasFactory, LogObserverTrait;
 
     public function costCenter()
     {

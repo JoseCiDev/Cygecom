@@ -3,7 +3,7 @@
 ])
 
 <div class="form-group">
-    <label for="{{ $id }}" class="control-label">CNPJ
+    <label for="{{ $id }}" class="regular-text">CNPJ
         <span class="cnpj-span-warning">Inválido!</span>
         <input type="hidden" id="cnpj-validator" value="" required data-rule-required="true">
     </label>
@@ -11,7 +11,7 @@
         data-cy="{{ $dataCy }}" placeholder="00.000.000/0000-00" class="form-control cpf-cnpj" minLength="18">
 
     <input type="checkbox" id="is-international-supplier">
-    <label for="is-international-supplier"> É internacional. (Não possui CNPJ)</label>
+    <label for="is-international-supplier" class="secondary-text"> É internacional. (Não possui CNPJ)</label>
 </div>
 
 <script>

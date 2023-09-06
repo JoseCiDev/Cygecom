@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use App\Enums\LogAction;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\{Factories\HasFactory, Model};
 
-class PurchaseRequestsLog extends Model
+class Log extends Model
 {
     use HasFactory;
 
@@ -15,22 +14,19 @@ class PurchaseRequestsLog extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function purchaseRequest()
-    {
-        return $this->hasOne(PurchaseRequest::class);
-    }
-
-    protected $table = 'purchase_requests_log';
-
     protected $fillable = [
-        'purchase_request_id',
-        'action',
+        'table',
+        'foreign_id',
         'user_id',
+        'action',
         'changes',
     ];
 
     protected $casts = [
         'changes' => 'array',
         'action' => LogAction::class,
+        'created_at' => 'datetime',
     ];
+
+    public $timestamps = false;
 }

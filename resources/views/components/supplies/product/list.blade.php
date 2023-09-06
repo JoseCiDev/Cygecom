@@ -1,12 +1,13 @@
 @php
     use App\Enums\PurchaseRequestStatus;
+    use App\Models\PurchaseRequestProduct;
 @endphp
 
 <div class="row">
     <div class="col-sm-12">
         <div class="box box-color box-bordered">
 
-            <div class="box-content nopadding">
+            <div class="box-content nopadding regular-text">
 
                 <div class="row">
                     <div class="col-md-12">
@@ -20,9 +21,9 @@
                                     $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
                                     $isChecked = count($status) ? collect($status)->contains($statusCase) : $statusDefaultFilter;
                                 @endphp
-                                
+
                                 @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
-                                    <label class="checkbox-label">
+                                    <label class="checkbox-label secondary-text">
                                         <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
                                         {{ $statusCase->label() }}
                                     </label>
@@ -61,9 +62,14 @@
                                 $concatenatedGroups = $groups->map(function ($item) {
                                         return $item->label();
                                     })->implode(', ');
-                                
+
                                 $categories = $product->purchaseRequestProduct->groupBy('category.name')->keys();
                                 $categoriesQtd = $categories->count();
+                                $suppliers = $product->purchaseRequestProduct->pluck('supplier')->unique('id');
+                                $modalData = [
+                                    'request' => $product,
+                                    'suppliers' => $suppliers
+                                ];
                             @endphp
                             <tr>
                                 <td>{{$product->id}}</td>
@@ -83,16 +89,16 @@
                                 <td class="hidden-1024">{{$product->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1280">{{$concatenatedGroups}}</td>
 
-                                <td class="hidden-1440">{{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y h:m:s') : '---'}}</td>
+                                <td class="hidden-1440">{{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y') : '---'}}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
                                         data-modal-name="{{ 'Analisando Solicitação de Produto - Nº ' . $product->id }}"
                                         data-id="{{ $product->id }}"
-                                        data-request="{{json_encode($product)}}"
+                                        data-request="{{json_encode($modalData)}}"
                                         rel="tooltip"
                                         title="Analisar"
-                                        class="btn btn-primary"
+                                        class="btn"
                                         data-toggle="modal"
                                         data-target="#modal-supplies"
                                         data-cy="btn-analisar-{{$index}}"
@@ -103,7 +109,7 @@
                                         $existSuppliesUser = (bool) $product->suppliesUser?->person->name;
                                         $existResponsibility = (bool) $product->responsibility_marked_at;
                                         $isOwnUserRequest = $product->user->id === auth()->user()->id;
-                                        $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest 
+                                        $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest
                                      @endphp
                                     <a href="{{route('supplies.product.detail', ['id' => $product->id])}}"
                                         class="btn btn-link openDetail"

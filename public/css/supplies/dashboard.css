@@ -1,0 +1,117 @@
+.supplies-dashboard {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.supplies-dashboard-title {
+    margin: 0;
+}
+
+.supplies-dashboard-requests {
+    margin: 40px 0 0 0;
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.supplies-dashboard-requests-item {
+    max-width: 340px;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.supplies-dashboard-requests-item-title {
+    font-size: 16px;
+    line-height: 20px;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.supplies-dashboard-requests-item-info {
+    padding: 25px;
+}
+
+.supplies-dashboard-requests-item-info-top {
+    display: flex;
+    justify-content: space-between;
+}
+
+.supplies-dashboard-requests-item-info-top-price {
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--grey-primary-color);
+    margin: 0;
+    max-width: 100px;
+    gap: 12px;
+}
+
+.supplies-dashboard-requests-item-info-top-price-value {
+    font-size: 38px;
+    line-height: 46px;
+    margin: 0;
+}
+
+.supplies-dashboard-requests-item-info-top-btns {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.supplies-dashboard-requests-item-info-top-btns-btn {
+    display: block;
+    border-radius: 4px;
+    border: 1px solid var(--grey-primary-color);
+    font-size: 16px;
+    line-height: 24px;
+    padding: 10px;
+    min-width: 160px;
+    text-align: center;
+}
+
+.supplies-dashboard-requests-item-info-top-btns-btn:visited {
+    text-decoration: none;
+    color: var(--grey-primary-color);
+}
+
+.supplies-dashboard-requests-item-info-top-btns-btn:hover {
+    text-decoration: none;
+    color: var(--black-color);
+    border: 1px solid var(--black-color);
+    box-shadow: 0 0 5px 0 var(--black-color);
+}
+
+.supplies-dashboard-requests-item-info-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 35px 0 0 0;
+}
+
+.supplies-dashboard-requests-item-info-bottom-row {
+    display: flex;
+    gap: 12px;
+}
+
+.supplies-dashboard-requests-item-info-bottom-row-text {
+    margin: 0;
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--grey-primary-color);
+    display: flex;
+    align-items: center;
+}
+
+.supplies-dashboard-requests-item-info-bottom-row-text-qtd {
+    font-size: 22px;
+    line-height: 27px;
+    color: var(--black-color);
+    font-weight: bold;
+}

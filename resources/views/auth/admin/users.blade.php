@@ -1,26 +1,19 @@
 <x-app>
-    <x-slot name="title">
-        <h1>Usuários</h1>
-    </x-slot>
-
      <x-modalDelete/>
 
         <div class="row">
             <div class="col-sm-12">
                 <div class="box box-color box-bordered">
-
-                    <div class="box-title">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h3 class="pull-left">Lista de usuários</h3>
-                            </div>
-                            <div class="col-md-6">
-                                <a data-cy="btn-novo-usuario" href="{{route('register')}}" class="btn pull-right btn-large" style="margin-right: 15px">Novo usuário</a>
-                            </div>
+                    <div class="row" style="margin: 0 0 30px;">
+                        <div class="col-md-6" style="padding: 0">
+                            <h1 class="page-title">Lista de usuários</h1>
+                        </div>
+                        <div class="col-md-6" style="padding: 0">
+                            <a data-cy="btn-novo-usuario" href="{{route('register')}}" class="btn btn-primary btn-large pull-right">Novo usuário</a>
                         </div>
                     </div>
 
-                    <div class="box-content nopadding">
+                    <div class="box-content nopadding regular-text">
 
                         <table
                             class="table table-hover table-nomargin table-bordered dataTable"
