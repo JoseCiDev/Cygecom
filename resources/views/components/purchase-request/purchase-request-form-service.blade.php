@@ -107,7 +107,7 @@
                 {{-- RESPONSÁVEL CONTRATAÇÃO --}}
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <label for="form-check" class="control-label regular-text" style="padding-right:10px;">
+                        <label for="form-check" class="regular-text" style="padding-right:10px;">
                             Quem fez/fará a contratação deste serviço?
                         </label>
                         <fieldset data-rule-required="true">
@@ -215,7 +215,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="regular-text">Data desejada do serviço</label>
-                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
+                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date" max="2100-01-01"
                             class="form-control" min="2023-07-24" value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
