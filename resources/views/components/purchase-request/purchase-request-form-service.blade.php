@@ -366,8 +366,11 @@
                                     <tbody>
                                     </tbody>
                                 </table>
+
+                                {{-- PARCELAS SÃO ENVIADAS PELOS INPUT HIDDENS DESSE CONTAINER --}}
                                 <div class="hidden-installments-inputs-container">
                                 </div>
+
                             </div>
                         </div>
                     </div>
