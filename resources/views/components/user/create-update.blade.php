@@ -12,7 +12,7 @@
     <div class="col-md-6" style="padding: 0">
         <h1 class="page-title">{{isset($user) ? 'Editar usuário' : 'Novo usuário'}}</h1>
     </div>
-    @if (!$userToChangeIsAdmin && isset($user) && auth()->user()->id !== $user->id)
+    @if (isset($user) && auth()->user()->id !== $user->id)
         <div class="col-md-6" style="padding: 0">
             <x-modalDelete />
             <button data-route="user" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario"
@@ -114,37 +114,35 @@
             </div>
         </div>
 
-        @if (!$userToChangeIsAdmin)
-            {{-- SENHA --}}
-            <div class="col-sm-3">
-                <div class="form-group">
-                    <label for="password" class="regular-text">Senha</label>
-                    <input type="password" name="password" id="password" data-cy="password"
-                        placeholder="Deve conter ao menos 8 digitos"
-                        @if (!isset($user))
-                            required data-rule-required="true" data-rule-minlength="8" class="form-control @error('password') is-invalid @enderror"
-                        @else
-                            class="form-control @error('password') is-invalid @enderror" @endif autocomplete="new-password">
-                    @error('password')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
+        {{-- SENHA --}}
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="password" class="regular-text">Senha</label>
+                <input type="password" name="password" id="password" data-cy="password"
+                    placeholder="Deve conter ao menos 8 digitos"
+                    @if (!isset($user))
+                        required data-rule-required="true" data-rule-minlength="8" class="form-control @error('password') is-invalid @enderror"
+                    @else
+                        class="form-control @error('password') is-invalid @enderror" @endif autocomplete="new-password">
+                @error('password')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
-            {{-- CONFIRMAR SENHA --}}
-            <div class="col-sm-3">
-                <div class="form-group">
-                    <label for="password-confirm" class="regular-text">Confirmar senha</label>
-                    <input type="password" name="password_confirmation" id="password-confirm" data-cy="password-confirm" placeholder="Digite novamente a senha"
-                        autocomplete="new-password"
-                        @if (!isset($user))
-                            class="form-control" data-rule-required="true"
-                        @else
-                            class="form-control no-validation"
-                        @endif >
-                    @error('password_confirmation') <span class="text-danger">{{ $message }}</span> @enderror
-                </div>
+        </div>
+        {{-- CONFIRMAR SENHA --}}
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label for="password-confirm" class="regular-text">Confirmar senha</label>
+                <input type="password" name="password_confirmation" id="password-confirm" data-cy="password-confirm" placeholder="Digite novamente a senha"
+                    autocomplete="new-password"
+                    @if (!isset($user))
+                        class="form-control" data-rule-required="true"
+                    @else
+                        class="form-control no-validation"
+                    @endif >
+                @error('password_confirmation') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
-        @endif
+        </div>
 
     </div>
 
@@ -361,14 +359,13 @@
                     Limpar
                 </button>
             </div>
-
-            <div class="pull-right">
-                @if (!$userToChangeIsAdmin)
-                    <button type="submit" class="btn btn-primary btn-large" data-cy="btn-submit-salvar">Salvar</button>
-                @endif
-            </div>
         </div>
     @endif
+
+    <div class="pull-right">
+        <button type="submit" class="btn btn-primary btn-large" data-cy="btn-submit-salvar">Salvar</button>
+    </div>
+
 </div>
 
 </form>

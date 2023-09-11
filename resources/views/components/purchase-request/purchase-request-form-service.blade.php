@@ -196,7 +196,7 @@
                 </div>
 
                 {{-- SERVIÇO JÁ PRESTADO --}}
-                <div class="col-sm-2 div-already-provided" hidden>
+                <div class="col-sm-2 div-already-provided">
                     <div class="form-group">
                         <label for="form-check" class="regular-text" style="padding-right:10px;">
                             Este serviço já foi prestado?
@@ -777,7 +777,7 @@
             if (isContractedBySupplies) {
                 $serviceAlreadyProvided
                     .last()
-                    .attr('checked', true);
+                    .prop('checked', true);
 
                 $divAlreadyProvided
                     .attr('hidden', true);
@@ -812,7 +812,7 @@
                 if (!purchaseRequest) {
                     $serviceAlreadyProvided
                         .last()
-                        .attr('checked', false);
+                        .prop('checked', false);
                 }
 
                 $divAlreadyProvided
