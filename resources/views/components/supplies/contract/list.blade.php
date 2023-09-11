@@ -51,7 +51,7 @@
                             <th>Condição de pgto.</th>
                             <th>Valor total</th>
                             <th class="hidden-1024">Contratação por</th>
-                            <th class="hidden-1440">CNPJ</th>
+                            <th class="hidden-1280">CNPJ</th>
                             <th class="hidden-1440">Data desejada</th>
                             <th>Ações</th>
                         </tr>

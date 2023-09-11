@@ -56,7 +56,7 @@
                             <th class="hidden-1024">Progresso</th>
                             <th>Contratação por</th>
 
-                            <th class="hidden-1440">CNPJ</th>
+                            <th class="hidden-1280">CNPJ</th>
                             <th class="hidden-1440">Data desejada</th>
 
                             <th>Ações</th>
