@@ -21,10 +21,10 @@
             </div>
 
             <div class="request-dashboard-requests-item">
-                <h2 class="request-dashboard-requests-item-title">Contratos/Serviços Recorrentes</h2>
-                <p class="request-dashboard-requests-item-subtitle">Contratação de serviços recorrentes, contratos com vigência determinada ou indeterminada.</p>
+                <h2 class="request-dashboard-requests-item-title">Serviços Recorrentes</h2>
+                <p class="request-dashboard-requests-item-subtitle">Contratação de serviços recorrentes com vigência determinada ou indeterminada.</p>
                 <p class="request-dashboard-requests-item-description">Exemplo: serviço de limpeza diária, vale alimentação, manutenção regular de ar condicionados, etc.</p>
-                <a class="request-dashboard-requests-item-btn bg-contract-color" href="{{ route('request.contract.register') }}" >Solicitar Contrato/Serviço recorrente</a>
+                <a class="request-dashboard-requests-item-btn bg-contract-color" href="{{ route('request.contract.register') }}" >Solicitar serviço recorrente</a>
             </div>
 
         </div>

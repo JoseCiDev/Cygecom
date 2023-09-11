@@ -46,7 +46,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="edit-observation" class="control-label">Observação</label>
-                                <textarea required name="observation" id="edit-observation" rows="3"
+                                <textarea name="observation" id="edit-observation" rows="3"
                                     placeholder="Ex: Pago com atraso de 3 dias devido a xpto" class="form-control text-area no-resize"></textarea>
                             </div>
                         </div>
