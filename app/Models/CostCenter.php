@@ -9,8 +9,6 @@ class CostCenter extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'deleted_by', 'updated_by'];
-
     public function person()
     {
         return $this->hasMany(Person::class);
@@ -25,4 +23,7 @@ class CostCenter extends Model
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
+
+    public $timestamps = false;
+    protected $fillable = ['name', 'company_id'];
 }
