@@ -211,9 +211,6 @@ class PurchaseRequestService extends ServiceProvider
             $purchaseRequest = PurchaseRequest::find($id);
             $purchaseRequest->updated_by = auth()->user()->id;
 
-            $isSetOnlyQuotation = isset($data['is_only_quotation']);
-            $data['is_only_quotation'] = $isSetOnlyQuotation ? 1 : 0;
-
             $purchaseRequest->fill($data);
             $purchaseRequest->save();
             $type = $purchaseRequest->type;
@@ -222,6 +219,9 @@ class PurchaseRequestService extends ServiceProvider
             if ($isSuppliesUpdate) {
                 return $purchaseRequest;
             }
+
+            $isSetOnlyQuotation = isset($data['is_only_quotation']);
+            $data['is_only_quotation'] = $isSetOnlyQuotation ? 1 : 0;
 
             $this->saveCostCenterApportionment($id, $data);
 
