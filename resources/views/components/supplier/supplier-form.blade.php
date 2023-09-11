@@ -24,9 +24,10 @@
     </div>
     <div class="row">
 
+        {{-- CNPJ --}}
         <div class="col-sm-2">
             <x-InputCnpj :cnpj="$supplier?->cpf_cnpj" :supplier="$supplier?->id" name="cpf_cnpj" id="cpf_cnpj" data-cy="cpf_cnpj" />
-            <input type="hidden" name="entity_type" value="PJ" data-cy="entity_type">
+            <input type="hidden" class="no-validation" name="entity_type" value="PJ" data-cy="entity_type">
         </div>
 
         <div class="col-sm-5">
@@ -46,6 +47,7 @@
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
