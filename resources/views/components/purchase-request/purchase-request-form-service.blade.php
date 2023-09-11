@@ -105,20 +105,18 @@
             <div class="row" style="margin-bottom:10px; margin-top:5px;">
 
                 {{-- RESPONSÁVEL CONTRATAÇÃO --}}
-                <div class="col-sm-5">
+                <div class="col-sm-3">
                     <div class="form-group">
-                        <label for="form-check" class="control-label regular-text" style="padding-right:10px;">
+                        <label for="form-check" class="regular-text" style="padding-right:10px;">
                             Quem fez/fará a contratação deste serviço?
                         </label>
                         <fieldset data-rule-required="true">
                             <div class="row">
-                                <div class="col-sm-3">
+                                <div class="col-sm-12">
                                     <input name="is_supplies_contract"value="1" class="radio-who-wants" required
                                         id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
                                         @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
                                     <label class="form-check-label secondary-text" for="is-supplies-contract">Suprimentos</label>
-                                </div>
-                                <div class="col-sm-4">
                                     <input name="is_supplies_contract" value="0" class="radio-who-wants"
                                         type="radio" required id="is-area-contract" data-cy="is-area-contract"
                                         style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
@@ -198,7 +196,7 @@
                 </div>
 
                 {{-- SERVIÇO JÁ PRESTADO --}}
-                <div class="col-sm-2 div-already-provided" hidden>
+                <div class="col-sm-2 div-already-provided">
                     <div class="form-group">
                         <label for="form-check" class="regular-text" style="padding-right:10px;">
                             Este serviço já foi prestado?
@@ -217,7 +215,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="regular-text">Data desejada do serviço</label>
-                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
+                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date" max="2100-01-01"
                             class="form-control" min="2023-07-24" value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
@@ -368,8 +366,11 @@
                                     <tbody>
                                     </tbody>
                                 </table>
+
+                                {{-- PARCELAS SÃO ENVIADAS PELOS INPUT HIDDENS DESSE CONTAINER --}}
                                 <div class="hidden-installments-inputs-container">
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -776,7 +777,7 @@
             if (isContractedBySupplies) {
                 $serviceAlreadyProvided
                     .last()
-                    .attr('checked', true);
+                    .prop('checked', true);
 
                 $divAlreadyProvided
                     .attr('hidden', true);
@@ -811,7 +812,7 @@
                 if (!purchaseRequest) {
                     $serviceAlreadyProvided
                         .last()
-                        .attr('checked', false);
+                        .prop('checked', false);
                 }
 
                 $divAlreadyProvided
