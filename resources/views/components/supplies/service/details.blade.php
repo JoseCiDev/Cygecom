@@ -388,7 +388,7 @@
             <div class="col-md-12">
                 <h4><i class="glyphicon glyphicon-link"></i> <strong>Links de apoio/sugestão:</strong></h4>
                 @php
-                    $supportLinks = 'Não há links para serem exibidos aqui.';
+                    $supportLinks = 'Não há links para serem exibidos.';
                     if ($request?->support_links) {
                         $supportLinks = str_replace(' ', '<br>', $request->support_links);
                         $supportLinks = nl2br($supportLinks);
