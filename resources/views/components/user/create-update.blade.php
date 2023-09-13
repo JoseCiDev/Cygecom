@@ -445,7 +445,6 @@
             if (formattedValue !== null) {
                 const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
                 const rawValue = parseFloat(processedValue);
-                console.log(rawValue);
                 $('.approve_limit').val(rawValue.toFixed(2));
             }
         });

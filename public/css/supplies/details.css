@@ -1,0 +1,17 @@
+.text-highlight {
+    margin: 0px 10px;
+}
+
+.only-quotation {
+    color: var(--gold-primary-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.only-quotation p{
+    color: var(--gold-primary-color);
+}
+.request-details-header .sub-info-container {
+    margin-top: 25px;
+}

@@ -42,6 +42,12 @@ class LogObserver
 
     private function createLog(LogAction $action, $model, ?array $changes = null)
     {
+        $userId = Auth::id();
+
+        if ($userId === null) {
+            return;
+        }
+
         Log::create([
             'table' => $model->getTable(),
             'foreign_id' => $model->id,
