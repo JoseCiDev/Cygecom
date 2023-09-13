@@ -45,12 +45,11 @@
 
                 @if ($product->is_only_quotation)
                     <div class="row only-quotation">
-                        <h3>
+                        <h4>
                             <i class="fa fa-warning">
                                 </i><strong> APENAS COTAÇÃO/ORÇAMENTO </strong>
                             <i class="fa fa-warning"></i>
-                        </h3>
-                        <p>(Não efetuar compra/contratação.)</p>
+                        </h4>
                     </div>
                 @endif
 
