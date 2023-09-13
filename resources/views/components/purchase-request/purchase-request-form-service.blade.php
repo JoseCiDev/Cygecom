@@ -53,7 +53,7 @@
 
     <div class="col-sm-6" style="padding: 0">
         @if ($hasRequestNotSent)
-            <h1 class="page-title">Editar solicitação de serviço nº {{$purchaseRequest->id}}</h1>
+            <h1 class="page-title">Editar solicitação de serviço nº {{ $purchaseRequest->id }}</h1>
         @elseif ($hasSentRequest)
             <div class="alert alert-info alert-dismissable">
                 <button data-cy="btn-close-alert" type="button" class="close" data-dismiss="alert">&times;</button>
@@ -61,7 +61,7 @@
                     <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
                 </h5>
             </div>
-            <h1 class="page-title">Visualizar solicitação de serviço nº {{$purchaseRequest->id}}</h1>
+            <h1 class="page-title">Visualizar solicitação de serviço nº {{ $purchaseRequest->id }}</h1>
         @else
             <h1 class="page-title">Nova solicitação de serviço</h1>
         @endif
@@ -69,7 +69,8 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right" style="padding: 0">
             <x-modalDelete />
-            <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
+            <button data-cy="btn-delete-request" data-route="purchaseRequests"
+                data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
                 title="Excluir" class="btn btn-primary btn-danger pull-right">
                 Excluir solicitação
@@ -104,6 +105,16 @@
 
             <div class="row" style="margin-bottom:10px; margin-top:5px;">
 
+                <div class="col-sm-2">
+                    <div class="form-group" style="display: flex">
+                        <input name="is_only_quotation"
+                            type="checkbox" id="checkbox-only-quotation" data-cy="checkbox-only-quotation"
+                            class="checkbox-only-quotation no-validation" style="margin:0"
+                            @checked((bool) $purchaseRequest?->is_only_quotation) >
+                        <label for="checkbox-only-quotation" class="regular-text form-check-label icheck-me" style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
+                    </div>
+                </div>
+
                 {{-- RESPONSÁVEL CONTRATAÇÃO --}}
                 <div class="col-sm-3">
                     <div class="form-group">
@@ -120,7 +131,8 @@
                                     <input name="is_supplies_contract" value="0" class="radio-who-wants"
                                         type="radio" required id="is-area-contract" data-cy="is-area-contract"
                                         style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label secondary-text" for="is-area-contract">Eu (Área solicitante)</label>
+                                    <label class="form-check-label secondary-text" for="is-area-contract">Eu (Área
+                                        solicitante)</label>
                                 </div>
                             </div>
                         </fieldset>
@@ -163,7 +175,8 @@
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
                     <div class="small" style="margin-top:-10px; margin-bottom:20px;">
-                        <p class="secondary-text">*Informe o motivo pelo qual você está solicitando esta contratação </p>
+                        <p class="secondary-text">*Informe o motivo pelo qual você está solicitando esta contratação
+                        </p>
                     </div>
                 </div>
 
@@ -189,8 +202,10 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="local-description" class="regular-text"> Local de prestação do serviço </label>
-                        <input data-rule-required="true" minlength="5" name="local_description" value="{{ $purchaseRequest->local_description ?? null }}" type="text"
-                            id="local-description" data-cy="local-description" placeholder="Ex: HKM - Av. Gentil Reinaldo Cordioli, 161 - Jardim Eldorado"
+                        <input data-rule-required="true" minlength="5" name="local_description"
+                            value="{{ $purchaseRequest->local_description ?? null }}" type="text"
+                            id="local-description" data-cy="local-description"
+                            placeholder="Ex: HKM - Av. Gentil Reinaldo Cordioli, 161 - Jardim Eldorado"
                             class="form-control">
                     </div>
                 </div>
@@ -202,10 +217,12 @@
                             Este serviço já foi prestado?
                         </label>
                         <fieldset data-rule-required="true">
-                            <input name="service[already_provided]" value="1" class="radio-already-provided" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided)
-                                id="already-provided" data-cy="already-provided" type="radio" required >
+                            <input name="service[already_provided]" value="1" class="radio-already-provided"
+                                @checked(isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided) id="already-provided" data-cy="already-provided"
+                                type="radio" required>
                             <label class="form-check-label secondary-text" for="already-provided">Sim</label>
-                            <input name="service[already_provided]" value="0" class="radio-already-provided" required type="radio" id="not-provided" data-cy="not-provided"
+                            <input name="service[already_provided]" value="0" class="radio-already-provided"
+                                required type="radio" id="not-provided" data-cy="not-provided"
                                 style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided)>
                             <label class="form-check-label secondary-text" for="not-provided">Não</label>
                         </fieldset>
@@ -258,7 +275,8 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="regular-text">Condição de pagamento</label>
-                            <select name="service[payment_info][payment_terms]" id="payment-terms" data-cy="payment-terms" class='select2-me service[payment_info][payment_terms]'
+                            <select name="service[payment_info][payment_terms]" id="payment-terms"
+                                data-cy="payment-terms" class='select2-me service[payment_info][payment_terms]'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentTerms as $paymentTerm)
@@ -276,8 +294,9 @@
                             <label for="format-amount" class="regular-text">Valor total do serviço</label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
-                                <input type="text" id="format-amount" name="format-amount" data-cy="format-amount" placeholder="0.00"
-                                    class="form-control format-amount" value="{{ str_replace('.', ',', $purchaseRequestServicePrice) }}">
+                                <input type="text" id="format-amount" name="format-amount"
+                                    data-cy="format-amount" placeholder="0.00" class="form-control format-amount"
+                                    value="{{ str_replace('.', ',', $purchaseRequestServicePrice) }}">
                                 <input type="hidden" name="service[price]" id="amount" data-cy="amount"
                                     class="amount no-validation" value="{{ $purchaseRequestServicePrice }}">
                             </div>
@@ -288,7 +307,8 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="regular-text">Forma de pagamento</label>
-                            <select name="service[payment_info][payment_method]" id="payment-method" data-cy="payment-method" class='select2-me payment-method'
+                            <select name="service[payment_info][payment_method]" id="payment-method"
+                                data-cy="payment-method" class='select2-me payment-method'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentMethods as $paymentMethod)
@@ -300,14 +320,16 @@
                         </div>
                     </div>
 
-                    <input type="hidden" class="no-validation" value="{{ $purchaseRequest?->service?->paymentInfo?->id ?? null }}" name="service[payment_info][id]">
+                    <input type="hidden" class="no-validation"
+                        value="{{ $purchaseRequest?->service?->paymentInfo?->id ?? null }}"
+                        name="service[payment_info][id]">
 
                     {{-- Nº PARCELAS --}}
                     <div class="col-sm-1">
                         <div class="form-group">
                             <label class="control-label regular-text">Nº de parcelas</label>
-                            <input type="text" class="form-control format-installments-number" name="installments-number"
-                                data-cy="format-installments-number" placeholder="Ex: 24"
+                            <input type="text" class="form-control format-installments-number"
+                                name="installments-number" data-cy="format-installments-number" placeholder="Ex: 24"
                                 value="{{ $serviceQuantityOfInstallments }}">
                             <input type="hidden" name="service[quantity_of_installments]" id="installments-number"
                                 data-cy="installments-number" class="installments-number no-validation"
@@ -366,8 +388,11 @@
                                     <tbody>
                                     </tbody>
                                 </table>
+
+                                {{-- PARCELAS SÃO ENVIADAS PELOS INPUT HIDDENS DESSE CONTAINER --}}
                                 <div class="hidden-installments-inputs-container">
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -394,9 +419,10 @@
                             @foreach ($suppliers as $supplier)
                                 @php
                                     $supplierSelected = isset($purchaseRequest->service) && $purchaseRequest->service->supplier_id === $supplier->id;
-                                    $cnpj = $supplier->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj) : 'CNPJ indefinido'
+                                    $cnpj = $supplier->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj) : 'CNPJ indefinido';
                                 @endphp
-                                <option value="{{ $supplier->id }}" @selected($supplierSelected)>{{ "$cnpj - $supplier->corporate_name" }}</option>
+                                <option value="{{ $supplier->id }}" @selected($supplierSelected)>
+                                    {{ "$cnpj - $supplier->corporate_name" }}</option>
                             @endforeach
                         </select>
                     </div>
