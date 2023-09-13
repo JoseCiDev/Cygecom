@@ -16,6 +16,7 @@
 
 <script>
     const $identificationDocument = $('.cpf-cnpj');
+
     $identificationDocument.imask({
         mask: '00.000.000/0000-00'
     });
@@ -23,6 +24,14 @@
 
 <script>
     $(() => {
+        // regras serão refeitas para todos os inputs
+        $identificationDocument.rules('add', {
+            required: true,
+            messages: {
+                required: 'Este campo é obrigatório.',
+            }
+        });
+
         const $inputCnpjValidator = $('#cnpj-validator');
         const $cnpjSpanWarning = $('.cnpj-span-warning');
         const $cnpj = $('#{{ $id }}');
@@ -74,7 +83,7 @@
         let isChecked;
 
         if (cnpjBackend === null && supplier !== null) {
-                isChecked = true;
+            isChecked = true;
         }
 
         $('#is-international-supplier').on('click', function() {
@@ -96,6 +105,12 @@
 
         $cnpj.on('input', function() {
             const cnpj = $(this).val();
+
+            if (cnpj.length === 0) {
+                $cnpjSpanWarning.hide();
+                $cnpj.valid();
+            }
+
             if (cnpj.length === 18) {
                 const isValid = validateCNPJ(cnpj);
                 if (!isValid) {
