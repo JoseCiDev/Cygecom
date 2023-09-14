@@ -42,12 +42,27 @@ class LogObserver
 
     private function createLog(LogAction $action, $model, ?array $changes = null)
     {
-        Log::create([
+        $userId = Auth::id();
+
+        if ($userId === null) {
+            return;
+        }
+
+        $logData = [
             'table' => $model->getTable(),
             'foreign_id' => $model->id,
             'user_id' => Auth::id(),
             'action' => $action->value,
             'changes' => $changes,
-        ]);
+        ];
+
+        $isSetSuppliesUpdateReason = isset($logData['changes']['supplies_update_reason']);
+        $suppliesUpdateReasonInvalid = $isSetSuppliesUpdateReason  && $logData['changes']['supplies_update_reason'] === null;
+
+        if ($suppliesUpdateReasonInvalid) {
+            return;
+        }
+
+        Log::create($logData);
     }
 }

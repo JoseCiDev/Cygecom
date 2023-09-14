@@ -337,11 +337,11 @@
                                             <div class="col-md-4">
                                                 <p>
                                                     <strong>Forma do pagamento:</strong>
-                                                    {{ $request->contract->paymentInfo->payment_method?->label() ?? '---' }}
+                                                    {{ $request->contract->paymentInfo?->payment_method?->label() ?? '---' }}
                                                 </p>
                                                 <p>
                                                     <strong>Detalhes de pagamento:</strong>
-                                                    {{ $request->contract->paymentInfo->description ?? '---' }}
+                                                    {{ $request->contract->paymentInfo?->description ?? '---' }}
                                                 </p>
                                                 <hr>
                                                 <p>
