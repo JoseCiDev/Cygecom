@@ -47,6 +47,7 @@
     <link rel="stylesheet" href="{{ asset('css/supplies/form-status-filter.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies/category-column-tags.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/supplies/details.css') }}">
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>

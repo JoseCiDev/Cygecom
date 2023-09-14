@@ -1,4 +1,8 @@
 $(() => {
+    function isValidForm() {
+        return $('#supplier-form').valid();
+    }
+
     const showSuccessAlertAndCloseModal = (response) => {
         bootbox.alert({
                 title: "<i class='fa fa-check'></i> Registro feito com sucesso!",
@@ -54,6 +58,12 @@ $(() => {
 
     const submitFormToAPI = (event) => {
         event.preventDefault();
+
+        const isValid = isValidForm();
+        if (!isValid) {
+            return;
+        }
+
         const form = $("#supplier-form");
         const formData = form.serialize();
 

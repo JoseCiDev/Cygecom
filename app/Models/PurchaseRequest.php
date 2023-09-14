@@ -83,6 +83,7 @@ class PurchaseRequest extends Model
         'updated_by',
         'deleted_by',
         'deleted_at',
+        'is_only_quotation'
     ];
 
     protected $casts = [
