@@ -48,12 +48,11 @@
 
                 @if ($contract->is_only_quotation)
                     <div class="row only-quotation">
-                        <h3>
+                        <h4>
                             <i class="fa fa-warning">
                                 </i><strong> APENAS COTAÇÃO/ORÇAMENTO </strong>
                             <i class="fa fa-warning"></i>
-                        </h3>
-                        <p>(Não efetuar compra/contratação.)</p>
+                        </h4>
                     </div>
                 @endif
 
@@ -363,7 +362,7 @@
                                             <div class="col-md-4">
                                                 <p>
                                                     <strong>Dia de vencimento:</strong>
-                                                    {{ $request->contract->payday ? Carbon\Carbon::parse($request->contract->payday)->format('d/m/Y') : '---' }}
+                                                    {{ $request->contract->payday ?? '---' }}
                                                 </p>
                                                 <p>
                                                     <strong>Vigência - Dia de início:</strong>
