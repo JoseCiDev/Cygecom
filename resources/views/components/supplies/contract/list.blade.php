@@ -46,10 +46,8 @@
                             <th>Solicitante</th>
                             <th>Responsável</th>
                             <th>Status</th>
-                            <th>Fornecedor</th>
-                            <th class="hidden-1280">Qualif. fornecedor</th>
+                            <th>Fornecedor</th>>
                             <th>Condição de pgto.</th>
-                            <th>Valor total</th>
                             <th class="hidden-1024">Contratação por</th>
                             <th class="hidden-1280">CNPJ</th>
                             <th class="hidden-1440">Data desejada</th>
@@ -76,12 +74,8 @@
                                 <td>{{$contract->suppliesUser?->person->name ?? '---'}}</td>
                                 <td>{{$contract->status->label()}}</td>
                                 <td>{{$contract->contract->supplier?->cpf_cnpj ?? '---'}}</td>
-                                <td class="hidden-1280">{{$contract->contract->supplier?->qualification->label() ?? '---'}}</td>
-
                                 <td>{{$contract->contract->paymentInfo?->payment_terms?->label() ?? '---'}}</td>
-                                <td>R$ {{$amountFormated}}</td>
                                 <td class="hidden-1024">{{$contract->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
-
                                 <td class="hidden-1280">
                                     <div class="tag-list">
                                         @forelse ($companies as $company)

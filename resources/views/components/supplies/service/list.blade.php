@@ -44,21 +44,14 @@
                     <thead>
                         <tr>
                             <th>Nº</th>
-
                             <th>Solicitante</th>
                             <th>Responsável</th>
                             <th>Status</th>
-                            <th>Fornecedor</th>
-                            <th class="hidden-1280">Qualif. fornecedor</th>
-
-                            <th class="hidden-1024">Condição de pgto.</th>
-                            <th class="hidden-1024">Valor total</th>
-                            <th class="hidden-1024">Progresso</th>
-                            <th>Contratação por</th>
-
+                            <th class="col-sm-3">Fornecedor</th>
+                            <th>Condição de pgto.</th>
+                            <th class="hidden-1024">Contratação por</th>
                             <th class="hidden-1280">CNPJ</th>
                             <th class="hidden-1440">Data desejada</th>
-
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -82,11 +75,7 @@
                                 <td>{{$service->suppliesUser?->person->name ?? '---'}}</td>
                                 <td>{{$service->status->label()}}</td>
                                 <td>{{$service->service->Supplier?->cpf_cnpj ?? '---'}}</td>
-                                <td class="hidden-1280">{{$service->service->Supplier?->qualification->label() ?? '---'}}</td>
-
-                                <td class="hidden-1024">{{$service->service->paymentInfo?->payment_terms?->label() ?? '---' }}</td>
-                                <td class="hidden-1024">R$ {{$amountFormated}}</td>
-                                <td class="hidden-1024">{{$service->service->already_provided ? 'Executado' : 'Não executado'}}</td>
+                                <td>{{$service->service->paymentInfo?->payment_terms?->label() ?? '---' }}</td>
                                 <td>{{$service->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
 
                                 <td class="hidden-1280">
