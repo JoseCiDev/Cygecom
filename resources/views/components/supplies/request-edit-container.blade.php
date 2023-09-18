@@ -52,7 +52,7 @@
                     Motivo para mudança de status
                 </label>
                 <textarea name="supplies_update_reason" id="supplies-update-reason"
-                    data-cy="supplies-update-reason" rows="3"
+                    data-cy="supplies-update-reason" rows="3" maxlength="200"
                     class="form-control text-area no-resize"></textarea>
             </div>
             <div class="small" style="margin-top:-10px; margin-bottom:20px;">
@@ -78,7 +78,16 @@
         $reasonUpdateStatus = $('#supplies-update-reason');
         $reasonUpdateStatusDiv = $('.div-reason-update');
 
+        const statusOldValue = $status.val();
+
         $status.on('change', function() {
+            if ($(this).val() === statusOldValue) {
+                $reasonUpdateStatusDiv.attr('hidden', true);
+                $reasonUpdateStatus.removeRequired();
+                $reasonUpdateStatus.val('');
+                return;
+            }
+
             const isCancel = $(this).val() === 'cancelada';
 
             $reasonUpdateStatusDiv.attr('hidden', false);
@@ -106,6 +115,7 @@
             }
 
             const statusValue = $('#status').find(':selected').text();
+            const reasonUpdateStatus = $reasonUpdateStatus.val() ?? '' ;
             const amountValue = "R$ " + $('#amount').val();
             const responsibleValue = $('#supplies_user_id').find(':selected').text();
 
@@ -115,6 +125,7 @@
                 message: "Por favor, confirme os dados que serão enviados: " +
                     "<ul>" +
                     `<li class="regular-text" >Status: ${statusValue}</li>` +
+                    (reasonUpdateStatus ? `<li class="regular-text">Motivo mudança de status: ${reasonUpdateStatus}</li>` : '') +
                     `<li class="regular-text">Valor total: ${amountValue}</li>` +
                     (responsibleValue.length ? `<li>Responsável: ${responsibleValue}</li>` :
                         '') +
