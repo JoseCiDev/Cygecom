@@ -40,7 +40,7 @@ class LogObserver
         $this->createLog(LogAction::DELETE, $model);
     }
 
-    private function createLog(LogAction $action, $model, ?array $changes = null)
+    private function createLog(LogAction $action, $model, ?array $changes = null): void
     {
         $userId = Auth::id();
 
@@ -56,10 +56,10 @@ class LogObserver
             'changes' => $changes,
         ];
 
-        $isSetSuppliesUpdateReason = isset($logData['changes']['supplies_update_reason']);
-        $suppliesUpdateReasonInvalid = $isSetSuppliesUpdateReason  && $logData['changes']['supplies_update_reason'] === null;
+        $hasChanges = array_key_exists('supplies_update_reason', $logData['changes']);
+        $hasChangesButIsNull = $hasChanges && $logData['changes']['supplies_update_reason'] === null;
 
-        if ($suppliesUpdateReasonInvalid) {
+        if ($hasChangesButIsNull) {
             return;
         }
 

@@ -91,6 +91,8 @@ class ProductController extends Controller
 
         $files = $request->file('arquivos');
 
+        $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.product.update";
+
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
         }
@@ -112,7 +114,7 @@ class ProductController extends Controller
 
             DB::beginTransaction();
 
-            $purchaseRequest = $this->purchaseRequestService->updateProductRequest($id, $data, $files);
+            $purchaseRequest = $this->purchaseRequestService->updateProductRequest($id, $data, $isSuppliesUpdate, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
