@@ -98,6 +98,8 @@ class ContractController extends Controller
         $validator = $this->validatorService->purchaseRequestUpdate($data);
         $files = $request->file('arquivos');
 
+        $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.contract.update";
+
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
         }
@@ -118,7 +120,7 @@ class ContractController extends Controller
             // MUDAR
             DB::beginTransaction();
 
-            $purchaseRequest = $this->purchaseRequestService->updateContractRequest($id, $data, $files);
+            $purchaseRequest = $this->purchaseRequestService->updateContractRequest($id, $data, $isSuppliesUpdate, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);

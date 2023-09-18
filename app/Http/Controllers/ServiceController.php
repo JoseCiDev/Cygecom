@@ -95,6 +95,8 @@ class ServiceController extends Controller
         $validator = $this->validatorService->purchaseRequestUpdate($data);
         $files = $request->file('arquivos');
 
+        $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.service.update";
+
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
         }
@@ -117,7 +119,7 @@ class ServiceController extends Controller
             // MUDAR
             DB::beginTransaction();
 
-            $purchaseRequest = $this->purchaseRequestService->updateServiceRequest($id, $data, $files);
+            $purchaseRequest = $this->purchaseRequestService->updateServiceRequest($id, $data, $isSuppliesUpdate, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => PurchaseRequestStatus::PENDENTE->value]);
