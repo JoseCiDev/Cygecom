@@ -51,7 +51,7 @@ class LogObserver
         Log::create([
             'table' => $model->getTable(),
             'foreign_id' => $model->id,
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'action' => $action->value,
             'changes' => $changes,
         ]);
