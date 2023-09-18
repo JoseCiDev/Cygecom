@@ -97,14 +97,13 @@
                             <p class="support_links" style="white-space: pre-wrap; max-height: 300px; overflow:scroll;"></p>
                             <hr>
 
-                            {{-- MOTIVO --}}
-                            <h4 class="topic"><i class="glyphicon glyphicon-info-sign"></i> <strong>Motivo e observações</strong></h4>
-                            <p>
-                                <strong>Motivo da solicitação:</strong> <span class="reason"></span>
-                            </p>
-                            <p>
-                                <strong>Observação:</strong> <span class="observation"></span>
-                            </p>
+                            {{-- PRODUTOS --}}
+                            <div class="modal-list-container">
+                                <h4 class="topic"><i class="glyphicon glyphicon--sign"></i> <strong>Produtos</strong></h4>
+                                <ul id="modal-product-list">
+                                    {{-- Adição dinâmica de <li> aqui --}}
+                                </ul>
+                            </div>
 
                         </div>
                     </div>

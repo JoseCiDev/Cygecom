@@ -108,3 +108,19 @@
 .request-details-content-box-products-product:nth-child(odd) {
     background-color: #eaeaea;
 }
+
+.modal-list-container {
+    display: none;
+    font-size: 16px;
+}
+
+#modal-product-list {
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow: scroll;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+}
