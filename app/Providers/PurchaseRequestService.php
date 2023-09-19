@@ -257,9 +257,9 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de serviço.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveService para atualizar serviço.
      */
-    public function updateServiceRequest(int $id, array $data, bool $isSuppliesUpdate = false,  UploadedFile|array|null $files): PurchaseRequest
+    public function updateServiceRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile|array|null $files): PurchaseRequest
     {
-        return DB::transaction(function () use ($id, $data, $isSuppliesUpdate, $files) {
+        return DB::transaction(function () use ($id, $data, $isSuppliesUpdate,  $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, $isSuppliesUpdate, $files);
             $this->saveService($purchaseRequest->id, $data, $purchaseRequest->service->id);
 
