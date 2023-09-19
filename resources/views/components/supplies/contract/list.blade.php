@@ -46,12 +46,10 @@
                             <th>Solicitante</th>
                             <th>Responsável</th>
                             <th>Status</th>
-                            <th>Fornecedor</th>
-                            <th class="hidden-1280">Qualif. fornecedor</th>
+                            <th>Fornecedor</th>>
                             <th>Condição de pgto.</th>
-                            <th>Valor total</th>
                             <th class="hidden-1024">Contratação por</th>
-                            <th class="hidden-1440">Grupo de custo</th>
+                            <th class="hidden-1280">CNPJ</th>
                             <th class="hidden-1440">Data desejada</th>
                             <th>Ações</th>
                         </tr>
@@ -59,10 +57,8 @@
                     <tbody>
                         @foreach ($contracts as $index => $contract)
                             @php
-                                $groups = $contract->CostCenterApportionment->pluck('costCenter.Company.group')->unique();
-                                $concatenatedGroups = $groups->map(function ($item) {
-                                        return $item->label();
-                                    })->implode(', ');
+                                $companies = $contract->CostCenterApportionment->pluck('costCenter.Company')->unique();
+
                                 $amount = $contract->contract->amount;
                                 $amountFormated = $amount !== null ? number_format($amount, 2, ',', '.') : '---';
 
@@ -78,12 +74,21 @@
                                 <td>{{$contract->suppliesUser?->person->name ?? '---'}}</td>
                                 <td>{{$contract->status->label()}}</td>
                                 <td>{{$contract->contract->supplier?->cpf_cnpj ?? '---'}}</td>
-                                <td class="hidden-1280">{{$contract->contract->supplier?->qualification->label() ?? '---'}}</td>
-
                                 <td>{{$contract->contract->paymentInfo?->payment_terms?->label() ?? '---'}}</td>
-                                <td>R$ {{$amountFormated}}</td>
                                 <td class="hidden-1024">{{$contract->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
-                                <td class="hidden-1440">{{$concatenatedGroups}}</td>
+                                <td class="hidden-1280">
+                                    <div class="tag-list">
+                                        @forelse ($companies as $company)
+                                            @php
+                                                $cnpj = $company->cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $company->cnpj) : 'CNPJ indefinido';
+                                                $concat = $company->name . ' - ' . $cnpj;
+                                            @endphp
+                                            <span class="tag-list-item">{{ $concat }}</span>
+                                        @empty
+                                            ---
+                                        @endforelse
+                                    </div>
+                                </td>
 
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($contract->desired_date)->format('d/m/Y') }}</td>
 

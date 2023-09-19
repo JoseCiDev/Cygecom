@@ -26,7 +26,7 @@
                             Fornecedor (CNPJ - Razão social)</label>
                         <select name="purchase_request_products[{{ $supplierIndex }}][supplier_id]" class='select2-me select-supplier'
                             data-placeholder="Informe um fornecedor ou cadastre um novo" style="width:100%;">
-                            <option value=""></option>
+                            <option value="">Informe um fornecedor ou cadastre um novo</option>
                             @foreach ($suppliers as $supplier)
                                 @php
                                     $isSelected = $supplier->id === $supplierId;
