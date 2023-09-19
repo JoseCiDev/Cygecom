@@ -56,13 +56,15 @@ class LogObserver
             'changes' => $changes,
         ];
 
-        $hasChanges = array_key_exists('supplies_update_reason', $logData['changes']);
-        $hasChangesButIsNull = $hasChanges && $logData['changes']['supplies_update_reason'] === null;
+        if ($changes !== null) {
+            $hasChanges = array_key_exists('supplies_update_reason', $logData['changes']);
+            $hasChangesButIsNull = $hasChanges && $logData['changes']['supplies_update_reason'] === null;
 
-        if ($hasChangesButIsNull) {
-            return;
+            if ($hasChangesButIsNull) {
+                return;
+            }
+
+            Log::create($logData);
         }
-
-        Log::create($logData);
     }
 }
