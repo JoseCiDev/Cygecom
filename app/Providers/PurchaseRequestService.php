@@ -106,6 +106,26 @@ class PurchaseRequestService extends ServiceProvider
         ])->whereNull('deleted_at')->whereIn('status', $status);
     }
 
+    public function purchaseRequestsByUserWithStatus(array $status)
+    {
+        $id = auth()->user()->id;
+
+        return PurchaseRequest::with([
+            'user.person.costCenter',
+            'suppliesUser.person.costCenter',
+            'purchaseRequestFile',
+            'costCenterApportionment.costCenter.company',
+            'deletedByUser',
+            'updatedByUser',
+            'service.paymentInfo',
+            'purchaseRequestProduct.category',
+            'purchaseRequestProduct.supplier',
+            'contract.installments',
+            'product.installments'
+        ])->whereNull('deleted_at')->where('user_id', $id)->whereIn('status', $status)->get();
+    }
+
+
     /**
      * @return mixed Pelo id retorna solicitação com suas relações, exceto deletada.
      */
@@ -269,7 +289,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de produto(s).
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveProduct para atualizar produto(s).
      */
-    public function updateProductRequest(int $id, array $data,  UploadedFile|array|null $files): PurchaseRequest
+    public function updateProductRequest(int $id, array $data, UploadedFile|array|null $files): PurchaseRequest
     {
         return DB::transaction(function () use ($id, $data, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, false, $files);
