@@ -32,7 +32,11 @@
 }
 
 .log-item-responsable {
-    min-width: 500px;
+    min-width: 400px;
+}
+
+.log-item-reason {
+    min-width: 300px;
 }
 
 .span-log-changes-view {
