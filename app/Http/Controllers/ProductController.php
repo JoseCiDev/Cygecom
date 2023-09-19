@@ -34,10 +34,10 @@ class ProductController extends Controller
         }
 
         try {
-            $msg = "Solicitação de produto criada com sucesso!";
-
             DB::beginTransaction();
             $purchaseRequest = $this->purchaseRequestService->registerProductRequest($data, $files);
+
+            $msg = "Solicitação de produto nº $purchaseRequest->id criada com sucesso!";
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
@@ -98,13 +98,13 @@ class ProductController extends Controller
         }
 
         try {
-            $msg = "Solicitação de produto atualizada com sucesso!";
-
             $isAdmin = auth()->user()->profile->name === 'admin';
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
             $isDraft = $purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value;
+
+            $msg = "Solicitação de produto nº $purchaseRequest->id atualizada com sucesso!";
 
             $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
 
@@ -118,12 +118,12 @@ class ProductController extends Controller
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
-                $msg = "Solicitação de serviço enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de produto nº $purchaseRequest->id enviada ao setor de suprimentos responsável!";
             }
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
-                $msg = "Solicitação de serviço enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de produto nº $purchaseRequest->id enviada ao setor de suprimentos responsável!";
             }
             DB::commit();
 

@@ -40,7 +40,8 @@ class ContractController extends Controller
             $purchaseRequest = $this->purchaseRequestService->registerContractRequest($data, $files);
             $route           = 'request.edit';
             $routeParams      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
-            $msg = "Solicitação de contrato criada com sucesso!";
+
+            $msg = "Solicitação de contrato nº $purchaseRequest->id  criada com sucesso!";
 
             // MUDAR
             if ($action === 'submit-request') {
@@ -105,13 +106,13 @@ class ContractController extends Controller
         }
 
         try {
-            $msg = "Solicitação de contrato atualizada com sucesso!";
-
             $isAdmin = auth()->user()->profile->name === 'admin';
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
             $isDraft = $purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value;
+
+            $msg = "Solicitação de contrato nº $purchaseRequest->id atualizada com sucesso!";
 
             $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
             if (!$isAuthorized) {
@@ -124,7 +125,7 @@ class ContractController extends Controller
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
-                $msg = "Solicitação de contrato enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de contrato nº $purchaseRequest->id enviada ao setor de suprimentos responsável!";
             }
 
             DB::commit();
