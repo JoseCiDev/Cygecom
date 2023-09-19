@@ -52,7 +52,7 @@
                     Motivo para mudança de status
                 </label>
                 <textarea name="supplies_update_reason" id="supplies-update-reason"
-                    data-cy="supplies-update-reason" rows="3" maxlength="200"
+                    data-cy="supplies-update-reason" rows="3" maxlength="200" minlength="5"
                     class="form-control text-area no-resize"></textarea>
             </div>
             <div class="small" style="margin-top:-10px; margin-bottom:20px;">
