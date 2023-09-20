@@ -42,8 +42,8 @@
             <header class="request-details-header">
                 <h1 class="text-highlight"><strong>Solicitação de contrato nº {{ $request->id }}</strong></h1>
                 <div>
-                    <span>Criado em: {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</span> |
-                    <span>Atualizado: {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}</span>
+                    <span>Criado em: {{ $request->created_at->formatCustom('d/m/Y H:i:s') }}</span> |
+                    <span>Atualizado: {{ $request->updated_at?->formatCustom('d/m/Y H:i:s') ?? '---' }}</span>
                 </div>
 
                 @if ($contract->is_only_quotation)
@@ -103,11 +103,11 @@
                                         <hr>
                                         <p>
                                             <strong>Solicitação criada em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}
+                                            {{ $request->created_at->formatCustom('d/m/Y H:i:s') }}
                                         </p>
                                         <p>
                                             <strong>Solicitação atualizada em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}
+                                            {{ $request->updated_at?->formatCustom('d/m/Y H:i:s') ?? '---' }}
                                         </p>
                                         <p>
                                             <strong>Solicitação desejada para:</strong>
@@ -158,11 +158,11 @@
                                         <hr>
                                         <p>
                                             <strong>Usuário criado em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->user->created_at)->format('d/m/Y h:m:s') }}
+                                            {{ $request->user->created_at->formatCustom('d/m/Y H:i:s') }}
                                         </p>
                                         <p>
                                             <strong>Usuário atualizado em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->user->updated_at)->format('d/m/Y h:m:s') }}
+                                            {{ $request->user->updated_at?->formatCustom('d/m/Y H:i:s') ?? '---' }}
                                         </p>
                                     </div>
                                 </div>
