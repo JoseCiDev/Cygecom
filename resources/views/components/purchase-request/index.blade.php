@@ -65,7 +65,7 @@
                                             <td>{{$purchaseRequest->status->label()}}</td>
                                             <td>{{$purchaseRequest->suppliesUser?->person?->name ?? '---'}}</td>
                                             <td>{{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($purchaseRequest->updated_at)->format('d/m/Y h:m:s') }}</td>
+                                            <td>{{ $purchaseRequest->updated_at->formatCustom('d/m/Y H:i:s')  }}</td>
 
                                             {{-- BTN AÇÕES --}}
                                             <td style="white-space: nowrap;">
