@@ -36,11 +36,12 @@ class ServiceController extends Controller
         }
 
         try {
-            $msg = "Solicitação de serviço criada com sucesso!";
             // MUDAR
             DB::beginTransaction();
 
             $purchaseRequest = $this->purchaseRequestService->registerServiceRequest($data, $files);
+
+            $msg = "Solicitação de serviço nº $purchaseRequest->id  criada com sucesso!";
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
@@ -95,18 +96,20 @@ class ServiceController extends Controller
         $validator = $this->validatorService->purchaseRequestUpdate($data);
         $files = $request->file('arquivos');
 
+        $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.service.update";
+
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
         }
 
         try {
-            $msg = "Solicitação de serviço atualizada com sucesso!";
-
             $isAdmin = auth()->user()->profile->name === 'admin';
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
             $isDraft = $purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value;
+
+            $msg = "Solicitação de serviço nº $purchaseRequest->id atualizada com sucesso!";
 
             $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
 
@@ -117,11 +120,11 @@ class ServiceController extends Controller
             // MUDAR
             DB::beginTransaction();
 
-            $purchaseRequest = $this->purchaseRequestService->updateServiceRequest($id, $data, $files);
+            $purchaseRequest = $this->purchaseRequestService->updateServiceRequest($id, $data, $isSuppliesUpdate, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => PurchaseRequestStatus::PENDENTE->value]);
-                $msg = "Solicitação de serviço enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de serviço nº $purchaseRequest->id  enviada ao setor de suprimentos responsável!";
             }
 
             DB::commit();
