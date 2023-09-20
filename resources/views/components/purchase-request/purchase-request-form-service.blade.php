@@ -111,7 +111,7 @@
                         Atribuir um solicitante
                     </label>
                     <select name="requester_person_id" class='select2-me select-supplier'
-                        data-cy="requester" data-placeholder="Escolha um fornecedor"
+                        data-cy="requester" data-placeholder="Escolha um colaborador"
                         style="width:100%;">
                         <option value=""></option>
                         @foreach ($people as $person)
