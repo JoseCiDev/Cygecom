@@ -51,7 +51,6 @@
                                 <thead>
                                     <tr>
                                         <th>Nº</th>
-                                        <th>Solicitante</th>
                                         <th>Contratação por</th>
                                         <th>Tipo de solicitação</th>
                                         <th>Fornecedor(es)</th>
@@ -83,7 +82,6 @@
                                         @endphp
                                         <tr>
                                             <td>{{$purchaseRequest->id}}</td>
-                                            <td>{{$purchaseRequest->user->person->name}}</td>
                                             <td>{{$purchaseRequest->is_supplies_contract ? 'Suprimentos' : 'Área Solicitante'}}</td>
                                             <td>{{$purchaseRequest->type->label()}}</td>
                                             <td>{{$supplier?->corporate_name . $msg}}</td>
