@@ -2,6 +2,8 @@
     use App\Enums\PurchaseRequestStatus;
     use App\Enums\PaymentMethod;
 
+    $currentUser =  auth()->user();
+
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
     $isCopy ??= null;
@@ -101,6 +103,27 @@
         <div class="full-product-line product-form">
             <div class="row center-block" style="padding-bottom: 10px;">
                 <h3>Dados da solicitação</h3>
+            </div>
+
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="col-sm-4 form-group">
+                    <label for="requester" style="display:block;" class="regular-text">
+                        Atribuir um solicitante
+                    </label>
+                    <select name="requester_person_id" class='select2-me select-supplier'
+                        data-cy="requester" data-placeholder="Escolha um fornecedor"
+                        style="width:100%;">
+                        <option value=""></option>
+                        @foreach ($people as $person)
+                            @php
+                                if ($person->id === $currentUser->person->id) {
+                                    continue;
+                                }
+                            @endphp
+                            <option value="{{ $person->id }}">{{$person->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
             <div class="row" style="margin-bottom:10px; margin-top:5px;">
