@@ -415,7 +415,7 @@
                         <select name="service[supplier_id]" class='select2-me select-supplier'
                             data-cy="service[supplier_id]" data-placeholder="Escolha um fornecedor"
                             style="width:100%;">
-                            <option value=""></option>
+                            <option value="">Informe um fornecedor ou cadastre um novo</option>
                             @foreach ($suppliers as $supplier)
                                 @php
                                     $supplierSelected = isset($purchaseRequest->service) && $purchaseRequest->service->supplier_id === $supplier->id;

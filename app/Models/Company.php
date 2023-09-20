@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    use HasFactory;
+    use HasFactory, LogObserverTrait;
 
     public function costCenter()
     {
@@ -18,4 +18,6 @@ class Company extends Model
     protected $casts = [
         'group' => CompanyGroup::class,
     ];
+
+    public $timestamps = false;
 }
