@@ -43,7 +43,6 @@ class LogObserver
     private function createLog(LogAction $action, $model, ?array $changes = null): void
     {
         $userId = Auth::id();
-
         if ($userId === null) {
             return;
         }
@@ -57,6 +56,7 @@ class LogObserver
         ];
 
         if ($changes !== null) {
+            //trata quando 'supplies_update_reason' existe mas é null
             $hasChanges = array_key_exists('supplies_update_reason', $logData['changes']);
             $hasChangesButIsNull = $hasChanges && $logData['changes']['supplies_update_reason'] === null;
 
