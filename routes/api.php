@@ -32,4 +32,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::group(['prefix' => 'supplies'], function () {
         Route::post('/files/uppload', [PurchaseRequestController::class, 'uploadSuppliesFilesAPI'])->name('api.supplies.files.upload');
     });
+
+    Route::group(['prefix' => 'reports'], function () {
+        Route::get('index', [App\Http\Controllers\ReportController::class, 'indexJson'])->name('reports.index.json');
+    });
 });

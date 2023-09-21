@@ -236,6 +236,9 @@
                             </ul>
                         </li>
                     @endif
+
+                    <li> <a href="{{ route('reports.index.view') }}"> <span>RELATÓRIOS</span> </a> </li>
+
                 </ul>
                 <x-navbar.user />
             </div>
@@ -267,8 +270,9 @@
 
     <script>
         $(() => {
-            // datatable language
+            // Datatable default config
             $('#DataTables_Table_0').DataTable({
+                scrollX: true,
                 language: {
                     lengthMenu: "Mostrar _MENU_ registros",
                     zeroRecords: "Nenhum registro encontrado",

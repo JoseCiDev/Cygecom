@@ -130,7 +130,11 @@ class Breadcrumb extends Component
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
             ['route' => 'supplies.contract.detail', 'label' => 'Contrato solicitado'],
-        ]
+        ],
+        'reports.index.view' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'reports.index.view', 'label' => 'Relatórios'],
+        ],
     ];
 
     public function __construct()
@@ -140,10 +144,12 @@ class Breadcrumb extends Component
 
     public function setItem()
     {
-        $route       = Route::getCurrentRoute();
-        $routeName   = $route->getName();
-
-        $this->items = $routeName !== 'home' ? $this->itemsMap[$routeName] : [];
+        $route = Route::getCurrentRoute();
+        $routeName = $route->getName();
+        $items = collect($this->itemsMap);
+        $hasBreadItem = $items->has($routeName);
+        $breadCrumb = $hasBreadItem ? $items->get($routeName) : [];
+        $this->items = $routeName !== 'home' ? $breadCrumb : [];
     }
 
     public function render()
