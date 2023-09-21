@@ -9,7 +9,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use App\Enums\PurchaseRequestType;
-use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\{
     ProductInstallment,
     ServiceInstallment,
@@ -28,7 +28,7 @@ use App\Models\{
 class PurchaseRequestService extends ServiceProvider
 {
     /**
-     * @return mixed Retorna todas solicitações com suas relações.
+     * @return Builder Retorna query builder de todas solicitações com suas relações.
      */
     public function allPurchaseRequests(): Builder
     {
