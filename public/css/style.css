@@ -10534,6 +10534,7 @@ a:focus {
     padding: 0;
 }
 
+.box .box-content.nopadding,
 .nopadding {
     padding: 0;
 }
