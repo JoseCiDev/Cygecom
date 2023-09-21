@@ -106,6 +106,26 @@ class PurchaseRequestService extends ServiceProvider
         ])->whereNull('deleted_at')->whereIn('status', $status);
     }
 
+    public function purchaseRequestsByUserWithStatus(array $status)
+    {
+        $id = auth()->user()->id;
+
+        return PurchaseRequest::with([
+            'user.person.costCenter',
+            'suppliesUser.person.costCenter',
+            'purchaseRequestFile',
+            'costCenterApportionment.costCenter.company',
+            'deletedByUser',
+            'updatedByUser',
+            'service.paymentInfo',
+            'purchaseRequestProduct.category',
+            'purchaseRequestProduct.supplier',
+            'contract.installments',
+            'product.installments'
+        ])->whereNull('deleted_at')->where('user_id', $id)->whereIn('status', $status)->get();
+    }
+
+
     /**
      * @return mixed Pelo id retorna solicitação com suas relações, exceto deletada.
      */
