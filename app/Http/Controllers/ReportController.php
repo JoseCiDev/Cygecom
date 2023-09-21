@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PurchaseRequestStatus;
 use App\Models\{Service, Product, Person, Contract};
 use App\Providers\PurchaseRequestService;
+use App\Services\ReportService;
 use Illuminate\Http\{Request, JsonResponse};
 use Illuminate\View\View;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Exception;
 
 class ReportController extends Controller
 {
-    public function __construct(private PurchaseRequestService $purchaseRequestService)
+    public function __construct(private PurchaseRequestService $purchaseRequestService, private ReportService $reportService)
     {
     }
 
@@ -25,28 +27,30 @@ class ReportController extends Controller
         $draw = (int) $request->query('draw', 1);
         $start = (int) $request->query('start', 0);
         $length = (int) $request->query('length', 10);
-        $searchValue = $request->query('search')['value'];
+        $searchValue = (string) $request->query('search')['value'];
         $orderColumnIndex = (int) $request->query('order')[0]['column'];
-        $orderDirection = $request->query('order')[0]['dir'];
+        $orderDirection = (string) $request->query('order', ['dir' => 'asc'])[0]['dir'];
+        $status = (string) $request->query('status', false);
+        $requestType = (string) $request->query('request-type', false);
+        $requestingUsersIds = (string) $request->query('requesting-users-ids', false);
         $currentPage = ($start / $length) + 1;
 
         try {
-            $query = $this->purchaseRequestService->allPurchaseRequests()->whereNull('deleted_at');
+            $query = $this->purchaseRequestService->allPurchaseRequests()
+                ->whereNull('deleted_at')
+                ->where('status', "!=", PurchaseRequestStatus::RASCUNHO->value);
 
-            $orderColumnMappings = [
-                0 => 'id',
-                1 => 'type',
-                2 => 'responsibility_marked_at',
-                3 => Person::select('name')->whereColumn('people.id', '=', 'purchase_requests.user_id'),
-                4 => 'status',
-                5 => Person::select('name')->whereColumn('people.id', '=', 'purchase_requests.supplies_user_id'),
-                10 => Product::select('amount')->whereColumn('products.purchase_request_id', '=', 'purchase_requests.id')
-                    ->union(Service::select('price')->whereColumn('services.purchase_request_id', '=', 'purchase_requests.id'))
-                    ->union(Contract::select('amount')->whereColumn('contracts.purchase_request_id', '=', 'purchase_requests.id'))
-            ];
+            $query = $this->reportService->whereInRequistingUserQuery($query, $requestingUsersIds);
 
-            $orderColumn = $orderColumnMappings[$orderColumnIndex] ?? false;
+            if ($requestType) {
+                $query = $this->reportService->whereInRequestTypeQuery($query, $requestType);
+            }
 
+            if ($status) {
+                $query = $this->reportService->whereInStatusQuery($query, $status);
+            }
+
+            $orderColumn = $this->mapOrdemColumn($orderColumnIndex);
             if ($orderColumn) {
                 $query->orderBy($orderColumn, $orderDirection);
             }
@@ -66,6 +70,23 @@ class ReportController extends Controller
             'recordsTotal' => $requests->total(),
             'recordsFiltered' => $requests->total(),
         ], 200);
+    }
+
+    private function mapOrdemColumn(int $orderColumnIndex): string|Builder|bool
+    {
+        $orderColumnMappings = [
+            0 => 'id',
+            1 => 'type',
+            2 => 'responsibility_marked_at',
+            3 => Person::select('name')->whereColumn('people.id', '=', 'purchase_requests.user_id'),
+            4 => 'status',
+            5 => Person::select('name')->whereColumn('people.id', '=', 'purchase_requests.supplies_user_id'),
+            10 => Product::select('amount')->whereColumn('products.purchase_request_id', '=', 'purchase_requests.id')
+                ->union(Service::select('price')->whereColumn('services.purchase_request_id', '=', 'purchase_requests.id'))
+                ->union(Contract::select('amount')->whereColumn('contracts.purchase_request_id', '=', 'purchase_requests.id'))
+        ];
+
+        return $orderColumnMappings[$orderColumnIndex] ?? false;
     }
 
     private function searchValueQuery($query, string $searchValue): Builder

@@ -10,7 +10,82 @@
 
 @endphp
 
+<style>
+.row-filter-reports {
+    display: flex;
+    gap: 20px;
+    padding: 15px 0;
+    align-items: center;
+    flex-wrap: wrap
+}
+
+.row-filter-reports .checkbox-label {
+    cursor: pointer;
+}
+
+</style>
+
 <div class="box-content nopadding regular-text">
+
+    <div class="row">
+        <div class="col-sm-3">
+            <label for="requisting-users-filter" class="regular-text">Solicitante</label>
+            <div class="form-group">
+                <select name="requisting-users-filter[]" id="requisting-users-filter" multiple="multiple" class="chosen-select form-control">
+
+                    @foreach ($requestingUsers as $user)
+                        <option value="{{$user->id}}">{{$user->person->name}}</option>
+                    @endforeach
+
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-2">
+            <span class="regular-text">Tipo da solicitação:</span>
+            <div class="row-filter-reports">
+
+                @foreach (PurchaseRequestType::cases() as $typeCase)
+                    <label class="checkbox-label secondary-text">
+                        <input type="checkbox" name="request-type[]" class="request-type-checkbox" value="{{ $typeCase->value }}" checked>
+                        {{ $typeCase->label() }}
+                    </label>
+                @endforeach
+
+            </div>
+        </div>
+
+        <div class="col-sm-7">
+            <span class="regular-text">Status da solicitação:</span>
+            <div class="row-filter-reports">
+                @foreach (PurchaseRequestStatus::cases() as $statusCase)
+                    @php
+                        $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
+                        $isChecked = $statusDefaultFilter;
+                    @endphp
+
+                    @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
+                        <label class="checkbox-label secondary-text">
+                            <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
+                            {{ $statusCase->label() }}
+                        </label>
+                    @endif
+
+                @endforeach
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary btn-small" id="reports-filter-btn">Filtrar</button>
+        </div>
+    </div>
+
     <table id="reportsTable" class="table table-hover table-nomargin table-bordered" data-nosort="0" data-checkall="all">
         <thead>
             <tr>
@@ -37,6 +112,20 @@
         const enumRequests = @json($enumRequests);
 
         $('#reportsTable').DataTable({
+            initComplete: function() {
+                $('#reports-filter-btn').click(() => {
+                    const $checkedStatusInputs = $('.status-checkbox:checked');
+                    const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
+                    const $requistingUsersIdsFilter = $('#requisting-users-filter').val() || "";
+
+                    const statusValues = $checkedStatusInputs.map((index, element) => element.value).toArray();
+                    const requestTypeValues = $checkedRequestTypeInputs.map((index, element) => element.value).toArray();
+
+                    const updatedUrlAjax = `${urlAjax}?status=${statusValues.join(',')}&request-type=${requestTypeValues.join(',')}&requesting-users-ids=${$requistingUsersIdsFilter}`;
+
+                    $('#reportsTable').DataTable().ajax.url(updatedUrlAjax).load();
+                });
+            },
             scrollY: '400px',
             scrollX: true,
             serverSide: true,
