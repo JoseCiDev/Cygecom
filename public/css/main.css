@@ -12,6 +12,11 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
+table.table thead th,
+table.table tbody td {
+    vertical-align: middle;
+}
+
 .user-item-list {
     border: 1px solid;
     margin-bottom: 5px;
