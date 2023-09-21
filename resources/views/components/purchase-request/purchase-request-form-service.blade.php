@@ -8,6 +8,7 @@
     $serviceInstallments = $purchaseRequest?->service?->installments;
     $purchaseRequestServicePrice = $purchaseRequest?->service?->price === null ? null : (float) $purchaseRequest?->service?->price;
     $serviceQuantityOfInstallments = $purchaseRequest?->service?->quantity_of_installments === null ? null : (int) $purchaseRequest?->service?->quantity_of_installments;
+    $serviceName = $purchaseRequest?->service?->name && !$isCopy ? $purchaseRequest?->service?->name : null;
 
     $selectedPaymentMethod = null;
     $selectedPaymentTerm = null;
@@ -34,6 +35,23 @@
 
 
 <style>
+    #service-title {
+        border: 1px solid rgb(195, 195, 195);
+        padding: 18px 0px 23px 10px;
+    }
+
+    #service-title::placeholder {
+        font-size: 16px;
+    }
+
+    #service-title {
+        font-size: 20px;
+    }
+
+    .label-service-title {
+        font-size: 16px;
+    }
+
     .cost-center-container {
         margin-bottom: 5px;
     }
@@ -89,6 +107,19 @@
 
         <input type="hidden" name="type" value="service" class="no-validation" data-cy="type">
 
+        {{-- NOME SERVIÇO --}}
+        <div class="row service-title-container" style="margin-bottom:5px; margin-top:18px;">
+            <div class="col-sm-6 contract-title">
+                <div class="form-group">
+                    <label for="service-title" class="regular-text label-service-title">Nome serviço pontual: </label>
+                    <input type="text" id="service-title" data-cy="service-title" name="service[name]"
+                        placeholder="Ex: Serviço manutenção elevador - 07/23 - HKM" class="form-control"
+                        data-rule-required="true" minlength="15" maxlength="200"
+                        value="{{ $serviceName }}">
+                </div>
+            </div>
+        </div>
+
         <div class="row center-block" style="padding-bottom: 10px;">
             <h3>Contratante</h3>
         </div>
@@ -107,11 +138,11 @@
 
                 <div class="col-sm-2">
                     <div class="form-group" style="display: flex">
-                        <input name="is_only_quotation"
-                            type="checkbox" id="checkbox-only-quotation" data-cy="checkbox-only-quotation"
-                            class="checkbox-only-quotation no-validation" style="margin:0"
-                            @checked((bool) $purchaseRequest?->is_only_quotation) >
-                        <label for="checkbox-only-quotation" class="regular-text form-check-label icheck-me" style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
+                        <input name="is_only_quotation" type="checkbox" id="checkbox-only-quotation"
+                            data-cy="checkbox-only-quotation" class="checkbox-only-quotation no-validation"
+                            style="margin:0" @checked((bool) $purchaseRequest?->is_only_quotation)>
+                        <label for="checkbox-only-quotation" class="regular-text form-check-label icheck-me"
+                            style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
                     </div>
                 </div>
 
@@ -127,7 +158,8 @@
                                     <input name="is_supplies_contract"value="1" class="radio-who-wants" required
                                         id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
                                         @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label secondary-text" for="is-supplies-contract">Suprimentos</label>
+                                    <label class="form-check-label secondary-text"
+                                        for="is-supplies-contract">Suprimentos</label>
                                     <input name="is_supplies_contract" value="0" class="radio-who-wants"
                                         type="radio" required id="is-area-contract" data-cy="is-area-contract"
                                         style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
@@ -232,8 +264,9 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="regular-text">Data desejada do serviço</label>
-                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date" max="2100-01-01"
-                            class="form-control" min="2023-07-24" value="{{ $purchaseRequest->desired_date ?? null }}">
+                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
+                            max="2100-01-01" class="form-control" min="2023-07-24"
+                            value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
 
