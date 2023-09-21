@@ -38,7 +38,6 @@ $(() =>{
             },
             description: (value) => value,
             local_description: (value) => value,
-            reason: (value) => value ?? '---',
             observation: (value) => value ?? '---',
             support_links: (value) => value?.replaceAll('\n', '<br>').replaceAll(' ', '<br><br>') ?? 'Sem links de apoio/sugestão',
             desired_date: (value) => dateFormatter(value),
@@ -63,8 +62,12 @@ $(() =>{
         const purchaseRequest = button.data('request').request;
         const requestUser = purchaseRequest.user
         const requestSuppliesUser = purchaseRequest.supplies_user
-
         const costCenterApportionment = purchaseRequest.cost_center_apportionment
+        const products = purchaseRequest.purchase_request_product;
+        const $modalListContainer = $(".modal-list-container");
+        const $modalProductList = $("#modal-product-list");
+
+        const hasProducts = products.length > 0;
 
         const elementCostCenterApportionment = $('.costCenterApportionment');
         elementCostCenterApportionment.empty();
@@ -121,8 +124,18 @@ $(() =>{
 
         mapObjectAndReturnContent(purchaseRequest, mappedBasicInfoEntries)
         mapObjectAndReturnContent(requestUser, mappedUserEntries, 'user-')
+
         if(requestSuppliesUser) {
             mapObjectAndReturnContent(requestSuppliesUser, mappedSuppliesUserEntries, 'supplies-user-')
+        }
+
+        hasProducts ? $modalListContainer.show() : $modalListContainer.hide();
+        if(hasProducts) {
+            $modalProductList.html("");
+            products.forEach(({name}) => {
+                const $li = $('<li>').html(`<strong>Nome:</strong> ${name}`);
+                $modalProductList.append($li);
+            });
         }
     });
 });
