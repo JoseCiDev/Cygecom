@@ -46,7 +46,7 @@
                             <th>Solicitante</th>
                             <th>Responsável</th>
                             <th>Status</th>
-                            <th>Fornecedor</th>>
+                            <th>Fornecedor</th>
                             <th>Condição de pgto.</th>
                             <th class="hidden-1024">Contratação por</th>
                             <th class="hidden-1280">CNPJ</th>
