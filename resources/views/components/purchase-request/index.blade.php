@@ -53,7 +53,7 @@
                                         <th>Nº</th>
                                         <th class="hidden-1280">Contratação por</th>
                                         <th>Tipo</th>
-                                        <th>Nome serviço recorrente/pontual</th>
+                                        <th>Nome do serviço</th>
                                         <th>Fornecedor(es)</th>
                                         <th>Status</th>
                                         <th>Responsável</th>
