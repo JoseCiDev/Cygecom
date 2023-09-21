@@ -38,9 +38,15 @@ class PurchaseRequestService extends ServiceProvider
             'deletedByUser',
             'updatedByUser',
             'service.paymentInfo',
+            'contract.paymentInfo',
+            'product.paymentInfo',
+            'service.supplier',
+            'contract.supplier',
+            'purchaseRequestProduct.supplier',
             'purchaseRequestProduct.category',
             'contract.installments',
-            'product.installments'
+            'product.installments',
+            'suppliesUser.person.costCenter'
         ]);
     }
 
