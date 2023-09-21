@@ -39,8 +39,8 @@
             <header class="request-details-header">
                 <h1 class="text-highlight"><strong>Solicitação de produto nº {{ $product->id }}</strong></h1>
                 <div>
-                    <span>Criado em: {{ \Carbon\Carbon::parse($product->created_at)->format('d/m/Y h:m:s') }}</span> |
-                    <span>Atualizado: {{ \Carbon\Carbon::parse($product->updated_at)->format('d/m/Y h:m:s') }}</span>
+                    <span>Criado em: {{ $product->created_at->formatCustom('d/m/Y H:i:s') }}</span> |
+                    <span>Atualizado: {{ $product->updated_at?->formatCustom('d/m/Y H:i:s') ?? '---' }}</span>
                 </div>
 
                 @if ($product->is_only_quotation)
@@ -135,11 +135,11 @@
                                         <hr>
                                         <p>
                                             <strong>Usuário criado em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->user->created_at)->format('d/m/Y h:m:s') }}
+                                            {{ $request->user->created_at->formatCustom('d/m/Y H:i:s') }}
                                         </p>
                                         <p>
                                             <strong>Usuário atualizado em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->user->updated_at)->format('d/m/Y h:m:s') }}
+                                            {{ $request->user->updated_at?->formatCustom('d/m/Y H:i:s') ?? '---' }}
                                         </p>
                                     </div>
                                 </div>
