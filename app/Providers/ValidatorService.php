@@ -391,14 +391,12 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         $messages  = $this->messagesForPurchaseRequest;
 
         if (isset($data['contract']['name'])) {
-            $name = $data['contract']['name'];
-            $rules['contract.name'] = ["unique:contracts,name,$name"];
+            $rules['contract.name'] = ["unique:contracts,name"];
             $messages['contract.name.unique'] = 'Desculpe, já existe outro contrato com esse nome.';
         }
 
         if (isset($data['service']['name'])) {
-            $name = $data['service']['name'];
-            $rules['service.name'] = ["unique:services,name,$name"];
+            $rules['service.name'] = ["unique:services,name"];
             $messages['service.name.unique'] = 'Desculpe, já existe outro serviço com esse nome.';
         }
 
