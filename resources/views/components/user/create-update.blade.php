@@ -72,20 +72,20 @@
                 <label for="number" class="regular-text"> Telefone/Celular </label>
                 <input type="text" name="number" id="number" data-cy="number" placeholder="Ex: (00) 0000-0000" @disabled($isDisabled)
                     class="form-control phone_number" data-rule-required="true" minlength="14"
-                    value="{{ old('number', isset($user) ? $user->person->phone->number : '') }}">
+                    value="{{ old('number', isset($user) ? $user->person->phone?->number : '') }}">
                 @error('number') <span class="text-danger">{{ $message }}</span> @enderror
 
                 <div style="margin-top: 10px">
                     {{-- PESSOAL --}}
                     <label class="form-check-label regular-text" for="personal">
-                        <input @disabled($isDisabled) @checked(isset($user) && $user->person->phone->phone_type === 'personal')
+                        <input @disabled($isDisabled) @checked(isset($user) && $user->person->phone?->phone_type === 'personal')
                             class="icheck-me" type="radio" name="phone_type" id="personal" data-cy="personal" value="personal" data-skin="minimal">
                         Pessoal
                     </label>
 
                     {{-- COMERCIAL --}}
                     <label class="form-check-label regular-text" for="commercial">
-                        <input @disabled($isDisabled) @checked(isset($user) && $user->person->phone->phone_type === 'commercial')
+                        <input @disabled($isDisabled) @checked(isset($user) && $user->person->phone?->phone_type === 'commercial')
                             class="icheck-me" type="radio" name="phone_type" id="commercial" data-cy="commercial" value="commercial" data-skin="minimal"
                             @if (!isset($user)) checked @endif >
                         Comercial
