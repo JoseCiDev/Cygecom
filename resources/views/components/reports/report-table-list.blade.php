@@ -8,6 +8,15 @@
         'paymentTerms' => collect(PaymentTerm::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
     ];
 
+    $costCenters = $requestingUsers
+        ->pluck('purchaseRequest')
+        ->collapse()
+        ->filter(fn($item) => $item->status->value !== PurchaseRequestStatus::RASCUNHO->value)
+        ->pluck('costCenterApportionment')
+        ->collapse()
+        ->pluck('costCenter')
+        ->unique();
+
 @endphp
 
 <style>
@@ -28,7 +37,8 @@
 <div class="box-content nopadding regular-text">
 
     <div class="row">
-        <div class="col-sm-3">
+
+        <div class="col-sm-4">
             <label for="requisting-users-filter" class="regular-text">Solicitante</label>
             <div class="form-group">
                 <select name="requisting-users-filter[]" id="requisting-users-filter" multiple="multiple" class="chosen-select form-control">
@@ -40,26 +50,62 @@
                 </select>
             </div>
         </div>
+
+        <div class="col-sm-5">
+            <label for="cost-center-filter" class="regular-text">Centros de custos</label>
+            <div class="form-group">
+                <select name="cost-center-filter[]" id="cost-center-filter" multiple="multiple" class="chosen-select form-control">
+                    @foreach ($costCenters as $costCenter)
+                        @php
+                            $companyName = $costCenter->company->name;
+                            $costCenterName = $costCenter->name;
+                            $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
+                        @endphp
+
+                        <option value="{{ $costCenter->id }}">
+                            {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
     </div>
 
     <div class="row">
 
         <div class="col-sm-2">
-            <span class="regular-text">Tipo da solicitação:</span>
-            <div class="row-filter-reports">
+            <div class="form-group">
+                <label for="date-since" class="regular-text">A partir de:</label>
+                <input type="date" class="form-control" name="date-since" id="date-since" data-cy="date-since" max="{{ now()->formatCustom('Y-m-d') }}">
+            </div>
+        </div>
 
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label for="date-until" class="regular-text">Até:</label>
+                <input type="date" class="form-control" name="date-until" id="date-until" data-cy="date-until" max="{{ now()->formatCustom('Y-m-d') }}">
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <label for="request-type" class="regular-text">Tipo da solicitação:</label>
+            <div class="row-filter-reports">
                 @foreach (PurchaseRequestType::cases() as $typeCase)
                     <label class="checkbox-label secondary-text">
                         <input type="checkbox" name="request-type[]" class="request-type-checkbox" value="{{ $typeCase->value }}" checked>
                         {{ $typeCase->label() }}
                     </label>
                 @endforeach
-
             </div>
         </div>
 
-        <div class="col-sm-7">
-            <span class="regular-text">Status da solicitação:</span>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <label for="status" class="regular-text">Status da solicitação:</label>
             <div class="row-filter-reports">
                 @foreach (PurchaseRequestStatus::cases() as $statusCase)
                     @php
@@ -111,17 +157,25 @@
         const urlAjax = @json(route('reports.index.json'));
         const enumRequests = @json($enumRequests);
 
-        $('#reportsTable').DataTable({
+        const reportsTable = $('#reportsTable').DataTable({
             initComplete: function() {
                 $('#reports-filter-btn').click(() => {
                     const $checkedStatusInputs = $('.status-checkbox:checked');
                     const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
                     const $requistingUsersIdsFilter = $('#requisting-users-filter').val() || "";
+                    const $costCenterIdsFilter = $('#cost-center-filter').val() || "";
+                    const $dateSince = $('#date-since').val();
+                    const $dateUntil = $('#date-until').val();
 
                     const statusValues = $checkedStatusInputs.map((index, element) => element.value).toArray();
                     const requestTypeValues = $checkedRequestTypeInputs.map((index, element) => element.value).toArray();
 
-                    const updatedUrlAjax = `${urlAjax}?status=${statusValues.join(',')}&request-type=${requestTypeValues.join(',')}&requesting-users-ids=${$requistingUsersIdsFilter}`;
+                    let updatedUrlAjax = `${urlAjax}?status=${statusValues.join(',')}`;
+                    updatedUrlAjax += `&request-type=${requestTypeValues.join(',')}`;
+                    updatedUrlAjax += `&requesting-users-ids=${$requistingUsersIdsFilter}`;
+                    updatedUrlAjax += `&cost-center-ids=${$costCenterIdsFilter}`;
+                    updatedUrlAjax += `&date-since=${$dateSince}`;
+                    updatedUrlAjax += `&date-until=${$dateUntil}`;
 
                     $('#reportsTable').DataTable().ajax.url(updatedUrlAjax).load();
                 });

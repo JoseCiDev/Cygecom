@@ -33,14 +33,23 @@ class ReportController extends Controller
         $status = (string) $request->query('status', false);
         $requestType = (string) $request->query('request-type', false);
         $requestingUsersIds = (string) $request->query('requesting-users-ids', false);
+        $costCenterIds = (string) $request->query('cost-center-ids', false);
+        $dateSince = (string) $request->query('date-since', false);
+        $dateUntil = (string) $request->query('date-until', now());
         $currentPage = ($start / $length) + 1;
 
         try {
             $query = $this->purchaseRequestService->allPurchaseRequests()
                 ->whereNull('deleted_at')
-                ->where('status', "!=", PurchaseRequestStatus::RASCUNHO->value);
+                ->where('status', "!=", PurchaseRequestStatus::RASCUNHO->value)
+                ->whereDate('responsibility_marked_at', '>=', $dateSince)
+                ->whereDate('responsibility_marked_at', '<=', $dateUntil);
 
             $query = $this->reportService->whereInRequistingUserQuery($query, $requestingUsersIds);
+
+            if ($costCenterIds) {
+                $query = $this->reportService->whereInCostCenterQuery($query, $costCenterIds);
+            }
 
             if ($requestType) {
                 $query = $this->reportService->whereInRequestTypeQuery($query, $requestType);
@@ -50,13 +59,13 @@ class ReportController extends Controller
                 $query = $this->reportService->whereInStatusQuery($query, $status);
             }
 
-            $orderColumn = $this->mapOrdemColumn($orderColumnIndex);
+            $orderColumn = $this->reportService->mapOrdemColumn($orderColumnIndex);
             if ($orderColumn) {
                 $query->orderBy($orderColumn, $orderDirection);
             }
 
             if (!empty($searchValue)) {
-                $query = $this->searchValueQuery($query, $searchValue);
+                $query = $this->reportService->searchValueQuery($query, $searchValue);
             }
 
             $requests = $query->paginate($length, ['*'], 'page', $currentPage);
@@ -70,68 +79,5 @@ class ReportController extends Controller
             'recordsTotal' => $requests->total(),
             'recordsFiltered' => $requests->total(),
         ], 200);
-    }
-
-    private function mapOrdemColumn(int $orderColumnIndex): string|Builder|bool
-    {
-        $orderColumnMappings = [
-            0 => 'id',
-            1 => 'type',
-            2 => 'responsibility_marked_at',
-            3 => Person::select('name')->whereColumn('people.id', '=', 'purchase_requests.user_id'),
-            4 => 'status',
-            5 => Person::select('name')->whereColumn('people.id', '=', 'purchase_requests.supplies_user_id'),
-            10 => Product::select('amount')->whereColumn('products.purchase_request_id', '=', 'purchase_requests.id')
-                ->union(Service::select('price')->whereColumn('services.purchase_request_id', '=', 'purchase_requests.id'))
-                ->union(Contract::select('amount')->whereColumn('contracts.purchase_request_id', '=', 'purchase_requests.id'))
-        ];
-
-        return $orderColumnMappings[$orderColumnIndex] ?? false;
-    }
-
-    private function searchValueQuery($query, string $searchValue): Builder
-    {
-        return $query
-            ->where('id', 'like', "%{$searchValue}%")
-            ->orWhereHas('user', function ($query) use ($searchValue) {
-                $query->whereHas('person', function ($query) use ($searchValue) {
-                    $query->where('name', 'like', "%{$searchValue}%");
-                });
-            })
-            ->orWhereHas('suppliesUser', function ($query) use ($searchValue) {
-                $query->whereHas('person', function ($query) use ($searchValue) {
-                    $query->where('name', 'like', "%{$searchValue}%");
-                });
-            })
-            ->orWhereHas('costCenterApportionment', function ($query) use ($searchValue) {
-                $query->whereHas('costCenter', function ($query) use ($searchValue) {
-                    $query->where('name', 'like', "%{$searchValue}%");
-                });
-            })
-            ->orWhereHas('costCenterApportionment', function ($query) use ($searchValue) {
-                $query->whereHas('costCenter', function ($query) use ($searchValue) {
-                    $query->where('name', 'like', "%{$searchValue}%");
-                });
-            })
-            ->orWhereHas('product', function ($query) use ($searchValue) {
-                $query->where('amount', 'like', "%{$searchValue}%");
-            })
-            ->orWhereHas('purchaseRequestProduct', function ($query) use ($searchValue) {
-                $query->whereHas('supplier', function ($query) use ($searchValue) {
-                    $query->where('corporate_name', 'like', "%{$searchValue}%");
-                });
-            })
-            ->orWhereHas('service', function ($query) use ($searchValue) {
-                $query->where('price', 'like', "%{$searchValue}%")
-                    ->orWhereHas('supplier', function ($query) use ($searchValue) {
-                        $query->where('corporate_name', 'like', "%{$searchValue}%");
-                    });
-            })
-            ->orWhereHas('contract', function ($query) use ($searchValue) {
-                $query->where('amount', 'like', "%{$searchValue}%")
-                    ->orWhereHas('supplier', function ($query) use ($searchValue) {
-                        $query->where('corporate_name', 'like', "%{$searchValue}%");
-                    });
-            });
     }
 }
