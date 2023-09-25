@@ -2,13 +2,14 @@
 
 namespace App\View\Components;
 
-use App\Models\{Company, CostCenter, Supplier};
-use App\Providers\PurchaseRequestService;
 use Closure;
-use App\Enums\{PaymentMethod, PaymentTerm, ContractRecurrence};
-use Illuminate\Contracts\View\View;
+use App\Models\Person;
 use Illuminate\View\Component;
+use Illuminate\Contracts\View\View;
+use App\Providers\PurchaseRequestService;
 use Illuminate\Database\Eloquent\Collection;
+use App\Models\{Company, CostCenter, Supplier};
+use App\Enums\{PaymentMethod, PaymentTerm, ContractRecurrence};
 
 class PurchaseRequestFormContract extends Component
 {
@@ -32,6 +33,7 @@ class PurchaseRequestFormContract extends Component
     {
         $companies       = Company::all();
         $suppliers       = Supplier::all();
+        $people = Person::all();
         $userCostCenters = auth()->user()->userCostCenterPermission;
         $paymentMethods = PaymentMethod::cases();
         $paymentTerms = PaymentTerm::cases();
@@ -56,6 +58,7 @@ class PurchaseRequestFormContract extends Component
             'companies'    => $companies,
             'costCenters'  => $costCenters,
             'suppliers'    => $suppliers,
+            'people' => $people,
             "paymentMethods" => $paymentMethods,
             "paymentTerms" => $paymentTerms,
             "recurrenceOptions" => $recurrenceOptions,
