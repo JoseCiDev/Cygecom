@@ -149,7 +149,7 @@
                     <label for="requester" style="display:block;" class="regular-text">
                         Atribuir um solicitante
                     </label>
-                    <select name="requester_person_id" class='select2-me select-supplier'
+                    <select name="requester_person_id" class='select2-me'
                         data-cy="requester" data-placeholder="Escolha um colaborador"
                         style="width:100%;">
                         <option value=""></option>
@@ -158,8 +158,9 @@
                                 if ($person->id === $currentUser->person->id) {
                                     continue;
                                 }
+                                $selected = $person->id === $purchaseRequest?->requester?->id;
                             @endphp
-                            <option value="{{ $person->id }}">{{$person->name}}</option>
+                            <option value="{{ $person->id }}" @selected($selected)>{{$person->name}}</option>
                         @endforeach
                     </select>
                 </div>
