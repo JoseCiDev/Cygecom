@@ -22,7 +22,6 @@ class PopulatePeople extends SeederFromImporter
                     $existingPerson = Person::where('cpf_cnpj', $data['cpf_cnpj'])->first();
                     if (!$existingPerson) {
                         $person = new Person;
-                        echo(array_intersect_key($data, array_flip($person->getFillable())));
                         $fillableData = array_intersect_key($data, array_flip($person->getFillable()));
                         $person->fill($fillableData);
                         $person->save();
