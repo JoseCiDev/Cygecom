@@ -121,7 +121,7 @@
                     $cnpjSpanWarning.hide();
                 }
             }
-        });
+        }).trigger('input');
 
         if (cnpjBackend === null && supplier !== null) {
             $('#is-international-supplier').trigger('click');
