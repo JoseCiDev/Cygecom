@@ -51,13 +51,14 @@
                                 <thead>
                                     <tr>
                                         <th>Nº</th>
-                                        <th>Contratação por</th>
-                                        <th>Tipo de solicitação</th>
+                                        <th class="hidden-1280">Contratação por</th>
+                                        <th>Tipo</th>
+                                        <th>Nome do serviço</th>
                                         <th>Fornecedor(es)</th>
                                         <th>Status</th>
                                         <th>Responsável</th>
                                         <th>Data desejada</th>
-                                        <th>Atualizado em</th>
+                                        <th class="hidden-1440">Atualizado em</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
@@ -67,11 +68,14 @@
                                             $isDraft = $purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value;
                                             $supplier = null;
                                             $msg = '';
+                                            $name = '---';
                                             if ($purchaseRequest->type === PurchaseRequestType::SERVICE) {
                                                 $supplier = $purchaseRequest->service->supplier ?? null;
+                                                $name = $purchaseRequest->service->name ?? '---';
                                             } elseif ($purchaseRequest->type === PurchaseRequestType::CONTRACT) {
                                                 $supplier = $purchaseRequest->contract->supplier ?? null;
-                                            } else {
+                                                $name = $purchaseRequest->contract->name ?? '---';
+                                            } else  {
                                                 $countSuppliers = count($purchaseRequest?->purchaseRequestProduct?->groupBy('supplier_id'));
 
                                                 if ($countSuppliers > 1) {
@@ -82,13 +86,14 @@
                                         @endphp
                                         <tr>
                                             <td>{{$purchaseRequest->id}}</td>
-                                            <td>{{$purchaseRequest->is_supplies_contract ? 'Suprimentos' : 'Área Solicitante'}}</td>
+                                            <td class="hidden-1280">{{$purchaseRequest->is_supplies_contract ? 'Suprimentos' : 'Área Solicitante'}}</td>
                                             <td>{{$purchaseRequest->type->label()}}</td>
+                                            <td>{{$name}}</td>
                                             <td>{{$supplier?->corporate_name . $msg}}</td>
                                             <td>{{$purchaseRequest->status->label()}}</td>
                                             <td>{{$purchaseRequest->suppliesUser?->person?->name ?? '---'}}</td>
                                             <td>{{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}</td>
-                                            <td>{{ $purchaseRequest->updated_at->formatCustom('d/m/Y H:i:s')  }}</td>
+                                            <td class="hidden-1440">{{ $purchaseRequest->updated_at->formatCustom('d/m/Y H:i:s')  }}</td>
 
                                             {{-- BTN AÇÕES --}}
                                             <td style="white-space: nowrap;">

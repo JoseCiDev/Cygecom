@@ -39,6 +39,7 @@ class Service extends Model
     }
 
     protected $fillable = [
+        'name',
         'already_provided',
         'local_service',
         'price',

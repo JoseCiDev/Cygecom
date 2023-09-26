@@ -57,6 +57,11 @@
 
                 <div class="row sub-info-container">
                     <h4 class="text-highlight">
+                        <strong>Nome do serviço:</strong>
+                        {{ $request->service?->name ?? '---' }}
+                    </h4>
+                    <br>
+                    <h4 class="text-highlight">
                         <strong>
                             Data da prestação do serviço:
                         </strong>
