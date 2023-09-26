@@ -563,6 +563,17 @@
             max: 1000000000,
         });
 
+        $editValueInputModal.on('input', function() {
+            const formattedValue = $(this).val();
+            if (formattedValue !== null) {
+                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                const rawValue = parseFloat(processedValue);
+                if (!isNaN(rawValue)) {
+                    $editValueHiddenModal.val(rawValue.toFixed(2)).trigger('change');
+                }
+            }
+        });
+
         function fillHiddenInputsWithRowData() {
             const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
             const tableData = $installmentsTable.data();
@@ -673,7 +684,6 @@
             $('#modal-edit-service-installment').modal('show');
 
             const expireDate = $('#edit-expire-date');
-            const $editValue = $('#edit-value');
             const status = $('#edit-status');
             const observation = $('#edit-observation');
 
@@ -683,7 +693,7 @@
             }
 
             editValueInputModalMasked.value = rowData.value.replace('.', ',');
-            $editValue.val(editValueInputModalMasked.value);
+            $editValueInputModal.val(editValueInputModalMasked.value);
 
             $editValueInputModal.trigger('input');
 
