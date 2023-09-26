@@ -48,6 +48,7 @@
     <link rel="stylesheet" href="{{ asset('css/supplies/category-column-tags.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies/details.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/reports/report-table-list.css') }}">
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>

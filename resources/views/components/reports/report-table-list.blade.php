@@ -19,21 +19,6 @@
 
 @endphp
 
-<style>
-.row-filter-reports {
-    display: flex;
-    gap: 20px;
-    padding: 15px 0;
-    align-items: center;
-    flex-wrap: wrap
-}
-
-.row-filter-reports .checkbox-label {
-    cursor: pointer;
-}
-
-</style>
-
 <div class="box-content nopadding regular-text">
 
     <div class="row">
@@ -129,6 +114,7 @@
     <div class="row">
         <div class="col-md-12">
             <button class="btn btn-primary btn-small" id="reports-filter-btn">Filtrar</button>
+            <button class="btn btn-primary btn-small" id="generate-csv-button">Baixar relatório</button>
         </div>
     </div>
 
@@ -156,35 +142,127 @@
     $(() => {
         const urlAjax = @json(route('reports.index.json'));
         const enumRequests = @json($enumRequests);
+        const $generateCSVButton = $('#generate-csv-button');
+        const $reportsTable = $('#reportsTable');
 
-        const reportsTable = $('#reportsTable').DataTable({
+        const getUrlWithParams = (urlAjax) => {
+            const $checkedStatusInputs = $('.status-checkbox:checked');
+            const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
+            const $requistingUsersIdsFilter = $('#requisting-users-filter').val() || "";
+            const $costCenterIdsFilter = $('#cost-center-filter').val() || "";
+            const $dateSince = $('#date-since').val();
+            const $dateUntil = $('#date-until').val();
+
+            const statusValues = $checkedStatusInputs.map((index, element) => element.value).toArray();
+            const requestTypeValues = $checkedRequestTypeInputs.map((index, element) => element.value).toArray();
+
+            let updatedUrlAjax = `${urlAjax}?status=${statusValues.join(',')}`;
+            updatedUrlAjax += `&request-type=${requestTypeValues.join(',')}`;
+            updatedUrlAjax += `&requesting-users-ids=${$requistingUsersIdsFilter}`;
+            updatedUrlAjax += `&cost-center-ids=${$costCenterIdsFilter}`;
+            updatedUrlAjax += `&date-since=${$dateSince}`;
+            updatedUrlAjax += `&date-until=${$dateUntil}`;
+
+            return updatedUrlAjax;
+        }
+
+        const downloadCsv = (csv) => {
+            const now = moment(new Date()).format('YYYY-MM-DD-HH-mm-ss-SSS');
+            const fileName = `relatorio-gecom-${now}.csv`;
+            const blob = new Blob([csv], { type: "text/csv" });
+            const link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = fileName;
+            link.click();
+        }
+
+        $reportsTable.DataTable({
             initComplete: function() {
                 $('#reports-filter-btn').click(() => {
-                    const $checkedStatusInputs = $('.status-checkbox:checked');
-                    const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
-                    const $requistingUsersIdsFilter = $('#requisting-users-filter').val() || "";
-                    const $costCenterIdsFilter = $('#cost-center-filter').val() || "";
-                    const $dateSince = $('#date-since').val();
-                    const $dateUntil = $('#date-until').val();
-
-                    const statusValues = $checkedStatusInputs.map((index, element) => element.value).toArray();
-                    const requestTypeValues = $checkedRequestTypeInputs.map((index, element) => element.value).toArray();
-
-                    let updatedUrlAjax = `${urlAjax}?status=${statusValues.join(',')}`;
-                    updatedUrlAjax += `&request-type=${requestTypeValues.join(',')}`;
-                    updatedUrlAjax += `&requesting-users-ids=${$requistingUsersIdsFilter}`;
-                    updatedUrlAjax += `&cost-center-ids=${$costCenterIdsFilter}`;
-                    updatedUrlAjax += `&date-since=${$dateSince}`;
-                    updatedUrlAjax += `&date-until=${$dateUntil}`;
-
-                    $('#reportsTable').DataTable().ajax.url(updatedUrlAjax).load();
+                    const updatedUrlAjax = getUrlWithParams(urlAjax);
+                    $reportsTable.DataTable().ajax.url(updatedUrlAjax).load();
                 });
+
+                $generateCSVButton.on('click', () => {
+                    let updatedUrlAjax = getUrlWithParams(urlAjax);
+                    updatedUrlAjax += `&length=-1`;
+
+                    $.ajax({
+                        url: updatedUrlAjax,
+                        type: 'GET',
+                        success: (data) => {
+                            const content = data.data;
+                            const headers = $('#reportsTable thead tr th').toArray().map(header => header.textContent);
+                            const rows = content.map(item => {
+                                const id = item.id
+                                const type = enumRequests['type'][item.type]
+                                const responsibilityMarkedAt = item.responsibility_marked_at ? moment(item.responsibility_marked_at).format('DD/MM/YYYY HH:mm:ss') : '---'
+                                const requistingUser = item.user.person.name
+                                const status = enumRequests['status'][item.status]
+                                const suppliesUserName = item.supplies_user.person.name
+                                const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name).join(', ');
+
+                                const supplierColumnMapping = {
+                                    'product': () => item.purchase_request_product?.map((element) => element.supplier?.corporate_name),
+                                    'service': () => [item.service?.supplier?.corporate_name],
+                                    'contract': () => [item.contract?.supplier?.corporate_name],
+                                };
+                                const suppliers = supplierColumnMapping[item.type]().filter((el) => el).join(', ') || '---';
+
+                                const paymentInfo = item[item.type]?.payment_info || {};
+
+                                const paymentMethod = paymentInfo.payment_method ;
+                                const paymentMethodLabel = enumRequests['paymentMethod'][paymentMethod] || '---'
+
+                                const paymentTerms = paymentInfo?.payment_terms || '---';
+                                const paymentTermsLabel = enumRequests['paymentTerms'][paymentTerms] || '---'
+
+                                const amount = item[item.type]?.amount || item[item.type]?.price;
+                                const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'});
+                                const formattedAmount = amount ? formatter.format(amount) : '---';
+
+                                return [
+                                    id,
+                                    type,
+                                    responsibilityMarkedAt,
+                                    requistingUser,
+                                    status,
+                                    suppliesUserName,
+                                    costCenters,
+                                    suppliers,
+                                    paymentMethodLabel,
+                                    paymentTermsLabel,
+                                    formattedAmount
+                                ]
+                            });
+
+                            const csv = [headers];
+                            rows.forEach((row) => {
+                                const csvRow = row.map((cell) => `"${cell}"`);
+                                csv.push('\n' + csvRow);
+                            });
+
+                            downloadCsv(csv);
+                        },
+                        error: (response, textStatus, errorThrown) => {
+                            // Manipular erros aqui
+                            const errorBox = `<div style="height: 300px; overflow: scroll">${response.responseJSON.error}</div>`;
+                            bootbox.alert({
+                                title: "Houve uma falha na busca dos registros!",
+                                message: "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista."
+                                + "<br><br>"
+                                + errorBox,
+                                className: 'bootbox-custom-warning'
+                            });
+                        },
+                    });
+                })
             },
             scrollY: '400px',
             scrollX: true,
             serverSide: true,
             paging: true,
-            lengthMenu: [10, 25, 50, 100],
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
             searching: true,
             searchDelay: 1000,
             language: {

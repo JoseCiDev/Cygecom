@@ -1,0 +1,11 @@
+.row-filter-reports {
+    display: flex;
+    gap: 20px;
+    padding: 15px 0;
+    align-items: center;
+    flex-wrap: wrap
+}
+
+.row-filter-reports .checkbox-label {
+    cursor: pointer;
+}

@@ -106,7 +106,7 @@ class ReportService
     /**
      * @param string $orderColumnIndex Recebe um index que determina o campo de ordenação com base no dicionário de mapeamento."
      */
-    public function mapOrdemColumn(int $orderColumnIndex): string|bool
+    public function mapOrdemColumn(int $orderColumnIndex): string|bool|Builder
     {
         $orderColumnMappings = [
             0 => 'id',

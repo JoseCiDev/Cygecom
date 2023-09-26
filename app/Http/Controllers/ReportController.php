@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PurchaseRequestStatus;
-use App\Models\{Service, Product, Person, Contract};
 use App\Providers\PurchaseRequestService;
 use App\Services\ReportService;
 use Illuminate\Http\{Request, JsonResponse};
 use Illuminate\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Exception;
 
 class ReportController extends Controller
@@ -27,9 +25,9 @@ class ReportController extends Controller
         $draw = (int) $request->query('draw', 1);
         $start = (int) $request->query('start', 0);
         $length = (int) $request->query('length', 10);
-        $searchValue = (string) $request->query('search')['value'];
-        $orderColumnIndex = (int) $request->query('order')[0]['column'];
-        $orderDirection = (string) $request->query('order', ['dir' => 'asc'])[0]['dir'];
+        $searchValue = (string) $request->query('search', ['value' => null])['value'];
+        $orderColumnIndex = (int) $request->query('order', [0 => ['column' => null]])[0]['column'];
+        $orderDirection = (string) $request->query('order', [0 => ['dir' => 'asc']])[0]['dir'];
         $status = (string) $request->query('status', false);
         $requestType = (string) $request->query('request-type', false);
         $requestingUsersIds = (string) $request->query('requesting-users-ids', false);
@@ -37,6 +35,7 @@ class ReportController extends Controller
         $dateSince = (string) $request->query('date-since', false);
         $dateUntil = (string) $request->query('date-until', now());
         $currentPage = ($start / $length) + 1;
+        $isAll = $length === -1;
 
         try {
             $query = $this->purchaseRequestService->allPurchaseRequests()
@@ -68,16 +67,16 @@ class ReportController extends Controller
                 $query = $this->reportService->searchValueQuery($query, $searchValue);
             }
 
-            $requests = $query->paginate($length, ['*'], 'page', $currentPage);
+            $requests = $isAll ? $query->get() : $query->paginate($length, ['*'], 'page', $currentPage);
         } catch (Exception $error) {
             return response()->json(['error' => 'Não foi possível buscar os fornecedores. Por favor, tente novamente mais tarde.' . $error], 500);
         }
 
         return response()->json([
-            'data' => $requests->items(),
+            'data' => $isAll ? $requests->toArray() : $requests->items(),
             'draw' => $draw,
-            'recordsTotal' => $requests->total(),
-            'recordsFiltered' => $requests->total(),
+            'recordsTotal' => $isAll ? $requests->count() : $requests->total(),
+            'recordsFiltered' => $isAll ? $requests->count() : $requests->total(),
         ], 200);
     }
 }
