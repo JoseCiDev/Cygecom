@@ -40,7 +40,7 @@ class SupplierController extends Controller
                     ->orWhere('name', 'like', "%{$searchValue}%")
                     ->orWhere('supplier_indication', 'like', "%{$searchValue}%")
                     ->orWhere('market_type', 'like', "%{$searchValue}%")
-                    ->orWhere('qualification', 'like', "%{$searchValue}%");
+                    ->orWhere('qualification', '=', "{$searchValue}");
             }
 
             $suppliersQuery = $query->orderBy('created_at', 'desc')->paginate($length, ['*'], 'page', $currentPage);
