@@ -103,7 +103,7 @@
             $cnpj.prop('disabled', false)
         });
 
-        $cnpj.on('input', function() {
+        $cnpj.on('input blur', function() {
             const cnpj = $(this).val();
 
             if (cnpj.length === 0) {
