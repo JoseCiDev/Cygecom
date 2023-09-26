@@ -126,5 +126,9 @@
         if (cnpjBackend === null && supplier !== null) {
             $('#is-international-supplier').trigger('click');
         }
+
+        if($cnpj.val()) {
+            $cnpj.trigger('input');
+        }
     });
 </script>
