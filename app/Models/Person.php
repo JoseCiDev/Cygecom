@@ -19,6 +19,11 @@ class Person extends Model
         return $this->belongsTo(Phone::class, 'phone_id');
     }
 
+    public function purchaseRequest()
+    {
+        return $this->hasMany(PurchaseRequest::class);
+    }
+
     public function costCenter()
     {
         return $this->belongsTo(CostCenter::class, 'cost_center_id');

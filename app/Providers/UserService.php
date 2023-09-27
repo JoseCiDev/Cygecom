@@ -63,9 +63,10 @@ class UserService extends ServiceProvider implements UserServiceInterface
     {
         return DB::transaction(function () use ($request) {
             $currentProfile = auth()->user()->profile->name;
+
             $phoneId = $this->createPhone($request);
             $request['phone_id'] = $phoneId;
-            $person = $this->createPerson($request);
+            $person = $this->updateOrCreatePerson($request);
 
             $user = new User();
             $user->email = $request['email'];
@@ -185,9 +186,14 @@ class UserService extends ServiceProvider implements UserServiceInterface
         UserCostCenterPermission::whereIn('cost_center_id', $removedPermissions)->where('user_id', $userId)->delete();
     }
 
-    private function createPerson(array $request): Person
+    private function updateOrCreatePerson(array $request): Person
     {
-        return Person::create($request);
+        return Person::updateOrCreate(['cpf_cnpj' => $request['cpf_cnpj']], [
+            'name' => $request['name'],
+            'phone_id' => $request['phone_id'],
+            'birthdate' => $request['birthdate'],
+            'cost_center_id' => $request['cost_center_id']
+        ]);
     }
 
     private function createPhone(array $request): int
