@@ -76,6 +76,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user->approver_user_id = $request['approver_user_id'] ?? null;
             $user->approve_limit = $request['approve_limit'] ?? null;
             $user->is_buyer = $request['is_buyer'] ?? false;
+            $user->can_associate_requester = $request['can_associate_requester'] ?? false;
 
             $user->save();
 
@@ -149,6 +150,8 @@ class UserService extends ServiceProvider implements UserServiceInterface
 
         $isBuyer = $data['is_buyer'] ?? $user->is_buyer;
 
+        $canAssociateRequester = $data['can_associate_requester'] ?? $user->can_associate_requester;
+
         $user->update([
             'email' => $email,
             'password' => $password,
@@ -156,6 +159,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             'approver_user_id' => $approverUserId,
             'approve_limit' => $approveLimit,
             'is_buyer' => $isBuyer,
+            'can_associate_requester' => $canAssociateRequester,
         ]);
     }
 
