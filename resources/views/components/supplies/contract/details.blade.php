@@ -121,6 +121,9 @@
                                     <hr>
                                     <div class="tab-content padding">
                                         <p>
+                                            <strong>Quem está solicitando:</strong> {{ $request->requester?->name ?? '---' }}
+                                        </p>
+                                        <p>
                                             <strong>E-mail do solicitante:</strong> {{ $request->user->email }}
                                         </p>
                                         <p>

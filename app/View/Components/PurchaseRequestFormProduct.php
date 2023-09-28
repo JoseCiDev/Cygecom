@@ -3,10 +3,11 @@
 namespace App\View\Components;
 
 use Closure;
-use App\Enums\{PaymentMethod, PaymentTerm};
+use App\Models\Person;
 use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
 use App\Providers\PurchaseRequestService;
+use App\Enums\{PaymentMethod, PaymentTerm};
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\{Company, CostCenter, ProductCategory, Supplier};
 
@@ -32,6 +33,7 @@ class PurchaseRequestFormProduct extends Component
     {
         $companies         = Company::all();
         $suppliers         = Supplier::all();
+        $people = Person::all();
         $productCategories = ProductCategory::all();
         $paymentMethods = PaymentMethod::cases();
         $paymentTerms = PaymentTerm::cases();
@@ -56,6 +58,7 @@ class PurchaseRequestFormProduct extends Component
             "companies" => $companies,
             "costCenters" => $costCenters,
             'suppliers' => $suppliers,
+            'people' => $people,
             "productCategories" => $productCategories,
             "paymentMethods" => $paymentMethods,
             "paymentTerms" => $paymentTerms,

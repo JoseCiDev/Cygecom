@@ -63,9 +63,10 @@ class UserService extends ServiceProvider implements UserServiceInterface
     {
         return DB::transaction(function () use ($request) {
             $currentProfile = auth()->user()->profile->name;
+
             $phoneId = $this->createPhone($request);
             $request['phone_id'] = $phoneId;
-            $person = $this->createPerson($request);
+            $person = $this->updateOrCreatePerson($request);
 
             $user = new User();
             $user->email = $request['email'];
@@ -75,6 +76,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $user->approver_user_id = $request['approver_user_id'] ?? null;
             $user->approve_limit = $request['approve_limit'] ?? null;
             $user->is_buyer = $request['is_buyer'] ?? false;
+            $user->can_associate_requester = $request['can_associate_requester'] ?? false;
 
             $user->save();
 
@@ -148,6 +150,8 @@ class UserService extends ServiceProvider implements UserServiceInterface
 
         $isBuyer = $data['is_buyer'] ?? $user->is_buyer;
 
+        $canAssociateRequester = $data['can_associate_requester'] ?? $user->can_associate_requester;
+
         $user->update([
             'email' => $email,
             'password' => $password,
@@ -155,6 +159,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             'approver_user_id' => $approverUserId,
             'approve_limit' => $approveLimit,
             'is_buyer' => $isBuyer,
+            'can_associate_requester' => $canAssociateRequester,
         ]);
     }
 
@@ -185,9 +190,14 @@ class UserService extends ServiceProvider implements UserServiceInterface
         UserCostCenterPermission::whereIn('cost_center_id', $removedPermissions)->where('user_id', $userId)->delete();
     }
 
-    private function createPerson(array $request): Person
+    private function updateOrCreatePerson(array $request): Person
     {
-        return Person::create($request);
+        return Person::updateOrCreate(['cpf_cnpj' => $request['cpf_cnpj']], [
+            'name' => $request['name'],
+            'phone_id' => $request['phone_id'],
+            'birthdate' => $request['birthdate'],
+            'cost_center_id' => $request['cost_center_id']
+        ]);
     }
 
     private function createPhone(array $request): int

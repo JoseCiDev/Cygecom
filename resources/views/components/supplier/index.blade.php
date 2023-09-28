@@ -5,54 +5,65 @@
 
     $enumQualification = [];
     foreach ($supplierQualificationStatus as $enum) {
-       $enumQualification[$enum->value] = $enum->label();
+        $enumQualification[$enum->value] = $enum->label();
     }
 @endphp
 <x-app>
 
-    <x-modalDelete/>
+    <x-modalDelete />
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="box box-color box-bordered">
-                    <div class="row" style="margin: 0 0 30px">
-                        <div class="col-md-6" style="padding: 0">
-                            <h1 class="page-title">Todos os fornecedores</h1>
-                        </div>
-                        <div class="col-md-6" style="padding: 0">
-                            <a data-cy="btn-cadastrar-novo" href="{{ route('supplier.form') }}" class="btn btn-primary btn-large pull-right">Cadastrar novo</a>
-                        </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="box box-color box-bordered">
+                <div class="row" style="margin: 0 0 30px">
+                    <div class="col-md-6" style="padding: 0">
+                        <h1 class="page-title">Todos os fornecedores</h1>
                     </div>
-
-                    <div class="box-content nopadding regular-text">
-
-                        <table id="supplierTable" class="table table-hover table-nomargin table-bordered" data-nosort="0" data-checkall="all">
-                            <thead>
-                                <tr>
-                                    <th >CNPJ</th>
-                                    <th >Razão social</th>
-                                    <th >Nome fantasia</th>
-                                    <th >Indicação</th>
-                                    <th >Mercado</th>
-                                    <th >Situação</th>
-                                    <th >Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{-- DINÂMICO --}}
-                            </tbody>
-                        </table>
-
+                    <div class="col-md-6" style="padding: 0">
+                        <a data-cy="btn-cadastrar-novo" href="{{ route('supplier.form') }}"
+                            class="btn btn-primary btn-large pull-right">Cadastrar novo</a>
                     </div>
+                </div>
+
+                <div class="box-content nopadding regular-text">
+
+                    <label for="qualificationFilter" class="regular-text">Filtrar por situação:</label>
+                    <select id="qualificationFilter">
+                        <option value="">Todos</option>
+                        @foreach ($supplierQualificationStatus as $qualification)
+                            <option value="{{ $qualification->value }}">{{ $qualification->label() }}</option>
+                        @endforeach
+                    </select>
+
+
+                    <table id="supplierTable" class="table table-hover table-nomargin table-bordered" data-nosort="0"
+                        data-checkall="all">
+                        <thead>
+                            <tr>
+                                <th>CNPJ</th>
+                                <th>Razão social</th>
+                                <th>Nome fantasia</th>
+                                <th>Indicação</th>
+                                <th>Mercado</th>
+                                <th>Situação</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{-- DINÂMICO --}}
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>
+    </div>
 
 </x-app>
 
 <script>
     $(() => {
-        $('#supplierTable').DataTable({
+        const table = $('#supplierTable').DataTable({
             serverSide: true,
             paging: true,
             lengthMenu: [10, 25, 50, 100],
@@ -79,18 +90,27 @@
                     console.log('Erro na requisição do DataTable:', errorThrown);
                 }
             },
-            columns: [
-                {
+            columns: [{
                     data: 'cpf_cnpj',
                     render: (value) => {
                         const cnpjRegex = /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/;
-                        return cnpjRegex.test(value)  ? value.replace(cnpjRegex, '$1.$2.$3/$4-$5') : "---";
+                        return cnpjRegex.test(value) ? value.replace(cnpjRegex,
+                            '$1.$2.$3/$4-$5') : "---";
                     }
                 },
-                { data: 'corporate_name'},
-                { data: 'name', defaultContent: '---' },
-                { data: 'supplier_indication'},
-                { data: 'market_type'},
+                {
+                    data: 'corporate_name'
+                },
+                {
+                    data: 'name',
+                    defaultContent: '---'
+                },
+                {
+                    data: 'supplier_indication'
+                },
+                {
+                    data: 'market_type'
+                },
                 {
                     data: 'qualification',
                     render: (value) => {
@@ -101,11 +121,21 @@
                 {
                     data: null,
                     render: (data) => (
-                        '<a href="suppliers/view/' + data.id + '" ' + 'class="btn" rel="tooltip" title="Editar" data-cy="btn-edit-supplier-' + data.id + '"><i class="fa fa-edit"></i></a>'
-                        + '<button data-route="supplier" data-name="' + data.corporate_name + '" data-id="' + data.id + '" rel="tooltip" title="Excluir" class="btn" data-toggle="modal" data-target="#modal" data-cy="btn-modal-delete-supplier"><i class="fa fa-times"></i></button>'
+                        '<a href="suppliers/view/' + data.id + '" ' +
+                        'class="btn" rel="tooltip" title="Editar" data-cy="btn-edit-supplier-' +
+                        data.id + '"><i class="fa fa-edit"></i></a>' +
+                        '<button data-route="supplier" data-name="' + data.corporate_name +
+                        '" data-id="' + data.id +
+                        '" rel="tooltip" title="Excluir" class="btn" data-toggle="modal" data-target="#modal" data-cy="btn-modal-delete-supplier"><i class="fa fa-times"></i></button>'
                     )
                 }
-            ]
+            ],
+            initComplete: function() {
+                $('#qualificationFilter').on('change', function() {
+                    const selectedValue = $(this).val();
+                    table.search(selectedValue).draw();
+                });
+            }
         });
     });
 </script>

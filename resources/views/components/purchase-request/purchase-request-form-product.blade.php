@@ -2,6 +2,8 @@
     use App\Enums\PurchaseRequestStatus;
     use App\Enums\PaymentMethod;
 
+    $currentUser = auth()->user();
+
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
     $isCopy ??= null;
@@ -66,7 +68,7 @@
 
     <div class="col-sm-6" style="padding: 0">
         @if ($hasRequestNotSent)
-            <h1 class="page-title">Editar solicitação de produto nº {{$purchaseRequest->id}}</h1>
+            <h1 class="page-title">Editar solicitação de produto nº {{ $purchaseRequest->id }}</h1>
         @elseif ($hasSentRequest)
             <div class="alert alert-info alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -74,7 +76,7 @@
                     <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
                 </h5>
             </div>
-            <h1 class="page-title">Visualizar solicitação de produto nº {{$purchaseRequest->id}}</h1>
+            <h1 class="page-title">Visualizar solicitação de produto nº {{ $purchaseRequest->id }}</h1>
         @else
             <h1 class="page-title">Nova solicitação de produto</h1>
         @endif
@@ -82,7 +84,8 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right" style="padding: 0">
             <x-modalDelete />
-            <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
+            <button data-cy="btn-delete-request" data-route="purchaseRequests"
+                data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
                 title="Excluir" class="btn btn-primary btn-danger pull-right">
                 Excluir solicitação
@@ -117,15 +120,39 @@
                 <h3>Dados da solicitação</h3>
             </div>
 
+            @if ($currentUser->can_associate_requester)
+                <div class="row" style="margin-bottom: 15px;">
+                    <div class="col-sm-4 form-group">
+                        <label for="requester" style="display:block;" class="regular-text">
+                            Atribuir um solicitante
+                        </label>
+                        <select name="requester_person_id" class='select2-me' data-cy="requester"
+                            data-placeholder="Escolha um colaborador" style="width:100%;">
+                            <option value=""></option>
+                            @foreach ($people as $person)
+                                @php
+                                    if ($person->id === $currentUser->person->id) {
+                                        continue;
+                                    }
+                                    $selected = $person->id === $purchaseRequest?->requester?->id;
+                                @endphp
+                                <option value="{{ $person->id }}" @selected($selected)>{{ $person->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            @endif
+
             <div class="row" style="margin-bottom:10px; margin-top:5px;">
 
                 <div class="col-sm-2">
                     <div class="form-group" style="display: flex">
-                        <input name="is_only_quotation"
-                            type="checkbox" id="checkbox-only-quotation" data-cy="checkbox-only-quotation"
-                            class="checkbox-only-quotation no-validation" style="margin:0"
-                            @checked((bool) $purchaseRequest?->is_only_quotation) >
-                        <label for="checkbox-only-quotation" class="regular-text form-check-label icheck-me" style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
+                        <input name="is_only_quotation" type="checkbox" id="checkbox-only-quotation"
+                            data-cy="checkbox-only-quotation" class="checkbox-only-quotation no-validation"
+                            style="margin:0" @checked((bool) $purchaseRequest?->is_only_quotation)>
+                        <label for="checkbox-only-quotation" class="regular-text form-check-label icheck-me"
+                            style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
                     </div>
                 </div>
 
@@ -140,10 +167,13 @@
                                     <input name="is_supplies_contract"value="1" class="radio-who-wants" required
                                         id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
                                         @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label secondary-text" for="is-supplies-contract">Suprimentos</label>
-                                    <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio" required id="is-area-contract" data-cy="is-area-contract"
+                                    <label class="form-check-label secondary-text"
+                                        for="is-supplies-contract">Suprimentos</label>
+                                    <input name="is_supplies_contract" value="0" class="radio-who-wants"
+                                        type="radio" required id="is-area-contract" data-cy="is-area-contract"
                                         style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label secondary-text" for="is-area-contract">Eu (Área solicitante)</label>
+                                    <label class="form-check-label secondary-text" for="is-area-contract">Eu (Área
+                                        solicitante)</label>
                                 </div>
                             </div>
                         </fieldset>
@@ -159,11 +189,14 @@
                         <fieldset data-rule-required="true">
                             <div class="row">
                                 <div class="col-sm-5">
-                                    <input name="is_comex" data-cy="is-comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex)
-                                        class="radio-comex" type="radio" data-skin="minimal" required>
-                                    <label class="form-check-label secondary-text" for="services" style="margin-right:15px;">Sim</label>
-                                    <input name="is_comex" data-cy="is-not-comex" value="0" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex)
-                                        class="radio-comex" type="radio" data-skin="minimal" required>
+                                    <input name="is_comex" data-cy="is-comex" value="1"
+                                        @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
+                                        data-skin="minimal" required>
+                                    <label class="form-check-label secondary-text" for="services"
+                                        style="margin-right:15px;">Sim</label>
+                                    <input name="is_comex" data-cy="is-not-comex" value="0"
+                                        @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
+                                        data-skin="minimal" required>
                                     <label class="form-check-label secondary-text" for="">Não</label>
                                 </div>
                             </div>
@@ -212,8 +245,9 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="regular-text">Data desejada entrega do produto</label>
-                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date" max="2100-01-01"
-                            class="form-control" value="{{ $purchaseRequest->desired_date ?? null }}">
+                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
+                            max="2100-01-01" class="form-control"
+                            value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
 
@@ -277,7 +311,8 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="regular-text">Condição de pagamento</label>
-                            <select name="product[payment_info][payment_terms]" id="payment-terms" data-cy="payment-terms" class='select2-me product[payment_info][payment_terms]'
+                            <select name="product[payment_info][payment_terms]" id="payment-terms"
+                                data-cy="payment-terms" class='select2-me product[payment_info][payment_terms]'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentTerms as $paymentTerm)
@@ -295,8 +330,9 @@
                             <label for="format-amount" class="regular-text">Valor total do(s) produto(s)</label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
-                                <input type="text" id="format-amount" name="format-amount" data-cy="format-amount" placeholder="0.00"
-                                    class="form-control format-amount" value="{{ str_replace('.', ',', $purchaseRequestProductAmount) }}">
+                                <input type="text" id="format-amount" name="format-amount"
+                                    data-cy="format-amount" placeholder="0.00" class="form-control format-amount"
+                                    value="{{ str_replace('.', ',', $purchaseRequestProductAmount) }}">
                                 <input type="hidden" name="product[amount]" id="amount" data-cy="amount"
                                     class="amount no-validation" value="{{ $purchaseRequestProductAmount }}">
                             </div>
@@ -328,8 +364,9 @@
                     <div class="col-sm-1">
                         <div class="form-group">
                             <label class="control-label regular-text">Nº parcelas</label>
-                            <input type="text" class="form-control format-installments-number" name="installments-number"
-                                placeholder="Ex: 24" value="{{ $productQuantityOfInstallments }}">
+                            <input type="text" class="form-control format-installments-number"
+                                name="installments-number" placeholder="Ex: 24"
+                                value="{{ $productQuantityOfInstallments }}">
                             <input type="hidden" name="product[quantity_of_installments]" id="installments-number"
                                 data-cy="installments-number" class="installments-number no-validation"
                                 value="{{ $productQuantityOfInstallments }}">
@@ -436,8 +473,8 @@
                     Salvar rascunho
                 </button>
 
-                <button type="submit" name="submit_request"
-                    class="btn btn-primary btn-success btn-submit-request" value="submit-request">
+                <button type="submit" name="submit_request" class="btn btn-primary btn-success btn-submit-request"
+                    value="submit-request">
                     Salvar e enviar solicitação
                 </button>
             @endif
@@ -1065,7 +1102,8 @@
             const suppliersCount = $supplierContainer.find('.supplier-block').length;
             const suppliersCountGreaterThanOne = suppliersCount > 1;
 
-            $('.delete-supplier').prop('disabled', !suppliersCountGreaterThanOne).toggleClass('disabled-button', !suppliersCountGreaterThanOne);
+            $('.delete-supplier').prop('disabled', !suppliersCountGreaterThanOne).toggleClass('disabled-button',
+                !suppliersCountGreaterThanOne);
         }
 
         const $productContainer = $('.product-container');

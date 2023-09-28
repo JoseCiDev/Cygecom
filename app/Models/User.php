@@ -72,6 +72,7 @@ class User extends Authenticatable
         'updated_by',
         'deleted_by',
         'deleted_at',
+        'can_associate_requester'
     ];
 
     /**

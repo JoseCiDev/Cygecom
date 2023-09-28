@@ -57,6 +57,11 @@
 
                 <div class="row sub-info-container">
                     <h4 class="text-highlight">
+                        <strong>Nome do serviço:</strong>
+                        {{ $request->service?->name ?? '---' }}
+                    </h4>
+                    <br>
+                    <h4 class="text-highlight">
                         <strong>
                             Data da prestação do serviço:
                         </strong>
@@ -119,6 +124,9 @@
                                     <h4><i class="fa fa-user"></i><strong> Informações do solicitante</strong></h4>
                                     <hr>
                                     <div class="tab-content padding">
+                                        <p>
+                                            <strong>Quem está solicitando:</strong> {{ $request->requester?->name ?? '---' }}
+                                        </p>
                                         <p>
                                             <strong>E-mail do solicitante:</strong> {{ $request->user->email }}
                                         </p>
