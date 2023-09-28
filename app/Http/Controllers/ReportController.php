@@ -26,7 +26,7 @@ class ReportController extends Controller
         $start = (int) $request->query('start', 0);
         $length = (int) $request->query('length', 10);
         $searchValue = (string) $request->query('search', ['value' => null])['value'];
-        $orderColumnIndex = (int) $request->query('order', [0 => ['column' => null]])[0]['column'];
+        $orderColumnIndex = (int) $request->query('order', [0 => ['column' => 0]])[0]['column'];
         $orderDirection = (string) $request->query('order', [0 => ['dir' => 'asc']])[0]['dir'];
         $status = (string) $request->query('status', false);
         $requestType = (string) $request->query('request-type', false);
@@ -58,10 +58,7 @@ class ReportController extends Controller
                 $query = $this->reportService->whereInStatusQuery($query, $status);
             }
 
-            $orderColumn = $this->reportService->mapOrdemColumn($orderColumnIndex);
-            if ($orderColumn) {
-                $query->orderBy($orderColumn, $orderDirection);
-            }
+            $query = $this->reportService->orderByMapped($query, $orderColumnIndex, $orderDirection);
 
             if (!empty($searchValue)) {
                 $query = $this->reportService->searchValueQuery($query, $searchValue);

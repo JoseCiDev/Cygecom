@@ -361,6 +361,7 @@
             scrollY: '400px',
             scrollX: true,
             paging: true,
+            serverSide: true,
             lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
             searching: true,
             searchDelay: 1000,
@@ -376,13 +377,11 @@
             ajax: {
                 url: urlAjax,
                 type: 'GET',
+                dataType: 'json',
                 error: (response, textStatus, errorThrown) => {
-                    const errorBox = `<div style="height: 300px; overflow: scroll">${response.responseJSON.error}</div>`
                     bootbox.alert({
                         title: "Houve uma falha na busca dos registros!",
-                        message: "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista."
-                        + "<br><br>"
-                        + errorBox,
+                        message: "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.",
                         className: 'bootbox-custom-warning'
                     });
                 },
@@ -434,7 +433,7 @@
                         const firstPendingStatus = logs
                             .filter((item) => item.changes?.status === 'pendente')
                             .find((item) => item.created_at)
-                            .created_at
+                            ?.created_at
 
                         return firstPendingStatus ? moment(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
                     }
