@@ -223,19 +223,21 @@
                 </div>
 
                 <div class="col-sm-3">
-                    <form-group>
+                    <div class="form-group">
                         <label for="form-check" style="margin-bottom: 12px;" class="regular-text">Este usuário pode solicitar para outras pessoas?</label>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <input @checked(isset($user) && $user?->can_associate_requester) name="can_associate_requester" id="can-associate-requester" data-cy="can-associate-requester"
-                                    class="icheck-me" type="radio" value="1" data-skin="minimal">
-                                <label class="form-check-label secondary-text" for="can-associate-requester">Sim</label>
-                                <input @checked(isset($user) && !$user?->can_associate_requester) class="icheck-me" type="radio" name="can_associate_requester" id="can-not-associate-requester"
-                                    data-cy="can-not-associate-requester" value="0" data-skin="minimal" >
-                                <label class="form-check-label secondary-text" for="can-not-associate-requester">Não</label>
+                        <fieldset data-rule-required="true">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <input @checked(isset($user) && $user?->can_associate_requester) name="can_associate_requester" id="can-associate-requester" data-cy="can-associate-requester"
+                                        class="icheck-me" type="radio" value="1" data-skin="minimal" required>
+                                    <label class="form-check-label secondary-text" for="can-associate-requester">Sim</label>
+                                    <input @checked(isset($user) && !$user?->can_associate_requester) class="icheck-me" type="radio" name="can_associate_requester" id="can-not-associate-requester"
+                                        data-cy="can-not-associate-requester" value="0" data-skin="minimal" required>
+                                    <label class="form-check-label secondary-text" for="can-not-associate-requester">Não</label>
+                                </div>
                             </div>
-                        </div>
-                    </form-group>
+                        </fieldset>
+                    </div>
                 </div>
 
             </div>
