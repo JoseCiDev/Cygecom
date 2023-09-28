@@ -47,7 +47,8 @@ class PurchaseRequestService extends ServiceProvider
             'purchaseRequestProduct.category',
             'contract.installments',
             'product.installments',
-            'suppliesUser.person.costCenter'
+            'suppliesUser.person.costCenter',
+            'logs'
         ]);
     }
 

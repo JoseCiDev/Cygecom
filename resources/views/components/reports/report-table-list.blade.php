@@ -271,7 +271,14 @@
                             const rows = content.map(item => {
                                 const id = item.id
                                 const type = enumRequests['type'][item.type]
-                                const responsibilityMarkedAt = item.responsibility_marked_at ? moment(item.responsibility_marked_at).format('DD/MM/YYYY HH:mm:ss') : '---'
+
+                                const pendingStatus = item.logs
+                                    .filter((item) => item.changes?.status === 'pendente')
+                                    .find((item) => item.created_at)
+                                    .created_at
+
+                                const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss')
+
                                 const requistingUser = item.user.person.name
                                 const status = enumRequests['status'][item.status]
                                 const suppliesUserName = item.supplies_user.person.name
@@ -300,7 +307,7 @@
                                     [
                                         id,
                                         type,
-                                        responsibilityMarkedAt,
+                                        firstPendingStatus,
                                         requistingUser,
                                         status,
                                         suppliesUserName,
@@ -422,8 +429,15 @@
                 },
                 { data: 'type', render: (type) => enumRequests['type'][type] },
                 {
-                    data: 'responsibility_marked_at',
-                    render: (responsibility_marked_at) => responsibility_marked_at ? moment(responsibility_marked_at).format('DD/MM/YYYY HH:mm:ss') : '---'
+                    data: 'logs',
+                    render: (logs, _, row) => {
+                        const firstPendingStatus = logs
+                            .filter((item) => item.changes?.status === 'pendente')
+                            .find((item) => item.created_at)
+                            .created_at
+
+                        return firstPendingStatus ? moment(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
+                    }
                 },
                 { data: 'user.person.name' },
                 { data: 'status', render: (status) => enumRequests['status'][status] },

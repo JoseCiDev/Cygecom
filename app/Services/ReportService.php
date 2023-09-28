@@ -6,6 +6,7 @@ use App\Enums\{PurchaseRequestType, PurchaseRequestStatus};
 use App\Models\{User, Service, Product, Person, Contract};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 class ReportService
@@ -99,6 +100,37 @@ class ReportService
                 fn ($query) => $query->whereIn('id', $validIds)
             )
         );
+
+        return $query;
+    }
+
+    /**
+     * @param string $dateSince Recebe uma string com a data inicial do período. Exemplo: "2023-09-20"
+     * @param string $dateUntil Recebe uma string com a data final do período. Exemplo: "2023-09-28"
+     * @param Builder $query Retorna query builder de PurchaseRequest para status pendente atualizado dentro do período escolhido
+     */
+    public function whereInLogDate(Builder $query, string $dateSince, string $dateUntil): Builder
+    {
+        $query->whereHas('logs', function ($query) use ($dateSince, $dateUntil) {
+            $query->where(DB::raw('JSON_EXTRACT(changes, "$.status")'), '=', 'pendente')
+                ->orderBy('created_at', 'asc')
+                ->whereDate('created_at', '>=', $dateSince)
+                ->whereDate('created_at', '<=', $dateUntil)
+                ->limit(1);
+        });
+
+        // dd($query->get()->toArray());
+
+        // $query->whereIn('id', function ($query) use ($dateSince, $dateUntil) {
+        //     $query->select('foreign_id')
+        //         ->from('logs')
+        //         ->where('table', '=', 'purchase_requests')
+        //         ->where(DB::raw('JSON_EXTRACT(changes, "$.status")'), '=', 'pendente')
+        //         ->orderBy('created_at', 'asc')
+        //         ->whereDate('created_at', '>=', $dateSince)
+        //         ->whereDate('created_at', '<=', $dateUntil);
+        //     // ->limit(1);
+        // });
 
         return $query;
     }

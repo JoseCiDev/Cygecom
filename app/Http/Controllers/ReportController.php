@@ -40,9 +40,9 @@ class ReportController extends Controller
         try {
             $query = $this->purchaseRequestService->allPurchaseRequests()
                 ->whereNull('deleted_at')
-                ->where('status', "!=", PurchaseRequestStatus::RASCUNHO->value)
-                ->whereDate('responsibility_marked_at', '>=', $dateSince)
-                ->whereDate('responsibility_marked_at', '<=', $dateUntil);
+                ->where('status', "!=", PurchaseRequestStatus::RASCUNHO->value);
+
+            $query = $this->reportService->whereInLogDate($query, $dateSince, $dateUntil);
 
             $query = $this->reportService->whereInRequistingUserQuery($query, $requestingUsersIds);
 
@@ -69,7 +69,7 @@ class ReportController extends Controller
 
             $requests = $isAll ? $query->get() : $query->paginate($length, ['*'], 'page', $currentPage);
         } catch (Exception $error) {
-            return response()->json(['error' => 'Não foi possível buscar os fornecedores. Por favor, tente novamente mais tarde.' . $error], 500);
+            return response()->json(['error' => 'Não foi possível buscar as solicitações. Por favor, tente novamente mais tarde.' . $error], 500);
         }
 
         return response()->json([
