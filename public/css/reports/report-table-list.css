@@ -1,11 +1,123 @@
-.row-filter-reports {
+.report-filters {
     display: flex;
-    gap: 20px;
-    padding: 15px 0;
-    align-items: center;
-    flex-wrap: wrap
+    flex-direction: column;
 }
 
-.row-filter-reports .checkbox-label {
+.report-filters .label-with-clear-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.report-filters .dates {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.report-filters .dates .date {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.report-filters .types,
+.report-filters .status {
+    display: flex;
+    column-gap: 20px;
+    padding: 5px 0;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.report-filters .checkbox-label {
     cursor: pointer;
+}
+
+@keyframes slide-in-from-right {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.product-td>td:first-child {
+    padding: 0 0 20px 0;
+}
+
+.product-detail-container {
+    border-left: 20px solid var(--product-color);
+    border-bottom: 2px solid var(--product-color);
+    background-color: #ffffff;
+    z-index: 1;
+
+    animation: slide-in-from-right .5s ease;
+    animation-fill-mode: both;
+}
+
+@media (min-width: 768px) {
+    .report-filters .dates-with-checkboxs {
+        display: flex;
+        gap: 20px;
+    }
+
+    .report-filters .dates {
+        flex-direction: column;
+        max-width: 180px;
+        justify-content: space-between;
+    }
+
+    .report-filters .status {
+        padding: 0;
+    }
+
+    .report-filters .types {
+        padding-bottom: 0;
+        padding-top: 5px;
+    }
+
+}
+
+@media (min-width: 1024px) {
+    .report-filters .selects {
+        display: flex;
+        gap: 15px;
+    }
+
+    .report-filters .selects .form-group {
+        width: 100%;
+    }
+
+    .report-filters .status {
+        row-gap: 0;
+    }
+
+    .report-filters .dates {
+        row-gap: 20px;
+    }
+
+    .report-filters .types {
+        padding: 0;
+    }
+
+
+    .report-filters .checkboxs {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    @media (min-width: 1200px) {
+        .report-filters .dates {
+            row-gap: 15px;
+        }
+
+        .report-filters .selects {
+            max-width: 1400px;
+        }
+    }
 }
