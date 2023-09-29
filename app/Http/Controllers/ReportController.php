@@ -34,6 +34,7 @@ class ReportController extends Controller
         $costCenterIds = (string) $request->query('cost-center-ids', false);
         $dateSince = (string) $request->query('date-since', false);
         $dateUntil = (string) $request->query('date-until', now());
+        $ownRequests = (string) $request->query('own-requests', true);
         $currentPage = ($start / $length) + 1;
         $isAll = $length === -1;
 
@@ -44,7 +45,7 @@ class ReportController extends Controller
 
             $query = $this->reportService->whereInLogDate($query, $dateSince, $dateUntil);
 
-            $query = $this->reportService->whereInRequistingUserQuery($query, $requestingUsersIds);
+            $query = $this->reportService->whereInRequistingUserQuery($query, $requestingUsersIds, $ownRequests);
 
             if ($costCenterIds) {
                 $query = $this->reportService->whereInCostCenterQuery($query, $costCenterIds);

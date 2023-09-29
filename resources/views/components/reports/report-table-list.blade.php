@@ -1,6 +1,10 @@
 @php
     use App\Enums\{PurchaseRequestType, PurchaseRequestStatus, PaymentMethod, PaymentTerm};
 
+    $currentProfile = auth()->user()->profile->name;
+    $isAdmin = $currentProfile === 'admin';
+    $isDirector = $currentProfile === 'diretor';
+
     $enumRequests = [
         'type' => collect(PurchaseRequestType::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
         'status' => collect(PurchaseRequestStatus::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
@@ -22,19 +26,22 @@
 <div class="report-filters">
 
     <div class="selects">
-        <div class="form-group">
-            <div class="label-with-clear-btn">
-                <label for="requisting-users-filter" class="regular-text" style="margin: 0">Solicitante</label>
-                <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn">Limpar</button>
-            </div>
 
-            <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]"
-                multiple="multiple" class="select2-me" placeholder="Escolha uma ou mais opções" style="width:100%;">
-                @foreach ($requestingUsers as $user)
-                    <option value="{{$user->id}}">{{$user->person->name}}</option>
-                @endforeach
-            </select>
-        </div>
+        @if ($isAdmin || $isDirector)
+            <div class="form-group">
+                <div class="label-with-clear-btn">
+                    <label for="requisting-users-filter" class="regular-text" style="margin: 0">Solicitante</label>
+                    <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn">Limpar</button>
+                </div>
+
+                <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]"
+                    multiple="multiple" class="select2-me" placeholder="Escolha uma ou mais opções" style="width:100%;">
+                    @foreach ($requestingUsers as $user)
+                        <option value="{{$user->id}}">{{$user->person->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
 
         <div class="form-group">
             <div class="label-with-clear-btn">
@@ -73,26 +80,6 @@
 
         <div class="checkboxs">
             <div class="form-group">
-                <label for="status" class="regular-text">Status da solicitação:</label>
-                <div class="status">
-                    @foreach (PurchaseRequestStatus::cases() as $statusCase)
-                        @php
-                            $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
-                            $isChecked = $statusDefaultFilter;
-                        @endphp
-
-                        @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
-                            <label class="checkbox-label secondary-text">
-                                <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
-                                {{ $statusCase->label() }}
-                            </label>
-                        @endif
-
-                    @endforeach
-                </div>
-            </div>
-
-            <div class="form-group">
                 <label for="request-type" class="regular-text">Tipo da solicitação:</label>
                 <div class="types">
                     @foreach (PurchaseRequestType::cases() as $typeCase)
@@ -115,6 +102,35 @@
         </div>
 
     </div>
+
+    <div class="form-group">
+        <label for="status" class="regular-text">Status da solicitação:</label>
+        <div class="status">
+            @foreach (PurchaseRequestStatus::cases() as $statusCase)
+                @php
+                    $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
+                    $isChecked = $statusDefaultFilter;
+                @endphp
+
+                @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
+                    <label class="checkbox-label secondary-text">
+                        <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
+                        {{ $statusCase->label() }}
+                    </label>
+                @endif
+
+            @endforeach
+        </div>
+    </div>
+
+    @if ($currentProfile === 'admin' || $currentProfile === 'diretor')
+        <div class="form-group">
+            <label class="checkbox-label secondary-text">
+                <input type="checkbox" id="own-requests" class="status-checkbox" value="true" checked>
+                Minhas solicitações
+            </label>
+        </div>
+    @endif
 
 </div>
 
@@ -201,6 +217,7 @@
             const $costCenterIdsFilter = $('#cost-center-filter').val() || "";
             const $dateSince = $('#date-since').val();
             const $dateUntil = $('#date-until').val();
+            const $ownRequests = $('#own-requests:checked').val() || false;
 
             const statusValues = $checkedStatusInputs.map((index, element) => element.value).toArray();
             const requestTypeValues = $checkedRequestTypeInputs.map((index, element) => element.value).toArray();
@@ -211,6 +228,7 @@
             updatedUrlAjax += `&cost-center-ids=${$costCenterIdsFilter}`;
             updatedUrlAjax += `&date-since=${$dateSince}`;
             updatedUrlAjax += `&date-until=${$dateUntil}`;
+            updatedUrlAjax += `&own-requests=${$ownRequests}`;
 
             return updatedUrlAjax;
         }
@@ -238,6 +256,11 @@
             })
         }
 
+        const filterDataTable = () => {
+            const updatedUrlAjax = getUrlWithParams(urlAjax);
+            $reportsTable.DataTable().ajax.url(updatedUrlAjax).load();
+        }
+
         $filterClearBtn.on('click', clearFilters);
         $filterClearUsersBtn.on('click', (_) => clearFilters(_, 'requistingUsersIdsFilter'));
         $filterClearCostCentersBtn.on('click', (_) => clearFilters(_, 'costCenterIdsFilter'));
@@ -251,10 +274,7 @@
 
         $reportsTable.DataTable({
             initComplete: function() {
-                $('#reports-filter-btn').on('click', () => {
-                    const updatedUrlAjax = getUrlWithParams(urlAjax);
-                    $reportsTable.DataTable().ajax.url(updatedUrlAjax).load();
-                });
+                $('#reports-filter-btn').on('click', filterDataTable);
 
                 $generateCSVButton.on('click', () => {
                     const $productDetail = $('.product-detail:checked').val();
@@ -281,7 +301,7 @@
 
                                 const requistingUser = item.user.person.name
                                 const status = enumRequests['status'][item.status]
-                                const suppliesUserName = item.supplies_user.person.name
+                                const suppliesUserName = item.supplies_user?.person.name
                                 const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name).join(', ');
 
                                 const supplierColumnMapping = {

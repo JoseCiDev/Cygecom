@@ -83,8 +83,6 @@
     }
 
     .report-filters .dates {
-        flex-direction: column;
-        max-width: 180px;
         justify-content: space-between;
     }
 

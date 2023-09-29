@@ -19,10 +19,12 @@ class ReportService
         $requestingUsersQuery = User::with('person', 'purchaseRequest.costCenterApportionment.costCenter')
             ->whereHas('purchaseRequest', fn ($query) => $query->where('status', '!=', PurchaseRequestStatus::RASCUNHO->value));
 
-        if ($currentProfile !== 'admin') {
+        if ($currentProfile !== 'admin' && $currentProfile !== 'diretor') {
             $requestingUsersQuery->where('id', $currentUserId);
         } elseif ($currentProfile === 'diretor') {
-            $requestingUsersQuery->where('approver_user_id', $currentUserId);
+            $requestingUsersQuery
+                ->where('id', $currentUserId)
+                ->orWhere('approver_user_id', $currentUserId);
         }
 
         $requestingUsers = $requestingUsersQuery->get();
@@ -63,7 +65,7 @@ class ReportService
     /**
      * @param string $requestingUsersIds Recebe uma string com ids de usuários separados por vírgula. Exemplo: "1,2,3"
      */
-    public function whereInRequistingUserQuery(Builder $query, ?string $requestingUsersIds = ''): Builder
+    public function whereInRequistingUserQuery(Builder $query, ?string $requestingUsersIds = '', $hasOwnRequests = true): Builder
     {
         $requestingUsersIdsArray = explode(',', $requestingUsersIds);
 
@@ -71,6 +73,16 @@ class ReportService
 
         if (empty($requestingUsersIds)) {
             $validIds = self::getRequistingUsers()->pluck('id');
+        }
+
+        $currentProfile = auth()->user()->profile->name;
+        $isAdmin = $currentProfile === 'admin';
+        $isDirector = $currentProfile === 'diretor';
+        $hasOwnRequestsFiltered = filter_var($hasOwnRequests, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        $removeCurrentUserId = !$hasOwnRequestsFiltered && ($isAdmin || $isDirector);
+        if ($removeCurrentUserId) {
+            $currentUserId = auth()->user()->id;
+            $validIds = $validIds->filter(fn ($id) => $id !== $currentUserId);
         }
 
         if ($validIds->isEmpty()) {
