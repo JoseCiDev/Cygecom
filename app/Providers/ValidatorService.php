@@ -392,7 +392,7 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
 
         if (isset($data['contract']['name'])) {
             $rules['contract.name'] = ['unique:contracts,name,' . $data['contract']['name']];
-            $messages['contract.name.unique'] = 'Desculpe, já existe outro contrato com esse nome.';
+            $messages['contract.name.unique'] = 'Desculpe, já existe outro serviço recorrente com esse nome.';
         }
 
         $validator = Validator::make($data, $rules, $messages);

@@ -36,7 +36,7 @@ class ServiceController extends Controller
         }
 
         try {
-            $msg = "Solicitação de serviço criada com sucesso!";
+            $msg = "Solicitação de serviço pontual criada com sucesso!";
             // MUDAR
             DB::beginTransaction();
 
@@ -44,7 +44,7 @@ class ServiceController extends Controller
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
-                $msg = "Solicitação de serviço nº $purchaseRequest->id criada e enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de serviço pontual nº $purchaseRequest->id criada e enviada ao setor de suprimentos responsável!";
             }
 
             DB::commit();
@@ -74,7 +74,7 @@ class ServiceController extends Controller
                     $isAuthorized = auth()->user()->purchaseRequest->where('id', $purchaseRequestIdToCopy)->whereNull('deleted_at')->first();
 
                     if (!$isAuthorized) {
-                        throw new Exception('Acesso não autorizado para essa solicitação de serviço.');
+                        throw new Exception('Acesso não autorizado para essa solicitação de serviço pontual.');
                     }
                 }
             }
@@ -100,7 +100,7 @@ class ServiceController extends Controller
         }
 
         try {
-            $msg = "Solicitação de serviço atualizada com sucesso!";
+            $msg = "Solicitação de serviço pontual atualizada com sucesso!";
 
             $isAdmin = auth()->user()->profile->name === 'admin';
 
@@ -121,7 +121,7 @@ class ServiceController extends Controller
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => PurchaseRequestStatus::PENDENTE->value]);
-                $msg = "Solicitação de serviço enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de serviço pontual enviada ao setor de suprimentos responsável!";
             }
 
             DB::commit();

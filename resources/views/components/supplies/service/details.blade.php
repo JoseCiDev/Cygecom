@@ -39,7 +39,7 @@
     <div class="request-details">
         <div class="details-content">
             <header class="request-details-header">
-                <h1 class="text-highlight"><strong>Solicitação de serviço nº {{ $request->id }}</strong></h1>
+                <h1 class="text-highlight"><strong>Solicitação de serviço pontual nº {{ $request->id }}</strong></h1>
                 <div>
                     <span>Criado em: {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</span> |
                     <span>Atualizado: {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}</span>

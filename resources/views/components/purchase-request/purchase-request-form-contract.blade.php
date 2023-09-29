@@ -70,7 +70,7 @@
 
     <div class="col-sm-6" style="padding: 0">
         @if ($hasRequestNotSent)
-            <h1 class="page-title">Editar solicitação de contrato nº {{$purchaseRequest->id}}</h1>
+            <h1 class="page-title">Editar solicitação de serviço recorrente nº {{$purchaseRequest->id}}</h1>
         @elseif ($hasSentRequest)
             <div class="alert alert-info alert-dismissable">
                 <button data-cy="btn-close-alert" type="button" class="close" data-dismiss="alert">&times;</button>
@@ -78,9 +78,9 @@
                     <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
                 </h5>
             </div>
-            <h1 class="page-title">Visualizar solicitação de contrato nº {{$purchaseRequest->id}}</h1>
+            <h1 class="page-title">Visualizar solicitação de serviço recorrente nº {{$purchaseRequest->id}}</h1>
         @else
-            <h1 class="page-title">Nova solicitação de contrato</h1>
+            <h1 class="page-title">Nova solicitação de serviço recorrente</h1>
         @endif
     </div>
 
@@ -119,9 +119,9 @@
         <div class="row contract-title-container" style="margin-bottom:5px; margin-top:18px;">
             <div class="col-sm-6 contract-title">
                 <div class="form-group">
-                    <label for="contract-title" class="regular-text label-contract-title">Nome do contrato: </label>
+                    <label for="contract-title" class="regular-text label-contract-title">Nome do serviço recorrente: </label>
                     <input type="text" id="contract-title" data-cy="contract-title" name="contract[name]"
-                        placeholder="Digite aqui um nome para este contrato... Ex: Contrato Work DB - 07/23 até 07/24"
+                        placeholder="Digite aqui um nome para este serviço recorrente... Ex: Contrato Work DB - 07/23 até 07/24"
                         class="form-control" data-rule-required="true" minlength="15"
                         value="@if (isset($purchaseRequest->contract) && $purchaseRequest->contract->name && !$isCopy) {{ $purchaseRequest->contract->name }} @endif">
                 </div>
@@ -179,7 +179,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="form-check" class="regular-text" style="padding-right:10px;">
-                            Este contrato será importado (COMEX)?
+                            Este serviço recorrente será importado (COMEX)?
                         </label>
                         <fieldset data-rule-required="true">
                             <div class="row">
@@ -219,9 +219,9 @@
                 {{-- DESCRICAO --}}
                 <div class="col-sm-7">
                     <div class="form-group">
-                        <label for="description" class="regular-text">Detalhes do contrato</label>
+                        <label for="description" class="regular-text">Detalhes do serviço recorrente</label>
                         <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
-                            rows="4" placeholder="Descreva com detalhes o objetivo do contrato"
+                            rows="4" placeholder="Descreva com detalhes o objetivo do serviço recorrente"
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
                     <div class="small" style="margin-top:-10px; margin-bottom:20px;">
@@ -288,7 +288,7 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <fieldset data-rule-required="true">
-                                <label for="form-check" class="regular-text" style="padding-right:10px;"> Valor do contrato será: </label>
+                                <label for="form-check" class="regular-text" style="padding-right:10px;"> Valor do serviço recorrente será: </label>
                                 {{-- FIXO --}}
                                 <input name="contract[is_fixed_payment]" data-cy="contract[is_fixed_payment]-true"
                                     value="1" class="radio-is-fixed-value" type="radio" data-skin="minimal"
@@ -304,7 +304,7 @@
                             </fieldset>
 
                             <div class="small">
-                                <p class="secondary-text">(Se o valor final do contrato não estiver definido, será variável).</p>
+                                <p class="secondary-text">(Se o valor final do serviço recorrente não estiver definido, será variável).</p>
                             </div>
                         </div>
                     </div>
@@ -327,7 +327,7 @@
 
                     <div class="col-sm-2" style="margin-top:-10px;">
                         <div class="form-group">
-                            <label class="regular-text">Valor total do contrato: </label>
+                            <label class="regular-text">Valor total do serviço recorrente: </label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
                                 <input type="text" placeholder="0,00" class="form-control format-amount"
@@ -433,7 +433,7 @@
                 <div class="row" style="display:flex; align-items:center; margin-bottom:5px;">
                     <h3 class="col-sm-6">
                         <i class="fa fa-dollar"></i>
-                        Parcelas deste contrato
+                        Parcelas deste serviço recorrente
                     </h3>
                     <div class="col-sm-6 div-btn-add-installment" style="margin-top:15px;" hidden>
                         <button type="button" class="btn btn-primary btn-small btn-success pull-right btn-add-installment"

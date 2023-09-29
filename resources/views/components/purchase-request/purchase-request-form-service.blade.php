@@ -53,7 +53,7 @@
 
     <div class="col-sm-6" style="padding: 0">
         @if ($hasRequestNotSent)
-            <h1 class="page-title">Editar solicitação de serviço nº {{ $purchaseRequest->id }}</h1>
+            <h1 class="page-title">Editar solicitação de serviço pontual nº {{ $purchaseRequest->id }}</h1>
         @elseif ($hasSentRequest)
             <div class="alert alert-info alert-dismissable">
                 <button data-cy="btn-close-alert" type="button" class="close" data-dismiss="alert">&times;</button>
@@ -61,9 +61,9 @@
                     <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
                 </h5>
             </div>
-            <h1 class="page-title">Visualizar solicitação de serviço nº {{ $purchaseRequest->id }}</h1>
+            <h1 class="page-title">Visualizar solicitação de serviço pontual nº {{ $purchaseRequest->id }}</h1>
         @else
-            <h1 class="page-title">Nova solicitação de serviço</h1>
+            <h1 class="page-title">Nova solicitação de serviço pontual</h1>
         @endif
     </div>
     @if (isset($purchaseRequest) && !$requestAlreadySent)

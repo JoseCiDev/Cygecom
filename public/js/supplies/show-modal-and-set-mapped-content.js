@@ -30,9 +30,9 @@ $(() =>{
             },
             type: (value) => {
                 const requestType = {
-                    contract: 'Contrato',
+                    contract: 'Serviço recorrente',
                     product: 'Produto',
-                    service: 'Serviço'
+                    service: 'Serviço pontual'
                 }
                 return requestType[value] ?? '---'
             },

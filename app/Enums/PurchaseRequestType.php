@@ -18,9 +18,9 @@ enum PurchaseRequestType: string implements EnumInterface
     public static function getLabel($value): string
     {
         return match ($value) {
-            self::SERVICE  => 'Serviço',
+            self::SERVICE  => 'Serviço pontual',
             self::PRODUCT  => 'Produto',
-            self::CONTRACT => 'Contrato',
+            self::CONTRACT => 'Serviço recorrente',
             default        => '---',
         };
     }
