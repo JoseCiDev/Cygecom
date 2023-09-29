@@ -16,8 +16,7 @@ class ReportService
         $currentProfile = auth()->user()->profile->name;
         $currentUserId = auth()->user()->id;
 
-        $requestingUsersQuery = User::with('person', 'purchaseRequest.costCenterApportionment.costCenter')
-            ->whereHas('purchaseRequest', fn ($query) => $query->where('status', '!=', PurchaseRequestStatus::RASCUNHO->value));
+        $requestingUsersQuery = User::with('person', 'purchaseRequest.costCenterApportionment.costCenter');
 
         if ($currentProfile !== 'admin' && $currentProfile !== 'diretor') {
             $requestingUsersQuery->where('id', $currentUserId);
@@ -27,8 +26,9 @@ class ReportService
                 ->orWhere('approver_user_id', $currentUserId);
         }
 
-        $requestingUsers = $requestingUsersQuery->get();
+        $requestingUsersQuery->whereHas('purchaseRequest', fn ($query) => $query->where('status', '!=', PurchaseRequestStatus::RASCUNHO->value));
 
+        $requestingUsers = $requestingUsersQuery->get();
         return $requestingUsers;
     }
 
