@@ -301,13 +301,13 @@
 
                                 const requistingUser = item.user.person.name
                                 const status = enumRequests['status'][item.status]
-                                const suppliesUserName = item.supplies_user?.person.name
+                                const suppliesUserName = item.supplies_user?.person.name || '---'
                                 const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name).join(', ');
 
                                 const supplierColumnMapping = {
-                                    'product': () => item.purchase_request_product?.map((element) => element.supplier?.corporate_name),
-                                    'service': () => [item.service?.supplier?.corporate_name],
-                                    'contract': () => [item.contract?.supplier?.corporate_name],
+                                    product: () => item.purchase_request_product?.map((element) => element.supplier?.corporate_name),
+                                    service: () => [item.service?.supplier?.corporate_name],
+                                    contract: () => [item.contract?.supplier?.corporate_name],
                                 };
                                 const suppliers = supplierColumnMapping[item.type]().filter((el) => el).join(', ') || '---';
 
