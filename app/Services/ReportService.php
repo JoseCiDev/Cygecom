@@ -178,6 +178,9 @@ class ReportService
                     $query->where('name', 'like', "%{$searchValue}%");
                 });
             })
+            ->orWhereHas('requester', function ($query) use ($searchValue) {
+                $query->where('name', 'like', "%{$searchValue}%");
+            })
             ->orWhereHas('suppliesUser', function ($query) use ($searchValue) {
                 $query->whereHas('person', function ($query) use ($searchValue) {
                     $query->where('name', 'like', "%{$searchValue}%");
