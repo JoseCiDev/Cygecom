@@ -68,14 +68,16 @@
     <div class="dates-with-checkboxs">
         <div class="dates">
             <div class="date">
-                <label for="date-since" class="regular-text">A partir de:</label>
+                <label for="date-since" class="regular-text">Data início:</label>
                 <input type="date" class="form-control" name="date-since" id="date-since" data-cy="date-since" max="{{ now()->formatCustom('Y-m-d') }}">
             </div>
 
             <div class="date">
-                <label for="date-until" class="regular-text">Até: </label>
+                <label for="date-until" class="regular-text">Data fim: </label>
                 <input type="date" class="form-control" name="date-until" id="date-until" data-cy="date-until" max="{{ now()->formatCustom('Y-m-d') }}">
             </div>
+
+            <small class="span-info">Data de envio da solicitação para suprimentos</small>
         </div>
 
         <div class="checkboxs">
@@ -134,15 +136,14 @@
 
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <button class="btn btn-primary btn-small" id="reports-filter-btn">Filtrar</button>
-        <button class="btn btn-secondary btn-small" id="filter-clear-all-btn">Limpa filtros</button>
-        <button class="btn btn-primary btn-small pull-right" id="generate-csv-button"><i class="fa fa-file-excel-o"></i> Baixar</button>
-    </div>
+<div class="report-btns">
+    <button class="btn btn-primary btn-small" id="reports-filter-btn">Filtrar</button>
+    <button class="btn btn-secondary btn-small" id="filter-clear-all-btn">Reiniciar filtros</button>
+    <button class="btn btn-primary btn-small" id="generate-csv-button"><i class="fa fa-file-excel-o"></i> Baixar</button>
 </div>
 
 <div class="box-content nopadding regular-text">
+    <span class="loader-box"></span>
 
     <table id="reportsTable" class="table table-hover table-nomargin table-bordered" data-nosort="0" data-checkall="all">
         <thead>
@@ -151,6 +152,7 @@
                 <th >Tipo</th>
                 <th >Solicitado em</th>
                 <th >Solicitante</th>
+                <th >Solicitante sistema</th>
                 <th >Status</th>
                 <th >Responsável</th>
                 <th >Centro de custo</th>
@@ -185,6 +187,7 @@
         const $productDetail = $('.product-detail');
 
         const $detailProductBtnTemplate = $('<span class="product-detail-btn" ><i class="glyphicon glyphicon-plus"></i></span>');
+        const $searchFieldInfoSpan = $('<div id="search-info-span" style="display: none" ><small>Filtrando apenas pelo campo buscar</small></div>');
 
         const clearFilters = (_, filter = false) => {
             const clearOptions = {
@@ -261,6 +264,35 @@
             $reportsTable.DataTable().ajax.url(updatedUrlAjax).load();
         }
 
+        const focusOnSeachField = () => $("input[type='search']").first().focus();
+
+        const setSearchFieldConfig = (event) => {
+            const $searchField = $(event.target);
+            const $spanInfo = $('#search-info-span');
+            const $reportFilters = $('.report-filters');
+            const $reportsFilterBtn = $('#reports-filter-btn');
+            const $filterClearAllBtn = $('#filter-clear-all-btn');
+
+            const $elementsToModify = $reportFilters.add($reportsFilterBtn).add($filterClearAllBtn);
+            const isSearchFieldEmpty = !$searchField.val();
+
+            $spanInfo.toggle(!isSearchFieldEmpty);
+
+            $elementsToModify.css({
+                opacity: isSearchFieldEmpty ? '1' : '0.5',
+                cursor: isSearchFieldEmpty ? 'auto' : 'help',
+            }).attr('title', isSearchFieldEmpty ? '' : 'Filtrando apenas pelo campo buscar');
+
+            $reportsFilterBtn.add($filterClearAllBtn).css('cursor', isSearchFieldEmpty ? 'pointer' : 'help');
+
+            if(!isSearchFieldEmpty) {
+                $reportFilters.on('click', focusOnSeachField)
+                return;
+            }
+
+            $reportFilters.off('click');
+        }
+
         $filterClearBtn.on('click', clearFilters);
         $filterClearUsersBtn.on('click', (_) => clearFilters(_, 'requistingUsersIdsFilter'));
         $filterClearCostCentersBtn.on('click', (_) => clearFilters(_, 'costCenterIdsFilter'));
@@ -274,6 +306,10 @@
 
         $reportsTable.DataTable({
             initComplete: function() {
+                $searchFieldInfoSpan.insertAfter($("#reportsTable_filter input[type='search']"));
+
+                $("#reportsTable_filter input[type='search']").on('input', setSearchFieldConfig)
+
                 $('#reports-filter-btn').on('click', filterDataTable);
 
                 $generateCSVButton.on('click', () => {
@@ -300,6 +336,7 @@
                                 const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss')
 
                                 const requistingUser = item.user.person.name
+                                const requester = item.requester?.name || '---'
                                 const status = enumRequests['status'][item.status]
                                 const suppliesUserName = item.supplies_user?.person.name || '---'
                                 const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name).join(', ');
@@ -329,6 +366,7 @@
                                         type,
                                         firstPendingStatus,
                                         requistingUser,
+                                        requester,
                                         status,
                                         suppliesUserName,
                                         costCenters,
@@ -381,6 +419,7 @@
             scrollY: '400px',
             scrollX: true,
             paging: true,
+            processing: true,
             serverSide: true,
             lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
             searching: true,
@@ -392,7 +431,8 @@
                 infoEmpty: "Nenhum registro disponível",
                 infoFiltered: "(filtrado de _MAX_ registros no total)",
                 search: "Buscar:",
-                paginate: { first: "Primeiro", last: "Último", next: "Próximo", previous: "Anterior" }
+                paginate: { first: "Primeiro", last: "Último", next: "Próximo", previous: "Anterior" },
+                processing:  $('.loader-box').show(),
             },
             ajax: {
                 url: urlAjax,
@@ -405,6 +445,8 @@
                         className: 'bootbox-custom-warning'
                     });
                 },
+                beforeSend: () => $('#reportsTable tbody').css('opacity', '0.2'),
+                complete: () => $('#reportsTable tbody').css('opacity', '1')
             },
             columns: [
                 {
@@ -459,6 +501,7 @@
                     }
                 },
                 { data: 'user.person.name' },
+                { data: 'requester', render: (requester, _, row) => requester ? requester.name : '---' },
                 { data: 'status', render: (status) => enumRequests['status'][status] },
                 { data: 'supplies_user.person.name', render: (suppliesUserName) => (suppliesUserName ?? '---') },
                 {

@@ -1,3 +1,33 @@
+.tag-category {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.tag-category-item {
+    border: 1px solid #666666;
+    border-radius: 4px;
+    padding: 2px 5px;
+    width: fit-content;
+    white-space: nowrap;
+}
+
+table tr {
+    animation: show .5s linear;
+}
+
+#search-info-span,
+#reports-filter-btn,
+#filter-clear-all-btn,
+.report-filters,
+#reportsTable tbody {
+    transition: opacity .8s ease
+}
+
+.box-content {
+    position: relative;
+}
+
 .report-filters {
     display: flex;
     flex-direction: column;
@@ -13,13 +43,19 @@
 .report-filters .dates {
     display: flex;
     gap: 5px;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
+    position: relative;
 }
 
 .report-filters .dates .date {
     display: flex;
     flex-direction: column;
     width: 100%;
+}
+
+.report-filters .dates .span-info {
+    position: absolute;
+    top: 60px;
 }
 
 .report-filters .types,
@@ -66,6 +102,15 @@
 #reportsTable_filter {
     float: none;
     margin: 10px 0;
+}
+
+.report-btns {
+    display: flex;
+    gap: 5px;
+}
+
+.report-btns #generate-csv-button {
+    margin-left: auto;
 }
 
 @media (min-width: 768px) {
@@ -119,7 +164,6 @@
         padding: 0;
     }
 
-
     .report-filters .checkboxs {
         display: flex;
         flex-direction: column;
@@ -134,5 +178,15 @@
         .report-filters .selects {
             max-width: 1400px;
         }
+    }
+}
+
+@keyframes show {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
     }
 }

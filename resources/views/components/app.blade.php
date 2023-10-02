@@ -36,6 +36,7 @@
         href="{{ asset('img/apple-touch-icon-precomposed.png') }}" />
 
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies.css') }}">
     <link rel="stylesheet" href="{{ asset('css/modal-supplies.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootbox.custom.css') }}">
