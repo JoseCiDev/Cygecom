@@ -171,50 +171,51 @@ class ReportService
      */
     public function searchValueQuery(Builder $query, string $searchValue): Builder
     {
-        return $query
-            ->where('id', 'like', "%{$searchValue}%")
-            ->orWhereHas('user', function ($query) use ($searchValue) {
-                $query->whereHas('person', function ($query) use ($searchValue) {
+        return $query->where(function ($query) use ($searchValue) {
+            $query->where('id', 'like', "%{$searchValue}%")
+                ->orWhereHas('user', function ($query) use ($searchValue) {
+                    $query->whereHas('person', function ($query) use ($searchValue) {
+                        $query->where('name', 'like', "%{$searchValue}%");
+                    });
+                })
+                ->orWhereHas('requester', function ($query) use ($searchValue) {
                     $query->where('name', 'like', "%{$searchValue}%");
-                });
-            })
-            ->orWhereHas('requester', function ($query) use ($searchValue) {
-                $query->where('name', 'like', "%{$searchValue}%");
-            })
-            ->orWhereHas('suppliesUser', function ($query) use ($searchValue) {
-                $query->whereHas('person', function ($query) use ($searchValue) {
-                    $query->where('name', 'like', "%{$searchValue}%");
-                });
-            })
-            ->orWhereHas('costCenterApportionment', function ($query) use ($searchValue) {
-                $query->whereHas('costCenter', function ($query) use ($searchValue) {
-                    $query->where('name', 'like', "%{$searchValue}%");
-                });
-            })
-            ->orWhereHas('costCenterApportionment', function ($query) use ($searchValue) {
-                $query->whereHas('costCenter', function ($query) use ($searchValue) {
-                    $query->where('name', 'like', "%{$searchValue}%");
-                });
-            })
-            ->orWhereHas('product', function ($query) use ($searchValue) {
-                $query->where('amount', 'like', "%{$searchValue}%");
-            })
-            ->orWhereHas('purchaseRequestProduct', function ($query) use ($searchValue) {
-                $query->whereHas('supplier', function ($query) use ($searchValue) {
-                    $query->where('corporate_name', 'like', "%{$searchValue}%");
-                });
-            })
-            ->orWhereHas('service', function ($query) use ($searchValue) {
-                $query->where('price', 'like', "%{$searchValue}%")
-                    ->orWhereHas('supplier', function ($query) use ($searchValue) {
+                })
+                ->orWhereHas('suppliesUser', function ($query) use ($searchValue) {
+                    $query->whereHas('person', function ($query) use ($searchValue) {
+                        $query->where('name', 'like', "%{$searchValue}%");
+                    });
+                })
+                ->orWhereHas('costCenterApportionment', function ($query) use ($searchValue) {
+                    $query->whereHas('costCenter', function ($query) use ($searchValue) {
+                        $query->where('name', 'like', "%{$searchValue}%");
+                    });
+                })
+                ->orWhereHas('costCenterApportionment', function ($query) use ($searchValue) {
+                    $query->whereHas('costCenter', function ($query) use ($searchValue) {
+                        $query->where('name', 'like', "%{$searchValue}%");
+                    });
+                })
+                ->orWhereHas('product', function ($query) use ($searchValue) {
+                    $query->where('amount', 'like', "%{$searchValue}%");
+                })
+                ->orWhereHas('purchaseRequestProduct', function ($query) use ($searchValue) {
+                    $query->whereHas('supplier', function ($query) use ($searchValue) {
                         $query->where('corporate_name', 'like', "%{$searchValue}%");
                     });
-            })
-            ->orWhereHas('contract', function ($query) use ($searchValue) {
-                $query->where('amount', 'like', "%{$searchValue}%")
-                    ->orWhereHas('supplier', function ($query) use ($searchValue) {
-                        $query->where('corporate_name', 'like', "%{$searchValue}%");
-                    });
-            });
+                })
+                ->orWhereHas('service', function ($query) use ($searchValue) {
+                    $query->where('price', 'like', "%{$searchValue}%")
+                        ->orWhereHas('supplier', function ($query) use ($searchValue) {
+                            $query->where('corporate_name', 'like', "%{$searchValue}%");
+                        });
+                })
+                ->orWhereHas('contract', function ($query) use ($searchValue) {
+                    $query->where('amount', 'like', "%{$searchValue}%")
+                        ->orWhereHas('supplier', function ($query) use ($searchValue) {
+                            $query->where('corporate_name', 'like', "%{$searchValue}%");
+                        });
+                });
+        });
     }
 }
