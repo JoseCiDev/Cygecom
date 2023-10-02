@@ -34,6 +34,7 @@ class PurchaseRequestService extends ServiceProvider
     {
         return PurchaseRequest::with([
             'user.person.costCenter',
+            'requester',
             'purchaseRequestFile',
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
