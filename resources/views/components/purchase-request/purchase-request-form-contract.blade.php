@@ -1,6 +1,8 @@
 @php
     use App\Enums\{PurchaseRequestStatus, PaymentMethod, ContractRecurrence};
 
+    $currentUser =  auth()->user();
+
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
     $isCopy ??= null;
@@ -141,6 +143,30 @@
             <div class="row center-block" style="padding-bottom: 10px;">
                 <h3>Dados da solicitação</h3>
             </div>
+
+            @if ($currentUser->can_associate_requester)
+                <div class="row" style="margin-bottom: 15px;">
+                    <div class="col-sm-4 form-group">
+                        <label for="requester" style="display:block;" class="regular-text">
+                            Atribuir um solicitante
+                        </label>
+                        <select name="requester_person_id" class='select2-me'
+                            data-cy="requester" data-placeholder="Escolha um colaborador"
+                            style="width:100%;">
+                            <option value=""></option>
+                            @foreach ($people as $person)
+                                @php
+                                    if ($person->id === $currentUser->person->id) {
+                                        continue;
+                                    }
+                                    $selected = $person->id === $purchaseRequest?->requester?->id;
+                                @endphp
+                                <option value="{{ $person->id }}" @selected($selected)>{{$person->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            @endif
 
             <div class="row" style="margin-bottom:15px; margin-top:5px;">
 
@@ -500,7 +526,7 @@
                         </label>
                         <select name="contract[supplier_id]" data-cy="contract[supplier_id]" class='select2-me select-supplier' data-placeholder="Escolha uma fornecedor"
                             style="width:100%;">
-                            <option value=""></option>
+                            <option value="">Informe um fornecedor ou cadastre um novo</option>
                             @foreach ($suppliers as $supplier)
                                 @php
                                     $supplierSelected = isset($purchaseRequest->contract) && $purchaseRequest->contract->supplier_id === $supplier->id;

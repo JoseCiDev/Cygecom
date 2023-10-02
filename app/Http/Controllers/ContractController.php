@@ -40,7 +40,8 @@ class ContractController extends Controller
             $purchaseRequest = $this->purchaseRequestService->registerContractRequest($data, $files);
             $route           = 'request.edit';
             $routeParams      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
-            $msg = "Solicitação de serviço recorrente criada com sucesso!";
+
+            $msg = "Solicitação de serviço recorrente nº $purchaseRequest->id  criada com sucesso!";
 
             // MUDAR
             if ($action === 'submit-request') {
@@ -98,6 +99,8 @@ class ContractController extends Controller
         $validator = $this->validatorService->purchaseRequestUpdate($data);
         $files = $request->file('arquivos');
 
+        $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.contract.update";
+
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
         }
@@ -111,6 +114,8 @@ class ContractController extends Controller
             $isDeleted = $purchaseRequest->deleted_at !== null;
             $isDraft = $purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value;
 
+            $msg = "Solicitação de contrato nº $purchaseRequest->id atualizada com sucesso!";
+
             $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
             if (!$isAuthorized) {
                 throw new Exception('Não foi possível acessar essa solicitação.');
@@ -118,11 +123,11 @@ class ContractController extends Controller
             // MUDAR
             DB::beginTransaction();
 
-            $purchaseRequest = $this->purchaseRequestService->updateContractRequest($id, $data, $files);
+            $purchaseRequest = $this->purchaseRequestService->updateContractRequest($id, $data, $isSuppliesUpdate, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
-                $msg = "Solicitação de serviço recorrente enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de serviço recorrente nº $purchaseRequest->id enviada ao setor de suprimentos responsável!";
             }
 
             DB::commit();

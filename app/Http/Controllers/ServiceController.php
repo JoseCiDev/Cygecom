@@ -42,6 +42,8 @@ class ServiceController extends Controller
 
             $purchaseRequest = $this->purchaseRequestService->registerServiceRequest($data, $files);
 
+            $msg = "Solicitação de serviço nº $purchaseRequest->id  criada com sucesso!";
+
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
                 $msg = "Solicitação de serviço pontual nº $purchaseRequest->id criada e enviada ao setor de suprimentos responsável!";
@@ -95,6 +97,8 @@ class ServiceController extends Controller
         $validator = $this->validatorService->purchaseRequestUpdate($data);
         $files = $request->file('arquivos');
 
+        $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.service.update";
+
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->getMessages())->withInput();
         }
@@ -108,6 +112,8 @@ class ServiceController extends Controller
             $isDeleted = $purchaseRequest->deleted_at !== null;
             $isDraft = $purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value;
 
+            $msg = "Solicitação de serviço nº $purchaseRequest->id atualizada com sucesso!";
+
             $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
 
             if (!$isAuthorized) {
@@ -117,11 +123,11 @@ class ServiceController extends Controller
             // MUDAR
             DB::beginTransaction();
 
-            $purchaseRequest = $this->purchaseRequestService->updateServiceRequest($id, $data, $files);
+            $purchaseRequest = $this->purchaseRequestService->updateServiceRequest($id, $data, $isSuppliesUpdate, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => PurchaseRequestStatus::PENDENTE->value]);
-                $msg = "Solicitação de serviço pontual enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de serviço pontual nº $purchaseRequest->id  enviada ao setor de suprimentos responsável!";
             }
 
             DB::commit();

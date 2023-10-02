@@ -103,7 +103,7 @@
             $cnpj.prop('disabled', false)
         });
 
-        $cnpj.on('input', function() {
+        $cnpj.on('input blur', function() {
             const cnpj = $(this).val();
 
             if (cnpj.length === 0) {
@@ -123,8 +123,16 @@
             }
         });
 
+        if (cnpjBackend !== null) {
+            $cnpj.trigger('input');
+        }
+
         if (cnpjBackend === null && supplier !== null) {
             $('#is-international-supplier').trigger('click');
+        }
+
+        if($cnpj.val()) {
+            $cnpj.trigger('input');
         }
     });
 </script>

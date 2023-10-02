@@ -60,6 +60,11 @@ class PurchaseRequest extends Model
         return $this->belongsTo(User::class, 'supplies_user_id');
     }
 
+    public function requester()
+    {
+        return $this->belongsTo(Person::class, 'requester_person_id');
+    }
+
     public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');
@@ -83,11 +88,13 @@ class PurchaseRequest extends Model
         'desired_date',
         'support_links',
         'supplies_user_id',
+        'supplies_update_reason',
         'responsibility_marked_at',
         'updated_by',
         'deleted_by',
         'deleted_at',
-        'is_only_quotation'
+        'is_only_quotation',
+        'requester_person_id'
     ];
 
     protected $casts = [

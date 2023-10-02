@@ -14,19 +14,42 @@ class PurchaseRequestController extends Controller
     {
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $statusData = $request->input('status');
         $purchaseRequests = $this->purchaseRequestService->purchaseRequests();
 
-        return view('components.purchase-request.index', ["purchaseRequests" => $purchaseRequests]);
+        if ($statusData) {
+            $filteredRequests = $this->purchaseRequestService->requestsByStatus($statusData)->get();
+            $params = [
+                'purchaseRequests' => $filteredRequests,
+                'selectedStatus' => $statusData
+            ];
+        } else {
+            $params['purchaseRequests'] = $purchaseRequests;
+        }
+
+        return view('components.purchase-request.index', $params);
     }
 
-    public function ownRequests()
+    public function ownRequests(Request $request)
     {
-        $purchaseRequests = $this->purchaseRequestService->purchaseRequestsByUser();
+        $statusData = $request->input('status');
+        $userRequests = $this->purchaseRequestService->purchaseRequestsByUser();
 
-        return view('components.purchase-request.index', ["purchaseRequests" => $purchaseRequests]);
+        if ($statusData) {
+            $filteredRequests = $this->purchaseRequestService->purchaseRequestsByUserWithStatus($statusData);
+            $params = [
+                'purchaseRequests' => $filteredRequests,
+                'selectedStatus' => $statusData
+            ];
+        } else {
+            $params['purchaseRequests'] = $userRequests;
+        }
+
+        return view('components.purchase-request.index', $params);
     }
+
 
     public function formList()
     {
@@ -91,7 +114,7 @@ class PurchaseRequestController extends Controller
                 $originalNames[] = $file->getClientOriginalName();
             }
 
-            $this->purchaseRequestService->uploadFilesToS3($files,  $purchaseRequestType,  $purchaseRequestId, $originalNames, $isSupplies);
+            $this->purchaseRequestService->uploadFilesToS3($files, $purchaseRequestType, $purchaseRequestId, $originalNames, $isSupplies);
         }
 
         return response()->json(['message' => 'Anexos atualizados com sucesso']);

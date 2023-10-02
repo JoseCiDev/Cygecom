@@ -34,7 +34,7 @@
                                     <td>{{$user->person->name}}</td>
                                     <td >{{$user->email}}</td>
                                     <td class='hidden-350'>{{$user->profile->name}}</td>
-                                    <td class='hidden-1024'>{{\Carbon\Carbon::parse($user->created_at)->format('d/m/Y - H:m:s')}}</td>
+                                    <td class='hidden-1024'>{{$user->created_at->formatCustom('d/m/Y - H:i:s')}}</td>
                                     <td class='hidden-480'>
                                         <a data-cy="btn-editar-usuario-{{$index}}" href="{{route('user' , ['id' => $user->id ])}}" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
                                         <button data-route="user" data-name="{{$user->person->name}}" data-id="{{$user->id}}" rel="tooltip" title="Excluir"

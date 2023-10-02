@@ -41,8 +41,8 @@
             <header class="request-details-header">
                 <h1 class="text-highlight"><strong>Solicitação de serviço pontual nº {{ $request->id }}</strong></h1>
                 <div>
-                    <span>Criado em: {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}</span> |
-                    <span>Atualizado: {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}</span>
+                    <span>Criado em: {{ $request->created_at->formatCustom('d/m/Y H:i:s') }}</span> |
+                    <span>Atualizado: {{ $request->updated_at?->formatCustom('d/m/Y H:i:s') ?? '---' }}</span>
                 </div>
 
                 @if ($service->is_only_quotation)
@@ -56,6 +56,11 @@
                 @endif
 
                 <div class="row sub-info-container">
+                    <h4 class="text-highlight">
+                        <strong>Nome do serviço:</strong>
+                        {{ $request->service?->name ?? '---' }}
+                    </h4>
+                    <br>
                     <h4 class="text-highlight">
                         <strong>
                             Data da prestação do serviço:
@@ -103,11 +108,11 @@
                                         <hr>
                                         <p>
                                             <strong>Solicitação criada em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->created_at)->format('d/m/Y h:m:s') }}
+                                            {{ $request->created_at->formatCustom('d/m/Y H:i:s') }}
                                         </p>
                                         <p>
                                             <strong>Solicitação atualizada em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->updated_at)->format('d/m/Y h:m:s') }}
+                                            {{ $request->updated_at?->formatCustom('d/m/Y H:i:s') ?? '---' }}
                                         </p>
                                         <p>
                                             <strong>Solicitação desejada para:</strong>
@@ -119,6 +124,9 @@
                                     <h4><i class="fa fa-user"></i><strong> Informações do solicitante</strong></h4>
                                     <hr>
                                     <div class="tab-content padding">
+                                        <p>
+                                            <strong>Quem está solicitando:</strong> {{ $request->requester?->name ?? '---' }}
+                                        </p>
                                         <p>
                                             <strong>E-mail do solicitante:</strong> {{ $request->user->email }}
                                         </p>
@@ -157,11 +165,11 @@
                                         <hr>
                                         <p>
                                             <strong>Usuário criado em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->user->created_at)->format('d/m/Y h:m:s') }}
+                                            {{ $request->user->created_at->formatCustom('d/m/Y H:i:s') }}
                                         </p>
                                         <p>
                                             <strong>Usuário atualizado em:</strong>
-                                            {{ \Carbon\Carbon::parse($request->user->updated_at)->format('d/m/Y h:m:s') }}
+                                            {{ $request->user->updated_at?->formatCustom('d/m/Y H:i:s') ?? '---' }}
                                         </p>
                                     </div>
                                 </div>
@@ -397,7 +405,7 @@
             <div class="col-md-12">
                 <h4><i class="glyphicon glyphicon-link"></i> <strong>Links de apoio/sugestão:</strong></h4>
                 @php
-                    $supportLinks = 'Não há links para serem exibidos aqui.';
+                    $supportLinks = 'Não há links para serem exibidos.';
                     if ($request?->support_links) {
                         $supportLinks = str_replace(' ', '<br>', $request->support_links);
                         $supportLinks = nl2br($supportLinks);
