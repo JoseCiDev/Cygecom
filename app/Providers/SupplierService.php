@@ -22,7 +22,19 @@ class SupplierService extends ServiceProvider
      */
     public function getSupplierById(int $id)
     {
-        return Supplier::with(['address', 'phone', 'deletedByUser', 'updatedByUser'])->where('id', $id)->whereNull('deleted_at')->first();
+        return Supplier::with(
+            [
+                'address',
+                'phone',
+                'deletedByUser',
+                'updatedByUser',
+                'service.purchaseRequest',
+                'contract.purchaseRequest',
+                'purchaseRequestProduct.purchaseRequest',
+
+            ])->where('id', $id)
+                ->whereNull('deleted_at')
+                ->firstOrFail();
     }
 
     /**
@@ -63,7 +75,7 @@ class SupplierService extends ServiceProvider
 
     public function deleteSupplier(int $id): void
     {
-        $supplier             = Supplier::find($id);
+        $supplier = Supplier::find($id);
         $supplier->deleted_at = Carbon::now();
         $supplier->deleted_by = auth()->user()->id;
         $supplier->save();
@@ -81,14 +93,14 @@ class SupplierService extends ServiceProvider
 
     private function createPhone(array $data): int
     {
-        $phone   = Phone::create($data);
+        $phone = Phone::create($data);
         $phoneId = $phone->id;
 
         return $phoneId;
     }
     private function createAddress(array $data): int
     {
-        $address   = Address::create($data);
+        $address = Address::create($data);
         $addressId = $address->id;
 
         return $addressId;
