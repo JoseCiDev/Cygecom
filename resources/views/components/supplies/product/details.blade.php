@@ -1,6 +1,17 @@
 @php
     use App\Enums\{LogAction, PurchaseRequestType, PurchaseRequestStatus};
 
+    $currentUser = auth()->user();
+    $profile = $currentUser->profile->name;
+
+    $isSupplies = match ($profile) {
+        'suprimentos_hkm',
+        'suprimentos_inp',
+        'admin' => true,
+
+        default => false,
+    };
+
     if (isset($contract)) {
         $request = $contract;
     } elseif (isset($product)) {
@@ -16,15 +27,16 @@
 @endphp
 
 <x-app>
-
-    <div class="row">
-        <div class="col-md-12">
-            <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::PRODUCT" :request-id="$request->id" :request-user-id="$request->user_id" :request-status="$request->status"
-                :amount="$request->product->amount" />
+    @if ($isSupplies)
+        <div class="row">
+            <div class="col-md-12">
+                <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::PRODUCT" :request-id="$request->id" :request-user-id="$request->user_id" :request-status="$request->status"
+                    :amount="$request->product->amount" />
+            </div>
         </div>
-    </div>
 
-    <hr>
+        <hr>
+    @endif
 
     <div class="row">
         <div class="col-md-12">
@@ -47,7 +59,7 @@
                     <div class="row only-quotation">
                         <h4>
                             <i class="fa fa-warning">
-                                </i><strong> APENAS COTAÇÃO/ORÇAMENTO </strong>
+                            </i><strong> APENAS COTAÇÃO/ORÇAMENTO </strong>
                             <i class="fa fa-warning"></i>
                         </h4>
                     </div>
@@ -460,13 +472,15 @@
 
         <hr>
 
-        <div class="row justify-content-center">
-            <div class="col-sm-12">
-                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::PRODUCT" />
+        @if ($isSupplies)
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::PRODUCT" />
+                </div>
             </div>
-        </div>
 
-        <hr>
+            <hr>
+        @endif
 
         <div class="row">
             <div class="col-md-12">
