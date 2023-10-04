@@ -173,7 +173,7 @@
 
                                     <div class="tab-content request-details-content-box-apportionment">
                                         @foreach ($request->costCenterApportionment as $index => $apportionment)
-                                            <div class="row">
+                                            <div class="row cost-center-box">
                                                 <p>Centro de custo nº {{ $index + 1 }}</p>
                                                 <div class="col-sm-3">
                                                     <p>
