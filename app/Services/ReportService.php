@@ -85,10 +85,6 @@ class ReportService
             $validIds = $validIds->filter(fn ($id) => $id !== $currentUserId);
         }
 
-        if ($validIds->isEmpty()) {
-            throw new InvalidArgumentException('Array de ids de usuários solicitantes inválido.');
-        }
-
         return $query->whereIn('user_id', $validIds);
     }
 
