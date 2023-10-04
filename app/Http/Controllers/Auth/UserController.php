@@ -150,7 +150,7 @@ class UserController extends Controller implements UserControllerInterface
     /**
      * @abstract função necessária para sobreescrever validator padrão;
      * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator 
+     * @return \Illuminate\Contracts\Validation\Validator
      */
     private function validator(array $data)
     {

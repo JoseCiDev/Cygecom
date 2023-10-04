@@ -36,12 +36,14 @@ class SupplierController extends Controller
             $query = $this->supplierService->getSuppliers();
 
             if (!empty($searchValue)) {
-                $query->where('cpf_cnpj', 'like', "%{$searchValue}%")
-                    ->orWhere('corporate_name', 'like', "%{$searchValue}%")
-                    ->orWhere('name', 'like', "%{$searchValue}%")
-                    ->orWhere('supplier_indication', 'like', "%{$searchValue}%")
-                    ->orWhere('market_type', 'like', "%{$searchValue}%")
-                    ->orWhere('qualification', 'like', "%{$searchValue}%");
+                $query->where(function ($query) use ($searchValue) {
+                    $query->where('cpf_cnpj', 'like', "%{$searchValue}%")
+                        ->orWhere('corporate_name', 'like', "%{$searchValue}%")
+                        ->orWhere('name', 'like', "%{$searchValue}%")
+                        ->orWhere('supplier_indication', 'like', "%{$searchValue}%")
+                        ->orWhere('market_type', 'like', "%{$searchValue}%")
+                        ->orWhere('qualification', '=', "{$searchValue}");
+                });
             }
 
             $suppliersQuery = $query->orderBy('created_at', 'desc')->paginate($length, ['*'], 'page', $currentPage);

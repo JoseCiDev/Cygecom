@@ -2,7 +2,7 @@
 
 namespace App\View\Components;
 
-use App\Models\{Company, CostCenter, Supplier};
+use App\Models\{Company, CostCenter, Supplier, Person};
 use App\Enums\{PaymentMethod, PaymentTerm};
 use App\Providers\PurchaseRequestService;
 use Closure;
@@ -28,6 +28,7 @@ class PurchaseRequestFormService extends Component
     {
         $companies       = Company::all();
         $suppliers = Supplier::all();
+        $people = Person::all();
         $userCostCenters = auth()->user()->userCostCenterPermission;
         $paymentMethods = PaymentMethod::cases();
         $paymentTerms = PaymentTerm::cases();
@@ -44,6 +45,7 @@ class PurchaseRequestFormService extends Component
             "paymentMethods" => $paymentMethods,
             "paymentTerms" => $paymentTerms,
             'suppliers' => $suppliers,
+            'people' => $people,
             'statusValues' => $statusValues
         ];
 
