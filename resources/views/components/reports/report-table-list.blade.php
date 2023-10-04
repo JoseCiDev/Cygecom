@@ -31,7 +31,7 @@
             <div class="form-group">
                 <div class="label-with-clear-btn">
                     <label for="requisting-users-filter" class="regular-text" style="margin: 0">Solicitante</label>
-                    <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn">Limpar</button>
+                    <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn" data-cy="filter-clear-users-btn">Limpar</button>
                 </div>
 
                 <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]"
@@ -46,9 +46,9 @@
         <div class="form-group">
             <div class="label-with-clear-btn">
                 <label for="cost-center-filter" class="regular-text" style="margin: 0">Centros de custos</label>
-                <button class="btn btn-mini btn-secondary" id="filter-clear-cost-centers-btn">Limpar</button>
+                <button class="btn btn-mini btn-secondary" id="filter-clear-cost-centers-btn" data-cy="filter-clear-cost-centers-btn">Limpar</button>
             </div>
-            <select id="cost-center-filter" name="cost-center-filter[]" multiple="multiple"  class="select2-me"
+            <select id="cost-center-filter" data-cy="cost-center-filter" name="cost-center-filter[]" multiple="multiple"  class="select2-me"
                 placeholder="Escolha uma ou mais opções" style="width:100%;">
                 @foreach ($costCenters as $costCenter)
                     @php
@@ -86,12 +86,12 @@
                 <div class="types">
                     @foreach (PurchaseRequestType::cases() as $typeCase)
                         <label class="checkbox-label secondary-text">
-                            <input type="checkbox" name="request-type[]" class="request-type-checkbox" value="{{ $typeCase->value }}" checked>
+                            <input type="checkbox" name="request-type[]" class="request-type-checkbox" data-cy="request-type-{{ $typeCase->value }}" value="{{ $typeCase->value }}" checked>
                             {{ $typeCase->label() }}
 
                             @if ($typeCase->value === PurchaseRequestType::PRODUCT->value)
                                 ( <label class="checkbox-label secondary-text" style="margin: 0">
-                                    <input type="checkbox" name="product-detail" class="product-detail" value="true">
+                                    <input type="checkbox" name="product-detail" data-cy="product-detail" class="product-detail" value="true">
                                     Detalhes
                                 </label>)
                             @endif
@@ -116,7 +116,7 @@
 
                 @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
                     <label class="checkbox-label secondary-text">
-                        <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
+                        <input type="checkbox" name="status[]" data-cy="status-{{ $statusCase->value }}" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
                         {{ $statusCase->label() }}
                     </label>
                 @endif
@@ -128,7 +128,7 @@
     @if ($currentProfile === 'admin' || $currentProfile === 'diretor')
         <div class="form-group">
             <label class="checkbox-label secondary-text">
-                <input type="checkbox" id="own-requests" class="status-checkbox" value="true" checked>
+                <input type="checkbox" id="own-requests" data-cy="own-requests" class="status-checkbox" value="true" checked>
                 Minhas solicitações
             </label>
         </div>
@@ -137,15 +137,15 @@
 </div>
 
 <div class="report-btns">
-    <button class="btn btn-primary btn-small" id="reports-filter-btn">Filtrar</button>
-    <button class="btn btn-secondary btn-small" id="filter-clear-all-btn">Reiniciar filtros</button>
-    <button class="btn btn-primary btn-small" id="generate-csv-button"><i class="fa fa-file-excel-o"></i> Baixar</button>
+    <button class="btn btn-primary btn-small" id="reports-filter-btn" data-cy="reports-filter-btn">Filtrar</button>
+    <button class="btn btn-secondary btn-small" id="filter-clear-all-btn" data-cy="filter-clear-all-btn">Reiniciar filtros</button>
+    <button class="btn btn-primary btn-small" id="generate-csv-button" data-cy="generate-csv-button"><i class="fa fa-file-excel-o"></i> Baixar</button>
 </div>
 
 <div class="box-content nopadding regular-text">
     <span class="loader-box"></span>
 
-    <table id="reportsTable" class="table table-hover table-nomargin table-bordered" data-nosort="0" data-checkall="all">
+    <table id="reportsTable" data-cy="reportsTable" class="table table-hover table-nomargin table-bordered" data-nosort="0" data-checkall="all">
         <thead>
             <tr>
                 <th >Nº</th>
