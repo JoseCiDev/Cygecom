@@ -1,4 +1,25 @@
+@php
+    use App\Enums\SupplierQualificationStatus;
+
+    $currentUser = auth()->user();
+
+    $productRequests = $supplier->purchaseRequestProduct;
+    $serviceRequests = $supplier->service;
+    $contractRequests = $supplier->contract;
+    $purchaseRequests = $productRequests->concat($serviceRequests)->concat($contractRequests);
+
+    $isEmAnalise =  $supplier->qualification->value === SupplierQualificationStatus::EM_ANALISE->value;
+    $isGestorFornecedores = $currentUser->profile->name === 'gestor_fornecedores';
+@endphp
+
 <x-app>
+
+    @if ($isEmAnalise && $isGestorFornecedores)
+        <x-supplier.purchase-requests
+            :supplier="$supplier"
+            :purchaseRequests="$purchaseRequests"
+        />
+    @endif
 
     <div class="row">
         <div class="col-sm-12">

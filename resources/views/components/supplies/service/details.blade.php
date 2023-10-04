@@ -1,6 +1,17 @@
 @php
     use App\Enums\{PurchaseRequestStatus, PurchaseRequestType};
 
+    $currentUser = auth()->user();
+    $profile = $currentUser->profile->name;
+
+    $isSupplies = match ($profile) {
+        'suprimentos_hkm',
+        'suprimentos_inp',
+        'admin' => true,
+
+        default => false,
+    };
+
     if (isset($contract)) {
         $request = $contract;
     } elseif (isset($product)) {
@@ -15,18 +26,21 @@
 
 <x-app>
 
-    <div class="row">
-        <div class="col-md-12">
-            <x-SuppliesRequestEditContainer
-                :request-type="PurchaseRequestType::SERVICE"
-                :request-id="$request->id"
-                :request-user-id="$request->user_id"
-                :request-status="$request->status"
-                :amount="$request->service->price"/>
+    @if($isSupplies)
+        <div class="row">
+            <div class="col-md-12">
+                <x-SuppliesRequestEditContainer
+                    :request-type="PurchaseRequestType::SERVICE"
+                    :request-id="$request->id"
+                    :request-user-id="$request->user_id"
+                    :request-status="$request->status"
+                    :amount="$request->service->price"/>
+            </div>
         </div>
-    </div>
 
-    <hr>
+        <hr>
+    @endif
+
 
     <div class="row">
         <div class="col-md-12">
@@ -417,11 +431,13 @@
 
         <hr>
 
-        <div class="row justify-content-center">
-            <div class="col-sm-12">
-                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::SERVICE" />
+        @if($isSupplies)
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::SERVICE" />
+                </div>
             </div>
-        </div>
+        @endif
 
         <hr>
 

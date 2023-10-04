@@ -144,12 +144,16 @@ class Breadcrumb extends Component
 
     public function setItem()
     {
-        $route = Route::getCurrentRoute();
-        $routeName = $route->getName();
-        $items = collect($this->itemsMap);
-        $hasBreadItem = $items->has($routeName);
-        $breadCrumb = $hasBreadItem ? $items->get($routeName) : [];
-        $this->items = $routeName !== 'home' ? $breadCrumb : [];
+        $route       = Route::getCurrentRoute();
+        $routeName   = $route->getName();
+
+        $routesSuppliersRequests = ['supplier.contract.detail', 'supplier.product.detail', 'supplier.service.detail'];
+        $isSupplierRequestRoute = in_array($routeName, $routesSuppliersRequests);
+        if ($isSupplierRequestRoute) {
+            return;
+        }
+
+        $this->items = $routeName !== 'home' ? $this->itemsMap[$routeName] : [];
     }
 
     public function render()

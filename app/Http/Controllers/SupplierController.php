@@ -2,28 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Providers\{SupplierService, ValidatorService};
 use Exception;
 use Illuminate\Http\Request;
+use App\Models\PurchaseRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Route;
+use App\Providers\{SupplierService, ValidatorService};
 
 class SupplierController extends Controller
 {
-    private $validatorService;
 
-    private $supplierService;
+    public function __construct(
+        private ValidatorService $validatorService,
+        private SupplierService $supplierService
+    ){}
 
-    public function __construct(ValidatorService $validatorService, SupplierService $supplierService)
-    {
-        $this->validatorService = $validatorService;
-        $this->supplierService  = $supplierService;
-    }
-
-    public function index()
+    public function index(): View
     {
         return view('components.supplier.index');
     }
 
-    public function indexAPI()
+    public function indexAPI(): RedirectResponse|JsonResponse
     {
         $draw = (int) request()->query('draw', 1);
         $start = (int) request()->query('start', 0);
@@ -58,7 +59,7 @@ class SupplierController extends Controller
         ], 200);
     }
 
-    public function supplier(int $id)
+    public function supplier(int $id): RedirectResponse|View
     {
         $supplier = $this->supplierService->getSupplierById($id);
 
@@ -66,15 +67,20 @@ class SupplierController extends Controller
             return redirect('suppliers')->withErrors("Não possível acessar fornecedor com ID: $id")->withInput();
         }
 
-        return view('components.supplier.edit', ['supplier' => $supplier, 'id' => $id]);
+        $params = [
+            'supplier' => $supplier,
+            'id' => $id,
+        ];
+
+        return view('components.supplier.edit', $params);
     }
 
-    public function showRegistrationForm()
+    public function showRegistrationForm(): View
     {
         return view('components.supplier.form');
     }
 
-    public function register(Request $request)
+    public function register(Request $request): RedirectResponse
     {
         $data = $request->all();
         $cnpj = $request->cpf_cnpj;
@@ -98,7 +104,7 @@ class SupplierController extends Controller
         return redirect()->route('suppliers');
     }
 
-    public function registerAPI(Request $request)
+    public function registerAPI(Request $request): RedirectResponse|JsonResponse
     {
         $data = $request->all();
         $cnpj = $request->cpf_cnpj;
@@ -128,7 +134,7 @@ class SupplierController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): RedirectResponse
     {
         $data = $request->all();
 
@@ -157,7 +163,7 @@ class SupplierController extends Controller
         return redirect()->route('supplier', ['id' => $id]);
     }
 
-    public function delete(int $id)
+    public function delete(int $id): RedirectResponse
     {
         try {
             $this->supplierService->deleteSupplier($id);
