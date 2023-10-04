@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Enums\{PurchaseRequestType, PurchaseRequestStatus};
-use App\Models\{User, Service, Product, Person, Contract};
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -138,7 +138,7 @@ class ReportService
      * @param string $orderColumnIndex Recebe um index que determina o campo de ordenação com base no dicionário de mapeamento."
      * @param string $orderDirection Recebe o tipo de ordenação, sendo 'asc' ou 'desc'.
      */
-    public function orderByMapped(Builder $query, int $orderColumnIndex, ?string $orderDirection = 'asc'): Builder
+    public function orderByMapped(Builder $query, int $orderColumnIndex): string
     {
         $latestLogSubquery = fn ($query) => $query->select('logs.created_at')
             ->from('logs')
@@ -148,22 +148,31 @@ class ReportService
             ->orderBy('logs.created_at', 'asc')
             ->limit(1);
 
-        $orderColumnMappings = [
-            0 => $query->orderBy('id', $orderDirection),
-            1 => $query->orderBy('type', $orderDirection),
-            2 => $query->orderBy($latestLogSubquery, $orderDirection),
-            3 => $query->orderBy(Person::select('name')->whereColumn('people.id', '=', 'purchase_requests.user_id'), $orderDirection),
-            4 => $query->orderBy('status', $orderDirection),
-            5 => $query->orderBy(Person::select('name')->whereColumn('people.id', '=', 'purchase_requests.supplies_user_id'), $orderDirection),
-            10 => $query->orderBy(
-                Product::select('amount')->whereColumn('products.purchase_request_id', '=', 'purchase_requests.id')
-                    ->union(Service::select('price')->whereColumn('services.purchase_request_id', '=', 'purchase_requests.id'))
-                    ->union(Contract::select('amount')->whereColumn('contracts.purchase_request_id', '=', 'purchase_requests.id')),
-                $orderDirection
-            )
-        ];
+        $getPersonName = fn ($query) => $query->select('people.name')
+            ->from('people')
+            ->join('users', 'users.person_id', '=', 'people.id')
+            ->where('users.id', DB::raw('purchase_requests.user_id'));
 
-        return $orderColumnMappings[$orderColumnIndex];
+        $getPersonRequester = fn ($query) => $query->select('people.name')
+            ->from('people')
+            ->where('people.id', DB::raw('purchase_requests.requester_person_id'));
+
+        $getPersonSupplies = fn ($query) => $query->select('people.name')
+            ->from('people')
+            ->where('people.id', DB::raw('purchase_requests.supplies_user_id'));
+
+        $orderColumnMappings = match ($orderColumnIndex) {
+            0 => 'purchase_requests.id',
+            1 => 'purchase_requests.type',
+            2 => $latestLogSubquery,
+            3 => $getPersonName,
+            4 => $getPersonRequester,
+            5 => 'purchase_requests.status',
+            6 => $getPersonSupplies,
+            11 => 'total_amount'
+        };
+
+        return $orderColumnMappings;
     }
 
     /**

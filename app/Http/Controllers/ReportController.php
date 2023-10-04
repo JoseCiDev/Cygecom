@@ -8,6 +8,7 @@ use App\Services\ReportService;
 use Illuminate\Http\{Request, JsonResponse};
 use Illuminate\View\View;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -39,31 +40,39 @@ class ReportController extends Controller
         $isAll = $length === -1;
 
         try {
-            $query = $this->purchaseRequestService->allPurchaseRequests()
-                ->whereNull('deleted_at')
-                ->where('status', "!=", PurchaseRequestStatus::RASCUNHO->value);
+            $query = $this->purchaseRequestService->allPurchaseRequests();
 
-            $query = $this->reportService->whereInLogDate($query, $dateSince, $dateUntil);
+            if (empty($searchValue)) {
+                $query = $this->reportService->whereInLogDate($query, $dateSince, $dateUntil);
 
-            $query = $this->reportService->whereInRequistingUserQuery($query, $requestingUsersIds, $ownRequests);
+                $query = $this->reportService->whereInRequistingUserQuery($query, $requestingUsersIds, $ownRequests);
 
-            if ($costCenterIds) {
-                $query = $this->reportService->whereInCostCenterQuery($query, $costCenterIds);
+                if ($costCenterIds) {
+                    $query = $this->reportService->whereInCostCenterQuery($query, $costCenterIds);
+                }
+
+                if ($requestType) {
+                    $query = $this->reportService->whereInRequestTypeQuery($query, $requestType);
+                }
+
+                if ($status) {
+                    $query = $this->reportService->whereInStatusQuery($query, $status);
+                }
             }
 
-            if ($requestType) {
-                $query = $this->reportService->whereInRequestTypeQuery($query, $requestType);
-            }
+            $query->select('purchase_requests.*', DB::raw('COALESCE(services.price, contracts.amount, products.amount) AS total_amount'))
+                ->leftJoin('contracts', 'contracts.purchase_request_id', '=', 'purchase_requests.id')
+                ->leftJoin('products', 'products.purchase_request_id', '=', 'purchase_requests.id')
+                ->leftJoin('services', 'services.purchase_request_id', '=', 'purchase_requests.id');
 
-            if ($status) {
-                $query = $this->reportService->whereInStatusQuery($query, $status);
-            }
-
-            $query = $this->reportService->orderByMapped($query, $orderColumnIndex, $orderDirection);
+            $orderValue = $this->reportService->orderByMapped($query, $orderColumnIndex);
+            $query->orderBy($orderValue, $orderDirection);
 
             if (!empty($searchValue)) {
                 $query = $this->reportService->searchValueQuery($query, $searchValue);
             }
+
+            $query->whereNull('purchase_requests.deleted_at')->where('purchase_requests.status', "!=", PurchaseRequestStatus::RASCUNHO->value);
 
             $requests = $isAll ? $query->get() : $query->paginate($length, ['*'], 'page', $currentPage);
         } catch (Exception $error) {
