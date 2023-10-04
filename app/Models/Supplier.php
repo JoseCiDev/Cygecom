@@ -12,7 +12,17 @@ class Supplier extends Model
 
     public function purchaseRequestProduct()
     {
-        return $this->hasMany(PurchaseRequestProduct::class, 'purchase_request_id');
+        return $this->hasMany(PurchaseRequestProduct::class, 'supplier_id');
+    }
+
+    public function service()
+    {
+        return $this->hasMany(Service::class, 'supplier_id');
+    }
+
+    public function contract()
+    {
+        return $this->hasMany(Contract::class, 'supplier_id');
     }
 
     public function address()

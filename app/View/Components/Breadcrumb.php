@@ -143,6 +143,12 @@ class Breadcrumb extends Component
         $route       = Route::getCurrentRoute();
         $routeName   = $route->getName();
 
+        $routesSuppliersRequests = ['supplier.contract.detail', 'supplier.product.detail', 'supplier.service.detail'];
+        $isSupplierRequestRoute = in_array($routeName, $routesSuppliersRequests);
+        if ($isSupplierRequestRoute) {
+            return;
+        }
+
         $this->items = $routeName !== 'home' ? $this->itemsMap[$routeName] : [];
     }
 

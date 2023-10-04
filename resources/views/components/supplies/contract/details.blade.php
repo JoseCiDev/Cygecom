@@ -1,6 +1,17 @@
 @php
     use App\Enums\{PaymentTerm, LogAction, PurchaseRequestType, PurchaseRequestStatus};
 
+    $currentUser = auth()->user();
+    $profile = $currentUser->profile->name;
+
+    $isSupplies = match ($profile) {
+        'suprimentos_hkm',
+        'suprimentos_inp',
+        'admin' => true,
+
+        default => false,
+    };
+
     if (isset($contract)) {
         $request = $contract;
     } elseif (isset($product)) {
@@ -15,19 +26,15 @@
 @endphp
 
 <x-app>
-
-    <div class="row">
-        <div class="col-md-12">
-            <x-SuppliesRequestEditContainer
-                :request-type="PurchaseRequestType::CONTRACT"
-                :request-id="$request->id"
-                :request-user-id="$request->user_id"
-                :request-status="$request->status"
-                :amount="$request->contract->amount"/>
+    @if ($isSupplies)
+        <div class="row">
+            <div class="col-md-12">
+                <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::CONTRACT" :request-id="$request->id" :request-user-id="$request->user_id" :request-status="$request->status"
+                    :amount="$request->contract->amount" />
+            </div>
         </div>
-    </div>
-
-    <hr>
+        <hr>
+    @endif
 
     <div class="row">
         <div class="col-md-12">
@@ -50,7 +57,7 @@
                     <div class="row only-quotation">
                         <h4>
                             <i class="fa fa-warning">
-                                </i><strong> APENAS COTAÇÃO/ORÇAMENTO </strong>
+                            </i><strong> APENAS COTAÇÃO/ORÇAMENTO </strong>
                             <i class="fa fa-warning"></i>
                         </h4>
                     </div>
@@ -239,7 +246,7 @@
                                                 <p>
                                                     <strong>CPF/CNPJ:</strong>
                                                     @php
-                                                        $cnpj = $request->contract?->supplier?->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $request->contract?->supplier?->cpf_cnpj) : 'CNPJ indefinido'
+                                                        $cnpj = $request->contract?->supplier?->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $request->contract?->supplier?->cpf_cnpj) : 'CNPJ indefinido';
                                                     @endphp
                                                     {{ $cnpj }}
                                                 </p>
@@ -384,7 +391,8 @@
 
                                     <div class="request-details-content-box-contract">
                                         <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i>
-                                            <strong> Parcelas</strong></h4>
+                                            <strong> Parcelas</strong>
+                                        </h4>
                                         @foreach ($request->contract->installments as $installmentIndex => $installment)
                                             <div class="request-details-content-box-contract-installment">
                                                 <div class="row">
@@ -457,13 +465,15 @@
 
         <hr>
 
-        <div class="row justify-content-center">
-            <div class="col-sm-12">
-                <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::CONTRACT" />
+        @if ($isSupplies)
+            <div class="row justify-content-center">
+                <div class="col-sm-12">
+                    <x-RequestFiles :purchaseRequestId="$request?->id" isSupplies :purchaseRequestType="PurchaseRequestType::CONTRACT" />
+                </div>
             </div>
-        </div>
 
-        <hr>
+            <hr>
+        @endif
 
         <div class="row">
             <div class="col-md-12">
