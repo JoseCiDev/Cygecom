@@ -390,7 +390,7 @@
 
                                                         @foreach ($products as $index => $productItem)
                                                             <div
-                                                                class="request-details-content-box-products-product {{ $index % 2 === 0 ? 'zebra-bg-even' : 'zebra-bg-odd' }}">
+                                                                class="request-details-content-box-products-product">
                                                                 <p><strong><i class="glyphicon glyphicon-tag"></i>
                                                                         Produto nº {{ $index + 1 }}:</strong></p>
 
