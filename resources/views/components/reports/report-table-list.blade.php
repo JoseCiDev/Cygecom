@@ -29,39 +29,43 @@
 
         @if ($isAdmin || $isDirector)
             <div class="form-group">
-                <div class="label-with-clear-btn">
-                    <label for="requisting-users-filter" class="regular-text" style="margin: 0">Solicitante</label>
-                    <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn" data-cy="filter-clear-users-btn">Limpar</button>
-                </div>
+                <label for="requisting-users-filter" class="regular-text cost-center-filter-label">Solicitante</label>
 
-                <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]"
-                    multiple="multiple" class="select2-me" placeholder="Escolha uma ou mais opções" style="width:100%;">
-                    @foreach ($requestingUsers as $user)
-                        <option value="{{$user->id}}">{{$user->person->name}}</option>
-                    @endforeach
-                </select>
+               <div class="select-filter-container" >
+                    <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]"
+                        multiple="multiple" class="select2-me" placeholder="Escolha uma ou mais opções">
+                        @foreach ($requestingUsers as $user)
+                            <option value="{{$user->id}}">{{$user->person->name}}</option>
+                        @endforeach
+                    </select>
+                    <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn" data-cy="filter-clear-users-btn">Limpar</button>
+               </div>
+
             </div>
         @endif
 
         <div class="form-group">
-            <div class="label-with-clear-btn">
-                <label for="cost-center-filter" class="regular-text" style="margin: 0">Centros de custos</label>
+            <label for="cost-center-filter" class="regular-text cost-center-filter-label">Centros de custos</label>
+
+            <div class="select-filter-container">
+                <select id="cost-center-filter" data-cy="cost-center-filter" name="cost-center-filter[]" multiple="multiple"  class="select2-me"
+                    placeholder="Escolha uma ou mais opções">
+                    @foreach ($costCenters as $costCenter)
+                        @php
+                            $companyName = $costCenter->company->name;
+                            $costCenterName = $costCenter->name;
+                            $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
+                        @endphp
+
+                        <option value="{{ $costCenter->id }}">
+                            {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
+                        </option>
+                    @endforeach
+                </select>
+
                 <button class="btn btn-mini btn-secondary" id="filter-clear-cost-centers-btn" data-cy="filter-clear-cost-centers-btn">Limpar</button>
             </div>
-            <select id="cost-center-filter" data-cy="cost-center-filter" name="cost-center-filter[]" multiple="multiple"  class="select2-me"
-                placeholder="Escolha uma ou mais opções" style="width:100%;">
-                @foreach ($costCenters as $costCenter)
-                    @php
-                        $companyName = $costCenter->company->name;
-                        $costCenterName = $costCenter->name;
-                        $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
-                    @endphp
 
-                    <option value="{{ $costCenter->id }}">
-                        {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
-                    </option>
-                @endforeach
-            </select>
         </div>
     </div>
 
@@ -128,8 +132,8 @@
     @if ($currentProfile === 'admin' || $currentProfile === 'diretor')
         <div class="form-group">
             <label class="checkbox-label secondary-text">
-                <input type="checkbox" id="own-requests" data-cy="own-requests" class="status-checkbox" value="true" checked>
-                Minhas solicitações
+                <input type="checkbox" id="own-requests" data-cy="own-requests" value="true" checked>
+                Incluir minhas solicitações
             </label>
         </div>
     @endif

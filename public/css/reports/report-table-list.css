@@ -28,22 +28,41 @@ table tr {
     position: relative;
 }
 
+.select2-container {
+    width: 100%;
+}
+
 .report-filters {
     display: flex;
     flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
-.report-filters .label-with-clear-btn {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.report-filters .form-group {
+    margin: 0;
+    width: 100%;
+}
+
+.report-filters .cost-center-filter-label {
     margin-bottom: 5px;
+}
+
+.report-filters .select-filter-container {
+    display: flex;
+    gap: 4px;
+}
+
+.report-filters .selects {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .report-filters .dates {
     display: flex;
-    gap: 5px;
-    margin-bottom: 25px;
+    gap: 15px;
+    margin-bottom: 34px;
     position: relative;
 }
 
@@ -122,6 +141,10 @@ table tr {
         float: right;
     }
 
+    .report-filters .selects {
+        flex-direction: row;
+    }
+
     .report-filters .dates-with-checkboxs {
         display: flex;
         gap: 20px;
@@ -129,6 +152,7 @@ table tr {
 
     .report-filters .dates {
         justify-content: space-between;
+        margin-bottom: 20px;
     }
 
     .report-filters .status {
@@ -144,12 +168,7 @@ table tr {
 
 @media (min-width: 1024px) {
     .report-filters .selects {
-        display: flex;
         gap: 15px;
-    }
-
-    .report-filters .selects .form-group {
-        width: 100%;
     }
 
     .report-filters .status {
