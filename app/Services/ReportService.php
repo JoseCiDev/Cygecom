@@ -177,7 +177,7 @@ class ReportService
     public function searchValueQuery(Builder $query, string $searchValue): Builder
     {
         return $query->where(function ($query) use ($searchValue) {
-            $query->where('id', 'like', "%{$searchValue}%")
+            $query->where('purchase_requests.id', 'like', "%{$searchValue}%")
                 ->orWhereHas('user', function ($query) use ($searchValue) {
                     $query->whereHas('person', function ($query) use ($searchValue) {
                         $query->where('name', 'like', "%{$searchValue}%");
@@ -188,11 +188,6 @@ class ReportService
                 })
                 ->orWhereHas('suppliesUser', function ($query) use ($searchValue) {
                     $query->whereHas('person', function ($query) use ($searchValue) {
-                        $query->where('name', 'like', "%{$searchValue}%");
-                    });
-                })
-                ->orWhereHas('costCenterApportionment', function ($query) use ($searchValue) {
-                    $query->whereHas('costCenter', function ($query) use ($searchValue) {
                         $query->where('name', 'like', "%{$searchValue}%");
                     });
                 })
