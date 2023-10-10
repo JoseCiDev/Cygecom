@@ -1,5 +1,63 @@
+/* Libraries */
+@import url('./bootstrap.min.css');
+@import url('./plugins/select2/select2.css');
+
+/* Custom */
+@import url('./style.css');
+@import url('./navigation.css');
+@import url('./select2-custom.css');
+@import url('./dataTable-custom.css');
+@import url('./supplies.css');
+@import url('./modal-supplies.css');
+@import url('./bootbox.custom.css');
+@import url('./custom-modal-dialog.css');
+@import url('./custom-breadcrumb.css');
+@import url('./purchase-request/product-suggestion-autocomplete.css');
+@import url('./purchase-request/log.css');
+@import url('./purchase-request/request-dashboard.css');
+@import url('./supplies/form-status-filter.css');
+@import url('./supplies/category-column-tags.css');
+@import url('./supplies/dashboard.css');
+@import url('./supplies/details.css');
+
+:root {
+    --gold-primary-color: #c49f51;
+    --gold-secondary-color: #d5bb84;
+    --gold-tertiary-color: #e1cfa7;
+
+    --grey-primary-color: #333333;
+    --grey-secondary-color: #cccccc;
+    --grey-tertiary-color: #f7f7f7;
+
+    --black-color: #141414;
+
+    --product-color: #35ce86;
+    --service-color: #f9a164;
+    --contract-color: #73cee0;
+
+    --product-color-hover: #70dda9;
+    --service-color-hover: #ffbc90;
+    --contract-color-hover: #9cdce9;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+label.inline {
+    font-weight: normal;
+}
+
 * {
     scroll-behavior: smooth;
+}
+
+body {
+    margin-bottom: 80px;
+    background: #fff;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -12,14 +70,53 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-.user-item-list {
-    border: 1px solid;
-    margin-bottom: 5px;
-    padding: 10px 0;
+strong {
+    font-weight: 700;
 }
 
-.border-red {
-    border: 1px solid red;
+
+input[type=checkbox] {
+    accent-color: #000000;
+}
+
+p,
+.regular-text {
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--black-color);
+}
+
+input,
+textarea,
+input:focus {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    outline-width: 0;
+}
+
+a:focus {
+    outline: none;
+    text-decoration: none;
+}
+
+@media (max-width: 767px) {
+    body {
+        padding: 0;
+    }
+}
+
+@media print {
+    #navigation {
+        display: none;
+    }
+
+    #main {
+        margin-left: 0;
+    }
 }
 
 .no-resize {
@@ -28,10 +125,6 @@ input[type="number"] {
 
 .container-fluid {
     padding: 0 25px;
-}
-
-strong {
-    font-weight: 700;
 }
 
 .cnpj-span-warning {

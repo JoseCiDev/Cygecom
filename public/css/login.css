@@ -1,0 +1,42 @@
+.login {
+    background: linear-gradient(to bottom, #333333, #575757);
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login .wrapper {
+    width: 360px;
+    height: 500px;
+}
+
+.login-logo {
+    margin-bottom: 20px;
+    width: 75%;
+}
+
+#login-form {
+    box-sizing: border-box;
+    background-color: #FFFFFF;
+    border-radius: 4px;
+    padding: 10px;
+    width: 100%;
+}
+
+#login-form #btn-login-entrar.btn {
+    width: 100%;
+    border-radius: 4px !important;
+    background-color: #333333;
+}
+
+#login-form #btn-login-entrar.btn:hover {
+    background-color: #cccccc
+}
+
+.login .wrapper .logo-essentia {
+    display: flex;
+    justify-content: center;
+    margin-top: 60px
+}

@@ -4,51 +4,15 @@
 
 	<title>GECOM - Login</title>
 
-    <!-- Favicon -->
 	<link rel="shortcut icon" href="{{asset('img/gecom/favicon.png')}}" />
 
-	<!-- Bootstrap -->
+	<script src="js/jquery.min.js"></script>
 	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<!-- Theme CSS -->
-	<link rel="stylesheet" href="css/style.css">
-	<!-- Bootstrap -->
+	<link rel="stylesheet" href="css/login.css">
 	<script src="js/bootstrap.min.js"></script>
 </head>
 
-<style>
-	.login .wrapper {
-		width: 360px;
-	}
-	.login-logo{
-		margin-bottom: 20px;
-		width: 75%;
-	}
-	#login-form{
-		box-sizing: border-box;
-		background-color: #FFFFFF;
-		border-radius: 4px;
-		padding: 10px;
-		width: 100%;
-	}
-
-	#login-form #btn-login-entrar.btn{
-		width: 100%;
-		border-radius: 4px!important;
-		background-color: #333333;
-	}
-	#login-form #btn-login-entrar.btn:hover{
-		background-color: #cccccc
-	}
-
-	.login .wrapper .logo-essentia {
-		display:flex;
-		justify-content:center;
-		margin-top: 60px
-	}
-
-</style>
-
-<body class='login theme-grey'>
+<body class='login'>
 	<div class="wrapper">
 		<img class="login-logo" src="{{asset('img/gecom/logo-login.svg')}}" alt="login-logo-essentia-group">
 		<x-alert/>
