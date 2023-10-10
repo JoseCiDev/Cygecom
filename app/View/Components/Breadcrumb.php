@@ -133,7 +133,7 @@ class Breadcrumb extends Component
         ],
         'reports.index.view' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'reports.index.view', 'label' => 'Relatórios'],
+            ['route' => 'reports.index.view', 'label' => 'Relatórios de solicitações'],
         ],
     ];
 
