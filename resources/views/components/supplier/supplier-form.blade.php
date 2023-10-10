@@ -61,17 +61,17 @@
                 <label for="market-type" class="regular-text">Tipo de mercado</label>
                 <fieldset id="market-type" data-rule-required="true">
                     <div class="row">
-                        <input @checked($supplier?->market_type === 'Nacional') class="icheck-me" type="radio"
+                        <input @checked($supplier?->market_type === 'Nacional') type="radio"
                             name="market_type" id="nacional" data-cy="nacional" value="Nacional" data-skin="minimal" required>
                         <label class="form-check-label secondary-text" for="nacional">Mercado nacional</label>
                     </div>
                     <div class="row">
-                        <input @checked($supplier?->market_type === 'Externo') class="icheck-me" type="radio"
+                        <input @checked($supplier?->market_type === 'Externo') type="radio"
                             name="market_type" id="externo" data-cy="externo" value="Externo" data-skin="minimal" required>
                         <label class="form-check-label secondary-text" for="externo">Mercado externo</label>
                     </div>
                     <div class="row">
-                        <input @checked($supplier?->market_type === 'Prospecção') class="icheck-me" type="radio"
+                        <input @checked($supplier?->market_type === 'Prospecção') type="radio"
                             name="market_type" id="prospec" data-cy="prospec" value="Prospecção" data-skin="minimal" required>
                         <label class="form-check-label secondary-text" for="prospec">Prospecção</label>
                     </div>
@@ -83,17 +83,17 @@
                 <label for="supplier-indication" class="regular-text">Indicação do fornecedor</label>
                 <fieldset id="supplier-indication" data-rule-required="true">
                     <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'Matéria Prima') class="icheck-me" type="radio"
+                        <input @checked($supplier?->supplier_indication === 'Matéria Prima') type="radio"
                             name="supplier_indication" id="materia-prima" data-cy="materia-prima" value="Matéria Prima" data-skin="minimal" required>
                         <label class="form-check-label secondary-text" for="materia-prima">Matéria-prima</label>
                     </div>
                     <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'Serviço') class="icheck-me" type="radio"
+                        <input @checked($supplier?->supplier_indication === 'Serviço') type="radio"
                             name="supplier_indication" id="servico" data-cy="servico" value="Serviço" data-skin="minimal" required>
                         <label class="form-check-label secondary-text" for="servico">Serviço</label>
                     </div>
                     <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'Ambos') class="icheck-me" type="radio"
+                        <input @checked($supplier?->supplier_indication === 'Ambos') type="radio"
                             name="supplier_indication" id="ambos" value="Ambos" data-cy="ambos" data-skin="minimal" required>
                         <label class="form-check-label secondary-text" for="ambos">Ambos</label>
                     </div>
@@ -245,7 +245,7 @@
         <div class="row">
             <div class="col-sm-3">
                 <label for="qualification" class="regular-text">Qualificação do fornecedor</label>
-                <select name="qualification" id="qualification" data-cy="qualification" class="chosen-select form-control">
+                <select name="qualification" id="qualification" data-cy="qualification" class='select2-me' style="width:100%;">
                     <option value="" selected >Selecione uma opção </option>
                     @foreach ($supplierQualificationStatus as $qualification)
                         <option value="{{ $qualification->value }}" @selected($supplier?->qualification === $qualification)>

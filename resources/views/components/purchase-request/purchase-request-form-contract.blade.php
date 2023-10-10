@@ -176,7 +176,7 @@
                             type="checkbox" id="checkbox-only-quotation" data-cy="checkbox-only-quotation"
                             class="checkbox-only-quotation no-validation" style="margin:0"
                             @checked((bool) $purchaseRequest?->is_only_quotation) >
-                        <label for="checkbox-only-quotation" class="regular-text form-check-label icheck-me" style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
+                        <label for="checkbox-only-quotation" class="regular-text form-check-label" style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
                     </div>
                 </div>
 

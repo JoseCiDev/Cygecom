@@ -81,14 +81,14 @@
                         {{-- PESSOAL --}}
                         <label class="form-check-label regular-text" for="personal">
                             <input @disabled($isDisabled) @checked(isset($user) && $user->person->phone?->phone_type === 'personal')
-                                class="icheck-me" type="radio" name="phone_type" id="personal" data-cy="personal" value="personal" data-skin="minimal">
+                             type="radio" name="phone_type" id="personal" data-cy="personal" value="personal" data-skin="minimal">
                             Pessoal
                         </label>
 
                         {{-- COMERCIAL --}}
                         <label class="form-check-label regular-text" for="commercial">
                             <input @disabled($isDisabled) @checked(isset($user) && $user->person->phone?->phone_type === 'commercial')
-                                class="icheck-me" type="radio" name="phone_type" id="commercial" data-cy="commercial" value="commercial" data-skin="minimal"
+                             type="radio" name="phone_type" id="commercial" data-cy="commercial" value="commercial" data-skin="minimal"
                                 @if (!isset($user)) checked @endif >
                             Comercial
                         </label>
@@ -158,18 +158,18 @@
                             <div class="col-md-4">
                                 @if ($isAdmin)
                                     <div>
-                                        <label class="form-check-label secondary-text" for="profile_admin"><input @checked(isset($user) && $user->profile->name === 'admin') class="icheck-me"
+                                        <label class="form-check-label secondary-text" for="profile_admin"><input @checked(isset($user) && $user->profile->name === 'admin')
                                             type="radio" name="profile_type" id="profile_admin" data-cy="profile_admin" value="admin" data-skin="minimal">
                                         Administrador</label>
                                     </div>
                                     <div>
-                                        <label class="form-check-label secondary-text" for="profile_diretor"><input @checked(isset($user) && $user->profile->name === 'diretor') class="icheck-me"
+                                        <label class="form-check-label secondary-text" for="profile_diretor"><input @checked(isset($user) && $user->profile->name === 'diretor')
                                             type="radio" name="profile_type" id="profile_diretor" data-cy="profile_diretor" value="diretor" data-skin="minimal">
                                         Diretor</label>
                                     </div>
                                 @endif
                                 <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'normal') class="icheck-me"
+                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'normal')
                                         type="radio" name="profile_type" id="profile_normal" data-cy="profile_normal" value="normal" data-skin="minimal"
                                     @if (!isset($user)) checked @endif>
                                     Padrão</label>
@@ -177,24 +177,24 @@
                             </div>
                             <div class="col-md-4">
                                 <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'suprimentos_hkm') class="icheck-me"
+                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'suprimentos_hkm')
                                         type="radio" name="profile_type" id="profile_suprimentos_hkm" data-cy="profile_suprimentos_hkm" value="suprimentos_hkm" data-skin="minimal">
                                     Suprimentos HKM</label>
                                 </div>
                                 <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'suprimentos_inp') class="icheck-me"
+                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'suprimentos_inp')
                                         type="radio" name="profile_type" id="profile_suprimentos_inp" data-cy="profile_suprimentos_inp" value="suprimentos_inp" data-skin="minimal" >
                                     Suprimentos INP</label>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'gestor_usuarios') class="icheck-me"
+                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'gestor_usuarios')
                                         type="radio" name="profile_type" id="gestor_usuarios" data-cy="gestor_usuarios" value="gestor_usuarios" data-skin="minimal" >
                                     Gestor de usuários</label>
                                 </div>
                                 <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'gestor_fornecedores') class="icheck-me"
+                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'gestor_fornecedores')
                                         type="radio" name="profile_type" id="gestor_fornecedores" data-cy="gestor_fornecedores" value="gestor_fornecedores" data-skin="minimal" >
                                     Gestor de fornecedores</label>
                                 </div>
@@ -209,11 +209,11 @@
                             <div class="col-md-12">
                                 <div>
                                     <input @checked(!isset($user) || (isset($user) && $user->is_buyer)) name="is_buyer" id="is_buyer_true" data-cy="is_buyer_true"
-                                        class="icheck-me" type="radio" value="1" data-skin="minimal">
+                                     type="radio" value="1" data-skin="minimal">
                                     <label class="form-check-label secondary-text" for="is_buyer_true">Autorizado</label>
                                 </div>
                                 <div>
-                                    <input @checked(isset($user) && !$user->is_buyer) class="icheck-me" type="radio" name="is_buyer" id="is_buyer_false"
+                                    <input @checked(isset($user) && !$user->is_buyer) type="radio" name="is_buyer" id="is_buyer_false"
                                         data-cy="is_buyer_false" value="0" data-skin="minimal" >
                                     <label class="form-check-label secondary-text" for="is_buyer_false">Não autorizado</label>
                                 </div>
@@ -229,9 +229,9 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <input @checked(isset($user) && $user?->can_associate_requester) name="can_associate_requester" id="can-associate-requester" data-cy="can-associate-requester"
-                                        class="icheck-me" type="radio" value="1" data-skin="minimal" required>
+                                     type="radio" value="1" data-skin="minimal" required>
                                     <label class="form-check-label secondary-text" for="can-associate-requester">Sim</label>
-                                    <input @checked(isset($user) && !$user?->can_associate_requester) class="icheck-me" type="radio" name="can_associate_requester" id="can-not-associate-requester"
+                                    <input @checked(isset($user) && !$user?->can_associate_requester) type="radio" name="can_associate_requester" id="can-not-associate-requester"
                                         data-cy="can-not-associate-requester" value="0" data-skin="minimal" required>
                                     <label class="form-check-label secondary-text" for="can-not-associate-requester">Não</label>
                                 </div>
@@ -247,11 +247,9 @@
                         <label for="cost_center_id" class="regular-text">Setor</label>
                         @if (isset($user))
                             <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id"
-                                class='chosen-select form-control @error('cost_center_id') is-invalid @enderror'
-                                data-rule-required="true" required>
-
-                                <option value="" disabled @selected(!isset($user->person->costCenter))>
-                                    Selecione uma opção</option>
+                                class='select2-me @error('cost_center_id') is-invalid @enderror' style="width: 100%"
+                                data-rule-required="true" required data-placeholder="Selecione uma opção">
+                                <option value=""></option>
                                 @foreach ($costCenters as $costCenter)
                                     @php
                                         $companyName = $costCenter->company->name;
@@ -267,8 +265,9 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         @else
-                            <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id" class='chosen-select form-control' data-rule-required="true">
-                                <option value="" disabled selected>Selecione uma opção </option>
+                            <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id" class='select2-me' style="width: 100%" data-rule-required="true"
+                                data-placeholder="Selecione uma opção">
+                                <option value=""></option>
                                 @foreach ($costCenters as $costCenter)
                                     @php
                                         $companyName = $costCenter->company->name;
@@ -288,8 +287,8 @@
                 <div class="col-sm-3">
                     <label for="approver_user_id" class="regular-text">Usuário aprovador</label>
                     @if (isset($user))
-                        <select name="approver_user_id" id="approver_user_id" data-cy="approver_user_id" class="chosen-select form-control">
-                            <option value="" disabled selected>Selecione uma opção </option>
+                        <select name="approver_user_id" id="approver_user_id" data-cy="approver_user_id" class="select2-me" style="width: 100%" data-placeholder="Selecione uma opção">
+                            <option value=""></option>
                             @foreach ($approvers as $approver)
                                 <option value="{{ $approver->id }}" @selected($user->approver_user_id == $approver->id)>
                                     {{ $approver->person->name }}
@@ -297,8 +296,8 @@
                             @endforeach
                         </select>
                     @else
-                        <select name="approver_user_id" id="approver_user_id" data-cy="approver_user_id" class="chosen-select form-control">
-                            <option value="" disabled selected>Selecione uma opção </option>
+                        <select name="approver_user_id" id="approver_user_id" data-cy="approver_user_id" class="select2-me" style="width: 100%" data-placeholder="Selecione uma opção">
+                            <option value=""></option>
                             @foreach ($approvers as $approver)
                                 @php
                                     $isSelected = old('approver_user_id') == $approver->id;
@@ -349,7 +348,7 @@
                     <div class="form-group">
                         <label for="approver_user_id" id="cost-center-permissions" class="regular-text">Centros de custos permitidos</label>
                         <select @disabled(!$currentProfile === 'admin') name="user_cost_center_permissions[]" id="user_cost_center_permissions" data-cy="user_cost_center_permissions" multiple="multiple"
-                            class="chosen-select form-control cost-centers-permissions" placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras" required data-rule-required="true">
+                            class="select2-me cost-centers-permissions" style="width: 100%" data-placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras" required data-rule-required="true">
                             @foreach ($costCenters as $costCenter)
                                 @php
                                     $companyName = $costCenter->company->name;
@@ -404,15 +403,12 @@
         // centro de custo permissao
         // clear all
         $btnClearCostCenters.on('click', function() {
-            $costCentersPermissions.val('');
-            $costCentersPermissions.val('').trigger("chosen:updated");
+            $costCentersPermissions.val('').trigger("change");
         });
 
         // select all
         $btnSelectAllCostCenters.on('click', function() {
-            $costCentersPermissions.find('option').each((_, option) => {
-                $(option).prop('selected', true);
-            }).closest('select').trigger('chosen:updated');
+            $costCentersPermissions.val($('.cost-centers-permissions option').map((_, option) => $(option).val())).trigger('change');
         });
 
         // checkbox sem limite aprovação

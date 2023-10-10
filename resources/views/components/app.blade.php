@@ -1,39 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ asset('img/gecom/favicon.png') }}" />
+
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    <!-- jQuery UI -->
-    <link rel="stylesheet" href="{{ asset('css/plugins/jquery-ui/jquery-ui.min.css') }}">
-    <!-- dataTables -->
-    <link rel="stylesheet" href="{{ asset('css/plugins/datatable/TableTools.css') }}">
-    <!-- PageGuide -->
-    <link rel="stylesheet" href="{{ asset('css/plugins/pageguide/pageguide.css') }}">
-    <!-- Fullcalendar -->
-    <link rel="stylesheet" href="{{ asset('css/plugins/fullcalendar/fullcalendar.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/plugins/fullcalendar/fullcalendar.print.css') }}" media="print">
-    <!-- chosen -->
-    <link rel="stylesheet" href="{{ asset('css/plugins/chosen/chosen.css') }}">
     <!-- select2 -->
     <link rel="stylesheet" href="{{ asset('css/plugins/select2/select2.css') }}">
-    <!-- icheck -->
-    <link rel="stylesheet" href="{{ asset('css/plugins/icheck/all.css') }}">
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="{{ asset('css/plugins/jquery-ui/jquery-ui.min.css') }}">
     <!-- Theme CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <!-- Color CSS -->
-    <link rel="stylesheet" href="{{ asset('css/themes.css') }}">
-
-    <link rel="{{ asset('apple-touch-icon-precomposed') }}"
-        href="{{ asset('img/apple-touch-icon-precomposed.png') }}" />
 
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies.css') }}">
@@ -51,59 +38,16 @@
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
-
-    <!-- Masked inputs -->
-    <script src="{{ asset('js/plugins/maskedinput/jquery.maskedinput.min.js') }}"></script>
-    <!-- jQuery UI -->
-    <script src="{{ asset('js/plugins/jquery-ui/jquery-ui.js') }}"></script>
-    <!-- Touch enable for jquery UI -->
-    <script src="{{ asset('js/plugins/touch-punch/jquery.touch-punch.min.js') }}"></script>
-    <!-- slimScroll -->
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
     <!-- Bootstrap -->
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-    <!-- vmap -->
-    <script src="{{ asset('js/plugins/vmap/jquery.vmap.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/vmap/jquery.vmap.world.js') }}"></script>
-    <script src="{{ asset('js/plugins/vmap/jquery.vmap.sampledata.js') }}"></script>
+    <!-- jQuery UI -->
+    <script src="{{ asset('js/plugins/jquery-ui/jquery-ui.js') }}"></script>
     <!-- Bootbox -->
     <script src="{{ asset('js/plugins/bootbox/jquery.bootbox.js') }}"></script>
-    <!-- Bootbox -->
     <script src="{{ asset('js/plugins/form/jquery.form.min.js') }}"></script>
-    <!-- Flot -->
-    <script src="{{ asset('js/plugins/flot/jquery.flot.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.bar.order.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.min.js') }}"></script>
-    <!-- imagesLoaded -->
-    <script src="{{ asset('js/plugins/imagesLoaded/jquery.imagesloaded.min.js') }}"></script>
-    <!-- PageGuide -->
-    <script src="{{ asset('js/plugins/pageguide/jquery.pageguide.js') }}"></script>
-    <!-- FullCalendar -->
-    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/fullcalendar/fullcalendar.min.js') }}"></script>
-    <!-- Chosen -->
-    <script src="{{ asset('js/plugins/chosen/chosen.jquery.min.js') }}"></script>
+
     <!-- select2 -->
     <script src="{{ asset('js/plugins/select2/select2.min.js') }}"></script>
-    <!-- multi select -->
-    <link rel="stylesheet" href="{{ asset('css/plugins/multiselect/multi-select.css') }}">
-    <!-- icheck -->
-    <script src="{{ asset('js/plugins/icheck/jquery.icheck.min.js') }}"></script>
-
-    <!-- MultiSelect -->
-    <script src="{{ asset('js/plugins/multiselect/jquery.multi-select.js') }}"></script>
-
-    <!-- Theme framework -->
-    <script src="{{ asset('js/eakroko.min.js') }}"></script>
-    <!-- Theme scripts -->
-    <script src="{{ asset('js/application.min.js') }}"></script>
-    <!-- Just for demonstration -->
-    <script src="{{ asset('js/demonstration.min.js') }}"></script>
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('img/gecom/favicon.png') }}" />
-    <!-- Apple devices Homescreen icon -->
 
     <!-- Validation -->
     <script src="{{ asset('js/plugins/validation/jquery.validate.min.js') }}"></script>
@@ -114,7 +58,26 @@
         integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <!-- IMask -->
+    <script src="https://unpkg.com/imask"></script>
+
+    <!-- New DataTables -->
+    <script src="{{ asset('js/plugins/momentjs/jquery.moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/momentjs/moment-range.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
     <script>
+         $.fn.imask = function(options) {
+            const maskedElements = this.map((_, input) => new IMask(input, options)).toArray();
+
+            if (maskedElements.length === 1) {
+                return maskedElements[0];
+            }
+
+            return maskedElements;
+        }
+
         // adiciona required style em elemento jquery e torna required pra validacao
         $.fn.makeRequired = function() {
             this.filter(function() {
@@ -144,33 +107,82 @@
                 const $label = $(this).closest('.form-group').find('label').first();
                 $label.append('<sup style="color:red">*</sup>');
             });
+
+            $(".select2-me").select2();
+
+            // autocomplete off
+            $("form").attr('autocomplete', 'off');
+
+            $('.dataTable').each((_, table) => $(table).DataTable({
+                language: {
+                    lengthMenu: "Mostrar _MENU_ registros",
+                    zeroRecords: "Nenhum registro encontrado",
+                    info: "Mostrando página _PAGE_ de _PAGES_",
+                    infoEmpty: "Nenhum registro disponível",
+                    infoFiltered: "(filtrado de _MAX_ registros no total)",
+                    search: "Buscar:",
+                    paginate: {
+                        first: "Primeiro",
+                        last: "Último",
+                        next: "Próximo",
+                        previous: "Anterior"
+                    }
+                },
+                destroy: true
+            }));
+
+            $('.form-validate').each(function () {
+                const id = $(this).attr('id');
+                $("#" + id).validate({
+                    ignore: ".no-validation",
+                    errorElement: 'span',
+                    errorClass: 'help-block has-error',
+                    errorPlacement: (error, element) => {
+                        const $elementParent = element.parent();
+
+                        if (element.siblings('.input-group-addon').length > 0) {
+                            $elementParent.after(error);
+                            return;
+                        }
+
+                        const elementType = element.attr('type');
+                        const radioCheckbox = ['radio', 'checkbox'];
+                        const elementTypeIsRadioOrCheckbox = radioCheckbox.includes(elementType);
+
+                        if (elementTypeIsRadioOrCheckbox) {
+                            element.closest('.form-group').find('fieldset').first().after(error);
+                            return;
+                        }
+
+                        if (element.prop('tagName').toLowerCase() === 'select') {
+                            element.before(error);
+                            return;
+                        }
+
+                        if (element.prop('type') === 'hidden' && error.text().length) {
+                            element[0].parentElement.scrollIntoView({block: 'center'});
+                            return;
+                        }
+
+                        element.after(error);
+                    },
+                    highlight: (label) => $(label).closest('.form-group').removeClass('has-error has-success').addClass('has-error'),
+                    success: (label) => label.addClass('valid').closest('.form-group').removeClass('has-error has-success'),
+                    onkeyup: (element) => $(element).valid(),
+                    onfocusout: (element) => $(element).valid(),
+                    rules: {
+                        password: {
+                            minlength: 8
+                        },
+                        password_confirmation: {
+                            minlength: 8,
+                            equalTo: '#password'
+                        }
+                    },
+                });
+            });
         });
     </script>
-
-    <!-- IMask -->
-    <script src="https://unpkg.com/imask"></script>
-    <script>
-        $.fn.imask = function(options) {
-            const maskedElements = this.map((_, input) => new IMask(input, options)).toArray();
-
-            if (maskedElements.length === 1) {
-                return maskedElements[0];
-            }
-
-            return maskedElements;
-        }
-    </script>
-
-    <!-- New DataTables -->
-    <script src="{{ asset('js/plugins/momentjs/jquery.moment.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/momentjs/moment-range.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/datatables/extensions/dataTables.tableTools.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/datatables/extensions/dataTables.colReorder.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/datatables/extensions/dataTables.colVis.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/datatables/extensions/dataTables.scroller.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
-
 </head>
 
 <body>
@@ -264,32 +276,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $(() => {
-            // datatable language
-            $('#DataTables_Table_0').DataTable({
-                language: {
-                    lengthMenu: "Mostrar _MENU_ registros",
-                    zeroRecords: "Nenhum registro encontrado",
-                    info: "Mostrando página _PAGE_ de _PAGES_",
-                    infoEmpty: "Nenhum registro disponível",
-                    infoFiltered: "(filtrado de _MAX_ registros no total)",
-                    search: "Buscar:",
-                    paginate: {
-                        first: "Primeiro",
-                        last: "Último",
-                        next: "Próximo",
-                        previous: "Anterior"
-                    }
-                },
-                destroy: true
-            });
-
-            // autocomplete off
-            $("form").attr('autocomplete', 'off');
-        })
-    </script>
 
     {{ $scripts ?? null }}
 </body>

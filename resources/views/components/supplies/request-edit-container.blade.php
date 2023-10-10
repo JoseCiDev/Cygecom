@@ -20,7 +20,7 @@
             <div class="col-sm-3">
                 <label for="status" class="regular-text">Status da solicitação</label>
                 <select name="status" data-cy="status" id="status" @disabled($requestIsFromLogged)
-                    class='chosen-select form-control'>
+                    class='select2-me' style="width:100%;">
                     @foreach ($allRequestStatus as $status)
                         @if ($status->value !== PurchaseRequestStatus::RASCUNHO->value)
                             <option @selected($requestStatus === $status) value="{{ $status }}">
