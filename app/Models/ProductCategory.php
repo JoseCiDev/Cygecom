@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ProductCategory extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
     public function productSugestion()
     {
