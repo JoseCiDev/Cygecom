@@ -63,7 +63,7 @@
             </div>
 
             <div class="supplies-dashboard-requests-item border-service">
-                <h2 class="supplies-dashboard-requests-item-title bg-service-color">Solicitações de serviços</h2>
+                <h2 class="supplies-dashboard-requests-item-title bg-service-color">Solicitações de serviços pontuais</h2>
                 <div class="supplies-dashboard-requests-item-info">
                     <div class="supplies-dashboard-requests-item-info-top">
                         <p class="supplies-dashboard-requests-item-info-top-price">
@@ -117,7 +117,7 @@
             </div>
 
             <div class="supplies-dashboard-requests-item border-contract">
-                <h2 class="supplies-dashboard-requests-item-title bg-contract-color">Solicitações de contratos</h2>
+                <h2 class="supplies-dashboard-requests-item-title bg-contract-color">Solicitações de serviços recorrentes</h2>
                 <div class="supplies-dashboard-requests-item-info">
                     <div class="supplies-dashboard-requests-item-info-top">
                         <p class="supplies-dashboard-requests-item-info-top-price">

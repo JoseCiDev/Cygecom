@@ -36,6 +36,7 @@
         href="{{ asset('img/apple-touch-icon-precomposed.png') }}" />
 
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies.css') }}">
     <link rel="stylesheet" href="{{ asset('css/modal-supplies.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootbox.custom.css') }}">
@@ -48,6 +49,7 @@
     <link rel="stylesheet" href="{{ asset('css/supplies/category-column-tags.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/supplies/details.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/reports/report-table-list.css') }}">
 
     <!-- jQuery -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -237,6 +239,17 @@
                             </ul>
                         </li>
                     @endif
+
+                    <li>
+                        <a href="#" data-toggle="dropdown" class='dropdown-toggle' data-cy="dropdown-suprimentos">
+                            <span>RELATÓRIOS</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li> <a href="{{ route('reports.index.view') }}">Relatórios de solicitações</a> </li>
+                        </ul>
+                    </li>
+
                 </ul>
                 <x-navbar.user />
             </div>
@@ -268,8 +281,9 @@
 
     <script>
         $(() => {
-            // datatable language
+            // Datatable default config
             $('#DataTables_Table_0').DataTable({
+                scrollX: true,
                 language: {
                     lengthMenu: "Mostrar _MENU_ registros",
                     zeroRecords: "Nenhum registro encontrado",

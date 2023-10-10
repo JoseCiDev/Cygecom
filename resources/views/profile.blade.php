@@ -1,7 +1,4 @@
 <x-app>
-    <x-slot name="title">
-        <h1>Perfil</h1>
-    </x-slot>
 
     <div class="row">
         <div class="col-sm-12">
