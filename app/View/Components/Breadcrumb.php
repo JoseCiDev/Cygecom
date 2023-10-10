@@ -99,6 +99,7 @@ class Breadcrumb extends Component
         'supplies.service.detail' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
+            ['route' => 'supplies.service', 'label' => 'Solicitações de serviços pontuais'],
             ['route' => 'supplies.service.detail', 'label' => 'Serviço pontual solicitado'],
         ],
         'supplies.product' => [
@@ -106,14 +107,10 @@ class Breadcrumb extends Component
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
             ['route' => 'supplies.product', 'label' => 'Solicitações de produtos'],
         ],
-        'supplies.product.filter' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.product.filter', 'label' => 'Solicitações de produtos'],
-        ],
         'supplies.product.detail' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
+            ['route' => 'supplies.product', 'label' => 'Solicitações de produtos'],
             ['route' => 'supplies.product.detail', 'label' => 'Produto(s) solicitado(s)'],
         ],
         'supplies.contract' => [
@@ -129,6 +126,7 @@ class Breadcrumb extends Component
         'supplies.contract.detail' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
+            ['route' => 'supplies.contract', 'label' => 'Solicitações de serviços recorrentes'],
             ['route' => 'supplies.contract.detail', 'label' => 'Serviço recorrente solicitado'],
         ],
         'reports.index.view' => [
