@@ -17,6 +17,12 @@ class InsertOnProductCategories extends Seeder
             foreach ($newProductCategories as $newCategory) {
                 ProductCategory::updateOrCreate(['id' => $newCategory['id']], $newCategory);
             }
+
+            // deleta categoria 2 - Compra laboratório Liquido, Sólido e Inj
+            $categoryToDelete = ProductCategory::find(2);
+            if ($categoryToDelete) {
+                $categoryToDelete->delete();
+            }
         });
     }
 }
