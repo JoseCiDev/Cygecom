@@ -91,14 +91,10 @@ class Breadcrumb extends Component
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
             ['route' => 'supplies.service', 'label' => 'Solicitações de serviços'],
         ],
-        'supplies.service.filter' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.service.filter', 'label' => 'Solicitações de serviços'],
-        ],
         'supplies.service.detail' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
+            ['route' => 'supplies.service', 'label' => 'Solicitações de serviços'],
             ['route' => 'supplies.service.detail', 'label' => 'Serviço solicitado'],
         ],
         'supplies.product' => [
@@ -106,14 +102,10 @@ class Breadcrumb extends Component
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
             ['route' => 'supplies.product', 'label' => 'Solicitações de produtos'],
         ],
-        'supplies.product.filter' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.product.filter', 'label' => 'Solicitações de produtos'],
-        ],
         'supplies.product.detail' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
+            ['route' => 'supplies.product', 'label' => 'Solicitações de produtos'],
             ['route' => 'supplies.product.detail', 'label' => 'Produto(s) solicitado(s)'],
         ],
         'supplies.contract' => [
@@ -121,14 +113,10 @@ class Breadcrumb extends Component
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
             ['route' => 'supplies.contract', 'label' => 'Solicitações de contratos'],
         ],
-        'supplies.contract.filter' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.contract.filter', 'label' => 'Solicitações de contratos'],
-        ],
         'supplies.contract.detail' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
+            ['route' => 'supplies.contract', 'label' => 'Solicitações de contratos'],
             ['route' => 'supplies.contract.detail', 'label' => 'Contrato solicitado'],
         ]
     ];
