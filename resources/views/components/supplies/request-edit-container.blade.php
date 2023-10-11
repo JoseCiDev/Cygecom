@@ -1,6 +1,9 @@
 @php
     use App\Enums\PurchaseRequestStatus;
+
+    $currentUser = auth()->user();
 @endphp
+
 
 <h4 style="margin-bottom: 15px"><i class="glyphicon glyphicon-edit"></i> <strong>Editar solicitação</strong></h4>
 <form class="form-validate" data-cy="form-request-edit" id="form-request-edit" method="POST"
@@ -34,10 +37,16 @@
                 <label for="supplies_user_id" class="regular-text">Atribuir novo responsável</label>
                 <select name="supplies_user_id" data-cy="supplies_user_id" id="supplies_user_id" class='select2-me'
                     style="width: 100%" placeholder="Escolher novo responsável" @disabled($requestIsFromLogged)>
-                    @foreach ($allowedResponsables as $user)
-                        <option disabled selected></option>
-                        <option value="{{ $user['id'] }}">
-                            {{ $user['name'] }}
+                    <option disabled selected></option>
+                    @foreach ($allowedResponsables as $responsableUser)
+                        @php
+                            $usersToNotShow = [$requestUserId, $currentUser->id];
+                            if (in_array($responsableUser['id'], $usersToNotShow)) {
+                                continue;
+                            }
+                        @endphp
+                        <option value="{{ $responsableUser['id'] }}">
+                            {{ $responsableUser['person']['name'] }}
                         </option>
                     @endforeach
                 </select>

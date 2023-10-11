@@ -2,10 +2,11 @@
 
 namespace App\View\Components;
 
-use App\Enums\{PurchaseRequestStatus, PurchaseRequestType};
 use Closure;
-use Illuminate\Contracts\View\View;
+use App\Models\User;
 use Illuminate\View\Component;
+use Illuminate\Contracts\View\View;
+use App\Enums\{PurchaseRequestStatus, PurchaseRequestType};
 
 class SuppliesRequestEditContainer extends Component
 {
@@ -25,16 +26,20 @@ class SuppliesRequestEditContainer extends Component
         public int $requestId,
         public int $requestUserId,
         public ?string $amount,
-    ) {
+    )
+    {
         $this->route = "supplies.request." . $this->requestType->value . ".update";
         $this->allRequestStatus = PurchaseRequestStatus::cases();
         $this->requestIsFromLogged = $this->requestUserId === auth()->user()->id;
+
         $this->inputName = $this->requestType->value === PurchaseRequestType::SERVICE->value
             ? (PurchaseRequestType::SERVICE->value . "[price]")
             : ($this->requestType->value . "[amount]");
-        $this->allowedResponsables = [
-            ["id" => auth()->user()->id, "name" => auth()->user()->person->name]
-        ];
+
+        $this->allowedResponsables = User::with('person')
+            ->whereIn('user_profile_id', [3, 4])
+            ->get()
+            ->toArray();
     }
 
     public function render(): View|Closure|string
