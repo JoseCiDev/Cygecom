@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\PurchaseRequestStatus;
 use App\Mail\GenericEmail;
 use Illuminate\Support\ServiceProvider;
 
@@ -35,6 +36,11 @@ class EmailService extends ServiceProvider
     {
         $subject = "Solicitação de " . $purchaseRequest->type->label() . " nº " . $purchaseRequest->id . ' - Status atualizado para ' . $purchaseRequest->status->label();
         $message = "Olá, " . $purchaseRequest->user->person->name . "! Sua solicitação de " . $purchaseRequest->type->label() . " teve o status atualizado para [" . $purchaseRequest->status->label() . '].';
+
+        $isCanceled = $purchaseRequest->status->value === PurchaseRequestStatus::CANCELADA->value;
+        if ($isCanceled) {
+            $message .= " Motivo do cancelamento: " . $purchaseRequest->supplies_update_reason;
+        }
 
         $email = new GenericEmail($subject, $message, $purchaseRequest->user->email);
         $email->sendMail();

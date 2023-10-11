@@ -47,7 +47,7 @@
     <div class="request-details">
         <div class="details-content">
             <header class="request-details-header">
-                <h1 class="text-highlight"><strong>Solicitação de contrato nº {{ $request->id }}</strong></h1>
+                <h1 class="text-highlight"><strong>Solicitação de serviço recorrente nº {{ $request->id }}</strong></h1>
                 <div>
                     <span>Criado em: {{ $request->created_at->formatCustom('d/m/Y H:i:s') }}</span> |
                     <span>Atualizado: {{ $request->updated_at?->formatCustom('d/m/Y H:i:s') ?? '---' }}</span>
@@ -65,7 +65,7 @@
 
                 <div class="row sub-info-container">
                     <h4 class="text-highlight">
-                        <strong>Nome do contrato:</strong>
+                        <strong>Nome do serviço recorrente:</strong>
                         {{ $request->contract->name }}
                     </h4>
                     <br>
@@ -344,7 +344,7 @@
                                                     {{ $request?->local_description ?? '---' }}
                                                 </p>
                                                 <p>
-                                                    <strong>Valor total do contrato (R$):</strong>
+                                                    <strong>Valor total do serviço recorrente (R$):</strong>
                                                     {{ $request->contract?->amount ?? '---' }}
                                                 </p>
                                                 <p>
@@ -365,7 +365,7 @@
                                                 </p>
                                                 <hr>
                                                 <p>
-                                                    <strong>Detalhes do contrato: </strong>
+                                                    <strong>Detalhes do serviço recorrente: </strong>
                                                     {{ $request?->description ?? '---' }}
                                                 </p>
                                             </div>

@@ -45,6 +45,11 @@ class PurchaseRequest extends Model
         return $this->hasMany(PurchaseRequestProduct::class);
     }
 
+    public function logs()
+    {
+        return $this->hasMany(Log::class, 'foreign_id', 'id')->where('table', 'purchase_requests');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

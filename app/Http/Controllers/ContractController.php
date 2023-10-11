@@ -41,12 +41,12 @@ class ContractController extends Controller
             $route           = 'request.edit';
             $routeParams      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
 
-            $msg = "Solicitação de contrato nº $purchaseRequest->id  criada com sucesso!";
+            $msg = "Solicitação de serviço recorrente nº $purchaseRequest->id  criada com sucesso!";
 
             // MUDAR
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
-                $msg = "Solicitação de contrato nº $purchaseRequest->id criada e enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de serviço recorrente nº $purchaseRequest->id criada e enviada ao setor de suprimentos responsável!";
             }
 
             $route = 'requests.own';
@@ -78,7 +78,7 @@ class ContractController extends Controller
                     $isAuthorized = auth()->user()->purchaseRequest->where('id', $purchaseRequestIdToCopy)->whereNull('deleted_at')->first();
 
                     if (!$isAuthorized) {
-                        throw new Exception('Acesso não autorizado para essa solicitação de contrato.');
+                        throw new Exception('Acesso não autorizado para essa solicitação de serviço recorrente.');
                     }
                 }
             }
@@ -106,6 +106,8 @@ class ContractController extends Controller
         }
 
         try {
+            $msg = "Solicitação de serviço recorrente atualizada com sucesso!";
+
             $isAdmin = auth()->user()->profile->name === 'admin';
 
             $purchaseRequest = PurchaseRequest::find($id);
@@ -125,7 +127,7 @@ class ContractController extends Controller
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);
-                $msg = "Solicitação de contrato nº $purchaseRequest->id enviada ao setor de suprimentos responsável!";
+                $msg = "Solicitação de serviço recorrente nº $purchaseRequest->id enviada ao setor de suprimentos responsável!";
             }
 
             DB::commit();
