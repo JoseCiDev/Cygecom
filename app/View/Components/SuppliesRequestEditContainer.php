@@ -24,7 +24,7 @@ class SuppliesRequestEditContainer extends Component
         public PurchaseRequestType $requestType,
         public PurchaseRequestStatus $requestStatus,
         public int $requestId,
-        public int $requestUserId,
+        public ?int $requestUserId,
         public ?string $amount,
     )
     {
