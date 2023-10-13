@@ -21,7 +21,7 @@ class InsertOnProductCategories extends Seeder
             // deleta categoria 2 - Compra laboratório Liquido, Sólido e Inj
             $categoryToDelete = ProductCategory::find(2);
             if ($categoryToDelete) {
-                $categoryToDelete->delete();
+                $categoryToDelete->update(['deleted_at' => now()]);
             }
         });
     }
