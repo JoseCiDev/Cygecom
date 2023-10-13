@@ -14,14 +14,14 @@
             </div>
 
             <div class="request-dashboard-requests-item">
-                <h2 class="request-dashboard-requests-item-title">Serviços Pontuais</h2>
+                <h2 class="request-dashboard-requests-item-title">Serviços pontuais</h2>
                 <p class="request-dashboard-requests-item-subtitle">Contratação de serviços pontuais.</p>
                 <p class="request-dashboard-requests-item-description">Exemplo: contratações de limpeza para vidros, consultoria única, etc.</p>
                 <a class="request-dashboard-requests-item-btn bg-service-color" href="{{ route('request.service.register') }}" >Solicitar serviço pontual</a>
             </div>
 
             <div class="request-dashboard-requests-item">
-                <h2 class="request-dashboard-requests-item-title">Serviços Recorrentes</h2>
+                <h2 class="request-dashboard-requests-item-title">Serviços recorrentes</h2>
                 <p class="request-dashboard-requests-item-subtitle">Contratação de serviços recorrentes com vigência determinada ou indeterminada.</p>
                 <p class="request-dashboard-requests-item-description">Exemplo: serviço de limpeza diária, vale alimentação, manutenção regular de ar condicionados, etc.</p>
                 <a class="request-dashboard-requests-item-btn bg-contract-color" href="{{ route('request.contract.register') }}" >Solicitar serviço recorrente</a>

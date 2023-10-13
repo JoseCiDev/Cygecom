@@ -24,11 +24,6 @@ class Product extends Model
         return $this->belongsTo(PurchaseRequest::class, 'purchase_request_id');
     }
 
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class, 'supplier_id');
-    }
-
     public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');

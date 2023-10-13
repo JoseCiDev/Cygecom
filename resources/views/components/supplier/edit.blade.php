@@ -13,10 +13,6 @@
 @endphp
 
 <x-app>
-    <x-slot name="title">
-        <h1>Editar Fornecedor</h1>
-    </x-slot>
-
 
     @if ($isEmAnalise && $isGestorFornecedores)
         <x-supplier.purchase-requests

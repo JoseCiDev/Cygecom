@@ -30,7 +30,11 @@
     @if ($isSupplies)
         <div class="row">
             <div class="col-md-12">
-                <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::PRODUCT" :request-id="$request->id" :request-user-id="$request->user_id" :request-status="$request->status"
+                <x-SuppliesRequestEditContainer
+                    :request-type="PurchaseRequestType::PRODUCT"
+                    :request-id="$request->id"
+                    :request-user-id="$request->user_id"
+                    :request-status="$request->status"
                     :amount="$request->product->amount" />
             </div>
         </div>
@@ -173,7 +177,7 @@
 
                                     <div class="tab-content request-details-content-box-apportionment">
                                         @foreach ($request->costCenterApportionment as $index => $apportionment)
-                                            <div class="row">
+                                            <div class="row cost-center-box">
                                                 <p>Centro de custo nº {{ $index + 1 }}</p>
                                                 <div class="col-sm-3">
                                                     <p>
@@ -390,7 +394,7 @@
 
                                                         @foreach ($products as $index => $productItem)
                                                             <div
-                                                                class="request-details-content-box-products-product {{ $index % 2 === 0 ? 'zebra-bg-even' : 'zebra-bg-odd' }}">
+                                                                class="request-details-content-box-products-product">
                                                                 <p><strong><i class="glyphicon glyphicon-tag"></i>
                                                                         Produto nº {{ $index + 1 }}:</strong></p>
 

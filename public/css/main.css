@@ -12,6 +12,17 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
+table.table thead th,
+table.table tbody td {
+    vertical-align: middle;
+}
+
+.chosen-container.chosen-container-multi .chosen-choices {
+    /* Altura máxima do select2 multiple */
+    max-height: 150px;
+    overflow: scroll;
+}
+
 .user-item-list {
     border: 1px solid;
     margin-bottom: 5px;
