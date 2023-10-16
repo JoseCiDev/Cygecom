@@ -1,60 +1,85 @@
 <button id="print-pdf" data-cy="print-pdf" class="btn btn-primary btn-large">Imprimir PDF</button>
 
-<script>
-    $(()=> {
-        $('#print-pdf').on('click', function() {
-            const element = $('{{ $selector }}');
-
-            const elements = element.find('*');
-            for (let i = 0; i < elements.length; i++) {
-                elements[i].style.fontSize = '10px';
-                elements[i].style.padding = '0';
-                elements[i].style.margin = '0';
+@push('styles')
+    <style>
+        @media print {
+            .request-details-content-box-products-product{
+                -webkit-print-color-adjust: exact;
             }
 
-            const detailsTitle = element.find('.box-title .request-title');
-            detailsTitle.css({
-                'font-size': '10px',
-                'font-weight': '400',
-                'line-height': '9px',
-                'text-align': 'center',
-                'letter-spacing': '7px',
-                'max-width': '840px',
-                'margin': '3px 0',
-                'color': '#333',
-                'text-transform': 'uppercase',
-            });
+            .request-details-content-box-products-product:nth-child(even) {
+                background-color: #c5c5c5 !important;
+            }
 
-            const boxTitle = element.find('.box-title');
-            boxTitle.css({
-                'margin': '3px 0',
-            });
+            .request-details-content-box-products-product:nth-child(odd) {
+                background-color: #eaeaea !important;
+            }
 
-            const requestDetailsContent = element.find('.request-details-content');
-            requestDetailsContent.css({
-                'margin': '1px 0',
-            });
+            .request-details-content-box-contract-installment:nth-child(even),
+            .request-details-content-box-service-installment:nth-child(even),
+            .request-details-content-box-product-installment:nth-child(even) {
+                background-color: #c5c5c5 !important;
+            }
 
-            const textToHighlight = element.find('.text-highlight');
-            textToHighlight.css({
-                'font-size': '12px',
-            });
+            .request-details-content-box-contract-installment:nth-child(odd),
+            .request-details-content-box-service-installment:nth-child(odd),
+            .request-details-content-box-product-installment:nth-child(odd) {
+                background-color: #eaeaea !important;
+            }
+        }
+    </style>
+@endpush
 
-            const subTextToHighlight = element.find('.text-highlight strong');
-            subTextToHighlight.css({
-                'font-size': '12px',
-            });
+@push('scripts')
+    <script>
+        $(()=> {
+            const element = $('{{ $selector }}');
 
-            const opt = {
-                margin : 4,
-                filename: '{{$fileName}}' + '.pdf',
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' },
-            };
+            const createPdf = () => {
+                element.css('margin', '0 auto')
 
-            html2pdf().from(element[0]).set(opt).save().then(() => location.reload());
-        });
-    })
-</script>
+                const elements = element.find('*');
+                for (let i = 0; i < elements.length; i++) {
+                    elements[i].style.fontSize = '10px';
+                    elements[i].style.padding = '0';
+                    elements[i].style.margin = '0';
+                }
+
+                element.find('.box-title .request-title')
+                    .css({
+                        'font-size': '10px',
+                        'font-weight': '400',
+                        'line-height': '9px',
+                        'text-align': 'center',
+                        'letter-spacing': '7px',
+                        'padding': '10px',
+                        'margin': '3px auto',
+                        'color': '#333',
+                        'text-transform': 'uppercase',
+                    });
+
+                element.find('.box-title').css('margin', '3px 0')
+
+                element.find('.request-details-content').css('margin', '1px 0')
+
+                element.find('.text-highlight')
+                    .add(element.find('.text-highlight strong'))
+                    .css('font-size', '12px')
+
+                element.find('.cost-center-box p')
+                    .add(element.find('.request-details-content p'))
+                    .css('line-height', '15px')
+
+                const body = document.querySelector('body');
+                body.innerHTML = element[0].outerHTML
+
+                window.print();
+                window.location.reload()
+            }
+
+            $('#print-pdf').on('click', createPdf);
+        })
+    </script>
+@endpush
 
 
