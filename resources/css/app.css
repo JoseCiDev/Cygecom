@@ -1,0 +1,26 @@
+@charset "UTF-8";
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300);
+
+/* Libraries - incompatível com ES6 */
+@import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+@import '../../node_modules/select2/select2.css';
+
+@import './main.css';
+
+/* Custom */
+@import './style.css';
+@import './navigation.css';
+@import './select2-custom.css';
+@import './dataTable-custom.css';
+@import './supplies.css';
+@import './modal-supplies.css';
+@import './bootbox.custom.css';
+@import './custom-modal-dialog.css';
+@import './custom-breadcrumb.css';
+@import './purchase-request/product-suggestion-autocomplete.css';
+@import './purchase-request/log.css';
+@import './purchase-request/request-dashboard.css';
+@import './supplies/form-status-filter.css';
+@import './supplies/category-column-tags.css';
+@import './supplies/dashboard.css';
+@import './supplies/details.css';
