@@ -34,7 +34,7 @@
 }
 
 .table.dataTable.dataTable-grouping .group.expanded-group {
-    background: url("../img/expanded-group.jpg") no-repeat left center #e6e6e6;
+    background: url("../../public/img/expanded-group.jpg") no-repeat left center #e6e6e6;
     padding-left: 33px;
 }
 
@@ -43,7 +43,7 @@
 }
 
 .table.dataTable.dataTable-grouping .group.collapsed-group {
-    background: url("../img/collapsed-group.jpg") no-repeat left center #e6e6e6;
+    background: url("../../public/img/collapsed-group.jpg") no-repeat left center #e6e6e6;
     padding-left: 33px;
 }
 
@@ -52,15 +52,15 @@
 }
 
 .table.dataTable .sorting_asc {
-    background: url("../img/sorting-asc.png") no-repeat right center #eee;
+    background: url("../../public/img/sorting-asc.png") no-repeat right center #eee;
 }
 
 .table.dataTable .sorting_desc {
-    background: url("../img/sorting-desc.png") no-repeat right center #eee;
+    background: url("../../public/img/sorting-desc.png") no-repeat right center #eee;
 }
 
 .table.dataTable .sorting {
-    background: url("../img/sorting.png") no-repeat right center #eee;
+    background: url("../../public/img/sorting.png") no-repeat right center #eee;
 }
 
 .table.dataTable .sorting,

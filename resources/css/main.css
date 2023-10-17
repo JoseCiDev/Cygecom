@@ -1,25 +1,3 @@
-/* Libraries */
-@import url('./bootstrap.min.css');
-@import url('./plugins/select2/select2.css');
-
-/* Custom */
-@import url('./style.css');
-@import url('./navigation.css');
-@import url('./select2-custom.css');
-@import url('./dataTable-custom.css');
-@import url('./supplies.css');
-@import url('./modal-supplies.css');
-@import url('./bootbox.custom.css');
-@import url('./custom-modal-dialog.css');
-@import url('./custom-breadcrumb.css');
-@import url('./purchase-request/product-suggestion-autocomplete.css');
-@import url('./purchase-request/log.css');
-@import url('./purchase-request/request-dashboard.css');
-@import url('./supplies/form-status-filter.css');
-@import url('./supplies/category-column-tags.css');
-@import url('./supplies/dashboard.css');
-@import url('./supplies/details.css');
-
 :root {
     --gold-primary-color: #c49f51;
     --gold-secondary-color: #d5bb84;
@@ -54,10 +32,13 @@ label.inline {
 }
 
 body {
-    margin-bottom: 80px;
     background: #fff;
     font-family: 'Open Sans', sans-serif;
     font-size: 13px;
+}
+
+#app {
+    padding-bottom: 80px;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -101,6 +82,11 @@ input:focus {
 a:focus {
     outline: none;
     text-decoration: none;
+}
+
+label[for]:not([for=""]),
+input {
+    cursor: pointer;
 }
 
 @media (max-width: 767px) {
