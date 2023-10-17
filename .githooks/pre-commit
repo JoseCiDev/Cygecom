@@ -5,12 +5,12 @@ exec < /dev/tty
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep ".php\{0,1\}$")
 for FILE in $STAGED_FILES
 do
-    docker exec php8-projects /bin/bash -c "cd /var/www/html/gerenciador-compras && ./vendor/bin/pint '${FILE}'"
+    docker exec php8.1-projects /bin/bash -c "cd /var/www/html/gerenciador-compras && ./vendor/bin/pint '${FILE}'"
     git add "${FILE}";
 done;
 
 # Rodar o phpstan no container
-docker exec php8-projects /bin/bash -c "cd /var/www/html/gerenciador-compras && ./vendor/bin/phpstan analyze"
+docker exec php8.1-projects /bin/bash -c "cd /var/www/html/gerenciador-compras && ./vendor/bin/phpstan analyze"
 if [ $? -ne 0 ]; then
     echo "Opa! Deu ruim aqui com PHPSTAN. Arrume antes de continuar... 😉";
     echo -n "Confirmar commit mesmo assim? [y/N]:"
