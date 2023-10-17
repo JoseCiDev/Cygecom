@@ -2,24 +2,23 @@
 <input value="{{$value}}" type="text" name="{{$name}}" id="{{$id}}" data-cy="{{$dataCy}}" placeholder="00.000-000" class="form-control postal-code"
     data-rule-required="true" data-rule-minlength="10">
 
-<script>
-    $(() => $('#{{$id}}').imask({ mask: '00.000-000' }));
-</script>
+@push('scripts')
+    <script type="module">
+        $(() => {
+            $('#{{$id}}').imask({ mask: '00.000-000' })
 
-<script>
-    $(() => {
-        const $postalCode = $('#{{$id}}');
-        $postalCode.on('input', function() {
-            if ($(this).val().length < 10) {
-                return;
-            }
-            const $inputFields = $('#{{$id}}, #country, #state, #city, #neighborhood, #street, #complement');
-            const $loadingIcon = $('.loading-icon');
+            const $postalCode = $('#{{$id}}');
+            $postalCode.on('input', function() {
+                if ($(this).val().length < 10) {
+                    return;
+                }
+                const $inputFields = $('#{{$id}}, #country, #state, #city, #neighborhood, #street, #complement');
+                const $loadingIcon = $('.loading-icon');
 
-            $inputFields.prop('disabled', true);
-            $loadingIcon.show();
+                $inputFields.prop('disabled', true);
+                $loadingIcon.show();
 
-            const postalCode = $postalCode.val().replace(/\D/g, '');
+                const postalCode = $postalCode.val().replace(/\D/g, '');
                 if (postalCode.length === 8) {
                     const apiUrl = `https://viacep.com.br/ws/${postalCode}/json`;
 
@@ -41,6 +40,7 @@
                         $postalCode.valid();
                     })
                 }
-        })
-    });
-</script>
+            })
+        });
+    </script>
+@endpush

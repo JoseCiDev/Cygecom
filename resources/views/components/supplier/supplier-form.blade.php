@@ -273,77 +273,55 @@
 </form>
 
 @if ($isAPI)
-    <script src="{{ asset('js/purchase-request/register-supplier-by-api.js') }}"></script>
+    @push('scripts')
+        <script type="module" src="{{ asset('js/purchase-request/register-supplier-by-api.js') }}"></script>
+    @endpush
 @endif
 
-<script>
-    $(() => {
-        function setAddressRules() {
-            const isChecked = $(this).is(':checked');
-            const $address = $('#postal_code, #state, #city, #neighborhood, #street, #street_number');
-            isChecked ? $address.removeRequired() : $address.makeRequired();
-        }
-
-        $('#is-international-supplier').on('change', setAddressRules)
-    });
-</script>
-
-<script>
-    $(() => {
-        const $phoneNumber = $('.phone-number');
-        const $streetNumber = $('.street-number');
-        const $checkboxHasNoStreetNumber = $('.checkbox-has-no-street-number');
-
-        // checkbox sem número
-        $checkboxHasNoStreetNumber.on('click', function() {
-            const isChecked = $(this).is(':checked');
-            $streetNumber.data('rule-required', !isChecked);
-            $streetNumber.valid();
-            if (isChecked) {
-                $(this).data('last-value', $streetNumber.val());
-                $(this).closest('.form-group').removeClass('has-error');
-                $(this).closest('.form-group').removeClass('has-success');
+@push('scripts')
+    <script type="module">
+        $(() => {
+            function setAddressRules() {
+                const isChecked = $(this).is(':checked');
+                const $address = $('#postal_code, #state, #city, #neighborhood, #street, #street_number');
+                isChecked ? $address.removeRequired() : $address.makeRequired();
             }
-            const currentValue = isChecked ? null : $(this).data('last-value');
-            $streetNumber.prop('readonly', isChecked).val(currentValue).valid();
+
+            $('#is-international-supplier').on('change', setAddressRules)
         });
+    </script>
 
-        $streetNumber.imask({
-            mask: Number,
-        });
+    <script type="module">
+        $(() => {
+            const $phoneNumber = $('.phone-number');
+            const $streetNumber = $('.street-number');
+            const $checkboxHasNoStreetNumber = $('.checkbox-has-no-street-number');
 
-        // checkbox número internacional (mudança mascara)
-        const $checkboxInternationalNumber = $('#checkbox-international-number');
-        const checkboxInternationalNumberValue = $checkboxInternationalNumber.val();
-
-        let phoneMask;
-
-        if (checkboxInternationalNumberValue === "0") {
-            phoneMask = $phoneNumber.imask({
-                mask: [{
-                        mask: '(00) 0000-0000'
-                    },
-                    {
-                        mask: '(00) 00000-0000'
-                    }
-                ]
-            });
-        }
-
-        $checkboxInternationalNumber.on('click', function() {
-            const isChecked = $(this).is(':checked');
-            $phoneNumber.valid();
-
-            const valueToSend = isChecked ? "1" : "0";
-            $(this).val(valueToSend);
-
-            if (isChecked) {
-                if ($phoneNumber.val()) {
+            // checkbox sem número
+            $checkboxHasNoStreetNumber.on('click', function() {
+                const isChecked = $(this).is(':checked');
+                $streetNumber.data('rule-required', !isChecked);
+                $streetNumber.valid();
+                if (isChecked) {
+                    $(this).data('last-value', $streetNumber.val());
                     $(this).closest('.form-group').removeClass('has-error');
                     $(this).closest('.form-group').removeClass('has-success');
                 }
-                phoneMask.destroy();
-            } else {
+                const currentValue = isChecked ? null : $(this).data('last-value');
+                $streetNumber.prop('readonly', isChecked).val(currentValue).valid();
+            });
+
+            $streetNumber.imask({
+                mask: Number,
+            });
+
+            // checkbox número internacional (mudança mascara)
+            const $checkboxInternationalNumber = $('#checkbox-international-number');
+            const checkboxInternationalNumberValue = $checkboxInternationalNumber.val();
+
+            let phoneMask;
+
+            if (checkboxInternationalNumberValue === "0") {
                 phoneMask = $phoneNumber.imask({
                     mask: [{
                             mask: '(00) 0000-0000'
@@ -354,6 +332,32 @@
                     ]
                 });
             }
-        })
-    });
-</script>
+
+            $checkboxInternationalNumber.on('click', function() {
+                const isChecked = $(this).is(':checked');
+                $phoneNumber.valid();
+
+                const valueToSend = isChecked ? "1" : "0";
+                $(this).val(valueToSend);
+
+                if (isChecked) {
+                    if ($phoneNumber.val()) {
+                        $(this).closest('.form-group').removeClass('has-error');
+                        $(this).closest('.form-group').removeClass('has-success');
+                    }
+                    phoneMask.destroy();
+                } else {
+                    phoneMask = $phoneNumber.imask({
+                        mask: [{
+                                mask: '(00) 0000-0000'
+                            },
+                            {
+                                mask: '(00) 00000-0000'
+                            }
+                        ]
+                    });
+                }
+            })
+        });
+    </script>
+@endpush

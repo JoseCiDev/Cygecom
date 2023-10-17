@@ -389,80 +389,82 @@
     </form>
 </div>
 
-<script>
-    $(() => {
-        const $btnClearCostCenters = $('.btn-clear-cost-centers');
-        const $btnSelectAllCostCenters = $('.btn-select-all-cost-centers');
-        const $costCentersPermissions = $('.cost-centers-permissions');
-        const $checkboxHasNoApproveLimit = $('.checkbox-has-no-approve-limit');
-        const $approveLimit = $('.format-approve-limit');
-        const $hiddenApproveLimit = $('.approve_limit');
-        const $identificationDocument = $('.cpf_cnpj');
-        const $phoneNumber = $('.phone_number');
+@push('scripts')
+    <script type="module">
+        $(() => {
+            const $btnClearCostCenters = $('.btn-clear-cost-centers');
+            const $btnSelectAllCostCenters = $('.btn-select-all-cost-centers');
+            const $costCentersPermissions = $('.cost-centers-permissions');
+            const $checkboxHasNoApproveLimit = $('.checkbox-has-no-approve-limit');
+            const $approveLimit = $('.format-approve-limit');
+            const $hiddenApproveLimit = $('.approve_limit');
+            const $identificationDocument = $('.cpf_cnpj');
+            const $phoneNumber = $('.phone_number');
 
-        // centro de custo permissao
-        // clear all
-        $btnClearCostCenters.on('click', function() {
-            $costCentersPermissions.val('').trigger("change");
-        });
+            // centro de custo permissao
+            // clear all
+            $btnClearCostCenters.on('click', function() {
+                $costCentersPermissions.val('').trigger("change");
+            });
 
-        // select all
-        $btnSelectAllCostCenters.on('click', function() {
-            $costCentersPermissions.val($('.cost-centers-permissions option').map((_, option) => $(option).val())).trigger('change');
-        });
+            // select all
+            $btnSelectAllCostCenters.on('click', function() {
+                $costCentersPermissions.val($('.cost-centers-permissions option').map((_, option) => $(option).val())).trigger('change');
+            });
 
-        // checkbox sem limite aprovação
-        $checkboxHasNoApproveLimit.on('click', function() {
-            const isChecked = $(this).is(':checked');
-            $approveLimit.data('rule-required', !isChecked);
-            $approveLimit.valid();
-            if (isChecked) {
-                $(this).data('last-value', $approveLimit.val());
-                $(this).closest('.form-group').removeClass('has-error');
-            }
-            const currentValue = isChecked ? null : $(this).data('last-value');
-            $approveLimit.prop('readonly', isChecked).val(currentValue).valid();
-            $hiddenApproveLimit.val(currentValue);
-        });
-
-        // masks
-        $identificationDocument.imask({
-            mask: [{
-                    mask: '000.000.000-00',
-                },
-                {
-                    mask: '00.000.000/0000-00',
+            // checkbox sem limite aprovação
+            $checkboxHasNoApproveLimit.on('click', function() {
+                const isChecked = $(this).is(':checked');
+                $approveLimit.data('rule-required', !isChecked);
+                $approveLimit.valid();
+                if (isChecked) {
+                    $(this).data('last-value', $approveLimit.val());
+                    $(this).closest('.form-group').removeClass('has-error');
                 }
-            ],
-            minLength: 13
-        });
-        $phoneNumber.imask({
-            mask: [{
-                    mask: '(00) 0000-0000'
-                },
-                {
-                    mask: '(00) 00000-0000'
-                }
-            ]
-        });
-        $approveLimit.imask({
-            mask: Number,
-            scale: 2,
-            thousandsSeparator: '.',
-            normalizeZeros: true,
-            padFractionalZeros: true,
-            min: 100,
-            max: 500000,
-        });
+                const currentValue = isChecked ? null : $(this).data('last-value');
+                $approveLimit.prop('readonly', isChecked).val(currentValue).valid();
+                $hiddenApproveLimit.val(currentValue);
+            });
 
-        // approve_limit input hidden
-        $approveLimit.on('input blur', function() {
-            const formattedValue = $(this).val();
-            if (formattedValue !== null) {
-                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
-                const rawValue = parseFloat(processedValue);
-                $('.approve_limit').val(rawValue.toFixed(2));
-            }
-        });
-    })
-</script>
+            // masks
+            $identificationDocument.imask({
+                mask: [{
+                        mask: '000.000.000-00',
+                    },
+                    {
+                        mask: '00.000.000/0000-00',
+                    }
+                ],
+                minLength: 13
+            });
+            $phoneNumber.imask({
+                mask: [{
+                        mask: '(00) 0000-0000'
+                    },
+                    {
+                        mask: '(00) 00000-0000'
+                    }
+                ]
+            });
+            $approveLimit.imask({
+                mask: Number,
+                scale: 2,
+                thousandsSeparator: '.',
+                normalizeZeros: true,
+                padFractionalZeros: true,
+                min: 100,
+                max: 500000,
+            });
+
+            // approve_limit input hidden
+            $approveLimit.on('input blur', function() {
+                const formattedValue = $(this).val();
+                if (formattedValue !== null) {
+                    const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                    const rawValue = parseFloat(processedValue);
+                    $('.approve_limit').val(rawValue.toFixed(2));
+                }
+            });
+        })
+    </script>
+@endpush

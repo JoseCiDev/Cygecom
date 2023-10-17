@@ -83,17 +83,19 @@
     </div>
 </div>
 
-<script>
-    $(() => {
-        const table = $('#table-striped').DataTable({
-            ordering: false,
-            paging: false,
-            info: false,
-            searching: false,
-            bLengthChange: false,
-            language: {
-                emptyTable: "Nenhuma solicitação encontrada.",
-            },
+@push('scripts')
+    <script type="module">
+        $(() => {
+            const table = $('#table-striped').DataTable({
+                ordering: false,
+                paging: false,
+                info: false,
+                searching: false,
+                bLengthChange: false,
+                language: {
+                    emptyTable: "Nenhuma solicitação encontrada.",
+                },
+            });
         });
-    });
-</script>
+    </script>
+@endpush

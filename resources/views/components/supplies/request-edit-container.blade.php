@@ -71,82 +71,84 @@
     </div>
 </form>
 
-<script>
-    $(() => {
-        $form = $("#form-request-edit");
-        $status = $('#status');
-        $reasonUpdateStatus = $('#supplies-update-reason');
-        $reasonUpdateStatusDiv = $('.div-reason-update');
+@push('scripts')
+    <script type="module">
+        $(() => {
+            const $form = $("#form-request-edit");
+            const $status = $('#status');
+            const $reasonUpdateStatus = $('#supplies-update-reason');
+            const $reasonUpdateStatusDiv = $('.div-reason-update');
 
-        const statusOldValue = $status.val();
+            const statusOldValue = $status.val();
 
-        $status.on('change', function() {
-            if ($(this).val() === statusOldValue) {
-                $reasonUpdateStatusDiv.attr('hidden', true);
-                $reasonUpdateStatus.removeRequired();
-                $reasonUpdateStatus.val('');
-                return;
-            }
+            $status.on('change', function() {
+                if ($(this).val() === statusOldValue) {
+                    $reasonUpdateStatusDiv.attr('hidden', true);
+                    $reasonUpdateStatus.removeRequired();
+                    $reasonUpdateStatus.val('');
+                    return;
+                }
 
-            const isCancel = $(this).val() === 'cancelada';
+                const isCancel = $(this).val() === 'cancelada';
 
-            $reasonUpdateStatusDiv.attr('hidden', false);
+                $reasonUpdateStatusDiv.attr('hidden', false);
 
-            if (isCancel) {
-                $reasonUpdateStatus.makeRequired();
-                $reasonUpdateStatus.rules('add', {
-                    required: true,
-                    messages: {
-                        required: 'Motivo é obrigatório para cancelar uma solicitação.',
-                    },
-                });
-            } else {
-                $reasonUpdateStatus.removeRequired();
-            }
-        });
-
-        $form.on('submit', function(event) {
-            event.preventDefault();
-
-            const formIsValid = $form.valid();
-
-            if(!formIsValid) {
-                return;
-            }
-
-            const statusValue = $('#status').find(':selected').text();
-            const reasonUpdateStatus = $reasonUpdateStatus.val() ?? '' ;
-            const amountValue = "R$ " + $('#amount').val();
-            const responsibleValue = $('#supplies_user_id').find(':selected').text();
-
-            bootbox.confirm({
-                title: 'Atenção! Deseja realmente alterar os dados?',
-                className: 'regular-text',
-                message: "Por favor, confirme os dados que serão enviados: " +
-                    "<ul>" +
-                    `<li class="regular-text" >Status: ${statusValue}</li>` +
-                    (reasonUpdateStatus ? `<li class="regular-text">Motivo mudança de status: ${reasonUpdateStatus}</li>` : '') +
-                    `<li class="regular-text">Valor total: ${amountValue}</li>` +
-                    (responsibleValue.length ? `<li>Responsável: ${responsibleValue}</li>` :
-                        '') +
-                    "</ul>",
-                buttons: {
-                    confirm: {
-                        label: 'Sim, atualizar solicitação',
-                        className: 'btn btn-success'
-                    },
-                    cancel: {
-                        label: 'Cancelar',
-                        className: 'btn btn-small'
-                    }
-                },
-                callback: function(result) {
-                    if (result) {
-                        $form.off('submit');
-                        $form.trigger('submit');
-                    }
+                if (isCancel) {
+                    $reasonUpdateStatus.makeRequired();
+                    $reasonUpdateStatus.rules('add', {
+                        required: true,
+                        messages: {
+                            required: 'Motivo é obrigatório para cancelar uma solicitação.',
+                        },
+                    });
+                } else {
+                    $reasonUpdateStatus.removeRequired();
                 }
             });
+
+            $form.on('submit', function(event) {
+                event.preventDefault();
+
+                const formIsValid = $form.valid();
+
+                if(!formIsValid) {
+                    return;
+                }
+
+                const statusValue = $('#status').find(':selected').text();
+                const reasonUpdateStatus = $reasonUpdateStatus.val() ?? '' ;
+                const amountValue = "R$ " + $('#amount').val();
+                const responsibleValue = $('#supplies_user_id').find(':selected').text();
+
+                bootbox.confirm({
+                    title: 'Atenção! Deseja realmente alterar os dados?',
+                    className: 'regular-text',
+                    message: "Por favor, confirme os dados que serão enviados: " +
+                        "<ul>" +
+                        `<li class="regular-text" >Status: ${statusValue}</li>` +
+                        (reasonUpdateStatus ? `<li class="regular-text">Motivo mudança de status: ${reasonUpdateStatus}</li>` : '') +
+                        `<li class="regular-text">Valor total: ${amountValue}</li>` +
+                        (responsibleValue.length ? `<li>Responsável: ${responsibleValue}</li>` :
+                            '') +
+                        "</ul>",
+                    buttons: {
+                        confirm: {
+                            label: 'Sim, atualizar solicitação',
+                            className: 'btn btn-success'
+                        },
+                        cancel: {
+                            label: 'Cancelar',
+                            className: 'btn btn-small'
+                        }
+                    },
+                    callback: function(result) {
+                        if (result) {
+                            $form.off('submit');
+                            $form.trigger('submit');
+                        }
+                    }
+                });
+            });
         });
-    });
-</script>
+    </script>
+@endpush

@@ -133,4 +133,6 @@
     </div>
 </div>
 
-<script src="{{asset('js/supplies/modal-confirm-supplies-responsability.js')}}"></script>
+@push('scripts')
+    <script type="module" src="{{asset('js/supplies/modal-confirm-supplies-responsability.js')}}"></script>
+@endpush

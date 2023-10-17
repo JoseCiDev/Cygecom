@@ -81,7 +81,7 @@
                             <hr>
 
                             {{-- CENTRO DE CUSTO --}}
-                            <h4 class="topic"><i class="fa fa-money"></i> <strong>Centros de custo</strong></h4>
+                            <h4 class="topic"><i class="fa-solid fa-money-bill"></i> <strong>Centros de custo</strong></h4>
                             <ul class="costCenterApportionment" style="font-size: 16px">
                                 {{-- Adição dinâmica de <li> aqui --}}
                             </ul>
@@ -117,4 +117,6 @@
     </div>
 </div>
 
-<script src="{{asset('js/supplies/show-modal-and-set-mapped-content.js')}}"></script>
+@push('scripts')
+    <script type="module" src="{{asset('js/supplies/show-modal-and-set-mapped-content.js')}}"></script>
+@endpush

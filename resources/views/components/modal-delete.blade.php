@@ -19,26 +19,28 @@
     </div>
 </div>
 
-<script>
-    $('#modal').on('show.bs.modal', function (event) {
-        const button = $(event.relatedTarget);
-        const name = button.data('name');
-        const id = button.data('id');
-        const route = button.data('route');
-        const modal = $(this);
+@push('scripts')
+    <script type="module">
+         $('#modal').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget);
+                const name = button.data('name');
+                const id = button.data('id');
+                const route = button.data('route');
+                const modal = $(this);
 
-        let action = '#'
-        if(route === 'products') {
-            action = `/products/delete/${id}`
-        } else if (route === 'user') {
-            action = `/user/delete/${id}`
-        } else if (route === 'supplier') {
-            action = `/suppliers/delete/${id}`
-        } else if (route === 'purchaseRequests') {
-            action =`/request/delete/${id}`
-        }
+                let action = '#'
+                if(route === 'products') {
+                    action = `/products/delete/${id}`
+                } else if (route === 'user') {
+                    action = `/user/delete/${id}`
+                } else if (route === 'supplier') {
+                    action = `/suppliers/delete/${id}`
+                } else if (route === 'purchaseRequests') {
+                    action =`/request/delete/${id}`
+                }
 
-        modal.find('.name').text(name);
-        modal.find('#modal-form-delete').attr('action', action );
-    });
-</script>
+                modal.find('.name').text(name);
+                modal.find('#modal-form-delete').attr('action', action );
+            });
+    </script>
+@endpush

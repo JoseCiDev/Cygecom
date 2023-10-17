@@ -78,13 +78,15 @@
     </div>
 </div>
 
-<script>
-    $(() => {
-        $('#table-striped').DataTable({
-            searching: false,
-            paging: false,
-            info: false,
-            order: [[1, 'desc']]
+@push('scripts')
+    <script type="module">
+        $(() => {
+            $('#table-striped').DataTable({
+                searching: false,
+                paging: false,
+                info: false,
+                order: [[1, 'desc']]
+            });
         });
-    });
-</script>
+    </script>
+@endpush

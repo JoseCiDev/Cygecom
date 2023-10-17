@@ -61,7 +61,7 @@
 
 </x-app>
 
-<script>
+<script type="module">
     $(() => {
         const table = $('#supplierTable').DataTable({
             serverSide: true,
