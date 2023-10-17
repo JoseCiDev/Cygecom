@@ -16,5 +16,5 @@ interface UserControllerInterface
     public function store(StoreUserRequest $request): RedirectResponse;
     public function edit(int $id): View;
     public function update(UpdateUserRequest $request, User $user): RedirectResponse;
-    public function destroy(User $user): RedirectResponse;
+    public function destroy(int $id): RedirectResponse;
 }

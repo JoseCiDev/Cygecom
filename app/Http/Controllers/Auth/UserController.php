@@ -135,9 +135,8 @@ class UserController extends Controller implements UserControllerInterface
      * @param User $user
      * @return RedirectResponse
      */
-    public function destroy(User $user): RedirectResponse
+    public function destroy(int $id): RedirectResponse
     {
-        $id = $user->id;
         try {
             $this->userService->deleteUser($id);
         } catch (Exception $error) {
