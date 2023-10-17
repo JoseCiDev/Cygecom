@@ -128,10 +128,19 @@ class UserService extends ServiceProvider implements UserServiceInterface
     }
     public function deleteUser(int $id)
     {
-        $user             = User::find($id);
-        $user->deleted_at = Carbon::now();
-        $user->deleted_by = auth()->user()->id;
-        $user->save();
+        $user = User::with('person')->find($id);
+
+        if ($user) {
+            $user->delete();
+            $user->deleted_by = auth()->user()->id;
+            $user->save();
+
+            if ($user->person) {
+                $user->person->delete();
+                $user->person->deleted_by = auth()->user()->id;
+                $user->person->save();
+            }
+        }
     }
 
     /**
@@ -195,7 +204,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
         return Person::updateOrCreate(['cpf_cnpj' => $request['cpf_cnpj']], [
             'name' => $request['name'],
             'phone_id' => $request['phone_id'],
-            'birthdate' => $request['birthdate'],
+            'birthdate' => $request['birthdate'] ?? null,
             'cost_center_id' => $request['cost_center_id']
         ]);
     }

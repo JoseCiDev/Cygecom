@@ -2,74 +2,79 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Contracts\UserControllerInterface;
-use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Providers\{UserService, ValidatorService};
 use Exception;
-use Illuminate\Auth\Events\Registered;
+use App\Models\User;
+use Illuminate\View\View;
+use App\Providers\UserService;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use App\Contracts\UserControllerInterface;
+use App\Http\Requests\User\{StoreUserRequest, UpdateUserRequest};
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Http\{JsonResponse, Request};
 
 class UserController extends Controller implements UserControllerInterface
 {
     use RegistersUsers;
 
-    private $userService;
-
-    private $validatorService;
-
-    public function __construct(UserService $userService, ValidatorService $validatorService)
-    {
-        $this->userService      = $userService;
-        $this->validatorService = $validatorService;
-    }
-
-    protected $redirectTo = '/users';
     /**
-     * @abstract Responsável por registrar usuário, junto com suas relações: Phone, People e UserCostCenterPermission
-     * @param array $data Recebe $data pelo trait RegistersUsers do método register: $request->all();
-     * @return User|string Retorna usuário logado para manter autenticação, podendo retornar os erros no redirect;
+     * The URI that users should be redirected to.
+     *
+     * @var string
      */
-    public function create(array $data): User|string
+    protected $redirect = '/users';
+
+    public function __construct(private UserService $userService)
     {
-        $user = $this->userService->registerUser($data);
-        return $user->first();
     }
 
-    public function register(Request $request)
-    {
-        $validator = $this->validator($request->all());
-        if ($validator->fails()) {
-            return redirect()->back()->withInput($request->all())->withErrors($validator->errors()->getMessages());
-        }
-
-        event(new Registered($user = $this->create($request->all())));
-
-        session()->flash('success', "Usuário cadastrado com sucesso! E-mail: $request->email");
-
-        if ($response = $this->registered($request, $user)) {
-            return $response;
-        }
-
-        return $request->wantsJson() ? new JsonResponse([], 201) : redirect($this->redirectPath());
-    }
-
-    public function showRegistrationForm()
-    {
-        $approvers   = $this->getApprovers('register');
-        $costCenters = $this->getCostCenters();
-
-        return view('auth.admin.register', ['approvers' => $approvers, 'costCenters' => $costCenters]);
-    }
-
-    public function showUsers()
+    /**
+     * Display a listing of the users.
+     *
+     * @return View
+     */
+    public function index(): View
     {
         $users = $this->userService->getUsers();
 
         return view('auth.admin.users', ['users' => $users]);
     }
-    public function showUser(int $id)
+
+    /**
+     * Show the registration form.
+     *
+     * @return View
+     */
+    public function create(): View
+    {
+        $approvers = $this->userService->getApprovers('register');
+        $costCenters = $this->userService->getCostCenters();
+
+        return view('auth.admin.register', compact('approvers', 'costCenters'));
+    }
+
+    /**
+     * Register a new user.
+     *
+     * @param StoreUserRequest $request
+     * @return RedirectResponse
+     */
+    public function store(StoreUserRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+        $user = $this->userService->registerUser($validated);
+
+        session()->flash('success', "Usuário cadastrado com sucesso! E-mail: {$user['email']}");
+
+        return redirect()->route('users');
+    }
+
+    /**
+     * Show the edit user form.
+     *
+     * @param int $id
+     * @return View
+     */
+    public function edit(int $id): View
     {
         $user = User::with([
             'person',
@@ -80,14 +85,22 @@ class UserController extends Controller implements UserControllerInterface
             'userCostCenterPermission.costCenter',
         ])->where('id', $id)->whereNull('deleted_at')->first();
 
-        $approvers   = $this->getApprovers('userUpdate', $id);
-        $costCenters = $this->getCostCenters();
+        $approvers = $this->userService->getApprovers('user.update', $id);
+        $costCenters = $this->userService->getCostCenters();
 
-        return view('auth.admin.user', ['user' => $user, 'approvers' => $approvers, 'costCenters' => $costCenters]);
+        return view('auth.admin.user', compact('user','approvers','costCenters'));
     }
 
-    public function update(Request $request, int $id)
+    /**
+     * Update a user's information.
+     *
+     * @param UpdateUserRequest $request
+     * @param User $user
+     * @return RedirectResponse
+     */
+    public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
+        $id = $user->id;
         $currentProfile = auth()->user()->profile->name;
         $isAdmin = $currentProfile === 'admin';
         $isGestorUsuarios = $currentProfile === 'gestor_usuarios';
@@ -98,15 +111,9 @@ class UserController extends Controller implements UserControllerInterface
         }
 
         try {
-            $data = $request->all();
+            $validated = $request->validated();
 
-            $validator = $this->validatorService->updateValidator($id, $data);
-
-            if ($validator->fails()) {
-                return back()->withErrors($validator->errors()->getMessages())->withInput();
-            }
-
-            $this->userService->userUpdate($data, $id);
+            $this->userService->userUpdate($validated, $id);
 
             if (auth()->user()->id === $id) {
                 session()->flash('success', "Seu usuário foi atualizado com sucesso!");
@@ -122,8 +129,15 @@ class UserController extends Controller implements UserControllerInterface
         }
     }
 
-    public function delete(int $id)
+    /**
+     * Delete a user.
+     *
+     * @param User $user
+     * @return RedirectResponse
+     */
+    public function destroy(User $user): RedirectResponse
     {
+        $id = $user->id;
         try {
             $this->userService->deleteUser($id);
         } catch (Exception $error) {
@@ -133,29 +147,5 @@ class UserController extends Controller implements UserControllerInterface
         session()->flash('success', "Usuário deletado com sucesso!");
 
         return redirect()->route('users');
-    }
-
-    private function getApprovers($action, int $id = null)
-    {
-        $query = $this->userService->getApprovers($action, $id = null);
-
-        return $query;
-    }
-
-    public function getCostCenters()
-    {
-        return $this->userService->getCostCenters();
-    }
-
-    /**
-     * @abstract função necessária para sobreescrever validator padrão;
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    private function validator(array $data)
-    {
-        $validator = $this->validatorService->registerValidator($data);
-
-        return $validator;
     }
 }
