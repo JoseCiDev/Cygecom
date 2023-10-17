@@ -117,13 +117,6 @@
                                         <p><strong>Quem está solicitando: </strong> {{ $request->requester?->name ?? '---' }}</p>
                                         <p><strong>E-mail do solicitante:</strong> {{ $request->user->email }}</p>
                                         <p><strong>Nome do solicitante:</strong> {{ $request->user->person->name }}</p>
-                                        <p><strong>Documento do solicitante:</strong>
-                                            {{ $request->user->person->cpf_cnpj }}
-                                        </p>
-                                        <p>
-                                            <strong>Celular/Telefone:</strong>
-                                            {{ $request->user->person->phone->number }}
-                                        </p>
                                         <p>
                                             <strong>Centro de custo do solicitante:</strong>
                                             {{ $request->user->person->costCenter->name }}
