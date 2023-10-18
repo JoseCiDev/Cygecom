@@ -53,7 +53,7 @@
     <div class="request-details">
         <div class="details-content">
             <header class="request-details-header">
-                <h1 class="text-highlight"><strong>Solicitação de serviço nº {{ $request->id }}</strong></h1>
+                <h1 class="text-highlight"><strong>Solicitação de serviço pontual nº {{ $request->id }}</strong></h1>
                 <div>
                     <span>Criado em: {{ $request->created_at->formatCustom('d/m/Y H:i:s') }}</span> |
                     <span>Atualizado: {{ $request->updated_at?->formatCustom('d/m/Y H:i:s') ?? '---' }}</span>

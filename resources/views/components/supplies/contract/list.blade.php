@@ -94,7 +94,7 @@
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
-                                        data-modal-name="{{ 'Analisando Solicitação de Contrato - Nº ' . $contract->id }}"
+                                        data-modal-name="{{ 'Analisando solicitação de serviço recorrente - Nº ' . $contract->id }}"
                                         data-id="{{ $contract->id }}"
                                         data-request="{{json_encode($modalData)}}"
                                         rel="tooltip"

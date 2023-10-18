@@ -24,7 +24,8 @@
         'public/js/plugins/validation/additional-methods.min.js' // v1.13.1,
     ])
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/reports/report-table-list.css') }}">
 
     @stack('styles')
 </head>

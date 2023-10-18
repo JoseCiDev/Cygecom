@@ -1,8 +1,4 @@
 <x-app>
-    <x-slot name="title">
-        <h1>E-mail</h1>
-    </x-slot>
-
     <div class="row">
         <div class="col-md-7">
             <div class="box box-bordered">
