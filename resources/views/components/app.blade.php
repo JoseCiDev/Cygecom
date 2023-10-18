@@ -24,9 +24,6 @@
         'public/js/plugins/validation/additional-methods.min.js' // v1.13.1,
     ])
 
-    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/reports/report-table-list.css') }}">
-
     @stack('styles')
 </head>
 

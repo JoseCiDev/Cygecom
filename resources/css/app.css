@@ -24,3 +24,5 @@
 @import './supplies/category-column-tags.css';
 @import './supplies/dashboard.css';
 @import './supplies/details.css';
+@import './loader.css';
+@import './reports/report-table-list.css';

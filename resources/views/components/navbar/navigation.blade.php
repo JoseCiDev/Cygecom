@@ -41,6 +41,7 @@
                 </ul>
             </li>
         @endif
+
         <li>
             <a href="#" data-toggle="dropdown" class='dropdown-toggle'
                 data-cy="dropdown-solicitacoes">
@@ -55,6 +56,7 @@
                 @endif
             </ul>
         </li>
+
         @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp' || $currentProfile === 'suprimentos_hkm')
             <li>
                 <a href="#" data-toggle="dropdown" class='dropdown-toggle'
@@ -72,6 +74,17 @@
                 </ul>
             </li>
         @endif
+
+        <li>
+            <a href="#" data-toggle="dropdown" class='dropdown-toggle' data-cy="dropdown-suprimentos">
+                <span>RELATÓRIOS</span>
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li> <a href="{{ route('reports.index.view') }}">Relatórios de solicitações</a> </li>
+            </ul>
+        </li>
+
     </ul>
     <div class="user">
         <div class="dropdown">
