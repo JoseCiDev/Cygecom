@@ -17,5 +17,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        DB::table('people')
+            ->update([
+                'people.deleted_at' => null,
+                'people.deleted_by' => null,
+            ]);
     }
 };
