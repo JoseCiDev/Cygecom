@@ -96,7 +96,7 @@ class ServiceController extends Controller
 
         $validator = $this->validatorService->purchaseRequestUpdate($data);
         $files = $request->file('arquivos');
-
+        $currentUser = auth()->user();
         $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.service.update";
 
         if ($validator->fails()) {
@@ -114,10 +114,11 @@ class ServiceController extends Controller
 
             $msg = "Solicitação de serviço nº $purchaseRequest->id atualizada com sucesso!";
 
-            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
+            $isOwnRequest = $purchaseRequest->user_id === $currentUser->id;
+            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && $isOwnRequest;
 
             if (!$isAuthorized) {
-                throw new Exception('Não foi possível acessar essa solicitação.');
+                throw new Exception('Ação não permitida pelo sistema!');
             }
 
             // MUDAR
