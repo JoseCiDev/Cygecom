@@ -37,7 +37,7 @@ class SuppliesRequestEditContainer extends Component
             : ($this->requestType->value . "[amount]");
 
         $this->allowedResponsables = User::with('person')
-            ->whereIn('user_profile_id', [3, 4])
+            ->whereIn('user_profile_id', [1, 3, 4])
             ->get()
             ->toArray();
     }
