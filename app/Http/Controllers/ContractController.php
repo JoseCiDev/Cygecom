@@ -98,7 +98,7 @@ class ContractController extends Controller
 
         $validator = $this->validatorService->purchaseRequestUpdate($data);
         $files = $request->file('arquivos');
-
+        $currentUser = auth()->user();
         $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.contract.update";
 
         if ($validator->fails()) {
@@ -108,7 +108,7 @@ class ContractController extends Controller
         try {
             $msg = "Solicitação de serviço recorrente atualizada com sucesso!";
 
-            $isAdmin = auth()->user()->profile->name === 'admin';
+            $isAdmin = $currentUser->profile->name === 'admin';
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
@@ -116,9 +116,11 @@ class ContractController extends Controller
 
             $msg = "Solicitação de contrato nº $purchaseRequest->id atualizada com sucesso!";
 
-            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
+            $isOwnRequest = $purchaseRequest->user_id === $currentUser->id;
+            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && $isOwnRequest;
+
             if (!$isAuthorized) {
-                throw new Exception('Não foi possível acessar essa solicitação.');
+                throw new Exception('Ação não permitida pelo sistema!');
             }
             // MUDAR
             DB::beginTransaction();
