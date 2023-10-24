@@ -61,6 +61,8 @@ $(() => {
     $("form").attr('autocomplete', 'off');
 
     $('.dataTable').each((_, table) => $(table).DataTable({
+        scrollY: '400px',
+        scrollX: true,
         language: {
             lengthMenu: "Mostrar _MENU_ registros",
             zeroRecords: "Nenhum registro encontrado",
