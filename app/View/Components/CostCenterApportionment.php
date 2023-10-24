@@ -17,8 +17,15 @@ class CostCenterApportionment extends Component
 
     public function render(): View|Closure|string
     {
-        $userCostCentersAllowed = auth()->user()->userCostCenterPermission;
-        $costCenters = CostCenter::whereIn('id', $userCostCentersAllowed->pluck('cost_center_id'))->get();
+        $currentUser = auth()->user();
+        $isAdmin = $currentUser->profile->name === 'admin';
+
+        $userCostCentersAllowed = $currentUser->userCostCenterPermission;
+        $filteredCostCenters = CostCenter::whereIn('id', $userCostCentersAllowed->pluck('cost_center_id'))->get();
+        $allCostCenters = CostCenter::All();
+
+        $costCenters =  $isAdmin ? $allCostCenters : $filteredCostCenters;
+
         $params = [
             'costCenters' => $costCenters,
             'purchaseRequest' => $this->purchaseRequest,

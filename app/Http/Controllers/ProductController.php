@@ -91,6 +91,7 @@ class ProductController extends Controller
 
         $files = $request->file('arquivos');
         $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.product.update";
+        $currentUser = auth()->user();
 
 
         if ($validator->fails()) {
@@ -98,7 +99,7 @@ class ProductController extends Controller
         }
 
         try {
-            $isAdmin = auth()->user()->profile->name === 'admin';
+            $isAdmin = $currentUser->profile->name === 'admin';
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
@@ -106,10 +107,11 @@ class ProductController extends Controller
 
             $msg = "Solicitação de produto nº $purchaseRequest->id atualizada com sucesso!";
 
-            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
+            $isOwnRequest = $purchaseRequest->user_id === $currentUser->id;
+            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && $isOwnRequest;
 
             if (!$isAuthorized) {
-                throw new Exception('Não foi possível acessar essa solicitação.');
+                throw new Exception('Ação não permitida pelo sistema!');
             }
 
             DB::beginTransaction();
