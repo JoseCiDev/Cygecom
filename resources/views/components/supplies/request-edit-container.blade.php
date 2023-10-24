@@ -40,8 +40,7 @@
                     <option disabled selected></option>
                     @foreach ($allowedResponsables as $responsableUser)
                         @php
-                            $usersToNotShow = [$requestUserId, $currentUser->id];
-                            if (in_array($responsableUser['id'], $usersToNotShow)) {
+                            if ($responsableUser['id'] === $requestUserId) {
                                 continue;
                             }
                         @endphp

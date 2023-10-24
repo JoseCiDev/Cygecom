@@ -50,8 +50,9 @@
                             }
 
                             if ($logChanges->has('supplies_user_id')) {
-                                $suppliesUser = User::find($logChanges->get('supplies_user_id'))->email;
-                                $changes = "$suppliesUser [suprimentos] atribuído como responsável";
+                                $userId = $logChanges->get('supplies_user_id');
+                                $userEmail = User::withTrashed()->find($userId)->email;
+                                $changes = "$userEmail [suprimentos] atribuído como responsável";
                             }
 
                             if ($logChanges->has('amount')) {
@@ -64,11 +65,13 @@
                                 $changes = "Preço total atualizado para R$ " . number_format($price, 2, ',', '.');
                             }
 
+                            $createdAt = $log->created_at->formatCustom('d/m/Y H:i:s');
+                            $email = $log->user->email;
                         @endphp
                         <tr>
                             <td>{{ $changes }}</td>
-                            <td>{{ $log->created_at->formatCustom('d/m/Y H:i:s') }}</td>
-                            <td>{{ $log->user->email }}</td>
+                            <td>{{ $createdAt }}</td>
+                            <td>{{ $email }}</td>
                             <td>{{ $reasonForUpdate }}</td>
                         </tr>
                     @endforeach

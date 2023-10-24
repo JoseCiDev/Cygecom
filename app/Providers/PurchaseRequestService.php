@@ -340,19 +340,28 @@ class PurchaseRequestService extends ServiceProvider
      */
     private function saveCostCenterApportionment(int $purchaseRequestId, array $data)
     {
-        $userId = auth()->user()->id;
+        $currentUser = auth()->user();
 
-        if (!isset($data['cost_center_apportionments'])) {
-            return;
+        if (!$data['cost_center_apportionments']) {
+            throw new Exception('Centro de custo precisa ser definido!');
         }
 
+        $currentPermissions = $currentUser->userCostCenterPermission->pluck('cost_center_id')->toArray();
         $apportionmentData = $data['cost_center_apportionments'];
         $existingIds = CostCenterApportionment::where('purchase_request_id', $purchaseRequestId)->pluck('id')->toArray();
 
         foreach ($apportionmentData as $apportionment) {
+            $id = $apportionment['cost_center_id'];
+            if (!in_array($id, $currentPermissions)) {
+                throw new Exception('Centros de custo selecionados não são permitidos para este usuário!');
+            }
+
             $apportionment['purchase_request_id'] = $purchaseRequestId;
-            $apportionment['updated_by'] = $userId;
-            $existingRecord = CostCenterApportionment::where(['purchase_request_id' => $purchaseRequestId, 'cost_center_id' => $apportionment['cost_center_id']])->first();
+            $apportionment['updated_by'] = $currentUser->id;
+            $existingRecord = CostCenterApportionment::where([
+                'purchase_request_id' => $purchaseRequestId,
+                'cost_center_id' => $apportionment['cost_center_id']
+            ])->first();
 
             if ($existingRecord) {
                 if (isset($apportionment['apportionment_currency'])) {

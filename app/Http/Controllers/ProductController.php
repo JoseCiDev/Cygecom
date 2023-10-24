@@ -91,6 +91,7 @@ class ProductController extends Controller
 
         $files = $request->file('arquivos');
         $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.product.update";
+        $currentUser = auth()->user();
 
 
         if ($validator->fails()) {
@@ -98,7 +99,7 @@ class ProductController extends Controller
         }
 
         try {
-            $isAdmin = auth()->user()->profile->name === 'admin';
+            $isAdmin = $currentUser->profile->name === 'admin';
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
@@ -106,10 +107,11 @@ class ProductController extends Controller
 
             $msg = "Solicitação de produto nº $purchaseRequest->id atualizada com sucesso!";
 
-            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
+            $isOwnRequest = $purchaseRequest->user_id === $currentUser->id;
+            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && $isOwnRequest;
 
             if (!$isAuthorized) {
-                throw new Exception('Não foi possível acessar essa solicitação.');
+                throw new Exception('Ação não permitida pelo sistema!');
             }
 
             DB::beginTransaction();
@@ -150,7 +152,6 @@ class ProductController extends Controller
     public function details(int $id)
     {
         $allRequestStatus = PurchaseRequestStatus::cases();
-
         $purchaseRequest = $this->purchaseRequestService->purchaseRequestById($id);
 
         if (!$purchaseRequest || $purchaseRequest->deleted_at !== null) {
@@ -158,7 +159,10 @@ class ProductController extends Controller
         }
 
         if ($this->isAuthorizedToUpdate($purchaseRequest)) {
-            $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
+            $data = [
+                'supplies_user_id' => auth()->user()->id,
+                'responsibility_marked_at' => now()
+            ];
             $purchaseRequestUpdated = $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
         }
 
@@ -177,10 +181,14 @@ class ProductController extends Controller
     {
         $allowedProfiles = ['admin', 'suprimentos_hkm', 'suprimentos_inp'];
         $userProfile = auth()->user()->profile->name;
-
         $existSuppliesUserId = (bool) $purchaseRequest->supplies_user_id;
         $existSuppliesMarkedAt = (bool) $purchaseRequest->responsibility_marked_at;
+        $userContainsPurchaseRequest = auth()->user()->purchaseRequest->contains($purchaseRequest);
 
-        return in_array($userProfile, $allowedProfiles) && !$existSuppliesUserId && !$existSuppliesMarkedAt && !auth()->user()->purchaseRequest->contains($purchaseRequest);
+        if ($userContainsPurchaseRequest || $existSuppliesUserId || $existSuppliesMarkedAt) {
+            return false;
+        }
+
+        return in_array($userProfile, $allowedProfiles);
     }
 }
