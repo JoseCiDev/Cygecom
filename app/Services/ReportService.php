@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\{PurchaseRequestType, PurchaseRequestStatus};
 use App\Models\User;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -134,7 +135,7 @@ class ReportService
      * @param string $orderColumnIndex Recebe um index que determina o campo de ordenação com base no dicionário de mapeamento."
      * @param string $orderDirection Recebe o tipo de ordenação, sendo 'asc' ou 'desc'.
      */
-    public function orderByMapped(Builder $query, int $orderColumnIndex): string
+    public function orderByMapped(Builder $query, int $orderColumnIndex): string|Closure
     {
         $latestLogSubquery = fn ($query) => $query->select('logs.created_at')
             ->from('logs')
