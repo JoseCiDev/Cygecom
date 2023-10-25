@@ -40,7 +40,10 @@ class SuppliesProductList extends Component
         }
 
         $products = $purchaseRequests->filter(function ($item) {
-            if ($item->type->value === PurchaseRequestType::PRODUCT->value) {
+            $validType = $item->type->value === PurchaseRequestType::PRODUCT->value;
+            $hasUser = $item->user !== null;
+
+            if ($validType && $hasUser) {
                 return $item;
             }
         });

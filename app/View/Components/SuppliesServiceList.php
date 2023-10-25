@@ -37,7 +37,10 @@ class SuppliesServiceList extends Component
         }
 
         $services = $purchaseRequests->filter(function ($item) {
-            if ($item->type->value === PurchaseRequestType::SERVICE->value) {
+            $validType = $item->type->value === PurchaseRequestType::SERVICE->value;
+            $hasUser = $item->user !== null;
+
+            if ($validType && $hasUser) {
                 return $item;
             }
         });
