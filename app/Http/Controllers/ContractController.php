@@ -117,7 +117,7 @@ class ContractController extends Controller
             $msg = "Solicitação de contrato nº $purchaseRequest->id atualizada com sucesso!";
 
             $isOwnRequest = $purchaseRequest->user_id === $currentUser->id;
-            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && $isOwnRequest;
+            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && ($isOwnRequest || $isSuppliesUpdate);
 
             if (!$isAuthorized) {
                 throw new Exception('Ação não permitida pelo sistema!');
