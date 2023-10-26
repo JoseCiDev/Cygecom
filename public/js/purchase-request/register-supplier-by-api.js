@@ -4,13 +4,11 @@ $(() => {
     }
 
     const showSuccessAlertAndCloseModal = (response) => {
-        bootbox.alert({
-                title: "<i class='fa fa-check'></i> Registro feito com sucesso!",
-                message: `<strong>CNPJ:</strong> ${response.cpf_cnpj} <br> ${response.message}`,
-                className: 'bootbox-custom-success'
-            });
-
-        $("#modal-supplier-register").modal("hide");
+        const title = "<i class='fa fa-check'></i> Registro feito com sucesso!";
+        const message = `<strong>CNPJ:</strong> ${response.cpf_cnpj} <br> ${response.message}`;
+        $.fn.showModalAlert(title, message);
+        const modalSupplierRegister = bootstrap.Modal.getInstance('#modal-supplier-register');
+        modalSupplierRegister.hide();
 
         const $selectElement = $("select.select-supplier");
         $selectElement.trigger("focus");
@@ -41,19 +39,16 @@ $(() => {
         });
         errorMessage += "</ul>"
 
-        bootbox.alert({
-            title: "Não foi possível registrar novo fornecedor!",
-            message: errorMessage,
-            className: 'bootbox-custom-warning',
-            callback: function() {
-                const $modalSupplierRegister = $("#modal-supplier-register").first();
-                const $firstInputSupplier = $modalSupplierRegister.find('.form-control:input').first();
-                setTimeout(() => {
-                    $firstInputSupplier.trigger("focus");
-                    $("body").addClass("modal-open");
-                }, 100)
-            }
+        const title = "Não foi possível registrar novo fornecedor!";
+        $.fn.showModalAlert(title, errorMessage, function() {
+            const $modalSupplierRegister = $("#modal-supplier-register").first();
+            const $firstInputSupplier = $modalSupplierRegister.find('.form-control:input').first();
+            setTimeout(() => {
+                $firstInputSupplier.trigger("focus");
+                $("body").addClass("modal-open");
+            }, 100)
         });
+
     };
 
     const submitFormToAPI = (event) => {
