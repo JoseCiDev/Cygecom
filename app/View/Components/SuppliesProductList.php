@@ -33,9 +33,9 @@ class SuppliesProductList extends Component
         } else {
             $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()
                 ->whereNotIn('status', [
-                    PurchaseRequestStatus::RASCUNHO,
-                    PurchaseRequestStatus::FINALIZADA,
-                    PurchaseRequestStatus::CANCELADA
+                    PurchaseRequestStatus::RASCUNHO->value,
+                    PurchaseRequestStatus::FINALIZADA->value,
+                    PurchaseRequestStatus::CANCELADA->value
                 ])->whereNull('deleted_at')->get();
         }
 
