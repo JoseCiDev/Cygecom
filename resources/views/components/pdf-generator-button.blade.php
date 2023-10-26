@@ -77,8 +77,7 @@
                 window.location.reload()
             }
 
-            html2pdf().from(element[0]).set(opt).save().then(() => location.reload());
+            $('#print-pdf').on('click', createPdf);
         })
     </script>
 @endpush
-
