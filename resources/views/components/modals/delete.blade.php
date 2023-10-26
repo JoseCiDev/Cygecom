@@ -39,6 +39,7 @@
             const action = routes[route] || "#";
 
             $modalDelete.find('#modal-delete-label .name').text(name);
+            $modalDelete.find('#modal-delete-message .name').text(name);
             $modalDelete.find('#modal-form-delete').attr('action', action);
         });
     </script>
