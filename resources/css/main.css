@@ -170,6 +170,12 @@ input {
     font-size: 32px;
     line-height: 39px;
     color: var(--black-color);
-    font-weight: bold;
+    font-weight: 600;
     margin: 0;
+}
+
+.form-status-filter {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap
 }

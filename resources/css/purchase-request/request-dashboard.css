@@ -13,7 +13,7 @@
     font-size: 18px;
     line-height: 22px;
     color: var(--black-color);
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .request-dashboard-requests {
@@ -33,7 +33,7 @@
     font-size: 18px;
     line-height: 22px;
     color: var(--black-color);
-    font-weight: bold;
+    font-weight: 600;
     margin: 0 0 12px 0;
 }
 
@@ -42,7 +42,7 @@
     line-height: 20px;
     height: 55px;
     color: var(--black-color);
-    font-weight: bold;
+    font-weight: 600;
     padding-bottom: 12px;
 }
 
@@ -63,7 +63,7 @@
     font-size: 16px;
     line-height: 20px;
     color: #FFFFFF;
-    font-weight: bold;
+    font-weight: 600;
     text-decoration: none;
 }
 
