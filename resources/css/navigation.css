@@ -28,6 +28,17 @@
     }
 }
 
+#navigation button {
+    background-color: transparent;
+    color: #ffffff;
+    border: none;
+}
+
+#navigation button:hover {
+    background-color: var(--gold-secondary-color);
+    color: #000000;
+}
+
 #active-menu-shadow {
     display: none;
     position: fixed;
@@ -106,8 +117,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: top;
-    align-items: left;
+    align-items: center;
     gap: 15px;
     padding: 15px;
     background: linear-gradient(to bottom, #333333, #575757);
@@ -137,7 +147,7 @@
 
 #navigation .dropdown-menu>li>a:hover {
     background-color: var(--gold-secondary-color);
-    color: #fff;
+    color: #000000;
     filter: none;
 }
 
@@ -174,6 +184,9 @@
     padding: 6px 15px;
     font-size: 13px;
     filter: none;
+    text-decoration: none;
+    color: #000000;
+    display: block;
 }
 
 #navigation #brand {
