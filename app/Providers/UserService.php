@@ -218,7 +218,9 @@ class UserService extends ServiceProvider implements UserServiceInterface
             'name' => $request['name'],
             'phone_id' => $request['phone_id'],
             'birthdate' => $request['birthdate'] ?? null,
-            'cost_center_id' => $request['cost_center_id']
+            'cost_center_id' => $request['cost_center_id'],
+            'deleted_at' => null,
+            'deleted_by' => null
         ]);
     }
 
