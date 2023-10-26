@@ -297,7 +297,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-3">
 
                 {{-- LINK --}}
                 <div class="col-sm-6">

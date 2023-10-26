@@ -124,3 +124,7 @@
     gap: 10px;
     padding: 0;
 }
+
+.supplies-dashboard a {
+    text-decoration: none;
+}

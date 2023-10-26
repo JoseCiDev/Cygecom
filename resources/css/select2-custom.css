@@ -60,3 +60,24 @@
     -moz-border-radius: 0;
     border-radius: 0;
 }
+
+.select2-selection__rendered {
+    /* Altura máxima do select2 multiple */
+    max-height: 150px;
+    overflow: scroll;
+}
+
+.select2-container .select2-selection--single {
+    height: 100%;
+    font-size: 1rem;
+    padding: 4px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 5px;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--gold-secondary-color);
+    color: #000000;
+}
