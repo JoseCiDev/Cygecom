@@ -1,14 +1,16 @@
-import jQuery from 'jquery'; // v2.2.4
+import jQuery from 'jquery'; // v3.7.1
 window.$ = jQuery;
 window.jQuery = window.$
 
 import "@fortawesome/fontawesome-free/js/all"; // v6.4.2
 
-import bootbox from "bootbox/bootbox.min.js"; // v4.3.0
-window.bootbox = bootbox
+import * as bootstrap from "bootstrap"; // v5.3.2
+window.bootstrap = bootstrap;
 
-import dataTable from "datatables.net"; // v1.10.25
-dataTable()
+import select2 from 'select2';
+select2();
+
+import "datatables.net";
 
 import IMask from "imask";
 
@@ -48,6 +50,24 @@ $.fn.removeRequired = function() {
     return $(this);
 }
 
+$.fn.showModalAlert = (title = '', message, callback = null) => {
+    const modalAlert = new bootstrap.Modal('#modal-alert', { keyboard: false});
+    $("#modal-alert-label").html(title);
+    $("#modal-alert-message").html(message);
+    $("#modal-alert-submit").on('click', () => {
+        if(callback) {
+            callback();
+        }
+        modalAlert.hide();
+    })
+
+    if(!callback) {
+        $("#modal-alert-btn-secondary").hide();
+    }
+
+    modalAlert.show();
+}
+
 $(() => {
     // required style
     $('[data-rule-required]').each(function() {
@@ -55,7 +75,7 @@ $(() => {
         $label.append('<sup style="color:red">*</sup>');
     });
 
-    $(".select2-me").select2();
+    $(".select2-me").select2({width: "100%", placeholder: "Selecione uma ou mais opções"});
 
     // autocomplete off
     $("form").attr('autocomplete', 'off');
@@ -63,6 +83,7 @@ $(() => {
     $('.dataTable').each((_, table) => $(table).DataTable({
         scrollY: '400px',
         scrollX: true,
+        autoWidth: true,
         language: {
             lengthMenu: "Mostrar _MENU_ registros",
             zeroRecords: "Nenhum registro encontrado",
