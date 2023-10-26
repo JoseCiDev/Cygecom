@@ -206,13 +206,15 @@ class ReportService
                     });
                 })
                 ->orWhereHas('service', function ($query) use ($searchValue) {
-                    $query->where('price', 'like', "%{$searchValue}%")
+                    $query->where('name', 'like', "%{$searchValue}%")
+                        ->orWhere('price', 'like', "%{$searchValue}%")
                         ->orWhereHas('supplier', function ($query) use ($searchValue) {
                             $query->where('corporate_name', 'like', "%{$searchValue}%");
                         });
                 })
                 ->orWhereHas('contract', function ($query) use ($searchValue) {
-                    $query->where('amount', 'like', "%{$searchValue}%")
+                    $query->where('name', 'like', "%{$searchValue}%")
+                        ->orWhere('amount', 'like', "%{$searchValue}%")
                         ->orWhereHas('supplier', function ($query) use ($searchValue) {
                             $query->where('corporate_name', 'like', "%{$searchValue}%");
                         });

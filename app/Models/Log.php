@@ -11,7 +11,7 @@ class Log extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id')->withTrashed();
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     protected $fillable = [
