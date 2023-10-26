@@ -152,7 +152,6 @@ class ProductController extends Controller
     public function details(int $id)
     {
         $allRequestStatus = PurchaseRequestStatus::cases();
-
         $purchaseRequest = $this->purchaseRequestService->purchaseRequestById($id);
 
         if (!$purchaseRequest || $purchaseRequest->deleted_at !== null) {
@@ -160,7 +159,10 @@ class ProductController extends Controller
         }
 
         if ($this->isAuthorizedToUpdate($purchaseRequest)) {
-            $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
+            $data = [
+                'supplies_user_id' => auth()->user()->id,
+                'responsibility_marked_at' => now()
+            ];
             $purchaseRequestUpdated = $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
         }
 
@@ -179,10 +181,14 @@ class ProductController extends Controller
     {
         $allowedProfiles = ['admin', 'suprimentos_hkm', 'suprimentos_inp'];
         $userProfile = auth()->user()->profile->name;
-
         $existSuppliesUserId = (bool) $purchaseRequest->supplies_user_id;
         $existSuppliesMarkedAt = (bool) $purchaseRequest->responsibility_marked_at;
+        $userContainsPurchaseRequest = auth()->user()->purchaseRequest->contains($purchaseRequest);
 
-        return in_array($userProfile, $allowedProfiles) && !$existSuppliesUserId && !$existSuppliesMarkedAt && !auth()->user()->purchaseRequest->contains($purchaseRequest);
+        if ($userContainsPurchaseRequest || $existSuppliesUserId || $existSuppliesMarkedAt) {
+            return false;
+        }
+
+        return in_array($userProfile, $allowedProfiles);
     }
 }

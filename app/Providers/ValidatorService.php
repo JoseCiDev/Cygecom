@@ -2,89 +2,12 @@
 
 namespace App\Providers;
 
-use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
-use App\Contracts\ValidatorServiceInterface;
 
-class ValidatorService extends ServiceProvider implements ValidatorServiceInterface
+class ValidatorService extends ServiceProvider
 {
-    public $requiredRulesForUser = [
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        'password' => ['required', 'string', 'min:8', 'confirmed'],
-        'profile_type' => ['required', 'string', 'max:255'],
-        'cpf_cnpj' => ['required', 'string', 'unique:people'],
-        'number' => ['required', 'string'],
-        'phone_type' => ['required', 'string'],
-        'cost_center_id' => ['required', 'string'],
-        'is_buyer' => ['nullable', 'boolean'],
-        "user_cost_center_permissions" => ['nullable', 'array'],
-    ];
-
-    public $requiredRulesForUserMessages = [
-        'name.required' => 'Campo "Nome" é obrigatório.',
-        'name.max' => 'Campo "Nome" deve ter no máximo :max caracteres',
-
-        'email.required' => '"E-mail" é obrigatório',
-        'email.email' => 'E-mail inválido.',
-        'email.max' => 'E-mail deve ter no máximo :max caracteres',
-        'email.unique' => 'Este e-mail já está sendo usado.',
-
-        'password.required' => '"Senha" é obrigatório.',
-        'password.min' => 'Senha deve ter pelo menos :min caracteres.',
-        'password.confirmed' => 'As senhas não são iguais.',
-
-        'profile_type.required' => '"Tipo de usuário" é obrigatório.',
-        'profile_type.max' => '"Tipo de usuário" deve ter no máximo :max',
-
-        'birthdate.date' => 'Data inválida',
-
-        'cpf_cnpj.required' => '"CPF/CNPJ" é obrigatório.',
-        'cpf_cnpj.unique' => 'Desculpe, já existe um usuário cadastrado com esse CPF/CNPJ. Por favor, verifique o campo novamente.',
-
-        'number.required' => '"Telefone/Celular" é obrigatório.',
-
-        'cost_center_id.required' => 'Centro de custo é obrigatório',
-
-        'is_buyer.boolean' => 'A pessoa de ter o campo "é comprador" como verdadeiro ou false.',
-
-        "user_cost_center_permissions.array" => "O campo permissões do centro de custo do usuário deve ser um array.",
-    ];
-
-    public $rulesForUserUpdate = [
-        'name' => ['nullable', 'string', 'max:255'],
-        'email' => ['nullable', 'email', 'max:255', 'unique:users,email'],
-        'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-        'password_confirmation' => ['nullable', 'required_with:password', 'same:password'],
-        'profile_type' => ['nullable', 'in:admin,normal,diretor,gestor_fornecedores,gestor_usuarios,suprimentos_hkm,suprimentos_inp'],
-        'approver_user_id' => ['nullable', 'numeric', 'min:1', 'exists:users,id'],
-        'approve_limit' => ['nullable', 'numeric', 'min:100'],
-        'birthdate' => ['nullable', 'date'],
-        'identification' => ['nullable', 'string', 'max:20'],
-        'number' => ['nullable', 'string', 'max:20'],
-        'phone_type' => ['nullable', 'string', 'max:20'],
-        "user_cost_center_permissions" => ['nullable', 'array'],
-    ];
-
-    public $rulesForUserUpdateMessages = [
-        'name.max' => '"Nome" deve ter no máximo :max caracteres.',
-
-        'email.email' => 'Endereço de e-mail inválido.',
-        'email.max' => '"E-mail" deve ter no máximo :max caracteres.',
-        'email.unique' => 'Insira um e-mail que não esteja em uso',
-
-        'password.min' => '"Senha" deve ter pelo menos :min caracteres.',
-        'password.confirmed' => 'As senhas não correspondem.',
-
-        'password_confirmation' => 'Confirmação de senha necessária',
-
-        'birthdate.date' => 'Data inválida',
-
-        "user_cost_center_permissions.array" => "O campo permissões do centro de custo do usuário deve ser um array.",
-    ];
-
     public $rulesForSupplier = [
         "cpf_cnpj" => ['nullable', 'string', 'min:11'],
         "entity_type" => ['required', 'string', 'in:PF,PJ'],
@@ -342,37 +265,6 @@ class ValidatorService extends ServiceProvider implements ValidatorServiceInterf
         'purchase_request_files.array' => 'Os arquivos de solicitação de cotação devem ser um array.',
         'purchase_request_files.*.path.string' => 'O caminho do arquivo deve ser uma string.',
     ];
-
-    public function registerValidator(array $data)
-    {
-        $existingUser = User::whereHas('person', function ($query) use ($data) {
-            $query->where('cpf_cnpj', $data['cpf_cnpj']);
-        })->first();
-
-        $rules = $this->requiredRulesForUser;
-        $rulesMsg = $this->requiredRulesForUserMessages;
-
-        $uniqueRule = $existingUser ? ['required', 'string', 'unique:people'] : ['required', 'string'];
-        $rules['cpf_cnpj'] = $uniqueRule;
-
-        $rulesMsg['cpf_cnpj.unique'] = 'CPF já está associado a um usuário.';
-
-        $validator = Validator::make($data, $rules, $rulesMsg);
-
-        return $validator;
-    }
-
-
-    public function updateValidator(int $id, array $data)
-    {
-        $rules = $this->rulesForUserUpdate;
-        $messages = $this->rulesForUserUpdateMessages;
-        $rules['email'] = ['nullable', 'email', 'max:255', 'unique:users,email,' . $id];
-
-        $validator = Validator::make($data, $rules, $messages);
-
-        return $validator;
-    }
 
     public function supplier(array $data, $cnpj)
     {

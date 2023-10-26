@@ -14,7 +14,14 @@ class UserService extends ServiceProvider implements UserServiceInterface
 {
     public function getUserById(int $id): User
     {
-        return User::with(['person', 'person.phone', 'profile', 'approver', 'person.costCenter', 'deletedByUser', 'updatedByUser'])->where('id', $id)->first();
+        return User::with([
+            'person',
+            'person.phone',
+            'profile', 'approver',
+            'person.costCenter',
+            'deletedByUser',
+            'updatedByUser'
+        ])->whereNull('deleted_at')->where('id', $id)->first();
     }
 
     /**
@@ -128,10 +135,25 @@ class UserService extends ServiceProvider implements UserServiceInterface
     }
     public function deleteUser(int $id)
     {
-        $user             = User::find($id);
-        $user->deleted_at = Carbon::now();
-        $user->deleted_by = auth()->user()->id;
-        $user->save();
+        $user = User::with('person')->find($id);
+        $person = $user->person;
+        $currentUserId = auth()->user()->id;
+
+        if ($user) {
+            $user->update([
+                'deleted_at' => now(),
+                'deleted_by' => $currentUserId
+            ]);
+            $user->save();
+
+            if ($person) {
+                $person->update([
+                    'deleted_at' => now(),
+                    'deleted_by' => $currentUserId
+                ]);
+                $person->save();
+            }
+        }
     }
 
     /**
@@ -195,8 +217,10 @@ class UserService extends ServiceProvider implements UserServiceInterface
         return Person::updateOrCreate(['cpf_cnpj' => $request['cpf_cnpj']], [
             'name' => $request['name'],
             'phone_id' => $request['phone_id'],
-            'birthdate' => $request['birthdate'],
-            'cost_center_id' => $request['cost_center_id']
+            'birthdate' => $request['birthdate'] ?? null,
+            'cost_center_id' => $request['cost_center_id'],
+            'deleted_at' => null,
+            'deleted_by' => null
         ]);
     }
 

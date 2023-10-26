@@ -155,6 +155,7 @@
                 <th >Nº</th>
                 <th >Tipo</th>
                 <th >Solicitado em</th>
+                <th>Nome Serviço</th>
                 <th >Solicitante</th>
                 <th >Solicitante sistema</th>
                 <th >Status</th>
@@ -339,6 +340,13 @@
 
                                 const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss')
 
+                                const serviceNameColumnMapping = {
+                                    product: () => null,
+                                    service: () => [item.service?.name],
+                                    contract: () => [item.contract?.name],
+                                };
+                                const serviceName = serviceNameColumnMapping[item.type]()?.filter((el) => el) || '---';
+
                                 const requistingUser = item.user.person.name
                                 const requester = item.requester?.name || '---'
                                 const status = enumRequests['status'][item.status]
@@ -369,6 +377,7 @@
                                         id,
                                         type,
                                         firstPendingStatus,
+                                        serviceName,
                                         requistingUser,
                                         requester,
                                         status,
@@ -502,6 +511,25 @@
                             ?.created_at
 
                         return firstPendingStatus ? moment(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
+                    }
+                },
+                {
+                    data: 'type',
+                    orderable: true,
+                    render: (type, _, row) => {
+                        const serviceNameColumnMapping = {
+                            product: () => null,
+                            service: () => [row.service?.name],
+                            contract: () => [row.contract?.name],
+                        };
+
+                        const serviceName = serviceNameColumnMapping[type]()?.filter((el) => el);
+
+                        if (!serviceName) {
+                            return '---';
+                        }
+
+                        return serviceName;
                     }
                 },
                 { data: 'user.person.name' },
