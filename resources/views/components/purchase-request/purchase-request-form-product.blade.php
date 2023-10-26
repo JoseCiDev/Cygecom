@@ -224,7 +224,7 @@
                             placeholder="Ex.: Devido aumento da demanda de produção, necessário a compra de uma máquina/equipamento."
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
-                    <div class="small" style="margin-top:-10px; margin-bottom:20px;">
+                    <div class="small" style="margin-top: 5px; margin-bottom:20px;">
                         <p class="secondary-text">*Informe o motivo que você está solicitando essa compra.</p>
                     </div>
                 </div>
@@ -279,9 +279,8 @@
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
                             class="form-control text-area no-resize">Solicitação de produto(s).</textarea>
                     </div>
-                    <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
-                        <p>* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação.
-                        </p>
+                    <div class="small" style="color:rgb(85, 85, 85); margin-top: 5px; margin-bottom:20px;">
+                        <p>* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação. </p>
                     </div>
                 </div>
 

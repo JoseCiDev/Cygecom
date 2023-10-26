@@ -39,7 +39,6 @@
 <style>
     #service-title {
         border: 1px solid rgb(195, 195, 195);
-        padding: 18px 0px 23px 10px;
     }
 
     #service-title::placeholder {
@@ -110,7 +109,7 @@
         <input type="hidden" name="type" value="service" class="no-validation" data-cy="type">
 
         {{-- NOME SERVIÇO --}}
-        <div class="row service-title-container" style="margin-bottom:5px; margin-top:18px;">
+        <div class="row service-title-container" style="margin-bottom: 25px; margin-top:18px;">
             <div class="col-sm-6 contract-title">
                 <div class="form-group">
                     <label for="service-title" class="regular-text label-service-title">Nome serviço pontual: </label>
@@ -232,7 +231,7 @@
                         <textarea data-rule-required="true" minlength="20" name="reason" id="reason" data-cy="reason" rows="4"
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
-                    <div class="small" style="margin-top:-10px; margin-bottom:20px;">
+                    <div class="small" style="margin-top: 5px; margin-bottom:20px;">
                         <p class="secondary-text">*Informe o motivo pelo qual você está solicitando esta contratação
                         </p>
                     </div>
@@ -247,7 +246,7 @@
                             placeholder="Ex.: Contratação de serviço para conserto de uma máquina da produção que está apresentando defeitos."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
-                    <div class="small" style="margin-top:-10px; margin-bottom:20px;">
+                    <div class="small" style="margin-top: 5px; margin-bottom:20px;">
                         <p class="secondary-text">*Descreva com detalhes o tipo de serviço que está solicitando.</p>
                     </div>
                 </div>
@@ -352,7 +351,7 @@
                         <div class="form-group">
                             <label for="format-amount" class="regular-text">Valor total do serviço</label>
                             <div class="input-group">
-                                <span class="input-group-addon">R$</span>
+                                <span class="input-group-text">R$</span>
                                 <input type="text" id="format-amount" name="format-amount"
                                     data-cy="format-amount" placeholder="0.00" class="form-control format-amount"
                                     value="{{ str_replace('.', ',', $purchaseRequestServicePrice) }}">

@@ -99,10 +99,9 @@
 
         <div class="col-sm-2">
             <div class="form-group">
-                <label for="cost_center_apportionments[0][apportionment_percentage]" class="regular-text"> Rateio (%)
-                </label>
+                <label for="cost_center_apportionments[0][apportionment_percentage]" class="regular-text"> Rateio (%) </label>
                 <div class="input-group">
-                    <span class="input-group-addon">%</span>
+                    <span class="input-group-text">%</span>
                     <input type="number" placeholder="0.00" class="form-control apportionment-percentage"
                         min="1" max="100" name="cost_center_apportionments[0][apportionment_percentage]"
                         id="cost_center_apportionments[0][apportionment_percentage]"
@@ -116,7 +115,7 @@
                 <label for="cost_center_apportionments[0][apportionment_currency]" class="regular-text"> Rateio (R$)
                 </label>
                 <div class="input-group">
-                    <span class="input-group-addon">R$</span>
+                    <span class="input-group-text">R$</span>
                     <input type="number" name="cost_center_apportionments[0][apportionment_currency]"
                         id="cost_center_apportionments[0][apportionment_currency]"
                         data-cy="cost_center_apportionments[0][apportionment_currency]" placeholder="0.00"

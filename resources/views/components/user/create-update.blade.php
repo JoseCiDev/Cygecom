@@ -152,55 +152,39 @@
             <div class="row" style="padding: 25px 0">
                 {{-- PERFIL DE USUÁRIO --}}
                 <div class="form-group">
-                    <div class="col-sm-6">
-                        <label for="form-check" style="margin-bottom: 12px;" class="regular-text">Perfil de usuário</label>
-                        <div class="form-check row">
-                            <div class="col-md-4">
-                                @if ($isAdmin)
-                                    <div>
-                                        <label class="form-check-label secondary-text" for="profile_admin"><input @checked(isset($user) && $user->profile->name === 'admin')
-                                            type="radio" name="profile_type" id="profile_admin" data-cy="profile_admin" value="admin" data-skin="minimal">
-                                        Administrador</label>
-                                    </div>
-                                    <div>
-                                        <label class="form-check-label secondary-text" for="profile_diretor"><input @checked(isset($user) && $user->profile->name === 'diretor')
-                                            type="radio" name="profile_type" id="profile_diretor" data-cy="profile_diretor" value="diretor" data-skin="minimal">
-                                        Diretor</label>
-                                    </div>
-                                @endif
-                                <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'normal')
-                                        type="radio" name="profile_type" id="profile_normal" data-cy="profile_normal" value="normal" data-skin="minimal"
-                                    @if (!isset($user)) checked @endif>
-                                    Padrão</label>
-                                </div>
+                    <div class="col-sm-12 my-3 fs-6">
+                        <label for="form-check" style="display:block; margin-bottom: 12px;" class="regular-text fs-5">Perfil de usuário</label>
+                        @if ($isAdmin)
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="profile_type" id="profile_admin" data-cy="profile_admin" value="admin" @checked(isset($user) && $user->profile->name === 'admin')>
+                                <label class="form-check-label" for="profile_admin"> Administrador </label>
                             </div>
-                            <div class="col-md-4">
-                                <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'suprimentos_hkm')
-                                        type="radio" name="profile_type" id="profile_suprimentos_hkm" data-cy="profile_suprimentos_hkm" value="suprimentos_hkm" data-skin="minimal">
-                                    Suprimentos HKM</label>
-                                </div>
-                                <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'suprimentos_inp')
-                                        type="radio" name="profile_type" id="profile_suprimentos_inp" data-cy="profile_suprimentos_inp" value="suprimentos_inp" data-skin="minimal" >
-                                    Suprimentos INP</label>
-                                </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="profile_type" id="profile_diretor" data-cy="profile_diretor" value="diretor" @checked(isset($user) && $user->profile->name === 'diretor')>
+                                <label class="form-check-label" for="profile_diretor"> Diretor </label>
                             </div>
-                            <div class="col-md-4">
-                                <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'gestor_usuarios')
-                                        type="radio" name="profile_type" id="gestor_usuarios" data-cy="gestor_usuarios" value="gestor_usuarios" data-skin="minimal" >
-                                    Gestor de usuários</label>
-                                </div>
-                                <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'gestor_fornecedores')
-                                        type="radio" name="profile_type" id="gestor_fornecedores" data-cy="gestor_fornecedores" value="gestor_fornecedores" data-skin="minimal" >
-                                    Gestor de fornecedores</label>
-                                </div>
-                            </div>
+                        @endif
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="profile_type" id="profile_normal" data-cy="profile_normal" value="normal" @checked(isset($user) && $user->profile->name === 'normal')>
+                            <label class="form-check-label" for="profile_normal"> Padrão </label>
                         </div>
-                </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="profile_type" id="profile_suprimentos_hkm" data-cy="profile_suprimentos_hkm" value="suprimentos_hkm" @checked(isset($user) && $user->profile->name === 'suprimentos_hkm')>
+                            <label class="form-check-label" for="profile_suprimentos_hkm"> Suprimentos HKM </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="profile_type" id="profile_suprimentos_inp" data-cy="profile_suprimentos_inp" value="suprimentos_inp" @checked(isset($user) && $user->profile->name === 'suprimentos_inp')>
+                            <label class="form-check-label" for="profile_suprimentos_inp"> Suprimentos INP </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="profile_type" id="gestor_usuarios" data-cy="gestor_usuarios" value="gestor_usuarios" @checked(isset($user) && $user->profile->name === 'gestor_usuarios')>
+                            <label class="form-check-label" for="gestor_usuarios"> Gestor de usuários </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="profile_type" id="gestor_fornecedores" data-cy="gestor_fornecedores" value="gestor_fornecedores" @checked(isset($user) && $user->profile->name === 'gestor_fornecedores')>
+                            <label class="form-check-label" for="gestor_fornecedores"> Gestor de fornecedores </label>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
@@ -315,14 +299,14 @@
                         <label for="format-approve-limit" class="regular-text"> Limite de aprovação </label>
                         @if (isset($user))
                             <div class="input-group">
-                                <span class="input-group-addon">R$</span>
+                                <span class="input-group-text">R$</span>
                                 <input type="text" id="format-approve-limit" data-cy="format-approve-limit" placeholder="Ex: 100,00" class="form-control format-approve-limit" data-rule-required="true"
                                     @if ($user->approve_limit === null) readonly @else value="{{ (float) $user->approve_limit }}" @endif>
                                 <input type="hidden" name="approve_limit" id="approve_limit" data-cy="approve_limit" class="approve_limit no-validation">
                             </div>
                         @else
                             <div class="input-group">
-                                <span class="input-group-addon">R$</span>
+                                <span class="input-group-text">R$</span>
                                 <input type="text" id="format-approve-limit" data-cy="format-approve-limit" placeholder="Ex: 100,00" class="form-control format-approve-limit" data-rule-required="true"
                                     value="{{ old('approve_limit') }}">
                                 <input type="hidden" name="approve_limit" id="approve_limit" data-cy="approve_limit" class="approve_limit no-validation" value="{{ old('approve_limit') }}">

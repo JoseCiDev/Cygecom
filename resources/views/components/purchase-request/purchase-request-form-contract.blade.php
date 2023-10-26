@@ -38,7 +38,6 @@
 <style>
     #contract-title {
         border: 1px solid rgb(195, 195, 195);
-        padding: 18px 0px 23px 10px;
     }
 
     #contract-title::placeholder {
@@ -237,7 +236,7 @@
                             placeholder="Ex: Ar condicionado da sala de reuniões do atrium apresenta defeitos de funcionamento"
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
-                    <div class="small" style="margin-top:-10px; margin-bottom:20px;">
+                    <div class="small" style="margin-top: 5px; margin-bottom:20px;">
                         <p class="secondary-text">* Por favor, forneça uma breve descrição do motivo pelo qual você está solicitando esta compra.</p>
                     </div>
                 </div>
@@ -250,7 +249,7 @@
                             rows="4" placeholder="Descreva com detalhes o objetivo do serviço recorrente"
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
-                    <div class="small" style="margin-top:-10px; margin-bottom:20px;">
+                    <div class="small" style="margin-top: 5px; margin-bottom:20px;">
                         <p class="secondary-text">* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação.</p>
                     </div>
                 </div>
@@ -281,7 +280,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row mt-3">
 
                 {{-- LINK --}}
                 <div class="col-sm-6">
@@ -355,7 +354,7 @@
                         <div class="form-group">
                             <label class="regular-text">Valor total do serviço recorrente: </label>
                             <div class="input-group">
-                                <span class="input-group-addon">R$</span>
+                                <span class="input-group-text">R$</span>
                                 <input type="text" placeholder="0,00" class="form-control format-amount"
                                     id="format-amount" name="format-amount" data-cy="format-amount"
                                     value="{{ str_replace('.', ',', $purchaseRequestContractAmount) }}">

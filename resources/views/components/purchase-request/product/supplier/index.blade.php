@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-2">
         <div class="col-sm-12 product-container">
             <label class="regular-text"> Produtos </label>
             <div class="box-content nopadding" style="background-color:rgba(244, 244, 244, 0.531); border: 1px solid rgb(179, 179, 179);">
