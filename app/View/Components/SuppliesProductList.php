@@ -33,17 +33,16 @@ class SuppliesProductList extends Component
         } else {
             $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()
                 ->whereNotIn('status', [
-                    PurchaseRequestStatus::RASCUNHO->value,
-                    PurchaseRequestStatus::FINALIZADA->value,
-                    PurchaseRequestStatus::CANCELADA->value
+                    PurchaseRequestStatus::RASCUNHO,
+                    PurchaseRequestStatus::FINALIZADA,
+                    PurchaseRequestStatus::CANCELADA
                 ])->whereNull('deleted_at')->get();
         }
 
         $products = $purchaseRequests->filter(function ($item) {
             $validType = $item->type->value === PurchaseRequestType::PRODUCT->value;
-            $hasUser = $item->user !== null;
 
-            if ($validType && $hasUser) {
+            if ($validType) {
                 return $item;
             }
         });

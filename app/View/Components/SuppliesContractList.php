@@ -41,9 +41,8 @@ class SuppliesContractList extends Component
 
         $contracts = $purchaseRequests->filter(function ($item) {
             $validType = $item->type->value === PurchaseRequestType::CONTRACT->value;
-            $hasUser = $item->user !== null;
 
-            if ($validType && $hasUser) {
+            if ($validType) {
                 return $item;
             }
         });

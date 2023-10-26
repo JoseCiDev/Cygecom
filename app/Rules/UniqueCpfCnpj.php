@@ -17,10 +17,10 @@ class UniqueCpfCnpj implements ValidationRule
     {
         $existingUser = User::whereHas('person', function ($query) use ($value) {
             $query->where('cpf_cnpj', $value);
-        })->first();
+        })->whereNull('deleted_at')->first();
 
         if ($existingUser) {
-            $fail('Desculpe, já existe um usuário cadastrado com esse CPF/CNPJ. Por favor, verifique o campo novamente');
+            $fail('Desculpe, já existe um usuário cadastrado com esse CPF/CNPJ.');
         }
     }
 }

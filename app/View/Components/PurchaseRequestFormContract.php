@@ -33,7 +33,7 @@ class PurchaseRequestFormContract extends Component
     {
         $companies       = Company::all();
         $suppliers       = Supplier::all();
-        $people = Person::all();
+        $people = Person::whereNull('deleted_at')->get();
         $userCostCenters = auth()->user()->userCostCenterPermission;
         $paymentMethods = PaymentMethod::cases();
         $paymentTerms = PaymentTerm::cases();

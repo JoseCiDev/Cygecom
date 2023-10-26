@@ -15,9 +15,9 @@ class UniqueEmail implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $email = User::where('email', $value);
+        $email = User::whereNull('deleted_at')->where('email', $value)->first();
 
-        if( $email->exists() ) {
+        if($email) {
             $fail('Este e-mail já está sendo usado.');
         }
     }
