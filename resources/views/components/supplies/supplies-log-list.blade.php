@@ -25,7 +25,7 @@
         <div class="box-content nopadding regular-text">
 
             <table class="table table-hover table-nomargin table-striped" data-column_filter_dateformat="dd-mm-yy"
-                data-nosort="0" data-checkall="all" id="#table-striped">
+                data-nosort="0" data-checkall="all" id="#table-striped" style="width:100%">
                 <thead>
                     <tr>
                         <th>Ação realizada</th>
