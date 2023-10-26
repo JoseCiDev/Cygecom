@@ -126,7 +126,7 @@
                         data.id + '"><i class="fa fa-edit"></i></a>' +
                         '<button data-route="supplier" data-name="' + data.corporate_name +
                         '" data-id="' + data.id +
-                        '" rel="tooltip" title="Excluir" class="btn" data-toggle="modal" data-target="#modal" data-cy="btn-modal-delete-supplier"><i class="fa fa-times"></i></button>'
+                        '" rel="tooltip" title="Excluir" class="btn" data-bs-toggle="modal" data-bs-target="#modal-delete" data-cy="btn-modal-delete-supplier"><i class="fa fa-times"></i></button>'
                     )
                 }
             ],

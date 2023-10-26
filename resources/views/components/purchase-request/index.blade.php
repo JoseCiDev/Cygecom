@@ -120,8 +120,8 @@
                                                     <button data-route="purchaseRequests"
                                                         data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                                                         data-id="{{ $purchaseRequest->id }}" rel="tooltip"
-                                                        title="Excluir" class="btn" data-toggle="modal"
-                                                        data-target="#modal"
+                                                        title="Excluir" class="btn" data-bs-toggle="modal"
+                                                        data-bs-target="#modal-delete"
                                                         data-cy="btn-delete-request-{{ $index }}">
                                                         <i class="fa fa-times"></i>
                                                     </button>

@@ -91,7 +91,7 @@
             <x-modals.delete />
             <button data-cy="btn-delete-request" data-route="purchaseRequests"
                 data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
+                data-id="{{ $purchaseRequest->id }}" data-bs-toggle="modal" data-bs-target="#modal" rel="tooltip"
                 title="Excluir" class="btn btn-primary btn-danger pull-right">
                 Excluir solicitação
             </button>
