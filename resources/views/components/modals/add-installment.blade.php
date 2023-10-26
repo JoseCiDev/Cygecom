@@ -1,9 +1,9 @@
-<div class="modal fade" id="modal-add-installment" tabindex="-1" role="dialog" aria-labelledby="modal-label"
-    aria-hidden="true">
+<div class="modal fade" id="modal-add-installment" tabindex="-1" aria-labelledby="modal-add-installment-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="modal-label">Adicionar Parcela<strong class="name"></strong></h4>
+                <h1 class="modal-title fs-5" id="modal-add-installment-label">Adicionar Parcela<strong class="name"></strong></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="form-modal-add-installment" data-cy="form-modal-add-installment" class="form-validate">
                 <div class="modal-body">
@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal" data-cy="btn-cancel-installment">
+                    <button type="button" class="btn btn-secondary btn-small" data-bs-dismiss="modal" data-cy="btn-cancel-installment">
                         Cancelar
                     </button>
                     <button type="submit" class="btn btn-primary btn-small btn-save-installment" data-cy="btn-submit-installment">

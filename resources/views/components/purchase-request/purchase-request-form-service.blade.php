@@ -716,7 +716,8 @@
 
             // modal edit installment
             function openModalForEdit(rowData) {
-                $('#modal-edit-service-installment').modal('show');
+                const modalEditServiceInstallment = bootstrap.Modal.getOrCreateInstance('#modal-edit-service-installment');
+                modalEditServiceInstallment.show();
 
                 const expireDate = $('#edit-expire-date');
                 const status = $('#edit-status');
@@ -766,7 +767,8 @@
 
                     $('#status').val('').trigger('change');
 
-                    $('#modal-edit-service-installment').modal('hide');
+                    const modalEditServiceInstallment = bootstrap.Modal.getOrCreateInstance('#modal-edit-service-installment');
+                    modalEditServiceInstallment.hide();
                 });
             }
 

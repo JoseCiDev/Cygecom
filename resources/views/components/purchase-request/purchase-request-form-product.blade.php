@@ -493,7 +493,7 @@
 
     <x-modals.supplier-register />
 
-    <x-modal-edit-product-installment :statusValues="$statusValues" />
+    <x-modals.edit-product-installment :statusValues="$statusValues" />
 
 </div>
 
@@ -945,7 +945,8 @@
 
             // modal edit installment
             function openModalForEdit(rowData) {
-                $('#modal-edit-product-installment').modal('show');
+                const modalEditProductInstallment = bootstrap.Modal.getOrCreateInstance('#modal-edit-product-installment');
+                modalEditProductInstallment.show();
 
                 const expireDate = $('#edit-expire-date');
                 const $editValue = $('#edit-value');
@@ -995,7 +996,8 @@
 
                     $('#status').val('').trigger('change');
 
-                    $('#modal-edit-product-installment').modal('hide');
+                    const modalEditProductInstallment = bootstrap.Modal.getOrCreateInstance('#modal-edit-product-installment');
+                    modalEditProductInstallment.hide();
                 });
             }
 

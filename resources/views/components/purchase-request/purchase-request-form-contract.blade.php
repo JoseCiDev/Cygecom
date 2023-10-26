@@ -603,9 +603,9 @@
         </div>
     </form>
 
-    <x-modal-add-installment />
+    <x-modals.add-installment />
 
-    <x-modal-edit-installment :statusValues="$statusValues" />
+    <x-ModalEditInstallment :statusValues="$statusValues" />
 
     <x-modals.supplier-register />
 
@@ -1086,7 +1086,8 @@
             }
 
             $('.btn-add-installment').on('click', function() {
-                $('#modal-add-installment').modal('show');
+                const modalAddInstallment = bootstrap.Modal.getOrCreateInstance('#modal-add-installment');
+                modalAddInstallment.show();
             });
 
             // form modal add installment
@@ -1127,7 +1128,8 @@
 
                 $('#status').val('').trigger('change');
 
-                $('#modal-add-installment').modal('hide');
+                const modalAddInstallment = bootstrap.Modal.getInstance('#modal-add-installment');
+                modalAddInstallment.hide();
             });
 
             $('#installments-table-striped tbody').on('click', 'tr', function(event) {
@@ -1153,7 +1155,8 @@
 
             // modal edit installment
             function openModalForEdit(rowData) {
-                $('#modal-edit-installment').modal('show');
+                const modalEditInstallment = bootstrap.Modal.getOrCreateInstance('#modal-edit-installment');
+                modalEditInstallment.show();
 
                 const expireDate = $('#edit-expire-date');
                 const $editValue = $('#edit-value');
@@ -1198,7 +1201,8 @@
                     $(this).find('input, select').val('');
                     $(this).find('textarea').val('');
 
-                    $('#modal-edit-installment').modal('hide');
+                    const modalEditInstallment = bootstrap.Modal.getInstance('#modal-edit-installment');
+                    modalEditInstallment.hide();
                 });
             }
 
@@ -1249,7 +1253,6 @@
             if (!hasSentRequest || $paymentTerm.filter(':selected').val() === "anticipated") {
                 $paymentTerm.filter(':selected').trigger('change.select2');
             }
-
 
             const selectedPaymentMethod = @json($selectedPaymentMethod);
             const paymentMethodsIsComex = @json($paymentMethods);

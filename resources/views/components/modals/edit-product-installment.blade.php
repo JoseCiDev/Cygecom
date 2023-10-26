@@ -1,18 +1,18 @@
-<div class="modal fade" id="modal-edit-installment" tabindex="-1" role="dialog" aria-labelledby="modal-label"
-    aria-hidden="true">
+<div class="modal fade" id="modal-edit-product-installment" tabindex="-1" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="modal-label">Editar Parcela<strong class="name"></strong></h4>
+                <h1 class="modal-title fs-5" id="modal-label">Editar Parcela<strong class="name"></strong></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="form-modal-edit-installment" data-cy="form-modal-edit-installment" class="form-validate">
+            <form id="form-modal-edit-product-installment" class="form-validate">
                 <div class="modal-body">
                     <div class="row">
                         {{-- VENCIMENTO --}}
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="edit-expire-date" class="control-label">Vencimento</label>
-                                <input type="date" name="expire_date" id="edit-expire-date" data-cy="edit-expire-date"
+                                <input type="date" name="expire_date" id="edit-expire-date"
                                     class="form-control edit-expire-date">
                             </div>
                         </div>
@@ -22,7 +22,8 @@
                             </label>
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
-                                <input type="text" placeholder="0.00" class="form-control" id="edit-value" data-cy="edit-value">
+                                <input type="text" placeholder="0.00" class="form-control"
+                                    id="edit-value">
                                 <input type="hidden" name="value" id="edit-value-hidden">
                             </div>
                         </div>
@@ -30,7 +31,7 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="edit-status" class="control-label">Status</label>
-                                <select name="status" id="edit-status" data-cy="edit-status" class='select2-me'
+                                <select name="status" id="edit-status" class='select2-me'
                                     style="width:100%; padding-top:2px;" data-placeholder="Pagamento do serviço">
                                     <option value=""></option>
                                     @foreach ($statusValues as $status)
@@ -45,17 +46,17 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="edit-observation" class="control-label">Observação</label>
-                                <textarea name="observation" id="edit-observation" data-cy="edit-observation" rows="3"
+                                <textarea name="observation" id="edit-observation" rows="3"
                                     placeholder="Ex: Pago com atraso de 3 dias devido a xpto" class="form-control text-area no-resize"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal" data-cy="btn-edit-installment-cancel">
+                    <button type="button" class="btn btn-secondary btn-small" data-bs-dismiss="modal">
                         Cancelar
                     </button>
-                    <button type="submit" class="btn btn-primary btn-small btn-edit-installment" data-cy="btn-edit-installment-submit">
+                    <button type="submit" class="btn btn-primary btn-small btn-edit-installment">
                         Salvar
                     </button>
                 </div>

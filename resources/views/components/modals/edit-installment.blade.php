@@ -1,11 +1,11 @@
-<div class="modal fade" id="modal-edit-service-installment" tabindex="-1" role="dialog" aria-labelledby="modal-label"
-    aria-hidden="true">
+<div class="modal fade" id="modal-edit-installment" tabindex="-1" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="modal-label">Editar Parcela<strong class="name"></strong></h4>
+                <h1 class="modal-title fs-5" id="modal-label">Editar Parcela<strong class="name"></strong></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="form-modal-edit-service-installment" data-cy="form-modal-edit-service-installment" class="form-validate">
+            <form id="form-modal-edit-installment" data-cy="form-modal-edit-installment" class="form-validate">
                 <div class="modal-body">
                     <div class="row">
                         {{-- VENCIMENTO --}}
@@ -23,7 +23,7 @@
                             <div class="input-group">
                                 <span class="input-group-addon">R$</span>
                                 <input type="text" placeholder="0.00" class="form-control" id="edit-value" data-cy="edit-value">
-                                <input type="hidden" name="value" class="no-validation" id="edit-value-hidden" data-cy="edit-value-hidden">
+                                <input type="hidden" name="value" id="edit-value-hidden">
                             </div>
                         </div>
                         {{-- STATUS --}}
@@ -52,10 +52,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal" data-cy="btn-edit-observation-cancel">
+                    <button type="button" class="btn btn-secondary btn-small" data-bs-dismiss="modal" data-cy="btn-edit-installment-cancel">
                         Cancelar
                     </button>
-                    <button type="submit" class="btn btn-primary btn-small btn-edit-installment" data-cy="btn-edit-observation-submit">
+                    <button type="submit" class="btn btn-primary btn-small btn-edit-installment" data-cy="btn-edit-installment-submit">
                         Salvar
                     </button>
                 </div>
