@@ -149,7 +149,7 @@
     <span class="loader-box"></span>
 
     <table id="reportsTable" data-cy="reportsTable" class="table table-hover table-nomargin table-bordered" data-nosort="0" data-checkall="all"
-        style="margin-bottom: 0">
+        style="margin-bottom: 0; width: 100%">
         <thead>
             <tr>
                 <th >Nº</th>
@@ -412,11 +412,9 @@
                                 downloadCsv(csv);
                             },
                             error: (response, textStatus, errorThrown) => {
-                                bootbox.alert({
-                                    title: "Houve uma falha na busca dos registros!",
-                                    message: "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.",
-                                    className: 'bootbox-custom-warning'
-                                });
+                                const title = "Houve uma falha na busca dos registros!";
+                                const message = "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
+                                $.fn.showModalAlert(title, message);
                             },
                         });
                     })
@@ -444,11 +442,9 @@
                     type: 'GET',
                     dataType: 'json',
                     error: (response, textStatus, errorThrown) => {
-                        bootbox.alert({
-                            title: "Houve uma falha na busca dos registros!",
-                            message: "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.",
-                            className: 'bootbox-custom-warning'
-                        });
+                        const title = "Houve uma falha na busca dos registros!";
+                        const message = "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
+                        $.fn.showModalAlert(title, message);
                     },
                     beforeSend: () => $('#reportsTable tbody').css('opacity', '0.2'),
                     complete: () => $('#reportsTable tbody').css('opacity', '1')

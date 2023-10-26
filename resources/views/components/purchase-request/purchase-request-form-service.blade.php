@@ -88,7 +88,7 @@
     </div>
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right" style="padding: 0">
-            <x-modalDelete />
+            <x-modals.delete />
             <button data-cy="btn-delete-request" data-route="purchaseRequests"
                 data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
@@ -419,7 +419,7 @@
                         <div class="box">
                             <div class="box-content nopadding regular-text">
                                 <table class="table table-hover table-nomargin table-striped"
-                                    id="installments-table-striped">
+                                    id="installments-table-striped" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th class="col-sm-2">
@@ -554,7 +554,7 @@
 
     <x-ModalEditServiceInstallment :statusValues="$statusValues" />
 
-    <x-ModalSupplierRegister />
+    <x-modals.supplier-register />
 
 </div>
 

@@ -9,9 +9,10 @@
     <div class="modal-dialog modal-lg custom-modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="modal-label">
+                <h4 class="modal-title" id="modal-label">
                     <strong class="modal-name"></strong>
-                </h3>
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <h4>Aqui consta informações básicas da solicitação:</h4>
@@ -109,9 +110,6 @@
                     </div>
 
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" data-cy="btn-close-modal">Fechar</button>
             </div>
         </div>
     </div>

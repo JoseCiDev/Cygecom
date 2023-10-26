@@ -12,13 +12,6 @@
     @vite([
         'resources/css/app.css',
         'resources/js/app.js',
-
-        'node_modules/bootstrap/dist/js/bootstrap.min.js', // Bootstrap v3.2.0 - incompatível com ES6
-        'node_modules/select2/select2.js', // select2 v3.5.1 - incompatível com ES6
-
-        'public/js/plugins/validation/jquery.validate.min.js', // v1.13.1
-        'public/js/plugins/validation/additional-methods.min.js', // v1.13.1,
-
         'resources/css/login.css'
     ])
 </head>
@@ -26,7 +19,7 @@
 <body class='login'>
 	<div class="wrapper">
 		<img class="login-logo" src="{{asset('img/gecom/logo-login.svg')}}" alt="login-logo-essentia-group">
-		<x-alert/>
+		<x-modals.alert/>
 		<form method="POST" action="{{ route('login') }}" id="login-form">
 			@csrf
 			<div class="form-group">

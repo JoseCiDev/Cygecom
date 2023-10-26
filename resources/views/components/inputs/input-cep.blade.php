@@ -24,7 +24,7 @@
 
                     $.getJSON(apiUrl, function(data) {
                         if (data.erro) {
-                            bootbox.alert("Endereço não encontrado para esse CEP.");
+                           $.fn.showModalAlert("Ops!", "Endereço não encontrado para esse CEP.")
                             return;
                         }
 

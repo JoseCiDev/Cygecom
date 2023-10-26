@@ -10,7 +10,7 @@
 @endphp
 <x-app>
 
-    <x-modalDelete />
+    <x-modals.delete />
 
     <div class="row">
         <div class="col-sm-12">
@@ -37,7 +37,7 @@
 
 
                     <table id="supplierTable" class="table table-hover table-nomargin table-bordered" data-nosort="0"
-                        data-checkall="all">
+                        data-checkall="all" style="width:100%">
                         <thead>
                             <tr>
                                 <th>CNPJ</th>

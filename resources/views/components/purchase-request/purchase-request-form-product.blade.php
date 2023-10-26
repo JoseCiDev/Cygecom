@@ -90,7 +90,7 @@
     </div>
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right" style="padding: 0">
-            <x-modalDelete />
+            <x-modals.delete />
             <button data-cy="btn-delete-request" data-route="purchaseRequests"
                 data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
@@ -491,7 +491,7 @@
         </div>
     </form>
 
-    <x-ModalSupplierRegister />
+    <x-modals.supplier-register />
 
     <x-modal-edit-product-installment :statusValues="$statusValues" />
 
@@ -1190,46 +1190,30 @@
 
                 const $supplierBlock = $(this).closest('.supplier-block');
 
-                bootbox.confirm({
-                    title: 'Atenção!',
-                    message: "<p>Ao remover este fornecedor, todos os produtos associados serão excluídos. Esta ação não poderá ser desfeita.</p>",
-                    buttons: {
-                        confirm: {
-                            label: 'Excluir',
-                            className: 'btn btn-secondary btn-danger'
-                        },
-                        cancel: {
-                            label: 'Cancelar',
-                            className: 'btn btn-secondary'
-                        }
-                    },
-                    callback: function(result) {
-                        if (!result) {
-                            return;
-                        }
+                const title = "Atenção!"
+                const message = "<p>Ao remover este fornecedor, todos os produtos associados serão excluídos. Esta ação não poderá ser desfeita.</p>";
+                $.fn.showModalAlert(title, message, () => {
+                    $supplierBlock.remove();
 
-                        $supplierBlock.remove();
-
-                        // atualiza os índices dos fornecedores restantes
-                        const $supplierBlocks = $('.supplier-block');
-                        $supplierBlocks.each(function(index) {
-                            $(this).find(
-                                'select[name^="purchase_request_suppliers"], input[name^="purchase_request_suppliers"]'
-                            ).each(function() {
-                                const oldName = $(this).attr('name');
-                                const regexNewName =
-                                    /purchase_request_suppliers\[(\d+)\](.*)/;
-                                const newName = oldName.replace(
-                                    regexNewName,
-                                    `purchase_request_suppliers[${index}]$2`
-                                );
-                                $(this).attr('name', newName);
-                            });
+                    // atualiza os índices dos fornecedores restantes
+                    const $supplierBlocks = $('.supplier-block');
+                    $supplierBlocks.each(function(index) {
+                        $(this).find(
+                            'select[name^="purchase_request_suppliers"], input[name^="purchase_request_suppliers"]'
+                        ).each(function() {
+                            const oldName = $(this).attr('name');
+                            const regexNewName =
+                                /purchase_request_suppliers\[(\d+)\](.*)/;
+                            const newName = oldName.replace(
+                                regexNewName,
+                                `purchase_request_suppliers[${index}]$2`
+                            );
+                            $(this).attr('name', newName);
                         });
+                    });
 
-                        checkSuppliersContainerLength();
-                        checkProductRows();
-                    }
+                    checkSuppliersContainerLength();
+                    checkProductRows();
                 });
             });
 
@@ -1281,24 +1265,11 @@
             $btnSubmitRequest.on('click', function(event) {
                 event.preventDefault();
 
-                bootbox.confirm({
-                    message: "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?",
-                    buttons: {
-                        confirm: {
-                            label: 'Sim, enviar solicitação',
-                            className: 'btn-success'
-                        },
-                        cancel: {
-                            label: 'Cancelar',
-                            className: 'btn-danger'
-                        }
-                    },
-                    callback: function(result) {
-                        if (result) {
-                            $sendAction.val('submit-request');
-                            $('#request-form').trigger('submit');
-                        }
-                    }
+                const title = "Atenção!"
+                const message = "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?";
+                $.fn.showModalAlert(title, message, () => {
+                    $sendAction.val('submit-request');
+                    $('#request-form').trigger('submit');
                 });
             });
 

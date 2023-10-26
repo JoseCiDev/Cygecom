@@ -128,34 +128,20 @@
                 const amountValue = "R$ " + $('#amount').val();
                 const responsibleValue = $('#supplies_user_id').find(':selected').text();
 
-                bootbox.confirm({
-                    title: 'Atenção! Deseja realmente alterar os dados?',
-                    className: 'regular-text',
-                    message: "Por favor, confirme os dados que serão enviados: " +
-                        "<ul>" +
+                const title = 'Atenção! Deseja realmente alterar os dados?';
+                const message = "Por favor, confirme os dados que serão enviados: " +
+                    "<ul>" +
                         `<li class="regular-text" >Status: ${statusValue}</li>` +
                         (reasonUpdateStatus ? `<li class="regular-text">Motivo mudança de status: ${reasonUpdateStatus}</li>` : '') +
                         `<li class="regular-text">Valor total: ${amountValue}</li>` +
                         (responsibleValue.length ? `<li>Responsável: ${responsibleValue}</li>` :
                             '') +
-                        "</ul>",
-                    buttons: {
-                        confirm: {
-                            label: 'Sim, atualizar solicitação',
-                            className: 'btn btn-success'
-                        },
-                        cancel: {
-                            label: 'Cancelar',
-                            className: 'btn btn-small'
-                        }
-                    },
-                    callback: function(result) {
-                        if (result) {
-                            $form.off('submit');
-                            $form.trigger('submit');
-                        }
-                    }
-                });
+                    "</ul>";
+
+                $.fn.showModalAlert(title, message, () => {
+                    $form.off('submit');
+                    $form.trigger('submit');
+                })
             });
         });
     </script>

@@ -15,7 +15,6 @@
 
         @if (session('success'))
             <div class="alert alert-success alert-dismissable">
-                <button data-cy="btn-close-modal" type="button" class="close" data-dismiss="alert">&times;</button>
                 {{ session('success') }}
             </div>
         @endif

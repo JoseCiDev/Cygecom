@@ -88,7 +88,7 @@
 
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right" style="padding: 0">
-            <x-modalDelete />
+            <x-modals.delete />
             <button data-cy="btn-delete-request" data-route="purchaseRequests" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
                 title="Excluir" class="btn btn-primary btn-danger pull-right">
@@ -475,7 +475,7 @@
                             <div class="box-content nopadding regular-text">
 
                                 <table class="table table-hover table-nomargin table-striped"
-                                    id="installments-table-striped">
+                                    id="installments-table-striped" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th class="col-sm-2">
@@ -607,7 +607,7 @@
 
     <x-modal-edit-installment :statusValues="$statusValues" />
 
-    <x-ModalSupplierRegister />
+    <x-modals.supplier-register />
 
 </div>
 
@@ -1312,24 +1312,11 @@
             $btnSubmitRequest.on('click', function(event) {
                 event.preventDefault();
 
-                bootbox.confirm({
-                    message: "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?",
-                    buttons: {
-                        confirm: {
-                            label: 'Sim, enviar solicitação',
-                            className: 'btn-success'
-                        },
-                        cancel: {
-                            label: 'Cancelar',
-                            className: 'btn-danger'
-                        }
-                    },
-                    callback: function(result) {
-                        if (result) {
-                            $sendAction.val('submit-request');
-                            $('#request-form').trigger('submit');
-                        }
-                    }
+                const title = "Atenção!"
+                const message = "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?";
+                $.fn.showModalAlert(title, message, () => {
+                    $sendAction.val('submit-request');
+                    $('#request-form').trigger('submit');
                 });
             });
 
