@@ -155,6 +155,7 @@
                 <th >Nº</th>
                 <th >Tipo</th>
                 <th >Solicitado em</th>
+                <th>Nome Serviço</th>
                 <th >Solicitante</th>
                 <th >Solicitante sistema</th>
                 <th >Status</th>
@@ -338,7 +339,14 @@
                                         .find((item) => item.created_at)
                                         .created_at
 
-                                    const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss')
+                                const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss')
+
+                                const serviceNameColumnMapping = {
+                                    product: () => null,
+                                    service: () => [item.service?.name],
+                                    contract: () => [item.contract?.name],
+                                };
+                                const serviceName = serviceNameColumnMapping[item.type]()?.filter((el) => el) || '---';
 
                                     const requistingUser = item.user.person.name
                                     const requester = item.requester?.name || '---'
@@ -365,22 +373,23 @@
                                     const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'});
                                     const formattedAmount = amount ? formatter.format(amount) : '---';
 
-                                    let rowData = [
-                                        [
-                                            id,
-                                            type,
-                                            firstPendingStatus,
-                                            requistingUser,
-                                            requester,
-                                            status,
-                                            suppliesUserName,
-                                            costCenters,
-                                            suppliers,
-                                            paymentMethodLabel,
-                                            paymentTermsLabel,
-                                            formattedAmount
-                                        ]
+                                let rowData = [
+                                    [
+                                        id,
+                                        type,
+                                        firstPendingStatus,
+                                        serviceName,
+                                        requistingUser,
+                                        requester,
+                                        status,
+                                        suppliesUserName,
+                                        costCenters,
+                                        suppliers,
+                                        paymentMethodLabel,
+                                        paymentTermsLabel,
+                                        formattedAmount
                                     ]
+                                ]
 
                                     if($productDetail && item.type === enumProductValue) {
                                         rowData.push(['' ,'Nome do produto', 'Categoria', 'Quantidade', 'Cor', 'Model', 'Tamanho']);
@@ -498,18 +507,37 @@
                                 .find((item) => item.created_at)
                                 ?.created_at
 
-                            return firstPendingStatus ? moment(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
+                        return firstPendingStatus ? moment(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
+                    }
+                },
+                {
+                    data: 'type',
+                    orderable: false,
+                    render: (type, _, row) => {
+                        const serviceNameColumnMapping = {
+                            product: () => null,
+                            service: () => [row.service?.name],
+                            contract: () => [row.contract?.name],
+                        };
+
+                        const serviceName = serviceNameColumnMapping[type]()?.filter((el) => el);
+
+                        if (!serviceName) {
+                            return '---';
                         }
-                    },
-                    { data: 'user.person.name' },
-                    { data: 'requester', render: (requester, _, row) => requester ? requester.name : '---' },
-                    { data: 'status', render: (status) => enumRequests['status'][status] },
-                    { data: 'supplies_user.person.name', render: (suppliesUserName) => (suppliesUserName ?? '---') },
-                    {
-                        data: 'cost_center_apportionment',
-                        orderable: false,
-                        render: (costCenter) => {
-                            const $div = $(document.createElement('div')).addClass('tag-category');
+
+                        return serviceName;
+                    }
+                },
+                { data: 'user.person.name' },
+                { data: 'requester', render: (requester, _, row) => requester ? requester.name : '---' },
+                { data: 'status', render: (status) => enumRequests['status'][status] },
+                { data: 'supplies_user.person.name', render: (suppliesUserName) => (suppliesUserName ?? '---') },
+                {
+                    data: 'cost_center_apportionment',
+                    orderable: false,
+                    render: (costCenter) => {
+                        const $div = $(document.createElement('div')).addClass('tag-category');
 
                             const costCenters = costCenter.map((element) => element.cost_center.name);
                             if(costCenter.length <= 0) {
