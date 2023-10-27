@@ -64,6 +64,9 @@
 <script type="module">
     $(() => {
         const table = $('#supplierTable').DataTable({
+            scrollY: '400px',
+            scrollX: true,
+            autoWidth: true,
             serverSide: true,
             paging: true,
             lengthMenu: [10, 25, 50, 100],
