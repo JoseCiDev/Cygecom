@@ -14,7 +14,14 @@ class UserService extends ServiceProvider implements UserServiceInterface
 {
     public function getUserById(int $id): User
     {
-        return User::with(['person', 'person.phone', 'profile', 'approver', 'person.costCenter', 'deletedByUser', 'updatedByUser'])->where('id', $id)->first();
+        return User::with([
+            'person',
+            'person.phone',
+            'profile', 'approver',
+            'person.costCenter',
+            'deletedByUser',
+            'updatedByUser'
+        ])->whereNull('deleted_at')->where('id', $id)->first();
     }
 
     /**
@@ -129,16 +136,22 @@ class UserService extends ServiceProvider implements UserServiceInterface
     public function deleteUser(int $id)
     {
         $user = User::with('person')->find($id);
+        $person = $user->person;
+        $currentUserId = auth()->user()->id;
 
         if ($user) {
-            $user->delete();
-            $user->deleted_by = auth()->user()->id;
+            $user->update([
+                'deleted_at' => now(),
+                'deleted_by' => $currentUserId
+            ]);
             $user->save();
 
-            if ($user->person) {
-                $user->person->delete();
-                $user->person->deleted_by = auth()->user()->id;
-                $user->person->save();
+            if ($person) {
+                $person->update([
+                    'deleted_at' => now(),
+                    'deleted_by' => $currentUserId
+                ]);
+                $person->save();
             }
         }
     }
@@ -205,7 +218,9 @@ class UserService extends ServiceProvider implements UserServiceInterface
             'name' => $request['name'],
             'phone_id' => $request['phone_id'],
             'birthdate' => $request['birthdate'] ?? null,
-            'cost_center_id' => $request['cost_center_id']
+            'cost_center_id' => $request['cost_center_id'],
+            'deleted_at' => null,
+            'deleted_by' => null
         ]);
     }
 

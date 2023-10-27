@@ -51,7 +51,7 @@
 
                             if ($logChanges->has('supplies_user_id')) {
                                 $userId = $logChanges->get('supplies_user_id');
-                                $userEmail = User::withTrashed()->find($userId)->email;
+                                $userEmail = User::find($userId)->email;
                                 $changes = "$userEmail [suprimentos] atribuído como responsável";
                             }
 

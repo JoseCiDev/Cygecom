@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\User;
 
-use Illuminate\Validation\Rule;
+use App\Rules\{UniqueCpfCnpj, UniqueEmail};
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUserRequest extends FormRequest
@@ -27,8 +27,7 @@ class StoreUserRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique(table: 'people')
-                    ->withoutTrashed()
+                new UniqueCpfCnpj,
             ],
             'name' => [
                 'required',
@@ -40,8 +39,7 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'max:255',
                 'email',
-                Rule::unique(table: 'users')
-                    ->withoutTrashed()
+                new UniqueEmail
             ],
             'password' => [
                 'required',

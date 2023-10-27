@@ -33,7 +33,7 @@ class PurchaseRequestFormProduct extends Component
     {
         $companies         = Company::all();
         $suppliers         = Supplier::all();
-        $people = Person::all();
+        $people = Person::whereNull('deleted_at')->get();
         $productCategories = ProductCategory::whereNull('deleted_at')->get();
         $paymentMethods = PaymentMethod::cases();
         $paymentTerms = PaymentTerm::cases();
