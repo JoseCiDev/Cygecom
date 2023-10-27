@@ -110,7 +110,7 @@ $(() => {
             errorPlacement: (error, element) => {
                 const $elementParent = element.parent();
 
-                if (element.siblings('.input-group-addon').length > 0) {
+                if (element.siblings('.input-group-text').length > 0) {
                     $elementParent.after(error);
                     return;
                 }

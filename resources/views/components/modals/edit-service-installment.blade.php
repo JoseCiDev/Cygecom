@@ -21,7 +21,7 @@
                             <label for="edit-value" class="control-label">Valor
                             </label>
                             <div class="input-group">
-                                <span class="input-group-addon">R$</span>
+                                <span class="input-group-text">R$</span>
                                 <input type="text" placeholder="0.00" class="form-control" id="edit-value" data-cy="edit-value">
                                 <input type="hidden" name="value" class="no-validation" id="edit-value-hidden" data-cy="edit-value-hidden">
                             </div>

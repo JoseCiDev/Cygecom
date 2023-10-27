@@ -42,7 +42,7 @@
                 <label for="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
                     class="regular-text"> Rateio (%) </label>
                 <div class="input-group">
-                    <label class="input-group-addon">%</label>
+                    <label class="input-group-text">%</label>
                     <input type="number" placeholder="0.00" class="form-control" min="1" max="100"
                         name="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
                         id="cost_center_apportionments[{{ $index }}][apportionment_percentage]"
@@ -57,7 +57,7 @@
                 <label for="cost_center_apportionments[{{ $index }}][apportionment_currency]"
                     class="regular-text"> Rateio (R$) </label>
                 <div class="input-group">
-                    <label class="input-group-addon">R$</label>
+                    <label class="input-group-text">R$</label>
                     <input type="number" placeholder="0.00" class="form-control" min="1" max="500000"
                         id="cost_center_apportionments[{{ $index }}][apportionment_currency]"
                         name="cost_center_apportionments[{{ $index }}][apportionment_currency]"

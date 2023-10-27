@@ -334,7 +334,7 @@
                         <div class="form-group">
                             <label for="format-amount" class="regular-text">Valor total do(s) produto(s)</label>
                             <div class="input-group">
-                                <span class="input-group-addon">R$</span>
+                                <span class="input-group-text">R$</span>
                                 <input type="text" id="format-amount" name="format-amount"
                                     data-cy="format-amount" placeholder="0.00" class="form-control format-amount"
                                     value="{{ str_replace('.', ',', $purchaseRequestProductAmount) }}">
