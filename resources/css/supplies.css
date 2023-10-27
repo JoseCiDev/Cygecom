@@ -30,6 +30,7 @@
 
 .request-details-content {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     border: 1px solid rgb(221, 221, 221);
 }
@@ -127,4 +128,10 @@
 
 .supplies-dashboard a {
     text-decoration: none;
+}
+
+@media (min-width: 1400px) {
+    .request-details-content {
+        flex-direction: row;
+    }
 }
