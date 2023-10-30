@@ -74,7 +74,6 @@
             <h1 class="page-title">Editar solicitação de serviço recorrente nº {{$purchaseRequest->id}}</h1>
         @elseif ($hasSentRequest)
             <div class="alert alert-info alert-dismissable">
-                <button data-cy="btn-close-alert" type="button" class="close" data-dismiss="alert">&times;</button>
                 <h5>
                     <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
                 </h5>
@@ -455,7 +454,7 @@
                 </div>
 
                 {{-- TABLE PARCELAS --}}
-                <div class="row" style="display:flex; align-items:center; margin-bottom:5px;">
+                <div class="row mt-4" style="display:flex; align-items:center; margin-bottom:5px;">
                     <h3 class="col-sm-6">
                         <i class="fa fa-dollar"></i>
                         Parcelas deste serviço recorrente

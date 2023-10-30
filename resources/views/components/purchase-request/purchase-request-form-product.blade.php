@@ -78,7 +78,6 @@
             <h1 class="page-title">Editar solicitação de produto nº {{ $purchaseRequest->id }}</h1>
         @elseif ($hasSentRequest)
             <div class="alert alert-info alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h5>
                     <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
                 </h5>
