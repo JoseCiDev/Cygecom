@@ -60,20 +60,17 @@
             <div class="form-group">
                 <label for="market-type" class="regular-text">Tipo de mercado</label>
                 <fieldset id="market-type" data-rule-required="true">
-                    <div class="row">
-                        <input @checked($supplier?->market_type === 'Nacional') type="radio"
-                            name="market_type" id="nacional" data-cy="nacional" value="Nacional" data-skin="minimal" required>
-                        <label class="form-check-label secondary-text" for="nacional">Mercado nacional</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="supplier_indication" id="nacional" data-cy="nacional" value="Nacional" required @checked($supplier?->market_type === 'Nacional')>
+                        <label class="form-check-label" for="nacional"> Mercado nacional </label>
                     </div>
-                    <div class="row">
-                        <input @checked($supplier?->market_type === 'Externo') type="radio"
-                            name="market_type" id="externo" data-cy="externo" value="Externo" data-skin="minimal" required>
-                        <label class="form-check-label secondary-text" for="externo">Mercado externo</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="market_type" id="externo" data-cy="externo" value="Externo" required @checked($supplier?->market_type === 'Externo')>
+                        <label class="form-check-label" for="externo"> Mercado externo </label>
                     </div>
-                    <div class="row">
-                        <input @checked($supplier?->market_type === 'Prospecção') type="radio"
-                            name="market_type" id="prospec" data-cy="prospec" value="Prospecção" data-skin="minimal" required>
-                        <label class="form-check-label secondary-text" for="prospec">Prospecção</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="market_type" id="prospec" data-cy="prospec" value="Prospecção" required @checked($supplier?->market_type === 'Prospecção')>
+                        <label class="form-check-label" for="prospec"> Prospecção </label>
                     </div>
                 </fieldset>
             </div>
@@ -81,21 +78,18 @@
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="supplier-indication" class="regular-text">Indicação do fornecedor</label>
-                <fieldset id="supplier-indication" data-rule-required="true">
-                    <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'Matéria Prima') type="radio"
-                            name="supplier_indication" id="materia-prima" data-cy="materia-prima" value="Matéria Prima" data-skin="minimal" required>
-                        <label class="form-check-label secondary-text" for="materia-prima">Matéria-prima</label>
+                <fieldset id="market-type" data-rule-required="true">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="supplier_indication" id="materia-prima" data-cy="materia-prima" value="Matéria Prima" required @checked($supplier?->supplier_indication === 'Matéria Prima')>
+                        <label class="form-check-label" for="materia-prima"> Matéria-prima </label>
                     </div>
-                    <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'Serviço') type="radio"
-                            name="supplier_indication" id="servico" data-cy="servico" value="Serviço" data-skin="minimal" required>
-                        <label class="form-check-label secondary-text" for="servico">Serviço</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="supplier_indication" id="servico" data-cy="servico" value="Serviço" required @checked($supplier?->supplier_indication === 'Serviço')>
+                        <label class="form-check-label" for="servico"> Serviço </label>
                     </div>
-                    <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'Ambos') type="radio"
-                            name="supplier_indication" id="ambos" value="Ambos" data-cy="ambos" data-skin="minimal" required>
-                        <label class="form-check-label secondary-text" for="ambos">Ambos</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="supplier_indication" id="ambos" data-cy="ambos" value="Ambos" required @checked($supplier?->supplier_indication === 'Ambos')>
+                        <label class="form-check-label" for="ambos"> Ambos </label>
                     </div>
                 </fieldset>
             </div>
