@@ -75,7 +75,19 @@ $(() => {
         $label.append('<sup style="color:red">*</sup>');
     });
 
-    $(".select2-me").select2({width: "100%", placeholder: "Selecione uma ou mais opções"});
+    $(".select2-me").each((_, element) => {
+        const dropdownParent = $(element).data('dropdown-parent');
+        const $parentElement = $(dropdownParent);
+
+        const config = {
+            width: "100%",
+            placeholder: "Selecione uma ou mais opções",
+            dropdownParent: $parentElement.length ? $parentElement : null
+        }
+
+        $(element).select2(config);
+
+    });
 
     // autocomplete off
     $("form").attr('autocomplete', 'off');
