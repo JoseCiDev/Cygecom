@@ -1,5 +1,5 @@
 <div class="modal fade" id="modal-supplier-register" tabindex="-1" aria-labelledby="modal-supplier-register-label" aria-hidden="true" style="z-index: 99999">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable" style="max-width: 1100px; width: 100%">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content" style="padding: 20px">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="modal-supplier-register-label">Registrar novo fornecedor</h1>
