@@ -19,7 +19,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box-content nopadding regular-text">
-            <table class="table table-hover table-nomargin table-striped" id="table-striped"
+            <table class="table table-hover table-nomargin table-striped" id="table-striped" style="width:100%"
                 data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                 <thead>
                     <tr>
@@ -83,17 +83,19 @@
     </div>
 </div>
 
-<script>
-    $(() => {
-        const table = $('#table-striped').DataTable({
-            ordering: false,
-            paging: false,
-            info: false,
-            searching: false,
-            bLengthChange: false,
-            language: {
-                emptyTable: "Nenhuma solicitação encontrada.",
-            },
+@push('scripts')
+    <script type="module">
+        $(() => {
+            const table = $('#table-striped').DataTable({
+                ordering: false,
+                paging: false,
+                info: false,
+                searching: false,
+                bLengthChange: false,
+                language: {
+                    emptyTable: "Nenhuma solicitação encontrada.",
+                },
+            });
         });
-    });
-</script>
+    </script>
+@endpush

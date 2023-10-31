@@ -164,7 +164,7 @@
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <h4>
-                                        <i class="fa fa-money"></i> <strong>Centro de custo e rateio</strong>
+                                        <i class="fa-solid fa-money-bill"></i> <strong>Centro de custo e rateio</strong>
                                     </h4>
                                     <hr>
                                     <p>
@@ -492,8 +492,8 @@
 
     </div>
 
-    <x-slot:scripts>
-        <script src="{{ asset('js/supplies/details-purchase-request-amount.js') }}"></script>
-    </x-slot:scripts>
+    @push('scripts')
+        <script type="module" src="{{ asset('js/supplies/details-purchase-request-amount.js') }}"></script>
+   @endpush
 
 </x-app>

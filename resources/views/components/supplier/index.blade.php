@@ -10,7 +10,7 @@
 @endphp
 <x-app>
 
-    <x-modalDelete />
+    <x-modals.delete />
 
     <div class="row">
         <div class="col-sm-12">
@@ -37,7 +37,7 @@
 
 
                     <table id="supplierTable" class="table table-hover table-nomargin table-bordered" data-nosort="0"
-                        data-checkall="all">
+                        data-checkall="all" style="width:100%">
                         <thead>
                             <tr>
                                 <th>CNPJ</th>
@@ -61,9 +61,12 @@
 
 </x-app>
 
-<script>
+<script type="module">
     $(() => {
         const table = $('#supplierTable').DataTable({
+            scrollY: '400px',
+            scrollX: true,
+            autoWidth: true,
             serverSide: true,
             paging: true,
             lengthMenu: [10, 25, 50, 100],
@@ -126,7 +129,7 @@
                         data.id + '"><i class="fa fa-edit"></i></a>' +
                         '<button data-route="supplier" data-name="' + data.corporate_name +
                         '" data-id="' + data.id +
-                        '" rel="tooltip" title="Excluir" class="btn" data-toggle="modal" data-target="#modal" data-cy="btn-modal-delete-supplier"><i class="fa fa-times"></i></button>'
+                        '" rel="tooltip" title="Excluir" class="btn" data-bs-toggle="modal" data-bs-target="#modal-delete" data-cy="btn-modal-delete-supplier"><i class="fa fa-times"></i></button>'
                     )
                 }
             ],

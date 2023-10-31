@@ -1,35 +1,18 @@
 $(() => {
     const $btnOpenDetail = $('.openDetail');
-
-    $(document).on('click', $btnOpenDetail.selector, function(event) {
+    $btnOpenDetail.on('click', (event) => {
         event.preventDefault();
-        const url = $(this).attr('href');
-        const isToShowString = $(this).data('is-to-show');
+        const $currentElement = $(event.target).closest('.openDetail')
+        const url = $currentElement.attr('href');
+        const isToShowString = $currentElement.data('is-to-show') || false;
         const isToShow = JSON.parse(isToShowString);
 
         if(!isToShow) {
             return window.location.href = url;
         }
 
-        bootbox.confirm({
-            title: "Confirmar atribuição de solicitação",
-            message: `Ainda não existe responsável por essa solicitação.
-                    <br>
-                    Deseja se tornar o responsável?`,
-            buttons: {
-                confirm: {
-                    label: 'Concordar e ir',
-                    className: 'btn-success'
-                },
-                cancel: {
-                    label: 'Não',
-                }
-            },
-            callback: function(result) {
-                if (result) {
-                    window.location.href = url;
-                }
-            }
-        });
-    })
+        const modalTitle = "Confirmar atribuição de solicitação";
+        const message = "Ainda não existe responsável por essa solicitação.<br>Deseja se tornar o responsável?";
+        $.fn.showModalAlert(modalTitle, message, () => window.location.href = url);
+    });
 });

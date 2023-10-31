@@ -10,11 +10,10 @@ class ModalEditInstallment extends Component
 {
     public function __construct(public $statusValues)
     {
-
     }
 
     public function render(): View|Closure|string
     {
-        return view('components.modal-edit-installment');
+        return view('components.modals.edit-installment');
     }
 }
