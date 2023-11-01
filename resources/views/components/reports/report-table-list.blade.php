@@ -152,10 +152,10 @@
         style="margin-bottom: 0; width: 100%">
         <thead>
             <tr>
-                <th >Nº</th>
+                <th class="noColvis">Nº</th>
                 <th >Tipo</th>
                 <th >Solicitado em</th>
-                <th>Nome Serviço</th>
+                <th >Nome Serviço</th>
                 <th >Solicitante</th>
                 <th >Solicitante sistema</th>
                 <th >Status</th>
@@ -311,12 +311,15 @@
             });
 
             $reportsTable.DataTable({
+                dom: 'Blfrtip',
                 initComplete: function() {
                     $searchFieldInfoSpan.insertAfter($("#reportsTable_filter input[type='search']"));
 
                     $("#reportsTable_filter input[type='search']").on('input', setSearchFieldConfig)
 
                     $('#reports-filter-btn').on('click', filterDataTable);
+
+                    $.fn.setStorageDtColumnConfig();
 
                     $generateCSVButton.on('click', () => {
                         const $productDetail = $('.product-detail:checked').val();
@@ -612,7 +615,16 @@
                         }
                     },
                 ],
+                buttons: [
+                    {
+                        extend: 'colvis',
+                        columns: ':not(.noColvis)',
+                        text: 'Mostrar / Ocultar colunas',
+                        columnText: (dt, idx, title ) => title,
+                    }
+                ],
             })
+
         });
     </script>
 @endpush

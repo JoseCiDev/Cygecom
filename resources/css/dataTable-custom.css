@@ -306,3 +306,63 @@
         float: right;
     }
 }
+
+/* Botão mostra/ocultar colunas */
+button.dt-button.buttons-collection.buttons-colvis {
+    margin-top: 15px;
+    width: 230px;
+    position: relative;
+    background-color: #fff;
+}
+
+button.dt-button.buttons-collection.buttons-colvis:hover {
+    background-color: #ccc;
+}
+
+div.dt-button-collection {
+    position: absolute;
+    margin-top: 15px;
+    background-color: #fff;
+    border: 1px solid var(--grey-primary-color);
+    border-radius: 4px;
+    padding: 5px 15px;
+    width: 230px;
+    z-index: 1;
+}
+
+button.dt-button.buttons-collection.buttons-colvis,
+button.dt-button.buttons-columnVisibility.dt-button-active {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    border-radius: 4px;
+    line-height: 24px;
+    color: var(--black-color);
+    border: 1px solid var(--grey-primary-color);
+}
+
+button.dt-button.buttons-columnVisibility.dt-button-active,
+button.dt-button.buttons-columnVisibility {
+    width: 200px;
+    text-align: left;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    line-height: 24px;
+}
+
+button.dt-button.buttons-columnVisibility:not(.dt-button-active) {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+button.dt-button.buttons-columnVisibility.dt-button-active::after {
+    content: "✓";
+}
+
+.dt-button-collection div[role='menu'] {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
