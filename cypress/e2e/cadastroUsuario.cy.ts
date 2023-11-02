@@ -1,17 +1,82 @@
 /// <reference types="cypress" />
 import * as faker from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
-import { ELEMENTS as el } from '../../../../elements';
-import { Perfil , OpcaoAutorizacao } from '../../../support/cypress.d';
+import { elements as el } from '../elements';
+import { dadosParametros } from '../dadosParametros';
 
+
+export const {
+    perfilUsuario,
+    inicioMenu,
+    logoGecom,
+    telaInicio,
+
+} = el.Inicio;
+
+export const {
+    logout,
+    opcoesMenu,
+    menuReduzido,
+    breadcumbHome,
+    breadcumbUsuario,
+    mostraQuantidadeRegistros,
+    BuscaUsuarioCadastrado,
+    proximaPagina,
+    ,
+
+} = el.Compartilhado;
+
+export const {
+    cadastroMenu,
+    cadastroMenuReduzido,
+    cadastroUsuarioSubMenu,
+    cadastroFornecedorSubMenu,
+    criaNovoUsuario,
+    nomeUsuario,
+    dataNascimentoUsuario,
+    cpfCnpjUsuario,
+    telefoneUsuario,
+    emailUsuario,
+    senhaUsuario,
+    confirmarSenhaUsuario,
+    setorUsuario,
+    opcaoSetorUsuario,
+    opcaoSelectSetorUsuario,
+    opcaoSelecionadaSetorUsuario,
+    usuarioAprovador,
+    opcaoUsuarioAprovador,
+    limiteAprovacaoUsuario,
+    centroCustoPermitidoUsuario,
+    selecionarTodosCentroCustoPermitidoUsuario,
+    limparCentroCustoPermitidoUsuario,
+    salvarCadastroUsuario,
+    cancelarCadastroUsuario,
+} = el.Cadastro;
+
+export const {
+    solicitacaoMenu,
+    novaSolicitacaoSubMenu,
+    minhaSolicitacaoSubMenu,
+    solicitacaoGeralSubMenu,
+
+} = el.Solicitacao;
+
+export const {
+    suprimentoMenu,
+    dashboardSubMenu,
+    produtoSubMenu,
+    servicoSubMenu,
+    contratoSubMenu,
+
+} = el.Suprimento;
 
 
 const acessarCadastroUsuario = () => {
-    cy.acessarMenuCadastro(el.cadastroMenu);
+    cy.acessarMenuCadastro(cadastroMenu);
 
-    cy.acessarSubmenuCadastroUsuario(el.cadastroUsuarioSubMenu);
+    cy.acessarSubmenuCadastroUsuario(cadastroUsuarioSubMenu);
 
-    cy.acessarCadastroUsuario(el.criaNovoUsuario);
+    cy.acessarCadastroUsuario(criaNovoUsuario);
 }
 
 
@@ -31,8 +96,7 @@ const inserirDataNascimentoUsuario = async (element: string, dataAtual: Date = n
 }
 
 describe('Testes da página Cadastro de Usuário', () => {
-    const ambiente = Cypress.env('AMBIENTE');
-    const dadosAmbiente = Cypress.env(ambiente);
+  
     const email: string = faker.faker.internet.userName() + '@'
     const dominio: string = '@essentia.com.br';
     const emailCompleto: string = faker.faker.internet.userName() + dominio;
@@ -50,7 +114,7 @@ describe('Testes da página Cadastro de Usuário', () => {
 
     beforeEach(function () {
 
-        cy.login(dadosAmbiente.EMAILGESTORUSUARIO, dadosAmbiente.SENHAGESTORUSUARIO);
+        cy.login(dadosParametros.env.EMAILGESTORUSUARIO, dadosParametros.env.SENHAGESTORUSUARIO);
 
         acessarCadastroUsuario()
     })
@@ -66,17 +130,17 @@ describe('Testes da página Cadastro de Usuário', () => {
     //         if (Cypress._.isArray(size)) {
     //             cy.loginLogoutWithViewport(size, dadosAmbiente);
 
-    //             // cy.getVisible(el.cadastroMenu)
+    //             // cy.getVisible(cadastroMenu)
     //             //     .click()
-    //             cy.get(el.cadastroMenu, { timeout: 10000 })
+    //             cy.get(cadastroMenu, { timeout: 10000 })
     //                 .then((element) => {
     //                     if (Cypress.dom.isVisible(element)) {
     //                         cy.wrap(element)
     //                             .click();
     //                     } else {
-    //                         cy.getVisible(el.menuReduzido)
+    //                         cy.getVisible(menuReduzido)
     //                             .click()
-    //                         cy.getVisible(el.cadastroMenuReduzido)
+    //                         cy.getVisible(cadastroMenuReduzido)
     //                             .scrollIntoView()
     //                             .click()
     //                     }
@@ -117,14 +181,14 @@ describe('Testes da página Cadastro de Usuário', () => {
         // Campo deve aceitar minimo 2 caracteres, ex: "Eu"
         acessarCadastroUsuario()
 
-        cy.getVisible(el.nomeUsuario)
+        cy.getVisible(nomeUsuario)
             .type(letraUnica)
             .blur();
 
         cy.getVisible('.help-block.has-error')
             .should('contain', 'Valor inválido!');
 
-        cy.getVisible(el.nomeUsuario)
+        cy.getVisible(nomeUsuario)
             .clear()
             .type(nome)
             .blur();
@@ -137,7 +201,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar a obrigatoriedade de preenchimento do campo "Nome".', () => {
         acessarCadastroUsuario()
 
-        cy.verificarObrigatoriedadeCampo(el.nomeUsuario);
+        cy.verificarObrigatoriedadeCampo(nomeUsuario);
 
     })
 
@@ -145,14 +209,14 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar a obrigatoriedade de preenchimento do campo "Data de nascimento".', () => {
         acessarCadastroUsuario()
 
-        cy.verificarObrigatoriedadeCampo(el.nomeUsuario);
+        cy.verificarObrigatoriedadeCampo(nomeUsuario);
     })
 
 
     it('Deve validar se o campo "Data de nascimento" aceita somente números.', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.dataNascimentoUsuario)
+        cy.getVisible(dataNascimentoUsuario)
             .should('have.attr', 'type', 'date');
     })
 
@@ -160,14 +224,14 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar a obrigatoriedade de preenchimento do campo "N° CPF/CNPJ".', () => {
         acessarCadastroUsuario()
 
-        cy.verificarObrigatoriedadeCampo(el.cpfCnpjUsuario);
+        cy.verificarObrigatoriedadeCampo(cpfCnpjUsuario);
     })
 
 
     it('Deve verificar se o campo "N° CPF/CNPJ" está preenchido com um valor de CPF válido.', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.cpfCnpjUsuario)
+        cy.getVisible(cpfCnpjUsuario)
             .clear()
             .type(cpfAleatorio)
             .should('have.attr', 'aria-invalid', 'true');
@@ -178,7 +242,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar se o campo "N° CPF/CNPJ" está preenchido com um valor de CNPJ válido.', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.cpfCnpjUsuario)
+        cy.getVisible(cpfCnpjUsuario)
             .clear()
             .type(cnpjAleatorio)
             .should('have.attr', 'aria-invalid', 'true');
@@ -188,14 +252,14 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar a obrigatoriedade de preenchimento do campo "Telefone/Celular".', () => {
         acessarCadastroUsuario()
 
-        cy.verificarObrigatoriedadeCampo(el.telefoneUsuario);
+        cy.verificarObrigatoriedadeCampo(telefoneUsuario);
     })
 
 
     it('Deve verificar se o campo "Telefone/Celular" contém máscara de preenchimento.', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.telefoneUsuario)
+        cy.getVisible(telefoneUsuario)
             .clear()
             .type(telefoneIncompleto)
             .should('have.attr', 'aria-invalid', 'true')
@@ -209,7 +273,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar se o campo "Telefone/Celular" tem validação para números iguais.', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.telefoneUsuario)
+        cy.getVisible(telefoneUsuario)
             .clear()
             .type('11111111111')
             .should('have.value', '(11) 11111-1111')
@@ -219,7 +283,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar se o campo "Telefone/Celular" tem validação para preenchimento com número "0".', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.telefoneUsuario)
+        cy.getVisible(telefoneUsuario)
             .clear()
             .type('0000000000')
             .should('have.value', '(00) 0000-0000')
@@ -229,7 +293,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar se o campo "Telefone/Celular" tem validação para preenchimento com número "9".', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.telefoneUsuario)
+        cy.getVisible(telefoneUsuario)
             .clear()
             .type('99999999999')
             .should('have.value', '(99) 99999-9999')
@@ -239,14 +303,14 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar a obrigatoriedade de preenchimento do campo "E-mail".', () => {
         acessarCadastroUsuario()
 
-        cy.verificarObrigatoriedadeCampo(el.emailUsuario);
+        cy.verificarObrigatoriedadeCampo(emailUsuario);
     })
 
 
     it('Deve verificar se há validação após o "@", no campo "E-mail".', () => {
         acessarCadastroUsuario()
 
-        cy.get(el.emailUsuario)
+        cy.get(emailUsuario)
             .type(email)
             .should('have.attr', 'aria-invalid', 'true');
 
@@ -256,9 +320,9 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar a obrigatoriedade de preenchimento e tipo do campo "Senha".', () => {
         acessarCadastroUsuario()
 
-        cy.verificarObrigatoriedadeCampo(el.senhaUsuario)
+        cy.verificarObrigatoriedadeCampo(senhaUsuario)
 
-        cy.getVisible(el.senhaUsuario)
+        cy.getVisible(senhaUsuario)
             .should('have.attr', 'type', 'password');
     })
 
@@ -266,10 +330,10 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar o tamanho mínimo do campo "Senha".', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.senhaUsuario)
+        cy.getVisible(senhaUsuario)
             .should('have.attr', 'data-rule-minlength')
 
-        cy.getVisible(el.senhaUsuario)
+        cy.getVisible(senhaUsuario)
             .invoke('attr', 'data-rule-minlength')
             .then((minlengthValue) => {
                 cy.log(`Valor da propriedade data-rule-minlength: ${minlengthValue}`);
@@ -280,7 +344,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar o tamanho máximo do campo "Senha".', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.senhaUsuario)
+        cy.getVisible(senhaUsuario)
             .type(senhaGigante)
     })
 
@@ -288,10 +352,10 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar o tamanho mínimo do campo "Confirmar Senha".', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.confirmarSenhaUsuario)
+        cy.getVisible(confirmarSenhaUsuario)
             .should('have.attr', 'data-rule-minlength')
 
-        cy.getVisible(el.confirmarSenhaUsuario)
+        cy.getVisible(confirmarSenhaUsuario)
             .invoke('attr', 'data-rule-minlength')
             .then((minlengthValue) => {
                 cy.log(`Valor da propriedade data-rule-minlength: ${minlengthValue}`);
@@ -302,7 +366,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar o tamanho máximo do campo "Confirmar Senha".', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.confirmarSenhaUsuario)
+        cy.getVisible(confirmarSenhaUsuario)
             .type(senhaGigante)
     })
 
@@ -310,18 +374,18 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar se o conteúdo de "Senha" e "Confirmar Senha" é igual.', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.senhaUsuario)
+        cy.getVisible(senhaUsuario)
             .type(senhaGigante)
             .should('have.value', senhaGigante);
 
-        cy.getVisible(el.confirmarSenhaUsuario)
+        cy.getVisible(confirmarSenhaUsuario)
             .type(senhaGigante)
             .should('have.value', senhaGigante);
 
-        cy.getVisible(el.senhaUsuario)
+        cy.getVisible(senhaUsuario)
             .invoke('val')
             .then((senhaDigitada) => {
-                cy.getVisible(el.confirmarSenhaUsuario)
+                cy.getVisible(confirmarSenhaUsuario)
                     .invoke('val')
                     .should('eq', senhaDigitada);
             });
@@ -354,14 +418,14 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar a obrigatoriedade de preenchimento do campo "Setor".', () => {
         acessarCadastroUsuario()
 
-        cy.getVisible(el.setorUsuario)
+        cy.getVisible(setorUsuario)
             .click()
 
-        cy.get(el.opcaoSetorUsuario)
+        cy.get(opcaoSetorUsuario)
             .eq(0)
             .invoke('attr', 'style', 'display: block')
 
-        cy.get(el.opcaoSelectSetorUsuario)
+        cy.get(opcaoSelectSetorUsuario)
             .invoke('removeAttr', 'style')
             .then(() => {
                 cy.getVisible('#cost_center_id')
@@ -373,14 +437,14 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar a obrigatoriedade de preenchimento do campo "Limite de Aprovação".', () => {
         acessarCadastroUsuario()
 
-        cy.verificarObrigatoriedadeCampo(el.limiteAprovacaoUsuario);
+        cy.verificarObrigatoriedadeCampo(limiteAprovacaoUsuario);
     })
 
 
     it('Deve verificar a possibilidade de inserção de letras no campo "Limite de Aprovação".', () => {
         acessarCadastroUsuario()
 
-        cy.get(el.limiteAprovacaoUsuario)
+        cy.get(limiteAprovacaoUsuario)
             .type(nome)
             .should('have.value', '');
 
@@ -390,7 +454,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar a possibilidade de inserção de valores negativos no campo "Limite de Aprovação".', () => {
         acessarCadastroUsuario()
 
-        cy.get(el.limiteAprovacaoUsuario)
+        cy.get(limiteAprovacaoUsuario)
             .type('-')
 
         cy.get('#form-register > div.user-information > div:nth-child(4) > div.col-sm-2 > div')
@@ -410,46 +474,46 @@ describe('Testes da página Cadastro de Usuário', () => {
 
     it.only('Deve ser possível criar usuário de perfil "padrão", "Autorizado para solicitar".', () => {
         
-        cy.inserirNome(el.nomeUsuario,nome)
+        cy.inserirNome(nomeUsuario,nome)
 
         
-        inserirDataNascimentoUsuario(el.dataNascimentoUsuario);
+        inserirDataNascimentoUsuario(dataNascimentoUsuario);
 
        
-        cy.inserirCpf(el.cpfCnpjUsuario,cpfAleatorio)
+        cy.inserirCpf(cpfCnpjUsuario,cpfAleatorio)
 
         
-        cy.inserirTelefone(el.telefoneUsuario,telefoneAleatorio)
+        cy.inserirTelefone(telefoneUsuario,telefoneAleatorio)
 
         
-        cy.inserirEmail(el.emailUsuario,emailCompleto)
+        cy.inserirEmail(emailUsuario,emailCompleto)
 
 
-        cy.inserirSenha(el.senhaUsuario,senha)
+        cy.inserirSenha(senhaUsuario,senha)
 
         
-        cy.inserirSenha(el.confirmarSenhaUsuario,senha)
+        cy.inserirSenha(confirmarSenhaUsuario,senha)
 
 
-        cy.selecionarPerfil(Perfil.Administrador);
+        cy.selecionarPerfil(dadosParametros.enums.Perfil.Administrador);
 
 
-        cy.selecionarAutorizacaoParaSolicitar(OpcaoAutorizacao.Autorizado);
+        cy.selecionarAutorizacaoParaSolicitar(dadosParametros.enums.OpcaoAutorizacao.Autorizado);
 
 
-        cy.inserirSetorUsuario(el.setorUsuario,el.opcaoSetorUsuario,el.opcaoSelectSetorUsuario,el.opcaoSelecionadaSetorUsuario);
+        cy.inserirSetorUsuario(setorUsuario,opcaoSetorUsuario,opcaoSelectSetorUsuario,opcaoSelecionadaSetorUsuario);
 
 
-        cy.inserirUsuarioAprovador(el.usuarioAprovador,el.opcaoUsuarioAprovador);
+        cy.inserirUsuarioAprovador(usuarioAprovador,opcaoUsuarioAprovador);
 
 
-        cy.inserirLimiteAprovacao('175',el.limiteAprovacaoUsuario)
+        cy.inserirLimiteAprovacao('175',limiteAprovacaoUsuario)
 
 
-        cy.inserirCentroCustoPermitido(el.selecionarTodosCentroCustoPermitidoUsuario)
+        cy.inserirCentroCustoPermitido(selecionarTodosCentroCustoPermitidoUsuario)
 
 
-        cy.getVisible(el.salvarCadastroUsuario)
+        cy.getVisible(salvarCadastroUsuario)
             .click()
 
 

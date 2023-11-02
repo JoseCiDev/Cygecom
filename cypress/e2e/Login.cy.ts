@@ -1,16 +1,19 @@
 /// <reference types="cypress" />
 
 import { faker } from '@faker-js/faker';
-import { ELEMENTS as el } from '../../../elements';
-import { sizes } from '../../support/commands';
+import { elements as el } from '../elements';
+import { dadosParametros } from '../dadosParametros'
 
 
 
 
 
+export const {
+    email,
+    senha,
+    entrar,
 
-
-
+} = el.Login;
 
 
 
@@ -26,31 +29,31 @@ describe('Testes da página Login.', () => {
 
     beforeEach(function () {
         cy.pause();
-        cy.visit(dadosAmbiente.BASEURL + '/login');
+        cy.visit(dadosAmbiente.env.BASEURL + '/login');
 
     })
 
     it.only(`Deve ser possível logar em vários dispositivos.`, () => {
-        sizes.forEach((size) => {
+        dadosParametros.sizes.forEach((size) => {
             cy.loginLogoutWithViewport(size, dadosAmbiente);
 
-            cy.inserirEmailLogin(el.email, dadosAmbiente.EMAILADMIN);
+            cy.inserirEmailLogin(email, dadosAmbiente.EMAILADMIN);
 
-            cy.inserirSenhaLogin(el.senha, dadosAmbiente.SENHAADMIN);
+            cy.inserirSenhaLogin(senha, dadosAmbiente.SENHAADMIN);
 
-            cy.getVisible(el.entrar).click();
+            cy.getVisible(entrar).click();
 
             cy.url().should('contain', `${dadosAmbiente.BASEURL}`);
 
             if (Cypress._.isArray(size)) {
-                cy.get(el.perfilUsuario).click();
-                cy.get(el.logout).click();
+                cy.get(el.Inicio.perfilUsuario).click();
+                cy.get(el.Compartilhado.logout).click();
             }
         });
         cy.pause();
     });
 
-    
+
 
     // it('Deve verificar se existe validação para o campo e-mail.', () => {
 
