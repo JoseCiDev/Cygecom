@@ -18,8 +18,8 @@
         <div class="col-sm-6">
             <div class="form-group">
                 <label style="display:block;" class="regular-text">Centro de custo da despesa</label>
-                <select name="cost_center_apportionments[{{ $index }}][cost_center_id]" id="select-cost-center"
-                    data-cy="select-cost-center" class='select2-me' data-rule-required="true" style="width:100%;"
+                <select name="cost_center_apportionments[{{ $index }}][cost_center_id]" id="cost_center_apportionments[{{ $index }}][cost_center_id]"
+                    data-cy="cost_center_apportionments[0][cost_center_id]" class="select2-me" data-rule-required="true" style="width:100%;"
                     placeholder="Ex: Almoxarifado">
                     <option value=""></option>
                     @foreach ($costCenters as $costCenter)
@@ -78,8 +78,8 @@
         <div class="col-sm-6">
             <div class="form-group">
                 <label class="regular-text" style="display:block"> Centro de custo da despesa </label>
-                <select style="width:100%" id="select-cost-center" name="cost_center_apportionments[0][cost_center_id]"
-                    data-cy="cost_center_apportionments[0][cost_center_id]" class='select2-me' required
+                <select style="width:100%" id="cost_center_apportionments[0][cost_center_id]" name="cost_center_apportionments[0][cost_center_id]"
+                    data-cy="cost_center_apportionments[0][cost_center_id]" class="select2-me" required
                     data-rule-required="true" placeholder="Ex: Almoxarifado">
                     <option value=""></option>
                     @foreach ($costCenters as $costCenter)
@@ -391,24 +391,32 @@
 
         $('.add-cost-center-btn').click(function() {
             manageApportionmentState();
-            const newRow = $('.cost-center-container').last().clone();
-            newRow.find('select[name^="cost_center_apportionments"], input[name^="cost_center_apportionments"]')
-                .each(function() {
-                    const oldName = $(this).attr('name');
+
+            $('.cost-center-container').find('select[name^="cost_center_apportionments"]').select2().select2('destroy');
+
+            const $newRow = $('.cost-center-container').last().clone();
+            $newRow.find('select[name^="cost_center_apportionments"], input[name^="cost_center_apportionments"]')
+                .each((index, element) => {
+                    const $currentElement = $(element);
+                    $currentElement.val(null).trigger('change');
+
+                    const oldName = $currentElement.attr('name');
                     const regexNewName = /\[(\d+)\]/;
                     const lastIndex = Number(oldName.match(regexNewName).at(-1));
                     const newName = oldName.replace(regexNewName, `[${lastIndex + 1}]`);
-                    $(this).attr('name', newName);
-                    $(this).attr('id', newName);
-                    $(this).attr('data-cy', newName);
+
+                    $currentElement.attr('name', newName);
+                    $currentElement.attr('id', newName);
+                    $currentElement.attr('data-cy', newName);
                 });
 
-            newRow.find("input, select").val(null);
-            newRow.find('.select2-container').remove();
-            newRow.find('.select2-me').select2();
+            $('.cost-center-container').last().after($newRow);
+            $newRow.find('.delete-cost-center').removeAttr('hidden');
 
-            $('.cost-center-container').last().after(newRow);
-            newRow.find('.delete-cost-center').removeAttr('hidden');
+            $('.cost-center-container').find('select[name^="cost_center_apportionments"]').select2({
+                width: "100%",
+                placeholder: "Selecione uma ou mais opções",
+            });
 
             manageBtnDeleteState();
             disableSelectedOptions();
