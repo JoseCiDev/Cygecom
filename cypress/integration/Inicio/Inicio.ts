@@ -70,6 +70,7 @@ export const {
 
 } = el.Suprimento;
 
+<<<<<<< HEAD
 const ambiente = Cypress.env('AMBIENTE')
 const dadosAmbiente = Cypress.env(ambiente)
 
@@ -79,6 +80,11 @@ describe('Testes da página Inicio', () => {
     const email: string = faker.internet.userName() + dominio;
     const senha: string = faker.number.int().toString()
 
+=======
+
+describe('Testes da página Inicio', () => {
+
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
 
 
@@ -94,7 +100,11 @@ describe('Testes da página Inicio', () => {
     it(`Deve ser possível logar em vários dispositivos.`, () => {
         dadosParametros.sizes.forEach((size) => {
             if (Cypress._.isArray(size)) {
+<<<<<<< HEAD
                 cy.loginLogoutWithViewport(size, dadosAmbiente);
+=======
+                cy.loginLogoutWithViewport(size);
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
                 cy.get(perfilUsuario)
                     .click();
@@ -102,11 +112,19 @@ describe('Testes da página Inicio', () => {
                 cy.get(logout)
                     .click();
 
+<<<<<<< HEAD
                 cy.getVisible(email)
                     .type(dadosParametros.env.EMAILADMIN, { log: false })
                     .should('have.value', dadosParametros.env.EMAILADMIN);
 
                 cy.getVisible(senha)
+=======
+                cy.getVisible(dadosParametros.Autenticacao.email)
+                    .type(dadosParametros.env.EMAILADMIN, { log: false })
+                    .should('have.value', dadosParametros.env.EMAILADMIN);
+
+                cy.getVisible(dadosParametros.Autenticacao.senha)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
                     .type(dadosParametros.env.SENHAADMIN, { log: false })
                     .should('have.value', dadosParametros.env.SENHAADMIN);
 
@@ -293,10 +311,17 @@ describe('Testes da página Inicio', () => {
         cy.getVisible(logout)
             .click();
 
+<<<<<<< HEAD
         cy.getVisible(email)
             .type(dadosParametros.env.EMAILUSUARIO, { log: false })
             .should('have.value', dadosParametros.env.EMAILUSUARIO);
         cy.getVisible(senha)
+=======
+        cy.getVisible(dadosParametros.Autenticacao.email)
+            .type(dadosParametros.env.EMAILUSUARIO, { log: false })
+            .should('have.value', dadosParametros.env.EMAILUSUARIO);
+        cy.getVisible(dadosParametros.Autenticacao.senha)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
             .type(dadosParametros.env.SENHAUSUARIO, { log: false })
             .should('have.value', dadosParametros.env.SENHAUSUARIO);
         cy.getVisible(el.Login.entrar)

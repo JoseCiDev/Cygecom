@@ -2,7 +2,11 @@
 import * as faker from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { elements as el } from '../elements';
+<<<<<<< HEAD
 import { dadosParametros } from '../dadosParametros';
+=======
+import { dadosParametros } from '../dadosParametros'
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
 
 export const {
@@ -22,7 +26,11 @@ export const {
     mostraQuantidadeRegistros,
     BuscaUsuarioCadastrado,
     proximaPagina,
+<<<<<<< HEAD
     ,
+=======
+    paginaAnterior,
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
 } = el.Compartilhado;
 
@@ -71,6 +79,7 @@ export const {
 } = el.Suprimento;
 
 
+<<<<<<< HEAD
 const acessarCadastroUsuario = () => {
     cy.acessarMenuCadastro(cadastroMenu);
 
@@ -110,21 +119,34 @@ describe('Testes da página Cadastro de Usuário', () => {
     const telefoneIncompleto: string = telefoneAleatorio.slice(0, -3)
 
 
+=======
+
+
+describe('Testes da página Cadastro de Usuário', () => {
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
 
     beforeEach(function () {
 
         cy.login(dadosParametros.env.EMAILGESTORUSUARIO, dadosParametros.env.SENHAGESTORUSUARIO);
 
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario();
+
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
     })
 
 
 
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
     // it(`Deve ser possível cadastrar em vários dispositivos.`, () => {
     //     sizes.forEach((size) => {
     //         if (Cypress._.isArray(size)) {
@@ -151,7 +173,16 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
 
+<<<<<<< HEAD
     it('Deve ser possível navegar pelos breadcumbs.', () => {
+=======
+    it('Deve ser possível navegar pelo breadcumb Home.', () => {
+
+        cy.getElementAndClick(breadcumbHome);
+
+        cy.url()
+            .should('contain', `${dadosParametros.env.BASEURL}`);
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
     })
 
@@ -179,10 +210,19 @@ describe('Testes da página Cadastro de Usuário', () => {
 
     it('Deve verificar a quantidade mínima de caracteres aceitos no campo "Nome".', () => {
         // Campo deve aceitar minimo 2 caracteres, ex: "Eu"
+<<<<<<< HEAD
         acessarCadastroUsuario()
 
         cy.getVisible(nomeUsuario)
             .type(letraUnica)
+=======
+        cy.acessarCadastroUsuario();
+
+        cy.getElementAndClick(criaNovoUsuario);
+
+        cy.getVisible(nomeUsuario)
+            .type(dadosParametros.Cadastro.letraUnica)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
             .blur();
 
         cy.getVisible('.help-block.has-error')
@@ -190,11 +230,16 @@ describe('Testes da página Cadastro de Usuário', () => {
 
         cy.getVisible(nomeUsuario)
             .clear()
+<<<<<<< HEAD
             .type(nome)
+=======
+            .type(dadosParametros.Cadastro.nome)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
             .blur();
 
         cy.get('#name-error')
             .should('have.class', 'help-block has-error valid');
+<<<<<<< HEAD
     })
 
 
@@ -245,18 +290,76 @@ describe('Testes da página Cadastro de Usuário', () => {
         cy.getVisible(cpfCnpjUsuario)
             .clear()
             .type(cnpjAleatorio)
+=======
+    });
+
+
+    it('Deve verificar a obrigatoriedade de preenchimento do campo "Nome".', () => {
+        cy.acessarCadastroUsuario();
+
+        cy.getElementAndClick(criaNovoUsuario);
+
+        cy.verificarObrigatoriedadeCampo(nomeUsuario);
+
+    });
+
+
+    it('Deve validar se o campo "Data de nascimento" aceita somente números.', () => {
+        cy.acessarCadastroUsuario();
+
+        cy.getElementAndClick(criaNovoUsuario);
+
+        cy.getVisible(dataNascimentoUsuario)
+            .should('have.attr', 'type', 'date');
+    });
+
+
+    it('Deve verificar a obrigatoriedade de preenchimento do campo "N° CPF/CNPJ".', () => {
+        cy.acessarCadastroUsuario();
+
+        cy.getElementAndClick(criaNovoUsuario);
+
+        cy.verificarObrigatoriedadeCampo(cpfCnpjUsuario);
+    });
+
+
+    it.only('Deve verificar se o campo "N° CPF/CNPJ" está preenchido com um valor de CPF válido.', () => {
+        cy.acessarCadastroUsuario();
+
+        cy.getElementAndClick(criaNovoUsuario);
+
+        cy.getVisible(cpfCnpjUsuario)
+            .clear()
+            .type(dadosParametros.Cadastro.cpf)
+            .should('have.attr', 'aria-invalid', 'true');
+
+    }); 
+
+
+    it('Deve verificar se o campo "N° CPF/CNPJ" está preenchido com um valor de CNPJ válido.', () => {
+        cy.acessarCadastroUsuario()
+
+        cy.getVisible(cpfCnpjUsuario)
+            .clear()
+            .type(dadosParametros.Cadastro.cnpj)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
             .should('have.attr', 'aria-invalid', 'true');
     })
 
 
     it('Deve verificar a obrigatoriedade de preenchimento do campo "Telefone/Celular".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario()
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.verificarObrigatoriedadeCampo(telefoneUsuario);
     })
 
 
     it('Deve verificar se o campo "Telefone/Celular" contém máscara de preenchimento.', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
 
         cy.getVisible(telefoneUsuario)
@@ -265,13 +368,27 @@ describe('Testes da página Cadastro de Usuário', () => {
             .should('have.attr', 'aria-invalid', 'true')
             .clear()
             .type(telefoneAleatorio)
+=======
+        cy.acessarCadastroUsuario()
+
+        cy.getVisible(telefoneUsuario)
+            .clear()
+            .type(dadosParametros.Cadastro.telefone.slice(0, -3))
+            .should('have.attr', 'aria-invalid', 'true')
+            .clear()
+            .type(dadosParametros.Cadastro.telefone)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
 
     })
 
 
     it('Deve verificar se o campo "Telefone/Celular" tem validação para números iguais.', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario()
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.getVisible(telefoneUsuario)
             .clear()
@@ -281,7 +398,11 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
     it('Deve verificar se o campo "Telefone/Celular" tem validação para preenchimento com número "0".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario()
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.getVisible(telefoneUsuario)
             .clear()
@@ -291,7 +412,11 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
     it('Deve verificar se o campo "Telefone/Celular" tem validação para preenchimento com número "9".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario()
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.getVisible(telefoneUsuario)
             .clear()
@@ -301,24 +426,39 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
     it('Deve verificar a obrigatoriedade de preenchimento do campo "E-mail".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario()
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.verificarObrigatoriedadeCampo(emailUsuario);
     })
 
 
     it('Deve verificar se há validação após o "@", no campo "E-mail".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
 
         cy.get(emailUsuario)
             .type(email)
+=======
+        cy.acessarCadastroUsuario()
+
+        cy.get(emailUsuario)
+            .type(dadosParametros.Autenticacao.email)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
             .should('have.attr', 'aria-invalid', 'true');
 
 
     })
 
     it('Deve verificar a obrigatoriedade de preenchimento e tipo do campo "Senha".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario()
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.verificarObrigatoriedadeCampo(senhaUsuario)
 
@@ -328,7 +468,11 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
     it('Deve verificar o tamanho mínimo do campo "Senha".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario()
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.getVisible(senhaUsuario)
             .should('have.attr', 'data-rule-minlength')
@@ -342,15 +486,26 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
     it('Deve verificar o tamanho máximo do campo "Senha".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
 
         cy.getVisible(senhaUsuario)
             .type(senhaGigante)
+=======
+        cy.acessarCadastroUsuario()
+
+        cy.getVisible(senhaUsuario)
+            .type(dadosParametros.Autenticacao.senhaGigante)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
     })
 
 
     it('Deve verificar o tamanho mínimo do campo "Confirmar Senha".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario()
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.getVisible(confirmarSenhaUsuario)
             .should('have.attr', 'data-rule-minlength')
@@ -364,14 +519,22 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
     it('Deve verificar o tamanho máximo do campo "Confirmar Senha".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
 
         cy.getVisible(confirmarSenhaUsuario)
             .type(senhaGigante)
+=======
+        cy.acessarCadastroUsuario()
+
+        cy.getVisible(confirmarSenhaUsuario)
+            .type(dadosParametros.Autenticacao.senhaGigante)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
     })
 
 
     it('Deve verificar se o conteúdo de "Senha" e "Confirmar Senha" é igual.', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
 
         cy.getVisible(senhaUsuario)
@@ -381,6 +544,17 @@ describe('Testes da página Cadastro de Usuário', () => {
         cy.getVisible(confirmarSenhaUsuario)
             .type(senhaGigante)
             .should('have.value', senhaGigante);
+=======
+        cy.acessarCadastroUsuario()
+
+        cy.getVisible(senhaUsuario)
+            .type(dadosParametros.Autenticacao.senhaGigante)
+            .should('have.value', dadosParametros.Autenticacao.senhaGigante);
+
+        cy.getVisible(confirmarSenhaUsuario)
+            .type(dadosParametros.Autenticacao.senhaGigante)
+            .should('have.value', dadosParametros.Autenticacao.senhaGigante);
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.getVisible(senhaUsuario)
             .invoke('val')
@@ -393,7 +567,11 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
     it('Deve verificar se o botão de opção está alinhado com a label de "Perfil de usuário".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario()
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.get('.form-check')  // Seletor que captura o elemento pai das opções
             .each((formCheck, index) => {
@@ -416,7 +594,11 @@ describe('Testes da página Cadastro de Usuário', () => {
     })
 
     it('Deve verificar a obrigatoriedade de preenchimento do campo "Setor".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario()
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.getVisible(setorUsuario)
             .click()
@@ -435,24 +617,39 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
     it('Deve verificar a obrigatoriedade de preenchimento do campo "Limite de Aprovação".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario()
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.verificarObrigatoriedadeCampo(limiteAprovacaoUsuario);
     })
 
 
     it('Deve verificar a possibilidade de inserção de letras no campo "Limite de Aprovação".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
 
         cy.get(limiteAprovacaoUsuario)
             .type(nome)
+=======
+        cy.acessarCadastroUsuario()
+
+        cy.get(limiteAprovacaoUsuario)
+            .type(dadosParametros.Cadastro.nome)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
             .should('have.value', '');
 
     })
 
 
     it('Deve verificar a possibilidade de inserção de valores negativos no campo "Limite de Aprovação".', () => {
+<<<<<<< HEAD
         acessarCadastroUsuario()
+=======
+        cy.acessarCadastroUsuario()
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
         cy.get(limiteAprovacaoUsuario)
             .type('-')
@@ -472,6 +669,7 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
 
+<<<<<<< HEAD
     it.only('Deve ser possível criar usuário de perfil "padrão", "Autorizado para solicitar".', () => {
         
         cy.inserirNome(nomeUsuario,nome)
@@ -493,6 +691,29 @@ describe('Testes da página Cadastro de Usuário', () => {
 
         
         cy.inserirSenha(confirmarSenhaUsuario,senha)
+=======
+    it('Deve ser possível criar usuário de perfil "padrão", "Autorizado para solicitar".', () => {
+
+        cy.inserirNome(nomeUsuario, dadosParametros.Cadastro.nome)
+
+
+        cy.inserirDataNascimento(dataNascimentoUsuario);
+
+
+        cy.inserirCpf(cpfCnpjUsuario, dadosParametros.Cadastro.cpf)
+
+
+        cy.inserirTelefone(telefoneUsuario, dadosParametros.Cadastro.telefone)
+
+
+        cy.inserirEmail(emailUsuario, dadosParametros.Autenticacao.email)
+
+
+        cy.inserirSenha(senhaUsuario, dadosParametros.Autenticacao.senha)
+
+
+        cy.inserirSenha(confirmarSenhaUsuario, dadosParametros.Autenticacao.senha)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
 
         cy.selecionarPerfil(dadosParametros.enums.Perfil.Administrador);
@@ -501,6 +722,7 @@ describe('Testes da página Cadastro de Usuário', () => {
         cy.selecionarAutorizacaoParaSolicitar(dadosParametros.enums.OpcaoAutorizacao.Autorizado);
 
 
+<<<<<<< HEAD
         cy.inserirSetorUsuario(setorUsuario,opcaoSetorUsuario,opcaoSelectSetorUsuario,opcaoSelecionadaSetorUsuario);
 
 
@@ -508,6 +730,15 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
         cy.inserirLimiteAprovacao('175',limiteAprovacaoUsuario)
+=======
+        cy.inserirSetorUsuario(setorUsuario, opcaoSetorUsuario, opcaoSelectSetorUsuario, opcaoSelecionadaSetorUsuario);
+
+
+        cy.inserirUsuarioAprovador(usuarioAprovador, opcaoUsuarioAprovador);
+
+
+        cy.inserirLimiteAprovacao('175', limiteAprovacaoUsuario)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
 
         cy.inserirCentroCustoPermitido(selecionarTodosCentroCustoPermitidoUsuario)
@@ -515,8 +746,11 @@ describe('Testes da página Cadastro de Usuário', () => {
 
         cy.getVisible(salvarCadastroUsuario)
             .click()
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
     })
 
     it('Deve ser possível criar usuário de perfil "Administrador", "Não Autorizado para solicitar".', () => { })

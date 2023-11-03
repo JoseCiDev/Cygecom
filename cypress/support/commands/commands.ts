@@ -31,8 +31,14 @@
 import { elements as el } from '../../elements'
 import { dadosParametros } from '../../dadosParametros'
 
+<<<<<<< HEAD
 import '../commandsLogin.ts';
 import '../commandsCadastroUsuario.ts';
+=======
+import '../commands/commandsLogin';
+import '../commands/commandsCadastroUsuario';
+import '../commands/commandsInicio';
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
 
 
@@ -41,7 +47,11 @@ import '../commandsCadastroUsuario.ts';
 Cypress.Commands.add('getVisible', (element: string, options: Partial<Cypress.Loggable & Cypress.Timeoutable & Cypress.Withinable>) => {
     const defaultOptions = { timeout: 20000 };
     const combinedOptions = { ...defaultOptions, ...options };
+<<<<<<< HEAD
     return cy.getVisible(element, combinedOptions);
+=======
+    return cy.get(element, combinedOptions);
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 })
 
 
@@ -131,6 +141,7 @@ Cypress.Commands.add('getRadioOptionByValue', (elemento: string, value): void =>
 });
 
 
+<<<<<<< HEAD
 Cypress.Commands.add('loginLogoutWithViewport', (size: Cypress.ViewportPreset, dadosAmbiente) => {
     if (Cypress._.isArray(size)) {
         (cy.viewport(size[0], size[1]))
@@ -167,6 +178,11 @@ Cypress.Commands.add('sairGecom', (element: string) => {
 
 Cypress.Commands.add('verificarObrigatoriedadeCampo', (element: string) => {
     cy.getVisible(element)
+=======
+
+Cypress.Commands.add('verificarObrigatoriedadeCampo', (element: string) => {
+    cy.get(element)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         .should('have.attr', 'aria-required', 'true')
 });
 
@@ -189,4 +205,27 @@ Cypress.Commands.add("inserirData", (dataAtual: Date = new Date()) => {
 });
 
 
+<<<<<<< HEAD
+=======
+Cypress.Commands.add('inserirDataNascimento', (element: string) => {
+
+    cy.inserirData(dadosParametros.cadastroParams.dataNascimento)
+        .then(({ DATA_FORMATADA }: { DATA_FORMATADA: string }) => {
+            const dataAtual = `${DATA_FORMATADA}`;
+
+            cy.getVisible(element)
+                .type(dataAtual.toString())
+                .then(() => {
+                    cy.getVisible(element)
+                        .should('have.value', dataAtual);
+                });
+        })
+})
+
+
+
+
+
+
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 

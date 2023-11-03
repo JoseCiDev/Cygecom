@@ -29,6 +29,7 @@
 
 
 import { elements as el } from '../../elements'
+<<<<<<< HEAD
 import { dadosParametros } from '../../dadosParametros'
 
 
@@ -47,11 +48,32 @@ Cypress.Commands.add('doLogin', (email: string, senha: string) => {
         .should('have.value', senha);
 
     cy.getVisible(el.Login.entrar)
+=======
+import { dadosParametros } from '../../dadosParametros';
+
+
+
+Cypress.Commands.add('login', (email: string, senha: string) => {
+    cy.visit(dadosParametros.env.BASEURL + '/login');
+
+    cy.get(el.Login.tituloLogin);
+
+    cy.get(el.Login.email)
+        .type(email, { log: false })
+        .should('have.value', email);
+
+    cy.get(el.Login.senha)
+        .type(senha, { log: false })
+        .should('have.value', senha);
+
+    cy.get(el.Login.entrar)
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         .click();
 
     cy.url()
         .should('contain', `${dadosParametros.env.BASEURL}`);
 });
+<<<<<<< HEAD
 Cypress.Commands.add('login', (email: string, senha: string) => {
     // Verifica se o usuário já está logado
     const isLoggedIn = localStorage.getItem('user_logged_in');
@@ -90,3 +112,17 @@ Cypress.Commands.add('inserirSenhaLogin', (element: string, credenciais: string 
         .type(value as string)
         .should('have.value', value as string)
 });
+=======
+
+
+Cypress.Commands.add('loginLogoutWithViewport', (size: Cypress.ViewportPreset) => {
+    if (Cypress._.isArray(size)) {
+        (cy.viewport(size[0], size[1]))
+        cy.log(`-Tamanho da tela: ${size[0]} x ${size[1]}-`);
+    } else {
+        cy.viewport(size);
+        cy.log(`-Tamanho da tela: ${size}-`);
+    }
+
+});
+>>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e

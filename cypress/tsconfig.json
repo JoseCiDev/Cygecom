@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+<<<<<<< HEAD
+    "types": ["node"],
     "esModuleInterop": true,
     "moduleResolution": "node",
     "target": "es5",
@@ -13,3 +15,18 @@
     "../cypress.d.ts"
   ]
 }
+=======
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "target": "es5",
+    "lib": [
+      "es5",
+      "dom"
+    ]
+  },
+  "include": [
+    "**/*.ts",
+    "../cypress.d.ts"
+  ]
+}
+>>>>>>> 66389675fb764448964dc7d97d8eb66f3d517bd5
