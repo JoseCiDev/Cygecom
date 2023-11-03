@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
+<<<<<<< HEAD
     "@types/node": "^20.8.10",
     "cypress": "^13.4.0",
     "faker": "^5.5.3",
@@ -21,5 +22,12 @@
   },
   "dependencies": {
     "date-fns": "^2.30.0"
+=======
+    "cypress": "^12.17.4",
+    "faker": "^5.5.3",
+    "faker-br": "^0.4.1",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6"
+>>>>>>> 66389675fb764448964dc7d97d8eb66f3d517bd5
   }
 }
