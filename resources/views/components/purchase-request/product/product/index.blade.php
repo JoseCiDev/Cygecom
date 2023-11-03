@@ -6,7 +6,6 @@
     'isCopy' => false
 ])
 
-
 <div class="product-row" style="border-bottom: 1px solid rgb(179, 179, 179)">
     <div class="row" style="padding: 15px 20px 0 20px;">
         <input type="hidden" name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][id]"
@@ -47,7 +46,7 @@
             <button type="button" class="btn btn-icon btn-danger delete-product" data-cy="delete-product"><i class="fa-solid fa-trash"></i></button>
         </div>
     </div>
-    <div class="row" style="padding: 0 20px 5px 20px">
+    <div class="row mt-3" style="padding: 0 20px 5px 20px">
         <div class="col-sm-2">
             <div class="form-group">
                 <label for="qtd" class="regular-text">Quantidade</label>
