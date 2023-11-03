@@ -14,10 +14,6 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-<<<<<<< HEAD
-import './commands/commands'
-=======
-<<<<<<< HEAD
 import './commands/commands.ts'
 
 // Alternatively you can use CommonJS syntax:
@@ -27,10 +23,3 @@ Cypress.on('uncaught:exception', (err, runnable) => {
     // failing the test
     return false
 })
-=======
-import './commands'
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
-
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
->>>>>>> 66389675fb764448964dc7d97d8eb66f3d517bd5
