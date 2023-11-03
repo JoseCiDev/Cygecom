@@ -61,7 +61,7 @@
                 <label for="market-type" class="regular-text">Tipo de mercado</label>
                 <fieldset id="market-type" data-rule-required="true">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="supplier_indication" id="nacional" data-cy="nacional" value="Nacional" required @checked($supplier?->market_type === 'Nacional')>
+                        <input class="form-check-input" type="radio" name="market_type" id="nacional" data-cy="nacional" value="Nacional" required @checked($supplier?->market_type === 'Nacional')>
                         <label class="form-check-label" for="nacional"> Mercado nacional </label>
                     </div>
                     <div class="form-check">
