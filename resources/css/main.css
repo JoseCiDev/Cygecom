@@ -105,6 +105,10 @@ input {
     }
 }
 
+.help-block.has-error {
+    color: #ff4433;
+}
+
 .no-resize {
     resize: none;
 }
