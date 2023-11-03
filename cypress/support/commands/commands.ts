@@ -31,14 +31,9 @@
 import { elements as el } from '../../elements'
 import { dadosParametros } from '../../dadosParametros'
 
-<<<<<<< HEAD
-import '../commandsLogin.ts';
-import '../commandsCadastroUsuario.ts';
-=======
 import '../commands/commandsLogin';
 import '../commands/commandsCadastroUsuario';
 import '../commands/commandsInicio';
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
 
 
@@ -47,11 +42,7 @@ import '../commands/commandsInicio';
 Cypress.Commands.add('getVisible', (element: string, options: Partial<Cypress.Loggable & Cypress.Timeoutable & Cypress.Withinable>) => {
     const defaultOptions = { timeout: 20000 };
     const combinedOptions = { ...defaultOptions, ...options };
-<<<<<<< HEAD
-    return cy.getVisible(element, combinedOptions);
-=======
     return cy.get(element, combinedOptions);
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 })
 
 
@@ -141,48 +132,9 @@ Cypress.Commands.add('getRadioOptionByValue', (elemento: string, value): void =>
 });
 
 
-<<<<<<< HEAD
-Cypress.Commands.add('loginLogoutWithViewport', (size: Cypress.ViewportPreset, dadosAmbiente) => {
-    if (Cypress._.isArray(size)) {
-        (cy.viewport(size[0], size[1]))
-        cy.log(`-Tamanho da tela: ${size[0]} x ${size[1]}-`);
-    } else {
-        cy.viewport(size);
-        cy.log(`-Tamanho da tela: ${size}-`);
-    }
-
-});
-
-
-
-
-
-Cypress.Commands.add('abrirPerfilUsuario', (element: string) => {
-    cy.getVisible(element).click();
-});
-
-
-
-Cypress.Commands.add('entrarGecom', (element: string) => {
-    cy.getVisible(element)
-        .click();
-})
-
-
-
-Cypress.Commands.add('sairGecom', (element: string) => {
-    cy.getVisible(element)
-        .click();
-})
-
-
-Cypress.Commands.add('verificarObrigatoriedadeCampo', (element: string) => {
-    cy.getVisible(element)
-=======
 
 Cypress.Commands.add('verificarObrigatoriedadeCampo', (element: string) => {
     cy.get(element)
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         .should('have.attr', 'aria-required', 'true')
 });
 
@@ -205,8 +157,6 @@ Cypress.Commands.add("inserirData", (dataAtual: Date = new Date()) => {
 });
 
 
-<<<<<<< HEAD
-=======
 Cypress.Commands.add('inserirDataNascimento', (element: string) => {
 
     cy.inserirData(dadosParametros.cadastroParams.dataNascimento)
@@ -227,5 +177,4 @@ Cypress.Commands.add('inserirDataNascimento', (element: string) => {
 
 
 
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 

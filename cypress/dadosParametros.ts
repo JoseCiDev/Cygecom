@@ -7,59 +7,23 @@ const ambiente = Cypress.env('AMBIENTE');
 const dadosAmbiente = Cypress.env(ambiente);
 
 
-<<<<<<< HEAD
-export interface DataHora {
-    DATA_FORMATADA: string;
-    HORA_FORMATADA: string;
-}
-
-interface DadosParametros {
-=======
 export interface DataHora<T = string> {
     DATA_FORMATADA: T;
     HORA_FORMATADA: T;
 }
 
 interface DadosParametros<T = string> {
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
     sizes: Array<number | [number, number] | string>;
 
     env: {
-<<<<<<< HEAD
-        ENV: string;
-        EMAILADMIN: string;
-        SENHAADMIN: string;
-=======
         ENV: T;
         EMAILADMIN: T;
         SENHAADMIN: T;
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         EMAILUSUARIO: string,
         SENHAUSUARIO: string,
         EMAILGESTORUSUARIO: string,
         SENHAGESTORUSUARIO: string,
-<<<<<<< HEAD
-        BASEURL: string;
-        DB_NAME: string;
-        DB_USER: string;
-        DB_HOST: string;
-        DB_PORT: string;
-        DB_PASSWORD: string;
-    };
-
-    url: {
-
-    };
-
-    pedidoParams: {
-
-    };
-
-    enums: {
-        Perfil: typeof Perfil;
-        OpcaoAutorizacao: typeof OpcaoAutorizacao;
-=======
         BASEURL: T;
         DB_NAME: T;
         DB_USER: T;
@@ -111,7 +75,6 @@ interface DadosParametros<T = string> {
         SolicitarOutrasPessoas: typeof SolicitarOutrasPessoas;
         SetorCentroCustoPermitido: typeof SetorCentroCustoPermitido;
         UsuarioAprovador: typeof UsuarioAprovador;
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
     };
 }
 
@@ -120,31 +83,15 @@ interface DadosParametros<T = string> {
 export const getRandomValue = <T>(array: T[]): T => {
     const randomIndex = Math.floor(Math.random() * array.length);
     return array[randomIndex];
-<<<<<<< HEAD
-}
-
-enum Perfil {
-=======
 };
 
 enum PerfilUsuario {
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
     Administrador = "profile_admin",
     Normal = "profile_normal",
     SuprimentosHKM = "profile_suprimentos_hkm",
     SuprimentosINP = "profile_suprimentos_inp",
     GestorUsuarios = "gestor_usuarios",
     GestorFornecedores = "gestor_fornecedores",
-<<<<<<< HEAD
-}
-
-
-enum OpcaoAutorizacao {
-    Autorizado = '1',
-    NaoAutorizado = '0',
-}
-
-=======
 };
 
 
@@ -963,16 +910,12 @@ const letraUnica = faker.string.alpha();
 const cpf = fakerBr.br.cpf();
 const cnpj = fakerBr.br.cnpj();
 const dataNascimento = new Date();
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
 
 export const dadosParametros: DadosParametros = {
 
-<<<<<<< HEAD
-=======
     env: dadosAmbiente,
 
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
     sizes: [
         [1536, 960],
         [1440, 900],
@@ -998,11 +941,6 @@ export const dadosParametros: DadosParametros = {
         [280, 653],
     ],
 
-<<<<<<< HEAD
-    env: dadosAmbiente,
-
-    url: {
-=======
     url: {
         login: 'http://192.168.0.66:9400/login',
     },
@@ -1020,19 +958,10 @@ export const dadosParametros: DadosParametros = {
         cpf: cpf,
         cnpj: cnpj,
         telefone: telefone,
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 
     },
 
     enums: {
-<<<<<<< HEAD
-        Perfil,
-        OpcaoAutorizacao,
-    },
-
-    pedidoParams: {
-
-=======
         PerfilUsuario,
         AutorizacaoSolicitar,
         SolicitarOutrasPessoas,
@@ -1056,7 +985,6 @@ export const dadosParametros: DadosParametros = {
         usuarioAprovador: UsuarioAprovador.diretorTeste,
         limiteAprovacao: LimiteAprovacao.milReais,
         centroCustoPermitido: SetorCentroCustoPermitido.HKMControladoria,
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
     },
 
 };

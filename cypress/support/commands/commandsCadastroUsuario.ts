@@ -31,25 +31,6 @@
 import { elements as el } from '../../elements'
 import { dadosParametros } from '../../dadosParametros'
 
-<<<<<<< HEAD
-
-
-Cypress.Commands.add('acessarMenuCadastro', (element: string) => {
-    cy.getVisible(element)
-        .click();
-});
-
-
-Cypress.Commands.add('acessarSubmenuCadastroUsuario', (element: string) => {
-    cy.getVisible(element)
-        .click();
-});
-
-
-Cypress.Commands.add('acessarCadastroUsuario', (element: string) => {
-    cy.getVisible(element)
-        .click();
-=======
 export const {
     email,
     senha,
@@ -130,27 +111,18 @@ Cypress.Commands.add('acessarCadastroUsuario', () => {
 
     cy.getElementAndClick(cadastroUsuarioSubMenu);
 
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
 });
 
 
 Cypress.Commands.add('inserirNome', (element: string, nome: string) => {
-<<<<<<< HEAD
-    cy.getVisible(element)
-=======
     cy.get(element)
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         .type(nome)
         .should('have.value', nome)
 });
 
 
 Cypress.Commands.add('inserirCpf', (element: string, cpf: string) => {
-<<<<<<< HEAD
-    cy.getVisible(element)
-=======
     cy.get(element)
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         .should('exist')
         .clear()
         .type(cpf)
@@ -159,11 +131,7 @@ Cypress.Commands.add('inserirCpf', (element: string, cpf: string) => {
 
 
 Cypress.Commands.add('inserirTelefone', (element: string, telefone: string) => {
-<<<<<<< HEAD
-    cy.getVisible(element)
-=======
     cy.get(element)
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         .clear()
         .type(telefone)
         .should('have.value', telefone);
@@ -171,48 +139,30 @@ Cypress.Commands.add('inserirTelefone', (element: string, telefone: string) => {
 
 
 Cypress.Commands.add('inserirEmail', (element: string, email: string) => {
-<<<<<<< HEAD
-    cy.getVisible(element)
-=======
     cy.get(element)
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         .type(email)
         .should('have.value', email);
 });
 
 
 Cypress.Commands.add('inserirSenha', (element: string, senha: string) => {
-<<<<<<< HEAD
-    cy.getVisible(element)
-=======
     cy.get(element)
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         .type(senha)
         .should('have.value', senha);
 });
 
 
 Cypress.Commands.add('selecionarPerfil', (perfil) => {
-<<<<<<< HEAD
-    cy.getVisible(`[data-cy="${perfil}"]`)
-=======
     cy.get(`[data-cy="${perfil}"]`)
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         .check()
         .should('be.checked');
 });
 
 
 Cypress.Commands.add('selecionarAutorizacaoParaSolicitar', (opcao) => {
-<<<<<<< HEAD
-    const inputId = opcao === dadosParametros.enums.OpcaoAutorizacao.Autorizado ? 'is_buyer_true' : 'is_buyer_false';
-
-    cy.getVisible(`input#${inputId}`)
-=======
     const inputId = opcao === dadosParametros.cadastroParams.autorizacaoSolicitar ? 'is_buyer_true' : 'is_buyer_false';
 
     cy.get(`input#${inputId}`)
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         .trigger('click', { force: true });
 });
 
@@ -220,11 +170,7 @@ Cypress.Commands.add('selecionarAutorizacaoParaSolicitar', (opcao) => {
 
 Cypress.Commands.add('inserirSetorUsuario', (setorUsuario: string, opcaoSetorUsuario: string, opcaoSelectSetorUsuario: string, opcaoSelecionadaSetorUsuario: string) => {
 
-<<<<<<< HEAD
-    cy.getVisible(setorUsuario)
-=======
     cy.get(setorUsuario)
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         .click();
 
     cy.get(opcaoSetorUsuario)
@@ -241,11 +187,7 @@ Cypress.Commands.add('inserirSetorUsuario', (setorUsuario: string, opcaoSetorUsu
 
 
 Cypress.Commands.add('inserirUsuarioAprovador', (usuarioAprovador: string, opcaoUsuarioAprovador: string) => {
-<<<<<<< HEAD
-    cy.getVisible(usuarioAprovador)
-=======
     cy.get(usuarioAprovador)
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
         .click();
 
     cy.get(opcaoUsuarioAprovador)
@@ -261,14 +203,8 @@ Cypress.Commands.add('inserirLimiteAprovacao', (value: string, element: string) 
 
 
 Cypress.Commands.add('inserirCentroCustoPermitido', (element: string) => {
-<<<<<<< HEAD
-    cy.getVisible(element)
-        .click()
-});
-=======
     cy.get(element)
         .click()
 });
 
 
->>>>>>> 7e26ae0ed00df99f6fe0236388fd5d6c2090292e
