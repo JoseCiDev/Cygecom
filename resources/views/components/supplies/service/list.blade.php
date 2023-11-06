@@ -86,6 +86,8 @@
                                                 $concat = $company->name . ' - ' . $cnpj;
                                             @endphp
                                             <span class="tag-list-item">{{ $concat }}</span>
+                                            <!-- APENAS PARA PODER BUSCAR PELO CNPJ SEM FORMATAÇÃO-->
+                                            <span style="display: none">{{ $company->cnpj }}</span>
                                         @empty
                                             ---
                                         @endforelse

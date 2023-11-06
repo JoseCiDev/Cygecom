@@ -80,10 +80,12 @@
                                     <div class="tag-list">
                                         @forelse ($companies as $company)
                                             @php
-                                                $cnpj = $company->cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $company->cnpj) : 'CNPJ indefinido';
-                                                $concat = $company->name . ' - ' . $cnpj;
+                                                $formattedCnpj = $company->cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $company->cnpj) : 'CNPJ indefinido';
+                                                $concat = $company->name . ' - ' . $formattedCnpj;
                                             @endphp
                                             <span class="tag-list-item">{{ $concat }}</span>
+                                            <!-- APENAS PARA PODER BUSCAR PELO CNPJ SEM FORMATAÇÃO-->
+                                            <span style="display: none">{{ $company->cnpj }}</span>
                                         @empty
                                             ---
                                         @endforelse
