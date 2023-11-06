@@ -48,11 +48,11 @@
                             <th>Nº</th>
                             <th>Solicitante</th>
                             <th>Responsável</th>
-                            <th class="col-sm-3">Categorias</th>
+                            <th>Categorias</th>
                             <th>Status</th>
-                            <th>Condição de pgto.</th>
+                            <th>Fornecedor</th>
                             <th class="hidden-1024">Contratação por</th>
-                            <th class="hidden-1280">CNPJ</th>
+                            <th class="hidden-1280">Empresa</th>
                             <th class="hidden-1440">Data desejada</th>
                             <th>Ações</th>
                         </tr>
@@ -84,7 +84,19 @@
                                     </div>
                                 </td>
                                 <td>{{ $product->status->label() }}</td>
-                                <td>{{ $product->product->paymentInfo?->payment_terms?->label() ?? '---' }}</td>
+                                <td>
+                                    <div class="tag-list">
+                                        @forelse ($suppliers as $index => $supplier)
+                                            @php
+                                                $supplierName = $supplier->corporate_name;
+                                                $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj);
+                                            @endphp
+                                            <span class="tag-list-item">{{ $supplierName . ' - ' . $cnpj }}</span>
+                                        @empty
+                                            ---
+                                        @endforelse
+                                    </div>
+                                </td>
                                 <td class="hidden-1024">
                                     {{ $product->is_supplies_contract ? 'Suprimentos' : 'Solicitante' }}</td>
 

@@ -47,10 +47,9 @@
                             <th>Solicitante</th>
                             <th>Responsável</th>
                             <th>Status</th>
-                            <th class="col-sm-3">Fornecedor</th>
-                            <th>Condição de pgto.</th>
+                            <th>Fornecedor</th>
                             <th class="hidden-1024">Contratação por</th>
-                            <th class="hidden-1280">CNPJ</th>
+                            <th class="hidden-1280">Empresa</th>
                             <th class="hidden-1440">Data desejada</th>
                             <th>Ações</th>
                         </tr>
@@ -74,8 +73,17 @@
                                 <td>{{$service->user->person->name}}</td>
                                 <td>{{$service->suppliesUser?->person->name ?? '---'}}</td>
                                 <td>{{$service->status->label()}}</td>
-                                <td>{{$service->service->Supplier?->cpf_cnpj ?? '---'}}</td>
-                                <td>{{$service->service->paymentInfo?->payment_terms?->label() ?? '---' }}</td>
+                                <td>
+                                    <div class="tag-list">
+                                        @php
+                                            $supplierName = $suppliers?->corporate_name;
+                                            $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $suppliers?->cpf_cnpj);
+                                        @endphp
+                                        @if ($suppliers)
+                                            <span class="tag-list-item">{{ $supplierName . ' - ' . $cnpj }}</span>
+                                        @endif
+                                    </div>
+                                </td>
                                 <td>{{$service->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
 
                                 <td class="hidden-1280">

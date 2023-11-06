@@ -47,9 +47,8 @@
                             <th>Responsável</th>
                             <th>Status</th>
                             <th>Fornecedor</th>
-                            <th>Condição de pgto.</th>
                             <th class="hidden-1024">Contratação por</th>
-                            <th class="hidden-1280">CNPJ</th>
+                            <th class="hidden-1280">Empresa</th>
                             <th class="hidden-1440">Data desejada</th>
                             <th>Ações</th>
                         </tr>
@@ -73,8 +72,17 @@
                                 <td>{{$contract->user->person->name}}</td>
                                 <td>{{$contract->suppliesUser?->person->name ?? '---'}}</td>
                                 <td>{{$contract->status->label()}}</td>
-                                <td>{{$contract->contract->supplier?->cpf_cnpj ?? '---'}}</td>
-                                <td>{{$contract->contract->paymentInfo?->payment_terms?->label() ?? '---'}}</td>
+                                <td>
+                                    <div class="tag-list">
+                                        @php
+                                            $supplierName = $suppliers?->corporate_name;
+                                            $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $suppliers?->cpf_cnpj);
+                                        @endphp
+                                        @if ($suppliers)
+                                            <span class="tag-list-item">{{ $supplierName . ' - ' . $cnpj }}</span>
+                                        @endif
+                                    </div>
+                                </td>
                                 <td class="hidden-1024">{{$contract->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
                                 <td class="hidden-1280">
                                     <div class="tag-list">
