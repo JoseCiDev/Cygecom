@@ -83,6 +83,10 @@
                     <h4 class="text-highlight"><strong>Responsável pela contratação:</strong>
                         {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }} </h4>
                     <br>
+                    <h4 class="text-highlight"><strong>Ordem de compra:</strong>
+                        {{ $request->purchase_order ?? '---' }}
+                    </h4>
+                    <br>
                 </div>
             </header>
             <main>
