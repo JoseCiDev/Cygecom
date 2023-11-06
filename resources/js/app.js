@@ -104,6 +104,7 @@ $(() => {
     // autocomplete off
     $("form").attr('autocomplete', 'off');
 
+    const $badgeColumnsQtd = $(`<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"></span>`);
     setColvisConfig();
     $('.dataTable').each((_, table) => $(table).DataTable({
         dom: 'Blfrtip',
@@ -129,7 +130,7 @@ $(() => {
             {
                 extend: 'colvis',
                 columns: ':not(.noColvis)',
-                text: 'Mostrar / Ocultar colunas',
+                text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
             }
         ],
     }));

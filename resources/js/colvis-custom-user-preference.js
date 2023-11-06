@@ -7,8 +7,13 @@ const setColvisConfig = () => {
         return `${currentPathname}#${currentDtId}`;
     };
 
+    const setBadgeColumnQtd = (qtd) => {
+        const $badgeColumns = $('button.dt-button.buttons-collection.buttons-colvis .badge');
+        $badgeColumns.text(qtd === 0 ? null : qtd);
+    }
+
     const colvisColumnToggle = (event) => {
-        const $currentElement = $(event.target);
+        const $currentElement = $(event.target).closest('button.dt-button.buttons-columnVisibility');
         const columnIndex = $currentElement.data('cv-idx');
         const isActive = $currentElement.hasClass('dt-button-active');
         const colvisPreferenceKeyName = getColvisPreferenceKeyName($currentElement);
@@ -19,6 +24,7 @@ const setColvisConfig = () => {
                 $.get('/api/user').done((user) => {
                     const dtUserColumnPreference = {  userId: user.id, columnsIdx: [{ idx: columnIndex, isActive: isActive }] };
                     saveOnStorage(colvisPreferenceKeyName, dtUserColumnPreference);
+                    setBadgeColumnQtd(dtUserColumnPreference.columnsIdx.length);
                 });
             }
             saveFirstPreference();
@@ -34,6 +40,9 @@ const setColvisConfig = () => {
         }
 
         saveOnStorage(colvisPreferenceKeyName, dtUserColumnPreference);
+
+        const inactiveColumnQtd = dtUserColumnPreference.columnsIdx.filter((element) => !element.isActive).length
+        setBadgeColumnQtd(inactiveColumnQtd);
     }
 
     const onOpenColvis = (event) => {

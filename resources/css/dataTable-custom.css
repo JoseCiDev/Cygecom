@@ -310,9 +310,10 @@
 /* Botão mostra/ocultar colunas */
 button.dt-button.buttons-collection.buttons-colvis {
     margin-top: 15px;
-    width: 230px;
     position: relative;
     background-color: #fff;
+    display: flex;
+    gap: 10px;
 }
 
 button.dt-button.buttons-collection.buttons-colvis:hover {

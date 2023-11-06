@@ -310,6 +310,7 @@
                 }
             });
 
+            const $badgeColumnsQtd = $(`<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"></span>`);
             $reportsTable.DataTable({
                 dom: 'Blfrtip',
                 initComplete: function() {
@@ -619,7 +620,7 @@
                     {
                         extend: 'colvis',
                         columns: ':not(.noColvis)',
-                        text: 'Mostrar / Ocultar colunas',
+                        text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
                         columnText: (dt, idx, title ) => title,
                     }
                 ],
