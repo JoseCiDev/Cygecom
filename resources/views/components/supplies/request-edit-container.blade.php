@@ -2,6 +2,7 @@
     use App\Enums\PurchaseRequestStatus;
 
     $currentUser = auth()->user();
+    $statusFinish = PurchaseRequestStatus::FINALIZADA->value;
 @endphp
 
 
@@ -50,6 +51,13 @@
                     @endforeach
                 </select>
             </div>
+
+            <div class="col-sm-3" id="purchase-order-box" hidden>
+                <div class="form-group">
+                    <label for="purchase_order" class="regular-text">Ordem de compra</label>
+                    <input type="text" name="purchase_order" id="purchase_order" data-cy="purchase_order" class="form-control" maxlength="20">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -81,6 +89,9 @@
 
 <script>
     $(() => {
+        const statusFinish = @json($statusFinish);
+        const $purchaseOrderBox = $("#purchase-order-box");
+        const $purchaseOrder = $("#purchase_order");
         $form = $("#form-request-edit");
         $status = $('#status');
         $reasonUpdateStatus = $('#supplies-update-reason');
@@ -94,6 +105,15 @@
                 $reasonUpdateStatus.removeRequired();
                 $reasonUpdateStatus.val('');
                 return;
+            }
+
+            if($(this).val() === statusFinish) {
+                $purchaseOrderBox.show();
+                $purchaseOrder.makeRequired();
+            } else {
+                $purchaseOrderBox.hide();
+                $purchaseOrder.removeRequired();
+                $purchaseOrder.val(null);
             }
 
             const isCancel = $(this).val() === 'cancelada';
