@@ -71,10 +71,10 @@
                             {{-- SUPRIMENTOS --}}
                             <h4 class="topic"><i class="fa fa-user"></i> <strong>Informações do suprimentos</strong></h4>
                             <p>
-                                <strong>Responsável:</strong> <span class="supplies-user-email">---</span>
+                                <strong>Responsável:</strong> <span class="supplies-user-person">---</span>
                             </p>
                             <p>
-                                <strong>E-mail do responsável:</strong> <span class="supplies-user-person">---</span>
+                                <strong>E-mail do responsável:</strong> <span class="supplies-user-email">---</span>
                             </p>
                             <p>
                                 <strong>Responsável em:</strong> <span class="responsibility_marked_at">---</span>

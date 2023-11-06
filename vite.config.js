@@ -8,8 +8,7 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
 
-                'public/js/plugins/validation/jquery.validate.min.js', // v1.13.1
-                'public/js/plugins/validation/additional-methods.min.js' // v1.13.1,
+                'resources/css/login.css',
             ]
         ),
     ],

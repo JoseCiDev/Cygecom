@@ -2,6 +2,9 @@ import jQuery from 'jquery'; // v3.7.1
 window.$ = jQuery;
 window.jQuery = window.$
 
+import 'jquery-validation'; //  v1.20.0
+import 'jquery-validation/dist/localization/messages_pt_BR';
+
 import "@fortawesome/fontawesome-free/js/all"; // v6.4.2
 
 import * as bootstrap from "bootstrap"; // v5.3.2

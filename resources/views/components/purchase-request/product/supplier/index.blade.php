@@ -8,7 +8,7 @@
     'isCopy' => false
 ])
 
-@push('scripts')
+@push('styles')
     <style>
         .supplier-block{
             border-bottom: 3px solid var(--grey-primary-color);
@@ -18,21 +18,27 @@
 
         .select-supplier-container{
             display: flex;
-            gap: 15px
+            gap: 15px;
+            justify-content: space-between;
         }
         .select-supplier-container .delete-supplier{
-            width: 60px;
+            width: 325px;
             display: flex;
             align-items: center;
-            justify-content: center
+            justify-content: space-around;
         }
+
+        .select-supplier-container .delete-supplier.disabled-button{
+           opacity: 0;
+        }
+
     </style>
 @endpush
 
 <div class="supplier-block">
 
     <div class="row">
-        <div class="col-sm-5">
+        <div class="col-sm-12">
             <div class="form-group">
                 <label class="regular-text"> Fornecedor (CNPJ - Razão social)</label>
                 <div class="select-supplier-container">
@@ -49,7 +55,7 @@
                             </option>
                         @endforeach
                     </select>
-                    <a class="btn btn-secondary btn-mini delete-supplier"> <i class="fa fa-times"></i> </a>
+                    <a class="btn btn-danger btn-secondary btn-mini delete-supplier">Apagar fornecedor e produto(s) <i class="fa fa-times"></i></a>
                 </div>
             </div>
         </div>
