@@ -162,11 +162,11 @@ class ReportService
             0 => 'purchase_requests.id',
             1 => 'purchase_requests.type',
             2 => $latestLogSubquery,
-            3 => $getPersonName,
-            4 => $getPersonRequester,
-            5 => 'purchase_requests.status',
-            6 => $getPersonSupplies,
-            11 => 'total_amount'
+            4 => $getPersonName,
+            5 => $getPersonRequester,
+            6 => 'purchase_requests.status',
+            7 => $getPersonSupplies,
+            12 => 'total_amount'
         };
 
         return $orderColumnMappings;
