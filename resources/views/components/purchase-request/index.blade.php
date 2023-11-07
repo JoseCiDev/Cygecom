@@ -59,6 +59,7 @@
                                         <th>Responsável</th>
                                         <th>Data desejada</th>
                                         <th class="hidden-1440">Atualizado em</th>
+                                        <th >Valor total</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
@@ -69,31 +70,35 @@
                                             $supplier = null;
                                             $msg = '';
                                             $name = '---';
-                                            if ($purchaseRequest->type === PurchaseRequestType::SERVICE) {
-                                                $supplier = $purchaseRequest->service->supplier ?? null;
-                                                $name = $purchaseRequest->service->name ?? '---';
-                                            } elseif ($purchaseRequest->type === PurchaseRequestType::CONTRACT) {
-                                                $supplier = $purchaseRequest->contract->supplier ?? null;
-                                                $name = $purchaseRequest->contract->name ?? '---';
-                                            } else  {
-                                                $countSuppliers = count($purchaseRequest?->purchaseRequestProduct?->groupBy('supplier_id'));
 
+                                            $requestType = $purchaseRequest->type->value;
+                                            if($requestType === PurchaseRequestType::PRODUCT->value) {
+                                                $countSuppliers = count($purchaseRequest?->purchaseRequestProduct?->groupBy('supplier_id'));
                                                 if ($countSuppliers > 1) {
                                                     $msg = ' (+' . ($countSuppliers - 1) . ')';
                                                 }
+
                                                 $supplier = $purchaseRequest?->purchaseRequestProduct->first()->supplier ?? null;
+                                            } else {
+                                                $supplier = $purchaseRequest[$requestType]->supplier ?? null;
+                                                $name = $purchaseRequest[$requestType]->name ?? '---';
                                             }
+
+                                            $cnpj = $supplier?->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj) : 'CNPJ indefinido';
+                                            $amount = $purchaseRequest[$requestType]->amount ?? $purchaseRequest[$requestType]->price;
+                                            $formatedAmount = $amount ? number_format($amount, 2, '.', ',') : '---';
                                         @endphp
                                         <tr>
                                             <td>{{$purchaseRequest->id}}</td>
                                             <td class="hidden-1280">{{$purchaseRequest->is_supplies_contract ? 'Suprimentos' : 'Área Solicitante'}}</td>
                                             <td>{{$purchaseRequest->type->label()}}</td>
                                             <td>{{$name}}</td>
-                                            <td>{{$supplier?->corporate_name . $msg}}</td>
+                                            <td>{{$supplier?->corporate_name ? $supplier?->corporate_name . " - " . $cnpj . " " . $msg : '---'}}</td>
                                             <td>{{$purchaseRequest->status->label()}}</td>
                                             <td>{{$purchaseRequest->suppliesUser?->person?->name ?? '---'}}</td>
                                             <td>{{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}</td>
                                             <td class="hidden-1440">{{ $purchaseRequest->updated_at->formatCustom('d/m/Y H:i:s')  }}</td>
+                                            <td><span hidden>{{$amount}}</span> R$ {{ $formatedAmount }}</td>
 
                                             {{-- BTN AÇÕES --}}
                                             <td style="white-space: nowrap;">
