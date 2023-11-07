@@ -300,8 +300,14 @@
                         @if (isset($user))
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
-                                <input type="text" id="format-approve-limit" data-cy="format-approve-limit" placeholder="Ex: 100,00" class="form-control format-approve-limit" data-rule-required="true"
-                                    @if ($user->approve_limit === null) readonly @else value="{{ (float) $user->approve_limit }}" @endif>
+                                <input type="text" id="format-approve-limit" data-cy="format-approve-limit" placeholder="Ex: 100,00" class="form-control format-approve-limit"
+                                @if ($user->approve_limit === null)
+                                    readonly
+                                @else
+                                    data-rule-required="true"
+                                    value="{{ (float) $user->approve_limit }}"
+                                @endif>
+
                                 <input type="hidden" name="approve_limit" id="approve_limit" data-cy="approve_limit" class="approve_limit no-validation">
                             </div>
                         @else
