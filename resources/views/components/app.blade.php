@@ -233,8 +233,8 @@
                                 <li><a href="{{ route('supplies.index') }}" data-cy="dropdown-suprimentos-dashboard">Dashboard</a></li>
                                 @if ($currentProfile === 'admin')
                                     <li><a href="{{ route('supplies.product') }}" data-cy="dropdown-suprimentos-produtos">Produtos</a></li>
-                                    <li><a href="{{ route('supplies.service') }}" data-cy="dropdown-suprimentos-servicos">Serviços</a></li>
-                                    <li><a href="{{ route('supplies.contract') }}" data-cy="dropdown-suprimentos-contratos">Contratos</a></li>
+                                    <li><a href="{{ route('supplies.service') }}" data-cy="dropdown-suprimentos-servicos-pontuais">Serviços pontuais</a></li>
+                                    <li><a href="{{ route('supplies.contract') }}" data-cy="dropdown-suprimentos-servicos-recorrentes">Serviços recorrentes</a></li>
                                 @endif
                             </ul>
                         </li>
