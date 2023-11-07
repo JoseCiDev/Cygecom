@@ -235,7 +235,7 @@
                             placeholder="Ex: Ar condicionado da sala de reuniões do atrium apresenta defeitos de funcionamento"
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
-                    <div class="small" style="margin-top: 5px; margin-bottom:20px;">
+                    <div class="small" style="margin-top: 10px; margin-bottom:20px;">
                         <p class="secondary-text">* Por favor, forneça uma breve descrição do motivo pelo qual você está solicitando esta compra.</p>
                     </div>
                 </div>
@@ -248,7 +248,7 @@
                             rows="4" placeholder="Descreva com detalhes o objetivo do serviço recorrente"
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
-                    <div class="small" style="margin-top: 5px; margin-bottom:20px;">
+                    <div class="small" style="margin-top: 10px; margin-bottom:20px;">
                         <p class="secondary-text">* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação.</p>
                     </div>
                 </div>
