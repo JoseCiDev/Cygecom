@@ -24,36 +24,36 @@
                             {{-- INFO BASICA --}}
                             <h4 class="topic"><i class="fa fa-info"></i> <strong>Informações básicas</strong></h4>
                             <p>
-                                <strong>Status de aprovação:</strong> <span class="status"></span>
+                                <strong>Status de aprovação:</strong> <span class="status clear-on-hide"></span>
                             </p>
                             <p>
-                                <strong>Tipo de solicitação:</strong> <span class="type"></span>
+                                <strong>Tipo de solicitação:</strong> <span class="type clear-on-hide"></span>
                             </p>
                             <p>
                                 <strong>Contratação deve ser por:</strong>
-                                <span class="is_supplies_contract"></span>
+                                <span class="is_supplies_contract clear-on-hide"></span>
                             </p>
                             <p>
-                                <strong>COMEX:</strong> <span class="is_comex"></span>
+                                <strong>COMEX:</strong> <span class="is_comex clear-on-hide"></span>
                             </p>
                             <p>
-                                <strong>Solicitação criada em:</strong> <span class="created_at"></span>
+                                <strong>Solicitação criada em:</strong> <span class="created_at clear-on-hide"></span>
                             </p>
                             <p>
-                                <strong>Solicitação atualizada em:</strong> <span class="updated_at"></span>
+                                <strong>Solicitação atualizada em:</strong> <span class="updated_at clear-on-hide"></span>
                             </p>
                             <p>
-                                <strong>Solicitação desejada para:</strong> <span class="desired_date"></span>
+                                <strong>Solicitação desejada para:</strong> <span class="desired_date clear-on-hide"></span>
                             </p>
 
                             <hr>
 
                             {{-- SOLICITANTE --}}
                             <h4 class="topic"><i class="fa fa-user"></i> <strong>Informações do solicitante</strong></h4>
-                            <p><strong>E-mail do solicitante:</strong> <span class="user-email">---</span></p>
+                            <p><strong>E-mail do solicitante:</strong> <span class="user-email clear-on-hide">---</span></p>
                             <p>
                                 <strong>Autorização para solicitar:</strong>
-                                <span class="user-is_buyer">---</span>
+                                <span class="user-is_buyer clear-on-hide">---</span>
                             </p>
 
                         </div>
@@ -64,26 +64,26 @@
                         <div class="tab-content padding">
                             {{-- FORNECEDORES --}}
                             <h4 class="topic"><i class="glyphicon glyphicon-briefcase"></i> <strong>Fornecedores</strong></h4>
-                            <div class="supplier-information" style="font-size: 16px">
+                            <div class="supplier-information clear-on-hide" style="font-size: 16px">
                                 {{-- Adição dinâmica de fornecedores--}}
                             </div>
 
                             {{-- SUPRIMENTOS --}}
                             <h4 class="topic"><i class="fa fa-user"></i> <strong>Informações do suprimentos</strong></h4>
                             <p>
-                                <strong>Responsável:</strong> <span class="supplies-user-person">---</span>
+                                <strong>Responsável:</strong> <span class="supplies-user-person clear-on-hide">---</span>
                             </p>
                             <p>
-                                <strong>E-mail do responsável:</strong> <span class="supplies-user-email">---</span>
+                                <strong>E-mail do responsável:</strong> <span class="supplies-user-email clear-on-hide">---</span>
                             </p>
                             <p>
-                                <strong>Responsável em:</strong> <span class="responsibility_marked_at">---</span>
+                                <strong>Responsável em:</strong> <span class="responsibility_marked_at clear-on-hide">---</span>
                             </p>
                             <hr>
 
                             {{-- CENTRO DE CUSTO --}}
                             <h4 class="topic"><i class="fa-solid fa-money-bill"></i> <strong>Centros de custo</strong></h4>
-                            <ul class="costCenterApportionment" style="font-size: 16px">
+                            <ul class="costCenterApportionment clear-on-hide" style="font-size: 16px">
                                 {{-- Adição dinâmica de <li> aqui --}}
                             </ul>
 

@@ -35,7 +35,7 @@
                         @endforeach
                     </select>
 
-
+                    <span class="loader-box"></span>
                     <table id="supplierTable" class="table table-hover table-nomargin table-bordered" data-nosort="0"
                         data-checkall="all" style="width:100%">
                         <thead>
@@ -74,6 +74,7 @@
             lengthMenu: [10, 25, 50, 100],
             searching: true,
             searchDelay: 1000,
+            processing: true,
             language: {
                 lengthMenu: "Mostrar _MENU_ registros por página",
                 zeroRecords: "Nenhum registro encontrado",
@@ -81,12 +82,8 @@
                 infoEmpty: "Nenhum registro disponível",
                 infoFiltered: "(filtrado de _MAX_ registros no total)",
                 search: "Buscar:",
-                paginate: {
-                    first: "Primeiro",
-                    last: "Último",
-                    next: "Próximo",
-                    previous: "Anterior"
-                }
+                paginate: { first: "Primeiro", last: "Último", next: "Próximo", previous: "Anterior"},
+                processing:  $('.loader-box').show(),
             },
             ajax: {
                 url: @json(route('api.suppliers.index')),
@@ -97,6 +94,7 @@
             },
             columns: [{
                     data: 'cpf_cnpj',
+                    orderable: false,
                     render: (value) => {
                         const cnpjRegex = /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/;
                         return cnpjRegex.test(value) ? value.replace(cnpjRegex,
@@ -104,20 +102,25 @@
                     }
                 },
                 {
-                    data: 'corporate_name'
+                    data: 'corporate_name',
+                    orderable: false,
                 },
                 {
                     data: 'name',
+                    orderable: false,
                     defaultContent: '---'
                 },
                 {
-                    data: 'supplier_indication'
+                    data: 'supplier_indication',
+                    orderable: false,
                 },
                 {
-                    data: 'market_type'
+                    data: 'market_type',
+                    orderable: false,
                 },
                 {
                     data: 'qualification',
+                    orderable: false,
                     render: (value) => {
                         const enumQualification = @json($enumQualification);
                         return enumQualification[value];
@@ -125,6 +128,7 @@
                 },
                 {
                     data: null,
+                    orderable: false,
                     render: (data) => (
                         '<a href="suppliers/view/' + data.id + '" ' +
                         'class="btn" rel="tooltip" title="Editar" data-cy="btn-edit-supplier-' +

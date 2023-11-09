@@ -230,7 +230,7 @@
                         <textarea data-rule-required="true" minlength="20" name="reason" id="reason" data-cy="reason" rows="4"
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
-                    <div class="small" style="margin-top: 5px; margin-bottom:20px;">
+                    <div class="small" style="margin-top: 10px; margin-bottom:20px;">
                         <p class="secondary-text">*Informe o motivo pelo qual você está solicitando esta contratação
                         </p>
                     </div>
@@ -245,7 +245,7 @@
                             placeholder="Ex.: Contratação de serviço para conserto de uma máquina da produção que está apresentando defeitos."
                             class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
-                    <div class="small" style="margin-top: 5px; margin-bottom:20px;">
+                    <div class="small" style="margin-top: 10px; margin-bottom:20px;">
                         <p class="secondary-text">*Descreva com detalhes o tipo de serviço que está solicitando.</p>
                     </div>
                 </div>

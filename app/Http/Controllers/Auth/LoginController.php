@@ -66,4 +66,23 @@ class LoginController extends Controller
             $this->username() => ['As credenciais fornecidas não coincidem com nossos registros.'],
         ]);
     }
+
+    /**
+     * Customização: Sobrescrito função do trait para validar deleted_at de user
+     * Attempt to log the user into the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function attemptLogin(Request $request)
+    {
+        $result = $this->guard()->attempt($this->credentials($request), $request->boolean('remember'));
+
+        if ($result && $this->guard()->user()->deleted_at !== null) {
+            $this->guard()->logout();
+            return false;
+        }
+
+        return $result;
+    }
 }
