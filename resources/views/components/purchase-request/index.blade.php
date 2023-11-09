@@ -3,7 +3,7 @@
     $currentRoute = Route::currentRouteName();
 @endphp
 <x-app>
-    <x-modalDelete />
+    <x-modals.delete />
 
     <div class="row">
         <div class="col-sm-12">
@@ -46,7 +46,7 @@
                     <div class="col-md-12">
                         <div class="box-content nopadding regular-text">
 
-                            <table class="table table-hover table-nomargin table-bordered dataTable"
+                            <table style="width:100%" class="table table-hover table-nomargin table-bordered dataTable"
                                 data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                                 <thead>
                                     <tr>
@@ -120,8 +120,8 @@
                                                     <button data-route="purchaseRequests"
                                                         data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                                                         data-id="{{ $purchaseRequest->id }}" rel="tooltip"
-                                                        title="Excluir" class="btn" data-toggle="modal"
-                                                        data-target="#modal"
+                                                        title="Excluir" class="btn" data-bs-toggle="modal"
+                                                        data-bs-target="#modal-delete"
                                                         data-cy="btn-delete-request-{{ $index }}">
                                                         <i class="fa fa-times"></i>
                                                     </button>
