@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\PurchaseRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Route;
 use App\Providers\{SupplierService, ValidatorService};
 
 class SupplierController extends Controller
@@ -17,7 +15,8 @@ class SupplierController extends Controller
     public function __construct(
         private ValidatorService $validatorService,
         private SupplierService $supplierService
-    ){}
+    ) {
+    }
 
     public function index(): View
     {
