@@ -40,7 +40,7 @@
                 </div>
 
                 <table class="table table-hover table-nomargin table-bordered dataTable" data-column_filter_dateformat="dd-mm-yy"
-                    data-nosort="0" data-checkall="all">
+                    style="width:100%" data-nosort="0" data-checkall="all">
                     <thead>
                         <tr>
                             <th>Nº</th>
@@ -103,8 +103,8 @@
                                         rel="tooltip"
                                         title="Analisar"
                                         class="btn"
-                                        data-toggle="modal"
-                                        data-target="#modal-supplies"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal-supplies"
                                         data-cy="btn-analisar-{{$index}}"
                                     >
                                         <i class="fa fa-search"></i>
@@ -135,4 +135,6 @@
     </div>
 </div>
 
-<script src="{{asset('js/supplies/modal-confirm-supplies-responsability.js')}}"></script>
+@push('scripts')
+    <script type="module" src="{{asset('js/supplies/modal-confirm-supplies-responsability.js')}}"></script>
+@endpush

@@ -41,7 +41,7 @@
                     </div>
                 </div>
 
-                <table class="table table-hover table-nomargin table-bordered dataTable"
+                <table class="table table-hover table-nomargin table-bordered dataTable" style="width:100%"
                     data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                     <thead>
                         <tr>
@@ -113,8 +113,8 @@
                                     <button
                                         data-modal-name="{{ 'Analisando Solicitação de Produto - Nº ' . $product->id }}"
                                         data-id="{{ $product->id }}" data-request="{{ json_encode($modalData) }}"
-                                        rel="tooltip" title="Analisar" class="btn" data-toggle="modal"
-                                        data-target="#modal-supplies" data-cy="btn-analisar-{{ $index }}">
+                                        rel="tooltip" title="Analisar" class="btn" data-bs-toggle="modal"
+                                        data-bs-target="#modal-supplies" data-cy="btn-analisar-{{ $index }}">
                                         <i class="fa fa-search"></i>
                                     </button>
                                     @php
@@ -139,4 +139,6 @@
     </div>
 </div>
 
-<script src="{{ asset('js/supplies/modal-confirm-supplies-responsability.js') }}"></script>
+@push('scripts')
+    <script type="module" src="{{ asset('js/supplies/modal-confirm-supplies-responsability.js') }}"></script>
+@endpush

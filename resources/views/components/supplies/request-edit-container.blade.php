@@ -24,7 +24,7 @@
             <div class="col-sm-3">
                 <label for="status" class="regular-text">Status da solicitação</label>
                 <select name="status" data-cy="status" id="status" @disabled($requestIsFromLogged)
-                    class='chosen-select form-control'>
+                    class='select2-me' style="width:100%;">
                     @foreach ($allRequestStatus as $status)
                         @if ($status->value !== PurchaseRequestStatus::RASCUNHO->value)
                             <option @selected($requestStatus === $status) value="{{ $status }}">
@@ -87,94 +87,83 @@
     </div>
 </form>
 
-<script>
-    $(() => {
-        const statusFinish = @json($statusFinish);
-        const $purchaseOrderBox = $("#purchase-order-box");
-        const $purchaseOrder = $("#purchase_order");
-        $form = $("#form-request-edit");
-        $status = $('#status');
-        $reasonUpdateStatus = $('#supplies-update-reason');
-        $reasonUpdateStatusDiv = $('.div-reason-update');
+@push('scripts')
+    <script type="module">
+        $(() => {
+            const statusFinish = @json($statusFinish);
+            const $purchaseOrderBox = $("#purchase-order-box");
+            const $purchaseOrder = $("#purchase_order");
+            const $form = $("#form-request-edit");
+            const $status = $('#status');
+            const $reasonUpdateStatus = $('#supplies-update-reason');
+            const $reasonUpdateStatusDiv = $('.div-reason-update');
 
-        const statusOldValue = $status.val();
 
-        $status.on('change', function() {
-            if ($(this).val() === statusOldValue) {
-                $reasonUpdateStatusDiv.attr('hidden', true);
-                $reasonUpdateStatus.removeRequired();
-                $reasonUpdateStatus.val('');
-                return;
-            }
+            const statusOldValue = $status.val();
 
-            if($(this).val() === statusFinish) {
-                $purchaseOrderBox.show();
-                $purchaseOrder.makeRequired();
-            } else {
-                $purchaseOrderBox.hide();
-                $purchaseOrder.removeRequired();
-                $purchaseOrder.val(null);
-            }
+            $status.on('change', function() {
+                if ($(this).val() === statusOldValue) {
+                    $reasonUpdateStatusDiv.attr('hidden', true);
+                    $reasonUpdateStatus.removeRequired();
+                    $reasonUpdateStatus.val('');
+                    return;
+                }
 
-            const isCancel = $(this).val() === 'cancelada';
+                if($(this).val() === statusFinish) {
+                    $purchaseOrderBox.show();
+                    $purchaseOrder.makeRequired();
+                } else {
+                    $purchaseOrderBox.hide();
+                    $purchaseOrder.removeRequired();
+                    $purchaseOrder.val(null);
+                }
 
-            $reasonUpdateStatusDiv.attr('hidden', false);
+                const isCancel = $(this).val() === 'cancelada';
 
-            if (isCancel) {
-                $reasonUpdateStatus.makeRequired();
-                $reasonUpdateStatus.rules('add', {
-                    required: true,
-                    messages: {
-                        required: 'Motivo é obrigatório para cancelar uma solicitação.',
-                    },
-                });
-            } else {
-                $reasonUpdateStatus.removeRequired();
-            }
-        });
+                $reasonUpdateStatusDiv.attr('hidden', false);
 
-        $form.on('submit', function(event) {
-            event.preventDefault();
-
-            const formIsValid = $form.valid();
-
-            if(!formIsValid) {
-                return;
-            }
-
-            const statusValue = $('#status').find(':selected').text();
-            const reasonUpdateStatus = $reasonUpdateStatus.val() ?? '' ;
-            const amountValue = "R$ " + $('#amount').val();
-            const responsibleValue = $('#supplies_user_id').find(':selected').text();
-
-            bootbox.confirm({
-                title: 'Atenção! Deseja realmente alterar os dados?',
-                className: 'regular-text',
-                message: "Por favor, confirme os dados que serão enviados: " +
-                    "<ul>" +
-                    `<li class="regular-text" >Status: ${statusValue}</li>` +
-                    (reasonUpdateStatus ? `<li class="regular-text">Motivo mudança de status: ${reasonUpdateStatus}</li>` : '') +
-                    `<li class="regular-text">Valor total: ${amountValue}</li>` +
-                    (responsibleValue.length ? `<li>Responsável: ${responsibleValue}</li>` :
-                        '') +
-                    "</ul>",
-                buttons: {
-                    confirm: {
-                        label: 'Sim, atualizar solicitação',
-                        className: 'btn btn-success'
-                    },
-                    cancel: {
-                        label: 'Cancelar',
-                        className: 'btn btn-small'
-                    }
-                },
-                callback: function(result) {
-                    if (result) {
-                        $form.off('submit');
-                        $form.trigger('submit');
-                    }
+                if (isCancel) {
+                    $reasonUpdateStatus.makeRequired();
+                    $reasonUpdateStatus.rules('add', {
+                        required: true,
+                        messages: {
+                            required: 'Motivo é obrigatório para cancelar uma solicitação.',
+                        },
+                    });
+                } else {
+                    $reasonUpdateStatus.removeRequired();
                 }
             });
+
+            $form.on('submit', function(event) {
+                event.preventDefault();
+
+                const formIsValid = $form.valid();
+
+                if(!formIsValid) {
+                    return;
+                }
+
+                const statusValue = $('#status').find(':selected').text();
+                const reasonUpdateStatus = $reasonUpdateStatus.val() ?? '' ;
+                const amountValue = "R$ " + $('#amount').val();
+                const responsibleValue = $('#supplies_user_id').find(':selected').text();
+
+                const title = 'Atenção! Deseja realmente alterar os dados?';
+                const message = "Por favor, confirme os dados que serão enviados: " +
+                    "<ul>" +
+                        `<li class="regular-text" >Status: ${statusValue}</li>` +
+                        (reasonUpdateStatus ? `<li class="regular-text">Motivo mudança de status: ${reasonUpdateStatus}</li>` : '') +
+                        `<li class="regular-text">Valor total: ${amountValue}</li>` +
+                        (responsibleValue.length ? `<li>Responsável: ${responsibleValue}</li>` :
+                            '') +
+                    "</ul>";
+
+                $.fn.showModalAlert(title, message, () => {
+                    $form.off('submit');
+                    $form.trigger('submit');
+                })
+            });
         });
-    });
-</script>
+    </script>
+@endpush

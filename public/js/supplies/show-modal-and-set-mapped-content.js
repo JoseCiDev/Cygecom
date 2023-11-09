@@ -1,15 +1,14 @@
 $(() =>{
     const formatCnpj = (cnpj) => cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
 
-    $('#modal-supplies').on('show.bs.modal', function(event) {
-        const list = $('.modal-body-dynamic-list')
-        list.text('')
+    const $modalSupplies = $('#modal-supplies');
 
-        const modal = $(this);
+    $modalSupplies.on('show.bs.modal', function(event) {
+        const $modal = $(this);
         const button = $(event.relatedTarget);
         const name = button.data('modal-name');
 
-        modal.find('.modal-name').text(name);
+        $modal.find('.modal-name').text(name);
 
         const dateFormatter = (date, execeptionMessage) => date ? new Date(date).toLocaleDateString('pt-br') : (execeptionMessage || '---');
         const booleanFormatter = (value, truthyMessage, falsyMessage) => value ? (truthyMessage || 'Verdadeiro') : (falsyMessage || 'Falso');
@@ -54,7 +53,7 @@ $(() =>{
         }
 
         const mappedSuppliesUserEntries = {
-            email: (value) =>  value,
+            email: (value) => value,
             person: (value) => value?.name
         }
 
@@ -79,7 +78,6 @@ $(() =>{
             </li>`;
             elementCostCenterApportionment.append(liElement);
         });
-
 
         const elementSuppliersInformation = $('.supplier-information');
         elementSuppliersInformation.empty();
@@ -138,4 +136,6 @@ $(() =>{
             });
         }
     });
+
+    $modalSupplies.on("hidden.bs.modal", () => $('.clear-on-hide').html('---'));
 });

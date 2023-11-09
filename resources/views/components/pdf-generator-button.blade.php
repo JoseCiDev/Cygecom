@@ -31,7 +31,7 @@
 @endpush
 
 @push('scripts')
-    <script>
+    <script type="module">
         $(()=> {
             const element = $('{{ $selector }}');
 
@@ -81,5 +81,3 @@
         })
     </script>
 @endpush
-
-

@@ -16,9 +16,9 @@
         </div>
         @if (isset($user) && auth()->user()->id !== $user->id)
             <div class="col-md-6" style="padding: 0">
-                <x-modalDelete />
+                <x-modals.delete />
                 <button data-route="user" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario"
-                    data-toggle="modal" data-target="#modal" rel="tooltip" title="Excluir" class="btn btn-primary btn-small btn-danger pull-right">
+                    data-bs-toggle="modal" data-bs-target="#modal-delete" rel="tooltip" title="Excluir" class="btn btn-primary btn-small btn-danger pull-right">
                     Excluir usuário
                 </button>
             </div>
@@ -81,14 +81,14 @@
                         {{-- PESSOAL --}}
                         <label class="form-check-label regular-text" for="personal">
                             <input @disabled($isDisabled) @checked(isset($user) && $user->person->phone?->phone_type === 'personal')
-                                class="icheck-me" type="radio" name="phone_type" id="personal" data-cy="personal" value="personal" data-skin="minimal">
+                             type="radio" name="phone_type" id="personal" data-cy="personal" value="personal" data-skin="minimal">
                             Pessoal
                         </label>
 
                         {{-- COMERCIAL --}}
                         <label class="form-check-label regular-text" for="commercial">
                             <input @disabled($isDisabled) @checked(isset($user) && $user->person->phone?->phone_type === 'commercial')
-                                class="icheck-me" type="radio" name="phone_type" id="commercial" data-cy="commercial" value="commercial" data-skin="minimal"
+                             type="radio" name="phone_type" id="commercial" data-cy="commercial" value="commercial" data-skin="minimal"
                                 @if (!isset($user)) checked @endif >
                             Comercial
                         </label>
@@ -152,55 +152,39 @@
             <div class="row" style="padding: 25px 0">
                 {{-- PERFIL DE USUÁRIO --}}
                 <div class="form-group">
-                    <div class="col-sm-6">
-                        <label for="form-check" style="margin-bottom: 12px;" class="regular-text">Perfil de usuário</label>
-                        <div class="form-check row">
-                            <div class="col-md-4">
-                                @if ($isAdmin)
-                                    <div>
-                                        <label class="form-check-label secondary-text" for="profile_admin"><input @checked(isset($user) && $user->profile->name === 'admin') class="icheck-me"
-                                            type="radio" name="profile_type" id="profile_admin" data-cy="profile_admin" value="admin" data-skin="minimal">
-                                        Administrador</label>
-                                    </div>
-                                    <div>
-                                        <label class="form-check-label secondary-text" for="profile_diretor"><input @checked(isset($user) && $user->profile->name === 'diretor') class="icheck-me"
-                                            type="radio" name="profile_type" id="profile_diretor" data-cy="profile_diretor" value="diretor" data-skin="minimal">
-                                        Diretor</label>
-                                    </div>
-                                @endif
-                                <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'normal') class="icheck-me"
-                                        type="radio" name="profile_type" id="profile_normal" data-cy="profile_normal" value="normal" data-skin="minimal"
-                                    @if (!isset($user)) checked @endif>
-                                    Padrão</label>
-                                </div>
+                    <div class="col-sm-12 my-3 fs-6">
+                        <label for="form-check" style="display:block; margin-bottom: 12px;" class="regular-text fs-5">Perfil de usuário</label>
+                        @if ($isAdmin)
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="profile_type" id="profile_admin" data-cy="profile_admin" value="admin" @checked(isset($user) && $user->profile->name === 'admin')>
+                                <label class="form-check-label" for="profile_admin"> Administrador </label>
                             </div>
-                            <div class="col-md-4">
-                                <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'suprimentos_hkm') class="icheck-me"
-                                        type="radio" name="profile_type" id="profile_suprimentos_hkm" data-cy="profile_suprimentos_hkm" value="suprimentos_hkm" data-skin="minimal">
-                                    Suprimentos HKM</label>
-                                </div>
-                                <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'suprimentos_inp') class="icheck-me"
-                                        type="radio" name="profile_type" id="profile_suprimentos_inp" data-cy="profile_suprimentos_inp" value="suprimentos_inp" data-skin="minimal" >
-                                    Suprimentos INP</label>
-                                </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="profile_type" id="profile_diretor" data-cy="profile_diretor" value="diretor" @checked(isset($user) && $user->profile->name === 'diretor')>
+                                <label class="form-check-label" for="profile_diretor"> Diretor </label>
                             </div>
-                            <div class="col-md-4">
-                                <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'gestor_usuarios') class="icheck-me"
-                                        type="radio" name="profile_type" id="gestor_usuarios" data-cy="gestor_usuarios" value="gestor_usuarios" data-skin="minimal" >
-                                    Gestor de usuários</label>
-                                </div>
-                                <div>
-                                    <label class="form-check-label secondary-text" for="personal"><input @checked(isset($user) && $user->profile->name === 'gestor_fornecedores') class="icheck-me"
-                                        type="radio" name="profile_type" id="gestor_fornecedores" data-cy="gestor_fornecedores" value="gestor_fornecedores" data-skin="minimal" >
-                                    Gestor de fornecedores</label>
-                                </div>
-                            </div>
+                        @endif
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="profile_type" id="profile_normal" data-cy="profile_normal" value="normal" @checked(isset($user) && $user->profile->name === 'normal')>
+                            <label class="form-check-label" for="profile_normal"> Padrão </label>
                         </div>
-                </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="profile_type" id="profile_suprimentos_hkm" data-cy="profile_suprimentos_hkm" value="suprimentos_hkm" @checked(isset($user) && $user->profile->name === 'suprimentos_hkm')>
+                            <label class="form-check-label" for="profile_suprimentos_hkm"> Suprimentos HKM </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="profile_type" id="profile_suprimentos_inp" data-cy="profile_suprimentos_inp" value="suprimentos_inp" @checked(isset($user) && $user->profile->name === 'suprimentos_inp')>
+                            <label class="form-check-label" for="profile_suprimentos_inp"> Suprimentos INP </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="profile_type" id="gestor_usuarios" data-cy="gestor_usuarios" value="gestor_usuarios" @checked(isset($user) && $user->profile->name === 'gestor_usuarios')>
+                            <label class="form-check-label" for="gestor_usuarios"> Gestor de usuários </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="profile_type" id="gestor_fornecedores" data-cy="gestor_fornecedores" value="gestor_fornecedores" @checked(isset($user) && $user->profile->name === 'gestor_fornecedores')>
+                            <label class="form-check-label" for="gestor_fornecedores"> Gestor de fornecedores </label>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
@@ -209,11 +193,11 @@
                             <div class="col-md-12">
                                 <div>
                                     <input @checked(!isset($user) || (isset($user) && $user->is_buyer)) name="is_buyer" id="is_buyer_true" data-cy="is_buyer_true"
-                                        class="icheck-me" type="radio" value="1" data-skin="minimal">
+                                     type="radio" value="1" data-skin="minimal">
                                     <label class="form-check-label secondary-text" for="is_buyer_true">Autorizado</label>
                                 </div>
                                 <div>
-                                    <input @checked(isset($user) && !$user->is_buyer) class="icheck-me" type="radio" name="is_buyer" id="is_buyer_false"
+                                    <input @checked(isset($user) && !$user->is_buyer) type="radio" name="is_buyer" id="is_buyer_false"
                                         data-cy="is_buyer_false" value="0" data-skin="minimal" >
                                     <label class="form-check-label secondary-text" for="is_buyer_false">Não autorizado</label>
                                 </div>
@@ -229,9 +213,9 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <input @checked(isset($user) && $user?->can_associate_requester) name="can_associate_requester" id="can-associate-requester" data-cy="can-associate-requester"
-                                        class="icheck-me" type="radio" value="1" data-skin="minimal" required>
+                                     type="radio" value="1" data-skin="minimal" required>
                                     <label class="form-check-label secondary-text" for="can-associate-requester">Sim</label>
-                                    <input @checked(isset($user) && !$user?->can_associate_requester) class="icheck-me" type="radio" name="can_associate_requester" id="can-not-associate-requester"
+                                    <input @checked(isset($user) && !$user?->can_associate_requester) type="radio" name="can_associate_requester" id="can-not-associate-requester"
                                         data-cy="can-not-associate-requester" value="0" data-skin="minimal" required>
                                     <label class="form-check-label secondary-text" for="can-not-associate-requester">Não</label>
                                 </div>
@@ -247,11 +231,9 @@
                         <label for="cost_center_id" class="regular-text">Setor</label>
                         @if (isset($user))
                             <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id"
-                                class='chosen-select form-control @error('cost_center_id') is-invalid @enderror'
-                                data-rule-required="true" required>
-
-                                <option value="" disabled @selected(!isset($user->person->costCenter))>
-                                    Selecione uma opção</option>
+                                class='select2-me @error('cost_center_id') is-invalid @enderror' style="width: 100%"
+                                data-rule-required="true" required data-placeholder="Selecione uma opção">
+                                <option value=""></option>
                                 @foreach ($costCenters as $costCenter)
                                     @php
                                         $companyName = $costCenter->company->name;
@@ -267,8 +249,9 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         @else
-                            <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id" class='chosen-select form-control' data-rule-required="true">
-                                <option value="" disabled selected>Selecione uma opção </option>
+                            <select name="cost_center_id" id="cost_center_id" data-cy="cost_center_id" class='select2-me' style="width: 100%" data-rule-required="true"
+                                data-placeholder="Selecione uma opção">
+                                <option value=""></option>
                                 @foreach ($costCenters as $costCenter)
                                     @php
                                         $companyName = $costCenter->company->name;
@@ -288,8 +271,8 @@
                 <div class="col-sm-3">
                     <label for="approver_user_id" class="regular-text">Usuário aprovador</label>
                     @if (isset($user))
-                        <select name="approver_user_id" id="approver_user_id" data-cy="approver_user_id" class="chosen-select form-control">
-                            <option value="" disabled selected>Selecione uma opção </option>
+                        <select name="approver_user_id" id="approver_user_id" data-cy="approver_user_id" class="select2-me" style="width: 100%" data-placeholder="Selecione uma opção">
+                            <option value=""></option>
                             @foreach ($approvers as $approver)
                                 <option value="{{ $approver->id }}" @selected($user->approver_user_id == $approver->id)>
                                     {{ $approver->person->name }}
@@ -297,8 +280,8 @@
                             @endforeach
                         </select>
                     @else
-                        <select name="approver_user_id" id="approver_user_id" data-cy="approver_user_id" class="chosen-select form-control">
-                            <option value="" disabled selected>Selecione uma opção </option>
+                        <select name="approver_user_id" id="approver_user_id" data-cy="approver_user_id" class="select2-me" style="width: 100%" data-placeholder="Selecione uma opção">
+                            <option value=""></option>
                             @foreach ($approvers as $approver)
                                 @php
                                     $isSelected = old('approver_user_id') == $approver->id;
@@ -316,14 +299,20 @@
                         <label for="format-approve-limit" class="regular-text"> Limite de aprovação </label>
                         @if (isset($user))
                             <div class="input-group">
-                                <span class="input-group-addon">R$</span>
-                                <input type="text" id="format-approve-limit" data-cy="format-approve-limit" placeholder="Ex: 100,00" class="form-control format-approve-limit" data-rule-required="true"
-                                    @if ($user->approve_limit === null) readonly @else value="{{ (float) $user->approve_limit }}" @endif>
+                                <span class="input-group-text">R$</span>
+                                <input type="text" id="format-approve-limit" data-cy="format-approve-limit" placeholder="Ex: 100,00" class="form-control format-approve-limit"
+                                @if ($user->approve_limit === null)
+                                    readonly
+                                @else
+                                    data-rule-required="true"
+                                    value="{{ (float) $user->approve_limit }}"
+                                @endif>
+
                                 <input type="hidden" name="approve_limit" id="approve_limit" data-cy="approve_limit" class="approve_limit no-validation">
                             </div>
                         @else
                             <div class="input-group">
-                                <span class="input-group-addon">R$</span>
+                                <span class="input-group-text">R$</span>
                                 <input type="text" id="format-approve-limit" data-cy="format-approve-limit" placeholder="Ex: 100,00" class="form-control format-approve-limit" data-rule-required="true"
                                     value="{{ old('approve_limit') }}">
                                 <input type="hidden" name="approve_limit" id="approve_limit" data-cy="approve_limit" class="approve_limit no-validation" value="{{ old('approve_limit') }}">
@@ -349,7 +338,7 @@
                     <div class="form-group">
                         <label for="approver_user_id" id="cost-center-permissions" class="regular-text">Centros de custos permitidos</label>
                         <select @disabled(!$currentProfile === 'admin') name="user_cost_center_permissions[]" id="user_cost_center_permissions" data-cy="user_cost_center_permissions" multiple="multiple"
-                            class="chosen-select form-control cost-centers-permissions" placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras" required data-rule-required="true">
+                            class="select2-me cost-centers-permissions" style="width: 100%" data-placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras" required data-rule-required="true">
                             @foreach ($costCenters as $costCenter)
                                 @php
                                     $companyName = $costCenter->company->name;
@@ -390,83 +379,82 @@
     </form>
 </div>
 
-<script>
-    $(() => {
-        const $btnClearCostCenters = $('.btn-clear-cost-centers');
-        const $btnSelectAllCostCenters = $('.btn-select-all-cost-centers');
-        const $costCentersPermissions = $('.cost-centers-permissions');
-        const $checkboxHasNoApproveLimit = $('.checkbox-has-no-approve-limit');
-        const $approveLimit = $('.format-approve-limit');
-        const $hiddenApproveLimit = $('.approve_limit');
-        const $identificationDocument = $('.cpf_cnpj');
-        const $phoneNumber = $('.phone_number');
+@push('scripts')
+    <script type="module">
+        $(() => {
+            const $btnClearCostCenters = $('.btn-clear-cost-centers');
+            const $btnSelectAllCostCenters = $('.btn-select-all-cost-centers');
+            const $costCentersPermissions = $('.cost-centers-permissions');
+            const $checkboxHasNoApproveLimit = $('.checkbox-has-no-approve-limit');
+            const $approveLimit = $('.format-approve-limit');
+            const $hiddenApproveLimit = $('.approve_limit');
+            const $identificationDocument = $('.cpf_cnpj');
+            const $phoneNumber = $('.phone_number');
 
-        // centro de custo permissao
-        // clear all
-        $btnClearCostCenters.on('click', function() {
-            $costCentersPermissions.val('');
-            $costCentersPermissions.val('').trigger("chosen:updated");
-        });
+            // centro de custo permissao
+            // clear all
+            $btnClearCostCenters.on('click', function() {
+                $costCentersPermissions.val('').trigger("change");
+            });
 
-        // select all
-        $btnSelectAllCostCenters.on('click', function() {
-            $costCentersPermissions.find('option').each((_, option) => {
-                $(option).prop('selected', true);
-            }).closest('select').trigger('chosen:updated');
-        });
+            // select all
+            $btnSelectAllCostCenters.on('click', function() {
+                $costCentersPermissions.val($('.cost-centers-permissions option').map((_, option) => $(option).val())).trigger('change');
+            });
 
-        // checkbox sem limite aprovação
-        $checkboxHasNoApproveLimit.on('click', function() {
-            const isChecked = $(this).is(':checked');
-            $approveLimit.data('rule-required', !isChecked);
-            $approveLimit.valid();
-            if (isChecked) {
-                $(this).data('last-value', $approveLimit.val());
-                $(this).closest('.form-group').removeClass('has-error');
-            }
-            const currentValue = isChecked ? null : $(this).data('last-value');
-            $approveLimit.prop('readonly', isChecked).val(currentValue).valid();
-            $hiddenApproveLimit.val(currentValue);
-        });
-
-        // masks
-        $identificationDocument.imask({
-            mask: [{
-                    mask: '000.000.000-00',
-                },
-                {
-                    mask: '00.000.000/0000-00',
+            // checkbox sem limite aprovação
+            $checkboxHasNoApproveLimit.on('click', function() {
+                const isChecked = $(this).is(':checked');
+                $approveLimit.data('rule-required', !isChecked);
+                $approveLimit.valid();
+                if (isChecked) {
+                    $(this).data('last-value', $approveLimit.val());
+                    $(this).closest('.form-group').removeClass('has-error');
                 }
-            ],
-            minLength: 13
-        });
-        $phoneNumber.imask({
-            mask: [{
-                    mask: '(00) 0000-0000'
-                },
-                {
-                    mask: '(00) 00000-0000'
-                }
-            ]
-        });
-        $approveLimit.imask({
-            mask: Number,
-            scale: 2,
-            thousandsSeparator: '.',
-            normalizeZeros: true,
-            padFractionalZeros: true,
-            min: 100,
-            max: 500000,
-        });
+                const currentValue = isChecked ? null : $(this).data('last-value');
+                $approveLimit.prop('readonly', isChecked).val(currentValue).valid();
+                $hiddenApproveLimit.val(currentValue);
+            });
 
-        // approve_limit input hidden
-        $approveLimit.on('input blur', function() {
-            const formattedValue = $(this).val();
-            if (formattedValue !== null) {
-                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
-                const rawValue = parseFloat(processedValue);
-                $('.approve_limit').val(rawValue.toFixed(2));
-            }
-        });
-    })
-</script>
+            // masks
+            $identificationDocument.imask({
+                mask: [{
+                        mask: '000.000.000-00',
+                    },
+                    {
+                        mask: '00.000.000/0000-00',
+                    }
+                ],
+                minLength: 13
+            });
+            $phoneNumber.imask({
+                mask: [{
+                        mask: '(00) 0000-0000'
+                    },
+                    {
+                        mask: '(00) 00000-0000'
+                    }
+                ]
+            });
+            $approveLimit.imask({
+                mask: Number,
+                scale: 2,
+                thousandsSeparator: '.',
+                normalizeZeros: true,
+                padFractionalZeros: true,
+                min: 100,
+                max: 500000,
+            });
+
+            // approve_limit input hidden
+            $approveLimit.on('input blur', function() {
+                const formattedValue = $(this).val();
+                if (formattedValue !== null) {
+                    const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                    const rawValue = parseFloat(processedValue);
+                    $('.approve_limit').val(rawValue.toFixed(2));
+                }
+            });
+        })
+    </script>
+@endpush
