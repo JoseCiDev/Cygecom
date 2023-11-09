@@ -52,7 +52,7 @@
                 </select>
             </div>
 
-            <div class="col-sm-3" id="purchase-order-box" hidden>
+            <div class="col-sm-3" id="purchase-order-box" style="display: none">
                 <div class="form-group">
                     <label for="purchase_order" class="regular-text">Ordem de compra</label>
                     <input type="text" name="purchase_order" id="purchase_order" data-cy="purchase_order" class="form-control" maxlength="20">
@@ -61,7 +61,7 @@
         </div>
     </div>
 
-    <div class="row div-reason-update" style="padding-top: 15px;" hidden>
+    <div class="row div-reason-update mt-3" style="padding-top: 15px;" hidden>
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="supplies-update-reason" class="regular-text">
@@ -71,7 +71,7 @@
                     data-cy="supplies-update-reason" rows="3" maxlength="200" minlength="5"
                     class="form-control text-area no-resize"></textarea>
             </div>
-            <div class="small" style="margin-top:-10px; margin-bottom:20px;">
+            <div class="small" style="margin-top: 10px; margin-bottom:20px;">
                 <p class="secondary-text">* Informe o motivo para atualizar o status desta solicitação.</p>
             </div>
         </div>
@@ -97,8 +97,6 @@
             const $status = $('#status');
             const $reasonUpdateStatus = $('#supplies-update-reason');
             const $reasonUpdateStatusDiv = $('.div-reason-update');
-
-
             const statusOldValue = $status.val();
 
             $status.on('change', function() {
