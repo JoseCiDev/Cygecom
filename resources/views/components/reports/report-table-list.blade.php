@@ -512,7 +512,7 @@
                 },
                 {
                     data: 'type',
-                    orderable: true,
+                    orderable: false,
                     render: (type, _, row) => {
                         const serviceNameColumnMapping = {
                             product: () => null,

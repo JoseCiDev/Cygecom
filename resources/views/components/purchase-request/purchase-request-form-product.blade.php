@@ -223,7 +223,7 @@
                             placeholder="Ex.: Devido aumento da demanda de produção, necessário a compra de uma máquina/equipamento."
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
-                    <div class="small" style="margin-top: 5px; margin-bottom:20px;">
+                    <div class="small" style="margin-top: 10px; margin-bottom:20px;">
                         <p class="secondary-text">*Informe o motivo que você está solicitando essa compra.</p>
                     </div>
                 </div>
