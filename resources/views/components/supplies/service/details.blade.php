@@ -34,7 +34,8 @@
                     :request-id="$request->id"
                     :request-user-id="$request->user_id"
                     :request-status="$request->status"
-                    :amount="$request->service->price"/>
+                    :amount="$request->service->price"
+                    :purchase-order="$request->purchase_order" />
             </div>
         </div>
 

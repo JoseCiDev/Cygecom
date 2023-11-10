@@ -3,8 +3,8 @@
 
     $currentUser = auth()->user();
     $statusFinish = PurchaseRequestStatus::FINALIZADA->value;
+    $requestStatusIsFinish = $requestStatus === PurchaseRequestStatus::FINALIZADA;
 @endphp
-
 
 <h4 style="margin-bottom: 15px"><i class="glyphicon glyphicon-edit"></i> <strong>Editar solicitação</strong></h4>
 <form class="form-validate" data-cy="form-request-edit" id="form-request-edit" method="POST"
@@ -52,10 +52,11 @@
                 </select>
             </div>
 
-            <div class="col-sm-3" id="purchase-order-box" style="display: none">
+            <div class="col-sm-3" id="purchase-order-box">
                 <div class="form-group">
                     <label for="purchase_order" class="regular-text">Ordem de compra</label>
-                    <input type="text" name="purchase_order" id="purchase_order" data-cy="purchase_order" class="form-control" maxlength="20">
+                    <input type="text" name="purchase_order" id="purchase_order" data-cy="purchase_order" class="form-control" maxlength="20"
+                        placeholder="Disponível ao finalizar solicitação" value="{{$purchaseOrder}}" @disabled(!$purchaseOrder || ($purchaseOrder && !$requestStatusIsFinish))>
                 </div>
             </div>
         </div>
@@ -108,11 +109,13 @@
                 }
 
                 if($(this).val() === statusFinish) {
-                    $purchaseOrderBox.show();
                     $purchaseOrder.makeRequired();
+                    $purchaseOrder.attr('placeholder', 'Ex.: 08454/14')
+                    $purchaseOrder.prop('disabled', false);
                 } else {
-                    $purchaseOrderBox.hide();
                     $purchaseOrder.removeRequired();
+                    $purchaseOrder.attr('placeholder', 'Disponível ao finalizar solicitação')
+                    $purchaseOrder.prop('disabled', true);
                     $purchaseOrder.val(null);
                 }
 
