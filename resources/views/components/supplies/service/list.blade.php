@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                <table class="table table-hover table-nomargin table-bordered dataTable" data-column_filter_dateformat="dd-mm-yy"
+                <table class="table table-hover table-nomargin table-striped table-bordered dataTable" data-column_filter_dateformat="dd-mm-yy"
                     style="width:100%" data-nosort="0" data-checkall="all">
                     <thead>
                         <tr>
