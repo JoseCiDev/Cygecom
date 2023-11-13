@@ -52,7 +52,7 @@
                             <th>Status</th>
                             <th>Fornecedor(es)</th>
                             <th>Contratação por</th>
-                            <th>CNPJ</th>
+                            <th>Empresa</th>
                             <th>Data desejada</th>
                             <th>Ord. compra</th>
                             <th class="noColvis">Ações</th>
