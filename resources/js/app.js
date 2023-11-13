@@ -14,11 +14,15 @@ import select2 from 'select2';
 select2();
 
 import "datatables.net";
+import 'datatables.net-buttons-dt';
+import 'datatables.net-buttons/js/buttons.colVis.mjs';
 
 import IMask from "imask";
 
 import moment from 'moment';
 window.moment = moment;
+
+import setColvisConfig from './colvis-custom-user-preference.js'
 
 $.fn.imask = function(options) {
     const maskedElements = this.map((_, input) => new IMask(input, options)).toArray();
@@ -71,6 +75,11 @@ $.fn.showModalAlert = (title = '', message, callback = null) => {
     modalAlert.show();
 }
 
+// Renderiza menu -> Aciona botões -> Fecha menu
+$.fn.setStorageDtColumnConfig = () =>{
+    $('button.dt-button.buttons-collection.buttons-colvis').trigger('click').trigger('click')
+};
+
 $(() => {
     // required style
     $('[data-rule-required]').each(function() {
@@ -95,7 +104,11 @@ $(() => {
     // autocomplete off
     $("form").attr('autocomplete', 'off');
 
+    const $badgeColumnsQtd = $(`<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"></span>`);
+    setColvisConfig();
     $('.dataTable').each((_, table) => $(table).DataTable({
+        dom: 'Blfrtip',
+        initComplete: () => $.fn.setStorageDtColumnConfig(),
         scrollY: '400px',
         scrollX: true,
         autoWidth: true,
@@ -113,7 +126,13 @@ $(() => {
                 previous: "Anterior"
             }
         },
-        destroy: true
+        buttons: [
+            {
+                extend: 'colvis',
+                columns: ':not(.noColvis)',
+                text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
+            }
+        ],
     }));
 
     $('.form-validate').each(function () {

@@ -40,13 +40,13 @@
                         data-checkall="all" style="width:100%">
                         <thead>
                             <tr>
-                                <th>CNPJ</th>
+                                <th class="noColvis">CNPJ</th>
                                 <th>Razão social</th>
                                 <th>Nome fantasia</th>
                                 <th>Indicação</th>
                                 <th>Mercado</th>
                                 <th>Situação</th>
-                                <th>Ações</th>
+                                <th class="noColvis">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,7 +63,9 @@
 
 <script type="module">
     $(() => {
+        const $badgeColumnsQtd = $(`<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"></span>`);
         const table = $('#supplierTable').DataTable({
+            dom: 'Blfrtip',
             scrollY: '400px',
             scrollX: true,
             autoWidth: true,
@@ -142,7 +144,17 @@
                     const selectedValue = $(this).val();
                     table.search(selectedValue).draw();
                 });
-            }
+
+                $.fn.setStorageDtColumnConfig();
+            },
+            buttons: [
+                {
+                    extend: 'colvis',
+                    columns: ':not(.noColvis)',
+                    text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
+                    columnText: (dt, idx, title ) => title,
+                }
+            ],
         });
     });
 </script>
