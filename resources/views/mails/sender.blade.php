@@ -129,13 +129,15 @@
     </div>
 </x-app>
 
-<script>
-    const bodyInput = document.getElementById('body');
-    const mensagemSpan = document.getElementById('email-message');
+@push('scripts')
+    <script type="module">
+        const bodyInput = document.getElementById('body');
+        const mensagemSpan = document.getElementById('email-message');
 
-    bodyInput.addEventListener('input', (event) => {
-        const mensagem = event.target.value;
-        mensagemSpan.textContent = mensagem;
-    });
-</script>
+        bodyInput.addEventListener('input', (event) => {
+            const mensagem = event.target.value;
+            mensagemSpan.textContent = mensagem;
+        });
+    </script>
+@endpush
 

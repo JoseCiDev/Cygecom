@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use App\Enums\PurchaseRequestStatus;
+use App\Http\Requests\Product\UpdateProductRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\{RedirectResponse, Request};
 use App\Models\{Company, CostCenter, PurchaseRequest, PurchaseRequestFile};
@@ -81,22 +82,20 @@ class ProductController extends Controller
         }
     }
 
-    public function updateProduct(Request $request, int $id): RedirectResponse
+    /**
+     * @param UpdateProductRequest $request
+     * @param int $id
+     * @return RedirectResponse
+     */
+    public function updateProduct(UpdateProductRequest $request, int $id): RedirectResponse
     {
-        $route     = 'request.own';
-        $data      = $request->all();
+        $route = 'request.own';
+        $data = $request->all();
         $action = $request->input('action');
-
-        $validator = $this->validatorService->purchaseRequestUpdate($data);
 
         $files = $request->file('arquivos');
         $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.product.update";
         $currentUser = auth()->user();
-
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator->errors()->getMessages())->withInput();
-        }
 
         try {
             $isAdmin = $currentUser->profile->name === 'admin';
@@ -110,13 +109,17 @@ class ProductController extends Controller
             $isOwnRequest = $purchaseRequest->user_id === $currentUser->id;
             $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && ($isOwnRequest || $isSuppliesUpdate);
 
+            if ($request->purchase_order && $purchaseRequest->supplies_user_id !== $currentUser->id) {
+                $isAuthorized = false;
+            }
+
             if (!$isAuthorized) {
                 throw new Exception('Ação não permitida pelo sistema!');
             }
 
             DB::beginTransaction();
 
-            $purchaseRequest = $this->purchaseRequestService->updateProductRequest($id, $data,$isSuppliesUpdate, $files);
+            $purchaseRequest = $this->purchaseRequestService->updateProductRequest($id, $data, $isSuppliesUpdate, $files);
 
             if ($action === 'submit-request') {
                 $purchaseRequest->update(['status' => 'pendente']);

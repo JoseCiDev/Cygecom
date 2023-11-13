@@ -12,14 +12,14 @@ $(() => {
         const qtdFillable = qtdSum >= 0 ? qtdSum : maxFilesQtd - $filesUploaded.length;
         return qtdFillable;
     }
-    
+
     function getFilesQtd(input) {
         const $filesUploaded = $('.list-group-item');
-    
+
         const filesToUploadQtd = input.files.length
         const filesUploadedQtd = $filesUploaded.length;
         const filesQtd = filesToUploadQtd + filesUploadedQtd;
-    
+
         return filesQtd;
     }
 
@@ -33,6 +33,12 @@ $(() => {
         const input = event.target;
 
         let totalFileSize = 0;
+        const files = input?.files;
+
+        if(!files) {
+            return;
+        }
+
         for (const file of input.files) {
             totalFileSize += file.size;
         }
@@ -44,24 +50,22 @@ $(() => {
         let infoFilesMessageLimit = `Você atingiu o limite máximo de ${maxFilesQtd} anexos.`;
 
         if (isLimitOverflow(input)) {
-            bootbox.alert({
-                title: "Limite de anexos excedido!",
-                message: infoFilesMessageLimit + (!IS_SUPPLIES_FILES ? " Por favor, tente selecionar menos arquivos ou remover alguns já enviados para adicionar novos anexos." : ' Não é possível enviar mais arquivos.'),
-                className: 'bootbox-custom-warning'
-            });
+            const title = "Limite de anexos excedido!";
+            const message = infoFilesMessageLimit + (!IS_SUPPLIES_FILES ? " Por favor, tente selecionar menos arquivos ou remover alguns já enviados para adicionar novos anexos." : ' Não é possível enviar mais arquivos.');
+
+            $.fn.showModalAlert(title, message);
+
             $filesToUpload.val('');
-        } 
-        
+        }
+
         if (totalFileSizeMB > maxFileSizeMB) {
-            bootbox.alert({
-                title: "Tamanho máximo de arquivo excedido!",
-                message: `O tamanho total dos arquivos selecionados não pode exceder ${maxFileSizeMB} MB.`,
-                className: 'bootbox-custom-warning',
-                callback: function() {
-                    $filesToUpload.val('');
-                    validateFilesToUpload({ target: $filesToUpload[0] });
-                    return;
-                }
+            const title = "Tamanho máximo de arquivo excedido!";
+            const message = `O tamanho total dos arquivos selecionados não pode exceder ${maxFileSizeMB} MB.`;
+
+            $.fn.showModalAlert(title, message, function() {
+                $filesToUpload.val('');
+                validateFilesToUpload({ target: $filesToUpload[0] });
+                return;
             });
         }
 

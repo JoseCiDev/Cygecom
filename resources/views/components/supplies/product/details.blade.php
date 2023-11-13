@@ -35,7 +35,8 @@
                     :request-id="$request->id"
                     :request-user-id="$request->user_id"
                     :request-status="$request->status"
-                    :amount="$request->product->amount" />
+                    :amount="$request->product->amount"
+                    :purchase-order="$request->purchase_order" />
             </div>
         </div>
 
@@ -83,6 +84,10 @@
                         {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }}
                     </h4>
                     <br>
+                    <h4 class="text-highlight"><strong>Ordem de compra:</strong>
+                        {{ $request->purchase_order ?? '---' }}
+                    </h4>
+                    <br>
                 </div>
             </header>
             <main>
@@ -104,8 +109,6 @@
                                         <p><strong>Motivo da solicitação:</strong> {{ $request->reason }} </p>
                                         <p><strong>Em qual sala/prédio ficará o produto:</strong>
                                             {{ $request->local_description }} </p>
-                                        <p><strong>Compra já realizada:</strong>
-                                            {{ $request->product->already_purchased ? 'Sim' : 'Não' }} </p>
                                         <p><strong>Observação:</strong> {{ $request->observation ?? '---' }}</p>
                                     </div>
                                 </div>
@@ -164,7 +167,7 @@
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <h4>
-                                        <i class="fa fa-money"></i> <strong>Centro de custo e rateio</strong>
+                                        <i class="fa-solid fa-money-bill"></i> <strong>Centro de custo e rateio</strong>
                                     </h4>
                                     <hr>
                                     <p>
@@ -492,8 +495,8 @@
 
     </div>
 
-    <x-slot:scripts>
-        <script src="{{ asset('js/supplies/details-purchase-request-amount.js') }}"></script>
-    </x-slot:scripts>
+    @push('scripts')
+        <script type="module" src="{{ asset('js/supplies/details-purchase-request-amount.js') }}"></script>
+   @endpush
 
 </x-app>

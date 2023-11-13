@@ -1,0 +1,22 @@
+{
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "laravel-vite-plugin": "^0.8.1",
+        "vite": "^4.4.11"
+    },
+    "type": "module",
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.4.2",
+        "bootstrap": "^5.3.2",
+        "datatables.net": "^1.13.6",
+        "datatables.net-buttons-dt": "^2.4.2",
+        "imask": "^7.1.3",
+        "jquery": "^3.7.1",
+        "jquery-validation": "^1.20.0",
+        "moment": "^2.29.4",
+        "select2": "^4.0.13"
+    }
+}

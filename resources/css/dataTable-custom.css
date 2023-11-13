@@ -1,0 +1,369 @@
+.table.table-condensed tr th,
+.table.table-condensed tr td {
+    padding: 4px 5px;
+}
+
+.table tr th,
+.table tr td {
+    padding: 10px;
+    border-top: 1px dotted #ddd;
+}
+
+.table.table-hover tr:hover>td {
+    background: #f8f8f8;
+}
+
+.table .with-checkbox {
+    width: 10px;
+    vertical-align: middle;
+}
+
+.table .with-checkbox input {
+    margin-left: 4px;
+    margin-top: 0;
+}
+
+.table.dataTable {
+    margin-bottom: 10px;
+    clear: both;
+}
+
+.table.dataTable.dataTable-grouping .group {
+    background: #e6e6e6;
+    border-top: 2px solid #ccc;
+}
+
+.table.dataTable.dataTable-grouping .group.expanded-group {
+    background: url("../../public/img/expanded-group.jpg") no-repeat left center #e6e6e6;
+    padding-left: 33px;
+}
+
+.table.dataTable.dataTable-grouping .group.expanded-group:hover {
+    cursor: pointer;
+}
+
+.table.dataTable.dataTable-grouping .group.collapsed-group {
+    background: url("../../public/img/collapsed-group.jpg") no-repeat left center #e6e6e6;
+    padding-left: 33px;
+}
+
+.table.dataTable.dataTable-grouping .group.collapsed-group:hover {
+    cursor: pointer;
+}
+
+.table.dataTable .sorting_asc {
+    background: url("../../public/img/sorting-asc.png") no-repeat right center #eee;
+}
+
+.table.dataTable .sorting_desc {
+    background: url("../../public/img/sorting-desc.png") no-repeat right center #eee;
+}
+
+.table.dataTable .sorting {
+    background: url("../../public/img/sorting.png") no-repeat right center #eee;
+}
+
+.table.dataTable .sorting,
+.table.dataTable .sorting_desc,
+.table.dataTable .sorting_asc {
+    padding-right: 30px;
+    white-space: nowrap;
+}
+
+.table.dataTable.dataTable-scroll-x {
+    border-collapse: separate;
+    max-width: none;
+}
+
+.table.dataTable.dataTable-scroll-x * {
+    box-sizing: initial;
+}
+
+.table.dataTable.dataTable-scroll-x td,
+.table.dataTable.dataTable-scroll-x th {
+    white-space: nowrap;
+}
+
+.table.dataTable th:focus {
+    outline: none;
+}
+
+.table.dataTable.dataTable-reorder th:hover {
+    cursor: move;
+}
+
+.table.table-colored-header thead th,
+.table.table-colored-header thead td {
+    background: #204e81;
+    color: #fff;
+}
+
+.table.table-nohead thead {
+    display: none;
+}
+
+.table.table-nohead thead th,
+.table.table-nohead thead td {
+    display: none;
+}
+
+.table.table-nohead tr:first-child td {
+    border: 0;
+}
+
+.table tr td {
+    vertical-align: middle;
+}
+
+.table tr td .label {
+    margin-right: 3px;
+}
+
+.table tr th {
+    vertical-align: middle;
+    background: #eee;
+    font-weight: 600;
+}
+
+.table.table-user tr.alpha td.alpha-val span {
+    background: #204e81;
+    color: #fff;
+    display: block;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 18px;
+}
+
+.table.table-user tr.alpha:hover td {
+    background: white;
+    cursor: pointer;
+}
+
+.table.table-user tr:first-child td {
+    border: 0;
+}
+
+.table.table-user tr td {
+    border-top: 1px dotted #ccc;
+}
+
+.table.table-user tr td.user {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.table.table-user tr td.icon {
+    width: 20px;
+    vertical-align: middle;
+}
+
+.table.table-user tr td.icon .online {
+    font-size: 10px;
+    color: #4fa828;
+}
+
+.dataTables_filter input {
+    margin-bottom: 0;
+    padding: 4px 0;
+    text-indent: 8px;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 1px solid #aaa;
+    display: inline;
+    margin-left: 5px;
+    background: #f6f6f6;
+}
+
+.dataTables_filter input:focus {
+    background: #fff;
+    border: 1px solid #204e81;
+}
+
+.dataTables_wrapper.no-footer .dataTables_info {
+    line-height: 30px;
+}
+
+.dataTable-col_filter th {
+    vertical-align: middle;
+}
+
+.dataTable-col_filter th input {
+    margin-bottom: 0;
+    width: 100%;
+    padding: 4px 0;
+    text-indent: 8px;
+    background: #fff;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 1px solid #aaa;
+}
+
+.dataTable-col_filter th input.dataTable-datepicker-to {
+    margin-top: 2px;
+}
+
+.dataTable-col_filter th input:focus {
+    border: 1px solid #204e81;
+}
+
+.dataTable-col_filter th select {
+    margin-bottom: 0;
+    width: 100%;
+    background: #fff;
+}
+
+.dataTables_wrapper .dataTables_length {
+    float: left;
+    min-width: 200px;
+    margin: 10px 10px 5px 10px;
+    line-height: 29px;
+}
+
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+    margin: 10px 10px 5px 5px;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    margin-bottom: 0;
+}
+
+.dataTables_wrapper .dataTables_info {
+    float: left;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.dataTables_wrapper .dataTables_info span {
+    font-weight: 600;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    margin: 17px 5px 10px 0;
+}
+
+.dataTables_wrapper .dataTables_paginate>a {
+    margin-right: 5px;
+    background: #eee;
+    padding: 3px 8px;
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.dataTables_wrapper .dataTables_paginate>a.paginate_button_disabled {
+    color: #999;
+}
+
+.dataTables_wrapper .dataTables_paginate>a.paginate_button_disabled:hover {
+    background: #eee;
+    cursor: default;
+}
+
+.dataTables_wrapper .dataTables_paginate>a:hover {
+    background: #ddd;
+}
+
+.dataTables_wrapper .dataTables_paginate>span>a {
+    padding: 3px 8px;
+    margin-right: 5px;
+    background: #eee;
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.dataTables_wrapper .dataTables_paginate>span>a.paginate_active {
+    background: #204e81;
+    color: #fff;
+}
+
+.dataTables_scroll {
+    clear: both;
+}
+
+.dataTables_scrollBody {
+    margin-top: -1px;
+    -webkit-overflow-scrolling: touch;
+}
+
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+    float: none;
+}
+
+@media (min-width: 768px) {
+    .dataTables_wrapper .dataTables_length {
+        float: left;
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+    }
+}
+
+/* Botão mostra/ocultar colunas */
+button.dt-button.buttons-collection.buttons-colvis {
+    margin-top: 15px;
+    position: relative;
+    background-color: #fff;
+    display: flex;
+    gap: 10px;
+}
+
+button.dt-button.buttons-collection.buttons-colvis:hover {
+    background-color: #ccc;
+}
+
+div.dt-button-collection {
+    position: absolute;
+    margin-top: 15px;
+    background-color: #fff;
+    border: 1px solid var(--grey-primary-color);
+    border-radius: 4px;
+    padding: 5px 15px;
+    width: 230px;
+    z-index: 1;
+}
+
+button.dt-button.buttons-collection.buttons-colvis,
+button.dt-button.buttons-columnVisibility.dt-button-active {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    border-radius: 4px;
+    line-height: 24px;
+    color: var(--black-color);
+    border: 1px solid var(--grey-primary-color);
+}
+
+button.dt-button.buttons-columnVisibility.dt-button-active,
+button.dt-button.buttons-columnVisibility {
+    width: 200px;
+    text-align: left;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    line-height: 24px;
+}
+
+button.dt-button.buttons-columnVisibility:not(.dt-button-active) {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+button.dt-button.buttons-columnVisibility.dt-button-active::after {
+    content: "✓";
+}
+
+.dt-button-collection div[role='menu'] {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
