@@ -50,17 +50,17 @@
                                 data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                                 <thead>
                                     <tr>
-                                        <th>Nº</th>
-                                        <th class="hidden-1280">Contratação por</th>
+                                        <th class="noColvis">Nº</th>
+                                        <th>Contratação por</th>
                                         <th>Tipo</th>
                                         <th>Nome do serviço</th>
                                         <th>Fornecedor(es)</th>
                                         <th>Status</th>
                                         <th>Responsável</th>
                                         <th>Data desejada</th>
-                                        <th class="hidden-1440">Atualizado em</th>
-                                        <th >Valor total</th>
-                                        <th>Ações</th>
+                                        <th>Atualizado em</th>
+                                        <th>Valor total</th>
+                                        <th class="noColvis">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>

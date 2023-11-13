@@ -228,25 +228,6 @@
                     </div>
                 </div>
 
-                {{-- PRODUTO JÁ COMPRADO --}}
-                <div class="col-sm-4 div-already-purchased" hidden style="width: 22%">
-                    <div class="form-group">
-                        <label for="form-check" class="regular-text" style="padding-right:10px">
-                            Você já realizou esta compra?
-                        </label>
-                        <fieldset data-rule-required="true">
-                            <input name="product[already_purchased]" value="1" class="radio-already-purchased"
-                                required id="already-purchased" data-cy="already-purchased" type="radio"
-                                @checked(isset($purchaseRequest) && (bool) $purchaseRequest->product->already_purchased)>
-                            <label class="form-check-label secondary-text" for="already-purchased">Sim</label>
-                            <input name="product[already_purchased]" value="0" class="radio-already-purchased"
-                                required type="radio" id="not-provided" data-cy="not-provided"
-                                style="margin-left: 12px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->product->already_purchased)>
-                            <label class="form-check-label secondary-text" for="not-provided">Não</label>
-                        </fieldset>
-                    </div>
-                </div>
-
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="regular-text">Data desejada entrega do produto</label>
@@ -569,32 +550,15 @@
                 autofix: 'pad'
             });
 
-            const $filesGroup = $('fieldset#files-group');
-            const csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-            const $productAlreadyPurchased = $('.radio-already-purchased');
+        const $filesGroup = $('fieldset#files-group');
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
             // muda data desejada mínima quando serviço já prestado
             const $desiredDate = $('#desired-date');
             const currentDate = moment();
             const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
 
-            $desiredDate.attr('min', currentDate.format('YYYY-MM-DD'))
-
-            function changeMinDesiredDate() {
-                const productAlreadyPurchased = $(this).val() === "1";
-
-                const minDate = productAlreadyPurchased ? minInitialDate : currentDate.format('YYYY-MM-DD');
-
-                $desiredDate.attr('min', minDate)
-
-                $desiredDate.rules('add', {
-                    min: minDate
-                });
-            }
-
-            $productAlreadyPurchased.on('change', changeMinDesiredDate).filter(':checked').trigger('change');
-
+        $desiredDate.attr('min', currentDate.format('YYYY-MM-DD'))
 
             // trata valor serviço mascara
             $serviceAmount.on('input', function() {
@@ -812,11 +776,8 @@
                 .prop('disabled', true)
                 .trigger('change.select2');
 
-
-            const $divAlreadyPurchased = $('.div-already-purchased');
-
-            $radioIsContractedBySupplies.on('change', function() {
-                const isContractedBySupplies = $(this).val() === "1";
+        $radioIsContractedBySupplies.on('change', function() {
+            const isContractedBySupplies = $(this).val() === "1";
 
                 // muda label
                 const supplierSelect = $('select.select-supplier');
@@ -826,12 +787,13 @@
 
                 supplierSelect.before().removeAttr('data-rule-required');
 
-                // muda label data desejada
-                const labelDesiredDateAlreadyProvided = "Data da entrega do produto";
-                const labelDesiredDateDefault = "Data desejada entrega do produto";
-                const newLabelDate = !isContractedBySupplies ? labelDesiredDateAlreadyProvided :
-                    labelDesiredDateDefault;
-                $desiredDate.siblings('label').text(newLabelDate);
+            // muda label data desejada
+            const labelDesiredDateAlreadyProvided = "Data da entrega do produto";
+            const labelDesiredDateDefault = "Data desejada entrega do produto";
+            const newLabelDate = isContractedBySupplies ? labelDesiredDateDefault: labelDesiredDateAlreadyProvided;
+            $desiredDate.siblings('label').text(newLabelDate);
+
+            isContractedBySupplies ? $desiredDate.removeRequired() : $desiredDate.makeRequired()
 
                 // desabilita e limpa inputs pagamento
                 $paymentBlock
@@ -843,17 +805,10 @@
                     .prop('disabled', isContractedBySupplies)
                     .trigger('change.select2');
 
-                if (isContractedBySupplies) {
-                    $productAlreadyPurchased
-                        .last()
-                        .prop('checked', true);
-
-                    $divAlreadyPurchased
-                        .attr('hidden', true);
-
-                    supplierSelect.removeRequired();
-                    supplierSelect.closest('.form-group').removeClass('has-error');
-                    $supplierBlock.find('.help-block').remove();
+            if (isContractedBySupplies) {
+                supplierSelect.removeRequired();
+                supplierSelect.closest('.form-group').removeClass('has-error');
+                $supplierBlock.find('.help-block').remove();
 
                     $paymentBlock
                         .find('input, textarea')
@@ -866,22 +821,8 @@
                     $installmentsTable.clear().draw();
                     hiddenInputsContainer.empty();
 
-                    return;
-                } else {
-                    /*
-                        ## solução previa ##
-                        tem um problema que é quando for edição e mover de suprimentos para area solicitante
-                        o radio button vem selecionado, ao invés de vazio, como acontece em um registro novo.
-                    */
-                    if (!purchaseRequest) {
-                        $productAlreadyPurchased
-                            .last()
-                            .prop('checked', false);
-                    }
-
-                    $divAlreadyPurchased
-                        .attr('hidden', false);
-                }
+                return;
+            }
 
                 supplierSelect.makeRequired();
             });

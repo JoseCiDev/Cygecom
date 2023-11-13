@@ -43,16 +43,17 @@
                     style="width:100%">
                     <thead>
                         <tr>
-                            <th>Nº</th>
+                            <th class="noColvis">Nº</th>
                             <th>Solicitante</th>
                             <th>Responsável</th>
                             <th>Status</th>
                             <th>Fornecedor</th>
                             <th>Condição de pgto.</th>
-                            <th class="hidden-1024">Contratação por</th>
-                            <th class="hidden-1280">CNPJ</th>
-                            <th class="hidden-1440">Data desejada</th>
-                            <th>Ações</th>
+                            <th>Contratação por</th>
+                            <th>CNPJ</th>
+                            <th>Data desejada</th>
+                            <th>Ord. compra</th>
+                            <th class="noColvis">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,6 +93,7 @@
                                 </td>
 
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($contract->desired_date)->format('d/m/Y') }}</td>
+                                <td>{{ $contract->purchase_order ?? '---' }}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
