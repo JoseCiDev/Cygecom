@@ -101,7 +101,11 @@
                                 </td>
 
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($contract->desired_date)->format('d/m/Y') }}</td>
-                                <td>{{ $contract->purchase_order ?? '---' }}</td>
+
+                                @php
+                                    $showPurchaseOrder = isset($contract->purchase_order) && $contract->status === PurchaseRequestStatus::FINALIZADA;
+                                @endphp
+                                <td>{{ $showPurchaseOrder ? $contract?->purchase_order : '---' }}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button

@@ -102,7 +102,12 @@
                                 </td>
 
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($service->desired_date)->format('d/m/Y') }}</td>
-                                <td>{{ $service->purchase_order ?? '---' }}</td>
+
+                                @php
+                                    $showPurchaseOrder = isset($service->purchase_order) && $service->status === PurchaseRequestStatus::FINALIZADA;
+                                @endphp
+                                <td>{{ $showPurchaseOrder ? $service?->purchase_order : '---' }}</td>
+
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
                                         data-modal-name="{{ 'Analisando Solicitação de Serviço - Nº ' . $service->id }}"
