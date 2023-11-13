@@ -29,7 +29,7 @@
 
 
 import { elements as el } from '../../elements'
-import { dadosParametros } from '../../dadosParametros'
+import { ValidationResult, dadosParametros } from '../../dadosParametros'
 
 export const {
     email,
@@ -208,3 +208,57 @@ Cypress.Commands.add('inserirCentroCustoPermitido', (element: string) => {
 });
 
 
+Cypress.Commands.add('quantidadeMinimaCaracteres', function (element: string, value: string, quantidadeMinima: number, elementError: string) {
+    cy.get(element)
+        .clear()
+        .type(value)
+        .then(() => {
+            const $elementError = Cypress.$(elementError)
+            if (value.length < quantidadeMinima && !$elementError.is(':visible')) {
+                return cy.wrap({ error: "Erro! Valor informado é menor que o obrigatório, porém aviso não é apresentado ao usuário." });
+            }
+
+            if (value.length > quantidadeMinima && $elementError.is(':visible')) {
+                return cy.wrap({ error: "Erro! Valor informado está correto, porém é apresentado mensagem de erro." });
+            }
+            return cy.wrap({ success: "Sucesso!" });
+        });
+});
+
+
+
+
+
+
+Cypress.Commands.add('validarCpfCnpj', (
+    element: string, value: string,
+    elementError: string, 
+    mensagemErro = 'Este campo é obrigatório.',
+    mensagemErroCpf = 'Este campo é obrigatório.') => {
+    // Remove caracteres não numéricos
+    const valorLimpo = value.replace(/[^\d]/g, '');
+
+    cy.get(element)
+        .clear()
+        .type(valorLimpo)
+        .then(() => {
+
+            const $elementError = Cypress.$(elementError)
+            if (valorLimpo.length < 11 && !$elementError.is(':visible') && $elementError.text() === mensagemErroCpf) {
+                return cy.wrap({ error: `${valorLimpo} é um CPF incompleto. Porém não é apresentado mensagem ao usuário.` });
+            }
+
+            // Verifica se o CNPJ possui 14 dígitos
+            if (valorLimpo.length > 11 && valorLimpo.length < 14 && !$elementError.is(':visible')) {
+                return cy.wrap({ error: `${valorLimpo} é um CNPJ incompleto. Porém não é apresentado mensagem ao usuário.` });
+            }
+
+            // Verifica se todos os dígitos são iguais, o que tornaria o CNPJ inválido
+            if (/^(\d)\1+$/.test(valorLimpo) && !$elementError.is(':visible')) {
+                return cy.wrap({ error: `${valorLimpo} são números iguais. Porém não é apresentado mensagem ao usuário.` });
+            }
+
+            return cy.wrap({ success: `${valorLimpo} é um CPF/CNPJ Ok.` });
+        })
+
+});

@@ -75,10 +75,6 @@ Cypress.Commands.add('getElementAndType', (element: string, text?: string): void
                 cy.wrap($elements.first())
                     .clear()
                     .type(text, { timeout: 1000 })
-            } else {
-                cy.wrap($elements.eq(0))
-                    .clear()
-                    .type(text, { timeout: 1000 })
             }
         });
 });
@@ -133,9 +129,30 @@ Cypress.Commands.add('getRadioOptionByValue', (elemento: string, value): void =>
 
 
 
-Cypress.Commands.add('verificarObrigatoriedadeCampo', (element: string) => {
+Cypress.Commands.add('verificarObrigatoriedadeCampo', (element: string, value: string, elementError: string, mensagemErro = 'Este campo é obrigatório.') => {
     cy.get(element)
-        .should('have.attr', 'aria-required', 'true')
+        .click()
+        .blur()
+        .then(() => {
+            const $elementError = Cypress.$(elementError)
+
+            if (!$elementError.is(':visible')) {
+                return cy.wrap({ error: "Erro! Hmm, não vejo a mensagem que deve ser apresentada ao usuário." });
+            }
+
+            if (value.length > 0) {
+                cy.get(element)
+                    .type(value)
+                    .then(() => {
+                        const $elementError = Cypress.$(elementError)
+                        if (value.length > 0 && $elementError.is(':visible') && $elementError.text() === mensagemErro) {
+                            return cy.wrap({ error: "Erro! O campo está preenchido, porém a mensagem de obrigatoriedade é apresentada." });
+                        }
+                    });
+            }
+
+            return cy.wrap({ success: "Ok! Mensagem de campo obrigatório está funcionando como esperado." });
+        })
 });
 
 

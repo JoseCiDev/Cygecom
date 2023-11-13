@@ -14,12 +14,7 @@ import { mount } from 'cypress/react'
 // cypress/support/index.ts
 
 
-import { DataHora, dadosParametros } from '../dadosParametros'
-
-
-
-
-
+import { DataHora, ValidationResult, dadosParametros } from '../dadosParametros'
 
 declare global {
     namespace Cypress {
@@ -97,7 +92,7 @@ declare global {
              * comando customizado para verificar se o campo tem obrigatoriedade de preenchimento em Gecom.
              * @example cy.verificarObrigatoriedadeCampo()
             */
-            verificarObrigatoriedadeCampo(element: string): Chainable<Element>
+            verificarObrigatoriedadeCampo(element: string, value: string, elementError: string, mensagemErro?: string): ValidationResult
 
             /**
             * comando customizado para inserir Data.
@@ -206,6 +201,20 @@ declare global {
              * @example cy.getSelectOptionByValue(el.elemento)
              */
             getSelectOptionByValue(dataCy: string, value: any): Chainable<Element>;
+
+            /**
+             * comando customizado para selecionar opção do select.
+             * @example cy.verificarQuantidadeMinimaCaracteresAceitos(element, value)
+             */
+            quantidadeMinimaCaracteres(element: string, value: string, quantidadeMinima: number, elementError: string): ValidationResult;
+
+            /**
+             * comando customizado para validar CNPJ.
+             * @example cy.validarCNPJ(element, value)
+             */
+            validarCpfCnpj(element: string, value: string, elementError: string, mensagemErro?: string, mensagemErroCpf?: string, mensagemErroCnpj?: string): ValidationResult
+
+
         }
 
     }

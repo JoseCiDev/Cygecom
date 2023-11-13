@@ -1,6 +1,10 @@
+/// <reference path="./support/cypress.d.ts" />
+
+
 import { faker } from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { format } from 'date-fns';
+
 
 
 const ambiente = Cypress.env('AMBIENTE');
@@ -12,6 +16,13 @@ export interface DataHora<T = string> {
     HORA_FORMATADA: T;
 }
 
+
+export type ValidationResult = Cypress.Chainable<{
+    error?: string;
+    success?: string;
+}>
+
+
 interface DadosParametros<T = string> {
 
     sizes: Array<number | [number, number] | string>;
@@ -20,10 +31,10 @@ interface DadosParametros<T = string> {
         ENV: T;
         EMAILADMIN: T;
         SENHAADMIN: T;
-        EMAILUSUARIO: string,
-        SENHAUSUARIO: string,
-        EMAILGESTORUSUARIO: string,
-        SENHAGESTORUSUARIO: string,
+        EMAILUSUARIO: T;
+        SENHAUSUARIO: T;
+        EMAILGESTORUSUARIO: T;
+        SENHAGESTORUSUARIO: T;
         BASEURL: T;
         DB_NAME: T;
         DB_USER: T;

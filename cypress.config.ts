@@ -4,6 +4,7 @@ export default defineConfig({
   projectId: "kserwh",
   includeShadowDom: true,
   defaultCommandTimeout: 10000,
+  waitForAnimations: false,
 
   e2e: {
     setupNodeEvents(on, config) {

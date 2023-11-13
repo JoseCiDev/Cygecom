@@ -56,6 +56,9 @@ interface Elements<T = string> {
         salvarCadastroUsuario: T;
         cancelarCadastroUsuario: T;
         cadastroFornecedorSubMenu: T;
+        mensagemObrigatoriedadeNome: T;
+        mensagemObrigatoriedadeCpfCnpj: T;
+        mensagemObrigatoriedadeTelefone: T;
     },
 
     Solicitacao: {
@@ -134,6 +137,9 @@ export const elements: Elements = {
         salvarCadastroUsuario: '[data-cy="btn-submit-salvar"]',
         cancelarCadastroUsuario: '[data-cy="btn-cancelar"]',
         cadastroFornecedorSubMenu: '[data-cy="dropdown-cadastros-fornecedores"]',
+        mensagemObrigatoriedadeNome: '#name-error',
+        mensagemObrigatoriedadeCpfCnpj: '#cpf_cnpj-error',
+        mensagemObrigatoriedadeTelefone: '#number-error',
     },
 
     Solicitacao: {

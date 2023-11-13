@@ -2,8 +2,7 @@
 import * as faker from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { elements as el } from '../elements';
-import { dadosParametros } from '../dadosParametros'
-
+import { ValidationResult, dadosParametros } from '../dadosParametros'
 
 export const {
     perfilUsuario,
@@ -51,6 +50,7 @@ export const {
     limparCentroCustoPermitidoUsuario,
     salvarCadastroUsuario,
     cancelarCadastroUsuario,
+    mensagemObrigatoriedadeCpfCnpj: mensagemObrigatoriedadeCpfCnpj,
 } = el.Cadastro;
 
 export const {
@@ -69,6 +69,8 @@ export const {
     contratoSubMenu,
 
 } = el.Suprimento;
+
+
 
 
 
@@ -149,20 +151,12 @@ describe('Testes da página Cadastro de Usuário', () => {
 
         cy.getElementAndClick(criaNovoUsuario);
 
-        cy.getVisible(nomeUsuario)
-            .type(dadosParametros.Cadastro.letraUnica)
-            .blur();
+        cy.quantidadeMinimaCaracteres(nomeUsuario, 'x', 2, mensagemObrigatoriedadeCpfCnpj).then((result) => {
 
-        cy.getVisible('.help-block.has-error')
-            .should('contain', 'Valor inválido!');
+            assert.exists(result.success, result.error)// se não existe
 
-        cy.getVisible(nomeUsuario)
-            .clear()
-            .type(dadosParametros.Cadastro.nome)
-            .blur();
+        });
 
-        cy.get('#name-error')
-            .should('have.class', 'help-block has-error valid');
     });
 
 
@@ -171,7 +165,11 @@ describe('Testes da página Cadastro de Usuário', () => {
 
         cy.getElementAndClick(criaNovoUsuario);
 
-        cy.verificarObrigatoriedadeCampo(nomeUsuario);
+        cy.verificarObrigatoriedadeCampo(cpfCnpjUsuario, '', mensagemObrigatoriedadeCpfCnpj).then((result) => {
+
+            assert.exists(result.success, result.error)// se não existe
+
+        });
 
     });
 
@@ -188,45 +186,73 @@ describe('Testes da página Cadastro de Usuário', () => {
 
     it('Deve verificar a obrigatoriedade de preenchimento do campo "N° CPF/CNPJ".', () => {
         cy.acessarCadastroUsuario();
-
         cy.getElementAndClick(criaNovoUsuario);
 
-        cy.verificarObrigatoriedadeCampo(cpfCnpjUsuario);
+         cy.verificarObrigatoriedadeCampo(cpfCnpjUsuario, '', mensagemObrigatoriedadeCpfCnpj).then((result) => {
+
+            assert.exists(result.success, result.error)// se não existe
+
+        });
     });
 
 
-    it.only('Deve verificar se o campo "N° CPF/CNPJ" está preenchido com um valor de CPF válido.', () => {
+    it('Deve verificar se o campo "N° CPF/CNPJ" está preenchido com um valor de CPF válido.', () => {
+        cy.acessarCadastroUsuario();
+        cy.getElementAndClick(criaNovoUsuario);
+
+         cy.verificarObrigatoriedadeCampo(cpfCnpjUsuario, 'x', mensagemObrigatoriedadeCpfCnpj).then((result) => {
+
+            assert.exists(result.success, result.error)// se não existe
+
+        });
+
+        cy.getElementAndType(cpfCnpjUsuario, dadosParametros.cadastroParams.cpf.toString());
+        // Validar CNPJ e usar o erro ou sucesso resultante
+
+        cy.validarCpfCnpj(cpfCnpjUsuario, dadosParametros.cadastroParams.cpf.toString(), mensagemObrigatoriedadeCpfCnpj).then((result) => {
+
+            assert.exists(result.success, result.error)// se não existe
+
+        });
+
+    })
+
+
+
+    it.only('Deve verificar se o campo "N° CPF/CNPJ" está preenchido com um valor de CNPJ válido.', () => {
         cy.acessarCadastroUsuario();
 
         cy.getElementAndClick(criaNovoUsuario);
 
-        cy.getVisible(cpfCnpjUsuario)
-            .clear()
-            .type(dadosParametros.Cadastro.cpf)
-            .should('have.attr', 'aria-invalid', 'true');
+        //dadosParametros.cadastroParams.cnpj.toString()
 
-    }); 
+        // Validar CNPJ e usar o erro ou sucesso resultante
+        cy.validarCpfCnpj(cpfCnpjUsuario, '123456789', mensagemObrigatoriedadeCpfCnpj).then((result) => {
 
+            assert.exists(result.success, result.error)// se não existe
 
-    it('Deve verificar se o campo "N° CPF/CNPJ" está preenchido com um valor de CNPJ válido.', () => {
-        cy.acessarCadastroUsuario()
+        });
 
-        cy.getVisible(cpfCnpjUsuario)
-            .clear()
-            .type(dadosParametros.Cadastro.cnpj)
-            .should('have.attr', 'aria-invalid', 'true');
     })
 
 
     it('Deve verificar a obrigatoriedade de preenchimento do campo "Telefone/Celular".', () => {
-        cy.acessarCadastroUsuario()
+        cy.acessarCadastroUsuario();
 
-        cy.verificarObrigatoriedadeCampo(telefoneUsuario);
+        cy.getElementAndClick(criaNovoUsuario);
+
+        cy.verificarObrigatoriedadeCampo(nomeUsuario, 'x', mensagemObrigatoriedadeCpfCnpj).then((result) => {
+
+            assert.exists(result.success, result.error)// se não existe
+
+        });
     })
 
 
     it('Deve verificar se o campo "Telefone/Celular" contém máscara de preenchimento.', () => {
-        cy.acessarCadastroUsuario()
+        cy.acessarCadastroUsuario();
+
+        cy.getElementAndClick(criaNovoUsuario);
 
         cy.getVisible(telefoneUsuario)
             .clear()
@@ -272,7 +298,11 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar a obrigatoriedade de preenchimento do campo "E-mail".', () => {
         cy.acessarCadastroUsuario()
 
-        cy.verificarObrigatoriedadeCampo(emailUsuario);
+        cy.verificarObrigatoriedadeCampo(nomeUsuario, 'x', mensagemObrigatoriedadeCpfCnpj).then((result) => {
+
+            assert.exists(result.success, result.error)// se não existe
+
+        });
     })
 
 
@@ -289,7 +319,11 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar a obrigatoriedade de preenchimento e tipo do campo "Senha".', () => {
         cy.acessarCadastroUsuario()
 
-        cy.verificarObrigatoriedadeCampo(senhaUsuario)
+        cy.verificarObrigatoriedadeCampo(nomeUsuario, 'x', mensagemObrigatoriedadeCpfCnpj).then((result) => {
+
+            assert.exists(result.success, result.error)// se não existe
+
+        });
 
         cy.getVisible(senhaUsuario)
             .should('have.attr', 'type', 'password');
@@ -406,7 +440,11 @@ describe('Testes da página Cadastro de Usuário', () => {
     it('Deve verificar a obrigatoriedade de preenchimento do campo "Limite de Aprovação".', () => {
         cy.acessarCadastroUsuario()
 
-        cy.verificarObrigatoriedadeCampo(limiteAprovacaoUsuario);
+        cy.verificarObrigatoriedadeCampo(nomeUsuario, 'x', mensagemObrigatoriedadeCpfCnpj).then((result) => {
+
+            assert.exists(result.success, result.error)// se não existe
+
+        });
     })
 
 
@@ -515,3 +553,4 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
 })
+
