@@ -48,7 +48,6 @@
                             <th>Responsável</th>
                             <th>Status</th>
                             <th>Fornecedor</th>
-                            <th>Condição de pgto.</th>
                             <th>Contratação por</th>
                             <th>CNPJ</th>
                             <th>Data desejada</th>

@@ -50,7 +50,7 @@
                             <th>Responsável</th>
                             <th>Categorias</th>
                             <th>Status</th>
-                            <th>Condição de pgto.</th>
+                            <th>Fornecedor(es)</th>
                             <th>Contratação por</th>
                             <th>CNPJ</th>
                             <th>Data desejada</th>
