@@ -2,8 +2,9 @@
     use App\Enums\PurchaseRequestStatus;
 
     $currentUser = auth()->user();
+    $statusFinish = PurchaseRequestStatus::FINALIZADA->value;
+    $requestStatusIsFinish = $requestStatus === PurchaseRequestStatus::FINALIZADA;
 @endphp
-
 
 <h4 style="margin-bottom: 15px"><i class="glyphicon glyphicon-edit"></i> <strong>Editar solicitação</strong></h4>
 <form class="form-validate" data-cy="form-request-edit" id="form-request-edit" method="POST"
@@ -50,10 +51,18 @@
                     @endforeach
                 </select>
             </div>
+
+            <div class="col-sm-3" id="purchase-order-box">
+                <div class="form-group">
+                    <label for="purchase_order" class="regular-text">Ordem de compra</label>
+                    <input type="text" name="purchase_order" id="purchase_order" data-cy="purchase_order" class="form-control" maxlength="20"
+                        placeholder="Disponível ao finalizar solicitação" value="{{$purchaseOrder}}" @disabled(!$purchaseOrder || ($purchaseOrder && !$requestStatusIsFinish))>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="row div-reason-update" style="padding-top: 15px;" hidden>
+    <div class="row div-reason-update mt-3" style="padding-top: 15px;" hidden>
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="supplies-update-reason" class="regular-text">
@@ -63,7 +72,7 @@
                     data-cy="supplies-update-reason" rows="3" maxlength="200" minlength="5"
                     class="form-control text-area no-resize"></textarea>
             </div>
-            <div class="small" style="margin-top:-10px; margin-bottom:20px;">
+            <div class="small" style="margin-top: 10px; margin-bottom:20px;">
                 <p class="secondary-text">* Informe o motivo para atualizar o status desta solicitação.</p>
             </div>
         </div>
@@ -82,11 +91,13 @@
 @push('scripts')
     <script type="module">
         $(() => {
+            const statusFinish = @json($statusFinish);
+            const $purchaseOrderBox = $("#purchase-order-box");
+            const $purchaseOrder = $("#purchase_order");
             const $form = $("#form-request-edit");
             const $status = $('#status');
             const $reasonUpdateStatus = $('#supplies-update-reason');
             const $reasonUpdateStatusDiv = $('.div-reason-update');
-
             const statusOldValue = $status.val();
 
             $status.on('change', function() {
@@ -95,6 +106,17 @@
                     $reasonUpdateStatus.removeRequired();
                     $reasonUpdateStatus.val('');
                     return;
+                }
+
+                if($(this).val() === statusFinish) {
+                    $purchaseOrder.makeRequired();
+                    $purchaseOrder.attr('placeholder', 'Ex.: 08454/14')
+                    $purchaseOrder.prop('disabled', false);
+                } else {
+                    $purchaseOrder.removeRequired();
+                    $purchaseOrder.attr('placeholder', 'Disponível ao finalizar solicitação')
+                    $purchaseOrder.prop('disabled', true);
+                    $purchaseOrder.val(null);
                 }
 
                 const isCancel = $(this).val() === 'cancelada';
