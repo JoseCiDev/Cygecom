@@ -1,5 +1,5 @@
 <x-app>
-     <x-modalDelete/>
+     <x-modals.delete/>
 
         <div class="row">
             <div class="col-sm-12">
@@ -15,9 +15,8 @@
 
                     <div class="box-content nopadding regular-text">
 
-                        <table
-                            class="table table-hover table-nomargin table-bordered dataTable"
-                            data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
+                        <table style="width: 100%" class="table table-hover table-bordered dataTable" data-nosort="0" data-checkall="all"
+                            data-column_filter_dateformat="dd-mm-yy">
                             <thead>
                                 <tr>
                                     <th class="col-md-3">Usuário</th>
@@ -38,7 +37,7 @@
                                     <td class='hidden-480'>
                                         <a data-cy="btn-editar-usuario-{{$index}}" href="{{route('user' , ['id' => $user->id ])}}" class="btn" rel="tooltip" title="Edit"><i class="fa fa-edit"></i></a>
                                         <button data-route="user" data-name="{{$user->person->name}}" data-id="{{$user->id}}" rel="tooltip" title="Excluir"
-                                                class="btn" data-toggle="modal" data-target="#modal" data-cy="btn-modal-excluir-usuario-{{$index}}" >
+                                                class="btn" data-bs-toggle="modal" data-bs-target="#modal-delete" data-cy="btn-modal-excluir-usuario-{{$index}}" >
                                                 <i class="fa fa-times"></i>
                                         </button>
                                     </td>

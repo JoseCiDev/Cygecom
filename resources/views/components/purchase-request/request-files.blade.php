@@ -40,72 +40,69 @@
         Salvar anexos
     </button>
 
-    <script>
-        $(() => {
-            $('#supplies-upload-btn').on('click', function() {
-                const formData = new FormData();
-                formData.append('purchase_request_id', {{$purchaseRequestId}});
-                formData.append('purchaseRequestType', "{{$purchaseRequestType}}");
+    @push('scripts')
+        <script type="module">
+            $(() => {
+                $('#supplies-upload-btn').on('click', function() {
+                    const formData = new FormData();
+                    formData.append('purchase_request_id', {{$purchaseRequestId}});
+                    formData.append('purchaseRequestType', "{{$purchaseRequestType}}");
 
-                const files = $('#files')[0].files;
+                    const files = $('#files')[0].files;
 
-                if(!files.length) {
-                    bootbox.alert({
-                        title: "Opa, não existe anexos para salvar.",
-                        message: `Por favor, verifique novamente o campo de anexos e tente novamente.`,
-                    });
-                    return;
-                }
-
-                for (let i = 0; i < files.length; i++) {
-                    formData.append('arquivos[]', files[i]);
-                }
-
-                const csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-                $.ajax({
-                    url: '{{route("api.supplies.files.upload")}}',
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    success: function(response) {
-                        bootbox.alert({
-                            title: "<i class='fa fa-check'></i> Envio de arquivo(s) concluído!",
-                            message: `Os anexos adicionados foram salvos com sucesso.`,
-                            className: 'bootbox-custom-success',
-                            callback: function () {
-                                $('#files').val('');
-                                window.location.reload()
-                            }
-                        });
-                    },
-                    error: function(error) {
-                        bootbox.alert({
-                            title: "<i class='fa fa-check'></i> Envio de arquivo(s) falhou!",
-                            message: `Desculpe, não foi possível salvar novos arquivos.`,
-                            className: 'bootbox-custom-warning',
-                            callback: function () {
-                                $('#files').val('');
-                                window.location.reload()
-                            }
-                        });
+                    if(!files.length) {
+                        $.fn.showModalAlert("Opa, não existe anexos para salvar.", "Por favor, verifique novamente o campo de anexos e tente novamente.");
+                        return;
                     }
-                });
-                $('#files').val('');
-            })
-        });
+
+                    for (let i = 0; i < files.length; i++) {
+                        formData.append('arquivos[]', files[i]);
+                    }
+
+                    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                    $.ajax({
+                        url: '{{route("api.supplies.files.upload")}}',
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        success: function(response) {
+                            const title= "<i class='fa fa-check'></i> Envio de arquivo(s) concluído!";
+                            const message= `Os anexos adicionados foram salvos com sucesso.`;
+                            $.fn.showModalAlert(title, message, () => {
+                                $('#files').val('');
+                                window.location.reload()
+                            })
+                        },
+                        error: function(error) {
+                            const title= "<i class='fa fa-check'></i> Envio de arquivo(s) falhou!";
+                            const message= `Desculpe, não foi possível salvar novos arquivos.`;
+                            $.fn.showModalAlert(title, message, () => {
+                                $('#files').val('');
+                                window.location.reload()
+                            })
+                        }
+                    });
+                    $('#files').val('');
+                })
+            });
+        </script>
+    @endpush
+@endif
+
+@push('scripts')
+    <script>
+        const IS_SUPPLIES_FILES =  {!! json_encode($isSupplies) !!};
     </script>
-@endif
+    <script type="module" src="{{asset('js/purchase-request/file-upload-validation.js')}}"></script>
 
-<script>
-    const IS_SUPPLIES_FILES =  {!! json_encode($isSupplies) !!};
-</script>
-<script src="{{asset('js/purchase-request/file-upload-validation.js')}}"></script>
+    @if (!$isSupplies)
+        <script type="module" src="{{ asset('/js/service-form/file-remove-button-config.js') }}"></script>
+    @endif
+@endpush
 
-@if (!$isSupplies)
-    <script src="{{ asset('js/service-form/file-remove-button-config.js') }}"></script>
-@endif
+

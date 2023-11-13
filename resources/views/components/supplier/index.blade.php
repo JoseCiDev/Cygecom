@@ -10,7 +10,7 @@
 @endphp
 <x-app>
 
-    <x-modalDelete />
+    <x-modals.delete />
 
     <div class="row">
         <div class="col-sm-12">
@@ -35,18 +35,18 @@
                         @endforeach
                     </select>
 
-
+                    <span class="loader-box"></span>
                     <table id="supplierTable" class="table table-hover table-nomargin table-bordered" data-nosort="0"
-                        data-checkall="all">
+                        data-checkall="all" style="width:100%">
                         <thead>
                             <tr>
-                                <th>CNPJ</th>
+                                <th class="noColvis">CNPJ</th>
                                 <th>Razão social</th>
                                 <th>Nome fantasia</th>
                                 <th>Indicação</th>
                                 <th>Mercado</th>
                                 <th>Situação</th>
-                                <th>Ações</th>
+                                <th class="noColvis">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,14 +61,20 @@
 
 </x-app>
 
-<script>
+<script type="module">
     $(() => {
+        const $badgeColumnsQtd = $(`<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"></span>`);
         const table = $('#supplierTable').DataTable({
+            dom: 'Blfrtip',
+            scrollY: '400px',
+            scrollX: true,
+            autoWidth: true,
             serverSide: true,
             paging: true,
             lengthMenu: [10, 25, 50, 100],
             searching: true,
             searchDelay: 1000,
+            processing: true,
             language: {
                 lengthMenu: "Mostrar _MENU_ registros por página",
                 zeroRecords: "Nenhum registro encontrado",
@@ -76,12 +82,8 @@
                 infoEmpty: "Nenhum registro disponível",
                 infoFiltered: "(filtrado de _MAX_ registros no total)",
                 search: "Buscar:",
-                paginate: {
-                    first: "Primeiro",
-                    last: "Último",
-                    next: "Próximo",
-                    previous: "Anterior"
-                }
+                paginate: { first: "Primeiro", last: "Último", next: "Próximo", previous: "Anterior"},
+                processing:  $('.loader-box').show(),
             },
             ajax: {
                 url: @json(route('api.suppliers.index')),
@@ -92,6 +94,7 @@
             },
             columns: [{
                     data: 'cpf_cnpj',
+                    orderable: false,
                     render: (value) => {
                         const cnpjRegex = /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/;
                         return cnpjRegex.test(value) ? value.replace(cnpjRegex,
@@ -99,20 +102,25 @@
                     }
                 },
                 {
-                    data: 'corporate_name'
+                    data: 'corporate_name',
+                    orderable: false,
                 },
                 {
                     data: 'name',
+                    orderable: false,
                     defaultContent: '---'
                 },
                 {
-                    data: 'supplier_indication'
+                    data: 'supplier_indication',
+                    orderable: false,
                 },
                 {
-                    data: 'market_type'
+                    data: 'market_type',
+                    orderable: false,
                 },
                 {
                     data: 'qualification',
+                    orderable: false,
                     render: (value) => {
                         const enumQualification = @json($enumQualification);
                         return enumQualification[value];
@@ -120,13 +128,14 @@
                 },
                 {
                     data: null,
+                    orderable: false,
                     render: (data) => (
                         '<a href="suppliers/view/' + data.id + '" ' +
                         'class="btn" rel="tooltip" title="Editar" data-cy="btn-edit-supplier-' +
                         data.id + '"><i class="fa fa-edit"></i></a>' +
                         '<button data-route="supplier" data-name="' + data.corporate_name +
                         '" data-id="' + data.id +
-                        '" rel="tooltip" title="Excluir" class="btn" data-toggle="modal" data-target="#modal" data-cy="btn-modal-delete-supplier"><i class="fa fa-times"></i></button>'
+                        '" rel="tooltip" title="Excluir" class="btn" data-bs-toggle="modal" data-bs-target="#modal-delete" data-cy="btn-modal-delete-supplier"><i class="fa fa-times"></i></button>'
                     )
                 }
             ],
@@ -135,7 +144,17 @@
                     const selectedValue = $(this).val();
                     table.search(selectedValue).draw();
                 });
-            }
+
+                $.fn.setStorageDtColumnConfig();
+            },
+            buttons: [
+                {
+                    extend: 'colvis',
+                    columns: ':not(.noColvis)',
+                    text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
+                    columnText: (dt, idx, title ) => title,
+                }
+            ],
         });
     });
 </script>

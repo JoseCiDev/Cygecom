@@ -42,27 +42,34 @@
     $hasSentRequest = $issetPurchaseRequest && $requestAlreadySent && !$isCopy;
 @endphp
 
-<style>
-    .cost-center-container {
-        margin-bottom: 5px;
-    }
+@push('styles')
+    <style>
+        .cost-center-container {
+            margin-bottom: 5px;
+        }
 
-    h4 {
-        font-size: 20px;
-    }
+        h4 {
+            font-size: 20px;
+        }
 
-    .product-row hr {
-        margin: 0px;
-    }
+        .product-row hr {
+            margin: 0px;
+        }
 
-    .supplier-block .product-container .product-row:nth-of-type(odd) {
-        background-color: #f7f7f7;
-    }
+        .supplier-block .product-container .product-row:nth-of-type(odd) {
+            background-color: #f7f7f7;
+        }
 
-    .supplier-block .product-container .product-row:nth-of-type(even) {
-        background-color: #ffffff;
-    }
-</style>
+        .supplier-block .product-container .product-row:nth-of-type(even) {
+            background-color: #ffffff;
+        }
+
+        .supplier-container{
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+@endpush
 
 <div class="row" style="margin: 0 0 30px;">
 
@@ -71,7 +78,6 @@
             <h1 class="page-title">Editar solicitação de produto nº {{ $purchaseRequest->id }}</h1>
         @elseif ($hasSentRequest)
             <div class="alert alert-info alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h5>
                     <strong>ATENÇÃO:</strong> Esta solicitação já foi enviada ao setor de suprimentos responsável.
                 </h5>
@@ -83,10 +89,10 @@
     </div>
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right" style="padding: 0">
-            <x-modalDelete />
+            <x-modals.delete />
             <button data-cy="btn-delete-request" data-route="purchaseRequests"
                 data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-toggle="modal" data-target="#modal" rel="tooltip"
+                data-id="{{ $purchaseRequest->id }}" data-bs-toggle="modal" data-bs-target="#modal-delete" rel="tooltip"
                 title="Excluir" class="btn btn-primary btn-danger pull-right">
                 Excluir solicitação
             </button>
@@ -151,11 +157,10 @@
                         <input name="is_only_quotation" type="checkbox" id="checkbox-only-quotation"
                             data-cy="checkbox-only-quotation" class="checkbox-only-quotation no-validation"
                             style="margin:0" @checked((bool) $purchaseRequest?->is_only_quotation)>
-                        <label for="checkbox-only-quotation" class="regular-text form-check-label icheck-me"
+                        <label for="checkbox-only-quotation" class="regular-text form-check-label"
                             style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
                     </div>
                 </div>
-
 
                 {{-- RESPONSÁVEL CONTRATAÇÃO --}}
                 <div class="col-sm-4">
@@ -218,27 +223,8 @@
                             placeholder="Ex.: Devido aumento da demanda de produção, necessário a compra de uma máquina/equipamento."
                             class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
-                    <div class="small" style="margin-top:-10px; margin-bottom:20px;">
+                    <div class="small" style="margin-top: 10px; margin-bottom:20px;">
                         <p class="secondary-text">*Informe o motivo que você está solicitando essa compra.</p>
-                    </div>
-                </div>
-
-                {{-- PRODUTO JÁ COMPRADO --}}
-                <div class="col-sm-4 div-already-purchased" hidden style="width: 22%">
-                    <div class="form-group">
-                        <label for="form-check" class="regular-text" style="padding-right:10px">
-                            Você já realizou esta compra?
-                        </label>
-                        <fieldset data-rule-required="true">
-                            <input name="product[already_purchased]" value="1" class="radio-already-purchased"
-                                required id="already-purchased" data-cy="already-purchased" type="radio"
-                                @checked(isset($purchaseRequest) && (bool) $purchaseRequest->product->already_purchased)>
-                            <label class="form-check-label secondary-text" for="already-purchased">Sim</label>
-                            <input name="product[already_purchased]" value="0" class="radio-already-purchased"
-                                required type="radio" id="not-provided" data-cy="not-provided"
-                                style="margin-left: 12px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->product->already_purchased)>
-                            <label class="form-check-label secondary-text" for="not-provided">Não</label>
-                        </fieldset>
                     </div>
                 </div>
 
@@ -273,16 +259,15 @@
                             placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
                             class="form-control text-area no-resize">Solicitação de produto(s).</textarea>
                     </div>
-                    <div class="small" style="color:rgb(85, 85, 85); margin-top:-10px; margin-bottom:20px;">
-                        <p>* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação.
-                        </p>
+                    <div class="small" style="color:rgb(85, 85, 85); margin-top: 5px; margin-bottom:20px;">
+                        <p>* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação. </p>
                     </div>
                 </div>
 
             </div>
 
 
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="support-links" class="regular-text">Links de apoio / sugestão
@@ -329,7 +314,7 @@
                         <div class="form-group">
                             <label for="format-amount" class="regular-text">Valor total do(s) produto(s)</label>
                             <div class="input-group">
-                                <span class="input-group-addon">R$</span>
+                                <span class="input-group-text">R$</span>
                                 <input type="text" id="format-amount" name="format-amount"
                                     data-cy="format-amount" placeholder="0.00" class="form-control format-amount"
                                     value="{{ str_replace('.', ',', $purchaseRequestProductAmount) }}">
@@ -402,11 +387,11 @@
                                     <thead>
                                         <tr>
                                             <th class="col-sm-2">
-                                                <i class="fa fa-calendar-o" style="padding-right:5px;"></i>
+                                                <i class="fa-solid fa-calendar" style="padding-right:5px;"></i>
                                                 Vencimento
                                             </th>
                                             <th class="col-sm-2">
-                                                <i class="fa fa-money" style="padding-right:5px;"></i>
+                                                <i class="fa-solid fa-money-bill" style="padding-right:5px;"></i>
                                                 Valor
                                             </th>
                                             <th class='col-sm-4 hidden-350'>
@@ -435,8 +420,9 @@
             </div>
 
             {{-- FORNECEDORES COM PRODUTOS --}}
-
             <div class="supplier-container">
+                <h3 class="supplier-title"><i class="glyphicon glyphicon-briefcase"></i> Fornecedor(es)</h3>
+
                 @php $supplierIndex = 0; @endphp
                 @if ($issetPurchaseRequest)
                     @foreach ($productSuppliers as $supplierId => $products)
@@ -452,7 +438,6 @@
                     <i class="glyphicon glyphicon-plus"></i>
                     <strong>Adicionar fornecedor</strong>
                 </button>
-
             </div>
         </div>
 
@@ -485,722 +470,670 @@
         </div>
     </form>
 
-    <x-ModalSupplierRegister />
+    <x-modals.supplier-register />
 
-    <x-modal-edit-product-installment :statusValues="$statusValues" />
+    <x-modals.edit-product-installment :statusValues="$statusValues" />
 
 </div>
 
-<script src="{{ asset('js/purchase-request/product-suggestions-from-api.js') }}"></script>
-<script src="{{ asset('js/supplies/select2-custom.js') }}"></script>
+@push('scripts')
+    <script type="module" src="{{ asset('js/purchase-request/product-suggestions-from-api.js') }}"></script>
+    <script type="module" src="{{ asset('js/supplies/select2-custom.js') }}"></script>
 
-<script>
-    $(() => {
-        const $productQuantity = $('.product-quantity');
+    <script type="module">
+        $(() => {
+            const $productQuantity = $('.product-quantity');
 
-        $productQuantity.each(function() {
-            const maskOptions = {
+            $productQuantity.each(function() {
+                const maskOptions = {
+                    mask: Number,
+                    min: 1,
+                    max: 10000,
+                    thousandsSeparator: ''
+                };
+
+                const mask = IMask(this, maskOptions);
+            });
+        });
+    </script>
+
+    <script type="module">
+        $(document).ready(function() {
+            const hasSentRequest = @json($hasSentRequest);
+
+            const $amount = $('.amount');
+            const $serviceAmount = $('#format-amount');
+            const $phoneNumber = $('#phone-number');
+
+            // masks
+            $phoneNumber.imask({
+                mask: [{
+                        mask: '(00) 0000-0000'
+                    },
+                    {
+                        mask: '(00) 00000-0000'
+                    }
+                ]
+            });
+
+            $serviceAmount.imask({
                 mask: Number,
-                min: 1,
-                max: 10000,
-                thousandsSeparator: ''
-            };
+                scale: 2,
+                thousandsSeparator: '.',
+                normalizeZeros: true,
+                padFractionalZeros: true,
+                min: 0,
+                max: 1000000000,
+            });
 
-            const mask = IMask(this, maskOptions);
-        });
-    });
-</script>
+            // mascaras pra modal edicao
+            const $editValueInputModal = $('#edit-value');
+            const $editValueHiddenModal = $('#edit-value-hidden');
 
-<script>
-    $(document).ready(function() {
-        hasSentRequest = @json($hasSentRequest);
+            const editValueInputModalMasked = $editValueInputModal.imask({
+                mask: Number,
+                scale: 2,
+                thousandsSeparator: '.',
+                normalizeZeros: true,
+                padFractionalZeros: true,
+                min: 0,
+                max: 1000000000,
+            });
 
-        const $amount = $('.amount');
-        const $serviceAmount = $('#format-amount');
-        const $phoneNumber = $('#phone-number');
+            const $inputInstallmentsNumber = $('.installments-number');
+            const $formatInputInstallmentsNumber = $('.format-installments-number');
 
-        // masks
-        $phoneNumber.imask({
-            mask: [{
-                    mask: '(00) 0000-0000'
-                },
-                {
-                    mask: '(00) 00000-0000'
-                }
-            ]
-        });
-
-        $serviceAmount.imask({
-            mask: Number,
-            scale: 2,
-            thousandsSeparator: '.',
-            normalizeZeros: true,
-            padFractionalZeros: true,
-            min: 0,
-            max: 1000000000,
-        });
-
-        // mascaras pra modal edicao
-        const $editValueInputModal = $('#edit-value');
-        const $editValueHiddenModal = $('#edit-value-hidden');
-
-        editValueInputModalMasked = $editValueInputModal.imask({
-            mask: Number,
-            scale: 2,
-            thousandsSeparator: '.',
-            normalizeZeros: true,
-            padFractionalZeros: true,
-            min: 0,
-            max: 1000000000,
-        });
-
-        const $inputInstallmentsNumber = $('.installments-number');
-        const $formatInputInstallmentsNumber = $('.format-installments-number');
-
-        $formatInputInstallmentsNumber.imask({
-            mask: IMask.MaskedRange,
-            from: 1,
-            to: 60,
-            autofix: 'pad'
-        });
+            $formatInputInstallmentsNumber.imask({
+                mask: IMask.MaskedRange,
+                from: 1,
+                to: 60,
+                autofix: 'pad'
+            });
 
         const $filesGroup = $('fieldset#files-group');
         const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-        const $productAlreadyPurchased = $('.radio-already-purchased');
-
-        // muda data desejada mínima quando serviço já prestado
-        const $desiredDate = $('#desired-date');
-        const currentDate = moment();
-        const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
+            // muda data desejada mínima quando serviço já prestado
+            const $desiredDate = $('#desired-date');
+            const currentDate = moment();
+            const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
 
         $desiredDate.attr('min', currentDate.format('YYYY-MM-DD'))
 
-        function changeMinDesiredDate() {
-            const productAlreadyPurchased = $(this).val() === "1";
-
-            const minDate = productAlreadyPurchased ? minInitialDate : currentDate.format('YYYY-MM-DD');
-
-            $desiredDate.attr('min', minDate)
-
-            $desiredDate.rules('add', {
-                min: minDate
+            // trata valor serviço mascara
+            $serviceAmount.on('input', function() {
+                const formattedValue = $(this).val();
+                if (formattedValue !== null) {
+                    const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
+                    const rawValue = parseFloat(processedValue);
+                    if (!isNaN(rawValue)) {
+                        $amount.val(rawValue.toFixed(2)).trigger('change');
+                    }
+                }
             });
-        }
 
-        $productAlreadyPurchased.on('change', changeMinDesiredDate).filter(':checked').trigger('change');
+            // sim está repetindo muito...
 
-
-        // trata valor serviço mascara
-        $serviceAmount.on('input', function() {
-            const formattedValue = $(this).val();
-            if (formattedValue !== null) {
-                const processedValue = formattedValue.replace(/[^0-9,]/g, '').replace(/,/g, '.');
-                const rawValue = parseFloat(processedValue);
-                if (!isNaN(rawValue)) {
-                    $amount.val(rawValue.toFixed(2)).trigger('change');
+            // trata qtd parcelas mascara
+            $formatInputInstallmentsNumber.on('input', function() {
+                const formattedValue = $(this).val();
+                if (formattedValue !== null) {
+                    const rawValue = parseInt(formattedValue);
+                    if (!isNaN(rawValue)) {
+                        $inputInstallmentsNumber.val(rawValue).trigger('change');
+                    }
                 }
-            }
-        });
+            });
+            // ---
 
-        // sim está repetindo muito...
+            // sim está repetindo muito...
 
-        // trata qtd parcelas mascara
-        $formatInputInstallmentsNumber.on('input', function() {
-            const formattedValue = $(this).val();
-            if (formattedValue !== null) {
-                const rawValue = parseInt(formattedValue);
-                if (!isNaN(rawValue)) {
-                    $inputInstallmentsNumber.val(rawValue).trigger('change');
+            // trata valor serviço mascara
+            $editValueInputModal.on('input', function() {
+                const formattedValue = $(this).val();
+                if (formattedValue !== null) {
+                    const processedValue = editValueInputModalMasked.unmaskedValue;
+                    if (!isNaN(processedValue)) {
+                        $editValueHiddenModal.val(processedValue);
+                    }
                 }
-            }
-        });
-        // ---
+            });
+            // ---
 
-        // sim está repetindo muito...
+            // sim está repetindo muito...
 
-        // trata valor serviço mascara
-        $editValueInputModal.on('input', function() {
-            const formattedValue = $(this).val();
-            if (formattedValue !== null) {
-                const processedValue = editValueInputModalMasked.unmaskedValue;
-                if (!isNaN(processedValue)) {
-                    $editValueHiddenModal.val(processedValue);
-                }
-            }
-        });
-        // ---
+            const $selectSupplier = $('.select-supplier');
+            const $paymentMethod = $('#payment-method');
+            const $paymentInfo = $('.payment-info');
 
-        // sim está repetindo muito...
+            const purchaseRequest = @json($purchaseRequest);
+            const isRequestCopy = @json($isCopy);
+            const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
 
-        const $selectSupplier = $('.select-supplier');
-        const $paymentMethod = $('#payment-method');
-        const $paymentInfo = $('.payment-info');
-
-        const purchaseRequest = @json($purchaseRequest);
-        const isRequestCopy = @json($isCopy);
-        const isNotCopyAndIssetPurchaseRequest = !isRequestCopy && purchaseRequest;
-
-        // dataTable config - parcelas
-        const $installmentsTable = $('#installments-table-striped').DataTable({
-            defer: true,
-            data: purchaseRequest?.product?.installments || [],
-            columns: [{
-                    data: "expire_date",
-                    render: function(data, type, row, meta) {
-                        if (!data) {
-                            return "";
+            // dataTable config - parcelas
+            const $installmentsTable = $('#installments-table-striped').DataTable({
+                defer: true,
+                data: purchaseRequest?.product?.installments || [],
+                columns: [{
+                        data: "expire_date",
+                        render: function(data, type, row, meta) {
+                            if (!data) {
+                                return "";
+                            }
+                            const formattedDate = moment(data, "YYYY/MM/DD").format("DD/MM/YYYY");
+                            return formattedDate || "";
                         }
-                        const formattedDate = moment(data, "YYYY/MM/DD").format("DD/MM/YYYY");
-                        return formattedDate || "";
-                    }
-                },
-                {
-                    data: "value",
-                    render: function(data, type, row, meta) {
-                        const dataWithR$ = "R$" + data;
-                        return dataWithR$;
-                    }
-                },
-                {
-                    data: "observation",
-                },
-                {
-                    data: "status",
-                },
-                {
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        const btnEdit = $(
-                            '<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>'
-                        );
-                        btnEdit.find('button').prop('disabled', hasSentRequest);
+                    },
+                    {
+                        data: "value",
+                        render: function(data, type, row, meta) {
+                            const dataWithR$ = "R$" + data;
+                            return dataWithR$;
+                        }
+                    },
+                    {
+                        data: "observation",
+                    },
+                    {
+                        data: "status",
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            const btnEdit = $(
+                                '<div><button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button></div>'
+                            );
+                            btnEdit.find('button').prop('disabled', hasSentRequest);
 
-                        return btnEdit.html();
+                            return btnEdit.html();
+                        }
                     }
+                ],
+                orderable: false,
+                paging: true,
+                pageLength: 12,
+                info: false,
+                searching: false,
+                bLengthChange: false,
+                language: {
+                    emptyTable: "Nenhuma parcela adicionada.",
+                    paginate: {
+                        previous: "Anterior",
+                        next: "Próximo",
+                    },
+                },
+                order: [
+                    [0, 'desc']
+                ],
+                createdRow: function(row, data, dataIndex) {
+                    const hiddenFormattedDate = $(row).data('hidden-date');
+                    $(row).attr('data-hidden-date', hiddenFormattedDate);
                 }
-            ],
-            orderable: false,
-            paging: true,
-            pageLength: 12,
-            info: false,
-            searching: false,
-            bLengthChange: false,
-            language: {
-                emptyTable: "Nenhuma parcela adicionada.",
-                paginate: {
-                    previous: "Anterior",
-                    next: "Próximo",
-                },
-            },
-            order: [
-                [0, 'desc']
-            ],
-            createdRow: function(row, data, dataIndex) {
-                const hiddenFormattedDate = $(row).data('hidden-date');
-                $(row).attr('data-hidden-date', hiddenFormattedDate);
-            }
-        });
-
-        const hiddenInputsContainer = $('.hidden-installments-inputs-container');
-
-        function fillHiddenInputsWithRowData() {
-            const tableData = $installmentsTable.data();
-            hiddenInputsContainer.empty();
-            tableData.each(function(rowData, index) {
-                const expireDate = rowData.expire_date;
-                const value = rowData.value;
-                const observation = rowData.observation;
-                const status = rowData.status;
-
-                const idInput = document.createElement('input');
-                idInput.type = 'number';
-                idInput.name = 'product[product_installments][' + index + '][id]';
-                idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.product
-                    ?.installments[index]?.id : null;
-                idInput.hidden = true;
-                idInput.className = "no-validation";
-                idInput.setAttribute('data-cy', 'product-product_installments-' + index + '-id');
-
-                const expireDateInput = document.createElement('input');
-                expireDateInput.type = 'date';
-                expireDateInput.name = 'product[product_installments][' + index +
-                    '][expire_date]';
-                expireDateInput.value = expireDate;
-                expireDateInput.hidden = true;
-                expireDateInput.className = "no-validation";
-                expireDateInput.setAttribute('data-cy', 'product-product_installments-' + index +
-                    '-expire_date');
-
-                const valueInput = document.createElement('input');
-                valueInput.type = 'number';
-                valueInput.name = 'product[product_installments][' + index + '][value]';
-                valueInput.value = value;
-                valueInput.hidden = true;
-                valueInput.className = "no-validation";
-                valueInput.setAttribute('data-cy', 'product-product_installments-' + index +
-                    '-value');
-
-                const observationInput = document.createElement('input');
-                observationInput.type = 'text';
-                observationInput.name = 'product[product_installments][' + index +
-                    '][observation]';
-                observationInput.value = observation;
-                observationInput.hidden = true;
-                observationInput.className = "no-validation";
-                observationInput.setAttribute('data-cy', 'product-product_installments-' + index +
-                    '-observation');
-
-                const statusInput = document.createElement('input');
-                statusInput.type = 'text';
-                statusInput.name = 'product[product_installments][' + index + '][status]';
-                statusInput.value = status;
-                statusInput.hidden = true;
-                statusInput.className = "no-validation";
-                statusInput.setAttribute('data-cy', 'product-product_installments-' + index +
-                    '-status');
-
-                hiddenInputsContainer.append(
-                    idInput,
-                    expireDateInput,
-                    valueInput,
-                    observationInput,
-                    statusInput,
-                );
             });
-        }
 
-        function deleteHiddenInputs(row) {
-            const index = $installmentsTable.row(row).index();
-            $('input[name^="product[product_installments][' + index + ']"]').remove();
-        }
+            const hiddenInputsContainer = $('.hidden-installments-inputs-container');
 
-        function updateHiddenInputIndex() {
-            $('input[name^="product[product_installments]"]').each(function() {
-                const currentName = $(this).attr('name');
-                const newIndex = currentName.replace(/\[(\d+)\]/, function(match, index) {
-                    const currentIndex = parseInt(index);
-                    return '[' + (currentIndex - 1) + ']';
-                });
-                $(this).attr('name', newIndex);
-            });
-        }
-
-        fillHiddenInputsWithRowData();
-
-
-        // verifica AREA ou SUPRIMENTOS (desabilitar pagamento)
-        const $radioIsContractedBySupplies = $('.radio-who-wants');
-        const $supplierBlock = $('.supplier-block');
-        const $paymentBlock = $('.payment-block');
-
-        const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
-        const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
-
-        // desabilita pagamento ao entrar em register
-        $paymentBlock
-            .find('input, textarea')
-            .prop('readonly', true);
-
-        $paymentBlock
-            .find('select')
-            .prop('disabled', true)
-            .trigger('change.select2');
-
-
-        const $divAlreadyPurchased = $('.div-already-purchased');
-
-        $radioIsContractedBySupplies.on('change', function() {
-            const isContractedBySupplies = $(this).val() === "1";
-
-            // muda label
-            const supplierSelect = $('select.select-supplier');
-            const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
-
-            supplierSelect.siblings('label').text(newLabel);
-
-            supplierSelect.before().removeAttr('data-rule-required');
-
-            // muda label data desejada
-            const labelDesiredDateAlreadyProvided = "Data da entrega do produto";
-            const labelDesiredDateDefault = "Data desejada entrega do produto";
-            const newLabelDate = !isContractedBySupplies ? labelDesiredDateAlreadyProvided :
-                labelDesiredDateDefault;
-            $desiredDate.siblings('label').text(newLabelDate);
-
-            // desabilita e limpa inputs pagamento
-            $paymentBlock
-                .find('input, textarea')
-                .prop('readonly', isContractedBySupplies);
-
-            $paymentBlock
-                .find('select')
-                .prop('disabled', isContractedBySupplies)
-                .trigger('change.select2');
-
-            if (isContractedBySupplies) {
-                $productAlreadyPurchased
-                    .last()
-                    .prop('checked', true);
-
-                $divAlreadyPurchased
-                    .attr('hidden', true);
-
-                supplierSelect.removeRequired();
-                supplierSelect.closest('.form-group').removeClass('has-error');
-                $supplierBlock.find('.help-block').remove();
-
-                $paymentBlock
-                    .find('input, textarea')
-                    .val('');
-                $paymentBlock
-                    .find('select')
-                    .val('')
-                    .trigger('change.select2');
-
-                $installmentsTable.clear().draw();
+            function fillHiddenInputsWithRowData() {
+                const tableData = $installmentsTable.data();
                 hiddenInputsContainer.empty();
+                tableData.each(function(rowData, index) {
+                    const expireDate = rowData.expire_date;
+                    const value = rowData.value;
+                    const observation = rowData.observation;
+                    const status = rowData.status;
 
-                return;
-            } else {
-                /*
-                    ## solução previa ##
-                    tem um problema que é quando for edição e mover de suprimentos para area solicitante
-                    o radio button vem selecionado, ao invés de vazio, como acontece em um registro novo.
-                */
-                if (!purchaseRequest) {
-                    $productAlreadyPurchased
-                        .last()
-                        .prop('checked', false);
-                }
+                    const idInput = document.createElement('input');
+                    idInput.type = 'number';
+                    idInput.name = 'product[product_installments][' + index + '][id]';
+                    idInput.value = isNotCopyAndIssetPurchaseRequest ? purchaseRequest?.product
+                        ?.installments[index]?.id : null;
+                    idInput.hidden = true;
+                    idInput.className = "no-validation";
+                    idInput.setAttribute('data-cy', 'product-product_installments-' + index + '-id');
 
-                $divAlreadyPurchased
-                    .attr('hidden', false);
+                    const expireDateInput = document.createElement('input');
+                    expireDateInput.type = 'date';
+                    expireDateInput.name = 'product[product_installments][' + index +
+                        '][expire_date]';
+                    expireDateInput.value = expireDate;
+                    expireDateInput.hidden = true;
+                    expireDateInput.className = "no-validation";
+                    expireDateInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                        '-expire_date');
+
+                    const valueInput = document.createElement('input');
+                    valueInput.type = 'number';
+                    valueInput.name = 'product[product_installments][' + index + '][value]';
+                    valueInput.value = value;
+                    valueInput.hidden = true;
+                    valueInput.className = "no-validation";
+                    valueInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                        '-value');
+
+                    const observationInput = document.createElement('input');
+                    observationInput.type = 'text';
+                    observationInput.name = 'product[product_installments][' + index +
+                        '][observation]';
+                    observationInput.value = observation;
+                    observationInput.hidden = true;
+                    observationInput.className = "no-validation";
+                    observationInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                        '-observation');
+
+                    const statusInput = document.createElement('input');
+                    statusInput.type = 'text';
+                    statusInput.name = 'product[product_installments][' + index + '][status]';
+                    statusInput.value = status;
+                    statusInput.hidden = true;
+                    statusInput.className = "no-validation";
+                    statusInput.setAttribute('data-cy', 'product-product_installments-' + index +
+                        '-status');
+
+                    hiddenInputsContainer.append(
+                        idInput,
+                        expireDateInput,
+                        valueInput,
+                        observationInput,
+                        statusInput,
+                    );
+                });
             }
 
-            supplierSelect.makeRequired();
-        });
-
-        if (!hasSentRequest || $radioIsContractedBySupplies.is(':checked')) {
-            $radioIsContractedBySupplies.filter(':checked').trigger('change');
-        }
-
-        const editButton =
-            '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
-
-        function generateInstallments(numberOfInstallments) {
-            const installmentValue = ($amount.val() / numberOfInstallments).toFixed(2);
-
-            const installmentsData = [];
-            const rowsData = [];
-
-            for (let i = 1; i <= numberOfInstallments; i++) {
-                const installmentDate = new Date();
-                const formattedDate = installmentDate.toLocaleDateString('pt-BR');
-                const hiddenFormattedDate = installmentDate.toISOString();
-
-                const installmentData = {
-                    expire_date: "",
-                    value: installmentValue,
-                    observation: "Parcela " + i + "/" + numberOfInstallments,
-                    status: "PENDENTE",
-                    //installmentDate
-                };
-
-                installmentsData.push(installmentData);
-                rowsData.push(installmentData);
+            function deleteHiddenInputs(row) {
+                const index = $installmentsTable.row(row).index();
+                $('input[name^="product[product_installments][' + index + ']"]').remove();
             }
 
-            for (const installmentData of installmentsData) {
-                const rowNode = $installmentsTable.row.add(installmentData).node();
-                $(rowNode).children('td').eq(0).attr('data-hidden-date', installmentData[5]);
+            function updateHiddenInputIndex() {
+                $('input[name^="product[product_installments]"]').each(function() {
+                    const currentName = $(this).attr('name');
+                    const newIndex = currentName.replace(/\[(\d+)\]/, function(match, index) {
+                        const currentIndex = parseInt(index);
+                        return '[' + (currentIndex - 1) + ']';
+                    });
+                    $(this).attr('name', newIndex);
+                });
             }
 
             fillHiddenInputsWithRowData();
 
-            //$installmentsTable.draw();
-            $installmentsTable.clear().rows.add(rowsData).draw();
-        }
 
-        let selectedRowIndex = null;
+            // verifica AREA ou SUPRIMENTOS (desabilitar pagamento)
+            const $radioIsContractedBySupplies = $('.radio-who-wants');
+            const $supplierBlock = $('.supplier-block');
+            const $paymentBlock = $('.payment-block');
 
-        $('#installments-table-striped tbody').on('click', 'tr', function(event) {
-            event.preventDefault();
+            const labelSuppliersSuggestion = "Deseja indicar um fornecedor?";
+            const labelSuppliersChoose = "Fornecedor - CNPJ / Razão Social";
 
-            if ($(event.target).closest('.btn-edit-installment').length) {
-                const rowData = $installmentsTable.row(this).data();
-                selectedRowIndex = $installmentsTable.row(this).index();
-                openModalForEdit(rowData);
+            // desabilita pagamento ao entrar em register
+            $paymentBlock
+                .find('input, textarea')
+                .prop('readonly', true);
+
+            $paymentBlock
+                .find('select')
+                .prop('disabled', true)
+                .trigger('change.select2');
+
+        $radioIsContractedBySupplies.on('change', function() {
+            const isContractedBySupplies = $(this).val() === "1";
+
+                // muda label
+                const supplierSelect = $('select.select-supplier');
+                const newLabel = isContractedBySupplies ? labelSuppliersSuggestion : labelSuppliersChoose;
+
+                supplierSelect.siblings('label').text(newLabel);
+
+                supplierSelect.before().removeAttr('data-rule-required');
+
+            // muda label data desejada
+            const labelDesiredDateAlreadyProvided = "Data da entrega do produto";
+            const labelDesiredDateDefault = "Data desejada entrega do produto";
+            const newLabelDate = isContractedBySupplies ? labelDesiredDateDefault: labelDesiredDateAlreadyProvided;
+            $desiredDate.siblings('label').text(newLabelDate);
+
+            isContractedBySupplies ? $desiredDate.removeRequired() : $desiredDate.makeRequired()
+
+                // desabilita e limpa inputs pagamento
+                $paymentBlock
+                    .find('input, textarea')
+                    .prop('readonly', isContractedBySupplies);
+
+                $paymentBlock
+                    .find('select')
+                    .prop('disabled', isContractedBySupplies)
+                    .trigger('change.select2');
+
+            if (isContractedBySupplies) {
+                supplierSelect.removeRequired();
+                supplierSelect.closest('.form-group').removeClass('has-error');
+                $supplierBlock.find('.help-block').remove();
+
+                    $paymentBlock
+                        .find('input, textarea')
+                        .val('');
+                    $paymentBlock
+                        .find('select')
+                        .val('')
+                        .trigger('change.select2');
+
+                    $installmentsTable.clear().draw();
+                    hiddenInputsContainer.empty();
+
+                return;
             }
-        });
 
-        const statusValues = @json($statusValues);
+                supplierSelect.makeRequired();
+            });
 
-        // modal edit installment
-        function openModalForEdit(rowData) {
-            $('#modal-edit-product-installment').modal('show');
-
-            const expireDate = $('#edit-expire-date');
-            const $editValue = $('#edit-value');
-            const status = $('#edit-status');
-            const observation = $('#edit-observation');
-
-            if (rowData.expire_date) {
-                const formattedDate = new Date(rowData.expire_date.split('/').reverse().join('-'));
-                expireDate.val(formattedDate.toISOString().split('T')[0]);
+            if (!hasSentRequest || $radioIsContractedBySupplies.is(':checked')) {
+                $radioIsContractedBySupplies.filter(':checked').trigger('change');
             }
 
-            editValueInputModalMasked.value = rowData.value.replace('.', ',');
-            $editValue.val(editValueInputModalMasked.value);
+            const editButton =
+                '<button type="button" rel="tooltip" title="Editar Parcela" class="btn btn-edit-installment"><i class="fa fa-edit"></i></button>';
 
-            $editValueInputModal.trigger('input');
+            function generateInstallments(numberOfInstallments) {
+                const installmentValue = ($amount.val() / numberOfInstallments).toFixed(2);
 
-            observation.val(rowData.observation);
+                const installmentsData = [];
+                const rowsData = [];
 
-            status.select2('val', statusValues.find((status) => status.description === rowData.status).id);
+                for (let i = 1; i <= numberOfInstallments; i++) {
+                    const installmentDate = new Date();
+                    const formattedDate = installmentDate.toLocaleDateString('pt-BR');
+                    const hiddenFormattedDate = installmentDate.toISOString();
 
-            $('#form-modal-edit-product-installment').one('submit', function(event) {
-                event.preventDefault();
+                    const installmentData = {
+                        expire_date: "",
+                        value: installmentValue,
+                        observation: "Parcela " + i + "/" + numberOfInstallments,
+                        status: "PENDENTE",
+                        //installmentDate
+                    };
 
-                const expireDate = $('#edit-expire-date').val();
-
-                const value = parseFloat($('#edit-value-hidden').val());
-                const status = $('#edit-status').find(':selected').text();
-                const observation = $('#edit-observation').val();
-
-                // insere valores editados na tabela
-                if (selectedRowIndex !== null) {
-                    $installmentsTable.cell(selectedRowIndex, 0).data(expireDate);
-                    $installmentsTable.cell(selectedRowIndex, 1).data(value.toFixed(2));
-                    $installmentsTable.cell(selectedRowIndex, 2).data(observation);
-                    $installmentsTable.cell(selectedRowIndex, 3).data(status);
-                    $installmentsTable.cell(selectedRowIndex, 4).data(editButton);
-                    $installmentsTable.draw();
+                    installmentsData.push(installmentData);
+                    rowsData.push(installmentData);
                 }
 
-                selectedRowIndex = null;
+                for (const installmentData of installmentsData) {
+                    const rowNode = $installmentsTable.row.add(installmentData).node();
+                    $(rowNode).children('td').eq(0).attr('data-hidden-date', installmentData[5]);
+                }
 
                 fillHiddenInputsWithRowData();
 
-                // limpa valores dos inputs (será repopulado na abertura do modal)
-                $(this).find('input, select').val('');
-                $(this).find('textarea').val('');
-
-                $('#status').val('').trigger('change');
-
-                $('#modal-edit-product-installment').modal('hide');
-            });
-        }
-
-        // gerar parcelas a partir do change de varios inputs
-        $amount.add($inputInstallmentsNumber).on('change', function() {
-            const changeableInputs = [
-                $amount.val(),
-                $inputInstallmentsNumber.val()
-            ];
-
-            if (!changeableInputs.every(Boolean)) {
-                return;
+                //$installmentsTable.draw();
+                $installmentsTable.clear().rows.add(rowsData).draw();
             }
-            const numberOfInstallments = $inputInstallmentsNumber.val();
-            $installmentsTable.clear();
-            generateInstallments(numberOfInstallments);
-        });
 
-        const $paymentTerm = $('#payment-terms');
-        const $paymentInfoDescription = $('#payment-info-description');
+            let selectedRowIndex = null;
 
-        $paymentTerm.on('change', function() {
-            const paymentTerm = $(this).val() === "anticipated";
+            $('#installments-table-striped tbody').on('click', 'tr', function(event) {
+                event.preventDefault();
 
-            if (!paymentTerm) {
+                if ($(event.target).closest('.btn-edit-installment').length) {
+                    const rowData = $installmentsTable.row(this).data();
+                    selectedRowIndex = $installmentsTable.row(this).index();
+                    openModalForEdit(rowData);
+                }
+            });
+
+            const statusValues = @json($statusValues);
+
+            // modal edit installment
+            function openModalForEdit(rowData) {
+                const modalEditProductInstallment = bootstrap.Modal.getOrCreateInstance('#modal-edit-product-installment');
+                modalEditProductInstallment.show();
+
+                const expireDate = $('#edit-expire-date');
+                const $editValue = $('#edit-value');
+                const status = $('#edit-status');
+                const observation = $('#edit-observation');
+
+                if (rowData.expire_date) {
+                    const formattedDate = new Date(rowData.expire_date.split('/').reverse().join('-'));
+                    expireDate.val(formattedDate.toISOString().split('T')[0]);
+                }
+
+                editValueInputModalMasked.value = rowData.value.replace('.', ',');
+                $editValue.val(editValueInputModalMasked.value);
+
+                $editValueInputModal.trigger('input');
+
+                observation.val(rowData.observation);
+
+                status.select2('val', statusValues.find((status) => status.description === rowData.status).id);
+
+                $('#form-modal-edit-product-installment').one('submit', function(event) {
+                    event.preventDefault();
+
+                    const expireDate = $('#edit-expire-date').val();
+
+                    const value = parseFloat($('#edit-value-hidden').val());
+                    const status = $('#edit-status').find(':selected').text();
+                    const observation = $('#edit-observation').val();
+
+                    // insere valores editados na tabela
+                    if (selectedRowIndex !== null) {
+                        $installmentsTable.cell(selectedRowIndex, 0).data(expireDate);
+                        $installmentsTable.cell(selectedRowIndex, 1).data(value.toFixed(2));
+                        $installmentsTable.cell(selectedRowIndex, 2).data(observation);
+                        $installmentsTable.cell(selectedRowIndex, 3).data(status);
+                        $installmentsTable.cell(selectedRowIndex, 4).data(editButton);
+                        $installmentsTable.draw();
+                    }
+
+                    selectedRowIndex = null;
+
+                    fillHiddenInputsWithRowData();
+
+                    // limpa valores dos inputs (será repopulado na abertura do modal)
+                    $(this).find('input, select').val('');
+                    $(this).find('textarea').val('');
+
+                    $('#status').val('').trigger('change');
+
+                    const modalEditProductInstallment = bootstrap.Modal.getOrCreateInstance('#modal-edit-product-installment');
+                    modalEditProductInstallment.hide();
+                });
+            }
+
+            // gerar parcelas a partir do change de varios inputs
+            $amount.add($inputInstallmentsNumber).on('change', function() {
+                const changeableInputs = [
+                    $amount.val(),
+                    $inputInstallmentsNumber.val()
+                ];
+
+                if (!changeableInputs.every(Boolean)) {
+                    return;
+                }
+                const numberOfInstallments = $inputInstallmentsNumber.val();
+                $installmentsTable.clear();
+                generateInstallments(numberOfInstallments);
+            });
+
+            const $paymentTerm = $('#payment-terms');
+            const $paymentInfoDescription = $('#payment-info-description');
+
+            $paymentTerm.on('change', function() {
+                const paymentTerm = $(this).val() === "anticipated";
+
+                if (!paymentTerm) {
+                    $serviceAmount
+                        .add($paymentMethod)
+                        .add($formatInputInstallmentsNumber)
+                        .add($paymentInfoDescription)
+                        .removeRequired()
+                        .closest('.form-group')
+                        .removeClass('has-error');
+
+                    $paymentBlock.find('.help-block').remove();
+
+                    return;
+                }
+
                 $serviceAmount
                     .add($paymentMethod)
                     .add($formatInputInstallmentsNumber)
                     .add($paymentInfoDescription)
-                    .removeRequired()
-                    .closest('.form-group')
-                    .removeClass('has-error');
+                    .makeRequired();
 
-                $paymentBlock.find('.help-block').remove();
+            }).trigger('change');
 
-                return;
+            if (!hasSentRequest || $paymentTerm.filter(':selected').val() === "anticipated") {
+                $paymentTerm.filter(':selected').trigger('change.select2');
             }
 
-            $serviceAmount
-                .add($paymentMethod)
-                .add($formatInputInstallmentsNumber)
-                .add($paymentInfoDescription)
-                .makeRequired();
 
-        }).trigger('change');
+            const selectedPaymentMethod = @json($selectedPaymentMethod);
+            const paymentMethodsIsComex = @json($paymentMethods);
 
-        if (!hasSentRequest || $paymentTerm.filter(':selected').val() === "anticipated") {
-            $paymentTerm.filter(':selected').trigger('change.select2');
-        }
+            const paymentMethodsNotComex = paymentMethodsIsComex
+                .filter(function({
+                    value
+                }) {
+                    return value !== 'internacional';
+                });
 
+            const $radioComex = $('.radio-comex');
 
-        const selectedPaymentMethod = @json($selectedPaymentMethod);
-        const paymentMethodsIsComex = @json($paymentMethods);
+            $radioComex.on('change', function() {
+                const isComex = $(this).val() === "1";
 
-        const paymentMethodsNotComex = paymentMethodsIsComex
-            .filter(function({
-                value
-            }) {
-                return value !== 'internacional';
+                $paymentMethod.empty();
+
+                const emptyOption = new Option();
+                $paymentMethod.append(emptyOption);
+
+                if (!isComex) {
+                    paymentMethodsNotComex.forEach(function({
+                        text,
+                        value
+                    }) {
+                        const option = new Option(text, value);
+                        if (value === selectedPaymentMethod) {
+                            option.selected = true;
+                        }
+                        $paymentMethod.append(option);
+                    });
+                } else {
+                    paymentMethodsIsComex.forEach(function({
+                        text,
+                        value
+                    }) {
+                        const option = new Option(text, value);
+                        if (value === selectedPaymentMethod) {
+                            option.selected = true;
+                        }
+                        $paymentMethod.append(option);
+                    });
+                }
+
+                // Destruir e recriar o Select2
+                $paymentMethod.select2('destroy');
+                $paymentMethod.select2();
             });
 
-        const $radioComex = $('.radio-comex');
-
-        $radioComex.on('change', function() {
-            const isComex = $(this).val() === "1";
-
-            $paymentMethod.empty();
-
-            const emptyOption = new Option();
-            $paymentMethod.append(emptyOption);
-
-            if (!isComex) {
-                paymentMethodsNotComex.forEach(function({
-                    text,
-                    value
-                }) {
-                    const option = new Option(text, value);
-                    if (value === selectedPaymentMethod) {
-                        option.selected = true;
-                    }
-                    $paymentMethod.append(option);
-                });
-            } else {
-                paymentMethodsIsComex.forEach(function({
-                    text,
-                    value
-                }) {
-                    const option = new Option(text, value);
-                    if (value === selectedPaymentMethod) {
-                        option.selected = true;
-                    }
-                    $paymentMethod.append(option);
-                });
+            if (!hasSentRequest && $radioComex.is(':checked')) {
+                $radioComex.filter(':checked').trigger('change');
             }
 
-            // Destruir e recriar o Select2
-            $paymentMethod.select2('destroy');
-            $paymentMethod.select2();
-        });
 
-        if (!hasSentRequest && $radioComex.is(':checked')) {
-            $radioComex.filter(':checked').trigger('change');
-        }
+            // add supplier
+            const $supplierContainer = $('.supplier-container');
+            const $addSupplierBtn = $('.add-supplier-btn');
 
+            function checkSuppliersContainerLength() {
+                const suppliersCount = $supplierContainer.find('.supplier-block').length;
+                const suppliersCountGreaterThanOne = suppliersCount > 1;
 
-        // add supplier
-        const $supplierContainer = $('.supplier-container');
-        const $addSupplierBtn = $('.add-supplier-btn');
+                $('.delete-supplier').prop('disabled', !suppliersCountGreaterThanOne).toggleClass('disabled-button',
+                    !suppliersCountGreaterThanOne);
+            }
 
-        function checkSuppliersContainerLength() {
-            const suppliersCount = $supplierContainer.find('.supplier-block').length;
-            const suppliersCountGreaterThanOne = suppliersCount > 1;
+            const $productContainer = $('.product-container');
 
-            $('.delete-supplier').prop('disabled', !suppliersCountGreaterThanOne).toggleClass('disabled-button',
-                !suppliersCountGreaterThanOne);
-        }
+            function checkProductRows() {
+                $('.supplier-block').each(function() {
+                    const $productContainer = $(this).find('.product-container');
+                    const $productRow = $productContainer.find('.product-row');
+                    const productRowCount = $productRow.length;
 
-        const $productContainer = $('.product-container');
-
-        function checkProductRows() {
-            $('.supplier-block').each(function() {
-                const $productContainer = $(this).find('.product-container');
-                const $productRow = $productContainer.find('.product-row');
-                const productRowCount = $productRow.length;
-
-                $productContainer.find('.delete-product').prop('disabled', productRowCount <= 1);
-            });
-        }
-
-        checkSuppliersContainerLength();
-        checkProductRows();
-
-        $(document).on('click', '.add-supplier-btn', function() {
-            @php
-                $viewPath = 'components.purchase-request.product.supplier.index';
-                $viewWithParams = view($viewPath, compact('productCategories', 'suppliers'));
-            @endphp
-            const $newContainer = $(@json($viewWithParams->render()));
-            const $currentSupplierBlock = $('.supplier-container').find('.supplier-block').last();
-
-            const [_, ...rest] = $newContainer
-                .find('.product-row').toArray();
-            rest.forEach(element => {
-                $(element).remove();
-            });
-
-            $newContainer.find(
-                'select[name^="purchase_request_products"], input[name^="purchase_request_products"]'
-            ).each(function() {
-                //const oldName = $(this).attr('name');
-                const lastFoundClass = Array.from(this.classList).at(-1);
-                const oldName = $currentSupplierBlock.find('.' + lastFoundClass).last().attr(
-                    'name');
-                const regexNewName = /purchase_request_products\[(\d+)\](.*)/;
-                const lastIndex = Number(oldName.match(regexNewName).at(1));
-                const anotherRegex = /\[\d+\]/;
-
-                const newName = oldName
-                    .replaceAll(/\[\d+\]/g, `[0]`)
-                    .replace(/\[\d+\]/, `[${lastIndex + 1}]`);
-
-                $(this).attr('name', newName);
-            });
-
-            $newContainer.find("input, select").val("");
-            $newContainer.find('.select2-container').remove();
-            $newContainer.find('.select2-me').select2();
-
-            // $newContainer.find('select.select-supplier').makeRequired();
-
-            $('.supplier-block').last().after($newContainer);
-            $newContainer.find('.delete-supplier').removeAttr('hidden');
-
-            $newContainer.find('[data-rule-required]').makeRequired();
+                    $productContainer.find('.delete-product').prop('disabled', productRowCount <= 1);
+                });
+            }
 
             checkSuppliersContainerLength();
             checkProductRows();
 
-            const $selectSupplier = $newContainer.find('select').first();
+            $(document).on('click', '.add-supplier-btn', function() {
+                @php
+                    $viewPath = 'components.purchase-request.product.supplier.index';
+                    $viewWithParams = view($viewPath, compact('productCategories', 'suppliers'));
+                @endphp
+                const $newContainer = $(@json($viewWithParams->render()));
+                const $currentSupplierBlock = $('.supplier-container').find('.supplier-block').last();
 
-            addBtnSupplierSelect($selectSupplier);
+                const [_, ...rest] = $newContainer
+                    .find('.product-row').toArray();
+                rest.forEach(element => {
+                    $(element).remove();
+                });
 
-            if (!$radioIsContractedBySupplies.is(':checked')) {
-                return;
-            }
+                $newContainer.find(
+                    'select[name^="purchase_request_products"], input[name^="purchase_request_products"]'
+                ).each(function() {
+                    //const oldName = $(this).attr('name');
+                    const lastFoundClass = Array.from(this.classList).at(-1);
+                    const oldName = $currentSupplierBlock.find('.' + lastFoundClass).last().attr(
+                        'name');
+                    const regexNewName = /purchase_request_products\[(\d+)\](.*)/;
+                    const lastIndex = Number(oldName.match(regexNewName).at(1));
+                    const anotherRegex = /\[\d+\]/;
 
-            $radioIsContractedBySupplies.filter(':checked').trigger('change');
-        });
+                    const newName = oldName
+                        .replaceAll(/\[\d+\]/g, `[0]`)
+                        .replace(/\[\d+\]/, `[${lastIndex + 1}]`);
 
-        $(document).on('click', '.delete-supplier', function(event) {
-            event.preventDefault();
+                    $(this).attr('name', newName);
+                });
 
-            const $supplierBlock = $(this).closest('.supplier-block');
+                $newContainer.find("input, select").val("");
+                $newContainer.find('.select2-container').remove();
+                $newContainer.find('.select2-me').select2();
 
-            bootbox.confirm({
-                title: 'Atenção!',
-                message: "<p>Ao remover este fornecedor, todos os produtos associados serão excluídos. Esta ação não poderá ser desfeita.</p>",
-                buttons: {
-                    confirm: {
-                        label: 'Excluir',
-                        className: 'btn btn-secondary btn-danger'
-                    },
-                    cancel: {
-                        label: 'Cancelar',
-                        className: 'btn btn-secondary'
-                    }
-                },
-                callback: function(result) {
-                    if (!result) {
-                        return;
-                    }
+                // $newContainer.find('select.select-supplier').makeRequired();
 
+                $('.supplier-block').last().after($newContainer);
+                $newContainer.find('.delete-supplier').removeAttr('hidden');
+
+                $newContainer.find('[data-rule-required]').makeRequired();
+
+                checkSuppliersContainerLength();
+                checkProductRows();
+
+                const $selectSupplier = $newContainer.find('select').first();
+
+                addBtnSupplierSelect($selectSupplier);
+
+                if (!$radioIsContractedBySupplies.is(':checked')) {
+                    return;
+                }
+
+                $radioIsContractedBySupplies.filter(':checked').trigger('change');
+            });
+
+            $(document).on('click', '.delete-supplier', function(event) {
+                event.preventDefault();
+
+                const $supplierBlock = $(this).closest('.supplier-block');
+
+                const title = "Atenção!"
+                const message = "<p>Ao remover este fornecedor, todos os produtos associados serão excluídos. Esta ação não poderá ser desfeita.</p>";
+                $.fn.showModalAlert(title, message, () => {
                     $supplierBlock.remove();
 
                     // atualiza os índices dos fornecedores restantes
@@ -1222,99 +1155,86 @@
 
                     checkSuppliersContainerLength();
                     checkProductRows();
-                }
-            });
-        });
-
-
-
-        $(document).on('click', '.add-product-btn', function() {
-            @php
-                $viewPath = 'components.purchase-request.product.product.index';
-                $viewWithParams = view($viewPath, compact('productCategories'));
-            @endphp
-            const newRow = $(@json($viewWithParams->render()));
-            const $currentSupplierBlock = $(this).closest('.supplier-block');
-
-            newRow.find(
-                'select[name^="purchase_request_products"], input[name^="purchase_request_products"]'
-            ).each(function() {
-                const lastFoundClass = Array.from(this.classList).at(-1);
-                const $lastProductRow = $currentSupplierBlock.find('.product-row').last();
-                const oldName = $lastProductRow.find('.' + lastFoundClass).last().attr('name');
-                const regexNewName = /\[products\]\[(\d+)\]/;
-                const lastIndex = Number(oldName.match(regexNewName).at(1));
-                const newName = oldName.replace(regexNewName, `[products][${lastIndex + 1}]`);
-                $(this).attr('name', newName);
-                $(this).attr('data-cy', newName);
+                });
             });
 
-            newRow.find("input, select").val("");
-            newRow.find('.select2-container').remove();
-            newRow.find('.select2-me').select2();
 
-            newRow.find('[data-rule-required]').makeRequired();
 
-            $(this).siblings('.product-row').last().after(newRow);
-            newRow.find('.delete-product').removeAttr('hidden');
+            $(document).on('click', '.add-product-btn', function() {
+                @php
+                    $viewPath = 'components.purchase-request.product.product.index';
+                    $viewWithParams = view($viewPath, compact('productCategories'));
+                @endphp
+                const newRow = $(@json($viewWithParams->render()));
+                const $currentSupplierBlock = $(this).closest('.supplier-block');
 
-            checkProductRows();
-        });
+                newRow.find(
+                    'select[name^="purchase_request_products"], input[name^="purchase_request_products"]'
+                ).each(function() {
+                    const lastFoundClass = Array.from(this.classList).at(-1);
+                    const $lastProductRow = $currentSupplierBlock.find('.product-row').last();
+                    const oldName = $lastProductRow.find('.' + lastFoundClass).last().attr('name');
+                    const regexNewName = /\[products\]\[(\d+)\]/;
+                    const lastIndex = Number(oldName.match(regexNewName).at(1));
+                    const newName = oldName.replace(regexNewName, `[products][${lastIndex + 1}]`);
+                    $(this).attr('name', newName);
+                    $(this).attr('data-cy', newName);
+                });
 
-        $(document).on('click', '.delete-product', function() {
-            $(this).closest('.product-row').remove();
+                newRow.find("input, select").val("");
+                newRow.find('.select2-container').remove();
+                newRow.find('.select2-me').select2();
 
-            checkProductRows();
-        });
+                newRow.find('[data-rule-required]').makeRequired();
 
-        // salvar rascunho ou enviar
-        const $btnSubmitRequest = $('.btn-submit-request');
-        const $sendAction = $('#action');
+                $(this).siblings('.product-row').last().after(newRow);
+                newRow.find('.delete-product').removeAttr('hidden');
 
-        $btnSubmitRequest.on('click', function(event) {
-            event.preventDefault();
-
-            bootbox.confirm({
-                message: "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?",
-                buttons: {
-                    confirm: {
-                        label: 'Sim, enviar solicitação',
-                        className: 'btn-success'
-                    },
-                    cancel: {
-                        label: 'Cancelar',
-                        className: 'btn-danger'
-                    }
-                },
-                callback: function(result) {
-                    if (result) {
-                        $sendAction.val('submit-request');
-                        $('#request-form').trigger('submit');
-                    }
-                }
+                checkProductRows();
             });
+
+            $(document).on('click', '.delete-product', function() {
+                $(this).closest('.product-row').remove();
+
+                checkProductRows();
+            });
+
+            // salvar rascunho ou enviar
+            const $btnSubmitRequest = $('.btn-submit-request');
+            const $sendAction = $('#action');
+
+            $btnSubmitRequest.on('click', function(event) {
+                event.preventDefault();
+
+                const title = "Atenção!"
+                const message = "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?";
+                $.fn.showModalAlert(title, message, () => {
+                    $sendAction.val('submit-request');
+                    $('#request-form').trigger('submit');
+                });
+            });
+
+            // desabilita todos os campos do form caso solicitacao ja enviada
+            if (hasSentRequest) {
+                $('#request-form')
+                    .find('input, textarea, checkbox')
+                    .prop('disabled', hasSentRequest);
+
+                $('#request-form')
+                    .find('select')
+                    .prop('disabled', hasSentRequest);
+
+                $('.file-remove').prop('disabled', hasSentRequest);
+
+                $('.add-supplier-btn').prop('disabled', hasSentRequest);
+                $('.delete-supplier').prop('disabled', hasSentRequest);
+
+                $('.add-product-btn').prop('disabled', hasSentRequest);
+                $('.delete-product').prop('disabled', hasSentRequest);
+
+                $('.add-cost-center-btn').prop('disabled', hasSentRequest);
+                $('.delete-cost-center').prop('disabled', hasSentRequest);
+            }
         });
-
-        // desabilita todos os campos do form caso solicitacao ja enviada
-        if (hasSentRequest) {
-            $('#request-form')
-                .find('input, textarea, checkbox')
-                .prop('disabled', hasSentRequest);
-
-            $('#request-form')
-                .find('select')
-                .prop('disabled', hasSentRequest);
-
-            $('.file-remove').prop('disabled', hasSentRequest);
-
-            $('.add-supplier-btn').prop('disabled', hasSentRequest);
-            $('.delete-supplier').prop('disabled', hasSentRequest);
-
-            $('.add-product-btn').prop('disabled', hasSentRequest);
-            $('.delete-product').prop('disabled', hasSentRequest);
-
-            $('.add-cost-center-btn').prop('disabled', hasSentRequest);
-            $('.delete-cost-center').prop('disabled', hasSentRequest);
-        }
-    });
-</script>
+    </script>
+@endpush

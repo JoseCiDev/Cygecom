@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Support\Facades\DB;
-use App\Models\PurchaseRequestFile;
 use App\Enums\PurchaseRequestStatus;
+use App\Http\Requests\Service\UpdateServiceRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\{RedirectResponse, Request};
-use App\Models\{Company, CostCenter, PurchaseRequest};
+use App\Models\{Company, CostCenter, PurchaseRequest, PurchaseRequestFile};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 
 class ServiceController extends Controller
@@ -88,20 +88,20 @@ class ServiceController extends Controller
         }
     }
 
-    public function updateService(Request $request, int $id): RedirectResponse
+    /**
+     * @param UpdateServiceRequest $request
+     * @param int $id
+     * @return RedirectResponse
+     */
+    public function updateService(UpdateServiceRequest $request, int $id): RedirectResponse
     {
         $route = 'requests.own';
         $data = $request->all();
         $action = $request->input('action');
 
-        $validator = $this->validatorService->purchaseRequestUpdate($data);
         $files = $request->file('arquivos');
         $currentUser = auth()->user();
         $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.service.update";
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator->errors()->getMessages())->withInput();
-        }
 
         try {
             $msg = "Solicitação de serviço pontual atualizada com sucesso!";
