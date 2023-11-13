@@ -109,8 +109,6 @@
                                         <p><strong>Motivo da solicitação:</strong> {{ $request->reason }} </p>
                                         <p><strong>Em qual sala/prédio ficará o produto:</strong>
                                             {{ $request->local_description }} </p>
-                                        <p><strong>Compra já realizada:</strong>
-                                            {{ $request->product->already_purchased ? 'Sim' : 'Não' }} </p>
                                         <p><strong>Observação:</strong> {{ $request->observation ?? '---' }}</p>
                                     </div>
                                 </div>
