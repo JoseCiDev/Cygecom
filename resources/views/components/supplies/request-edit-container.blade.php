@@ -53,15 +53,14 @@
         </div>
     </div>
 
-    <div class="row div-reason-update" style="padding-top: 15px;" hidden>
+    <div class="row div-reason-update" style="padding-top: 15px; display: none">
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="supplies-update-reason" class="regular-text">
                     Motivo para mudança de status
                 </label>
-                <textarea name="supplies_update_reason" id="supplies-update-reason"
-                    data-cy="supplies-update-reason" rows="3" maxlength="200" minlength="5"
-                    class="form-control text-area no-resize"></textarea>
+                <textarea name="supplies_update_reason" id="supplies-update-reason" data-cy="supplies-update-reason"
+                    rows="3" maxlength="200" minlength="5" class="form-control text-area no-resize"></textarea>
             </div>
             <div class="small" style="margin-top:-10px; margin-bottom:20px;">
                 <p class="secondary-text">* Informe o motivo para atualizar o status desta solicitação.</p>
@@ -81,35 +80,36 @@
 
 <script>
     $(() => {
-        $form = $("#form-request-edit");
-        $status = $('#status');
-        $reasonUpdateStatus = $('#supplies-update-reason');
-        $reasonUpdateStatusDiv = $('.div-reason-update');
-
+        const $form = $("#form-request-edit");
+        const $status = $('#status');
+        const $reasonUpdateStatus = $('#supplies-update-reason');
+        const $reasonUpdateStatusDiv = $('.div-reason-update');
         const statusOldValue = $status.val();
+        const requestStatusCancel = @json(PurchaseRequestStatus::CANCELADA->value);
 
         $status.on('change', function() {
-            if ($(this).val() === statusOldValue) {
-                $reasonUpdateStatusDiv.attr('hidden', true);
+            const currentValue = $(this).val();
+            const isOriginValue = currentValue === statusOldValue;
+
+            if (isOriginValue) {
+                $reasonUpdateStatusDiv.hide();
                 $reasonUpdateStatus.removeRequired();
                 $reasonUpdateStatus.val('');
                 return;
             }
 
-            const isCancel = $(this).val() === 'cancelada';
+            $reasonUpdateStatusDiv.show();
 
-            $reasonUpdateStatusDiv.attr('hidden', false);
-
+            const isCancel = currentValue === requestStatusCancel;
             if (isCancel) {
                 $reasonUpdateStatus.makeRequired();
                 $reasonUpdateStatus.rules('add', {
                     required: true,
-                    messages: {
-                        required: 'Motivo é obrigatório para cancelar uma solicitação.',
-                    },
+                    messages: { required: 'Motivo é obrigatório para cancelar uma solicitação.' },
                 });
             } else {
                 $reasonUpdateStatus.removeRequired();
+                $reasonUpdateStatus.rules('remove', 'required');
             }
         });
 
