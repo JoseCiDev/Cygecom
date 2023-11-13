@@ -35,7 +35,8 @@
                     :request-id="$request->id"
                     :request-user-id="$request->user_id"
                     :request-status="$request->status"
-                    :amount="$request->product->amount" />
+                    :amount="$request->product->amount"
+                    :purchase-order="$request->purchase_order" />
             </div>
         </div>
 
@@ -81,6 +82,10 @@
                     <br>
                     <h4 class="text-highlight"><strong>Responsável pela contratação:</strong>
                         {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }}
+                    </h4>
+                    <br>
+                    <h4 class="text-highlight"><strong>Ordem de compra:</strong>
+                        {{ $request->purchase_order ?? '---' }}
                     </h4>
                     <br>
                 </div>

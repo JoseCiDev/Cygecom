@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Enums\PurchaseRequestStatus;
+use App\Http\Requests\Contract\UpdateContractRequest;
 use Illuminate\Http\{RedirectResponse, Request};
 use App\Models\{Company, CostCenter, PurchaseRequest, PurchaseRequestFile};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
@@ -90,20 +91,20 @@ class ContractController extends Controller
         }
     }
 
-    public function updateContract(Request $request, int $id): RedirectResponse
+    /**
+     * @param UpdateContractRequest $request
+     * @param int $id
+     * @return RedirectResponse
+     */
+    public function updateContract(UpdateContractRequest $request, int $id): RedirectResponse
     {
         $route = 'requests.own';
         $data = $request->all();
         $action = $request->input('action');
 
-        $validator = $this->validatorService->purchaseRequestUpdate($data);
         $files = $request->file('arquivos');
         $currentUser = auth()->user();
         $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.contract.update";
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator->errors()->getMessages())->withInput();
-        }
 
         try {
             $msg = "Solicitação de serviço recorrente atualizada com sucesso!";

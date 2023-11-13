@@ -30,7 +30,7 @@
         <div id="main">
             <div class="container-fluid">
                 <x-breadcrumb />
-                <x-modals.alert />
+                <x-alert />
                 {{ $slot }}
             </div>
         </div>

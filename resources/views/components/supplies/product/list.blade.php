@@ -54,6 +54,7 @@
                             <th>Contratação por</th>
                             <th>CNPJ</th>
                             <th>Data desejada</th>
+                            <th>Ord. compra</th>
                             <th class="noColvis">Ações</th>
                         </tr>
                     </thead>
@@ -105,6 +106,8 @@
                                 <td class="hidden-1440">
                                     {{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y') : '---' }}
                                 </td>
+
+                                <td>{{ $product->purchase_order ?? '---' }}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
