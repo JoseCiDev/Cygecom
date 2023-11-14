@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class PurchaseOrderIfStatusFinish implements ValidationRule
 {
-    public function __construct(private string $status)
+    public function __construct(private ?string $status)
     {
     }
 
