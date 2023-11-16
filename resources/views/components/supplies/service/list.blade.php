@@ -82,6 +82,8 @@
                                         @endphp
                                         @if ($suppliers)
                                             <span class="tag-list-item">{{ $supplierName . ' - ' . $cnpj }}</span>
+                                        @else
+                                            ---
                                         @endif
                                     </div>
                                 </td>

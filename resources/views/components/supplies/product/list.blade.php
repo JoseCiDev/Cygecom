@@ -87,15 +87,17 @@
                                 <td>{{ $product->status->label() }}</td>
                                 <td>
                                     <div class="tag-list">
-                                        @forelse ($suppliers as $index => $supplier)
+                                        @foreach ($suppliers as $index => $supplier)
                                             @php
-                                                $supplierName = $supplier->corporate_name;
-                                                $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj);
+                                                $supplierName = $supplier?->corporate_name;
+                                                $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier?->cpf_cnpj);
                                             @endphp
-                                            <span class="tag-list-item">{{ $supplierName . ' - ' . $cnpj }}</span>
-                                        @empty
-                                            ---
-                                        @endforelse
+                                            @if ($supplier)
+                                                <span class="tag-list-item">{{ $supplierName . ' - ' . $cnpj }}</span>
+                                            @else
+                                                ---
+                                            @endif
+                                        @endforeach
                                     </div>
                                 </td>
                                 <td class="hidden-1024">
