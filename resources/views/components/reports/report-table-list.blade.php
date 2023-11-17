@@ -521,7 +521,7 @@
                     },
                     {
                         data: 'responsibility_marked_at',
-                        render: (responsibility_marked_at, _, row) => responsibility_marked_at ? moment(responsibility_marked_at).format('DD/MM/YYYY HH:mm:ss') : '---'
+                        render: (responsibility_marked_at, _, row) =>  responsibility_marked_at ? moment.utc(responsibility_marked_at).utcOffset('-03:00').format('DD/MM/YYYY HH:mm:ss') : '---'
                     },
                     {
                         data: 'type',
