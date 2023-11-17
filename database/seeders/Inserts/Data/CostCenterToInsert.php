@@ -18,7 +18,7 @@ class CostCenterToInsert implements DataToInsertInterface
         $hasErrorName = !$isEqualQtd  || $ids->isEmpty() || !$isInt || $invalidNames->isNotEmpty();
         if ($hasErrorName) {
             $errorMessage = 'Houve um problema ao identificar os IDs das empresas. Verifique as seguintes razões sociais: ' . $corporateNames->implode(', ');
-            throw new \Exception($errorMessage);
+            throw new Exception($errorMessage);
         }
 
         return true;
@@ -108,6 +108,7 @@ class CostCenterToInsert implements DataToInsertInterface
             ['id' => 780, 'name' => 'Diretoria financeira', 'company_id' => $IdSaraceni],
             ['id' => 781, 'name' => 'Tributário', 'company_id' => $IdSaraceni],
             ['id' => 782, 'name' => 'Controladoria', 'company_id' => $IdSaraceni],
+            ['id' => 783, 'name' => 'Arquitetura', 'company_id' => $IdSaraceni],
         ];
     }
 }
