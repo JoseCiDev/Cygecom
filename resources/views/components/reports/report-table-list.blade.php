@@ -521,7 +521,6 @@
                     },
                     {
                         data: 'responsibility_marked_at',
-                        orderable: false,
                         render: (responsibility_marked_at, _, row) => responsibility_marked_at ? moment(responsibility_marked_at).format('DD/MM/YYYY HH:mm:ss') : '---'
                     },
                     {
