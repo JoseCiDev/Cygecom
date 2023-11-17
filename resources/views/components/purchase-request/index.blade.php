@@ -85,7 +85,7 @@
                                             }
 
                                             $cnpj = $supplier?->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj) : 'CNPJ indefinido';
-                                            $amount = $purchaseRequest[$requestType]->amount ?? $purchaseRequest[$requestType]->price;
+                                            $amount = $purchaseRequest[$requestType]?->amount ?? $purchaseRequest[$requestType]?->price;
                                             $formatedAmount = $amount ? number_format($amount, 2, '.', ',') : '---';
                                         @endphp
                                         <tr>
