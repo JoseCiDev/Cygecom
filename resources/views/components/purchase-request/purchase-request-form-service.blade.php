@@ -835,7 +835,7 @@
             // desabilita pagamento ao entrar em register
             $paymentBlock
                 .find('input, textarea')
-                .prop('readonly', true);
+                .prop('disabled', true);
 
             $paymentBlock
                 .find('select')
@@ -862,7 +862,7 @@
                 $desiredDate.siblings('label').text(newLabelDate);
 
                 // desabilita pagamento
-                $paymentBlock.find('input, textarea').prop('readonly', isContractedBySupplies);
+                $paymentBlock.find('input, textarea').prop('disabled', isContractedBySupplies);
                 $paymentBlock.find('select').prop('disabled', isContractedBySupplies).trigger(
                     'change.select2');
 
