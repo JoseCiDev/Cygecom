@@ -304,7 +304,7 @@ class PurchaseRequestService extends ServiceProvider
     {
         return DB::transaction(function () use ($id, $data, $isSuppliesUpdate, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, $isSuppliesUpdate, $files);
-            $this->saveProducts($purchaseRequest->id, $data, $purchaseRequest->product->id);
+            $this->saveProducts($purchaseRequest->id, $data, $purchaseRequest?->product?->id);
 
             return $purchaseRequest;
         });
