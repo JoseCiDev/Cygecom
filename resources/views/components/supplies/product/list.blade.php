@@ -85,7 +85,7 @@
                                     </div>
                                 </td>
                                 <td>{{ $product->status->label() }}</td>
-                                <td>{{ $product->product->paymentInfo?->payment_terms?->label() ?? '---' }}</td>
+                                <td>{{ $product?->product?->paymentInfo?->payment_terms?->label() ?? '---' }}</td>
                                 <td class="hidden-1024">
                                     {{ $product->is_supplies_contract ? 'Suprimentos' : 'Solicitante' }}</td>
 
