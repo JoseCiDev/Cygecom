@@ -27,6 +27,8 @@ window.Chart = Chart;
 Chart.defaults.color = '#141414';
 
 import setColvisConfig from './colvis-custom-user-preference.js'
+import createChartDoughnut from './create-chart-doughnut.js'
+window.createChartDoughnut = createChartDoughnut
 
 $.fn.imask = function(options) {
     const maskedElements = this.map((_, input) => new IMask(input, options)).toArray();
