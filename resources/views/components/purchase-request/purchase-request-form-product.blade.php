@@ -1228,6 +1228,7 @@
 
                 $('.add-supplier-btn').prop('disabled', hasSentRequest);
                 $('.delete-supplier').prop('disabled', hasSentRequest);
+                $('.delete-supplier').attr('disabled', hasSentRequest);
 
                 $('.add-product-btn').prop('disabled', hasSentRequest);
                 $('.delete-product').prop('disabled', hasSentRequest);
