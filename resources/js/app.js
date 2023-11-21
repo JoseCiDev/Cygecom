@@ -22,6 +22,10 @@ import IMask from "imask";
 import moment from 'moment';
 window.moment = moment;
 
+import Chart from 'chart.js/auto';
+window.Chart = Chart;
+Chart.defaults.color = '#141414';
+
 import setColvisConfig from './colvis-custom-user-preference.js'
 
 $.fn.imask = function(options) {
