@@ -34,6 +34,16 @@ class ReportService
     }
 
     /**
+     * @return Builder query para consulta de usuários que possuem solicitações diferentes de status rascunho
+     */
+    public function productivityRequestingUsers(): Builder
+    {
+        $requestingUsersQuery = User::with('person', 'purchaseRequest.costCenterApportionment.costCenter')
+            ->whereHas('purchaseRequest', fn ($query) => $query->where('status', '!=', PurchaseRequestStatus::RASCUNHO->value));
+        return $requestingUsersQuery;
+    }
+
+    /**
      * @param string $requestType Recebe uma string dos tipos de solicitação separados por vírgula. Exemplo: "product,service"
      */
     public function whereInRequestTypeQuery(Builder $query, string $requestType): Builder|InvalidArgumentException
@@ -167,6 +177,48 @@ class ReportService
             6 => 'purchase_requests.status',
             7 => $getPersonSupplies,
             12 => 'total_amount'
+        };
+
+        return $orderColumnMappings;
+    }
+
+    /**
+     * @param string $orderColumnIndex Recebe um index que determina o campo de ordenação com base no dicionário de mapeamento."
+     * @param string $orderDirection Recebe o tipo de ordenação, sendo 'asc' ou 'desc'.
+     */
+    public function productivityOrder(Builder $query, int $orderColumnIndex): string|Closure
+    {
+        $latestLogSubquery = fn ($query) => $query->select('logs.created_at')
+            ->from('logs')
+            ->where('logs.table', 'purchase_requests')
+            ->where('logs.foreign_id', '=', DB::raw('purchase_requests.id'))
+            ->where(DB::raw('JSON_UNQUOTE(JSON_EXTRACT(logs.changes, "$.status"))'), '=', 'pendente')
+            ->orderBy('logs.created_at', 'asc')
+            ->limit(1);
+
+        $getPersonName = fn ($query) => $query->select('people.name')
+            ->from('people')
+            ->join('users', 'users.person_id', '=', 'people.id')
+            ->where('users.id', DB::raw('purchase_requests.user_id'));
+
+        $getPersonRequester = fn ($query) => $query->select('people.name')
+            ->from('people')
+            ->where('people.id', DB::raw('purchase_requests.requester_person_id'));
+
+        $getPersonSupplies = fn ($query) => $query->select('people.name')
+            ->from('people')
+            ->where('people.id', DB::raw('purchase_requests.supplies_user_id'));
+
+        $orderColumnMappings = match ($orderColumnIndex) {
+            0 => 'purchase_requests.id',
+            1 => 'purchase_requests.type',
+            2 => $latestLogSubquery,
+            3 => $getPersonName,
+            4 => $getPersonRequester,
+            5 => 'purchase_requests.status',
+            6 => $getPersonSupplies,
+            8 => 'purchase_requests.is_supplies_contract',
+            9 => 'purchase_requests.desired_date',
         };
 
         return $orderColumnMappings;
