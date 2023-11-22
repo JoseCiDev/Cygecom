@@ -282,6 +282,7 @@ $buyingStatus = [
             flex-wrap: wrap;
             row-gap: 10px;
             column-gap: 15px;
+            align-items: center;
         }
 
         .productivity-report-filters .request-status-filter .status .checkbox-label{
@@ -379,7 +380,7 @@ $buyingStatus = [
                     </div>
                     <div class="select-filter-btns">
                         <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn" data-cy="filter-clear-users-btn">Limpar</button>
-                        <button class="btn btn-mini btn-secondary">Todos</button>
+                        <button class="btn btn-mini btn-secondary" id="all-requisting-users-btn" data-cy="all-requisting-users-btn">Todos</button>
                     </div>
                 </div>
 
@@ -403,7 +404,7 @@ $buyingStatus = [
                     </div>
                     <div class="select-filter-btns">
                         <button class="btn btn-mini btn-secondary" id="filter-clear-cost-centers-btn" data-cy="filter-clear-cost-centers-btn">Limpar</button>
-                        <button class="btn btn-mini btn-secondary" >Todos</button>
+                        <button class="btn btn-mini btn-secondary" id="all-cost-center-btn" data-cy="all-cost-center-btn">Todos</button>
                     </div>
                 </div>
 
@@ -419,7 +420,7 @@ $buyingStatus = [
                     </div>
                     <div class="select-filter-btns">
                         <button class="btn btn-mini btn-secondary" id="filter-clear-supplies-users-btn" data-cy="filter-clear-supplies-users-btn">Limpar</button>
-                        <button class="btn btn-mini btn-secondary" >Todos</button>
+                        <button class="btn btn-mini btn-secondary" id="all-suppliers-users-btn" data-cy="all-suppliers-users-btn">Todos</button>
                     </div>
                 </div>
 
@@ -436,7 +437,6 @@ $buyingStatus = [
                         <label for="date-until" class="regular-text">Data fim: </label>
                         <input type="date" class="form-control" name="date-until" id="date-until" data-cy="date-until" max="{{ now()->formatCustom('Y-m-d') }}">
                     </div>
-                    <small class="span-info">Data de envio da solicitação para suprimentos</small>
                 </div>
 
                 <div class="dates">
@@ -496,6 +496,8 @@ $buyingStatus = [
                         @endif
 
                     @endforeach
+
+                    <button id="all-status-checkbox" type="button" class="btn btn-mini btn-secondary">Marcar todos status</button>
                 </div>
             </div>
 
@@ -629,10 +631,17 @@ $buyingStatus = [
                 const $checkedStatusInputs = $('.status-checkbox');
                 const $isSuppliesContractNone = $('#is-supplies-contract-none');
                 const $suppliesUsers = $('#supplies-users');
+
                 const $filterClearBtn = $('#filter-clear-all-btn');
                 const $filterClearUsersBtn = $('#filter-clear-users-btn');
                 const $filterClearCostCentersBtn = $('#filter-clear-cost-centers-btn');
                 const $filterClearSuppliesUsersBtn = $('#filter-clear-supplies-users-btn');
+
+                const $allRequistingUsersBtn = $('#all-requisting-users-btn');
+                const $allCostCenterBtn = $('#all-cost-center-btn');
+                const $allSuppliersUsersBtn = $('#all-suppliers-users-btn');
+
+                const $allStatusCheckbox = $('#all-status-checkbox');
 
                 const getUrlWithParams = (urlAjax) => {
                     const $checkedStatusInputs = $('.status-checkbox:checked');
@@ -669,7 +678,7 @@ $buyingStatus = [
                     $productivityTable.DataTable().ajax.url(updatedUrlAjax).load();
                 }
 
-                const clearFilters = (_, filter = false) => {
+                const clearFilters = (filter = false) => {
                     const clearOptions = {
                         requistingUsersIdsFilter: () => $requistingUsersIdsFilter.val(null).trigger('change'),
                         costCenterIdsFilter: () => $costCenterIdsFilter.val(null).trigger('change'),
@@ -859,10 +868,27 @@ $buyingStatus = [
                     ],
                 })
 
-                $filterClearBtn.on('click', clearFilters);
-                $filterClearUsersBtn.on('click', (_) => clearFilters(_, 'requistingUsersIdsFilter'));
-                $filterClearCostCentersBtn.on('click', (_) => clearFilters(_, 'costCenterIdsFilter'));
-                $filterClearSuppliesUsersBtn.on('click', (_) => clearFilters(_, 'suppliesUsersFilter'));
+                $filterClearBtn.on('click', () => clearFilters());
+                $filterClearUsersBtn.on('click', () => clearFilters('requistingUsersIdsFilter'));
+                $filterClearCostCentersBtn.on('click', () => clearFilters('costCenterIdsFilter'));
+                $filterClearSuppliesUsersBtn.on('click', () => clearFilters('suppliesUsersFilter'));
+
+                $allRequistingUsersBtn.on('click', () => {
+                    const allValues = $requistingUsersIdsFilter.find('option').map((_, option) => $(option).val())
+                    $requistingUsersIdsFilter.val(allValues).trigger('change');
+                });
+
+                $allCostCenterBtn.on('click', () => {
+                    const allValues = $costCenterIdsFilter.find('option').map((_, option) => $(option).val())
+                    $costCenterIdsFilter.val(allValues).trigger('change');
+                })
+
+                $allSuppliersUsersBtn.on('click', () => {
+                    const allValues = $suppliesUsers.find('option').map((_, option) => $(option).val())
+                    $suppliesUsers.val(allValues).trigger('change');
+                })
+
+                $allStatusCheckbox.on('click', (event) => $checkedStatusInputs.each((_, el) =>  $(el).prop('checked', true)))
             });
         </script>
     @endpush
