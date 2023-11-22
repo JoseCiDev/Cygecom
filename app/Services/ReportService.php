@@ -126,12 +126,14 @@ class ReportService
     /**
      * @param string $dateSince Recebe uma string com a data inicial do período. Exemplo: "2023-09-20"
      * @param string $dateUntil Recebe uma string com a data final do período. Exemplo: "2023-09-28"
-     * @param Builder $query Retorna query builder de PurchaseRequest para status pendente atualizado dentro do período escolhido
+     * @param Builder $query Receber query builder de PurchaseRequest
+     * @param PurchaseRequestStatus $status
+     * @return Builder Retorna query builder de PurchaseRequest para status escolhido atualizado dentro do período escolhido
      */
-    public function whereInLogDate(Builder $query, string $dateSince, string $dateUntil): Builder
+    public function whereInLogDate(Builder $query, string $dateSince, string $dateUntil, PurchaseRequestStatus $status = PurchaseRequestStatus::PENDENTE): Builder
     {
-        $query->whereHas('logs', function ($query) use ($dateSince, $dateUntil) {
-            $query->where(DB::raw('JSON_EXTRACT(changes, "$.status")'), '=', 'pendente')
+        $query->whereHas('logs', function ($query) use ($dateSince, $dateUntil, $status) {
+            $query->where(DB::raw('JSON_EXTRACT(changes, "$.status")'), '=', $status)
                 ->orderBy('created_at', 'asc')
                 ->whereDate('created_at', '>=', $dateSince)
                 ->whereDate('created_at', '<=', $dateUntil)
