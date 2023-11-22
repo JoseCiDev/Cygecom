@@ -142,8 +142,6 @@ class ReportController extends Controller
 
             $query->where('purchase_requests.status', "!=", PurchaseRequestStatus::RASCUNHO->value);
 
-            $query = $this->reportService->whereInLogDate($query, $dateSince, $dateUntil);
-
             $query = $this->reportService->whereInRequistingUserQuery($query, $requestingUsersIds);
 
             if ($isSuppliesContract !== null) {
@@ -158,10 +156,6 @@ class ReportController extends Controller
                 $query = $this->reportService->whereInRequestTypeQuery($query, $requestType);
             }
 
-            if ($status) {
-                $query = $this->reportService->whereInStatusQuery($query, $status);
-            }
-
             if ($desiredDate) {
                 $query->where('purchase_requests.desired_date', $desiredDate);
             }
@@ -170,11 +164,13 @@ class ReportController extends Controller
                 $query->where('purchase_requests.supplies_user_id', $suppliesUsers);
             }
 
-            $orderValue = $this->reportService->productivityOrder($query, $orderColumnIndex);
-            $query->orderBy($orderValue, $orderDirection);
+            $suppliesUsersQuery = clone ($query);
+            $suppliesUsersQuery = $this->reportService->whereInLogDate($suppliesUsersQuery, $dateSince, $dateUntil, PurchaseRequestStatus::FINALIZADA);
+
+            $query = $this->reportService->whereInStatusQuery($query, $status);
+            $query = $this->reportService->whereInLogDate($query, $dateSince, $dateUntil);
 
             $statusQuery = clone ($query);
-            $suppliesUsersQuery = clone ($query);
             $chartData = [
                 'status' => $statusQuery->get()->groupBy('status')->map(function ($group) {
                     return [
@@ -195,6 +191,9 @@ class ReportController extends Controller
 
             $countQuery = clone ($query);
             $requestsByUsersQtd = $countQuery->where('is_supplies_contract', false)->count();
+
+            $orderValue = $this->reportService->productivityOrder($query, $orderColumnIndex);
+            $query->orderBy($orderValue, $orderDirection);
 
             $days = Carbon::parse($dateUntil)->diffInDays(Carbon::parse($dateSince));
             $finishedRequestsQuery = clone ($query);

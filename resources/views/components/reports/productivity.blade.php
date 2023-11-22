@@ -570,7 +570,7 @@ $buyingStatus = [
                                 ---
                             </span>
                             <p class="productivity-report-item-info-bottom-row-text">
-                                solicitações finalizadas
+                               finalizadas que foram pendentes no mesmo período
                             </p>
                         </div>
                         <div class="productivity-report-item-info-bottom-row">
