@@ -155,7 +155,9 @@
                 <th class="noColvis">Nº</th>
                 <th >Tipo</th>
                 <th >Solicitado em</th>
+                <th >Data de atribuição</th>
                 <th >Nome Serviço</th>
+                <th >Contratado por</th>
                 <th >Solicitante</th>
                 <th >Solicitante sistema</th>
                 <th >Status</th>
@@ -335,27 +337,28 @@
                                 const content = data.data;
                                 const headers = $('#reportsTable>thead>tr>th').toArray().map(header => header.textContent);
                                 const rows = content.map(item => {
-                                    const id = item.id
-                                    const type = enumRequests['type'][item.type]
+                                    const id = item.id;
+                                    const type = enumRequests['type'][item.type];
 
                                     const pendingStatus = item.logs
                                         .filter((item) => item.changes?.status === 'pendente')
                                         .find((item) => item.created_at)
-                                        .created_at
+                                        .created_at;
 
-                                const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss')
+                                    const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss');
+                                    const responsibilityMarkedAt = moment(item.responsibility_marked_at).format('DD/MM/YYYY HH:mm:ss');
 
-                                const serviceNameColumnMapping = {
-                                    product: () => null,
-                                    service: () => [item.service?.name],
-                                    contract: () => [item.contract?.name],
-                                };
-                                const serviceName = serviceNameColumnMapping[item.type]()?.filter((el) => el) || '---';
-
-                                    const requistingUser = item.user.person.name
-                                    const requester = item.requester?.name || '---'
-                                    const status = enumRequests['status'][item.status]
-                                    const suppliesUserName = item.supplies_user?.person.name || '---'
+                                    const serviceNameColumnMapping = {
+                                        product: () => null,
+                                        service: () => [item.service?.name],
+                                        contract: () => [item.contract?.name],
+                                    };
+                                    const serviceName = serviceNameColumnMapping[item.type]()?.filter((el) => el) || '---';
+                                    const isSuppliesContract = item.is_supplies_contract ? "Suprimentos" : "Área solicitante";
+                                    const requistingUser = item.user.person.name;
+                                    const requester = item.requester?.name || '---';
+                                    const status = enumRequests['status'][item.status];
+                                    const suppliesUserName = item.supplies_user?.person.name || '---';
                                     const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name).join(', ');
 
                                     const supplierColumnMapping = {
@@ -368,32 +371,34 @@
                                     const paymentInfo = item[item.type]?.payment_info || {};
 
                                     const paymentMethod = paymentInfo.payment_method ;
-                                    const paymentMethodLabel = enumRequests['paymentMethod'][paymentMethod] || '---'
+                                    const paymentMethodLabel = enumRequests['paymentMethod'][paymentMethod] || '---';
 
                                     const paymentTerms = paymentInfo?.payment_terms || '---';
-                                    const paymentTermsLabel = enumRequests['paymentTerms'][paymentTerms] || '---'
+                                    const paymentTermsLabel = enumRequests['paymentTerms'][paymentTerms] || '---';
 
                                     const amount = item[item.type]?.amount || item[item.type]?.price;
                                     const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'});
                                     const formattedAmount = amount ? formatter.format(amount) : '---';
 
-                                let rowData = [
-                                    [
-                                        id,
-                                        type,
-                                        firstPendingStatus,
-                                        serviceName,
-                                        requistingUser,
-                                        requester,
-                                        status,
-                                        suppliesUserName,
-                                        costCenters,
-                                        suppliers,
-                                        paymentMethodLabel,
-                                        paymentTermsLabel,
-                                        formattedAmount
-                                    ]
-                                ]
+                                    let rowData = [
+                                        [
+                                            id,
+                                            type,
+                                            firstPendingStatus,
+                                            responsibilityMarkedAt,
+                                            serviceName,
+                                            isSuppliesContract,
+                                            requistingUser,
+                                            requester,
+                                            status,
+                                            suppliesUserName,
+                                            costCenters,
+                                            suppliers,
+                                            paymentMethodLabel,
+                                            paymentTermsLabel,
+                                            formattedAmount
+                                        ]
+                                    ];
 
                                     if($productDetail && item.type === enumProductValue) {
                                         rowData.push(['' ,'Nome do produto', 'Categoria', 'Quantidade', 'Cor', 'Model', 'Tamanho']);
@@ -511,110 +516,118 @@
                                 .find((item) => item.created_at)
                                 ?.created_at
 
-                        return firstPendingStatus ? moment(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
-                    }
-                },
-                {
-                    data: 'type',
-                    orderable: false,
-                    render: (type, _, row) => {
-                        const serviceNameColumnMapping = {
-                            product: () => null,
-                            service: () => [row.service?.name],
-                            contract: () => [row.contract?.name],
-                        };
-
-                        const serviceName = serviceNameColumnMapping[type]()?.filter((el) => el);
-
-                        if (!serviceName) {
-                            return '---';
+                            return firstPendingStatus ? moment(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
                         }
-
-                        return serviceName;
-                    }
-                },
-                { data: 'user.person.name' },
-                { data: 'requester', render: (requester, _, row) => requester ? requester.name : '---' },
-                { data: 'status', render: (status) => enumRequests['status'][status] },
-                { data: 'supplies_user.person.name', render: (suppliesUserName) => (suppliesUserName ?? '---') },
-                {
-                    data: 'cost_center_apportionment',
-                    orderable: false,
-                    render: (costCenter) => {
-                        const $div = $(document.createElement('div')).addClass('tag-category');
-
-                            const costCenters = costCenter.map((element) => element.cost_center.name);
-                            if(costCenter.length <= 0) {
-                                return $div.append(`<span class="tag-category-item">---</span>`)[0].outerHTML;
-                            }
-
-                            $div.append(costCenters.map((costCenter) => `<span class="tag-category-item">${costCenter}</span>`).join(''));
-                            return $div[0].outerHTML;
-                        }
+                    },
+                    {
+                        data: 'responsibility_marked_at',
+                        render: (responsibility_marked_at, _, row) =>  responsibility_marked_at ? moment.utc(responsibility_marked_at).utcOffset('-03:00').format('DD/MM/YYYY HH:mm:ss') : '---'
                     },
                     {
                         data: 'type',
                         orderable: false,
                         render: (type, _, row) => {
-                            const $div = $(document.createElement('div')).addClass('tag-category');
-
-                            const supplierColumnMapping = {
-                                product: () => row.purchase_request_product?.map((element) => element.supplier?.corporate_name),
-                                service: () => [row.service?.supplier?.corporate_name],
-                                contract: () => [row.contract?.supplier?.corporate_name],
+                            const serviceNameColumnMapping = {
+                                product: () => null,
+                                service: () => [row.service?.name],
+                                contract: () => [row.contract?.name],
                             };
 
-                            const suppliers = supplierColumnMapping[type]()?.filter((el) => el);
+                            const serviceName = serviceNameColumnMapping[type]()?.filter((el) => el);
 
-                            if(!suppliers || suppliers.length === 0) {
+                            if (!serviceName) {
                                 return '---';
                             }
 
-                            suppliers.forEach((element) => {
-                                const $span = $(document.createElement('span')).addClass('tag-category-item');
-                                $span.text(element);
-                                $div.append($span);
-                            });
-
-                            return $div[0].outerHTML;
+                            return serviceName;
                         }
                     },
                     {
-                        data: 'type',
+                        data: 'is_supplies_contract',
+                        render: (is_supplies_contract, _, row) => is_supplies_contract ? "Suprimentos" : "Área solicitante"
+                    },
+                    { data: 'user.person.name' },
+                    { data: 'requester', render: (requester, _, row) => requester ? requester.name : '---' },
+                    { data: 'status', render: (status) => enumRequests['status'][status] },
+                    { data: 'supplies_user.person.name', render: (suppliesUserName) => (suppliesUserName ?? '---') },
+                    {
+                        data: 'cost_center_apportionment',
                         orderable: false,
-                        render: (type, _, row) => {
-                            const paymentInfo = row[type]?.payment_info || {};
-                            const paymentMethod = paymentInfo.payment_method ;
-                            const paymentMethodLabel = enumRequests['paymentMethod'][paymentMethod] ?? '---'
+                        render: (costCenter) => {
+                            const $div = $(document.createElement('div')).addClass('tag-category');
 
-                            return paymentMethodLabel;
-                        }
-                    },
-                    {
-                        data: 'type',
-                        orderable: false,
-                        render: (type, _, row) => {
-                            const paymentInfo = row[type]?.payment_info || {};
-                            const paymentTerms = paymentInfo?.payment_terms || '---';
-                            const paymentTermsLabel = enumRequests['paymentTerms'][paymentTerms] ?? '---'
+                                const costCenters = costCenter.map((element) => element.cost_center.name);
+                                if(costCenter.length <= 0) {
+                                    return $div.append(`<span class="tag-category-item">---</span>`)[0].outerHTML;
+                                }
 
-                            return paymentTermsLabel;
-                        }
-                    },
-                    {
-                        data: 'type',
-                        render: (type, _, row) => {
-                            const amount = row[type]?.amount || row[type]?.price;
-
-                            if (!amount || !isFinite(amount)) {
-                                return 'R$ ---';
+                                $div.append(costCenters.map((costCenter) => `<span class="tag-category-item">${costCenter}</span>`).join(''));
+                                return $div[0].outerHTML;
                             }
+                        },
+                        {
+                            data: 'type',
+                            orderable: false,
+                            render: (type, _, row) => {
+                                const $div = $(document.createElement('div')).addClass('tag-category');
 
-                            const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'});
-                            const formattedAmount = formatter.format(amount);
-                            return formattedAmount;
-                        }
-                    },
+                                const supplierColumnMapping = {
+                                    product: () => row.purchase_request_product?.map((element) => element.supplier?.corporate_name),
+                                    service: () => [row.service?.supplier?.corporate_name],
+                                    contract: () => [row.contract?.supplier?.corporate_name],
+                                };
+
+                                const suppliers = supplierColumnMapping[type]()?.filter((el) => el);
+
+                                if(!suppliers || suppliers.length === 0) {
+                                    return '---';
+                                }
+
+                                suppliers.forEach((element) => {
+                                    const $span = $(document.createElement('span')).addClass('tag-category-item');
+                                    $span.text(element);
+                                    $div.append($span);
+                                });
+
+                                return $div[0].outerHTML;
+                            }
+                        },
+                        {
+                            data: 'type',
+                            orderable: false,
+                            render: (type, _, row) => {
+                                const paymentInfo = row[type]?.payment_info || {};
+                                const paymentMethod = paymentInfo.payment_method ;
+                                const paymentMethodLabel = enumRequests['paymentMethod'][paymentMethod] ?? '---'
+
+                                return paymentMethodLabel;
+                            }
+                        },
+                        {
+                            data: 'type',
+                            orderable: false,
+                            render: (type, _, row) => {
+                                const paymentInfo = row[type]?.payment_info || {};
+                                const paymentTerms = paymentInfo?.payment_terms || '---';
+                                const paymentTermsLabel = enumRequests['paymentTerms'][paymentTerms] ?? '---'
+
+                                return paymentTermsLabel;
+                            }
+                        },
+                        {
+                            data: 'type',
+                            render: (type, _, row) => {
+                                const amount = row[type]?.amount || row[type]?.price;
+
+                                if (!amount || !isFinite(amount)) {
+                                    return 'R$ ---';
+                                }
+
+                                const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'});
+                                const formattedAmount = formatter.format(amount);
+                                return formattedAmount;
+                            }
+                        },
                 ],
                 buttons: [
                     {
