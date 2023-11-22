@@ -187,6 +187,12 @@ $buyingStatus = [
             overflow: auto;
         }
 
+        .productivity-report-title.bar-title {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
         .productivity-report .chart-bar-finished .charts-requests-finished{
             position: relative;
             width: 100%;
@@ -594,7 +600,7 @@ $buyingStatus = [
             </div>
 
             <div class="chart-bar-finished border-productivity-report">
-                <h2 class="productivity-report-title bg-productivity-report">Solicitações finalizadas</h2>
+                <h2 class="productivity-report-title bar-title bg-productivity-report">Solicitações finalizadas</h2>
 
                 <div class="charts-container chart-requests-finished-container" >
                     <div class="charts-requests-finished"><canvas id="charts-requests-finished"></canvas></div>
@@ -704,7 +710,7 @@ $buyingStatus = [
                 }
 
                 const createOrUpdateChartBar = (chartDataResponse) => {
-                    const chartStatusTitle = 'Solicitações finalizadas por responsável no período dd/mm/yyyy - dd/mm/yyyy';
+                    const chartStatusTitle = 'Solic. finalizadas por responsável (dd/mm/yy - dd/mm/yy)';
                     const chartLabels = [
                         "joão",
                         "maria",

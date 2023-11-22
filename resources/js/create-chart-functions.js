@@ -45,6 +45,12 @@ const createChartBar = (canvasChartId, chartLabels, chartData, title = false, su
         options: {
             maintainAspectRatio: false,
             indexAxis: 'y',
+            layout: {
+                padding: {
+                    right: 25,
+                    bottom: 25,
+                }
+            },
             scales: {
                 y: {
                     ticks: {
@@ -52,13 +58,14 @@ const createChartBar = (canvasChartId, chartLabels, chartData, title = false, su
                     }
                 },
                 x: {
+                    position: 'top',
                     ticks: {
                         autoSkip: false,
                     },
                 }
-            }
+            },
         }
-      };
+    };
 
     new Chart($(`#${canvasChartId}`), config);
 }
