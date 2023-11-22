@@ -465,7 +465,7 @@ $buyingStatus = [
                     <label for="request-type" class="regular-text">Contratação por:</label>
                     <div class="inputs-container">
                         <label class="checkbox-label secondary-text">
-                            <input type="radio" name="is-supplies-contract" class="is-supplies-contract" data-cy="is-supplies-contract-none" checked value="">
+                            <input id="is-supplies-contract-none" type="radio" name="is-supplies-contract" class="is-supplies-contract" data-cy="is-supplies-contract-none" checked value="">
                             Ambos
                         </label>
                         <label class="checkbox-label secondary-text">
@@ -622,10 +622,12 @@ $buyingStatus = [
                 const $productivityTable = $('#productivityTable');
                 const $dateSince = $('#date-since');
                 const $dateUntil = $('#date-until');
+                const $desiredDate = $('#desired-date');
                 const $requistingUsersIdsFilter = $('#requisting-users-filter');
                 const $costCenterIdsFilter = $('#cost-center-filter');
                 const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
                 const $checkedStatusInputs = $('.status-checkbox');
+                const $isSuppliesContractNone = $('#is-supplies-contract-none');
 
                 const getUrlWithParams = (urlAjax) => {
                     const $checkedStatusInputs = $('.status-checkbox:checked');
@@ -670,11 +672,12 @@ $buyingStatus = [
                         checkedStatusInputs: () => {
                             $checkedStatusInputs.each((_, element) => {
                                 const value = $(element).val();
-                                const isChecked = value !== 'finalizada' && value !== 'cancelada';
+                                const isChecked = value === 'pendente';
                                 $(element).prop('checked', isChecked);
                             });
                         },
-                        dates: () => $dateSince.add($dateUntil).val(null),
+                        dates: () => $dateSince.add($dateUntil).add($desiredDate).val(null),
+                        contractingBy: () => $isSuppliesContractNone.trigger('click')
                     }
 
                     if(filter) {
