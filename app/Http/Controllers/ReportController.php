@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Enums\PurchaseRequestStatus;
 use App\Providers\{UserService, PurchaseRequestService};
-use App\Services\ReportService;
+use App\Services\{ReportService, PersonService};
 use Carbon\Carbon;
 use Illuminate\Http\{Request, JsonResponse};
 use Illuminate\View\View;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
@@ -17,6 +18,7 @@ class ReportController extends Controller
         private PurchaseRequestService $purchaseRequestService,
         private ReportService $reportService,
         private UserService $userService,
+        private PersonService $personService
     ) {
     }
 
@@ -171,13 +173,24 @@ class ReportController extends Controller
             $orderValue = $this->reportService->productivityOrder($query, $orderColumnIndex);
             $query->orderBy($orderValue, $orderDirection);
 
+            $statusQuery = clone ($query);
+            $suppliesUsersQuery = clone ($query);
             $chartData = [
-                'status' => $query->get()->groupBy('status')->map(function ($group) {
+                'status' => $statusQuery->get()->groupBy('status')->map(function ($group) {
                     return [
                         'label' => $group->first()->status->label(),
                         'count' => $group->count(),
                     ];
-                })
+                }),
+                'suppliesUserRequests' => $suppliesUsersQuery->where('status', PurchaseRequestStatus::FINALIZADA->value)->get()
+                    ->groupBy('supplies_user_id')
+                    ->map(function (Collection $item, int $suppliesUserId) {
+                        return [
+                            'userId' => $suppliesUserId,
+                            'name' => $this->personService->byUserId($suppliesUserId)->pluck('name')->first(),
+                            'requestsQtdFinish' => $item->count(),
+                        ];
+                    }),
             ];
 
             $countQuery = clone ($query);

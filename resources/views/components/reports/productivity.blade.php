@@ -441,7 +441,7 @@ $buyingStatus = [
 
                 <div class="dates">
                     <div class="date">
-                        <label for="desired-date" class="regular-text">Data desejada pelo solicitante:</label>
+                        <label for="desired-date" class="regular-text">Data desejada:</label>
                         <input type="date" class="form-control" name="desired-date" id="desired-date" data-cy="desired-date">
                     </div>
                 </div>
@@ -710,55 +710,24 @@ $buyingStatus = [
                 }
 
                 const createOrUpdateChartBar = (chartDataResponse) => {
-                    const chartStatusTitle = 'Solic. finalizadas por responsável (dd/mm/yy - dd/mm/yy)';
-                    const chartLabels = [
-                        "joão",
-                        "maria",
-                        "pedro",
-                        "ana",
-                        "carlos",
-                        "beatriz",
-                        "daniel",
-                        "clara",
-                        "eduardo",
-                        "flavia",
-                        "gustavo",
-                        "helena",
-                        "joaquim",
-                        "isabela",
-                        "luiz",
-                        "joão",
-                        "maria",
-                        "pedro",
-                        "ana",
-                        "carlos",
-                        "beatriz",
-                        "daniel",
-                        "clara",
-                        "eduardo",
-                        "flavia",
-                        "gustavo",
-                        "helena",
-                        "joaquim",
-                        "isabela",
-                        "luiz",
-                        "joão",
-                        "maria",
-                        "pedro",
-                        "ana",
-                        "carlos",
-                        "beatriz",
-                        "daniel",
-                        "clara",
-                        "eduardo",
-                        "flavia",
-                        "gustavo",
-                        "helena",
-                        "joaquim",
-                        "isabela",
-                        "luiz",
-                    ];
-                    const chartData = [2, 5, 10, 11, 3, 12, 13, 10, 2, 5, 10, 11, 3, 50, 9, 5,2, 5, 10, 11, 3, 12, 13, 10, 2, 5, 10, 11, 3, 12, 9, 5,2, 5, 10, 11, 3, 12, 13, 10, 2, 5, 10, 11, 3, 12, 9, 5];
+                    const users = Object.values(chartDataResponse.suppliesUserRequests);
+                    const chartStatusTitle = 'Solicitações finalizadas por responsável';
+                    const chartLabels = [];
+                    const chartData = [];
+
+                    users.forEach((user) => {
+                        const splitedName = user.name.split(' ');
+                        const firstName = splitedName[0].charAt(0).toUpperCase() + splitedName[0].slice(1).toLowerCase();
+
+                        const lastName = splitedName.length > 1 ? splitedName.slice(-1)[0] : null;
+                        const lastNameLetter = lastName?.slice(0, 1).toUpperCase();
+
+                        const formattedName = `${firstName} ${lastNameLetter ? lastNameLetter + '.': ''}`;
+
+                        chartLabels.push(formattedName)
+                        chartData.push(user.requestsQtdFinish)
+                    })
+
                     createChartBar('charts-requests-finished', chartLabels, chartData, chartStatusTitle);
                 }
 
@@ -857,7 +826,7 @@ $buyingStatus = [
                             data: 'purchase_request_product',
                             orderable: false,
                             render: (purchase_request_product, _, row) => {
-                                if(!purchase_request_product) {
+                                if(!purchase_request_product.length) {
                                     return "---";
                                 }
 

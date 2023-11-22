@@ -25,10 +25,16 @@ const createChartDoughnut = (canvasChartId, chartLabels, chartData, title = fals
     new Chart($(`#${canvasChartId}`), chartConfig);
 }
 
-const createChartBar = (canvasChartId, chartLabels, chartData, title = false, subtitle = false) => {
+const createChartBar = (canvasChartId, chartLabels, chartData, title = false) => {
     const chartStatus = Chart.getChart(canvasChartId);
     if(chartStatus) {
         chartStatus.destroy();
+    }
+
+    if (chartData.length < 10) {
+        const chartDataQtd = chartData.length;
+        const responsiveHeight = chartDataQtd >= 3 ? chartDataQtd : 3;
+        $('.productivity-report .chart-bar-finished .charts-requests-finished').css('height', `${responsiveHeight}0vh`);
     }
 
     const data = {
@@ -49,6 +55,7 @@ const createChartBar = (canvasChartId, chartLabels, chartData, title = false, su
                 padding: {
                     right: 25,
                     bottom: 25,
+                    left: 10
                 }
             },
             scales: {
