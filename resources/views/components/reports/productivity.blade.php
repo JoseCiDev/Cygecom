@@ -36,11 +36,12 @@ $buyingStatus = [
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px
+            gap: 15px;
+            width: 100%;
         }
 
         .charts-requests-sent{
-            width: 375px;
+            width: 325px;
             cursor: pointer;
         }
 
@@ -57,12 +58,13 @@ $buyingStatus = [
         }
 
         .productivity-report{
-            margin-top: 50px;
+            margin-top: 120px;
             display: flex;
             flex-direction: column;
             align-content: center;
             justify-content: center;
             gap: 20px;
+            width: 100%;
         }
 
         .productivity-report-item {
@@ -172,26 +174,23 @@ $buyingStatus = [
             font-weight: bold;
         }
 
-        @media(min-width: 1024px) {
-            .productivity-report-item {
-                flex-direction: row;
-                position: relative;
-                padding-top: 60px;
-                padding-bottom: 30px;
-            }
-
-            .productivity-report-title{
-                position: absolute;
-                top: 0;
-            }
+        /* Chart bar */
+        .productivity-report .chart-bar-finished {
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-direction: column;
+            width: 100%;
+            gap: 15px;
+            max-height: 650px;
+            overflow: auto;
         }
 
-        @media(min-width: 1280px) {
-            .productivity-report{
-                flex-direction: row;
-                justify-content: left;
-            }
-
+        .productivity-report .chart-bar-finished .charts-requests-finished{
+            position: relative;
+            width: 100%;
+            height: 100vh;
         }
 
         /* Filtros */
@@ -321,16 +320,32 @@ $buyingStatus = [
         }
 
         @media(min-width: 1024px) {
+            .charts-requests-sent{
+                width: 375px;
+            }
+
+            .productivity-report-item {
+                flex-direction: row;
+                position: relative;
+                padding-top: 60px;
+                padding-bottom: 30px;
+            }
+
+            .productivity-report-title.doughnut-title{
+                position: absolute;
+                top: 0;
+            }
+
             .productivity-report-filters .dates-container{
                 display: flex;
                 gap: 10px;
             }
         }
-    </style>
 
-    <style>
-        .charts-requests-finished{
-            width: 800px;
+        @media(min-width: 1280px) {
+            .productivity-report{
+                flex-direction: row;
+            }
         }
     </style>
 @endpush
@@ -388,7 +403,7 @@ $buyingStatus = [
 
                 <div class="form-group">
                     <div class="select-filter-container" >
-                        <label for="supplies-users" class="regular-text cost-center-filter-label">Suprimentos responsável</label>
+                        <label for="supplies-users" class="regular-text cost-center-filter-label">Responsável</label>
                         <select id="supplies-users" data-cy="supplies-users" name="supplies-users[]"
                             multiple="multiple" class="select2-me" placeholder="Escolha uma ou mais opções">
                             @foreach ($suppliesUsers as $user)
@@ -512,7 +527,7 @@ $buyingStatus = [
 
         <div class="productivity-report">
             <div class="productivity-report-item border-productivity-report">
-                <h2 class="productivity-report-title bg-productivity-report">Status das solicitações enviadas</h2>
+                <h2 class="productivity-report-title doughnut-title bg-productivity-report">Status das solicitações enviadas</h2>
 
                 <div class="charts-container">
                     <div class="charts-requests-sent"><canvas id="charts-requests-sent"></canvas></div>
@@ -578,10 +593,10 @@ $buyingStatus = [
                 </div>
             </div>
 
-            <div class="productivity-report-item border-productivity-report">
+            <div class="chart-bar-finished border-productivity-report">
                 <h2 class="productivity-report-title bg-productivity-report">Solicitações finalizadas</h2>
 
-                <div class="charts-container">
+                <div class="charts-container chart-requests-finished-container" >
                     <div class="charts-requests-finished"><canvas id="charts-requests-finished"></canvas></div>
                 </div>
             </div>
@@ -689,7 +704,56 @@ $buyingStatus = [
                 }
 
                 const createOrUpdateChartBar = (chartDataResponse) => {
-                    createChartBar('charts-requests-finished');
+                    const chartStatusTitle = 'Solicitações finalizadas por responsável no período dd/mm/yyyy - dd/mm/yyyy';
+                    const chartLabels = [
+                        "joão",
+                        "maria",
+                        "pedro",
+                        "ana",
+                        "carlos",
+                        "beatriz",
+                        "daniel",
+                        "clara",
+                        "eduardo",
+                        "flavia",
+                        "gustavo",
+                        "helena",
+                        "joaquim",
+                        "isabela",
+                        "luiz",
+                        "joão",
+                        "maria",
+                        "pedro",
+                        "ana",
+                        "carlos",
+                        "beatriz",
+                        "daniel",
+                        "clara",
+                        "eduardo",
+                        "flavia",
+                        "gustavo",
+                        "helena",
+                        "joaquim",
+                        "isabela",
+                        "luiz",
+                        "joão",
+                        "maria",
+                        "pedro",
+                        "ana",
+                        "carlos",
+                        "beatriz",
+                        "daniel",
+                        "clara",
+                        "eduardo",
+                        "flavia",
+                        "gustavo",
+                        "helena",
+                        "joaquim",
+                        "isabela",
+                        "luiz",
+                    ];
+                    const chartData = [2, 5, 10, 11, 3, 12, 13, 10, 2, 5, 10, 11, 3, 50, 9, 5,2, 5, 10, 11, 3, 12, 13, 10, 2, 5, 10, 11, 3, 12, 9, 5,2, 5, 10, 11, 3, 12, 13, 10, 2, 5, 10, 11, 3, 12, 9, 5];
+                    createChartBar('charts-requests-finished', chartLabels, chartData, chartStatusTitle);
                 }
 
                 const $badgeColumnsQtd = $(`<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"></span>`);

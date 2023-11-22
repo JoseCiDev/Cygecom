@@ -27,7 +27,7 @@ window.Chart = Chart;
 Chart.defaults.color = '#141414';
 
 import setColvisConfig from './colvis-custom-user-preference.js'
-import {createChartDoughnut, createChartBar} from './create-chart-doughnut.js'
+import {createChartDoughnut, createChartBar} from './create-chart-functions.js'
 window.createChartDoughnut = createChartDoughnut
 window.createChartBar = createChartBar
 
