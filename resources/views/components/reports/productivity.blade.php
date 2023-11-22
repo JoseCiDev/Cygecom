@@ -379,7 +379,7 @@ $buyingStatus = [
                     </div>
                     <div class="select-filter-btns">
                         <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn" data-cy="filter-clear-users-btn">Limpar</button>
-                        <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn" data-cy="filter-clear-users-btn">Todos</button>
+                        <button class="btn btn-mini btn-secondary">Todos</button>
                     </div>
                 </div>
 
@@ -403,7 +403,7 @@ $buyingStatus = [
                     </div>
                     <div class="select-filter-btns">
                         <button class="btn btn-mini btn-secondary" id="filter-clear-cost-centers-btn" data-cy="filter-clear-cost-centers-btn">Limpar</button>
-                        <button class="btn btn-mini btn-secondary" id="filter-clear-cost-centers-btn" data-cy="filter-clear-cost-centers-btn">Todos</button>
+                        <button class="btn btn-mini btn-secondary" >Todos</button>
                     </div>
                 </div>
 
@@ -418,8 +418,8 @@ $buyingStatus = [
                         </select>
                     </div>
                     <div class="select-filter-btns">
-                        <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn" data-cy="filter-clear-users-btn">Limpar</button>
-                        <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn" data-cy="filter-clear-users-btn">Todos</button>
+                        <button class="btn btn-mini btn-secondary" id="filter-clear-supplies-users-btn" data-cy="filter-clear-supplies-users-btn">Limpar</button>
+                        <button class="btn btn-mini btn-secondary" >Todos</button>
                     </div>
                 </div>
 
@@ -628,6 +628,11 @@ $buyingStatus = [
                 const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
                 const $checkedStatusInputs = $('.status-checkbox');
                 const $isSuppliesContractNone = $('#is-supplies-contract-none');
+                const $suppliesUsers = $('#supplies-users');
+                const $filterClearBtn = $('#filter-clear-all-btn');
+                const $filterClearUsersBtn = $('#filter-clear-users-btn');
+                const $filterClearCostCentersBtn = $('#filter-clear-cost-centers-btn');
+                const $filterClearSuppliesUsersBtn = $('#filter-clear-supplies-users-btn');
 
                 const getUrlWithParams = (urlAjax) => {
                     const $checkedStatusInputs = $('.status-checkbox:checked');
@@ -668,6 +673,7 @@ $buyingStatus = [
                     const clearOptions = {
                         requistingUsersIdsFilter: () => $requistingUsersIdsFilter.val(null).trigger('change'),
                         costCenterIdsFilter: () => $costCenterIdsFilter.val(null).trigger('change'),
+                        suppliesUsersFilter: () => $suppliesUsers.val(null).trigger('change'),
                         checkedRequestTypeInputs: () => $checkedRequestTypeInputs.prop('checked', true),
                         checkedStatusInputs: () => {
                             $checkedStatusInputs.each((_, element) => {
@@ -740,7 +746,6 @@ $buyingStatus = [
                     initComplete: function() {
                         $.fn.setStorageDtColumnConfig();
                         $('#reports-filter-btn').on('click', filterDataTable);
-                        $('#filter-clear-all-btn').on('click', clearFilters)
                     },
                     scrollY: '400px',
                     scrollX: true,
@@ -854,6 +859,10 @@ $buyingStatus = [
                     ],
                 })
 
+                $filterClearBtn.on('click', clearFilters);
+                $filterClearUsersBtn.on('click', (_) => clearFilters(_, 'requistingUsersIdsFilter'));
+                $filterClearCostCentersBtn.on('click', (_) => clearFilters(_, 'costCenterIdsFilter'));
+                $filterClearSuppliesUsersBtn.on('click', (_) => clearFilters(_, 'suppliesUsersFilter'));
             });
         </script>
     @endpush
