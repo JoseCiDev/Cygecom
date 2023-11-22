@@ -48,9 +48,8 @@
                             <th>Responsável</th>
                             <th>Status</th>
                             <th class="col-sm-3">Fornecedor</th>
-                            <th>Condição de pgto.</th>
                             <th>Contratação por</th>
-                            <th>CNPJ</th>
+                            <th>Empresa</th>
                             <th>Data desejada</th>
                             <th>Ord. compra</th>
                             <th class="noColvis">Ações</th>
@@ -75,8 +74,19 @@
                                 <td>{{$service->user->person->name}}</td>
                                 <td>{{$service->suppliesUser?->person->name ?? '---'}}</td>
                                 <td>{{$service->status->label()}}</td>
-                                <td>{{$service->service->Supplier?->cpf_cnpj ?? '---'}}</td>
-                                <td>{{$service->service->paymentInfo?->payment_terms?->label() ?? '---' }}</td>
+                                <td>
+                                    <div class="tag-list">
+                                        @php
+                                            $supplierName = $suppliers?->corporate_name;
+                                            $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $suppliers?->cpf_cnpj);
+                                        @endphp
+                                        @if ($suppliers)
+                                            <span class="tag-list-item">{{ $supplierName . ' - ' . $cnpj }}</span>
+                                        @else
+                                            ---
+                                        @endif
+                                    </div>
+                                </td>
                                 <td>{{$service->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
 
                                 <td class="hidden-1280">
@@ -94,7 +104,12 @@
                                 </td>
 
                                 <td class="hidden-1440">{{ \Carbon\Carbon::parse($service->desired_date)->format('d/m/Y') }}</td>
-                                <td>{{ $service->purchase_order ?? '---' }}</td>
+
+                                @php
+                                    $showPurchaseOrder = isset($service->purchase_order) && $service->status === PurchaseRequestStatus::FINALIZADA;
+                                @endphp
+                                <td>{{ $showPurchaseOrder ? $service?->purchase_order : '---' }}</td>
+
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
                                         data-modal-name="{{ 'Analisando Solicitação de Serviço - Nº ' . $service->id }}"
