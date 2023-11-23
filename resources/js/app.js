@@ -22,7 +22,7 @@ import IMask from "imask";
 import moment from 'moment';
 window.moment = moment;
 
-import setColvisConfig from './colvis-custom-user-preference.js'
+import setColvisConfig from '../../public/js/utils/colvis-custom-user-preference.js'
 
 $.fn.imask = function(options) {
     const maskedElements = this.map((_, input) => new IMask(input, options)).toArray();
