@@ -235,14 +235,15 @@ $buyingStatus = [
             justify-content: space-between;
             gap: 10px;
             position: relative;
-            margin: 10px 0;
+            margin: 10px 0 30px;
         }
 
-        .productivity-report-filters .dates-container .dates.date-period{
-            margin: 10px 0 20px;
-        }
         .productivity-report-filters .dates-container .dates .date{
             width: 100%;
+        }
+
+        .productivity-report-filters .dates-container .dates .date input[type='date']{
+            text-align: center;
         }
 
         .productivity-report-filters .dates-container .dates .span-info{
@@ -251,6 +252,10 @@ $buyingStatus = [
             left: 0;
             right: 0;
             text-align: center;
+            background-image: linear-gradient(to top, var(--grey-secondary-color), var(--grey-tertiary-color));
+            color: var(--black-color);
+            border-radius: 0 0 4px 4px;
+            cursor: help;
         }
 
         .productivity-report-filters .checkboxs-container {
@@ -353,6 +358,11 @@ $buyingStatus = [
             .productivity-report{
                 flex-direction: row;
             }
+
+            .productivity-report-filters .dates-container .dates .span-info{
+                text-align: left;
+                padding: 0 20px;
+            }
         }
     </style>
 @endpush
@@ -427,7 +437,7 @@ $buyingStatus = [
             </div>
 
             <div class="dates-container">
-                <div class="dates date-period">
+                <div class="dates">
                     <div class="date">
                         <label for="date-since" class="regular-text">Data início:</label>
                         <input type="date" class="form-control" name="date-since" id="date-since" data-cy="date-since" max="{{ now()->formatCustom('Y-m-d') }}">
@@ -437,6 +447,14 @@ $buyingStatus = [
                         <label for="date-until" class="regular-text">Data fim: </label>
                         <input type="date" class="form-control" name="date-until" id="date-until" data-cy="date-until" max="{{ now()->formatCustom('Y-m-d') }}">
                     </div>
+
+                    <small class="span-info">
+                        <i class="fa-solid fa-circle-info"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            data-bs-title="Tabela e gráfico circular: solicitações pendentes no período. Gráfico de barras: solicitações finalizadas no período."></i>
+                            Período para filtragem das solicitações.
+                    </small>
                 </div>
 
                 <div class="dates">
@@ -444,6 +462,13 @@ $buyingStatus = [
                         <label for="desired-date" class="regular-text">Data desejada:</label>
                         <input type="date" class="form-control" name="desired-date" id="desired-date" data-cy="desired-date">
                     </div>
+                    <small class="span-info">
+                        <i class="fa-solid fa-circle-info"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="Filtros data início e data fim são ignorados ao filtrar por data desejada."></i>
+                        Filtrar por data desejada sobrescreve período.
+                    </small>
                 </div>
             </div>
 
@@ -465,15 +490,15 @@ $buyingStatus = [
                     <label for="request-type" class="regular-text">Contratação por:</label>
                     <div class="inputs-container">
                         <label class="checkbox-label secondary-text">
-                            <input id="is-supplies-contract-none" type="radio" name="is-supplies-contract" class="is-supplies-contract" data-cy="is-supplies-contract-none" checked value="">
+                            <input id="is-supplies-contract-none" type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input" data-cy="is-supplies-contract-none" checked value="">
                             Ambos
                         </label>
                         <label class="checkbox-label secondary-text">
-                            <input type="radio" name="is-supplies-contract" class="is-supplies-contract" data-cy="is-supplies-contract-true" value="1">
+                            <input type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input" data-cy="is-supplies-contract-true" value="1">
                             Suprimentos
                         </label>
                         <label class="checkbox-label secondary-text">
-                            <input type="radio" name="is-supplies-contract" class="is-supplies-contract" data-cy="is-supplies-contract-false" value="0">
+                            <input type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input" data-cy="is-supplies-contract-false" value="0">
                             Área solicitante
                         </label>
                     </div>
@@ -573,30 +598,6 @@ $buyingStatus = [
                                finalizadas que foram pendentes no mesmo período
                             </p>
                         </div>
-                        <div class="productivity-report-item-info-bottom-row">
-                            <span class="productivity-report-item-info-bottom-row-text-qtd">
-                                ---
-                            </span>
-                            <p class="productivity-report-item-info-bottom-row-text">
-                                média de solicitações finalizadas por dia
-                            </p>
-                        </div>
-                        <div class="productivity-report-item-info-bottom-row">
-                            <span class="productivity-report-item-info-bottom-row-text-qtd">
-                                ---
-                            </span>
-                            <p class="productivity-report-item-info-bottom-row-text">
-                                média de solicitações finalizadas por semana
-                            </p>
-                        </div>
-                        <div class="productivity-report-item-info-bottom-row">
-                            <span class="productivity-report-item-info-bottom-row-text-qtd">
-                                ---
-                            </span>
-                            <p class="productivity-report-item-info-bottom-row-text">
-                                média de solicitações finalizadas por mês
-                            </p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -642,6 +643,23 @@ $buyingStatus = [
                 const $allSuppliersUsersBtn = $('#all-suppliers-users-btn');
 
                 const $allStatusCheckbox = $('#all-status-checkbox');
+
+                const $tooltipTriggerList = $('[data-bs-toggle="tooltip"]');
+                const tooltipList = $tooltipTriggerList.map((_, tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+
+                const handleDateChange = (event, isDesiredDate) => {
+                    const currentElementVal = $(event.target).val();
+                    if(!currentElementVal) {
+                        return;
+                    }
+
+                    if(isDesiredDate) {
+                        $dateSince.add($dateUntil).val(null);
+                        return;
+                    }
+
+                    $desiredDate.val(null);
+                }
 
                 const getUrlWithParams = (urlAjax) => {
                     const $checkedStatusInputs = $('.status-checkbox:checked');
@@ -889,6 +907,9 @@ $buyingStatus = [
                 })
 
                 $allStatusCheckbox.on('click', (event) => $checkedStatusInputs.each((_, el) =>  $(el).prop('checked', true)))
+
+                $desiredDate.on('change', (event) => handleDateChange(event, true));
+                $dateSince.add($dateUntil).on('change', (event) => handleDateChange(event, false));
             });
         </script>
     @endpush
