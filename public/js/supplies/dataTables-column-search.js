@@ -9,7 +9,6 @@ $(() => {
 
     $tableSupplies.dataTable({
         dom: 'Blfrtip',
-        initComplete: () => $.fn.setStorageDtColumnConfig(),
         scrollY: '400px',
         scrollX: true,
         autoWidth: true,
@@ -43,6 +42,7 @@ $(() => {
         }],
 
         initComplete: function () {
+            $.fn.setStorageDtColumnConfig();
             let index = 0;
             this.api().columns().every(function (e) {
                 const column = this;
