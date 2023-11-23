@@ -87,6 +87,18 @@ $.fn.setStorageDtColumnConfig = () =>{
     $('button.dt-button.buttons-collection.buttons-colvis').trigger('click').trigger('click')
 };
 
+$.fn.downloadCsv = (csv, name) => {
+    const now = moment(new Date()).format('YYYY-MM-DD-HH-mm-ss-SSS');
+    const fileName = `relatorio-gecom-${now}-${name}.csv`;
+    const blob = new Blob([csv], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
+
+    window.URL.revokeObjectURL(link.href);
+}
+
 $(() => {
     // required style
     $('[data-rule-required]').each(function() {

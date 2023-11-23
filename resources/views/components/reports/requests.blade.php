@@ -436,7 +436,7 @@ $costCenters = $requestingUsers
                                         csv.push('\n');
                                     });
 
-                                    downloadCsv(csv);
+                                    $.fn.downloadCsv(csv, 'solicitacoes');
                                 },
                                 error: (response, textStatus, errorThrown) => {
                                     const title = "Houve uma falha na busca dos registros!";
