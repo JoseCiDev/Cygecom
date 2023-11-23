@@ -2,6 +2,14 @@
     use App\Enums\PurchaseRequestStatus;
 @endphp
 
+@push('styles')
+    <style>
+        input.search-button {
+            padding: 3px;
+        }
+    </style>
+@endpush
+
 <div class="row">
     <div class="col-sm-12">
         <div class="box box-color box-bordered">
@@ -42,8 +50,7 @@
                 <table id="table-supplies-list" class="table table-hover table-nomargin table-striped" data-column_filter_dateformat="dd-mm-yy"
                     style="width:100%" data-nosort="0" data-checkall="all">
                     <thead>
-                        <tr class="search-bar" style="background-color: red">
-                            <th></th>
+                        <tr class="search-bar">
                             <th></th>
                             <th></th>
                             <th></th>
@@ -65,7 +72,7 @@
                             <th>Empresa</th>
                             <th>Data desejada</th>
                             <th>Ord. compra</th>
-                            <th class="noColvis">Ações</th>
+                            <th class="noColvis ignore-search">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,18 +90,20 @@
                                 ];
                             @endphp
                             <tr>
-                                <td>{{$service->id}}</td>
+                                <td style="min-width: 90px;">{{$service->id}}</td>
                                 <td>{{$service->user->person->name}}</td>
                                 <td>{{$service->suppliesUser?->person->name ?? '---'}}</td>
                                 <td>{{$service->status->label()}}</td>
                                 <td>
                                     <div class="tag-list">
                                         @php
-                                            $supplierName = $suppliers?->corporate_name;
-                                            $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $suppliers?->cpf_cnpj);
+                                            $cnpjFormatted = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $suppliers?->cpf_cnpj);
+                                            $fullSupplier = $suppliers?->corporate_name . ' - ' . $cnpjFormatted;
                                         @endphp
                                         @if ($suppliers)
-                                            <span class="tag-list-item">{{ $supplierName . ' - ' . $cnpj }}</span>
+                                            <span class="tag-list-item">{{ $fullSupplier }}</span>
+                                            <!-- APENAS PARA PODER BUSCAR PELO CNPJ SEM FORMATAÇÃO-->
+                                            <span style="display: none">{{ $suppliers?->cpf_cnpj }}</span>
                                         @else
                                             ---
                                         @endif
@@ -106,10 +115,10 @@
                                     <div class="tag-list">
                                         @forelse ($companies as $company)
                                             @php
-                                                $cnpj = $company->cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $company->cnpj) : 'CNPJ indefinido';
-                                                $concat = $company->name . ' - ' . $cnpj;
+                                                $cnpjFormatted = $company->cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $company->cnpj) : 'CNPJ indefinido';
+                                                $fullCompany = $company->name . ' - ' . $cnpjFormatted;
                                             @endphp
-                                            <span class="tag-list-item">{{ $concat }}</span>
+                                            <span class="tag-list-item">{{ $fullCompany }}</span>
                                             <!-- APENAS PARA PODER BUSCAR PELO CNPJ SEM FORMATAÇÃO-->
                                             <span style="display: none">{{ $company->cnpj }}</span>
                                         @empty

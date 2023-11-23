@@ -2,6 +2,14 @@
     use App\Enums\PurchaseRequestStatus;
 @endphp
 
+@push('styles')
+    <style>
+        input.search-button {
+            padding: 3px;
+        }
+    </style>
+@endpush
+
 <div class="row">
     <div class="col-sm-12">
         <div class="box box-color box-bordered">
@@ -39,9 +47,21 @@
                     </div>
                 </div>
 
-                <table class="table table-hover table-nomargin table-striped table-bordered dataTable" data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all"
+                <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered" data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all"
                     style="width:100%">
                     <thead>
+                        <tr class="search-bar">
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
                         <tr>
                             <th class="noColvis">Nº</th>
                             <th>Solicitante</th>
@@ -52,7 +72,7 @@
                             <th>Empresa</th>
                             <th>Data desejada</th>
                             <th>Ord. compra</th>
-                            <th class="noColvis">Ações</th>
+                            <th class="noColvis ignore-search">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,18 +90,20 @@
                                 ];
                             @endphp
                             <tr>
-                                <td>{{$contract->id}}</td>
+                                <td style="min-width: 90px;">{{$contract->id}}</td>
                                 <td>{{$contract->user->person->name}}</td>
                                 <td>{{$contract->suppliesUser?->person->name ?? '---'}}</td>
                                 <td>{{$contract->status->label()}}</td>
                                 <td>
                                     <div class="tag-list">
                                         @php
-                                            $supplierName = $suppliers?->corporate_name;
-                                            $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $suppliers?->cpf_cnpj);
+                                            $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $suppliers?->cpf_cnpj);
+                                            $fullSupplier = $suppliers?->corporate_name . ' - ' . $formattedCnpj;
                                         @endphp
                                         @if ($suppliers)
-                                            <span class="tag-list-item">{{ $supplierName . ' - ' . $cnpj }}</span>
+                                            <span class="tag-list-item">{{ $fullSupplier }}</span>
+                                            <!-- APENAS PARA PODER BUSCAR PELO CNPJ SEM FORMATAÇÃO-->
+                                            <span style="display: none">{{ $suppliers?->cpf_cnpj }}</span>
                                         @else
                                             ---
                                         @endif
@@ -93,9 +115,9 @@
                                         @forelse ($companies as $company)
                                             @php
                                                 $formattedCnpj = $company->cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $company->cnpj) : 'CNPJ indefinido';
-                                                $concat = $company->name . ' - ' . $formattedCnpj;
+                                                $fullCompany = $company->name . ' - ' . $formattedCnpj;
                                             @endphp
-                                            <span class="tag-list-item">{{ $concat }}</span>
+                                            <span class="tag-list-item">{{ $fullCompany }}</span>
                                             <!-- APENAS PARA PODER BUSCAR PELO CNPJ SEM FORMATAÇÃO-->
                                             <span style="display: none">{{ $company->cnpj }}</span>
                                         @empty
@@ -152,4 +174,5 @@
 
 @push('scripts')
     <script type="module" src="{{asset('js/supplies/modal-confirm-supplies-responsability.js')}}"></script>
+    <script type="module" src="{{asset('js/supplies/dataTables-column-search.js')}}"></script>
 @endpush
