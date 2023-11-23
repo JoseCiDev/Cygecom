@@ -31,6 +31,10 @@ $buyingStatus = [
 
 @push('styles')
     <style>
+        .fa-circle-info{
+            cursor: help;
+        }
+
         /* Gráficos */
         .charts-container{
             display: flex;
@@ -38,6 +42,10 @@ $buyingStatus = [
             align-items: center;
             gap: 15px;
             width: 100%;
+        }
+
+        .charts-requests-finished{
+            cursor: pointer;
         }
 
         .charts-requests-sent{
@@ -560,7 +568,14 @@ $buyingStatus = [
 
         <div class="productivity-report">
             <div class="productivity-report-item border-productivity-report">
-                <h2 class="productivity-report-title doughnut-title bg-productivity-report">Status das solicitações enviadas</h2>
+                <h2 class="productivity-report-title doughnut-title bg-productivity-report">
+                    <i class="fa-solid fa-circle-info"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-title="Representação gráfica dos status a partir da filtragem inserida.
+                        *Em processo de compra são status: pendente, em trativa, em cotação e aguardando aprov."></i>
+                    Status das solicitações enviadas
+                </h2>
 
                 <div class="charts-container">
                     <div class="charts-requests-sent"><canvas id="charts-requests-sent"></canvas></div>
@@ -603,7 +618,16 @@ $buyingStatus = [
             </div>
 
             <div class="chart-bar-finished border-productivity-report">
-                <h2 class="productivity-report-title bar-title bg-productivity-report">Solicitações finalizadas</h2>
+                <h2 class="productivity-report-title bar-title bg-productivity-report">
+                    <i class="fa-solid fa-circle-info"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-title="Representação quantitativa de finalizações por cada responsável.
+                        O período dos dados é o escolhido na filtragem.
+                        Caso não for escolhido período será representado os dados de todas solicitações finalizadas.
+                        Atenção: O responsável é o último atribuído."></i>
+                    Solicitações finalizadas
+                </h2>
 
                 <div class="charts-container chart-requests-finished-container" >
                     <div class="charts-requests-finished"><canvas id="charts-requests-finished"></canvas></div>
