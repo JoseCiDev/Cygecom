@@ -52,7 +52,7 @@ const createChartBar = (canvasChartId, chartLabels, chartData, title = false) =>
             plugins: {
                 title: {
                     display: true,
-                    text: title || `Quantidade total: ${chartData.reduce((previous, sum) => previous + sum)}`,
+                    text: title || `Quantidade total: ${chartData.length ? chartData.reduce((previous, sum) => previous + sum) : ''}`,
                 },
             },
             maintainAspectRatio: false,
