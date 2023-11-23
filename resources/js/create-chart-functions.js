@@ -49,6 +49,12 @@ const createChartBar = (canvasChartId, chartLabels, chartData, title = false) =>
         type: 'bar',
         data: data,
         options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: title || `Quantidade total: ${chartData.reduce((previous, sum) => previous + sum)}`,
+                },
+            },
             maintainAspectRatio: false,
             indexAxis: 'y',
             layout: {

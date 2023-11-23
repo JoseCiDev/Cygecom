@@ -656,6 +656,7 @@ $buyingStatus = [
                 const $checkedStatusInputs = $('.status-checkbox');
                 const $isSuppliesContractNone = $('#is-supplies-contract-none');
                 const $suppliesUsers = $('#supplies-users');
+                const $generateCSVButton = $('#generate-csv-button');
 
                 const $filterClearBtn = $('#filter-clear-all-btn');
                 const $filterClearUsersBtn = $('#filter-clear-users-btn');
@@ -771,7 +772,6 @@ $buyingStatus = [
 
                 const createOrUpdateChartBar = (chartDataResponse) => {
                     const users = Object.values(chartDataResponse.suppliesUserRequests);
-                    const chartStatusTitle = 'Solicitações finalizadas por responsável';
                     const chartLabels = [];
                     const chartData = [];
 
@@ -788,7 +788,7 @@ $buyingStatus = [
                         chartData.push(user.requestsQtdFinish)
                     })
 
-                    createChartBar('charts-requests-finished', chartLabels, chartData, chartStatusTitle);
+                    createChartBar('charts-requests-finished', chartLabels, chartData);
                 }
 
                 const $badgeColumnsQtd = $(`<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"></span>`);
@@ -797,6 +797,73 @@ $buyingStatus = [
                     initComplete: function() {
                         $.fn.setStorageDtColumnConfig();
                         $('#reports-filter-btn').on('click', filterDataTable);
+
+                        $generateCSVButton.on('click', () => {
+                            let updatedUrlAjax = getUrlWithParams(urlAjax);
+                            updatedUrlAjax += `&length=-1`;
+
+                            $.ajax({
+                                url: updatedUrlAjax,
+                                type: 'GET',
+                                success: (data) => {
+                                    const content = data.data;
+                                    const headers = $('#productivityTable>thead>tr>th').toArray().map(header => header.textContent);
+                                    const rows = content.map(item => {
+                                        const id = item.id;
+                                        const type = enumRequests['type'][item.type];
+
+                                        const pendingStatus = item.logs
+                                            .filter((item) => item.changes?.status === 'pendente')
+                                            .find((item) => item.created_at)
+                                            .created_at;
+
+                                        const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss');
+                                        const requistingUser = item.user.person.name;
+                                        const requester = item.requester?.name || '---';
+                                        const status = enumRequests['status'][item.status];
+                                        const suppliesUserName = item.supplies_user?.person.name || '---';
+                                        const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name).join(', ');
+                                        const isSuppliesContract = item.is_supplies_contract ? 'Suprimentos' : 'Área solicitante';
+                                        const desiredDate = item.desired_date ? moment(item.desired_date).format('DD/MM/YYYY') : '---';
+                                        const productCategories =  item.purchase_request_product.map((product) => product.category.name).join(', ') || '---';
+
+                                        let rowData = [
+                                            [
+                                                id,
+                                                type,
+                                                firstPendingStatus,
+                                                requistingUser,
+                                                requester,
+                                                status,
+                                                suppliesUserName,
+                                                costCenters,
+                                                isSuppliesContract,
+                                                desiredDate,
+                                                productCategories
+                                            ]
+                                        ]
+
+                                        return rowData;
+                                    });
+
+                                    const csv = [headers];
+                                    rows.forEach((row) => {
+                                        row.forEach((item) => {
+                                            const csvRow = item.map((cell) => `"${cell}"`);
+                                            csv.push('\n' + csvRow);
+                                        })
+                                        csv.push('\n');
+                                    });
+
+                                    $.fn.downloadCsv(csv, 'produtividade');
+                                },
+                                error: (response, textStatus, errorThrown) => {
+                                    const title = "Houve uma falha na busca dos registros!";
+                                    const message = "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
+                                    $.fn.showModalAlert(title, message);
+                                },
+                            });
+                        })
                     },
                     scrollY: '400px',
                     scrollX: true,
