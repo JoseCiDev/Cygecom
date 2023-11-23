@@ -48,11 +48,11 @@
                             <th class="noColvis">Nº</th>
                             <th>Solicitante</th>
                             <th>Responsável</th>
-                            <th class="col-sm-3">Categorias</th>
+                            <th>Categorias</th>
                             <th>Status</th>
-                            <th>Condição de pgto.</th>
+                            <th>Fornecedor(es)</th>
                             <th>Contratação por</th>
-                            <th>CNPJ</th>
+                            <th>Empresa</th>
                             <th>Data desejada</th>
                             <th>Ord. compra</th>
                             <th class="noColvis">Ações</th>
@@ -85,7 +85,21 @@
                                     </div>
                                 </td>
                                 <td>{{ $product->status->label() }}</td>
-                                <td>{{ $product->product->paymentInfo?->payment_terms?->label() ?? '---' }}</td>
+                                <td>
+                                    <div class="tag-list">
+                                        @foreach ($suppliers as $index => $supplier)
+                                            @php
+                                                $supplierName = $supplier?->corporate_name;
+                                                $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier?->cpf_cnpj);
+                                            @endphp
+                                            @if ($supplier)
+                                                <span class="tag-list-item">{{ $supplierName . ' - ' . $cnpj }}</span>
+                                            @else
+                                                ---
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </td>
                                 <td class="hidden-1024">
                                     {{ $product->is_supplies_contract ? 'Suprimentos' : 'Solicitante' }}</td>
 
@@ -109,7 +123,10 @@
                                     {{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y') : '---' }}
                                 </td>
 
-                                <td>{{ $product->purchase_order ?? '---' }}</td>
+                                @php
+                                    $showPurchaseOrder = isset($product->purchase_order) && $product->status === PurchaseRequestStatus::FINALIZADA;
+                                @endphp
+                                <td>{{ $showPurchaseOrder ? $product->purchase_order : '---' }}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
