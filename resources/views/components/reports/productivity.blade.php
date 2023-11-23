@@ -689,7 +689,7 @@ $buyingStatus = [
                 const getUrlWithParams = (urlAjax) => {
                     const $checkedStatusInputs = $('.status-checkbox:checked');
                     const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
-                    const $requistingUsersIdsFilter = $('#requisting-users-filter').val() || "";
+                    const requistingUsersIds = $('#requisting-users-filter').val() || "";
                     const $costCenterIdsFilter = $('#cost-center-filter').val() || "";
                     const $suppliesUsers = $('#supplies-users').val() || "";
                     const $dateSince = $('#date-since').val();
@@ -702,7 +702,6 @@ $buyingStatus = [
 
                     let updatedUrlAjax = `${urlAjax}?status=${statusValues.join(',')}`;
                     updatedUrlAjax += `&request-type=${requestTypeValues.join(',')}`;
-                    updatedUrlAjax += `&requesting-users-ids=${$requistingUsersIdsFilter}`;
                     updatedUrlAjax += `&cost-center-ids=${$costCenterIdsFilter}`;
                     updatedUrlAjax += `&date-since=${$dateSince}`;
                     updatedUrlAjax += `&date-until=${$dateUntil}`;
@@ -712,6 +711,10 @@ $buyingStatus = [
                     if($isSuppliesContract !== undefined && $isSuppliesContract !== "") {
                         updatedUrlAjax += `&is-supplies-contract=${$isSuppliesContract}`;
                     }
+
+                    requistingUsersIds.forEach((userId) => {
+                        updatedUrlAjax += `&requesting-users-ids[]=${userId}`;
+                    })
 
                     return updatedUrlAjax;
                 }

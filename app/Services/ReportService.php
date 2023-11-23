@@ -100,6 +100,22 @@ class ReportService
     }
 
     /**
+     * @param Builder $query Recebe query builder
+     * @param array $requestingUsersIds Recebe array ids de usuários
+     */
+    public function requesterProductivityQuery(Builder $query, array $requestingUsersIds): Builder
+    {
+        $validIds = collect($requestingUsersIds)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id);
+
+        if ($validIds->isEmpty()) {
+            $validIds = User::whereHas('purchaseRequest', fn ($query) => $query->where('status', '!=', PurchaseRequestStatus::RASCUNHO->value))
+                ->get()->pluck('id');
+        }
+
+        return $query->whereIn('user_id', $validIds);
+    }
+
+    /**
      * @param string $costCenterIds Recebe uma string com ids de cost centers separados por vírgula. Exemplo: "1,2,3"
      */
     public function whereInCostCenterQuery(Builder $query, ?string $costCenterIds = ''): Builder

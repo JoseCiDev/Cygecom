@@ -127,7 +127,7 @@ class ReportController extends Controller
         $orderDirection = (string) $request->query('order', [0 => ['dir' => 'asc']])[0]['dir'];
         $status = (string) $request->query('status', "pendente");
         $requestType = (string) $request->query('request-type', false);
-        $requestingUsersIds = (string) $request->query('requesting-users-ids', false);
+        $requestingUsersIds = (array) $request->query('requesting-users-ids', []);
         $costCenterIds = (string) $request->query('cost-center-ids', false);
         $dateSince = (string) $request->query('date-since', false);
         $dateUntil = (string) $request->query('date-until', now());
@@ -142,7 +142,7 @@ class ReportController extends Controller
 
             $query->where('purchase_requests.status', "!=", PurchaseRequestStatus::RASCUNHO->value);
 
-            $query = $this->reportService->whereInRequistingUserQuery($query, $requestingUsersIds);
+            $query = $this->reportService->requesterProductivityQuery($query, $requestingUsersIds);
 
             if ($isSuppliesContract !== null) {
                 $query->where('purchase_requests.is_supplies_contract', $isSuppliesContract);
