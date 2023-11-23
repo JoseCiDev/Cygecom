@@ -165,7 +165,9 @@ $costCenters = $requestingUsers
                                 <th class="noColvis">Nº</th>
                                 <th >Tipo</th>
                                 <th >Solicitado em</th>
+                                <th >Data de atribuição</th>
                                 <th >Nome Serviço</th>
+                                <th >Contratado por</th>
                                 <th >Solicitante</th>
                                 <th >Solicitante sistema</th>
                                 <th >Status</th>
@@ -349,15 +351,16 @@ $costCenters = $requestingUsers
                                     const content = data.data;
                                     const headers = $('#reportsTable>thead>tr>th').toArray().map(header => header.textContent);
                                     const rows = content.map(item => {
-                                        const id = item.id
-                                        const type = enumRequests['type'][item.type]
+                                        const id = item.id;
+                                        const type = enumRequests['type'][item.type];
 
                                         const pendingStatus = item.logs
                                             .filter((item) => item.changes?.status === 'pendente')
                                             .find((item) => item.created_at)
-                                            .created_at
+                                            .created_at;
 
-                                        const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss')
+                                        const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss');
+                                        const responsibilityMarkedAt = moment(item.responsibility_marked_at).format('DD/MM/YYYY HH:mm:ss');
 
                                         const serviceNameColumnMapping = {
                                             product: () => null,
@@ -365,11 +368,11 @@ $costCenters = $requestingUsers
                                             contract: () => [item.contract?.name],
                                         };
                                         const serviceName = serviceNameColumnMapping[item.type]()?.filter((el) => el) || '---';
-
+                                        const isSuppliesContract = item.is_supplies_contract ? "Suprimentos" : "Área solicitante";
                                         const requistingUser = item.user.person.name
-                                        const requester = item.requester?.name || '---'
-                                        const status = enumRequests['status'][item.status]
-                                        const suppliesUserName = item.supplies_user?.person.name || '---'
+                                        const requester = item.requester?.name || '---';
+                                        const status = enumRequests['status'][item.status];
+                                        const suppliesUserName = item.supplies_user?.person.name || '---';
                                         const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name).join(', ');
 
                                         const supplierColumnMapping = {
@@ -382,10 +385,10 @@ $costCenters = $requestingUsers
                                         const paymentInfo = item[item.type]?.payment_info || {};
 
                                         const paymentMethod = paymentInfo.payment_method ;
-                                        const paymentMethodLabel = enumRequests['paymentMethod'][paymentMethod] || '---'
+                                        const paymentMethodLabel = enumRequests['paymentMethod'][paymentMethod] || '---';
 
                                         const paymentTerms = paymentInfo?.payment_terms || '---';
-                                        const paymentTermsLabel = enumRequests['paymentTerms'][paymentTerms] || '---'
+                                        const paymentTermsLabel = enumRequests['paymentTerms'][paymentTerms] || '---';
 
                                         const amount = item[item.type]?.amount || item[item.type]?.price;
                                         const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'});
@@ -396,7 +399,9 @@ $costCenters = $requestingUsers
                                                 id,
                                                 type,
                                                 firstPendingStatus,
+                                                responsibilityMarkedAt,
                                                 serviceName,
+                                                isSuppliesContract,
                                                 requistingUser,
                                                 requester,
                                                 status,
@@ -407,7 +412,7 @@ $costCenters = $requestingUsers
                                                 paymentTermsLabel,
                                                 formattedAmount
                                             ]
-                                        ]
+                                        ];
 
                                         if($productDetail && item.type === enumProductValue) {
                                             rowData.push(['' ,'Nome do produto', 'Categoria', 'Quantidade', 'Cor', 'Model', 'Tamanho']);
@@ -529,6 +534,10 @@ $costCenters = $requestingUsers
                         }
                     },
                     {
+                        data: 'responsibility_marked_at',
+                        render: (responsibility_marked_at, _, row) =>  responsibility_marked_at ? moment.utc(responsibility_marked_at).utcOffset('-03:00').format('DD/MM/YYYY HH:mm:ss') : '---'
+                    },
+                    {
                         data: 'type',
                         orderable: false,
                         render: (type, _, row) => {
@@ -546,6 +555,10 @@ $costCenters = $requestingUsers
 
                             return serviceName;
                         }
+                    },
+                    {
+                        data: 'is_supplies_contract',
+                        render: (is_supplies_contract, _, row) => is_supplies_contract ? "Suprimentos" : "Área solicitante"
                     },
                     { data: 'user.person.name' },
                     { data: 'requester', render: (requester, _, row) => requester ? requester.name : '---' },

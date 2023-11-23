@@ -190,11 +190,13 @@ class ReportService
             0 => 'purchase_requests.id',
             1 => 'purchase_requests.type',
             2 => $latestLogSubquery,
-            4 => $getPersonName,
-            5 => $getPersonRequester,
-            6 => 'purchase_requests.status',
-            7 => $getPersonSupplies,
-            12 => 'total_amount'
+            3 => 'purchase_requests.responsibility_marked_at',
+            5 => 'purchase_requests.is_supplies_contract',
+            6 => $getPersonName,
+            7 => $getPersonRequester,
+            8 => 'purchase_requests.status',
+            9 => $getPersonSupplies,
+            14 => 'total_amount'
         };
 
         return $orderColumnMappings;

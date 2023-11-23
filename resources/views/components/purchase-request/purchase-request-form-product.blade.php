@@ -769,7 +769,7 @@
             // desabilita pagamento ao entrar em register
             $paymentBlock
                 .find('input, textarea')
-                .prop('readonly', true);
+                .prop('disabled', true);
 
             $paymentBlock
                 .find('select')
@@ -798,7 +798,7 @@
                 // desabilita e limpa inputs pagamento
                 $paymentBlock
                     .find('input, textarea')
-                    .prop('readonly', isContractedBySupplies);
+                    .prop('disabled', isContractedBySupplies);
 
                 $paymentBlock
                     .find('select')
@@ -1228,6 +1228,7 @@
 
                 $('.add-supplier-btn').prop('disabled', hasSentRequest);
                 $('.delete-supplier').prop('disabled', hasSentRequest);
+                $('.delete-supplier').attr('disabled', hasSentRequest);
 
                 $('.add-product-btn').prop('disabled', hasSentRequest);
                 $('.delete-product').prop('disabled', hasSentRequest);
