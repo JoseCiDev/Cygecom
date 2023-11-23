@@ -943,7 +943,7 @@
             // desabilita pagamento ao entrar em register
             $paymentBlock
                 .find('input, textarea')
-                .prop('readonly', true);
+                .prop('disabled', true);
 
             $paymentBlock
                 .find('input[type="checkbox"], input[type="radio"]')
@@ -975,7 +975,7 @@
                 // desabilita pagamento
                 $paymentBlock
                     .find('input, textarea')
-                    .prop('readonly', isContractedBySupplies);
+                    .prop('disabled', isContractedBySupplies);
 
                 $paymentBlock
                     .find('input[type="checkbox"], input[type="radio"]')
