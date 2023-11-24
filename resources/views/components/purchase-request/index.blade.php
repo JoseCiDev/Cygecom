@@ -99,7 +99,7 @@
 
                                             $cnpj = $supplier?->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj) : 'CNPJ indefinido';
                                             $amount = $purchaseRequest[$requestType]?->amount ?? $purchaseRequest[$requestType]?->price;
-                                            $formatedAmount = $amount ? number_format($amount, 2, '.', ',') : '---';
+                                            $formatedAmount = $amount ? number_format($amount, 2, ',', '.') : '---';
                                         @endphp
                                         <tr>
                                             <td style="min-width: 90px;">{{$purchaseRequest->id}}</td>
@@ -109,9 +109,19 @@
                                             <td>{{$supplier?->corporate_name ? $supplier?->corporate_name . " - " . $cnpj . " " . $msg : '---'}}</td>
                                             <td>{{$purchaseRequest->status->label()}}</td>
                                             <td>{{$purchaseRequest->suppliesUser?->person?->name ?? '---'}}</td>
-                                            <td>{{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}</td>
-                                            <td class="hidden-1440">{{ $purchaseRequest->updated_at->formatCustom('d/m/Y H:i:s')  }}</td>
-                                            <td><span hidden>{{$amount}}</span> R$ {{ $formatedAmount }}</td>
+                                            <td>
+                                                <span hidden> {{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('Y-m-d H:i:s') }}</span>
+                                                {{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}
+                                            </td>
+                                            <td class="hidden-1440">
+                                                <span hidden> {{ \Carbon\Carbon::parse($purchaseRequest->updated_at)->format('Y-m-d H:i:s') }}</span>
+                                                {{ $purchaseRequest->updated_at->formatCustom('d/m/Y H:i:s')  }}
+                                            </td>
+                                            <td>
+                                                {{-- str_pad para ordenação por string no dataTables --}}
+                                                <span hidden>{{ str_pad($amount, 10, "0", STR_PAD_LEFT) }}</span>
+                                                R$ {{ $formatedAmount }}
+                                            </td>
 
                                             {{-- BTN AÇÕES --}}
                                             <td style="white-space: nowrap;">
