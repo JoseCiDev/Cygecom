@@ -46,9 +46,22 @@
                     <div class="col-md-12">
                         <div class="box-content nopadding regular-text">
 
-                            <table style="width:100%" class="table table-hover table-nomargin table-bordered dataTable"
+                            <table id="table-supplies-list" style="width:100%" class="table table-hover table-nomargin table-bordered"
                                 data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                                 <thead>
+                                    <tr class="search-bar">
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
                                     <tr>
                                         <th class="noColvis">Nº</th>
                                         <th>Contratação por</th>
@@ -60,7 +73,7 @@
                                         <th>Data desejada</th>
                                         <th>Atualizado em</th>
                                         <th>Valor total</th>
-                                        <th class="noColvis">Ações</th>
+                                        <th class="noColvis ignore-search">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -89,7 +102,7 @@
                                             $formatedAmount = $amount ? number_format($amount, 2, '.', ',') : '---';
                                         @endphp
                                         <tr>
-                                            <td>{{$purchaseRequest->id}}</td>
+                                            <td style="min-width: 90px;">{{$purchaseRequest->id}}</td>
                                             <td class="hidden-1280">{{$purchaseRequest->is_supplies_contract ? 'Suprimentos' : 'Área Solicitante'}}</td>
                                             <td>{{$purchaseRequest->type->label()}}</td>
                                             <td>{{$name}}</td>
@@ -142,5 +155,7 @@
             </div>
         </div>
     </div>
+
+    <script type="module" src="{{asset('js/utils/dataTables-column-search.js')}}"></script>
 
 </x-app>
