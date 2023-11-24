@@ -1,4 +1,4 @@
-import setColvisConfig from '../utils/colvis-custom-user-preference.js'
+import setColvisConfig from './colvis-custom-user-preference.js'
 
 $(() => {
     const $badgeColumnsQtd = $(`<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"></span>`);
@@ -54,15 +54,13 @@ $(() => {
                 input.addClass('search-button');
 
                 if (!column.header().classList.contains('ignore-search')) {
-                    if (!column.header().classList.contains('no-search')) {
-                        $tableSearchBarRow.children().eq(index).html(input);
-                        input.on('keyup', (e) => {
-                            const x = $(e.currentTarget);
-                            if (column.search() !== x.val()) {
-                                column.search(x.val()).draw();
-                            }
-                        });
-                    }
+                    $tableSearchBarRow.children().eq(index).html(input);
+                    input.on('keyup', (e) => {
+                        const x = $(e.currentTarget);
+                        if (column.search() !== x.val()) {
+                            column.search(x.val()).draw();
+                        }
+                    });
                 }
                 index++;
             });
