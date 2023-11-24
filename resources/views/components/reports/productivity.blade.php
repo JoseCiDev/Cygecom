@@ -1,42 +1,37 @@
 @php
-use App\Enums\{PurchaseRequestType, PurchaseRequestStatus, PaymentMethod, PaymentTerm};
+    use App\Enums\{PurchaseRequestType, PurchaseRequestStatus, PaymentMethod, PaymentTerm};
 
-$currentProfile = auth()->user()->profile->name;
-$isAdmin = $currentProfile === 'admin';
-$isDirector = $currentProfile === 'diretor';
+    $currentProfile = auth()->user()->profile->name;
+    $isAdmin = $currentProfile === 'admin';
+    $isDirector = $currentProfile === 'diretor';
 
-$enumRequests = [
-    'type' => collect(PurchaseRequestType::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
-    'status' => collect(PurchaseRequestStatus::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
-    'paymentMethod' => collect(PaymentMethod::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
-    'paymentTerms' => collect(PaymentTerm::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
-];
+    $enumRequests = [
+        'type' => collect(PurchaseRequestType::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
+        'status' => collect(PurchaseRequestStatus::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
+        'paymentMethod' => collect(PaymentMethod::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
+        'paymentTerms' => collect(PaymentTerm::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
+    ];
 
-$costCenters = $requestingUsers
-    ->pluck('purchaseRequest')
-    ->collapse()
-    ->filter(fn($item) => $item->status->value !== PurchaseRequestStatus::RASCUNHO->value)
-    ->pluck('costCenterApportionment')
-    ->collapse()
-    ->pluck('costCenter')
-    ->unique();
+    $costCenters = $requestingUsers
+        ->pluck('purchaseRequest')
+        ->collapse()
+        ->filter(fn($item) => $item->status->value !== PurchaseRequestStatus::RASCUNHO->value)
+        ->pluck('costCenterApportionment')
+        ->collapse()
+        ->pluck('costCenter')
+        ->unique();
 
-$buyingStatus = [
-    PurchaseRequestStatus::PENDENTE->label(),
-    PurchaseRequestStatus::EM_TRATATIVA->label(),
-    PurchaseRequestStatus::EM_COTACAO->label(),
-    PurchaseRequestStatus::AGUARDANDO_APROVACAO_DE_COMPRA->label(),
-];
+    $buyingStatus = [PurchaseRequestStatus::PENDENTE->label(), PurchaseRequestStatus::EM_TRATATIVA->label(), PurchaseRequestStatus::EM_COTACAO->label(), PurchaseRequestStatus::AGUARDANDO_APROVACAO_DE_COMPRA->label()];
 @endphp
 
 @push('styles')
     <style>
-        .fa-circle-info{
+        .fa-circle-info {
             cursor: help;
         }
 
         /* Gráficos */
-        .charts-container{
+        .charts-container {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -44,11 +39,11 @@ $buyingStatus = [
             width: 100%;
         }
 
-        .charts-requests-finished{
+        .charts-requests-finished {
             cursor: pointer;
         }
 
-        .charts-requests-sent{
+        .charts-requests-sent {
             width: 325px;
             cursor: pointer;
         }
@@ -61,11 +56,11 @@ $buyingStatus = [
             background-color: var(--grey-primary-color);
         }
 
-        .text-productivity-report{
+        .text-productivity-report {
             color: var(--grey-primary-color);
         }
 
-        .productivity-report{
+        .productivity-report {
             margin-top: 120px;
             display: flex;
             flex-direction: column;
@@ -201,21 +196,21 @@ $buyingStatus = [
             z-index: 1;
         }
 
-        .productivity-report .chart-bar-finished .charts-requests-finished{
+        .productivity-report .chart-bar-finished .charts-requests-finished {
             position: relative;
             width: 100%;
             height: 100vh;
         }
 
         /* Filtros */
-        .productivity-report-filters{
+        .productivity-report-filters {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
-        .productivity-report-filters .selects{
+        .productivity-report-filters .selects {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -223,21 +218,21 @@ $buyingStatus = [
             width: 100%;
         }
 
-        .productivity-report-filters .selects .form-group{
+        .productivity-report-filters .selects .form-group {
             width: 100%;
             margin: 10px 0;
         }
 
-        .productivity-report-filters .selects .select-filter-container{
+        .productivity-report-filters .selects .select-filter-container {
             margin-bottom: 10px;
             width: 100%;
         }
 
-        .productivity-report-filters .dates-container{
+        .productivity-report-filters .dates-container {
             width: 100%;
         }
 
-        .productivity-report-filters .dates-container .dates{
+        .productivity-report-filters .dates-container .dates {
             width: 100%;
             display: flex;
             justify-content: space-between;
@@ -246,15 +241,15 @@ $buyingStatus = [
             margin: 10px 0 30px;
         }
 
-        .productivity-report-filters .dates-container .dates .date{
+        .productivity-report-filters .dates-container .dates .date {
             width: 100%;
         }
 
-        .productivity-report-filters .dates-container .dates .date input[type='date']{
+        .productivity-report-filters .dates-container .dates .date input[type='date'] {
             text-align: center;
         }
 
-        .productivity-report-filters .dates-container .dates .span-info{
+        .productivity-report-filters .dates-container .dates .span-info {
             position: absolute;
             top: 62px;
             left: 0;
@@ -270,27 +265,27 @@ $buyingStatus = [
             width: 100%;
         }
 
-        .productivity-report-filters .checkboxs-container .checkboxs{
+        .productivity-report-filters .checkboxs-container .checkboxs {
             width: 100%;
             margin: 10px 0;
         }
 
-        .productivity-report-filters .checkboxs-container .checkboxs .inputs-container{
+        .productivity-report-filters .checkboxs-container .checkboxs .inputs-container {
             display: flex;
             justify-content: left;
             gap: 15px;
             padding: 5px 0;
         }
 
-        .productivity-report-filters .checkboxs-container .checkboxs .inputs-container .checkbox-label{
-           cursor: pointer;
+        .productivity-report-filters .checkboxs-container .checkboxs .inputs-container .checkbox-label {
+            cursor: pointer;
         }
 
-        .productivity-report-filters .request-status-filter{
+        .productivity-report-filters .request-status-filter {
             margin: 10px 0;
         }
 
-        .productivity-report-filters .request-status-filter .status{
+        .productivity-report-filters .request-status-filter .status {
             display: flex;
             flex-wrap: wrap;
             row-gap: 10px;
@@ -298,11 +293,11 @@ $buyingStatus = [
             align-items: center;
         }
 
-        .productivity-report-filters .request-status-filter .status .checkbox-label{
+        .productivity-report-filters .request-status-filter .status .checkbox-label {
             cursor: pointer;
         }
 
-        .productivity-report-btns{
+        .productivity-report-btns {
             margin: 10px 0;
             display: flex;
             justify-content: left;
@@ -310,14 +305,14 @@ $buyingStatus = [
         }
 
         @media(min-width: 768px) {
-            .productivity-report-filters .selects .form-group{
+            .productivity-report-filters .selects .form-group {
                 display: flex;
                 align-items: center;
                 gap: 5px;
                 justify-content: space-between;
             }
 
-            .productivity-report-filters .selects .form-group .select-filter-btns{
+            .productivity-report-filters .selects .form-group .select-filter-btns {
                 display: flex;
                 gap: 5px;
                 padding-top: 10px;
@@ -330,17 +325,17 @@ $buyingStatus = [
                 gap: 15px;
             }
 
-            .productivity-report-filters .checkboxs-container .checkboxs{
+            .productivity-report-filters .checkboxs-container .checkboxs {
                 max-width: 375px;
             }
 
-            .productivity-report-filters .request-status-filter{
+            .productivity-report-filters .request-status-filter {
                 width: 100%;
             }
         }
 
         @media(min-width: 1024px) {
-            .charts-requests-sent{
+            .charts-requests-sent {
                 width: 375px;
             }
 
@@ -351,23 +346,23 @@ $buyingStatus = [
                 padding-bottom: 30px;
             }
 
-            .productivity-report-title.doughnut-title{
+            .productivity-report-title.doughnut-title {
                 position: absolute;
                 top: 0;
             }
 
-            .productivity-report-filters .dates-container{
+            .productivity-report-filters .dates-container {
                 display: flex;
                 gap: 10px;
             }
         }
 
         @media(min-width: 1280px) {
-            .productivity-report{
+            .productivity-report {
                 flex-direction: row;
             }
 
-            .productivity-report-filters .dates-container .dates .span-info{
+            .productivity-report-filters .dates-container .dates .span-info {
                 text-align: left;
                 padding: 0 20px;
             }
@@ -379,7 +374,9 @@ $buyingStatus = [
 
     <div class="box box-color box-bordered">
         <div class="row" style="margin: 0 0 30px">
-            <div class="col-md-6" style="padding: 0"> <h1 class="page-title">Relatório de produtividade</h1> </div>
+            <div class="col-md-6" style="padding: 0">
+                <h1 class="page-title">Relatório de produtividade</h1>
+            </div>
         </div>
 
         <div class="productivity-report-filters">
@@ -387,12 +384,12 @@ $buyingStatus = [
             <div class="selects">
 
                 <div class="form-group">
-                    <div class="select-filter-container" >
+                    <div class="select-filter-container">
                         <label for="requisting-users-filter" class="regular-text cost-center-filter-label">Solicitante</label>
-                        <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]"
-                            multiple="multiple" class="select2-me" placeholder="Escolha uma ou mais opções">
+                        <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]" multiple="multiple" class="select2-me"
+                            placeholder="Escolha uma ou mais opções">
                             @foreach ($requestingUsers as $user)
-                                <option value="{{$user->id}}">{{$user->person->name}}</option>
+                                <option value="{{ $user->id }}">{{ $user->person->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -405,7 +402,7 @@ $buyingStatus = [
                 <div class="form-group">
                     <div class="select-filter-container">
                         <label for="cost-center-filter" class="regular-text cost-center-filter-label">Centros de custos</label>
-                        <select id="cost-center-filter" data-cy="cost-center-filter" name="cost-center-filter[]" multiple="multiple"  class="select2-me"
+                        <select id="cost-center-filter" data-cy="cost-center-filter" name="cost-center-filter[]" multiple="multiple" class="select2-me"
                             placeholder="Escolha uma ou mais opções">
                             @foreach ($costCenters as $costCenter)
                                 @php
@@ -427,12 +424,12 @@ $buyingStatus = [
                 </div>
 
                 <div class="form-group">
-                    <div class="select-filter-container" >
+                    <div class="select-filter-container">
                         <label for="supplies-users" class="regular-text cost-center-filter-label">Responsável</label>
-                        <select id="supplies-users" data-cy="supplies-users" name="supplies-users[]"
-                            multiple="multiple" class="select2-me" placeholder="Escolha uma ou mais opções">
+                        <select id="supplies-users" data-cy="supplies-users" name="supplies-users[]" multiple="multiple" class="select2-me"
+                            placeholder="Escolha uma ou mais opções">
                             @foreach ($suppliesUsers as $user)
-                                <option value="{{$user->id}}">{{$user->person->name}}</option>
+                                <option value="{{ $user->id }}">{{ $user->person->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -457,11 +454,9 @@ $buyingStatus = [
                     </div>
 
                     <small class="span-info">
-                        <i class="fa-solid fa-circle-info"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
+                        <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top"
                             data-bs-title="Tabela e gráfico circular: solicitações pendentes no período. Gráfico de barras: solicitações finalizadas no período."></i>
-                            Período para filtragem das solicitações.
+                        Período para filtragem das solicitações.
                     </small>
                 </div>
 
@@ -471,10 +466,8 @@ $buyingStatus = [
                         <input type="date" class="form-control" name="desired-date" id="desired-date" data-cy="desired-date">
                     </div>
                     <small class="span-info">
-                        <i class="fa-solid fa-circle-info"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        data-bs-title="Filtros data início e data fim são ignorados ao filtrar por data desejada."></i>
+                        <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-title="Filtros data início e data fim são ignorados ao filtrar por data desejada."></i>
                         Filtrar por data desejada sobrescreve período.
                     </small>
                 </div>
@@ -498,7 +491,8 @@ $buyingStatus = [
                     <label for="request-type" class="regular-text">Contratação por:</label>
                     <div class="inputs-container">
                         <label class="checkbox-label secondary-text">
-                            <input id="is-supplies-contract-none" type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input" data-cy="is-supplies-contract-none" checked value="">
+                            <input id="is-supplies-contract-none" type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input"
+                                data-cy="is-supplies-contract-none" checked value="">
                             Ambos
                         </label>
                         <label class="checkbox-label secondary-text">
@@ -506,7 +500,8 @@ $buyingStatus = [
                             Suprimentos
                         </label>
                         <label class="checkbox-label secondary-text">
-                            <input type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input" data-cy="is-supplies-contract-false" value="0">
+                            <input type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input" data-cy="is-supplies-contract-false"
+                                value="0">
                             Área solicitante
                         </label>
                     </div>
@@ -523,11 +518,11 @@ $buyingStatus = [
 
                         @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
                             <label class="checkbox-label secondary-text">
-                                <input type="checkbox" name="status[]" data-cy="status-{{ $statusCase->value }}" class="status-checkbox" value="{{ $statusCase->value }}" @checked($statusDefaultFilter)>
+                                <input type="checkbox" name="status[]" data-cy="status-{{ $statusCase->value }}" class="status-checkbox" value="{{ $statusCase->value }}"
+                                    @checked($statusDefaultFilter)>
                                 {{ $statusCase->label() }}
                             </label>
                         @endif
-
                     @endforeach
 
                     <button id="all-status-checkbox" type="button" class="btn btn-mini btn-secondary">Marcar todos status</button>
@@ -550,16 +545,16 @@ $buyingStatus = [
                 <thead>
                     <tr>
                         <th class="noColvis">Nº</th>
-                        <th >Tipo</th>
-                        <th >Solicitado em</th>
-                        <th >Solicitante</th>
-                        <th >Solicitante sistema</th>
-                        <th >Status</th>
-                        <th >Responsável</th>
-                        <th >Centro de custo</th>
-                        <th >Contratação por</th>
-                        <th >Data desejada</th>
-                        <th >Categorias</th>
+                        <th>Tipo</th>
+                        <th>Solicitado em</th>
+                        <th>Solicitante</th>
+                        <th>Solicitante sistema</th>
+                        <th>Status</th>
+                        <th>Responsável</th>
+                        <th>Centro de custo</th>
+                        <th>Contratação por</th>
+                        <th>Data desejada</th>
+                        <th>Categorias</th>
                     </tr>
                 </thead>
                 <tbody> {{-- Dinâmico --}} </tbody>
@@ -569,10 +564,8 @@ $buyingStatus = [
         <div class="productivity-report">
             <div class="productivity-report-item border-productivity-report">
                 <h2 class="productivity-report-title doughnut-title bg-productivity-report">
-                    <i class="fa-solid fa-circle-info"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    data-bs-title="Representação gráfica dos status a partir da filtragem inserida.
+                    <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-title="Representação gráfica dos status a partir da filtragem inserida.
                         *Em processo de compra são status: pendente, em trativa, em cotação e aguardando aprov."></i>
                     Status das solicitações enviadas
                 </h2>
@@ -610,7 +603,7 @@ $buyingStatus = [
                                 ---
                             </span>
                             <p class="productivity-report-item-info-bottom-row-text">
-                               finalizadas que foram pendentes no mesmo período
+                                finalizadas que foram pendentes no mesmo período
                             </p>
                         </div>
                     </div>
@@ -619,17 +612,15 @@ $buyingStatus = [
 
             <div class="chart-bar-finished border-productivity-report">
                 <h2 class="productivity-report-title bar-title bg-productivity-report">
-                    <i class="fa-solid fa-circle-info"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    data-bs-title="Representação quantitativa de finalizações por cada responsável.
+                    <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-title="Representação quantitativa de finalizações por cada responsável.
                         O período dos dados é o escolhido na filtragem.
                         Caso não for escolhido período será representado os dados de todas solicitações finalizadas.
                         Atenção: O responsável é o último atribuído."></i>
                     Solicitações finalizadas
                 </h2>
 
-                <div class="charts-container chart-requests-finished-container" >
+                <div class="charts-container chart-requests-finished-container">
                     <div class="charts-requests-finished"><canvas id="charts-requests-finished"></canvas></div>
                 </div>
             </div>
@@ -674,11 +665,11 @@ $buyingStatus = [
 
                 const handleDateChange = (event, isDesiredDate) => {
                     const currentElementVal = $(event.target).val();
-                    if(!currentElementVal) {
+                    if (!currentElementVal) {
                         return;
                     }
 
-                    if(isDesiredDate) {
+                    if (isDesiredDate) {
                         $dateSince.add($dateUntil).val(null);
                         return;
                     }
@@ -690,8 +681,8 @@ $buyingStatus = [
                     const $checkedStatusInputs = $('.status-checkbox:checked');
                     const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
                     const requistingUsersIds = $('#requisting-users-filter').val() || "";
-                    const $costCenterIdsFilter = $('#cost-center-filter').val() || "";
-                    const $suppliesUsers = $('#supplies-users').val() || "";
+                    const costCenterIdsFilter = $('#cost-center-filter').val() || "";
+                    const suppliesUsers = $('#supplies-users').val() || "";
                     const $dateSince = $('#date-since').val();
                     const $dateUntil = $('#date-until').val();
                     const $isSuppliesContract = $('.is-supplies-contract:checked').val();
@@ -702,15 +693,21 @@ $buyingStatus = [
 
                     let updatedUrlAjax = `${urlAjax}?status=${statusValues.join(',')}`;
                     updatedUrlAjax += `&request-type=${requestTypeValues.join(',')}`;
-                    updatedUrlAjax += `&cost-center-ids=${$costCenterIdsFilter}`;
                     updatedUrlAjax += `&date-since=${$dateSince}`;
                     updatedUrlAjax += `&date-until=${$dateUntil}`;
                     updatedUrlAjax += `&desired-date=${$desiredDate}`;
-                    updatedUrlAjax += `&supplies-users=${$suppliesUsers}`;
 
-                    if($isSuppliesContract !== undefined && $isSuppliesContract !== "") {
+                    if ($isSuppliesContract !== undefined && $isSuppliesContract !== "") {
                         updatedUrlAjax += `&is-supplies-contract=${$isSuppliesContract}`;
                     }
+
+                    suppliesUsers.forEach((userId) => {
+                        updatedUrlAjax += `&supplies-users[]=${userId}`;
+                    })
+
+                    costCenterIdsFilter.forEach((costCenterId) => {
+                        updatedUrlAjax += `&cost-center-ids[]=${costCenterId}`;
+                    })
 
                     requistingUsersIds.forEach((userId) => {
                         updatedUrlAjax += `&requesting-users-ids[]=${userId}`;
@@ -741,7 +738,7 @@ $buyingStatus = [
                         contractingBy: () => $isSuppliesContractNone.trigger('click')
                     }
 
-                    if(filter) {
+                    if (filter) {
                         clearOptions[filter]();
                         return;
                     }
@@ -825,10 +822,12 @@ $buyingStatus = [
                                         const requester = item.requester?.name || '---';
                                         const status = enumRequests['status'][item.status];
                                         const suppliesUserName = item.supplies_user?.person.name || '---';
-                                        const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name).join(', ');
+                                        const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name)
+                                            .join(', ');
                                         const isSuppliesContract = item.is_supplies_contract ? 'Suprimentos' : 'Área solicitante';
                                         const desiredDate = item.desired_date ? moment(item.desired_date).format('DD/MM/YYYY') : '---';
-                                        const productCategories =  item.purchase_request_product.map((product) => product.category.name).join(', ') || '---';
+                                        const productCategories = item.purchase_request_product.map((product) => product.category.name)
+                                            .join(', ') || '---';
 
                                         let rowData = [
                                             [
@@ -862,7 +861,8 @@ $buyingStatus = [
                                 },
                                 error: (response, textStatus, errorThrown) => {
                                     const title = "Houve uma falha na busca dos registros!";
-                                    const message = "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
+                                    const message =
+                                        "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
                                     $.fn.showModalAlert(title, message);
                                 },
                             });
@@ -873,7 +873,10 @@ $buyingStatus = [
                     paging: true,
                     processing: true,
                     serverSide: true,
-                    lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        [10, 25, 50, 100, 'Todos']
+                    ],
                     searching: false,
                     searchDelay: 1000,
                     language: {
@@ -883,8 +886,13 @@ $buyingStatus = [
                         infoEmpty: "Nenhum registro disponível",
                         infoFiltered: "(filtrado de _MAX_ registros no total)",
                         search: "Buscar:",
-                        paginate: { first: "Primeiro", last: "Último", next: "Próximo", previous: "Anterior" },
-                        processing:  $('.loader-box').show(),
+                        paginate: {
+                            first: "Primeiro",
+                            last: "Último",
+                            next: "Próximo",
+                            previous: "Anterior"
+                        },
+                        processing: $('.loader-box').show(),
                     },
                     ajax: {
                         url: urlAjax,
@@ -892,7 +900,8 @@ $buyingStatus = [
                         dataType: 'json',
                         error: (response, textStatus, errorThrown) => {
                             const title = "Houve uma falha na busca dos registros!";
-                            const message = "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
+                            const message =
+                                "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
                             $.fn.showModalAlert(title, message);
                         },
                         beforeSend: () => $('#productivityTable tbody').css('opacity', '0.2'),
@@ -908,9 +917,13 @@ $buyingStatus = [
                             $('#productivityTable tbody').css('opacity', '1')
                         }
                     },
-                    columns: [
-                        { data: 'id' },
-                        { data: 'type', render: (type) => enumRequests['type'][type] },
+                    columns: [{
+                            data: 'id'
+                        },
+                        {
+                            data: 'type',
+                            render: (type) => enumRequests['type'][type]
+                        },
                         {
                             data: 'logs',
                             render: (logs, _, row) => {
@@ -921,13 +934,21 @@ $buyingStatus = [
                                 return firstPendingStatus ? moment(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
                             }
                         },
-                        { data: 'user.person.name' },
+                        {
+                            data: 'user.person.name'
+                        },
                         {
                             data: 'requester',
                             render: (requester, _, row) => requester ? requester.name : '---'
                         },
-                        { data: 'status', render: (status) => enumRequests['status'][status] },
-                        { data: 'supplies_user.person.name', render: (suppliesUserName) => (suppliesUserName ?? '---') },
+                        {
+                            data: 'status',
+                            render: (status) => enumRequests['status'][status]
+                        },
+                        {
+                            data: 'supplies_user.person.name',
+                            render: (suppliesUserName) => (suppliesUserName ?? '---')
+                        },
                         {
                             data: 'cost_center_apportionment',
                             orderable: false,
@@ -935,7 +956,7 @@ $buyingStatus = [
                                 const $div = $(document.createElement('div')).addClass('tag-category');
 
                                 const costCenters = costCenter.map((element) => element.cost_center.name);
-                                if(costCenter.length <= 0) {
+                                if (costCenter.length <= 0) {
                                     return $div.append(`<span class="tag-category-item">---</span>`)[0].outerHTML;
                                 }
 
@@ -955,7 +976,7 @@ $buyingStatus = [
                             data: 'purchase_request_product',
                             orderable: false,
                             render: (purchase_request_product, _, row) => {
-                                if(!purchase_request_product.length) {
+                                if (!purchase_request_product.length) {
                                     return "---";
                                 }
 
@@ -970,14 +991,12 @@ $buyingStatus = [
                             }
                         },
                     ],
-                    buttons: [
-                        {
-                            extend: 'colvis',
-                            columns: ':not(.noColvis)',
-                            text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
-                            columnText: (dt, idx, title ) => title,
-                        }
-                    ],
+                    buttons: [{
+                        extend: 'colvis',
+                        columns: ':not(.noColvis)',
+                        text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
+                        columnText: (dt, idx, title) => title,
+                    }],
                 })
 
                 $filterClearBtn.on('click', () => clearFilters());
@@ -1000,7 +1019,7 @@ $buyingStatus = [
                     $suppliesUsers.val(allValues).trigger('change');
                 })
 
-                $allStatusCheckbox.on('click', (event) => $checkedStatusInputs.each((_, el) =>  $(el).prop('checked', true)))
+                $allStatusCheckbox.on('click', (event) => $checkedStatusInputs.each((_, el) => $(el).prop('checked', true)))
 
                 $desiredDate.on('change', (event) => handleDateChange(event, true));
                 $dateSince.add($dateUntil).on('change', (event) => handleDateChange(event, false));

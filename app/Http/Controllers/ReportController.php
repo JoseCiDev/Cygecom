@@ -62,8 +62,8 @@ class ReportController extends Controller
         $orderDirection = (string) $request->query('order', [0 => ['dir' => 'asc']])[0]['dir'];
         $status = (string) $request->query('status', false);
         $requestType = (string) $request->query('request-type', false);
-        $requestingUsersIds = (string) $request->query('requesting-users-ids', false);
-        $costCenterIds = (string) $request->query('cost-center-ids', false);
+        $requestingUsersIds = (array) $request->query('requesting-users-ids', []);
+        $costCenterIds = (array) $request->query('cost-center-ids', []);
         $dateSince = (string) $request->query('date-since', false);
         $dateUntil = (string) $request->query('date-until', now());
         $ownRequests = (string) $request->query('own-requests', true);
@@ -78,7 +78,7 @@ class ReportController extends Controller
 
                 $query = $this->reportService->whereInRequistingUserQuery($query, $requestingUsersIds, $ownRequests);
 
-                if ($costCenterIds) {
+                if (collect($costCenterIds)->isNotEmpty()) {
                     $query = $this->reportService->whereInCostCenterQuery($query, $costCenterIds);
                 }
 
@@ -128,12 +128,12 @@ class ReportController extends Controller
         $status = (string) $request->query('status', "pendente");
         $requestType = (string) $request->query('request-type', false);
         $requestingUsersIds = (array) $request->query('requesting-users-ids', []);
-        $costCenterIds = (string) $request->query('cost-center-ids', false);
+        $costCenterIds = (array) $request->query('cost-center-ids', []);
         $dateSince = (string) $request->query('date-since', false);
         $dateUntil = (string) $request->query('date-until', now());
-        $isSuppliesContract = $request->query('is-supplies-contract', null);
-        $desiredDate = $request->query('desired-date', null);
-        $suppliesUsers = $request->query('supplies-users', null);
+        $isSuppliesContract = (bool) $request->query('is-supplies-contract', null);
+        $desiredDate = (string) $request->query('desired-date', null);
+        $suppliesUsers = (array) $request->query('supplies-users', []);
         $currentPage = ($start / $length) + 1;
         $isAll = $length === -1;
 
@@ -148,7 +148,7 @@ class ReportController extends Controller
                 $query->where('purchase_requests.is_supplies_contract', $isSuppliesContract);
             }
 
-            if ($costCenterIds) {
+            if (collect($costCenterIds)->isNotEmpty()) {
                 $query = $this->reportService->whereInCostCenterQuery($query, $costCenterIds);
             }
 
@@ -160,8 +160,8 @@ class ReportController extends Controller
                 $query->where('purchase_requests.desired_date', $desiredDate);
             }
 
-            if ($suppliesUsers) {
-                $query->where('purchase_requests.supplies_user_id', $suppliesUsers);
+            if (collect($suppliesUsers)->isNotEmpty()) {
+                $query->whereIn('purchase_requests.supplies_user_id', $suppliesUsers);
             }
 
             $suppliesUsersQuery = clone ($query);

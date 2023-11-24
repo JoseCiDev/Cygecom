@@ -74,13 +74,11 @@ class ReportService
     }
 
     /**
-     * @param string $requestingUsersIds Recebe uma string com ids de usuários separados por vírgula. Exemplo: "1,2,3"
+     * @param array $requestingUsersIds Recebe um array com ids de usuários.
      */
-    public function whereInRequistingUserQuery(Builder $query, ?string $requestingUsersIds = '', $hasOwnRequests = true): Builder
+    public function whereInRequistingUserQuery(Builder $query, array $requestingUsersIds, $hasOwnRequests = true): Builder
     {
-        $requestingUsersIdsArray = explode(',', $requestingUsersIds);
-
-        $validIds = collect($requestingUsersIdsArray)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id);
+        $validIds = collect($requestingUsersIds)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id);
 
         if (empty($requestingUsersIds)) {
             $validIds = self::getRequistingUsers()->pluck('id');
@@ -116,13 +114,13 @@ class ReportService
     }
 
     /**
-     * @param string $costCenterIds Recebe uma string com ids de cost centers separados por vírgula. Exemplo: "1,2,3"
+     * @param Builder $query
+     * @param array $costCenterIds Recebe uma array com ids de cost centers.
+     * @return Builder
      */
-    public function whereInCostCenterQuery(Builder $query, ?string $costCenterIds = ''): Builder
+    public function whereInCostCenterQuery(Builder $query, array $costCenterIds): Builder
     {
-        $costCenterIdsArray = explode(',', $costCenterIds);
-
-        $validIds = collect($costCenterIdsArray)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id);
+        $validIds = collect($costCenterIds)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id);
 
         if ($validIds->isEmpty()) {
             throw new InvalidArgumentException('Array de ids de centros de custos inválido.');

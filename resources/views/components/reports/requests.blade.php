@@ -1,25 +1,25 @@
 @php
-use App\Enums\{PurchaseRequestType, PurchaseRequestStatus, PaymentMethod, PaymentTerm};
+    use App\Enums\{PurchaseRequestType, PurchaseRequestStatus, PaymentMethod, PaymentTerm};
 
-$currentProfile = auth()->user()->profile->name;
-$isAdmin = $currentProfile === 'admin';
-$isDirector = $currentProfile === 'diretor';
+    $currentProfile = auth()->user()->profile->name;
+    $isAdmin = $currentProfile === 'admin';
+    $isDirector = $currentProfile === 'diretor';
 
-$enumRequests = [
-    'type' => collect(PurchaseRequestType::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
-    'status' => collect(PurchaseRequestStatus::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
-    'paymentMethod' => collect(PaymentMethod::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
-    'paymentTerms' => collect(PaymentTerm::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
-];
+    $enumRequests = [
+        'type' => collect(PurchaseRequestType::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
+        'status' => collect(PurchaseRequestStatus::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
+        'paymentMethod' => collect(PaymentMethod::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
+        'paymentTerms' => collect(PaymentTerm::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
+    ];
 
-$costCenters = $requestingUsers
-    ->pluck('purchaseRequest')
-    ->collapse()
-    ->filter(fn($item) => $item->status->value !== PurchaseRequestStatus::RASCUNHO->value)
-    ->pluck('costCenterApportionment')
-    ->collapse()
-    ->pluck('costCenter')
-    ->unique();
+    $costCenters = $requestingUsers
+        ->pluck('purchaseRequest')
+        ->collapse()
+        ->filter(fn($item) => $item->status->value !== PurchaseRequestStatus::RASCUNHO->value)
+        ->pluck('costCenterApportionment')
+        ->collapse()
+        ->pluck('costCenter')
+        ->unique();
 @endphp
 
 <x-app>
@@ -29,7 +29,9 @@ $costCenters = $requestingUsers
             <div class="box box-color box-bordered">
 
                 <div class="row" style="margin: 0 0 30px">
-                    <div class="col-md-6" style="padding: 0"> <h1 class="page-title">Relatórios</h1> </div>
+                    <div class="col-md-6" style="padding: 0">
+                        <h1 class="page-title">Relatórios</h1>
+                    </div>
                 </div>
 
                 <div class="report-filters">
@@ -40,24 +42,25 @@ $costCenters = $requestingUsers
                             <div class="form-group">
                                 <label for="requisting-users-filter" class="regular-text cost-center-filter-label">Solicitante</label>
 
-                            <div class="select-filter-container" >
-                                    <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]"
-                                        multiple="multiple" class="select2-me" placeholder="Escolha uma ou mais opções">
+                                <div class="select-filter-container">
+                                    <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]" multiple="multiple" class="select2-me"
+                                        placeholder="Escolha uma ou mais opções">
                                         @foreach ($requestingUsers as $user)
-                                            <option value="{{$user->id}}">{{$user->person->name}}</option>
+                                            <option value="{{ $user->id }}">{{ $user->person->name }}</option>
                                         @endforeach
                                     </select>
                                     <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn" data-cy="filter-clear-users-btn">Limpar</button>
-                            </div>
+                                </div>
 
                             </div>
                         @endif
 
                         <div class="form-group">
-                            <label for="cost-center-filter" class="regular-text cost-center-filter-label">Centros de custos</label>
+                            <label for="cost-center-filter" class="regular-text cost-center-filter-label">Centros de
+                                custos</label>
 
                             <div class="select-filter-container">
-                                <select id="cost-center-filter" data-cy="cost-center-filter" name="cost-center-filter[]" multiple="multiple"  class="select2-me"
+                                <select id="cost-center-filter" data-cy="cost-center-filter" name="cost-center-filter[]" multiple="multiple" class="select2-me"
                                     placeholder="Escolha uma ou mais opções">
                                     @foreach ($costCenters as $costCenter)
                                         @php
@@ -99,11 +102,12 @@ $costCenters = $requestingUsers
                                 <div class="types">
                                     @foreach (PurchaseRequestType::cases() as $typeCase)
                                         <label class="checkbox-label secondary-text">
-                                            <input type="checkbox" name="request-type[]" class="request-type-checkbox" data-cy="request-type-{{ $typeCase->value }}" value="{{ $typeCase->value }}" checked>
+                                            <input type="checkbox" name="request-type[]" class="request-type-checkbox" data-cy="request-type-{{ $typeCase->value }}"
+                                                value="{{ $typeCase->value }}" checked>
                                             {{ $typeCase->label() }}
 
                                             @if ($typeCase->value === PurchaseRequestType::PRODUCT->value)
-                                                ( <label class="checkbox-label secondary-text" style="margin: 0">
+                                                (<label class="checkbox-label secondary-text" style="margin: 0">
                                                     <input type="checkbox" name="product-detail" data-cy="product-detail" class="product-detail" value="true">
                                                     Detalhes
                                                 </label>)
@@ -129,11 +133,11 @@ $costCenters = $requestingUsers
 
                                 @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
                                     <label class="checkbox-label secondary-text">
-                                        <input type="checkbox" name="status[]" data-cy="status-{{ $statusCase->value }}" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
+                                        <input type="checkbox" name="status[]" data-cy="status-{{ $statusCase->value }}" class="status-checkbox" value="{{ $statusCase->value }}"
+                                            @checked($isChecked)>
                                         {{ $statusCase->label() }}
                                     </label>
                                 @endif
-
                             @endforeach
                         </div>
                     </div>
@@ -163,20 +167,20 @@ $costCenters = $requestingUsers
                         <thead>
                             <tr>
                                 <th class="noColvis">Nº</th>
-                                <th >Tipo</th>
-                                <th >Solicitado em</th>
-                                <th >Data de atribuição</th>
-                                <th >Nome Serviço</th>
-                                <th >Contratado por</th>
-                                <th >Solicitante</th>
-                                <th >Solicitante sistema</th>
-                                <th >Status</th>
-                                <th >Responsável</th>
-                                <th >Centro de custo</th>
-                                <th >Fornecedor</th>
-                                <th >Forma Pgto.</th>
-                                <th >Condição Pgto.</th>
-                                <th >Valor total</th>
+                                <th>Tipo</th>
+                                <th>Solicitado em</th>
+                                <th>Data de atribuição</th>
+                                <th>Nome Serviço</th>
+                                <th>Contratado por</th>
+                                <th>Solicitante</th>
+                                <th>Solicitante sistema</th>
+                                <th>Status</th>
+                                <th>Responsável</th>
+                                <th>Centro de custo</th>
+                                <th>Fornecedor</th>
+                                <th>Forma Pgto.</th>
+                                <th>Condição Pgto.</th>
+                                <th>Valor total</th>
                             </tr>
                         </thead>
                         <tbody> {{-- Dinâmico --}} </tbody>
@@ -224,10 +228,10 @@ $costCenters = $requestingUsers
                             });
                         },
                         dates: () => $dateSince.add($dateUntil).val(null),
-                        productDetail: () =>$productDetail.prop('checked', false)
+                        productDetail: () => $productDetail.prop('checked', false)
                     }
 
-                    if(filter) {
+                    if (filter) {
                         clearOptions[filter]();
                         return;
                     }
@@ -238,8 +242,8 @@ $costCenters = $requestingUsers
                 const getUrlWithParams = (urlAjax) => {
                     const $checkedStatusInputs = $('.status-checkbox:checked');
                     const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
-                    const $requistingUsersIdsFilter = $('#requisting-users-filter').val() || "";
-                    const $costCenterIdsFilter = $('#cost-center-filter').val() || "";
+                    const requistingUsersIds = $('#requisting-users-filter').val() || "";
+                    const costCenterIds = $('#cost-center-filter').val() || "";
                     const $dateSince = $('#date-since').val();
                     const $dateUntil = $('#date-until').val();
                     const $ownRequests = $('#own-requests:checked').val() || false;
@@ -249,11 +253,18 @@ $costCenters = $requestingUsers
 
                     let updatedUrlAjax = `${urlAjax}?status=${statusValues.join(',')}`;
                     updatedUrlAjax += `&request-type=${requestTypeValues.join(',')}`;
-                    updatedUrlAjax += `&requesting-users-ids=${$requistingUsersIdsFilter}`;
-                    updatedUrlAjax += `&cost-center-ids=${$costCenterIdsFilter}`;
                     updatedUrlAjax += `&date-since=${$dateSince}`;
                     updatedUrlAjax += `&date-until=${$dateUntil}`;
                     updatedUrlAjax += `&own-requests=${$ownRequests}`;
+
+                    costCenterIds.forEach((costCenterId) => {
+                        updatedUrlAjax += `&cost-center-ids[]=${costCenterId}`;
+                    })
+
+                    requistingUsersIds.forEach((userId) => {
+                        updatedUrlAjax += `&requesting-users-ids[]=${userId}`;
+                    })
+
 
                     return updatedUrlAjax;
                 }
@@ -261,7 +272,9 @@ $costCenters = $requestingUsers
                 const downloadCsv = (csv) => {
                     const now = moment(new Date()).format('YYYY-MM-DD-HH-mm-ss-SSS');
                     const fileName = `relatorio-gecom-${now}.csv`;
-                    const blob = new Blob([csv], { type: "text/csv" });
+                    const blob = new Blob([csv], {
+                        type: "text/csv"
+                    });
                     const link = document.createElement("a");
                     link.href = window.URL.createObjectURL(blob);
                     link.download = fileName;
@@ -307,7 +320,7 @@ $costCenters = $requestingUsers
 
                     $reportsFilterBtn.add($filterClearAllBtn).css('cursor', isSearchFieldEmpty ? 'pointer' : 'help');
 
-                    if(!isSearchFieldEmpty) {
+                    if (!isSearchFieldEmpty) {
                         $reportFilters.on('click', focusOnSeachField)
                         return;
                     }
@@ -321,7 +334,7 @@ $costCenters = $requestingUsers
 
                 $reportsTable.on('draw.dt', () => {
                     const $productDetail = $('.product-detail:checked').val();
-                    if($productDetail) {
+                    if ($productDetail) {
                         showProductDetail()
                     }
                 });
@@ -373,25 +386,31 @@ $costCenters = $requestingUsers
                                         const requester = item.requester?.name || '---';
                                         const status = enumRequests['status'][item.status];
                                         const suppliesUserName = item.supplies_user?.person.name || '---';
-                                        const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name).join(', ');
+                                        const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name)
+                                            .join(', ');
 
                                         const supplierColumnMapping = {
-                                            product: () => item.purchase_request_product?.map((element) => element.supplier?.corporate_name),
+                                            product: () => item.purchase_request_product?.map((element) => element.supplier
+                                                ?.corporate_name),
                                             service: () => [item.service?.supplier?.corporate_name],
                                             contract: () => [item.contract?.supplier?.corporate_name],
                                         };
-                                        const suppliers = supplierColumnMapping[item.type]().filter((el) => el).join(', ') || '---';
+                                        const suppliers = supplierColumnMapping[item.type]().filter((el) => el)
+                                            .join(', ') || '---';
 
                                         const paymentInfo = item[item.type]?.payment_info || {};
 
-                                        const paymentMethod = paymentInfo.payment_method ;
+                                        const paymentMethod = paymentInfo.payment_method;
                                         const paymentMethodLabel = enumRequests['paymentMethod'][paymentMethod] || '---';
 
                                         const paymentTerms = paymentInfo?.payment_terms || '---';
                                         const paymentTermsLabel = enumRequests['paymentTerms'][paymentTerms] || '---';
 
                                         const amount = item[item.type]?.amount || item[item.type]?.price;
-                                        const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'});
+                                        const formatter = new Intl.NumberFormat('pt-BR', {
+                                            style: 'currency',
+                                            currency: 'BRL'
+                                        });
                                         const formattedAmount = amount ? formatter.format(amount) : '---';
 
                                         let rowData = [
@@ -414,19 +433,24 @@ $costCenters = $requestingUsers
                                             ]
                                         ];
 
-                                        if($productDetail && item.type === enumProductValue) {
-                                            rowData.push(['' ,'Nome do produto', 'Categoria', 'Quantidade', 'Cor', 'Model', 'Tamanho']);
+                                        if ($productDetail && item.type === enumProductValue) {
+                                            rowData.push(['', 'Nome do produto',
+                                                'Categoria',
+                                                'Quantidade', 'Cor',
+                                                'Model', 'Tamanho'
+                                            ]);
 
-                                            item.purchase_request_product.forEach((element) => {
-                                                const name = element.name;
-                                                const category = element.category.name;
-                                                const quantity = element.quantity;
-                                                const color = element.color || '---';
-                                                const model = element.model || '---';
-                                                const size = element.size || '---';
+                                            item.purchase_request_product
+                                                .forEach((element) => {
+                                                    const name = element.name;
+                                                    const category = element.category.name;
+                                                    const quantity = element.quantity;
+                                                    const color = element.color || '---';
+                                                    const model = element.model || '---';
+                                                    const size = element.size || '---';
 
-                                                rowData.push([id, name,category, quantity, color, model, size]);
-                                            })
+                                                    rowData.push([id, name, category, quantity, color, model, size]);
+                                                })
                                         }
 
                                         return rowData;
@@ -445,7 +469,8 @@ $costCenters = $requestingUsers
                                 },
                                 error: (response, textStatus, errorThrown) => {
                                     const title = "Houve uma falha na busca dos registros!";
-                                    const message = "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
+                                    const message =
+                                        "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
                                     $.fn.showModalAlert(title, message);
                                 },
                             });
@@ -456,7 +481,10 @@ $costCenters = $requestingUsers
                     paging: true,
                     processing: true,
                     serverSide: true,
-                    lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        [10, 25, 50, 100, 'Todos']
+                    ],
                     searching: true,
                     searchDelay: 1000,
                     language: {
@@ -466,8 +494,13 @@ $costCenters = $requestingUsers
                         infoEmpty: "Nenhum registro disponível",
                         infoFiltered: "(filtrado de _MAX_ registros no total)",
                         search: "Buscar:",
-                        paginate: { first: "Primeiro", last: "Último", next: "Próximo", previous: "Anterior" },
-                        processing:  $('.loader-box').show(),
+                        paginate: {
+                            first: "Primeiro",
+                            last: "Último",
+                            next: "Próximo",
+                            previous: "Anterior"
+                        },
+                        processing: $('.loader-box').show(),
                     },
                     ajax: {
                         url: urlAjax,
@@ -475,18 +508,40 @@ $costCenters = $requestingUsers
                         dataType: 'json',
                         error: (response, textStatus, errorThrown) => {
                             const title = "Houve uma falha na busca dos registros!";
-                            const message = "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
+                            const message =
+                                "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
                             $.fn.showModalAlert(title, message);
                         },
                         beforeSend: () => $('#reportsTable tbody').css('opacity', '0.2'),
                         complete: () => $('#reportsTable tbody').css('opacity', '1')
                     },
-                    columns: [
-                        {
+                    columns: [{
                             data: 'id',
                             render: (id, _, row) => {
                                 const type = row.type;
-                                if(type === enumProductValue) {
+                                if (type === enumProductValue) {
+                                    const rowProductDetail = row.purchase_request_product.map((element) => {
+                                        const {
+                                            name,
+                                            category,
+                                            quantity,
+                                            color,
+                                            model,
+                                            size
+                                        } = element;
+
+                                        let tr = "<tr>";
+                                        tr += `<td>${name}</td>`;
+                                        tr += `<td>${category.name}</td>`;
+                                        tr += `<td>${quantity}</td>`;
+                                        tr += `<td>${color || '---'}</td>`;
+                                        tr += `<td>${model || '---'}</td>`;
+                                        tr += `<td>${size || '---'}</td>`;
+                                        tr += "<tr>";
+
+                                        return tr;
+                                    }).join('')
+
                                     const productDetailContainer = `
                                         <table class="product-detail-container table table-hover table-nomargin table-bordered" style="display: none">
                                             <thead>
@@ -498,22 +553,9 @@ $costCenters = $requestingUsers
                                                 <th>Tamanho</th>
                                             </thead>
                                             <tbody>
-                                                ${row.purchase_request_product.map((element) => {
-                                                    const { name, category, quantity, color, model, size } = element;
-                                                    return `
-                                                    <tr>
-                                                        <td>${name}</td>
-                                                        <td>${category.name}</td>
-                                                        <td>${quantity}</td>
-                                                        <td>${color || '---'}</td>
-                                                        <td>${model || '---'}</td>
-                                                        <td>${size || '---'}</td>
-                                                    </tr>
-                                                    `;
-                                                }).join('')}
+                                                ${rowProductDetail}
                                             </tbody>
-                                        </table>
-                                    `;
+                                        </table>`;
 
                                     return id + ` ${productDetailContainer}`;
                                 }
@@ -521,7 +563,10 @@ $costCenters = $requestingUsers
                                 return id;
                             }
                         },
-                        { data: 'type', render: (type) => enumRequests['type'][type] },
+                        {
+                            data: 'type',
+                            render: (type) => enumRequests['type'][type]
+                        },
                         {
                             data: 'logs',
                             render: (logs, _, row) => {
@@ -530,52 +575,65 @@ $costCenters = $requestingUsers
                                     .find((item) => item.created_at)
                                     ?.created_at
 
-                            return firstPendingStatus ? moment(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
-                        }
-                    },
-                    {
-                        data: 'responsibility_marked_at',
-                        render: (responsibility_marked_at, _, row) =>  responsibility_marked_at ? moment.utc(responsibility_marked_at).utcOffset('-03:00').format('DD/MM/YYYY HH:mm:ss') : '---'
-                    },
-                    {
-                        data: 'type',
-                        orderable: false,
-                        render: (type, _, row) => {
-                            const serviceNameColumnMapping = {
-                                product: () => null,
-                                service: () => [row.service?.name],
-                                contract: () => [row.contract?.name],
-                            };
-
-                            const serviceName = serviceNameColumnMapping[type]()?.filter((el) => el);
-
-                            if (!serviceName) {
-                                return '---';
+                                return firstPendingStatus ? moment(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
                             }
+                        },
+                        {
+                            data: 'responsibility_marked_at',
+                            render: (responsibility_marked_at, _, row) => responsibility_marked_at ? moment.utc(responsibility_marked_at).utcOffset('-03:00')
+                                .format('DD/MM/YYYY HH:mm:ss') : '---'
+                        },
+                        {
+                            data: 'type',
+                            orderable: false,
+                            render: (type, _, row) => {
+                                const serviceNameColumnMapping = {
+                                    product: () => null,
+                                    service: () => [row.service?.name],
+                                    contract: () => [row.contract?.name],
+                                };
 
-                            return serviceName;
-                        }
-                    },
-                    {
-                        data: 'is_supplies_contract',
-                        render: (is_supplies_contract, _, row) => is_supplies_contract ? "Suprimentos" : "Área solicitante"
-                    },
-                    { data: 'user.person.name' },
-                    { data: 'requester', render: (requester, _, row) => requester ? requester.name : '---' },
-                    { data: 'status', render: (status) => enumRequests['status'][status] },
-                    { data: 'supplies_user.person.name', render: (suppliesUserName) => (suppliesUserName ?? '---') },
-                    {
-                        data: 'cost_center_apportionment',
-                        orderable: false,
-                        render: (costCenter) => {
-                            const $div = $(document.createElement('div')).addClass('tag-category');
+                                const serviceName = serviceNameColumnMapping[type]()?.filter((el) => el);
+
+                                if (!serviceName) {
+                                    return '---';
+                                }
+
+                                return serviceName;
+                            }
+                        },
+                        {
+                            data: 'is_supplies_contract',
+                            render: (is_supplies_contract, _, row) => is_supplies_contract ? "Suprimentos" : "Área solicitante"
+                        },
+                        {
+                            data: 'user.person.name'
+                        },
+                        {
+                            data: 'requester',
+                            render: (requester, _, row) => requester ? requester.name : '---'
+                        },
+                        {
+                            data: 'status',
+                            render: (status) => enumRequests['status'][status]
+                        },
+                        {
+                            data: 'supplies_user.person.name',
+                            render: (suppliesUserName) => (suppliesUserName ?? '---')
+                        },
+                        {
+                            data: 'cost_center_apportionment',
+                            orderable: false,
+                            render: (costCenter) => {
+                                const $div = $(document.createElement('div')).addClass('tag-category');
 
                                 const costCenters = costCenter.map((element) => element.cost_center.name);
-                                if(costCenter.length <= 0) {
+                                if (costCenter.length <= 0) {
                                     return $div.append(`<span class="tag-category-item">---</span>`)[0].outerHTML;
                                 }
 
-                                $div.append(costCenters.map((costCenter) => `<span class="tag-category-item">${costCenter}</span>`).join(''));
+                                $div.append(costCenters.map((costCenter) => `<span class="tag-category-item">${costCenter}</span>`)
+                                    .join(''));
                                 return $div[0].outerHTML;
                             }
                         },
@@ -593,7 +651,7 @@ $costCenters = $requestingUsers
 
                                 const suppliers = supplierColumnMapping[type]()?.filter((el) => el);
 
-                                if(!suppliers || suppliers.length === 0) {
+                                if (!suppliers || suppliers.length === 0) {
                                     return '---';
                                 }
 
@@ -611,7 +669,7 @@ $costCenters = $requestingUsers
                             orderable: false,
                             render: (type, _, row) => {
                                 const paymentInfo = row[type]?.payment_info || {};
-                                const paymentMethod = paymentInfo.payment_method ;
+                                const paymentMethod = paymentInfo.payment_method;
                                 const paymentMethodLabel = enumRequests['paymentMethod'][paymentMethod] ?? '---'
 
                                 return paymentMethodLabel;
@@ -637,20 +695,21 @@ $costCenters = $requestingUsers
                                     return 'R$ ---';
                                 }
 
-                                const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'});
+                                const formatter = new Intl.NumberFormat('pt-BR', {
+                                    style: 'currency',
+                                    currency: 'BRL'
+                                });
                                 const formattedAmount = formatter.format(amount);
                                 return formattedAmount;
                             }
                         },
                     ],
-                    buttons: [
-                        {
-                            extend: 'colvis',
-                            columns: ':not(.noColvis)',
-                            text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
-                            columnText: (dt, idx, title ) => title,
-                        }
-                    ],
+                    buttons: [{
+                        extend: 'colvis',
+                        columns: ':not(.noColvis)',
+                        text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
+                        columnText: (dt, idx, title) => title,
+                    }],
                 })
 
             });
