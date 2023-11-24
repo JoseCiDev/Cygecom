@@ -174,5 +174,5 @@
 
 @push('scripts')
     <script type="module" src="{{asset('js/supplies/modal-confirm-supplies-responsability.js')}}"></script>
-    <script type="module" src="{{asset('js/supplies/dataTables-column-search.js')}}"></script>
+    <script type="module" src="{{asset('js/utils/dataTables-column-search.js')}}"></script>
 @endpush
