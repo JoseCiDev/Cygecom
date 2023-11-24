@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PurchaseRequestStatus;
 use App\Enums\PurchaseRequestType;
 use App\Models\{PurchaseRequestFile, PurchaseRequest};
 use App\Providers\{EmailService, PurchaseRequestService};
@@ -17,7 +18,9 @@ class PurchaseRequestController extends Controller
     public function index(Request $request)
     {
         $statusData = $request->input('status');
-        $purchaseRequests = $this->purchaseRequestService->purchaseRequests();
+        $purchaseRequests = $this->purchaseRequestService->purchaseRequests()
+            ->whereNotIn('status', PurchaseRequestStatus::FINALIZADA)
+            ->whereNotIn('status', PurchaseRequestStatus::CANCELADA);
 
         if ($statusData) {
             $filteredRequests = $this->purchaseRequestService->requestsByStatus($statusData)->get();
@@ -35,7 +38,9 @@ class PurchaseRequestController extends Controller
     public function ownRequests(Request $request)
     {
         $statusData = $request->input('status');
-        $userRequests = $this->purchaseRequestService->purchaseRequestsByUser();
+        $userRequests = $this->purchaseRequestService->purchaseRequestsByUser()
+            ->whereNotIn('status', PurchaseRequestStatus::FINALIZADA)
+            ->whereNotIn('status', PurchaseRequestStatus::CANCELADA);
 
         if ($statusData) {
             $filteredRequests = $this->purchaseRequestService->purchaseRequestsByUserWithStatus($statusData);
