@@ -35,12 +35,6 @@ $(() => {
             }
         ],
 
-        pageLength: 25,
-        columnDefs: [{
-            orderable: false,
-            "ordering": false,
-        }],
-
         initComplete: function () {
             $.fn.setStorageDtColumnConfig();
             let index = 0;
