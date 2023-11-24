@@ -126,7 +126,10 @@
                                     </div>
                                 </td>
 
-                                <td class="hidden-1440">{{ \Carbon\Carbon::parse($contract->desired_date)->format('d/m/Y') }}</td>
+                                <td class="hidden-1440">
+                                    <span hidden> {{ \Carbon\Carbon::parse($contract->desired_date)->format('Y-m-d H:i:s') }}</span>
+                                    {{ \Carbon\Carbon::parse($contract->desired_date)->format('d/m/Y') }}
+                                </td>
 
                                 @php
                                     $showPurchaseOrder = isset($contract->purchase_order) && $contract->status === PurchaseRequestStatus::FINALIZADA;

@@ -127,7 +127,10 @@
                                     </div>
                                 </td>
 
-                                <td class="hidden-1440">{{ \Carbon\Carbon::parse($service->desired_date)->format('d/m/Y') }}</td>
+                                <td class="hidden-1440">
+                                    <span hidden> {{ \Carbon\Carbon::parse($service->desired_date)->format('Y-m-d H:i:s') }}</span>
+                                    {{ \Carbon\Carbon::parse($service->desired_date)->format('d/m/Y') }}
+                                </td>
 
                                 @php
                                     $showPurchaseOrder = isset($service->purchase_order) && $service->status === PurchaseRequestStatus::FINALIZADA;

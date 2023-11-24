@@ -143,6 +143,7 @@
                                 </td>
 
                                 <td class="hidden-1440">
+                                    <span hidden> {{ \Carbon\Carbon::parse($product->desired_date)->format('Y-m-d H:i:s') }}</span>
                                     {{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y') : '---' }}
                                 </td>
 
