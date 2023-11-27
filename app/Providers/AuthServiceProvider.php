@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\{User, Ability};
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -20,15 +21,19 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * Register any authentication / authorization services.
      */
-    public function boot(): void
+    public function boot()
     {
-        $abilities = Ability::all();
-        foreach ($abilities as $ability) {
-            Gate::define($ability->name, function (User $user) use ($ability) {
-                $hasProfileAbility = $user->profile->abilities->pluck('name')->contains($ability->name);
-                $hasUserAbility = $user->abilities->pluck('name')->contains($ability->name);
-                return $hasProfileAbility || $hasUserAbility;
-            });
+        try {
+            $abilities = Ability::all();
+            foreach ($abilities as $ability) {
+                Gate::define($ability->name, function (User $user) use ($ability) {
+                    $hasProfileAbility = $user->profile->abilities->pluck('name')->contains($ability->name);
+                    $hasUserAbility = $user->abilities->pluck('name')->contains($ability->name);
+                    return $hasProfileAbility || $hasUserAbility;
+                });
+            }
+        } catch (QueryException $e) {
+            return false;
         }
     }
 }

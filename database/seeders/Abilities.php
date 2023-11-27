@@ -47,7 +47,12 @@ class Abilities extends Seeder
             ['id' => 22, 'name' => 'get.request.product.register', 'description' => 'Acessar tela de registrar nova solicitação de produto'],
             ['id' => 23, 'name' => 'post.request.product.register', 'description' => 'Registrar nova solicitação de produto'],
             ['id' => 24, 'name' => 'post.request.product.update', 'description' => 'Atualizar nova solicitação de produto'],
-            ['id' => 25, 'name' => 'get.request.user.show.jsont.delete', 'description' => 'Excluir solicitação'],
+            ['id' => 25, 'name' => 'get.request.contract.register', 'description' => 'Acessar tela de registrar nova solicitação de serviço recorrente'],
+            ['id' => 26, 'name' => 'post.request.contract.register', 'description' => 'Registrar nova solicitação de serviço recorrente'],
+            ['id' => 27, 'name' => 'post.request.contract.update', 'description' => 'Atualizar nova solicitação de serviço recorrente'],
+            ['id' => 28, 'name' => 'get.request.edit', 'description' => 'Acessar tela de editação de solicitação'],
+            ['id' => 29, 'name' => 'delete.request.file.delete', 'description' => 'Excluir anexos da solicitação'],
+            ['id' => 30, 'name' => 'post.request.delete', 'description' => 'Excluir solicitação'],
             ['id' => 49, 'name' => 'get.api.product.suggestion.index', 'description' => 'API: Busca sugestões de produtos. É usado em novas solicitações'],
             ['id' => 50, 'name' => 'post.api.supplies.files.upload', 'description' => 'API: Upload de anexos da solicitação'],
 
