@@ -19,8 +19,10 @@ class ArrayOfIntenger implements ValidationRule
         }
 
         foreach ($value as $item) {
-            if (!is_int($item)) {
-                $fail('Cada item na lista de habilidades deve ser um número inteiro.');
+            $validIntenger = filter_var($item, FILTER_VALIDATE_INT);
+
+            if (!$validIntenger && $validIntenger <= 0) {
+                $fail('Cada item na lista de habilidades deve ser um número inteiro e maior que zero.');
             }
         }
     }
