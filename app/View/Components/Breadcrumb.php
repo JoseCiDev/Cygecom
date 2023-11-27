@@ -133,6 +133,10 @@ class Breadcrumb extends Component
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'reports.index.view', 'label' => 'Relatórios de solicitações'],
         ],
+        'abilities.index' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'abilities.index', 'label' => 'Dashboard de habilidades'],
+        ],
     ];
 
     public function __construct()
@@ -151,7 +155,8 @@ class Breadcrumb extends Component
             return;
         }
 
-        $this->items = $routeName !== 'home' ? $this->itemsMap[$routeName] : [];
+        $existBreadCrumb = collect($this->itemsMap)->has($routeName);
+        $this->items = $existBreadCrumb ? $this->itemsMap[$routeName] : [];
     }
 
     public function render()
