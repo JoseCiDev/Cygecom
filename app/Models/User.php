@@ -36,6 +36,11 @@ class User extends Authenticatable
         return $this->hasMany(PurchaseRequest::class);
     }
 
+    public function abilities()
+    {
+        return $this->belongsToMany(Ability::class, 'abilities_users', 'user_id', 'ability_id');
+    }
+
     public function deletedByUser()
     {
         return $this->belongsTo(User::class, 'deleted_by');

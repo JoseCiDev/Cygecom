@@ -13,4 +13,9 @@ class UserProfile extends Model
     {
         return $this->hasOne(User::class);
     }
+
+    public function abilities()
+    {
+        return $this->belongsToMany(Ability::class, 'abilities_profiles', 'user_profile_id', 'ability_id');
+    }
 }
