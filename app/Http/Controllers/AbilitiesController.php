@@ -41,6 +41,12 @@ class AbilitiesController extends Controller
         $abilities = $validated['abilities'] ?? [];
 
         $user = $this->userService->getUserById($userId);
+        $userProfileAbilities = $user->profile->abilities->pluck('id');
+
+        if ($userProfileAbilities->intersect($abilities)->isNotEmpty()) {
+            return response()->json(['error' => 'Não é possível adicionar habilidades já existentes no perfil do usuário.'], 400);
+        }
+
         $user->abilities()->sync($abilities);
 
         return response()->json($user, 200);
