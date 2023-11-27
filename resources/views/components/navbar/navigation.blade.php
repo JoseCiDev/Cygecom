@@ -94,7 +94,7 @@
 
         @can('get.abilities.index')
             <a href="{{ route('abilities.index') }}" class="btn btn-secondary bg-transparent text-light">
-                Gestão de perfis
+                Gestão de habilidades
             </a>
         @endcan
 
