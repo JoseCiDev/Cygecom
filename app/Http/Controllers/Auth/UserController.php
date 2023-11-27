@@ -88,7 +88,7 @@ class UserController extends Controller implements UserControllerInterface
         $approvers = $this->userService->getApprovers('user.update', $id);
         $costCenters = $this->userService->getCostCenters();
 
-        return view('auth.admin.user', compact('user','approvers','costCenters'));
+        return view('auth.admin.user', compact('user', 'approvers', 'costCenters'));
     }
 
     /**
@@ -146,5 +146,13 @@ class UserController extends Controller implements UserControllerInterface
         session()->flash('success', "Usuário deletado com sucesso!");
 
         return redirect()->route('users');
+    }
+
+    public function showJson(int $id)
+    {
+        $user = $this->userService->getUserById($id);
+        return response()->json([
+            'data' => $user,
+        ], 200);
     }
 }
