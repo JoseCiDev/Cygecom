@@ -22,7 +22,7 @@ import IMask from "imask";
 import moment from 'moment';
 window.moment = moment;
 
-import setColvisConfig from './colvis-custom-user-preference.js'
+import setColvisConfig from '../../public/js/utils/colvis-custom-user-preference.js';
 
 $.fn.imask = function(options) {
     const maskedElements = this.map((_, input) => new IMask(input, options)).toArray();
@@ -106,9 +106,8 @@ $(() => {
 
     const $badgeColumnsQtd = $(`<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"></span>`);
     setColvisConfig();
-    $('.dataTable').each((_, table) => $(table).DataTable({
+    $('.dataTable').each((_, table) => $(table).dataTable({
         dom: 'Blfrtip',
-        initComplete: () => $.fn.setStorageDtColumnConfig(),
         scrollY: '400px',
         scrollX: true,
         autoWidth: true,
@@ -133,6 +132,7 @@ $(() => {
                 text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
             }
         ],
+        initComplete: () => $.fn.setStorageDtColumnConfig(),
     }));
 
     $('.form-validate').each(function () {
