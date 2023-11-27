@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use App\Models\{User, Ability};
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -21,6 +22,13 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $abilities = Ability::all();
+        foreach ($abilities as $ability) {
+            Gate::define($ability->name, function (User $user) use ($ability) {
+                $hasProfileAbility = $user->profile->abilities->pluck('name')->contains($ability->name);
+                $hasUserAbility = $user->abilities->pluck('name')->contains($ability->name);
+                return $hasProfileAbility || $hasUserAbility;
+            });
+        }
     }
 }

@@ -17,34 +17,35 @@
                 </li>
                 <li>
                     <a data-cy="btn-logout" class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                         Sair
-                     </a>
+                        Sair
+                    </a>
                     <form id="logout-form" data-cy="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
                 </li>
             </ul>
         </div>
     </div>
 
-    <span id="menu-hambuguer-icon" > <i class="fa-solid fa-bars"></i> </span>
+    <span id="menu-hambuguer-icon"> <i class="fa-solid fa-bars"></i> </span>
     <div class='main-nav'>
         <span id="menu-hambuguer-icon-closer" style="display: none"> <i class="fa-solid fa-arrow-left-long"></i> </span>
 
-        @if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios' || $currentProfile === 'gestor_fornecedores')
+
+        @if (Gate::any(['get.users', 'get.suppliers']))
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Cadastros
                 </button>
                 <ul class="dropdown-menu">
-                    @if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios')
+                    @can('get.users')
                         <li>
                             <a href="{{ route('users') }}" data-cy="dropdown-cadastros-usuarios">Usuários</a>
                         </li>
-                    @endif
-                    @if ($currentProfile === 'admin' || $currentProfile === 'gestor_fornecedores')
+                    @endcan
+                    @can('get.suppliers')
                         <li>
                             <a href="{{ route('suppliers') }}" data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
                         </li>
-                    @endif
+                    @endcan
                 </ul>
             </div>
         @endif
@@ -54,29 +55,33 @@
                 Solicitações
             </button>
             <ul class="dropdown-menu">
-                <li><a href="{{ route('request.links') }}" data-cy="dropdown-solicitacoes-novas">Nova solicitação</a></li>
-                <li><a href="{{ route('requests.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas solicitações</a></li>
-                @if ($currentProfile === 'admin')
+                @can('get.request.links')
+                    <li><a href="{{ route('request.links') }}" data-cy="dropdown-solicitacoes-novas">Nova solicitação</a></li>
+                @endcan
+                @can('get.requests.own')
+                    <li><a href="{{ route('requests.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas solicitações</a></li>
+                @endcan
+                @can('get.requests')
                     <li><a href="{{ route('requests') }}" data-cy="dropdown-solicitacoes-gerais">Solicitações gerais</a></li>
-                @endif
+                @endcan
             </ul>
         </div>
 
-        @if ($currentProfile === 'admin' || $currentProfile === 'suprimentos_inp' || $currentProfile === 'suprimentos_hkm')
+        @can('get.supplies.index')
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Suprimentos
                 </button>
                 <ul class="dropdown-menu">
                     <li><a href="{{ route('supplies.index') }}" data-cy="dropdown-suprimentos-dashboard">Dashboard</a></li>
-                    @if ($currentProfile === 'admin')
+                    @if (Gate::any(['get.supplies.product', 'get.supplies.service', 'get.supplies.contract']))
                         <li><a href="{{ route('supplies.product') }}" data-cy="dropdown-suprimentos-produtos">Produtos</a></li>
                         <li><a href="{{ route('supplies.service') }}" data-cy="dropdown-suprimentos-servicos-pontuais">Serviços pontuais</a></li>
                         <li><a href="{{ route('supplies.contract') }}" data-cy="dropdown-suprimentos-servicos-recorrentes">Serviços recorrentes</a></li>
                     @endif
                 </ul>
             </div>
-        @endif
+        @endcan
 
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -87,11 +92,17 @@
             </ul>
         </div>
 
+        @can('get.abilities.index')
+            <a href="{{ route('abilities.index') }}" class="btn btn-secondary bg-transparent text-light">
+                Gestão de perfis
+            </a>
+        @endcan
+
     </div>
 
     <a data-cy="logo-gecom" href="/" id="brand"></a>
 </div>
 
 @push('scripts')
-    <script type="module" src="{{asset('js/navbar/mobile.js')}}"></script>
+    <script type="module" src="{{ asset('js/navbar/mobile.js') }}"></script>
 @endpush

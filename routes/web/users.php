@@ -2,15 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'profile:gestor_usuarios'])->group(function () {
+Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'user'], function () {
-        Route::get('register', [App\Http\Controllers\Auth\UserController::class, 'create'])->name('register');
-        Route::post('register', [App\Http\Controllers\Auth\UserController::class, 'store']);
-        Route::post('delete/{id}', [App\Http\Controllers\Auth\UserController::class, 'destroy']);
+        Route::middleware('can:get.register')->get('/register', [App\Http\Controllers\Auth\UserController::class, 'create'])->name('register');
+        Route::middleware('can:post.store')->post('/register', [App\Http\Controllers\Auth\UserController::class, 'store']);
+        Route::middleware('can:post.destroy')->post('/delete/{id}', [App\Http\Controllers\Auth\UserController::class, 'destroy']);
     });
 
     Route::group(['prefix' => 'users'], function () {
-        Route::get('/', [App\Http\Controllers\Auth\UserController::class, 'index'])->name('users');
-        Route::get('/{id}', [App\Http\Controllers\Auth\UserController::class, 'edit'])->name('user');
+        Route::middleware('can:get.users')->get('/', [App\Http\Controllers\Auth\UserController::class, 'index'])->name('users');
+        Route::middleware('can:get.user')->get('/{id}', [App\Http\Controllers\Auth\UserController::class, 'edit'])->name('user');
+        Route::middleware('can:post.user.update')->post('/users/{user}', [App\Http\Controllers\Auth\UserController::class, 'update'])->name('user.update');
     });
 });
