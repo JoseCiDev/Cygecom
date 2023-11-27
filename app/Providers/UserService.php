@@ -3,9 +3,7 @@
 namespace App\Providers;
 
 use App\Contracts\UserServiceInterface;
-use App\Models\CostCenter;
-use App\Models\{Person, Phone, User, UserCostCenterPermission, UserProfile};
-use Carbon\Carbon;
+use App\Models\{CostCenter, Person, Phone, User, UserCostCenterPermission, UserProfile};
 use Exception;
 use Illuminate\Support\Facades\{DB, Hash};
 use Illuminate\Support\ServiceProvider;
@@ -15,9 +13,10 @@ class UserService extends ServiceProvider implements UserServiceInterface
     public function getUserById(int $id): User
     {
         return User::with([
-            'person',
+            'abilities',
             'person.phone',
-            'profile', 'approver',
+            'profile.abilities',
+            'approver',
             'person.costCenter',
             'deletedByUser',
             'updatedByUser'
