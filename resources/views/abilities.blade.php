@@ -93,6 +93,9 @@
                     },
                 });
             });
+
+            const $tooltipTriggerList = $('[data-bs-toggle="tooltip"]');
+            $tooltipTriggerList.each((_, tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
         </script>
     @endpush
 </x-app>
