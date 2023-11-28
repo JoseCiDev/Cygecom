@@ -34,9 +34,20 @@ class UserController extends Controller implements UserControllerInterface
      */
     public function index(): View
     {
-        $users = $this->userService->getUsers();
+        $loggedId = auth()->user()->id;
+        $isAdmin = auth()->user()->profile->name === 'admin';
 
-        return view('auth.admin.users', ['users' => $users]);
+        $users = $this->userService->getUsers()->where('id', '!=', $loggedId);
+
+        if (!$isAdmin) {
+            $users->whereHas('profile', function ($query) {
+                return $query->where('name', '!=', 'admin');
+            });
+        }
+
+        $users = $users->get();
+
+        return view('users.index', ['users' => $users]);
     }
 
     /**
@@ -49,7 +60,7 @@ class UserController extends Controller implements UserControllerInterface
         $approvers = $this->userService->getApprovers('register');
         $costCenters = $this->userService->getCostCenters();
 
-        return view('auth.admin.register', compact('approvers', 'costCenters'));
+        return view('users.register', compact('approvers', 'costCenters'));
     }
 
     /**
@@ -88,7 +99,7 @@ class UserController extends Controller implements UserControllerInterface
         $approvers = $this->userService->getApprovers('user.update', $id);
         $costCenters = $this->userService->getCostCenters();
 
-        return view('auth.admin.user', compact('user', 'approvers', 'costCenters'));
+        return view('users.user', compact('user', 'approvers', 'costCenters'));
     }
 
     /**

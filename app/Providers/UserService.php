@@ -7,6 +7,7 @@ use App\Models\{CostCenter, Person, Phone, User, UserCostCenterPermission, UserP
 use Exception;
 use Illuminate\Support\Facades\{DB, Hash};
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserService extends ServiceProvider implements UserServiceInterface
 {
@@ -24,20 +25,19 @@ class UserService extends ServiceProvider implements UserServiceInterface
     }
 
     /**
-     * @return array Retorna um array com todos usuários, exceto logado.
+     * @return Builder Retorna um query builder de todos usuários, exceto excluídos.
      */
-    public function getUsers()
+    public function getUsers(): Builder
     {
-        $loggedId = auth()->user()->id;
-        $isAdmin = auth()->user()->profile->name === 'admin';
-
-        return User::with('person', 'profile')->where('id', '!=', $loggedId)->whereNull('deleted_at')
-            ->whereHas('profile', function ($query) use ($isAdmin) {
-                $query->where('name', '!=', 'admin');
-                if (!$isAdmin) {
-                    $query->where('name', '!=', 'diretor');
-                }
-            })->get();
+        return User::with([
+            'abilities',
+            'person.phone',
+            'profile.abilities',
+            'approver',
+            'person.costCenter',
+            'deletedByUser',
+            'updatedByUser'
+        ])->whereNull('deleted_at');
     }
 
     /**

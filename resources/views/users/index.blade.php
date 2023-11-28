@@ -18,15 +18,14 @@
                     <table style="width: 100%" class="table table-hover table-bordered dataTable" data-nosort="0" data-checkall="all" data-column_filter_dateformat="dd-mm-yy">
                         <thead>
                             <tr>
-                                <th class="col-md-3">Usuário</th>
-                                <th class="col-md-3">E-mail</th>
-                                <th class='hidden-350 col-md-2'>Perfil</th>
-                                <th class='hidden-1024 col-md-3'>Membro desde</th>
-                                <th class='hidden-480 col-md-1'>Opções</th>
+                                <th>Usuário</th>
+                                <th>E-mail</th>
+                                <th>Perfil</th>
+                                <th>Membro desde</th>
+                                <th>Opções</th>
                             </tr>
                         </thead>
                         <tbody>
-
                             @foreach ($users as $index => $user)
                                 <tr>
                                     <td>{{ $user->person->name }}</td>
