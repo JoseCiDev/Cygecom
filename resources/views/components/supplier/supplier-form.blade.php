@@ -60,20 +60,17 @@
             <div class="form-group">
                 <label for="market-type" class="regular-text">Tipo de mercado</label>
                 <fieldset id="market-type" data-rule-required="true">
-                    <div class="row">
-                        <input @checked($supplier?->market_type === 'Nacional') class="icheck-me" type="radio"
-                            name="market_type" id="nacional" data-cy="nacional" value="Nacional" data-skin="minimal" required>
-                        <label class="form-check-label secondary-text" for="nacional">Mercado nacional</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="market_type" id="nacional" data-cy="nacional" value="Nacional" required @checked($supplier?->market_type === 'Nacional')>
+                        <label class="form-check-label" for="nacional"> Mercado nacional </label>
                     </div>
-                    <div class="row">
-                        <input @checked($supplier?->market_type === 'Externo') class="icheck-me" type="radio"
-                            name="market_type" id="externo" data-cy="externo" value="Externo" data-skin="minimal" required>
-                        <label class="form-check-label secondary-text" for="externo">Mercado externo</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="market_type" id="externo" data-cy="externo" value="Externo" required @checked($supplier?->market_type === 'Externo')>
+                        <label class="form-check-label" for="externo"> Mercado externo </label>
                     </div>
-                    <div class="row">
-                        <input @checked($supplier?->market_type === 'Prospecção') class="icheck-me" type="radio"
-                            name="market_type" id="prospec" data-cy="prospec" value="Prospecção" data-skin="minimal" required>
-                        <label class="form-check-label secondary-text" for="prospec">Prospecção</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="market_type" id="prospec" data-cy="prospec" value="Prospecção" required @checked($supplier?->market_type === 'Prospecção')>
+                        <label class="form-check-label" for="prospec"> Prospecção </label>
                     </div>
                 </fieldset>
             </div>
@@ -81,21 +78,18 @@
         <div class="col-sm-3">
             <div class="form-group">
                 <label for="supplier-indication" class="regular-text">Indicação do fornecedor</label>
-                <fieldset id="supplier-indication" data-rule-required="true">
-                    <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'Matéria Prima') class="icheck-me" type="radio"
-                            name="supplier_indication" id="materia-prima" data-cy="materia-prima" value="Matéria Prima" data-skin="minimal" required>
-                        <label class="form-check-label secondary-text" for="materia-prima">Matéria-prima</label>
+                <fieldset id="market-type" data-rule-required="true">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="supplier_indication" id="materia-prima" data-cy="materia-prima" value="Matéria Prima" required @checked($supplier?->supplier_indication === 'Matéria Prima')>
+                        <label class="form-check-label" for="materia-prima"> Matéria-prima </label>
                     </div>
-                    <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'Serviço') class="icheck-me" type="radio"
-                            name="supplier_indication" id="servico" data-cy="servico" value="Serviço" data-skin="minimal" required>
-                        <label class="form-check-label secondary-text" for="servico">Serviço</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="supplier_indication" id="servico" data-cy="servico" value="Serviço" required @checked($supplier?->supplier_indication === 'Serviço')>
+                        <label class="form-check-label" for="servico"> Serviço </label>
                     </div>
-                    <div class="row">
-                        <input @checked($supplier?->supplier_indication === 'Ambos') class="icheck-me" type="radio"
-                            name="supplier_indication" id="ambos" value="Ambos" data-cy="ambos" data-skin="minimal" required>
-                        <label class="form-check-label secondary-text" for="ambos">Ambos</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="supplier_indication" id="ambos" data-cy="ambos" value="Ambos" required @checked($supplier?->supplier_indication === 'Ambos')>
+                        <label class="form-check-label" for="ambos"> Ambos </label>
                     </div>
                 </fieldset>
             </div>
@@ -245,7 +239,7 @@
         <div class="row">
             <div class="col-sm-3">
                 <label for="qualification" class="regular-text">Qualificação do fornecedor</label>
-                <select name="qualification" id="qualification" data-cy="qualification" class="chosen-select form-control">
+                <select name="qualification" id="qualification" data-cy="qualification" class='select2-me' style="width:100%;">
                     <option value="" selected >Selecione uma opção </option>
                     @foreach ($supplierQualificationStatus as $qualification)
                         <option value="{{ $qualification->value }}" @selected($supplier?->qualification === $qualification)>
@@ -273,77 +267,55 @@
 </form>
 
 @if ($isAPI)
-    <script src="{{ asset('js/purchase-request/register-supplier-by-api.js') }}"></script>
+    @push('scripts')
+        <script type="module" src="{{ asset('js/purchase-request/register-supplier-by-api.js') }}"></script>
+    @endpush
 @endif
 
-<script>
-    $(() => {
-        function setAddressRules() {
-            const isChecked = $(this).is(':checked');
-            const $address = $('#postal_code, #state, #city, #neighborhood, #street, #street_number');
-            isChecked ? $address.removeRequired() : $address.makeRequired();
-        }
-
-        $('#is-international-supplier').on('change', setAddressRules)
-    });
-</script>
-
-<script>
-    $(() => {
-        const $phoneNumber = $('.phone-number');
-        const $streetNumber = $('.street-number');
-        const $checkboxHasNoStreetNumber = $('.checkbox-has-no-street-number');
-
-        // checkbox sem número
-        $checkboxHasNoStreetNumber.on('click', function() {
-            const isChecked = $(this).is(':checked');
-            $streetNumber.data('rule-required', !isChecked);
-            $streetNumber.valid();
-            if (isChecked) {
-                $(this).data('last-value', $streetNumber.val());
-                $(this).closest('.form-group').removeClass('has-error');
-                $(this).closest('.form-group').removeClass('has-success');
+@push('scripts')
+    <script type="module">
+        $(() => {
+            function setAddressRules() {
+                const isChecked = $(this).is(':checked');
+                const $address = $('#postal_code, #state, #city, #neighborhood, #street, #street_number');
+                isChecked ? $address.removeRequired() : $address.makeRequired();
             }
-            const currentValue = isChecked ? null : $(this).data('last-value');
-            $streetNumber.prop('readonly', isChecked).val(currentValue).valid();
+
+            $('#is-international-supplier').on('change', setAddressRules)
         });
+    </script>
 
-        $streetNumber.imask({
-            mask: Number,
-        });
+    <script type="module">
+        $(() => {
+            const $phoneNumber = $('.phone-number');
+            const $streetNumber = $('.street-number');
+            const $checkboxHasNoStreetNumber = $('.checkbox-has-no-street-number');
 
-        // checkbox número internacional (mudança mascara)
-        const $checkboxInternationalNumber = $('#checkbox-international-number');
-        const checkboxInternationalNumberValue = $checkboxInternationalNumber.val();
-
-        let phoneMask;
-
-        if (checkboxInternationalNumberValue === "0") {
-            phoneMask = $phoneNumber.imask({
-                mask: [{
-                        mask: '(00) 0000-0000'
-                    },
-                    {
-                        mask: '(00) 00000-0000'
-                    }
-                ]
-            });
-        }
-
-        $checkboxInternationalNumber.on('click', function() {
-            const isChecked = $(this).is(':checked');
-            $phoneNumber.valid();
-
-            const valueToSend = isChecked ? "1" : "0";
-            $(this).val(valueToSend);
-
-            if (isChecked) {
-                if ($phoneNumber.val()) {
+            // checkbox sem número
+            $checkboxHasNoStreetNumber.on('click', function() {
+                const isChecked = $(this).is(':checked');
+                $streetNumber.data('rule-required', !isChecked);
+                $streetNumber.valid();
+                if (isChecked) {
+                    $(this).data('last-value', $streetNumber.val());
                     $(this).closest('.form-group').removeClass('has-error');
                     $(this).closest('.form-group').removeClass('has-success');
                 }
-                phoneMask.destroy();
-            } else {
+                const currentValue = isChecked ? null : $(this).data('last-value');
+                $streetNumber.prop('readonly', isChecked).val(currentValue).valid();
+            });
+
+            $streetNumber.imask({
+                mask: Number,
+            });
+
+            // checkbox número internacional (mudança mascara)
+            const $checkboxInternationalNumber = $('#checkbox-international-number');
+            const checkboxInternationalNumberValue = $checkboxInternationalNumber.val();
+
+            let phoneMask;
+
+            if (checkboxInternationalNumberValue === "0") {
                 phoneMask = $phoneNumber.imask({
                     mask: [{
                             mask: '(00) 0000-0000'
@@ -354,6 +326,32 @@
                     ]
                 });
             }
-        })
-    });
-</script>
+
+            $checkboxInternationalNumber.on('click', function() {
+                const isChecked = $(this).is(':checked');
+                $phoneNumber.valid();
+
+                const valueToSend = isChecked ? "1" : "0";
+                $(this).val(valueToSend);
+
+                if (isChecked) {
+                    if ($phoneNumber.val()) {
+                        $(this).closest('.form-group').removeClass('has-error');
+                        $(this).closest('.form-group').removeClass('has-success');
+                    }
+                    phoneMask.destroy();
+                } else {
+                    phoneMask = $phoneNumber.imask({
+                        mask: [{
+                                mask: '(00) 0000-0000'
+                            },
+                            {
+                                mask: '(00) 00000-0000'
+                            }
+                        ]
+                    });
+                }
+            })
+        });
+    </script>
+@endpush

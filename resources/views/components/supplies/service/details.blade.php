@@ -34,7 +34,8 @@
                     :request-id="$request->id"
                     :request-user-id="$request->user_id"
                     :request-status="$request->status"
-                    :amount="$request->service->price"/>
+                    :amount="$request->service->price"
+                    :purchase-order="$request->purchase_order" />
             </div>
         </div>
 
@@ -88,6 +89,10 @@
                     <br>
                     <h4 class="text-highlight"><strong>Responsável pela contratação:</strong>
                         {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }} </h4>
+                    <br>
+                    <h4 class="text-highlight"><strong>Ordem de compra:</strong>
+                        {{ $request->purchase_order ?? '---' }}
+                    </h4>
                     <br>
                 </div>
             </header>
@@ -190,7 +195,7 @@
 
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
-                                    <h4><i class="fa fa-money"></i> <strong>Centro de custo e rateio</strong></h4>
+                                    <h4><i class="fa-solid fa-money-bill"></i> <strong>Centro de custo e rateio</strong></h4>
                                     <hr>
                                     <p>
                                         <strong>Qtd. de centro de custos:</strong>
@@ -445,8 +450,8 @@
 
     </div>
 
-    <x-slot:scripts>
-        <script src="{{ asset('js/supplies/details-purchase-request-amount.js') }}"></script>
-    </x-slot:scripts>
+    @push('scripts')
+        <script type="module" src="{{ asset('js/supplies/details-purchase-request-amount.js') }}"></script>
+    @endpush
 
 </x-app>

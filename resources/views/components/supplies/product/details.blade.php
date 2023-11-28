@@ -22,8 +22,8 @@
         $request = null;
     }
 
-    $paymentTermProduct = $request->product->paymentInfo?->payment_terms;
-    $paymentMethod = $request->product?->paymentInfo?->payment_method;
+    $paymentTermProduct = $request?->product?->paymentInfo?->payment_terms;
+    $paymentMethod = $request?->product?->paymentInfo?->payment_method;
 @endphp
 
 <x-app>
@@ -35,7 +35,8 @@
                     :request-id="$request->id"
                     :request-user-id="$request->user_id"
                     :request-status="$request->status"
-                    :amount="$request->product->amount" />
+                    :amount="$request?->product?->amount"
+                    :purchase-order="$request->purchase_order" />
             </div>
         </div>
 
@@ -83,6 +84,10 @@
                         {{ $request->is_supplies_contract ? 'Suprimentos' : 'Área solicitante' }}
                     </h4>
                     <br>
+                    <h4 class="text-highlight"><strong>Ordem de compra:</strong>
+                        {{ $request->purchase_order ?? '---' }}
+                    </h4>
+                    <br>
                 </div>
             </header>
             <main>
@@ -104,8 +109,6 @@
                                         <p><strong>Motivo da solicitação:</strong> {{ $request->reason }} </p>
                                         <p><strong>Em qual sala/prédio ficará o produto:</strong>
                                             {{ $request->local_description }} </p>
-                                        <p><strong>Compra já realizada:</strong>
-                                            {{ $request->product->already_purchased ? 'Sim' : 'Não' }} </p>
                                         <p><strong>Observação:</strong> {{ $request->observation ?? '---' }}</p>
                                     </div>
                                 </div>
@@ -164,7 +167,7 @@
                             <div class="request-details-content">
                                 <div class="request-details-content-box">
                                     <h4>
-                                        <i class="fa fa-money"></i> <strong>Centro de custo e rateio</strong>
+                                        <i class="fa-solid fa-money-bill"></i> <strong>Centro de custo e rateio</strong>
                                     </h4>
                                     <hr>
                                     <p>
@@ -219,7 +222,7 @@
                                         <div class="col-sm-6">
                                             <p>
                                                 <strong>Nº de parcelas:</strong>
-                                                {{ $request->product->quantity_of_installments ?? '---' }}
+                                                {{ $request?->product?->quantity_of_installments ?? '---' }}
                                             </p>
                                             <p>
                                                 <strong>Valor total:</strong>
@@ -244,34 +247,35 @@
                                 </div>
 
                                 <div class="request-details-content-box-product">
-                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong>
-                                            Parcelas</strong></h4>
-                                    @foreach ($request->product->installments as $installmentIndex => $installment)
-                                        <div class="request-details-content-box-product-installment">
-                                            <div class="row">
-                                                <p class="col-xs-3">
-                                                    <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
-                                                </p>
-                                                <p class="col-xs-3">
-                                                    <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
-                                                </p>
-                                                <p class="col-xs-6">
-                                                    <strong>Observação do pagamento:</strong>
-                                                    <span>{{ $installment->observation ?? '---' }}</span>
-                                                </p>
-                                            </div>
-                                            <div class="row">
-                                                <p class="col-xs-3">
-                                                    <strong>Valor:</strong> R$ {{ $installment->value }}
-                                                </p>
-                                                <p class="col-xs-3">
-                                                    <strong>Vencimento:</strong>
-                                                    {{ $installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---' }}
-                                                </p>
+                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
+                                    @if ($request?->product?->installments)
+                                        @foreach ($request->product->installments as $installmentIndex => $installment)
+                                            <div class="request-details-content-box-product-installment">
+                                                <div class="row">
+                                                    <p class="col-xs-3">
+                                                        <strong>Parcela nº:</strong> {{ $installmentIndex + 1 }}
+                                                    </p>
+                                                    <p class="col-xs-3">
+                                                        <strong>Quitação:</strong> {{ $installment->status ?? '---' }}
+                                                    </p>
+                                                    <p class="col-xs-6">
+                                                        <strong>Observação do pagamento:</strong>
+                                                        <span>{{ $installment->observation ?? '---' }}</span>
+                                                    </p>
+                                                </div>
+                                                <div class="row">
+                                                    <p class="col-xs-3">
+                                                        <strong>Valor:</strong> R$ {{ $installment->value }}
+                                                    </p>
+                                                    <p class="col-xs-3">
+                                                        <strong>Vencimento:</strong>
+                                                        {{ $installment->expire_date ? \Carbon\Carbon::parse($installment->expire_date)->format('d/m/Y') : '---' }}
+                                                    </p>
 
+                                                </div>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
 
@@ -492,8 +496,8 @@
 
     </div>
 
-    <x-slot:scripts>
-        <script src="{{ asset('js/supplies/details-purchase-request-amount.js') }}"></script>
-    </x-slot:scripts>
+    @push('scripts')
+        <script type="module" src="{{ asset('js/supplies/details-purchase-request-amount.js') }}"></script>
+   @endpush
 
 </x-app>

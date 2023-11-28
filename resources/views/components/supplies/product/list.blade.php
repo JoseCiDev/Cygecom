@@ -3,6 +3,14 @@
     use App\Models\PurchaseRequestProduct;
 @endphp
 
+@push('styles')
+    <style>
+        input.search-button {
+            padding: 3px;
+        }
+    </style>
+@endpush
+
 <div class="row">
     <div class="col-sm-12">
         <div class="box box-color box-bordered">
@@ -41,20 +49,34 @@
                     </div>
                 </div>
 
-                <table class="table table-hover table-nomargin table-bordered dataTable"
+                <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered" style="width:100%"
                     data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                     <thead>
+                        <tr class="search-bar">
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
                         <tr>
-                            <th>Nº</th>
+                            <th class="noColvis">Nº</th>
                             <th>Solicitante</th>
                             <th>Responsável</th>
-                            <th class="col-sm-3">Categorias</th>
+                            <th>Categorias</th>
                             <th>Status</th>
-                            <th>Condição de pgto.</th>
-                            <th class="hidden-1024">Contratação por</th>
-                            <th class="hidden-1280">CNPJ</th>
-                            <th class="hidden-1440">Data desejada</th>
-                            <th>Ações</th>
+                            <th>Fornecedor(es)</th>
+                            <th>Contratação por</th>
+                            <th>Empresa</th>
+                            <th>Data desejada</th>
+                            <th>Ord. compra</th>
+                            <th class="noColvis ignore-search">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,7 +93,7 @@
                                 ];
                             @endphp
                             <tr>
-                                <td>{{ $product->id }}</td>
+                                <td style="min-width: 90px;">{{ $product->id }}</td>
                                 <td>{{ $product->user->person->name }}</td>
                                 <td>{{ $product->suppliesUser?->person->name ?? '---' }}</td>
                                 <td>
@@ -84,7 +106,23 @@
                                     </div>
                                 </td>
                                 <td>{{ $product->status->label() }}</td>
-                                <td>{{ $product->product->paymentInfo?->payment_terms?->label() ?? '---' }}</td>
+                                <td>
+                                    <div class="tag-list">
+                                        @foreach ($suppliers as $index => $supplier)
+                                            @php
+                                                $cnpjFormatted = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier?->cpf_cnpj);
+                                                $fullSupplier = $supplier?->corporate_name . ' - ' . $cnpjFormatted;
+                                            @endphp
+                                            @if ($supplier)
+                                                <span class="tag-list-item">{{ $fullSupplier }}</span>
+                                                <!-- APENAS PARA PODER BUSCAR PELO CNPJ SEM FORMATAÇÃO-->
+                                                <span style="display: none">{{ $supplier?->cpf_cnpj }}</span>
+                                            @else
+                                                ---
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </td>
                                 <td class="hidden-1024">
                                     {{ $product->is_supplies_contract ? 'Suprimentos' : 'Solicitante' }}</td>
 
@@ -92,10 +130,12 @@
                                     <div class="tag-list">
                                         @forelse ($companies as $company)
                                             @php
-                                                $cnpj = $company->cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $company->cnpj) : 'CNPJ indefinido';
-                                                $concat = $company->name . ' - ' . $cnpj;
+                                                $cnpjFormatted = $company->cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $company->cnpj) : 'CNPJ indefinido';
+                                                $fullCompany = $company->name . ' - ' . $cnpjFormatted;
                                             @endphp
-                                            <span class="tag-list-item">{{ $concat }}</span>
+                                            <span class="tag-list-item">{{ $fullCompany }}</span>
+                                            <!-- APENAS PARA PODER BUSCAR PELO CNPJ SEM FORMATAÇÃO-->
+                                            <span style="display: none">{{ $company->cnpj }}</span>
                                         @empty
                                             ---
                                         @endforelse
@@ -103,15 +143,21 @@
                                 </td>
 
                                 <td class="hidden-1440">
+                                    <span hidden> {{ \Carbon\Carbon::parse($product->desired_date)->format('Y-m-d H:i:s') }}</span>
                                     {{ $product->desired_date ? \Carbon\Carbon::parse($product->desired_date)->format('d/m/Y') : '---' }}
                                 </td>
+
+                                @php
+                                    $showPurchaseOrder = isset($product->purchase_order) && $product->status === PurchaseRequestStatus::FINALIZADA;
+                                @endphp
+                                <td>{{ $showPurchaseOrder ? $product->purchase_order : '---' }}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
                                     <button
                                         data-modal-name="{{ 'Analisando Solicitação de Produto - Nº ' . $product->id }}"
                                         data-id="{{ $product->id }}" data-request="{{ json_encode($modalData) }}"
-                                        rel="tooltip" title="Analisar" class="btn" data-toggle="modal"
-                                        data-target="#modal-supplies" data-cy="btn-analisar-{{ $index }}">
+                                        rel="tooltip" title="Analisar" class="btn" data-bs-toggle="modal"
+                                        data-bs-target="#modal-supplies" data-cy="btn-analisar-{{ $index }}">
                                         <i class="fa fa-search"></i>
                                     </button>
                                     @php
@@ -136,4 +182,7 @@
     </div>
 </div>
 
-<script src="{{ asset('js/supplies/modal-confirm-supplies-responsability.js') }}"></script>
+@push('scripts')
+    <script type="module" src="{{ asset('js/supplies/modal-confirm-supplies-responsability.js') }}"></script>
+    <script type="module" src="{{asset('js/utils/dataTables-column-search.js')}}"></script>
+@endpush

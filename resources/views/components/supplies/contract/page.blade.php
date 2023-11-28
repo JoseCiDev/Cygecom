@@ -1,6 +1,6 @@
 <x-app>
-    <x-ModalDelete/>
-    <x-ModalSupplies/>
+    <x-modals.delete />
+    <x-modals.supplies/>
 
     <div class="row" style="margin-bottom: 15px">
         <div class="col-md-12 text-left">

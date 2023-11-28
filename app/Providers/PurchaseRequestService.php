@@ -304,7 +304,7 @@ class PurchaseRequestService extends ServiceProvider
     {
         return DB::transaction(function () use ($id, $data, $isSuppliesUpdate, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, $isSuppliesUpdate, $files);
-            $this->saveProducts($purchaseRequest->id, $data, $purchaseRequest->product->id);
+            $this->saveProducts($purchaseRequest->id, $data, $purchaseRequest?->product?->id);
 
             return $purchaseRequest;
         });
@@ -446,27 +446,29 @@ class PurchaseRequestService extends ServiceProvider
      */
     private function saveProducts(int $purchaseRequestId, array $data, ?int $productId = null)
     {
-        $productData = $data['product'];
-        $productInstallmentsData = $productData['product_installments'] ?? [];
-        $paymentInfoData = $productData['payment_info'] ?? [];
-        if (isset($productData['amount'])) {
-            $productData['amount'] = number_format($productData['amount'], 2, '.', '');
-        }
+        if (collect($data)->has('product')) {
+            $productData = $data['product'];
+            $productInstallmentsData = $productData['product_installments'] ?? [];
+            $paymentInfoData = $productData['payment_info'] ?? [];
+            if (isset($productData['amount'])) {
+                $productData['amount'] = number_format($productData['amount'], 2, '.', '');
+            }
 
-        if (!empty(array_filter($paymentInfoData))) {
-            $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
-            $productData['payment_info_id'] = $paymentInfoResponse->id;
-        }
+            if (!empty(array_filter($paymentInfoData))) {
+                $paymentInfoResponse = PaymentInfo::updateOrCreate(['id' => $paymentInfoData['id']], $paymentInfoData);
+                $productData['payment_info_id'] = $paymentInfoResponse->id;
+            }
 
-        $product = Product::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'id' => $productId], $productData);
+            $product = Product::updateOrCreate(['purchase_request_id' => $purchaseRequestId, 'id' => $productId], $productData);
 
-        $existingInstallments = ProductInstallment::where('product_id', $product->id)->get();
+            $existingInstallments = ProductInstallment::where('product_id', $product->id)->get();
 
-        $this->updateNumberOfInstallments($existingInstallments, $productInstallmentsData);
+            $this->updateNumberOfInstallments($existingInstallments, $productInstallmentsData);
 
-        foreach ($productInstallmentsData as $installment) {
-            $installment['product_id'] = $product->id;
-            ProductInstallment::updateOrCreate(['id' => $installment['id']], $installment);
+            foreach ($productInstallmentsData as $installment) {
+                $installment['product_id'] = $product->id;
+                ProductInstallment::updateOrCreate(['id' => $installment['id']], $installment);
+            }
         }
 
         if (!isset($data['purchase_request_products'])) {

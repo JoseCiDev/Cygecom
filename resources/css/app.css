@@ -1,0 +1,24 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:800,700,600,500,400,300);
+
+@import "bootstrap";
+@import "select2";
+
+@import './main.css';
+
+/* Custom */
+@import './style.css';
+@import './navigation.css';
+@import './select2-custom.css';
+@import './dataTable-custom.css';
+@import './supplies.css';
+@import './custom-breadcrumb.css';
+@import './purchase-request/product-suggestion-autocomplete.css';
+@import './purchase-request/log.css';
+@import './purchase-request/request-dashboard.css';
+@import './supplies/form-status-filter.css';
+@import './supplies/category-column-tags.css';
+@import './supplies/dashboard.css';
+@import './supplies/details.css';
+@import './supplies/dataTables-column-search.css';
+@import './loader.css';
+@import './reports/report-table-list.css';

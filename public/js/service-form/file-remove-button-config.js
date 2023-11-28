@@ -38,23 +38,9 @@ $(() => {
     $fileRemoveButtons.on('click', function(event) {
         event.preventDefault();
 
-        bootbox.confirm({
-            title: 'Deseja realmente excluir o anexo ?',
-            message: "Este anexo será excluído. Essa ação não pode ser desfeita.",
-            buttons: {
-                confirm: {
-                    label: 'Sim, excluir arquivo',
-                    className: 'btn-danger'
-                },
-                cancel: {
-                    label: 'Cancelar',
-                }
-            },
-            callback: function(result) {
-                if(result) {
-                    removeFile(event);
-                }
-            }
-        });
+        const title = 'Deseja realmente excluir o anexo ?';
+        const message = 'Este anexo será excluído. Essa ação não pode ser desfeita.';
+
+        $.fn.showModalAlert(title, message, () => removeFile(event))
     });
 });
