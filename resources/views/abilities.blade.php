@@ -14,6 +14,13 @@
             .abilities #accordionFlushProfiles .accordion-item .accordion-collapse {
                 padding-bottom: 50px;
             }
+
+            .tag-list-item {
+                cursor: help;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                max-width: 250px;
+            }
         </style>
     @endpush
 
@@ -43,8 +50,9 @@
                             <td>
                                 <div class="tag-list">
                                     @forelse ($user->abilities as $ability)
-                                        <span style="cursor: help" class="tag-list-item" data-bs-toggle='tooltip' data-bs-placement='top'
-                                            data-bs-title="{{ $ability->description }}">{{ $ability->name }}</span>
+                                        <span class="tag-list-item" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->description }}">
+                                            {{ $ability->description }}
+                                        </span>
                                     @empty
                                         Padrões do perfil
                                     @endforelse
@@ -84,9 +92,6 @@
                         }
                     },
                 });
-
-                const $tooltipTriggerList = $('[data-bs-toggle="tooltip"]');
-                $tooltipTriggerList.each((_, tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
             });
         </script>
     @endpush
