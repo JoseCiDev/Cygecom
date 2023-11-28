@@ -584,7 +584,7 @@
                     <div class="productivity-report-item-info-bottom">
                         <div class="productivity-report-item-info-bottom-row">
                             <span id="buying-status-qtd" class="productivity-report-item-info-bottom-row-text-qtd">
-                                ---
+                                0
                             </span>
                             <p class="productivity-report-item-info-bottom-row-text">
                                 em processo de compra
@@ -592,7 +592,7 @@
                         </div>
                         <div class="productivity-report-item-info-bottom-row">
                             <span id="requests-by-users-qtd" class="productivity-report-item-info-bottom-row-text-qtd">
-                                ---
+                                0
                             </span>
                             <p class="productivity-report-item-info-bottom-row-text">
                                 contratações pelo solicitante
@@ -600,7 +600,7 @@
                         </div>
                         <div class="productivity-report-item-info-bottom-row">
                             <span id="finished-requests-qtd" class="productivity-report-item-info-bottom-row-text-qtd">
-                                ---
+                                0
                             </span>
                             <p class="productivity-report-item-info-bottom-row-text">
                                 finalizadas que foram pendentes no mesmo período
