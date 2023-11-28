@@ -74,11 +74,12 @@
                         <ul class="list-group" id="user-abilities">
                             @foreach ($abilities as $ability)
                                 <li class="list-group-item">
-                                    <div class="form-check form-switch">
+                                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top'
+                                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
                                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
                                             value="{{ $ability->id }}">
                                         <label class="form-check-label" for="ability-{{ $ability->id }}">
-                                            ID:{{ $ability->id }} {{ $ability->name }} - {{ $ability->description }}
+                                            {{ $ability->description }}
                                         </label>
                                     </div>
                                 </li>
@@ -182,13 +183,9 @@
                         $currentElement.prop('checked', isProfileAbility);
 
                         if (isProfileAbility) {
-                            $listGroupItem.attr('data-bs-toggle', 'tooltip');
-                            $listGroupItem.attr('data-bs-placement', 'top');
-                            $listGroupItem.attr('data-bs-title', 'Habilidade de perfil. Não é possível modificar.');
+                            $listGroupItem.hide();
                         } else {
-                            $listGroupItem.removeAttr('data-bs-toggle');
-                            $listGroupItem.removeAttr('data-bs-placement');
-                            $listGroupItem.removeAttr('data-bs-title');
+                            $listGroupItem.show();
                         }
 
                         if (isUserAbility) {

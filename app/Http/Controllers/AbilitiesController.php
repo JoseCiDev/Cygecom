@@ -19,7 +19,10 @@ class AbilitiesController extends Controller
     {
         $abilities = Ability::with('users', 'profiles')->get();
         $profiles = UserProfile::with('abilities', 'user.person')->get();
-        $users = User::with('abilities', 'person')->whereNull('deleted_at')->get();
+        $users = $this->userService->getUsers()
+            ->whereHas('profile', function ($query) {
+                return $query->where('name', '!=', 'admin');
+            })->get();
 
         $params = [
             'abilities' => $abilities,
