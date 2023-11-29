@@ -1,5 +1,6 @@
 <?php
 
+use Dotenv\Dotenv;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 
@@ -32,6 +33,21 @@ if (file_exists($maintenance = __DIR__ . '/../storage/framework/maintenance.php'
 */
 
 require __DIR__ . '/../vendor/autoload.php';
+
+if (str_contains($_SERVER['REQUEST_URI'], '/phpinfo')) {
+    $hash = $_POST['hash'] ?? null;
+    $isAuthorized = $hash === Dotenv::createImmutable('../')->load()['PHP_INFO_HASH'];
+
+    if ($hash && $isAuthorized) {
+        phpinfo();
+        exit;
+    }
+
+    $_GET['unauthorized'] = $hash !== null;
+
+    require __DIR__ . '/info.php';
+    exit;
+}
 
 /*
 |--------------------------------------------------------------------------
