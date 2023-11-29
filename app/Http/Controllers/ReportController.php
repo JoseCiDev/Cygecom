@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PurchaseRequestStatus;
+use App\Enums\{PurchaseRequestType, PurchaseRequestStatus};
 use App\Providers\{UserService, PurchaseRequestService};
 use App\Services\{ReportService, PersonService};
 use Carbon\Carbon;
@@ -60,8 +60,8 @@ class ReportController extends Controller
         $searchValue = (string) $request->query('search', ['value' => null])['value'];
         $orderColumnIndex = (int) $request->query('order', [0 => ['column' => 0]])[0]['column'];
         $orderDirection = (string) $request->query('order', [0 => ['dir' => 'asc']])[0]['dir'];
-        $status = (string) $request->query('status', false);
-        $requestType = (string) $request->query('request-type', false);
+        $status = (array) $request->query('status', collect(PurchaseRequestStatus::cases())->map(fn ($el) => $el->value)->toArray());
+        $requestType = (array) $request->query('request-type', collect(PurchaseRequestType::cases())->map(fn ($el) => $el->value)->toArray());
         $requestingUsersIds = (array) $request->query('requesting-users-ids', []);
         $costCenterIds = (array) $request->query('cost-center-ids', []);
         $dateSince = (string) $request->query('date-since', false);
@@ -86,9 +86,7 @@ class ReportController extends Controller
                     $query = $this->reportService->whereInRequestTypeQuery($query, $requestType);
                 }
 
-                if ($status) {
-                    $query = $this->reportService->whereInStatusQuery($query, $status);
-                }
+                $query = $this->reportService->whereInStatusQuery($query, $status);
             }
 
             $query->select('purchase_requests.*', DB::raw('COALESCE(services.price, contracts.amount, products.amount) AS total_amount'))
@@ -125,8 +123,8 @@ class ReportController extends Controller
         $length = (int) $request->query('length', 10);
         $orderColumnIndex = (int) $request->query('order', [0 => ['column' => 0]])[0]['column'];
         $orderDirection = (string) $request->query('order', [0 => ['dir' => 'asc']])[0]['dir'];
-        $status = (string) $request->query('status', "pendente");
-        $requestType = (string) $request->query('request-type', false);
+        $status = (array) $request->query('status', [PurchaseRequestStatus::PENDENTE->value]);
+        $requestType = (array) $request->query('request-type', collect(PurchaseRequestType::cases())->map(fn ($el) => $el->value)->toArray());
         $requestingUsersIds = (array) $request->query('requesting-users-ids', []);
         $costCenterIds = (array) $request->query('cost-center-ids', []);
         $dateSince = (string) $request->query('date-since', false);

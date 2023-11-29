@@ -678,6 +678,7 @@
                 }
 
                 const getUrlWithParams = (urlAjax) => {
+                    let updatedUrlAjax = urlAjax + "?";
                     const $checkedStatusInputs = $('.status-checkbox:checked');
                     const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
                     const requistingUsersIds = $('#requisting-users-filter').val() || "";
@@ -688,11 +689,6 @@
                     const $isSuppliesContract = $('.is-supplies-contract:checked').val();
                     const $desiredDate = $('#desired-date').val();
 
-                    const statusValues = $checkedStatusInputs.map((index, element) => element.value).toArray();
-                    const requestTypeValues = $checkedRequestTypeInputs.map((index, element) => element.value).toArray();
-
-                    let updatedUrlAjax = `${urlAjax}?status=${statusValues.join(',')}`;
-                    updatedUrlAjax += `&request-type=${requestTypeValues.join(',')}`;
                     updatedUrlAjax += `&date-since=${$dateSince}`;
                     updatedUrlAjax += `&date-until=${$dateUntil}`;
                     updatedUrlAjax += `&desired-date=${$desiredDate}`;
@@ -701,17 +697,11 @@
                         updatedUrlAjax += `&is-supplies-contract=${$isSuppliesContract}`;
                     }
 
-                    suppliesUsers.forEach((userId) => {
-                        updatedUrlAjax += `&supplies-users[]=${userId}`;
-                    })
-
-                    costCenterIdsFilter.forEach((costCenterId) => {
-                        updatedUrlAjax += `&cost-center-ids[]=${costCenterId}`;
-                    })
-
-                    requistingUsersIds.forEach((userId) => {
-                        updatedUrlAjax += `&requesting-users-ids[]=${userId}`;
-                    })
+                    $checkedStatusInputs.each((_, element) => updatedUrlAjax += `&status[]=${element.value}`);
+                    $checkedRequestTypeInputs.each((_, element) => updatedUrlAjax += `&request-type[]=${element.value}`);
+                    $.each(suppliesUsers, (_, userId) => updatedUrlAjax += `&supplies-users[]=${userId}`);
+                    $.each(costCenterIdsFilter, (_, costCenterId) => updatedUrlAjax += `&cost-center-ids[]=${costCenterId}`);
+                    $.each(requistingUsersIds, (_, userId) => updatedUrlAjax += `&requesting-users-ids[]=${userId}`);
 
                     return updatedUrlAjax;
                 }

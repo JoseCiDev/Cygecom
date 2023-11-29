@@ -240,6 +240,7 @@
                 }
 
                 const getUrlWithParams = (urlAjax) => {
+                    let updatedUrlAjax = urlAjax + "?";
                     const $checkedStatusInputs = $('.status-checkbox:checked');
                     const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
                     const requistingUsersIds = $('#requisting-users-filter').val() || "";
@@ -248,23 +249,14 @@
                     const $dateUntil = $('#date-until').val();
                     const $ownRequests = $('#own-requests:checked').val() || false;
 
-                    const statusValues = $checkedStatusInputs.map((index, element) => element.value).toArray();
-                    const requestTypeValues = $checkedRequestTypeInputs.map((index, element) => element.value).toArray();
-
-                    let updatedUrlAjax = `${urlAjax}?status=${statusValues.join(',')}`;
-                    updatedUrlAjax += `&request-type=${requestTypeValues.join(',')}`;
                     updatedUrlAjax += `&date-since=${$dateSince}`;
                     updatedUrlAjax += `&date-until=${$dateUntil}`;
                     updatedUrlAjax += `&own-requests=${$ownRequests}`;
 
-                    costCenterIds.forEach((costCenterId) => {
-                        updatedUrlAjax += `&cost-center-ids[]=${costCenterId}`;
-                    })
-
-                    requistingUsersIds.forEach((userId) => {
-                        updatedUrlAjax += `&requesting-users-ids[]=${userId}`;
-                    })
-
+                    $checkedStatusInputs.each((_, element) => updatedUrlAjax += `&status[]=${element.value}`);
+                    $checkedRequestTypeInputs.each((_, element) => updatedUrlAjax += `&request-type[]=${element.value}`);
+                    $.each(costCenterIds, (_, costCenterId) => updatedUrlAjax += `&cost-center-ids[]=${costCenterId}`);
+                    $.each(requistingUsersIds, (userId) => updatedUrlAjax += `&requesting-users-ids[]=${userId}`);
 
                     return updatedUrlAjax;
                 }

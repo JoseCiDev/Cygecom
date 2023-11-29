@@ -44,12 +44,11 @@ class ReportService
     }
 
     /**
-     * @param string $requestType Recebe uma string dos tipos de solicitação separados por vírgula. Exemplo: "product,service"
+     * @param array $requestType Recebe um array dos tipos de solicitação. Exemplo: ['product','service']
      */
-    public function whereInRequestTypeQuery(Builder $query, string $requestType): Builder|InvalidArgumentException
+    public function whereInRequestTypeQuery(Builder $query, array $requestType): Builder|InvalidArgumentException
     {
-        $requestTypeArray = explode(',', $requestType);
-        $validRequestTypeArray  = collect($requestTypeArray)->filter(fn ($item) => PurchaseRequestType::tryFrom($item));
+        $validRequestTypeArray  = collect($requestType)->filter(fn ($item) => PurchaseRequestType::tryFrom($item));
 
         if ($validRequestTypeArray->isEmpty()) {
             throw new InvalidArgumentException('Array de tipos de solicitações inválido.');
@@ -59,12 +58,11 @@ class ReportService
     }
 
     /**
-     * @param string $status Recebe uma string dos status de solicitação separados por vírgula. Exemplo: "pendente,em_tratativa,em_cotacao"
+     * @param array $status Recebe uma array dos status de solicitação. Exemplo: ['pendente','em_tratativa','em_cotacao']
      */
-    public function whereInStatusQuery(Builder $query, string $status): Builder|InvalidArgumentException
+    public function whereInStatusQuery(Builder $query, array $status): Builder|InvalidArgumentException
     {
-        $statusArray = explode(',', $status);
-        $validStatusArray = collect($statusArray)->filter(fn ($item) => PurchaseRequestStatus::tryFrom($item));
+        $validStatusArray = collect($status)->filter(fn ($item) => PurchaseRequestStatus::tryFrom($item));
 
         if ($validStatusArray->isEmpty()) {
             throw new InvalidArgumentException('Array de status inválido.');
