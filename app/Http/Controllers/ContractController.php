@@ -175,7 +175,7 @@ class ContractController extends Controller
             return throw new Exception('Não foi possível acessar essa solicitação.');
         }
 
-        return view('components.supplies.contract.details', compact('contract', 'allRequestStatus', 'files'));
+        return view('supplies.contract.details', compact('contract', 'allRequestStatus', 'files'));
     }
 
     private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool

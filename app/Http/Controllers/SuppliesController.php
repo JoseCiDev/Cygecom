@@ -57,28 +57,28 @@ class SuppliesController extends Controller
 
         $params = array_merge($params, $this->getComexAndDesiredTodayCounts($products, $services, $contracts, $today));
 
-        return view('components.supplies.index', $params);
+        return view('supplies.index', $params);
     }
 
     public function product(): View
     {
         $params = $this->getRequestsParams(request(), PurchaseRequestType::PRODUCT);
 
-        return view('components.supplies.product.page', $params);
+        return view('supplies.product.page', $params);
     }
 
     public function service(): View
     {
         $params = $this->getRequestsParams(request(), PurchaseRequestType::SERVICE);
 
-        return view('components.supplies.service.page', $params);
+        return view('supplies.service.page', $params);
     }
 
     public function contract(): View
     {
         $params = $this->getRequestsParams(request(), PurchaseRequestType::CONTRACT);
 
-        return view('components.supplies.contract.page', $params);
+        return view('supplies.contract.page', $params);
     }
 
     /**

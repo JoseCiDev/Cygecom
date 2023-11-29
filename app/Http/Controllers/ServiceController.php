@@ -173,7 +173,7 @@ class ServiceController extends Controller
             return throw new Exception('Não foi possível acessar essa solicitação.');
         }
 
-        return view('components.supplies.service.details', compact('service', 'allRequestStatus', 'files'));
+        return view('supplies.service.details', compact('service', 'allRequestStatus', 'files'));
     }
 
     private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool
