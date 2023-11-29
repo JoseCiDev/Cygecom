@@ -2,26 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CompanyGroup;
-use App\Enums\PurchaseRequestStatus;
-use App\Enums\PurchaseRequestType;
-use App\Providers\PurchaseRequestService;
-use App\Providers\SupplierService;
 use Illuminate\Http\Request;
+use App\Enums\{PurchaseRequestType, PurchaseRequestStatus, CompanyGroup};
+use App\Providers\{SupplierService, PurchaseRequestService};
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\View\View;
 
 class SuppliesController extends Controller
 {
-    public function __construct(private PurchaseRequestService $purchaseRequestService, private SupplierService $supplierService)
-    {
-        $this->middleware('auth');
+    public function __construct(
+        private PurchaseRequestService $purchaseRequestService,
+        private SupplierService $supplierService
+    ) {
     }
 
     /**
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(): View
     {
-        $currentProfile = auth()->user()->profile->name;
         $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()->whereNull('deleted_at')->whereNotIn('status', ['rascunho'])->get();
 
         $typesGrouped = $purchaseRequests->groupBy(function ($item) {
@@ -56,72 +55,39 @@ class SuppliesController extends Controller
             'contractsFromHkm' => $contractsFromHkm,
         ];
 
-        if ($currentProfile === 'admin') {
-            $params = array_merge($params, $this->getComexAndDesiredTodayCounts($products, $services, $contracts, $today));
-        } elseif ($currentProfile === 'suprimentos_hkm') {
-            $params = array_merge($params, $this->getComexAndDesiredTodayCounts($productsFromHkm, $servicesFromHkm, $contractsFromHkm, $today));
-        } elseif ($currentProfile === 'suprimentos_inp') {
-            $params = array_merge($params, $this->getComexAndDesiredTodayCounts($productsFromInp, $servicesFromInp, $contractsFromInp, $today));
-        }
+        $params = array_merge($params, $this->getComexAndDesiredTodayCounts($products, $services, $contracts, $today));
 
         return view('components.supplies.index', $params);
     }
 
-    public function product(Request $request)
+    public function product(): View
     {
-        $statusData = $request->input('status');
-        $querySuppliesGroup = request()->query('suppliesGroup');
+        $params = $this->getRequestsParams(request(), PurchaseRequestType::PRODUCT);
 
-        $status = $statusData ? array_map(function ($item) {
-            return PurchaseRequestStatus::tryFrom($item);
-        }, $statusData) : [];
-
-        try {
-            $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
-        } catch (\ValueError $error) {
-            return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
-        }
-
-        return view('components.supplies.product.page', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
+        return view('components.supplies.product.page', $params);
     }
 
-    public function service(Request $request)
+    public function service(): View
     {
-        $statusData = $request->input('status');
-        $querySuppliesGroup = request()->query('suppliesGroup');
+        $params = $this->getRequestsParams(request(), PurchaseRequestType::SERVICE);
 
-        $status = $statusData ? array_map(function ($item) {
-            return PurchaseRequestStatus::tryFrom($item);
-        }, $statusData) : [];
-
-        try {
-            $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
-        } catch (\ValueError $error) {
-            return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
-        }
-
-        return view('components.supplies.service.page', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
+        return view('components.supplies.service.page', $params);
     }
 
-    public function contract(Request $request)
+    public function contract(): View
     {
-        $statusData = $request->input('status');
-        $querySuppliesGroup = request()->query('suppliesGroup');
+        $params = $this->getRequestsParams(request(), PurchaseRequestType::CONTRACT);
 
-        $status = $statusData ? array_map(function ($item) {
-            return PurchaseRequestStatus::tryFrom($item);
-        }, $statusData) : [];
-
-        try {
-            $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
-        } catch (\ValueError $error) {
-            return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
-        }
-
-        return view('components.supplies.contract.page', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
+        return view('components.supplies.contract.page', $params);
     }
 
-    private function getComexAndDesiredTodayCounts($products, $services, $contracts, $today)
+    /**
+     * Contabiliza quantos comex e datas desejadas existem para cada tipo de solicitação
+     * @param Collection $products
+     * @param Collection $services
+     * @param Collection $contracts
+     */
+    private function getComexAndDesiredTodayCounts($products, $services, $contracts, $today): array
     {
         return [
             'productComexQtd' => $products->where('is_comex', true)->count(),
@@ -131,5 +97,44 @@ class SuppliesController extends Controller
             'serviceDesiredTodayQtd' => $services->where('desired_date', $today)->count(),
             'contractDesiredTodayQtd' => $contracts->where('desired_date', $today)->count(),
         ];
+    }
+
+    /**
+     * Cria e retorna os parâmetros para view da solicitação do tipo escolhido
+     * @param Request $request
+     * @param PurchaseRequestType $requestType
+     * @return array parâmetros da solcitação
+     */
+    private function getRequestsParams(Request $request, PurchaseRequestType $requestType): array
+    {
+        $statusData = collect($request->get('status'));
+        $status = $statusData->map(fn ($el) => PurchaseRequestStatus::tryFrom($el));
+
+        if ($status->isNotEmpty()) {
+            $purchaseRequests = $this->purchaseRequestService->requestsByStatus($status->toArray())
+                ->whereNotIn('status', [PurchaseRequestStatus::RASCUNHO->value])->get();
+        } else {
+            $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()
+                ->whereNotIn('status', [
+                    PurchaseRequestStatus::RASCUNHO->value,
+                    PurchaseRequestStatus::FINALIZADA->value,
+                    PurchaseRequestStatus::CANCELADA->value
+                ])->whereNull('deleted_at')->get();
+        }
+
+        $requests = $purchaseRequests->filter(function ($item) use ($requestType) {
+            $validType = $item->type->value === $requestType->value;
+
+            if ($validType) {
+                return $item;
+            }
+        });
+
+        $params = [
+            'status' => $status,
+            'requests' => $requests
+        ];
+
+        return $params;
     }
 }

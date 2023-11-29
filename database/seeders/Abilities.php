@@ -102,7 +102,6 @@ class Abilities extends Seeder
         $suppliesAbilities = [
             ...$normalAbilities,
             6, 7, 8, 9, 10, 11, 12, 13, 14, 15, // Supplies
-            55, 56 // Authorizes
         ];
 
         $userManagerAbilities = [
@@ -124,8 +123,14 @@ class Abilities extends Seeder
         $profilesAbilities = [
             'admin' => [...array_column($abilitiesData, 'id')],
             'normal' => $normalAbilities,
-            'suprimentos_inp' => $suppliesAbilities,
-            'suprimentos_hkm' => $suppliesAbilities,
+            'suprimentos_inp' => [
+                ...$suppliesAbilities,
+                56, // Authorizes
+            ],
+            'suprimentos_hkm' => [
+                ...$suppliesAbilities,
+                55, // Authorizes
+            ],
             'gestor_usuarios' => $userManagerAbilities,
             'gestor_fornecedores' => $supplierManagerAbilities,
             'diretor' => $directorAbilities,
