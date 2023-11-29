@@ -46,9 +46,22 @@
                     <div class="col-md-12">
                         <div class="box-content nopadding regular-text">
 
-                            <table style="width:100%" class="table table-hover table-nomargin table-bordered dataTable"
+                            <table id="table-supplies-list" style="width:100%" class="table table-hover table-nomargin table-bordered"
                                 data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                                 <thead>
+                                    <tr class="search-bar">
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
                                     <tr>
                                         <th class="noColvis">Nº</th>
                                         <th>Contratação por</th>
@@ -60,7 +73,7 @@
                                         <th>Data desejada</th>
                                         <th>Atualizado em</th>
                                         <th>Valor total</th>
-                                        <th class="noColvis">Ações</th>
+                                        <th class="noColvis ignore-search">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -86,19 +99,29 @@
 
                                             $cnpj = $supplier?->cpf_cnpj ? preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $supplier->cpf_cnpj) : 'CNPJ indefinido';
                                             $amount = $purchaseRequest[$requestType]?->amount ?? $purchaseRequest[$requestType]?->price;
-                                            $formatedAmount = $amount ? number_format($amount, 2, '.', ',') : '---';
+                                            $formatedAmount = $amount ? number_format($amount, 2, ',', '.') : '---';
                                         @endphp
                                         <tr>
-                                            <td>{{$purchaseRequest->id}}</td>
+                                            <td style="min-width: 90px;">{{$purchaseRequest->id}}</td>
                                             <td class="hidden-1280">{{$purchaseRequest->is_supplies_contract ? 'Suprimentos' : 'Área Solicitante'}}</td>
                                             <td>{{$purchaseRequest->type->label()}}</td>
                                             <td>{{$name}}</td>
                                             <td>{{$supplier?->corporate_name ? $supplier?->corporate_name . " - " . $cnpj . " " . $msg : '---'}}</td>
                                             <td>{{$purchaseRequest->status->label()}}</td>
                                             <td>{{$purchaseRequest->suppliesUser?->person?->name ?? '---'}}</td>
-                                            <td>{{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}</td>
-                                            <td class="hidden-1440">{{ $purchaseRequest->updated_at->formatCustom('d/m/Y H:i:s')  }}</td>
-                                            <td><span hidden>{{$amount}}</span> R$ {{ $formatedAmount }}</td>
+                                            <td>
+                                                <span hidden> {{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('Y-m-d H:i:s') }}</span>
+                                                {{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}
+                                            </td>
+                                            <td class="hidden-1440">
+                                                <span hidden> {{ \Carbon\Carbon::parse($purchaseRequest->updated_at)->format('Y-m-d H:i:s') }}</span>
+                                                {{ $purchaseRequest->updated_at->formatCustom('d/m/Y H:i:s')  }}
+                                            </td>
+                                            <td>
+                                                {{-- str_pad para ordenação por string no dataTables --}}
+                                                <span hidden>{{ str_pad($amount, 10, "0", STR_PAD_LEFT) }}</span>
+                                                R$ {{ $formatedAmount }}
+                                            </td>
 
                                             {{-- BTN AÇÕES --}}
                                             <td style="white-space: nowrap;">
@@ -142,5 +165,7 @@
             </div>
         </div>
     </div>
+
+    <script type="module" src="{{asset('js/utils/dataTables-column-search.js')}}"></script>
 
 </x-app>
