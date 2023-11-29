@@ -1,15 +1,12 @@
 @php
     use App\Enums\{PurchaseRequestType, PurchaseRequestStatus, PaymentMethod, PaymentTerm};
-
-    $currentProfile = auth()->user()->profile->name;
-    $isAdmin = $currentProfile === 'admin';
-    $isDirector = $currentProfile === 'diretor';
+    use Illuminate\Support\Facades\Gate;
 
     $enumRequests = [
-        'type' => collect(PurchaseRequestType::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
-        'status' => collect(PurchaseRequestStatus::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
-        'paymentMethod' => collect(PaymentMethod::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
-        'paymentTerms' => collect(PaymentTerm::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
+        'type' => collect(PurchaseRequestType::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
+        'status' => collect(PurchaseRequestStatus::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
+        'paymentMethod' => collect(PaymentMethod::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
+        'paymentTerms' => collect(PaymentTerm::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
     ];
 
     $costCenters = $requestingUsers
@@ -26,19 +23,19 @@
 
     <div class="selects">
 
-        @if ($isAdmin || $isDirector)
+        @if (Gate::any(['admin', 'diretor']))
             <div class="form-group">
                 <label for="requisting-users-filter" class="regular-text cost-center-filter-label">Solicitante</label>
 
-               <div class="select-filter-container" >
-                    <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]"
-                        multiple="multiple" class="select2-me" placeholder="Escolha uma ou mais opções">
+                <div class="select-filter-container">
+                    <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]" multiple="multiple" class="select2-me"
+                        placeholder="Escolha uma ou mais opções">
                         @foreach ($requestingUsers as $user)
-                            <option value="{{$user->id}}">{{$user->person->name}}</option>
+                            <option value="{{ $user->id }}">{{ $user->person->name }}</option>
                         @endforeach
                     </select>
                     <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn" data-cy="filter-clear-users-btn">Limpar</button>
-               </div>
+                </div>
 
             </div>
         @endif
@@ -47,7 +44,7 @@
             <label for="cost-center-filter" class="regular-text cost-center-filter-label">Centros de custos</label>
 
             <div class="select-filter-container">
-                <select id="cost-center-filter" data-cy="cost-center-filter" name="cost-center-filter[]" multiple="multiple"  class="select2-me"
+                <select id="cost-center-filter" data-cy="cost-center-filter" name="cost-center-filter[]" multiple="multiple" class="select2-me"
                     placeholder="Escolha uma ou mais opções">
                     @foreach ($costCenters as $costCenter)
                         @php
@@ -89,11 +86,12 @@
                 <div class="types">
                     @foreach (PurchaseRequestType::cases() as $typeCase)
                         <label class="checkbox-label secondary-text">
-                            <input type="checkbox" name="request-type[]" class="request-type-checkbox" data-cy="request-type-{{ $typeCase->value }}" value="{{ $typeCase->value }}" checked>
+                            <input type="checkbox" name="request-type[]" class="request-type-checkbox" data-cy="request-type-{{ $typeCase->value }}" value="{{ $typeCase->value }}"
+                                checked>
                             {{ $typeCase->label() }}
 
                             @if ($typeCase->value === PurchaseRequestType::PRODUCT->value)
-                                ( <label class="checkbox-label secondary-text" style="margin: 0">
+                                (<label class="checkbox-label secondary-text" style="margin: 0">
                                     <input type="checkbox" name="product-detail" data-cy="product-detail" class="product-detail" value="true">
                                     Detalhes
                                 </label>)
@@ -119,16 +117,16 @@
 
                 @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
                     <label class="checkbox-label secondary-text">
-                        <input type="checkbox" name="status[]" data-cy="status-{{ $statusCase->value }}" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
+                        <input type="checkbox" name="status[]" data-cy="status-{{ $statusCase->value }}" class="status-checkbox" value="{{ $statusCase->value }}"
+                            @checked($isChecked)>
                         {{ $statusCase->label() }}
                     </label>
                 @endif
-
             @endforeach
         </div>
     </div>
 
-    @if ($currentProfile === 'admin' || $currentProfile === 'diretor')
+    @if (Gate::any(['admin', 'diretor']))
         <div class="form-group">
             <label class="checkbox-label secondary-text">
                 <input type="checkbox" id="own-requests" data-cy="own-requests" value="true" checked>
@@ -153,20 +151,20 @@
         <thead>
             <tr>
                 <th class="noColvis">Nº</th>
-                <th >Tipo</th>
-                <th >Solicitado em</th>
-                <th >Data de atribuição</th>
-                <th >Nome Serviço</th>
-                <th >Contratado por</th>
-                <th >Solicitante</th>
-                <th >Solicitante sistema</th>
-                <th >Status</th>
-                <th >Responsável</th>
-                <th >Centro de custo</th>
-                <th >Fornecedor</th>
-                <th >Forma Pgto.</th>
-                <th >Condição Pgto.</th>
-                <th >Valor total</th>
+                <th>Tipo</th>
+                <th>Solicitado em</th>
+                <th>Data de atribuição</th>
+                <th>Nome Serviço</th>
+                <th>Contratado por</th>
+                <th>Solicitante</th>
+                <th>Solicitante sistema</th>
+                <th>Status</th>
+                <th>Responsável</th>
+                <th>Centro de custo</th>
+                <th>Fornecedor</th>
+                <th>Forma Pgto.</th>
+                <th>Condição Pgto.</th>
+                <th>Valor total</th>
             </tr>
         </thead>
         <tbody> {{-- Dinâmico --}} </tbody>
@@ -210,10 +208,10 @@
                         });
                     },
                     dates: () => $dateSince.add($dateUntil).val(null),
-                    productDetail: () =>$productDetail.prop('checked', false)
+                    productDetail: () => $productDetail.prop('checked', false)
                 }
 
-                if(filter) {
+                if (filter) {
                     clearOptions[filter]();
                     return;
                 }
@@ -247,7 +245,9 @@
             const downloadCsv = (csv) => {
                 const now = moment(new Date()).format('YYYY-MM-DD-HH-mm-ss-SSS');
                 const fileName = `relatorio-gecom-${now}.csv`;
-                const blob = new Blob([csv], { type: "text/csv" });
+                const blob = new Blob([csv], {
+                    type: "text/csv"
+                });
                 const link = document.createElement("a");
                 link.href = window.URL.createObjectURL(blob);
                 link.download = fileName;
@@ -293,7 +293,7 @@
 
                 $reportsFilterBtn.add($filterClearAllBtn).css('cursor', isSearchFieldEmpty ? 'pointer' : 'help');
 
-                if(!isSearchFieldEmpty) {
+                if (!isSearchFieldEmpty) {
                     $reportFilters.on('click', focusOnSeachField)
                     return;
                 }
@@ -307,7 +307,7 @@
 
             $reportsTable.on('draw.dt', () => {
                 const $productDetail = $('.product-detail:checked').val();
-                if($productDetail) {
+                if ($productDetail) {
                     showProductDetail()
                 }
             });
@@ -359,10 +359,12 @@
                                     const requester = item.requester?.name || '---';
                                     const status = enumRequests['status'][item.status];
                                     const suppliesUserName = item.supplies_user?.person.name || '---';
-                                    const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name).join(', ');
+                                    const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name)
+                                        .join(', ');
 
                                     const supplierColumnMapping = {
-                                        product: () => item.purchase_request_product?.map((element) => element.supplier?.corporate_name),
+                                        product: () => item.purchase_request_product?.map((element) => element.supplier
+                                            ?.corporate_name),
                                         service: () => [item.service?.supplier?.corporate_name],
                                         contract: () => [item.contract?.supplier?.corporate_name],
                                     };
@@ -370,14 +372,17 @@
 
                                     const paymentInfo = item[item.type]?.payment_info || {};
 
-                                    const paymentMethod = paymentInfo.payment_method ;
+                                    const paymentMethod = paymentInfo.payment_method;
                                     const paymentMethodLabel = enumRequests['paymentMethod'][paymentMethod] || '---';
 
                                     const paymentTerms = paymentInfo?.payment_terms || '---';
                                     const paymentTermsLabel = enumRequests['paymentTerms'][paymentTerms] || '---';
 
                                     const amount = item[item.type]?.amount || item[item.type]?.price;
-                                    const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'});
+                                    const formatter = new Intl.NumberFormat('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL'
+                                    });
                                     const formattedAmount = amount ? formatter.format(amount) : '---';
 
                                     let rowData = [
@@ -400,8 +405,8 @@
                                         ]
                                     ];
 
-                                    if($productDetail && item.type === enumProductValue) {
-                                        rowData.push(['' ,'Nome do produto', 'Categoria', 'Quantidade', 'Cor', 'Model', 'Tamanho']);
+                                    if ($productDetail && item.type === enumProductValue) {
+                                        rowData.push(['', 'Nome do produto', 'Categoria', 'Quantidade', 'Cor', 'Model', 'Tamanho']);
 
                                         item.purchase_request_product.forEach((element) => {
                                             const name = element.name;
@@ -411,7 +416,7 @@
                                             const model = element.model || '---';
                                             const size = element.size || '---';
 
-                                            rowData.push([id, name,category, quantity, color, model, size]);
+                                            rowData.push([id, name, category, quantity, color, model, size]);
                                         })
                                     }
 
@@ -431,7 +436,8 @@
                             },
                             error: (response, textStatus, errorThrown) => {
                                 const title = "Houve uma falha na busca dos registros!";
-                                const message = "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
+                                const message =
+                                    "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
                                 $.fn.showModalAlert(title, message);
                             },
                         });
@@ -442,7 +448,10 @@
                 paging: true,
                 processing: true,
                 serverSide: true,
-                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, 'Todos']
+                ],
                 searching: true,
                 searchDelay: 1000,
                 language: {
@@ -452,8 +461,13 @@
                     infoEmpty: "Nenhum registro disponível",
                     infoFiltered: "(filtrado de _MAX_ registros no total)",
                     search: "Buscar:",
-                    paginate: { first: "Primeiro", last: "Último", next: "Próximo", previous: "Anterior" },
-                    processing:  $('.loader-box').show(),
+                    paginate: {
+                        first: "Primeiro",
+                        last: "Último",
+                        next: "Próximo",
+                        previous: "Anterior"
+                    },
+                    processing: $('.loader-box').show(),
                 },
                 ajax: {
                     url: urlAjax,
@@ -461,18 +475,18 @@
                     dataType: 'json',
                     error: (response, textStatus, errorThrown) => {
                         const title = "Houve uma falha na busca dos registros!";
-                        const message = "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
+                        const message =
+                            "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
                         $.fn.showModalAlert(title, message);
                     },
                     beforeSend: () => $('#reportsTable tbody').css('opacity', '0.2'),
                     complete: () => $('#reportsTable tbody').css('opacity', '1')
                 },
-                columns: [
-                    {
+                columns: [{
                         data: 'id',
                         render: (id, _, row) => {
                             const type = row.type;
-                            if(type === enumProductValue) {
+                            if (type === enumProductValue) {
                                 const productDetailContainer = `
                                     <table class="product-detail-container table table-hover table-nomargin table-bordered" style="display: none">
                                         <thead>
@@ -486,16 +500,29 @@
                                         <tbody>
                                             ${row.purchase_request_product.map((element) => {
                                                 const { name, category, quantity, color, model, size } = element;
-                                                return `
-                                                <tr>
-                                                    <td>${name}</td>
-                                                    <td>${category.name}</td>
-                                                    <td>${quantity}</td>
-                                                    <td>${color || '---'}</td>
-                                                    <td>${model || '---'}</td>
-                                                    <td>${size || '---'}</td>
-                                                </tr>
-                                                `;
+                                                return ` <
+                                    tr >
+                                    <
+                                    td > $ {
+                                        name
+                                    } < /td> <
+                                td > $ {
+                                    category.name
+                                } < /td> <
+                                td > $ {
+                                    quantity
+                                } < /td> <
+                                td > $ {
+                                    color || '---'
+                                } < /td> <
+                                td > $ {
+                                    model || '---'
+                                } < /td> <
+                                td > $ {
+                                    size || '---'
+                                } < /td> < /
+                                tr >
+                                    `;
                                             }).join('')}
                                         </tbody>
                                     </table>
@@ -507,7 +534,10 @@
                             return id;
                         }
                     },
-                    { data: 'type', render: (type) => enumRequests['type'][type] },
+                    {
+                        data: 'type',
+                        render: (type) => enumRequests['type'][type]
+                    },
                     {
                         data: 'logs',
                         render: (logs, _, row) => {
@@ -521,7 +551,8 @@
                     },
                     {
                         data: 'responsibility_marked_at',
-                        render: (responsibility_marked_at, _, row) =>  responsibility_marked_at ? moment.utc(responsibility_marked_at).utcOffset('-03:00').format('DD/MM/YYYY HH:mm:ss') : '---'
+                        render: (responsibility_marked_at, _, row) => responsibility_marked_at ? moment.utc(responsibility_marked_at).utcOffset('-03:00').format(
+                            'DD/MM/YYYY HH:mm:ss') : '---'
                     },
                     {
                         data: 'type',
@@ -546,100 +577,111 @@
                         data: 'is_supplies_contract',
                         render: (is_supplies_contract, _, row) => is_supplies_contract ? "Suprimentos" : "Área solicitante"
                     },
-                    { data: 'user.person.name' },
-                    { data: 'requester', render: (requester, _, row) => requester ? requester.name : '---' },
-                    { data: 'status', render: (status) => enumRequests['status'][status] },
-                    { data: 'supplies_user.person.name', render: (suppliesUserName) => (suppliesUserName ?? '---') },
+                    {
+                        data: 'user.person.name'
+                    },
+                    {
+                        data: 'requester',
+                        render: (requester, _, row) => requester ? requester.name : '---'
+                    },
+                    {
+                        data: 'status',
+                        render: (status) => enumRequests['status'][status]
+                    },
+                    {
+                        data: 'supplies_user.person.name',
+                        render: (suppliesUserName) => (suppliesUserName ?? '---')
+                    },
                     {
                         data: 'cost_center_apportionment',
                         orderable: false,
                         render: (costCenter) => {
                             const $div = $(document.createElement('div')).addClass('tag-category');
 
-                                const costCenters = costCenter.map((element) => element.cost_center.name);
-                                if(costCenter.length <= 0) {
-                                    return $div.append(`<span class="tag-category-item">---</span>`)[0].outerHTML;
-                                }
-
-                                $div.append(costCenters.map((costCenter) => `<span class="tag-category-item">${costCenter}</span>`).join(''));
-                                return $div[0].outerHTML;
+                            const costCenters = costCenter.map((element) => element.cost_center.name);
+                            if (costCenter.length <= 0) {
+                                return $div.append(`<span class="tag-category-item">---</span>`)[0].outerHTML;
                             }
-                        },
-                        {
-                            data: 'type',
-                            orderable: false,
-                            render: (type, _, row) => {
-                                const $div = $(document.createElement('div')).addClass('tag-category');
 
-                                const supplierColumnMapping = {
-                                    product: () => row.purchase_request_product?.map((element) => element.supplier?.corporate_name),
-                                    service: () => [row.service?.supplier?.corporate_name],
-                                    contract: () => [row.contract?.supplier?.corporate_name],
-                                };
-
-                                const suppliers = supplierColumnMapping[type]()?.filter((el) => el);
-
-                                if(!suppliers || suppliers.length === 0) {
-                                    return '---';
-                                }
-
-                                suppliers.forEach((element) => {
-                                    const $span = $(document.createElement('span')).addClass('tag-category-item');
-                                    $span.text(element);
-                                    $div.append($span);
-                                });
-
-                                return $div[0].outerHTML;
-                            }
-                        },
-                        {
-                            data: 'type',
-                            orderable: false,
-                            render: (type, _, row) => {
-                                const paymentInfo = row[type]?.payment_info || {};
-                                const paymentMethod = paymentInfo.payment_method ;
-                                const paymentMethodLabel = enumRequests['paymentMethod'][paymentMethod] ?? '---'
-
-                                return paymentMethodLabel;
-                            }
-                        },
-                        {
-                            data: 'type',
-                            orderable: false,
-                            render: (type, _, row) => {
-                                const paymentInfo = row[type]?.payment_info || {};
-                                const paymentTerms = paymentInfo?.payment_terms || '---';
-                                const paymentTermsLabel = enumRequests['paymentTerms'][paymentTerms] ?? '---'
-
-                                return paymentTermsLabel;
-                            }
-                        },
-                        {
-                            data: 'type',
-                            render: (type, _, row) => {
-                                const amount = row[type]?.amount || row[type]?.price;
-
-                                if (!amount || !isFinite(amount)) {
-                                    return 'R$ ---';
-                                }
-
-                                const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL'});
-                                const formattedAmount = formatter.format(amount);
-                                return formattedAmount;
-                            }
-                        },
-                ],
-                buttons: [
+                            $div.append(costCenters.map((costCenter) => `<span class="tag-category-item">${costCenter}</span>`).join(''));
+                            return $div[0].outerHTML;
+                        }
+                    },
                     {
-                        extend: 'colvis',
-                        columns: ':not(.noColvis)',
-                        text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
-                        columnText: (dt, idx, title ) => title,
-                    }
+                        data: 'type',
+                        orderable: false,
+                        render: (type, _, row) => {
+                            const $div = $(document.createElement('div')).addClass('tag-category');
+
+                            const supplierColumnMapping = {
+                                product: () => row.purchase_request_product?.map((element) => element.supplier?.corporate_name),
+                                service: () => [row.service?.supplier?.corporate_name],
+                                contract: () => [row.contract?.supplier?.corporate_name],
+                            };
+
+                            const suppliers = supplierColumnMapping[type]()?.filter((el) => el);
+
+                            if (!suppliers || suppliers.length === 0) {
+                                return '---';
+                            }
+
+                            suppliers.forEach((element) => {
+                                const $span = $(document.createElement('span')).addClass('tag-category-item');
+                                $span.text(element);
+                                $div.append($span);
+                            });
+
+                            return $div[0].outerHTML;
+                        }
+                    },
+                    {
+                        data: 'type',
+                        orderable: false,
+                        render: (type, _, row) => {
+                            const paymentInfo = row[type]?.payment_info || {};
+                            const paymentMethod = paymentInfo.payment_method;
+                            const paymentMethodLabel = enumRequests['paymentMethod'][paymentMethod] ?? '---'
+
+                            return paymentMethodLabel;
+                        }
+                    },
+                    {
+                        data: 'type',
+                        orderable: false,
+                        render: (type, _, row) => {
+                            const paymentInfo = row[type]?.payment_info || {};
+                            const paymentTerms = paymentInfo?.payment_terms || '---';
+                            const paymentTermsLabel = enumRequests['paymentTerms'][paymentTerms] ?? '---'
+
+                            return paymentTermsLabel;
+                        }
+                    },
+                    {
+                        data: 'type',
+                        render: (type, _, row) => {
+                            const amount = row[type]?.amount || row[type]?.price;
+
+                            if (!amount || !isFinite(amount)) {
+                                return 'R$ ---';
+                            }
+
+                            const formatter = new Intl.NumberFormat('pt-BR', {
+                                style: 'currency',
+                                currency: 'BRL'
+                            });
+                            const formattedAmount = formatter.format(amount);
+                            return formattedAmount;
+                        }
+                    },
                 ],
+                buttons: [{
+                    extend: 'colvis',
+                    columns: ':not(.noColvis)',
+                    text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
+                    columnText: (dt, idx, title) => title,
+                }],
             })
 
         });
     </script>
 @endpush
-

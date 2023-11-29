@@ -2,11 +2,11 @@
 
 namespace App\View\Components;
 
-use App\Models\CostCenter;
-use App\Models\PurchaseRequest;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\Component;
+use App\Models\{PurchaseRequest, CostCenter};
 
 class CostCenterApportionment extends Component
 {
@@ -18,7 +18,7 @@ class CostCenterApportionment extends Component
     public function render(): View|Closure|string
     {
         $currentUser = auth()->user();
-        $isAdmin = $currentUser->profile->name === 'admin';
+        $isAdmin = Gate::allows('admin');
 
         $userCostCentersAllowed = $currentUser->userCostCenterPermission;
         $filteredCostCenters = CostCenter::whereIn('id', $userCostCentersAllowed->pluck('cost_center_id'))->get();

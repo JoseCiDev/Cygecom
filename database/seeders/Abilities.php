@@ -10,7 +10,7 @@ class Abilities extends Seeder
 {
     public function run(): void
     {
-        $abilitiesData = [
+        $routesAbilities = [
             // Abilities
             ['id' => 1, 'name' => 'get.abilities.index', 'description' => 'Acessar tela do painel de gestão de perfis e habilidades'],
             ['id' => 45, 'name' => 'post.abilities.store.json', 'description' => 'API: Atualizar habilidades dos usuários'],
@@ -79,6 +79,19 @@ class Abilities extends Seeder
             ['id' => 51, 'name' => 'get.reports.index.json', 'description' => 'API: Buscar dados de relatório de solicitação para tabela'],
         ];
 
+        $authorizesAbilities = [
+            ['id' => 52, 'name' => 'admin', 'description' => 'Autorização interna de administrador'],
+            ['id' => 53, 'name' => 'gestor_usuarios', 'description' => 'Autorização interna de gestor de usuários'],
+            ['id' => 54, 'name' => 'diretor', 'description' => 'Autorização interna de diretor'],
+            ['id' => 55, 'name' => 'suprimentos_hkm', 'description' => 'Autorização interna de suprimentos HKM'],
+            ['id' => 56, 'name' => 'suprimentos_inp', 'description' => 'Autorização interna de suprimentos INP'],
+        ];
+
+        $abilitiesData = [
+            ...$routesAbilities,
+            ...$authorizesAbilities,
+        ];
+
         $normalAbilities = [
             2, 3, 4, 5, // Web
             17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 49, 50, // Requests
@@ -89,20 +102,23 @@ class Abilities extends Seeder
         $suppliesAbilities = [
             ...$normalAbilities,
             6, 7, 8, 9, 10, 11, 12, 13, 14, 15, // Supplies
+            55, 56 // Authorizes
         ];
 
         $userManagerAbilities = [
             ...$normalAbilities,
             31, 32, 33, 34, 35, 46, // Users
+            53 // Authorizes
         ];
 
         $supplierManagerAbilities = [
             ...$normalAbilities,
-            36, 37, 38, 39, 40, 41, 42, 43 // Suppliers
+            36, 37, 38, 39, 40, 41, 42, 43, // Suppliers
         ];
 
         $directorAbilities = [
             ...$normalAbilities,
+            54 // Authorizes
         ];
 
         $profilesAbilities = [

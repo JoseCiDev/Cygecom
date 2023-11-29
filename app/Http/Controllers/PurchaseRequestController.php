@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PurchaseRequestStatus;
-use App\Enums\PurchaseRequestType;
+use Exception;
+use Illuminate\Http\{RedirectResponse, Request};
+use Illuminate\Support\Facades\Gate;
+use App\Enums\{PurchaseRequestStatus, PurchaseRequestType};
 use App\Models\{PurchaseRequestFile, PurchaseRequest};
 use App\Providers\{EmailService, PurchaseRequestService};
-use Illuminate\Http\{RedirectResponse, Request};
-use Exception;
 
 class PurchaseRequestController extends Controller
 {
@@ -63,7 +63,7 @@ class PurchaseRequestController extends Controller
 
     public function edit(PurchaseRequestType $type, int $id)
     {
-        $isAdmin = auth()->user()->profile->name === 'admin';
+        $isAdmin = Gate::allows('admin');
 
         try {
             $purchaseRequest = PurchaseRequest::find($id);
@@ -87,7 +87,7 @@ class PurchaseRequestController extends Controller
         $route = 'requests';
 
         try {
-            $isAdmin = auth()->user()->profile->name === 'admin';
+            $isAdmin = Gate::allows('admin');
             $purchaseRequest = auth()->user()->purchaseRequest->find($id);
             $isDeleted = $purchaseRequest?->deleted_at !== null;
             $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;

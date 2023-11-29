@@ -1,8 +1,4 @@
 <x-app>
-    @php
-        $currentProfile = auth()->user()->profile->name;
-    @endphp
-
     @push('styles')
         <style>
             .abilities {

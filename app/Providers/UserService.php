@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use App\Contracts\UserServiceInterface;
-use App\Models\{CostCenter, Person, Phone, User, UserCostCenterPermission, UserProfile};
 use Exception;
-use Illuminate\Support\Facades\{DB, Hash};
+use Illuminate\Support\Facades\{DB, Gate, Hash};
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
+use App\Contracts\UserServiceInterface;
+use App\Models\{CostCenter, Person, Phone, User, UserCostCenterPermission, UserProfile};
 
 class UserService extends ServiceProvider implements UserServiceInterface
 {
@@ -68,8 +68,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
     public function registerUser(array $request): User
     {
         return DB::transaction(function () use ($request) {
-            $currentProfile = auth()->user()->profile->name;
-
             $phoneId = $this->createPhone($request);
             $request['phone_id'] = $phoneId;
             $person = $this->updateOrCreatePerson($request);
@@ -86,7 +84,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
 
             $user->save();
 
-            if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios') {
+            if (Gate::any(['admin', 'gestor_usuarios'])) {
                 $costCenterPermissions = $request['user_cost_center_permissions'] ?? null;
 
                 if ($costCenterPermissions !== null) {
@@ -103,7 +101,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
         DB::beginTransaction();
 
         try {
-            $currentProfile = auth()->user()->profile->name;
             $user = $this->getUserById($userId);
             $person = $user->person;
             $phone = $user->person->phone;
@@ -113,7 +110,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $this->savePerson($person, $data);
             $this->savePhone($phone, $data);
 
-            if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios') {
+            if (Gate::any(['admin', 'gestor_usuarios'])) {
                 $costCenterPermissions = $data['user_cost_center_permissions'] ?? null;
 
                 if (!$costCenterPermissions && !$isOwnUser) {

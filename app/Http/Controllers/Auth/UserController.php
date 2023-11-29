@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use Exception;
-use App\Models\User;
 use Illuminate\View\View;
-use App\Providers\UserService;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use App\Contracts\UserControllerInterface;
-use App\Http\Requests\User\{StoreUserRequest, UpdateUserRequest};
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
+use App\Models\User;
+use App\Providers\UserService;
+use App\Contracts\UserControllerInterface;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\User\{StoreUserRequest, UpdateUserRequest};
 
 class UserController extends Controller implements UserControllerInterface
 {
@@ -35,7 +36,7 @@ class UserController extends Controller implements UserControllerInterface
     public function index(): View
     {
         $loggedId = auth()->user()->id;
-        $isAdmin = auth()->user()->profile->name === 'admin';
+        $isAdmin = Gate::allows('admin');
 
         $users = $this->userService->getUsers()->where('id', '!=', $loggedId);
 
@@ -112,9 +113,8 @@ class UserController extends Controller implements UserControllerInterface
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         $id = $user->id;
-        $currentProfile = auth()->user()->profile->name;
-        $isAdmin = $currentProfile === 'admin';
-        $isGestorUsuarios = $currentProfile === 'gestor_usuarios';
+        $isAdmin = Gate::allows('admin');
+        $isGestorUsuarios = Gate::allows('gestor_usuarios');
         $isOwnId = $id === auth()->user()->id;
 
         if ((!$isAdmin && !$isGestorUsuarios) && !$isOwnId) {

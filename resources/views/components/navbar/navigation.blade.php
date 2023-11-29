@@ -1,7 +1,3 @@
-@php
-    $currentProfile = auth()->user()->profile->name;
-@endphp
-
 <div id="active-menu-shadow"></div>
 <div id="navigation">
 
@@ -93,9 +89,14 @@
         </div>
 
         @can('get.abilities.index')
-            <a href="{{ route('abilities.index') }}" class="btn btn-secondary bg-transparent text-light">
-                Gestão de habilidades
-            </a>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Autorizações
+                </button>
+                <ul class="dropdown-menu">
+                    <li> <a href="{{ route('abilities.index') }}">Usuários e habilidades</a> </li>
+                </ul>
+            </div>
         @endcan
 
     </div>

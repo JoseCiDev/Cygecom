@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{DB, Route, Gate};
+use Illuminate\Http\{RedirectResponse, Request};
 use App\Enums\PurchaseRequestStatus;
 use App\Http\Requests\Service\UpdateServiceRequest;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\{RedirectResponse, Request};
 use App\Models\{Company, CostCenter, PurchaseRequest, PurchaseRequestFile};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 
@@ -68,7 +67,7 @@ class ServiceController extends Controller
         $companies   = Company::all();
         $costCenters = CostCenter::all();
         $params      = ["companies" => $companies, "costCenters" => $costCenters];
-        $isAdmin     = auth()->user()->profile->name === 'admin';
+        $isAdmin     = Gate::allows('admin');
 
         try {
             if ($purchaseRequestIdToCopy) {
@@ -106,7 +105,7 @@ class ServiceController extends Controller
         try {
             $msg = "Solicitação de serviço pontual atualizada com sucesso!";
 
-            $isAdmin = auth()->user()->profile->name === 'admin';
+            $isAdmin = Gate::allows('admin');
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
@@ -179,12 +178,11 @@ class ServiceController extends Controller
 
     private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool
     {
-        $allowedProfiles = ['admin', 'suprimentos_hkm', 'suprimentos_inp'];
-        $userProfile = auth()->user()->profile->name;
+        $allowedProfiles = Gate::any(['admin', 'suprimentos_hkm', 'suprimentos_inp']);
 
         $existSuppliesUserId = (bool) $purchaseRequest->supplies_user_id;
         $existSuppliesMarkedAt = (bool) $purchaseRequest->responsibility_marked_at;
 
-        return in_array($userProfile, $allowedProfiles) && !$existSuppliesUserId && !$existSuppliesMarkedAt && !auth()->user()->purchaseRequest->contains($purchaseRequest);
+        return $allowedProfiles && !$existSuppliesUserId && !$existSuppliesMarkedAt && !auth()->user()->purchaseRequest->contains($purchaseRequest);
     }
 }

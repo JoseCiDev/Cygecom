@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\User\StoreAbilitiesRequest;
-use App\Models\{UserProfile, User, Ability};
+use App\Models\{UserProfile, Ability};
 use App\Providers\UserService;
 
 class AbilitiesController extends Controller
@@ -30,7 +30,7 @@ class AbilitiesController extends Controller
             'users' => $users
         ];
 
-        return view('abilities', $params);
+        return view('authorizations.abilities', $params);
     }
 
     /**

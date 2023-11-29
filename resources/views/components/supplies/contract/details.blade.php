@@ -1,16 +1,7 @@
 @php
     use App\Enums\{PaymentTerm, LogAction, PurchaseRequestType, PurchaseRequestStatus};
 
-    $currentUser = auth()->user();
-    $profile = $currentUser->profile->name;
-
-    $isSupplies = match ($profile) {
-        'suprimentos_hkm',
-        'suprimentos_inp',
-        'admin' => true,
-
-        default => false,
-    };
+    $isSupplies = Gate::any(['admin', 'suprimentos_hkm', 'suprimentos_inp']);
 
     if (isset($contract)) {
         $request = $contract;
@@ -29,13 +20,7 @@
     @if ($isSupplies)
         <div class="row">
             <div class="col-md-12">
-                <x-SuppliesRequestEditContainer
-                    :request-type="PurchaseRequestType::CONTRACT"
-                    :request-id="$request->id"
-                    :request-user-id="$request->user_id"
-                    :request-status="$request->status"
-                    :amount="$request->contract->amount"
-                    :purchase-order="$request->purchase_order" />
+                <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::CONTRACT" :request-id="$request->id" :request-user-id="$request->user_id" :request-status="$request->status" :amount="$request->contract->amount" :purchase-order="$request->purchase_order" />
             </div>
         </div>
         <hr>
@@ -443,8 +428,7 @@
                 @if ($files->count())
                     <ul>
                         @foreach ($files as $index => $file)
-                            <li><a style="font-size: 16px" data-cy="link-{{ $index }}"
-                                    href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank"
+                            <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank"
                                     rel="noopener noreferrer">{{ $file->original_name }}</a></li>
                         @endforeach
                     </ul>
