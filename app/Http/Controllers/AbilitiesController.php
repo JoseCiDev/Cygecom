@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\User\StoreAbilitiesRequest;
 use App\Models\{UserProfile, Ability};
 use App\Providers\UserService;
+use Illuminate\Http\Request;
 
 class AbilitiesController extends Controller
 {
@@ -31,6 +32,18 @@ class AbilitiesController extends Controller
         ];
 
         return view('authorizations.abilities', $params);
+    }
+
+    public function profile()
+    {
+        $abilities = Ability::with('users', 'profiles')->get();
+
+        return view('authorizations.profile', ['abilities' => $abilities]);
+    }
+
+    public function create(Request $request)
+    {
+        return redirect()->back();
     }
 
     /**

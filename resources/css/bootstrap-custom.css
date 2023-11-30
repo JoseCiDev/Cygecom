@@ -7,3 +7,8 @@
     border-color: var(--gold-primary-color);
     box-shadow: 0 0 0 0.25rem var(--gold-tertiary-color);
 }
+
+.form-control:focus {
+    border-color: var(--grey-primary-color);
+    box-shadow: 0 0 0 0.25rem var(--gold-tertiary-color);
+}

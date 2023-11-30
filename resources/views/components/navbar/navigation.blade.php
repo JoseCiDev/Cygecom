@@ -95,6 +95,7 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li> <a href="{{ route('abilities.index') }}">Usuários e habilidades</a> </li>
+                    <li> <a href="{{ route('abilities.profile') }}">Criação de perfis</a> </li>
                 </ul>
             </div>
         @endcan
