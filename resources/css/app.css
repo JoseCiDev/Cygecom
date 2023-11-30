@@ -15,10 +15,10 @@
 @import './purchase-request/product-suggestion-autocomplete.css';
 @import './purchase-request/log.css';
 @import './purchase-request/request-dashboard.css';
-@import './supplies/form-status-filter.css';
 @import './supplies/category-column-tags.css';
 @import './supplies/dashboard.css';
 @import './supplies/details.css';
 @import './supplies/dataTables-column-search.css';
 @import './loader.css';
 @import './reports/report-table-list.css';
+@import './bootstrap-custom.css';

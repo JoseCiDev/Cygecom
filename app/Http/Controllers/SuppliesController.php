@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use App\Enums\{PurchaseRequestType, PurchaseRequestStatus, CompanyGroup};
 use App\Providers\{SupplierService, PurchaseRequestService};
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\View\View;
+use App\Http\Requests\Supplies\SuppliesParamsRequest;
 
 class SuppliesController extends Controller
 {
@@ -60,23 +60,23 @@ class SuppliesController extends Controller
         return view('supplies.index', $params);
     }
 
-    public function product(): View
+    public function product(SuppliesParamsRequest $request): View
     {
-        $params = $this->getRequestsParams(request(), PurchaseRequestType::PRODUCT);
+        $params = $this->getRequestsParams($request, PurchaseRequestType::PRODUCT);
 
         return view('supplies.product.page', $params);
     }
 
-    public function service(): View
+    public function service(SuppliesParamsRequest $request): View
     {
-        $params = $this->getRequestsParams(request(), PurchaseRequestType::SERVICE);
+        $params = $this->getRequestsParams($request, PurchaseRequestType::SERVICE);
 
         return view('supplies.service.page', $params);
     }
 
-    public function contract(): View
+    public function contract(SuppliesParamsRequest $request): View
     {
-        $params = $this->getRequestsParams(request(), PurchaseRequestType::CONTRACT);
+        $params = $this->getRequestsParams($request, PurchaseRequestType::CONTRACT);
 
         return view('supplies.contract.page', $params);
     }
@@ -101,38 +101,42 @@ class SuppliesController extends Controller
 
     /**
      * Cria e retorna os parâmetros para view da solicitação do tipo escolhido
-     * @param Request $request
+     * @param SuppliesParamsRequest $request
      * @param PurchaseRequestType $requestType
      * @return array parâmetros da solcitação
      */
-    private function getRequestsParams(Request $request, PurchaseRequestType $requestType): array
+    private function getRequestsParams(SuppliesParamsRequest $request, PurchaseRequestType $requestType): array
     {
-        $statusData = collect($request->get('status'));
-        $status = $statusData->map(fn ($el) => PurchaseRequestStatus::tryFrom($el));
+        $companiesGroup = collect($request->get('companies-group'));
+        $status = collect($request->get('status'));
 
-        if ($status->isNotEmpty()) {
-            $purchaseRequests = $this->purchaseRequestService->requestsByStatus($status->toArray())
-                ->whereNotIn('status', [PurchaseRequestStatus::RASCUNHO->value])->get();
-        } else {
-            $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()
-                ->whereNotIn('status', [
+        if ($status->isEmpty()) {
+            $status = collect(PurchaseRequestStatus::cases())
+                ->pluck('value')->filter(fn ($status) => !collect([
                     PurchaseRequestStatus::RASCUNHO->value,
                     PurchaseRequestStatus::FINALIZADA->value,
                     PurchaseRequestStatus::CANCELADA->value
-                ])->whereNull('deleted_at')->get();
+                ])->contains($status));
         }
 
-        $requests = $purchaseRequests->filter(function ($item) use ($requestType) {
-            $validType = $item->type->value === $requestType->value;
+        if ($companiesGroup->isEmpty()) {
+            $companiesGroup = collect(CompanyGroup::cases())->pluck('value');
+        }
 
-            if ($validType) {
-                return $item;
-            }
-        });
+        $requests = $this->purchaseRequestService->requestsByStatus($status->toArray())
+            ->whereNotIn('status', [PurchaseRequestStatus::RASCUNHO->value]);
+
+        $requests->whereHas('costCenterApportionment', fn ($query) => $query
+            ->whereHas('costCenter', fn ($query) => $query
+                ->whereHas('company', fn ($query) => $query
+                    ->whereIn('group', $companiesGroup))));
+
+        $requests->where('type', $requestType);
 
         $params = [
             'status' => $status,
-            'requests' => $requests
+            'companiesGroup' => $companiesGroup,
+            'requests' => $requests->get()
         ];
 
         return $params;

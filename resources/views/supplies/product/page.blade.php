@@ -27,7 +27,7 @@
 
                 <div class="box-content nopadding regular-text">
 
-                    <x-SuppliesFilters :route="route('supplies.product')" :status="$status" />
+                    <x-SuppliesFilters :status="$status" :companies-group="$companiesGroup" />
 
                     <div class="row">
                         <div class="col-md-12">

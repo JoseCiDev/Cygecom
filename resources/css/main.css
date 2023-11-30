@@ -177,9 +177,3 @@ input {
     font-weight: 600;
     margin: 0;
 }
-
-.form-status-filter {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap
-}
