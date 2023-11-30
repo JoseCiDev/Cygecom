@@ -2,24 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\User\StoreAbilitiesRequest;
-use App\Models\{UserProfile, Ability};
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use App\Http\Requests\User\{StoreAbilitiesRequest, CreateProfileRequest};
+use App\Models\Ability;
 use App\Providers\UserService;
-use Illuminate\Http\Request;
+use App\Services\UserProfileService;
 
 class AbilitiesController extends Controller
 {
-    public function __construct(private UserService $userService)
-    {
+    public function __construct(
+        private UserService $userService,
+        private UserProfileService $userProfileService
+    ) {
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
         $abilities = Ability::with('users', 'profiles')->get();
-        $profiles = UserProfile::with('abilities', 'user.person')->get();
+        $profiles = $this->userProfileService->profiles()->get();
         $users = $this->userService->getUsers()
             ->whereHas('profile', function ($query) {
                 return $query->where('name', '!=', 'admin');
@@ -34,15 +38,44 @@ class AbilitiesController extends Controller
         return view('authorizations.abilities', $params);
     }
 
-    public function profile()
+    public function profile(): View
     {
         $abilities = Ability::with('users', 'profiles')->get();
 
         return view('authorizations.profile', ['abilities' => $abilities]);
     }
 
-    public function create(Request $request)
+    /**
+     * Cria novo perfil validando integridade para perfis únicos
+     * @param CreateProfileRequest $request Valida formato dos dados: name e abilities
+     * @return RedirectResponse Retorna para página de submit
+     */
+    public function create(CreateProfileRequest $request): RedirectResponse
     {
+        $name = $request->get('name');
+        $abilities = collect($request->get('abilities'));
+
+        try {
+            $profiles = $this->userProfileService->profiles()->get();
+
+            foreach ($profiles as $profile) {
+                $profileName = $profile->name;
+                $profileAbilities = $profile->abilities->pluck('id');
+
+                $profileAbilitiesDiff = $profileAbilities->diff($abilities);
+                $abilitiesDiff = $abilities->diff($profileAbilities);
+
+                if ($abilitiesDiff->isEmpty() && $profileAbilitiesDiff->isEmpty()) {
+                    throw new \Exception("Já exite o perfil $profileName que possui as habilidades idênticas. Por favor, analise melhor as necessidades do novo perfil $name!");
+                }
+            }
+
+            $this->userProfileService->create($name, $abilities);
+        } catch (\Exception $exception) {
+            return redirect()->back()->withErrors(["Não foi possível criar o perfil $name.", $exception]);
+        }
+
+        session()->flash('success', "Perfil $name criado com sucesso!");
         return redirect()->back();
     }
 

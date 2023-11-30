@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserProfile extends Model
 {
-    use HasFactory;
+    use HasFactory, LogObserverTrait;
 
     public function user()
     {
@@ -18,4 +18,7 @@ class UserProfile extends Model
     {
         return $this->belongsToMany(Ability::class, 'abilities_profiles', 'user_profile_id', 'ability_id');
     }
+
+    protected $fillable = ['name'];
+    public $timestamps = false;
 }
