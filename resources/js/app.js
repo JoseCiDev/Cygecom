@@ -57,10 +57,15 @@ $.fn.removeRequired = function() {
     return $(this);
 }
 
-$.fn.showModalAlert = (title = '', message, callback = null) => {
+$.fn.showModalAlert = (title = '', message, callback = null, modalDialogClass = false) => {
     const modalAlert = new bootstrap.Modal('#modal-alert', { keyboard: false});
     $("#modal-alert-label").html(title);
     $("#modal-alert-message").html(message);
+
+    if(modalDialogClass) {
+        $('#modal-alert .modal-dialog').addClass(modalDialogClass);
+    }
+
     $("#modal-alert-submit").on('click', () => {
         if(callback) {
             callback();
