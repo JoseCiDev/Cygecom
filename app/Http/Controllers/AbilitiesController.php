@@ -72,7 +72,7 @@ class AbilitiesController extends Controller
 
             $this->userProfileService->create($name, $abilities);
         } catch (\Exception $exception) {
-            return redirect()->back()->withErrors(["Não foi possível criar o perfil $name.", $exception]);
+            return redirect()->back()->withInput()->withErrors(["Não foi possível criar o perfil $name.", $exception->getMessage()]);
         }
 
         session()->flash('success', "Perfil $name criado com sucesso!");

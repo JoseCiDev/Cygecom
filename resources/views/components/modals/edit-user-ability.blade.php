@@ -193,9 +193,6 @@
                         }
                     })
 
-                    const $tooltipTriggerList = $('[data-bs-toggle="tooltip"]');
-                    $tooltipTriggerList.each((_, tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
-
                     $form.attr('action', `/abilities/store/${id}`);
                 },
                 error: function(error) {

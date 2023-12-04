@@ -103,7 +103,6 @@ $(() => {
         }
 
         $(element).select2(config);
-
     });
 
     // autocomplete off
@@ -190,4 +189,6 @@ $(() => {
             },
         });
     });
+
+    $('[data-bs-toggle="tooltip"]').each((_, tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
 });

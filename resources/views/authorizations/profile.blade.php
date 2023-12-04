@@ -39,6 +39,10 @@
                     flex-direction: row;
                     flex-wrap: wrap;
                 }
+
+                #form-create-profile #create-profile {
+                    align-self: flex-end;
+                }
             }
 
             @media(min-width: 1440px) {
@@ -58,24 +62,15 @@
     <div class="alert alert-warning" role="alert">
         <strong>Regras de criação de perfil:</strong>
         <ul class="list-group">
-            <li class="list-group-item bg-transparent">
-                Evite perfis específicos que serão usados apenas em excessões.
-                Em casos específicos deve ser usado o gerenciamento de
-                <a href="{{ route('abilities.index') }}" class="link-danger">usuários e habilidades</a>
-            </li>
-
-            <li class="list-group-item bg-transparent">
-                Implemente habilidades que mantenham a integridade do sistema.
-                Garanta que as habilidades estejam corretas. Isso ajuda a evitar perfis com acessos incorretos ou incompletos.
-            </li>
-
-            <li class="list-group-item bg-transparent"> Forneça um nome de perfil semântico que facilite o processo de entendimento dos usuários.</li>
-            <li class="list-group-item bg-transparent"> Analise o módulo de <a href="{{ route('abilities.index') }}" class="link-danger">usuários e habilidades</a> antes de
-                criar um novo perfil. Continue com a criação de novo perfil apenas se existir usuários que possuem a necessidade de mesmas habilidades. </li>
-            <li class="list-group-item bg-transparent"> Conjunto de habilidades é único. Mesmo perfis idênticos com nomes diferentes não são permitidos. </li>
             <li class="list-group-item bg-transparent"> Nome de perfil é único. </li>
             <li class="list-group-item bg-transparent"> Nome de perfil não deve ter espaço. Separe palavras com caracter "_". Ex.: suprimentos_hkm. </li>
             <li class="list-group-item bg-transparent"> Nome de perfil não deve ter caracteres especias ou acentos, exceto "_". </li>
+            <li class="list-group-item bg-transparent"> Evite perfis específicos que serão usados apenas em excessões. Ex.: suprimentos_luis, diretor_luis </li>
+            <li class="list-group-item bg-transparent"> Garanta que as habilidades estejam corretas. Isso ajuda a evitar perfis com acessos incorretos ou incompletos. </li>
+            <li class="list-group-item bg-transparent"> Escolha um nome de perfil que facilite o processo de entendimento dos usuários. Ex.: suprimentos_hkm, suprimentos_inp </li>
+            <li class="list-group-item bg-transparent"> Analise <a href="{{ route('abilities.index') }}" class="link-danger">usuários e habilidades</a> antes de
+                criar um novo perfil. Pode ser que ajustar um ou poucos usuários seja a melhor solução. </li>
+            <li class="list-group-item bg-transparent"> Conjunto de habilidades é único. Mesmo perfis idênticos com nomes diferentes não são permitidos. </li>
         </ul>
     </div>
 
@@ -88,7 +83,6 @@
 
         <div class="profile-types">
             <button class="btn btn-secondary" data-profile="normal"><i class="fa-solid fa-plus"></i> habililidades normais</button>
-            <button class="btn btn-secondary" data-profile="admin"><i class="fa-solid fa-plus"></i> habililidades de administrador</button>
             <button class="btn btn-secondary" data-profile="suprimentos_inp"><i class="fa-solid fa-plus"></i> habililidades de suprimentos INP</button>
             <button class="btn btn-secondary" data-profile="suprimentos_hkm"><i class="fa-solid fa-plus"></i> habililidades de suprimentos HKM</button>
             <button class="btn btn-secondary" data-profile="gestor_usuarios"><i class="fa-solid fa-plus"></i> habililidades de gestor de usuários</button>
@@ -151,14 +145,12 @@
                          Evite manter o novo perfil sem relações.
                          Em caso de não possuir autorização contate o gestor de usuários.`;
 
-                    $.fn.showModalAlert(title, message, () => $('#form-create-profile').trigger('submit'));
+                    $.fn.showModalAlert(title, message, () => $('#form-create-profile').trigger('submit'), 'modal-lg');
                 }
 
                 $createProfileBtn.on('click', createProfile);
 
                 $profileBtns.on('click', setProfileAbilities);
-
-                $('[data-bs-toggle="tooltip"]').each((_, tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
             });
         </script>
     @endpush

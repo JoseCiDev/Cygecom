@@ -105,6 +105,10 @@ input {
     }
 }
 
+.fa-circle-info {
+    cursor: help;
+}
+
 .help-block.has-error {
     color: #ff4433;
 }

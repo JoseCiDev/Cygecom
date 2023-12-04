@@ -12,7 +12,7 @@ require __DIR__ . '/web/reports.php';
 require __DIR__ . '/web/abilities.php';
 
 Route::middleware(['auth'])->group(function () {
-    Route::middleware('can:get.home')->get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::middleware('can:get.profile')->get('/profile', [App\Http\Controllers\ProfileController::class, 'showProfile'])->name('profile');
 });
 

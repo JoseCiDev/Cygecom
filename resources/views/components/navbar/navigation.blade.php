@@ -88,17 +88,21 @@
             </ul>
         </div>
 
-        @can('get.abilities.index')
+        @if (Gate::any(['get.abilities.index', 'get.abilities.profile']))
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Autorizações
                 </button>
                 <ul class="dropdown-menu">
-                    <li> <a href="{{ route('abilities.index') }}">Usuários e habilidades</a> </li>
-                    <li> <a href="{{ route('abilities.profile') }}">Criação de perfis</a> </li>
+                    @can('get.abilities.index')
+                        <li> <a href="{{ route('abilities.index') }}">Usuários e habilidades</a> </li>
+                    @endcan
+                    @can('get.abilities.profile')
+                        <li> <a href="{{ route('abilities.profile') }}">Criação de perfis</a> </li>
+                    @endcan
                 </ul>
             </div>
-        @endcan
+        @endif
 
     </div>
 
