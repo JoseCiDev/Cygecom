@@ -23,14 +23,12 @@ class SuppliesParamsRequest extends FormRequest
      */
     public function rules(): array
     {
-        $companiesGroups = collect(CompanyGroup::cases())->pluck('value')->join(',');
         $statusValues = collect(PurchaseRequestStatus::cases())->pluck('value')
             ->filter(fn ($status) => $status !== PurchaseRequestStatus::RASCUNHO->value)
             ->join(',');
 
         $rules = [
             'status' => ['nullable', 'array', "in:$statusValues"],
-            'companies-group' => ['nullable', 'array', "in:$companiesGroups"]
         ];
 
         return $rules;

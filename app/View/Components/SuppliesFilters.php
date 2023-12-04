@@ -12,10 +12,8 @@ class SuppliesFilters extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(
-        public Collection $companiesGroup,
-        public Collection $status
-    ) {
+    public function __construct(public Collection $status)
+    {
     }
 
     /**

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Enums\{PurchaseRequestType, PurchaseRequestStatus, CompanyGroup};
 use App\Providers\{SupplierService, PurchaseRequestService};
 use App\Http\Requests\Supplies\SuppliesParamsRequest;
+use Illuminate\Support\Facades\Gate;
 
 class SuppliesController extends Controller
 {
@@ -107,7 +108,6 @@ class SuppliesController extends Controller
      */
     private function getRequestsParams(SuppliesParamsRequest $request, PurchaseRequestType $requestType): array
     {
-        $companiesGroup = collect($request->get('companies-group'));
         $status = collect($request->get('status'));
 
         if ($status->isEmpty()) {
@@ -119,23 +119,20 @@ class SuppliesController extends Controller
                 ])->contains($status));
         }
 
-        if ($companiesGroup->isEmpty()) {
-            $companiesGroup = collect(CompanyGroup::cases())->pluck('value');
-        }
-
         $requests = $this->purchaseRequestService->requestsByStatus($status->toArray())
             ->whereNotIn('status', [PurchaseRequestStatus::RASCUNHO->value]);
 
-        $requests->whereHas('costCenterApportionment', fn ($query) => $query
-            ->whereHas('costCenter', fn ($query) => $query
-                ->whereHas('company', fn ($query) => $query
-                    ->whereIn('group', $companiesGroup))));
+        if (!Gate::allows('admin')) {
+            $requests->whereHas('costCenterApportionment', fn ($query) => $query->whereHas(
+                'costCenter',
+                fn ($query) => $query->whereIn('id', auth()->user()->suppliesCostCenters->pluck('id'))
+            ));
+        }
 
         $requests->where('type', $requestType);
 
         $params = [
             'status' => $status,
-            'companiesGroup' => $companiesGroup,
             'requests' => $requests->get()
         ];
 

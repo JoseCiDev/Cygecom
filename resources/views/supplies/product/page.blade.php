@@ -27,7 +27,7 @@
 
                 <div class="box-content nopadding regular-text">
 
-                    <x-SuppliesFilters :status="$status" :companies-group="$companiesGroup" />
+                    <x-SuppliesFilters :status="$status" />
 
                     <div class="row">
                         <div class="col-md-12">
