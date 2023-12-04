@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -76,12 +77,16 @@ class LoginController extends Controller
      */
     protected function attemptLogin(Request $request)
     {
-        $result = $this->guard()->attempt($this->credentials($request), $request->boolean('remember'));
+        $user = User::where('email', $request->input('email'))->whereNull('deleted_at')->first();
 
-        if ($result && $this->guard()->user()->deleted_at !== null) {
-            $this->guard()->logout();
+        if (!$user) {
             return false;
         }
+
+        $result = $this->guard()->attempt([
+            'email' => $user->email,
+            'password' => $request->input('password'),
+        ], $request->boolean('remember'));
 
         return $result;
     }
