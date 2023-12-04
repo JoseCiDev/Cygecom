@@ -14,9 +14,10 @@ class Abilities extends Seeder
             // Abilities
             ['id' => 1, 'name' => 'get.abilities.index', 'description' => 'Acessar tela do painel de gestão de perfis e habilidades'],
             ['id' => 45, 'name' => 'post.abilities.store.json', 'description' => 'API: Atualizar habilidades dos usuários'],
+            ['id' => 57, 'name' => 'get.abilities.profile', 'description' => 'Acessar tela de criação de perfil'],
+            ['id' => 2, 'name' => 'post.abilities.profile.create', 'description' => 'Registrar novo perfil'],
 
             // Web
-            ['id' => 2, 'name' => 'get.home', 'description' => 'Acessar tela inicial'],
             ['id' => 3, 'name' => 'get.profile', 'description' => 'Acessar tela do seu perfil'],
             ['id' => 4, 'name' => 'post.user.update', 'description' => 'Atualizar usuário'],
             ['id' => 5, 'name' => 'post.supplier.register', 'description' => 'Registrar novo fornecedor'],
@@ -93,7 +94,7 @@ class Abilities extends Seeder
         ];
 
         $normalAbilities = [
-            2, 3, 4, 5, // Web
+            3, 4, 5, // Web
             17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 49, 50, // Requests
             44, 51, // Reports
             47, 48 // Supplies
