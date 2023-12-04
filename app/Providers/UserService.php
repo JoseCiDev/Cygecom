@@ -84,6 +84,10 @@ class UserService extends ServiceProvider implements UserServiceInterface
 
             $user->save();
 
+            if (Gate::any(['admin', 'gestor_usuarios', 'suprimentos_hkm', 'suprimentos_inp'])) {
+                $user->suppliesCostCenters()->sync($request['supplies_cost_centers']);
+            }
+
             if (Gate::any(['admin', 'gestor_usuarios'])) {
                 $costCenterPermissions = $request['user_cost_center_permissions'] ?? null;
 
@@ -109,6 +113,10 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $this->saveUser($user, $data);
             $this->savePerson($person, $data);
             $this->savePhone($phone, $data);
+
+            if (Gate::any(['admin', 'gestor_usuarios', 'suprimentos_hkm', 'suprimentos_inp'])) {
+                $user->suppliesCostCenters()->sync($data['supplies_cost_centers']);
+            }
 
             if (Gate::any(['admin', 'gestor_usuarios'])) {
                 $costCenterPermissions = $data['user_cost_center_permissions'] ?? null;

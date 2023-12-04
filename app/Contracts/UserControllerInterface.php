@@ -7,10 +7,11 @@ use Illuminate\View\View;
 use App\Providers\UserService;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\User\{StoreUserRequest, UpdateUserRequest};
+use App\Services\UserProfileService;
 
 interface UserControllerInterface
 {
-    public function __construct(UserService $userService);
+    public function __construct(UserService $userService, UserProfileService $userProfileService);
     public function index(): View;
     public function create(): View;
     public function store(StoreUserRequest $request): RedirectResponse;

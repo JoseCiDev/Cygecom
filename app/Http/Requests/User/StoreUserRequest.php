@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\User;
 
-use App\Rules\{UniqueCpfCnpj, UniqueEmail};
+use App\Rules\{ArrayOfIntenger, UniqueCpfCnpj, UniqueEmail};
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUserRequest extends FormRequest
@@ -70,7 +70,11 @@ class StoreUserRequest extends FormRequest
             ],
             'user_cost_center_permissions' => [
                 'nullable',
-                'array'
+                new ArrayOfIntenger
+            ],
+            'supplies_cost_centers' => [
+                'nullable',
+                new ArrayOfIntenger
             ],
         ];
     }
@@ -104,8 +108,6 @@ class StoreUserRequest extends FormRequest
             'cost_center_id.required' => 'Centro de custo é obrigatório',
 
             'is_buyer.boolean' => 'A pessoa de ter o campo "é comprador" como verdadeiro ou false.',
-
-            "user_cost_center_permissions.array" => "O campo permissões do centro de custo do usuário deve ser um array.",
         ];
     }
 }

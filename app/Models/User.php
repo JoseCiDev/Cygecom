@@ -31,6 +31,11 @@ class User extends Authenticatable
         return $this->hasMany(UserCostCenterPermission::class);
     }
 
+    public function suppliesCostCenters()
+    {
+        return $this->belongsToMany(CostCenter::class, 'supplies_cost_centers', 'user_id', 'cost_center_id');
+    }
+
     public function purchaseRequest()
     {
         return $this->hasMany(PurchaseRequest::class);

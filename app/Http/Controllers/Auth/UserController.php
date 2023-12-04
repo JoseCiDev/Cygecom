@@ -12,6 +12,8 @@ use App\Providers\UserService;
 use App\Contracts\UserControllerInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\{StoreUserRequest, UpdateUserRequest};
+use App\Models\Company;
+use App\Services\UserProfileService;
 
 class UserController extends Controller implements UserControllerInterface
 {
@@ -24,8 +26,10 @@ class UserController extends Controller implements UserControllerInterface
      */
     protected $redirect = '/users';
 
-    public function __construct(private UserService $userService)
-    {
+    public function __construct(
+        private UserService $userService,
+        private UserProfileService $userProfileService
+    ) {
     }
 
     /**
@@ -60,8 +64,17 @@ class UserController extends Controller implements UserControllerInterface
     {
         $approvers = $this->userService->getApprovers('register');
         $costCenters = $this->userService->getCostCenters();
+        $profiles = $this->userProfileService->profiles()->get();
+        $companies = Company::select('id', 'corporate_name', 'name', 'cnpj', 'group')->get();
 
-        return view('users.register', compact('approvers', 'costCenters'));
+        $params = [
+            'approvers' => $approvers,
+            'costCenters' => $costCenters,
+            'profiles' => $profiles,
+            'companies' => $companies
+        ];
+
+        return view('users.user', $params);
     }
 
     /**
@@ -99,8 +112,18 @@ class UserController extends Controller implements UserControllerInterface
 
         $approvers = $this->userService->getApprovers('user.update', $id);
         $costCenters = $this->userService->getCostCenters();
+        $profiles = $this->userProfileService->profiles()->get();
+        $companies = Company::select('id', 'corporate_name', 'name', 'cnpj', 'group')->get();
 
-        return view('users.user', compact('user', 'approvers', 'costCenters'));
+        $params = [
+            'user' => $user,
+            'approvers' => $approvers,
+            'costCenters' => $costCenters,
+            'profiles' => $profiles,
+            'companies' => $companies
+        ];
+
+        return view('users.user', $params);
     }
 
     /**

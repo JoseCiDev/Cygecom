@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\Rules\ArrayOfIntenger;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -89,9 +90,13 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'max:20'
             ],
-            "user_cost_center_permissions" => [
+            'user_cost_center_permissions' => [
                 'nullable',
-                'array'
+                new ArrayOfIntenger
+            ],
+            'supplies_cost_centers' => [
+                'nullable',
+                new ArrayOfIntenger
             ],
         ];
     }
@@ -118,8 +123,6 @@ class UpdateUserRequest extends FormRequest
             'password_confirmation' => 'Confirmação de senha necessária',
 
             'birthdate.date' => 'Data inválida',
-
-            "user_cost_center_permissions.array" => "O campo permissões do centro de custo do usuário deve ser um array.",
         ];
     }
 }
