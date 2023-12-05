@@ -56,7 +56,10 @@
                             </td>
                             <td>
                                 <button class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-edit-user-ability" data-user-id={{ $user->id }}>
-                                    <i class="fa-solid fa-pen-to-square"></i> Editar habilidades</button>
+                                    <i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" data-bs-placement="top"
+                                        data-bs-title="Editar habilidades do usuário"></i></button>
+                                <a href="{{ route('abilities.user', ['id' => $user->id]) }}" class="btn btn-mini btn-secondary">
+                                    <i class="fa-solid fa-eye" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ver todas habilidades do usuário"></i></a>
                             </td>
                         </tr>
                     @endforeach

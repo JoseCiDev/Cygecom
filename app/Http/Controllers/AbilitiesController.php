@@ -46,6 +46,18 @@ class AbilitiesController extends Controller
     }
 
     /**
+     * Tela que mostra todas habilidades do usuário
+     * @param int $id ID usado para encontrar usuário
+     * @return View Tela de habilidades do usuário encontrado
+     */
+    public function user(int $id): View
+    {
+        $user = $this->userService->getUserById($id);
+
+        return view('authorizations.user', ['user' => $user]);
+    }
+
+    /**
      * Cria novo perfil validando integridade para perfis únicos
      * @param CreateProfileRequest $request Valida formato dos dados: name e abilities
      * @return RedirectResponse Retorna para página de submit
