@@ -2,16 +2,36 @@
 
 @push('styles')
     <style>
-        .user-abilities-container li.list-group-item.get {
+        .color-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: space-around;
+            padding: 10px;
+        }
+
+        .color-info small {
+            padding: 0 3px;
+        }
+
+        .user-abilities-container li.list-group-item.get,
+        .get {
             border-left: 6px solid #6DC066;
         }
 
-        .user-abilities-container li.list-group-item.post {
+        .user-abilities-container li.list-group-item.post,
+        .post {
             border-left: 6px solid #FFA500;
         }
 
-        .user-abilities-container li.list-group-item.delete {
+        .user-abilities-container li.list-group-item.delete,
+        .delete {
             border-left: 6px solid #E74C3C;
+        }
+
+        .user-abilities-container li.list-group-item.type-authorize,
+        .type-authorize {
+            border-left: 6px solid #000;
         }
 
         .user-abilities-container .list-group {
@@ -112,7 +132,12 @@
                     </div>
                 </form>
             </div>
-
+            <div class="color-info">
+                <small class="get">Acessar dados</small>
+                <small class="post">Modificar dados</small>
+                <small class="delete">Excluir dados</small>
+                <small class="type-authorize">Autorização de perfil</small>
+            </div>
         </div>
     </div>
 </div>

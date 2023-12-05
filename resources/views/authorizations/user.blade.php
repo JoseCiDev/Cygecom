@@ -17,19 +17,34 @@
 <x-app>
     @push('styles')
         <style>
-            .user-container li.list-group-item.get {
+            .color-info {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                padding: 10px;
+            }
+
+            .color-info small {
+                padding: 0 3px;
+            }
+
+            .user-container li.list-group-item.get,
+            .get {
                 border-left: 6px solid #6DC066;
             }
 
-            .user-container li.list-group-item.post {
+            .user-container li.list-group-item.post,
+            .post {
                 border-left: 6px solid #FFA500;
             }
 
-            .user-container li.list-group-item.delete {
+            .user-container li.list-group-item.delete,
+            .delete {
                 border-left: 6px solid #E74C3C;
             }
 
-            .user-container li.list-group-item.type-authorized {
+            .user-container li.list-group-item.type-authorize,
+            .type-authorize {
                 border-left: 6px solid #000;
             }
 
@@ -103,11 +118,19 @@
         <hr>
 
         <p><strong>Habilidades do perfil do usuário:</strong> </p>
+
+        <div class="color-info">
+            <small class="get">Acessar dados</small>
+            <small class="post">Modificar dados</small>
+            <small class="delete">Excluir dados</small>
+            <small class="type-authorize">Autorização de perfil</small>
+        </div>
+
         <ul class="list-group list-group-abilities">
             @foreach ($profileAbilities as $ability)
                 @php
                     $nameParts = explode('.', $ability->name);
-                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorized';
+                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                 @endphp
 
                 <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
@@ -123,7 +146,7 @@
             @forelse ($userAbilities as $ability)
                 @php
                     $nameParts = explode('.', $ability->name);
-                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorized';
+                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                 @endphp
                 <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
                     {{ $ability->description }}
