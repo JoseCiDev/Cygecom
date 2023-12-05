@@ -2,6 +2,18 @@
 
 @push('styles')
     <style>
+        .user-abilities-container li.list-group-item.get {
+            border-left: 6px solid #6DC066;
+        }
+
+        .user-abilities-container li.list-group-item.post {
+            border-left: 6px solid #FFA500;
+        }
+
+        .user-abilities-container li.list-group-item.delete {
+            border-left: 6px solid #E74C3C;
+        }
+
         .user-abilities-container .list-group {
             display: flex;
             flex-direction: column;
@@ -73,7 +85,11 @@
 
                         <ul class="list-group" id="user-abilities">
                             @foreach ($abilities as $ability)
-                                <li class="list-group-item">
+                                @php
+                                    $method = collect(explode('.', $ability->name))->first();
+                                @endphp
+
+                                <li class="list-group-item {{ $method }}">
                                     <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top'
                                         data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
                                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
