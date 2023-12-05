@@ -64,8 +64,8 @@ class ReportController extends Controller
         $requestType = (array) $request->query('request-type', collect(PurchaseRequestType::cases())->map(fn ($el) => $el->value)->toArray());
         $requestingUsersIds = (array) $request->query('requesting-users-ids', []);
         $costCenterIds = (array) $request->query('cost-center-ids', []);
-        $dateSince = (string) $request->query('date-since', false);
-        $dateUntil = (string) $request->query('date-until', now());
+        $dateSince = (string) $request->query('date-since', now()->subMonth()->format('Y-m-d'));
+        $dateUntil = (string) $request->query('date-until', now()->format('Y-m-d'));
         $ownRequests = (string) $request->query('own-requests', true);
         $currentPage = ($start / $length) + 1;
         $isAll = $length === -1;
@@ -127,8 +127,8 @@ class ReportController extends Controller
         $requestType = (array) $request->query('request-type', collect(PurchaseRequestType::cases())->map(fn ($el) => $el->value)->toArray());
         $requestingUsersIds = (array) $request->query('requesting-users-ids', []);
         $costCenterIds = (array) $request->query('cost-center-ids', []);
-        $dateSince = (string) $request->query('date-since', false);
-        $dateUntil = (string) $request->query('date-until', now());
+        $dateSince = (string) $request->query('date-since', now()->subMonth()->format('Y-m-d'));
+        $dateUntil = (string) $request->query('date-until', now()->format('Y-m-d'));
         $isSuppliesContract = (bool) $request->query('is-supplies-contract', null);
         $desiredDate = (string) $request->query('desired-date', null);
         $suppliesUsers = (array) $request->query('supplies-users', []);

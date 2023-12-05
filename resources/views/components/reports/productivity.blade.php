@@ -228,6 +228,10 @@
             width: 100%;
         }
 
+        .productivity-report-filters .dates-checkboxs-box {
+            width: 100%;
+        }
+
         .productivity-report-filters .dates-container {
             width: 100%;
         }
@@ -235,7 +239,6 @@
         .productivity-report-filters .dates-container .dates {
             width: 100%;
             display: flex;
-            justify-content: space-between;
             gap: 10px;
             position: relative;
             margin: 10px 0 30px;
@@ -243,6 +246,8 @@
 
         .productivity-report-filters .dates-container .dates .date {
             width: 100%;
+            flex-basis: 170px;
+            flex-grow: 1;
         }
 
         .productivity-report-filters .dates-container .dates .date input[type='date'] {
@@ -255,7 +260,6 @@
             left: 0;
             right: 0;
             text-align: center;
-            background-image: linear-gradient(to top, var(--grey-secondary-color), var(--grey-tertiary-color));
             color: var(--black-color);
             border-radius: 0 0 4px 4px;
             cursor: help;
@@ -291,6 +295,7 @@
             row-gap: 10px;
             column-gap: 15px;
             align-items: center;
+            padding: 5px 0 10px;
         }
 
         .productivity-report-filters .request-status-filter .status .checkbox-label {
@@ -310,6 +315,7 @@
                 align-items: center;
                 gap: 5px;
                 justify-content: space-between;
+                margin: 0;
             }
 
             .productivity-report-filters .selects .form-group .select-filter-btns {
@@ -332,11 +338,39 @@
             .productivity-report-filters .request-status-filter {
                 width: 100%;
             }
+
+            .productivity-report-filters .dates-container {
+                display: flex;
+                gap: 10px;
+            }
         }
 
         @media(min-width: 1024px) {
             .charts-requests-sent {
                 width: 375px;
+            }
+
+            .productivity-report-filters .selects {
+                gap: 15px;
+            }
+
+            .productivity-report-filters .selects .select-filter-container {
+                margin-bottom: 0;
+            }
+
+            .productivity-report-filters .selects .form-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0;
+            }
+
+            .productivity-report-filters .dates-checkboxs-box {
+                display: flex;
+                gap: 20px;
+            }
+
+            .productivity-report-filters .checkboxs-container {
+                flex-wrap: wrap;
             }
 
             .productivity-report-item {
@@ -353,7 +387,7 @@
 
             .productivity-report-filters .dates-container {
                 display: flex;
-                gap: 10px;
+                flex-wrap: wrap;
             }
         }
 
@@ -365,6 +399,25 @@
             .productivity-report-filters .dates-container .dates .span-info {
                 text-align: left;
                 padding: 0 20px;
+            }
+        }
+
+        @media(min-width: 1440px) {
+            .productivity-report-filters .selects {
+                flex-direction: row;
+                justify-content: left;
+                flex-wrap: wrap;
+                column-gap: 20px;
+                align-items: flex-start;
+            }
+
+            .productivity-report-filters .selects .form-group {
+                flex: 1 0 45%;
+            }
+
+            .productivity-report-filters .dates-container,
+            .productivity-report-filters .checkboxs-container {
+                flex-wrap: nowrap;
             }
         }
     </style>
@@ -441,69 +494,74 @@
 
             </div>
 
-            <div class="dates-container">
-                <div class="dates">
-                    <div class="date">
-                        <label for="date-since" class="regular-text">Data início:</label>
-                        <input type="date" class="form-control" name="date-since" id="date-since" data-cy="date-since" max="{{ now()->formatCustom('Y-m-d') }}">
+            <div class="dates-checkboxs-box">
+                <div class="dates-container">
+                    <div class="dates">
+                        <div class="date">
+                            <label for="date-since" class="regular-text">Data início: (período)</label>
+                            <input type="date" class="form-control" name="date-since" id="date-since" data-cy="date-since" max="{{ now()->formatCustom('Y-m-d') }}"
+                                value="{{ now()->subMonth()->format('Y-m-d') }}">
+                        </div>
+
+                        <div class="date">
+                            <label for="date-until" class="regular-text">Data fim: (período)</label>
+                            <input type="date" class="form-control" name="date-until" id="date-until" data-cy="date-until" max="{{ now()->formatCustom('Y-m-d') }}"
+                                value="{{ now()->format('Y-m-d') }}">
+                        </div>
+
+                        <small class="span-info" data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-title="Período padrão é 1 mês. Tabela e gráfico circular: solicitações pendentes no período. Gráfico de barras: solicitações finalizadas no período.">
+                            <i class="fa-solid fa-circle-info"></i>
+                            Período para filtragem das solicitações.
+                        </small>
                     </div>
 
-                    <div class="date">
-                        <label for="date-until" class="regular-text">Data fim: </label>
-                        <input type="date" class="form-control" name="date-until" id="date-until" data-cy="date-until" max="{{ now()->formatCustom('Y-m-d') }}">
+                    <div class="dates">
+                        <div class="date">
+                            <label for="desired-date" class="regular-text">Data desejada:</label>
+                            <input type="date" class="form-control" name="desired-date" id="desired-date" data-cy="desired-date">
+                        </div>
+                        <small class="span-info" data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-title="Filtros data início e data fim são ignorados ao filtrar por data desejada.">
+                            <i class="fa-solid fa-circle-info"></i>
+                            Filtrar por data desejada sobrescreve período.
+                        </small>
                     </div>
-
-                    <small class="span-info">
-                        <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top"
-                            data-bs-title="Tabela e gráfico circular: solicitações pendentes no período. Gráfico de barras: solicitações finalizadas no período."></i>
-                        Período para filtragem das solicitações.
-                    </small>
                 </div>
 
-                <div class="dates">
-                    <div class="date">
-                        <label for="desired-date" class="regular-text">Data desejada:</label>
-                        <input type="date" class="form-control" name="desired-date" id="desired-date" data-cy="desired-date">
+                <div class="checkboxs-container">
+                    <div class="checkboxs form-group">
+                        <label for="request-type" class="regular-text">Tipo da solicitação:</label>
+                        <div class="inputs-container">
+                            @foreach (PurchaseRequestType::cases() as $typeCase)
+                                <label class="checkbox-label secondary-text">
+                                    <input type="checkbox" name="request-type[]" class="request-type-checkbox" data-cy="request-type-{{ $typeCase->value }}"
+                                        value="{{ $typeCase->value }}" checked>
+                                    {{ $typeCase->label() }}
+                                </label>
+                            @endforeach
+                        </div>
                     </div>
-                    <small class="span-info">
-                        <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top"
-                            data-bs-title="Filtros data início e data fim são ignorados ao filtrar por data desejada."></i>
-                        Filtrar por data desejada sobrescreve período.
-                    </small>
-                </div>
-            </div>
 
-            <div class="checkboxs-container">
-                <div class="checkboxs form-group">
-                    <label for="request-type" class="regular-text">Tipo da solicitação:</label>
-                    <div class="inputs-container">
-                        @foreach (PurchaseRequestType::cases() as $typeCase)
+                    <div class="checkboxs form-group">
+                        <label for="request-type" class="regular-text">Contratação por:</label>
+                        <div class="inputs-container">
                             <label class="checkbox-label secondary-text">
-                                <input type="checkbox" name="request-type[]" class="request-type-checkbox" data-cy="request-type-{{ $typeCase->value }}"
-                                    value="{{ $typeCase->value }}" checked>
-                                {{ $typeCase->label() }}
+                                <input id="is-supplies-contract-none" type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input"
+                                    data-cy="is-supplies-contract-none" checked value="">
+                                Ambos
                             </label>
-                        @endforeach
-                    </div>
-                </div>
-
-                <div class="checkboxs form-group">
-                    <label for="request-type" class="regular-text">Contratação por:</label>
-                    <div class="inputs-container">
-                        <label class="checkbox-label secondary-text">
-                            <input id="is-supplies-contract-none" type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input"
-                                data-cy="is-supplies-contract-none" checked value="">
-                            Ambos
-                        </label>
-                        <label class="checkbox-label secondary-text">
-                            <input type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input" data-cy="is-supplies-contract-true" value="1">
-                            Suprimentos
-                        </label>
-                        <label class="checkbox-label secondary-text">
-                            <input type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input" data-cy="is-supplies-contract-false"
-                                value="0">
-                            Área solicitante
-                        </label>
+                            <label class="checkbox-label secondary-text">
+                                <input type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input" data-cy="is-supplies-contract-true"
+                                    value="1">
+                                Suprimentos
+                            </label>
+                            <label class="checkbox-label secondary-text">
+                                <input type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input" data-cy="is-supplies-contract-false"
+                                    value="0">
+                                Área solicitante
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -524,9 +582,8 @@
                             </label>
                         @endif
                     @endforeach
-
-                    <button id="all-status-checkbox" type="button" class="btn btn-mini btn-secondary">Marcar todos status</button>
                 </div>
+                <button id="all-status-checkbox" type="button" class="btn btn-mini btn-secondary">Marcar todos status</button>
             </div>
 
         </div>
@@ -615,7 +672,7 @@
                     <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top"
                         data-bs-title="Representação quantitativa de finalizações por cada responsável.
                         O período dos dados é o escolhido na filtragem.
-                        Caso não for escolhido período será representado os dados de todas solicitações finalizadas.
+                        Caso não for escolhido período será representado os dados de solicitações finalizadas nos últimos 30 dias.
                         Atenção: O responsável é o último atribuído."></i>
                     Solicitações finalizadas
                 </h2>

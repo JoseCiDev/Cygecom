@@ -85,12 +85,14 @@
                         <div class="dates">
                             <div class="date">
                                 <label for="date-since" class="regular-text">Data início:</label>
-                                <input type="date" class="form-control" name="date-since" id="date-since" data-cy="date-since" max="{{ now()->formatCustom('Y-m-d') }}">
+                                <input type="date" class="form-control" name="date-since" id="date-since" data-cy="date-since" max="{{ now()->formatCustom('Y-m-d') }}"
+                                    value="{{ now()->subMonth()->format('Y-m-d') }}">
                             </div>
 
                             <div class="date">
                                 <label for="date-until" class="regular-text">Data fim: </label>
-                                <input type="date" class="form-control" name="date-until" id="date-until" data-cy="date-until" max="{{ now()->formatCustom('Y-m-d') }}">
+                                <input type="date" class="form-control" name="date-until" id="date-until" data-cy="date-until" max="{{ now()->formatCustom('Y-m-d') }}"
+                                    value="{{ now()->format('Y-m-d') }}">
                             </div>
 
                             <small class="span-info">Data de envio da solicitação para suprimentos</small>
