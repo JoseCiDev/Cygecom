@@ -1,6 +1,37 @@
 <x-app>
     @push('styles')
         <style>
+            .color-info {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                padding: 10px;
+            }
+
+            .color-info small {
+                padding: 0 3px;
+            }
+
+            .profile-form li.list-group-item.get,
+            .get {
+                border-left: 6px solid #6DC066;
+            }
+
+            .profile-form li.list-group-item.post,
+            .post {
+                border-left: 6px solid #FFA500;
+            }
+
+            .profile-form li.list-group-item.delete,
+            .delete {
+                border-left: 6px solid #E74C3C;
+            }
+
+            .profile-form li.list-group-item.type-authorize,
+            .type-authorize {
+                border-left: 6px solid #000;
+            }
+
             .profile-form,
             .profile-form .profile-types {
                 display: flex;
@@ -81,6 +112,13 @@
             <input type="text" id="name" data-cy="name" name="name" placeholder="Ex: suprimentos_inp, diretor, admin" class="form-control" minlength="4" maxlength="30">
         </div>
 
+        <div class="color-info">
+            <small class="get">Acessar dados</small>
+            <small class="post">Modificar dados</small>
+            <small class="delete">Excluir dados</small>
+            <small class="type-authorize">Autorização de perfil</small>
+        </div>
+
         <div class="profile-types">
             <button class="btn btn-secondary" data-profile="normal"><i class="fa-solid fa-plus"></i> habililidades normais</button>
             <button class="btn btn-secondary" data-profile="suprimentos_inp"><i class="fa-solid fa-plus"></i> habililidades de suprimentos INP</button>
@@ -94,9 +132,11 @@
         <ul class="list-group" id="user-abilities">
             @foreach ($abilities as $ability)
                 @php
+                    $nameParts = explode('.', $ability->name);
+                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                     $profileNames = $ability->profiles->pluck('name');
                 @endphp
-                <li class="list-group-item">
+                <li class="list-group-item {{ $method }}">
                     <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}" value="{{ $ability->id }}"
                             @checked($profileNames->contains('normal')) data-profiles='{{ $profileNames }}'>

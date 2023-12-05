@@ -106,7 +106,8 @@
                         <ul class="list-group" id="user-abilities">
                             @foreach ($abilities as $ability)
                                 @php
-                                    $method = collect(explode('.', $ability->name))->first();
+                                    $nameParts = explode('.', $ability->name);
+                                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                                 @endphp
 
                                 <li class="list-group-item {{ $method }}">
