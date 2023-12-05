@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\User;
 
-use App\Rules\{ArrayOfIntenger, UniqueCpfCnpj, UniqueEmail};
+use App\Rules\{ArrayOfIntenger, ProfileType, UniqueCpfCnpj, UniqueEmail};
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUserRequest extends FormRequest
@@ -50,7 +50,8 @@ class StoreUserRequest extends FormRequest
             'profile_type' => [
                 'required',
                 'string',
-                'max:255'
+                'max:255',
+                new ProfileType
             ],
             'number' => [
                 'required',

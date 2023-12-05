@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\User;
 
-use App\Rules\ArrayOfIntenger;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\{ProfileType, ArrayOfIntenger};
 
 class UpdateUserRequest extends FormRequest
 {
@@ -58,7 +58,8 @@ class UpdateUserRequest extends FormRequest
             ],
             'profile_type' => [
                 'nullable',
-                'in:admin,normal,diretor,gestor_fornecedores,gestor_usuarios,suprimentos_hkm,suprimentos_inp'
+                'string',
+                new ProfileType
             ],
             'approver_user_id' => [
                 'nullable',
