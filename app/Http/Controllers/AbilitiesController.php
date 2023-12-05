@@ -68,6 +68,10 @@ class AbilitiesController extends Controller
         $abilities = collect($request->get('abilities'));
 
         try {
+            if ($abilities->isEmpty()) {
+                throw new \Exception("Não é possível criar um perfil sem habilidades!");
+            }
+
             $profiles = $this->userProfileService->profiles()->get();
 
             foreach ($profiles as $profile) {
