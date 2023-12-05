@@ -120,12 +120,12 @@
         </div>
 
         <div class="profile-types">
-            <button class="btn btn-secondary" data-profile="normal"><i class="fa-solid fa-plus"></i> habililidades normais</button>
-            <button class="btn btn-secondary" data-profile="suprimentos_inp"><i class="fa-solid fa-plus"></i> habililidades de suprimentos INP</button>
-            <button class="btn btn-secondary" data-profile="suprimentos_hkm"><i class="fa-solid fa-plus"></i> habililidades de suprimentos HKM</button>
-            <button class="btn btn-secondary" data-profile="gestor_usuarios"><i class="fa-solid fa-plus"></i> habililidades de gestor de usuários</button>
-            <button class="btn btn-secondary" data-profile="gestor_fornecedores"><i class="fa-solid fa-plus"></i> habililidades de gestor de fornecedores</button>
-            <button class="btn btn-secondary" data-profile="diretor"><i class="fa-solid fa-plus"></i> habililidades de diretor</button>
+            <button class="btn btn-secondary" data-profile="normal"><i class="fa-solid fa-plus-minus"></i> habililidades normais</button>
+            <button class="btn btn-secondary" data-profile="suprimentos_inp"><i class="fa-solid fa-plus-minus"></i> habililidades de suprimentos INP</button>
+            <button class="btn btn-secondary" data-profile="suprimentos_hkm"><i class="fa-solid fa-plus-minus"></i> habililidades de suprimentos HKM</button>
+            <button class="btn btn-secondary" data-profile="gestor_usuarios"><i class="fa-solid fa-plus-minus"></i> habililidades de gestor de usuários</button>
+            <button class="btn btn-secondary" data-profile="gestor_fornecedores"><i class="fa-solid fa-plus-minus"></i> habililidades de gestor de fornecedores</button>
+            <button class="btn btn-secondary" data-profile="diretor"><i class="fa-solid fa-plus-minus"></i> habililidades de diretor</button>
         </div>
 
         <label for="user-abilities">Lista de habilidades para o novo perfil</label>
@@ -163,16 +163,25 @@
                     event.preventDefault();
                     const $profileTarget = $(event.target).data('profile');
 
-                    $('.ability-input').each((_, element) => {
+                    const abilitiesTargetsUnchecked = $('.ability-input').filter((_, element) => {
                         const $currentElement = $(element);
                         const profiles = $currentElement.data('profiles');
-                        const isChecked = profiles.find((el) => el === $profileTarget);
+                        const isAbilityTarget = profiles.includes($profileTarget);
 
-                        if (isChecked) {
-                            $currentElement.prop('checked', true);
+                        if (isAbilityTarget) {
+                            return !$currentElement.is(':checked');
                         }
                     })
 
+                    $('.ability-input').each((_, element) => {
+                        const $currentElement = $(element);
+                        const profiles = $currentElement.data('profiles');
+                        const isAbilityTarget = profiles.includes($profileTarget);
+
+                        if (isAbilityTarget) {
+                            $currentElement.prop('checked', abilitiesTargetsUnchecked.length ? true : false);
+                        }
+                    })
                 };
 
                 const createProfile = (event) => {
