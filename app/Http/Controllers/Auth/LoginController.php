@@ -84,6 +84,7 @@ class LoginController extends Controller
         }
 
         $result = $this->guard()->attempt([
+            'id' => $user->id,
             'email' => $user->email,
             'password' => $request->input('password'),
         ], $request->boolean('remember'));
