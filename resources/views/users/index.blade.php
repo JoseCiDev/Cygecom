@@ -1,53 +1,95 @@
 <x-app>
+    @push('styles')
+        <style>
+            .user-header {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 20px;
+            }
+
+            .actions {
+                display: flex;
+                gap: 4px;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .actions>* {
+                flex-basis: 40px;
+            }
+
+            .tag-list-item {
+                cursor: help;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                max-width: 250px;
+            }
+        </style>
+    @endpush
+
     <x-modals.delete />
+    <x-modals.edit-user-ability :abilities="$abilities" />
 
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="box box-color box-bordered">
-                <div class="row" style="margin: 0 0 30px;">
-                    <div class="col-md-6" style="padding: 0">
-                        <h1 class="page-title">Lista de usuários</h1>
-                    </div>
-                    <div class="col-md-6" style="padding: 0">
-                        <a data-cy="btn-novo-usuario" href="{{ route('register') }}" class="btn btn-primary btn-large pull-right">Novo usuário</a>
-                    </div>
-                </div>
+    <div class="box-content nopadding regular-text">
 
-                <div class="box-content nopadding regular-text">
-
-                    <table style="width: 100%" class="table table-hover table-bordered dataTable" data-nosort="0" data-checkall="all" data-column_filter_dateformat="dd-mm-yy">
-                        <thead>
-                            <tr>
-                                <th>Usuário</th>
-                                <th>E-mail</th>
-                                <th>Perfil</th>
-                                <th>Membro desde</th>
-                                <th>Opções</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($users as $index => $user)
-                                <tr>
-                                    <td>{{ $user->person->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td class='hidden-350'>{{ $user->profile->name }}</td>
-                                    <td class='hidden-1024'>{{ $user->created_at->formatCustom('d/m/Y - H:i:s') }}</td>
-                                    <td class='hidden-480'>
-                                        <a data-cy="btn-editar-usuario-{{ $index }}" href="{{ route('user', ['id' => $user->id]) }}" class="btn" rel="tooltip"
-                                            title="Edit"><i class="fa fa-edit"></i></a>
-                                        <button data-route="user" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" rel="tooltip" title="Excluir" class="btn"
-                                            data-bs-toggle="modal" data-bs-target="#modal-delete" data-cy="btn-modal-excluir-usuario-{{ $index }}">
-                                            <i class="fa fa-times"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                </div>
-            </div>
+        <div class="user-header">
+            <h1 class="page-title">Lista de usuários</h1>
+            <a data-cy="btn-novo-usuario" href="{{ route('users.create') }}" class="btn btn-primary btn-large">Novo usuário</a>
         </div>
+
+        <table style="width: 100%" class="table table-hover table-bordered dataTable" data-nosort="0" data-checkall="all" data-column_filter_dateformat="dd-mm-yy">
+            <thead>
+                <tr>
+                    <th>Usuário</th>
+                    <th>E-mail</th>
+                    <th>Perfil</th>
+                    <th>Habilidades específicas</th>
+                    <th>Membro desde</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($users as $index => $user)
+                    <tr>
+                        <td>{{ $user->person->name }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td>{{ $user->profile->name }}</td>
+                        <td>
+                            <div class="tag-list">
+                                @forelse ($user->abilities as $ability)
+                                    <span class="tag-list-item" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->description }}">
+                                        {{ $ability->description }}
+                                    </span>
+                                @empty
+                                    Padrões do perfil
+                                @endforelse
+                            </div>
+                        </td>
+                        <td>{{ $user->created_at->formatCustom('d/m/Y - H:i:s') }}</td>
+                        <td>
+                            <div class="actions">
+                                <a data-cy="btn-editar-usuario-{{ $index }}" href="{{ route('user.edit', ['id' => $user->id]) }}" class="btn btn-mini btn-secondary"
+                                    rel="tooltip">
+                                    <i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar dados usuário"></i>
+                                </a>
+                                <button data-route="user" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" rel="tooltip" class="btn btn-mini btn-secondary"
+                                    data-bs-toggle="modal" data-bs-target="#modal-delete" data-cy="btn-modal-excluir-usuario-{{ $index }}">
+                                    <i class="fa fa-times" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Excluir usuário"></i>
+                                </button>
+                                <button class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-edit-user-ability" data-user-id={{ $user->id }}>
+                                    <i class="fa-solid fa-sliders" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar habilidades do usuário"></i>
+                                </button>
+                                <a href="{{ route('users.show', ['id' => $user->id]) }}" class="btn btn-mini btn-secondary">
+                                    <i class="fa-solid fa-eye" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ver todas habilidades do usuário"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
     </div>
 
 </x-app>

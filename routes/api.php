@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
         });
 
         Route::middleware('can:get.user.show.json')->get('/show/{id}', [UserController::class, 'showJson'])->name('user.show.json');
+        Route::middleware('can:post.user.abilities.store')->post('abilities/store/{userId}', [App\Http\Controllers\Auth\UserController::class, 'storeAbilities'])->name('user.abilities.store');
     });
 
     Route::group(['prefix' => 'suppliers'], function () {
@@ -40,9 +41,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::group(['prefix' => 'reports'], function () {
         Route::middleware('can:get.reports.index.json')->get('/index', [App\Http\Controllers\ReportController::class, 'indexJson'])->name('reports.index.json');
-    });
-
-    Route::group(['prefix' => 'abilities'], function () {
-        Route::middleware('can:post.abilities.store.json')->post('/store/{userId}', [App\Http\Controllers\AbilitiesController::class, 'storeJson'])->name('abilities.store.json');
     });
 });

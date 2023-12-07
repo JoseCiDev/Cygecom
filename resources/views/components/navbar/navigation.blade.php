@@ -9,7 +9,7 @@
             </button>
             <ul class="dropdown-menu">
                 <li>
-                    <a data-cy="route-profile" class="dropdown-item" href="{{ route('profile') }}">Configurações da conta</a>
+                    <a data-cy="route-profile" class="dropdown-item" href="{{ route('user.edit', ['id' => auth()->user()->id]) }}">Configurações da conta</a>
                 </li>
                 <li>
                     <a data-cy="btn-logout" class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
@@ -25,16 +25,15 @@
     <div class='main-nav'>
         <span id="menu-hambuguer-icon-closer" style="display: none"> <i class="fa-solid fa-arrow-left-long"></i> </span>
 
-
-        @if (Gate::any(['get.users', 'get.suppliers']))
+        @if (Gate::any(['get.users.index', 'get.suppliers']))
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Cadastros
                 </button>
                 <ul class="dropdown-menu">
-                    @can('get.users')
+                    @can('get.users.index')
                         <li>
-                            <a href="{{ route('users') }}" data-cy="dropdown-cadastros-usuarios">Usuários</a>
+                            <a href="{{ route('users.index') }}" data-cy="dropdown-cadastros-usuarios">Usuários</a>
                         </li>
                     @endcan
                     @can('get.suppliers')
@@ -88,18 +87,13 @@
             </ul>
         </div>
 
-        @if (Gate::any(['get.abilities.index', 'get.abilities.profile.create']))
+        @if (Gate::any(['get.profile.create']))
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Autorizações
                 </button>
                 <ul class="dropdown-menu">
-                    @can('get.abilities.index')
-                        <li> <a href="{{ route('abilities.index') }}">Usuários e habilidades</a> </li>
-                    @endcan
-                    @can('get.abilities.profile.create')
-                        <li> <a href="{{ route('abilities.profile.create') }}">Criação de perfis</a> </li>
-                    @endcan
+                    <li> <a href="{{ route('profile.create') }}">Criação de perfis</a> </li>
                 </ul>
             </div>
         @endif

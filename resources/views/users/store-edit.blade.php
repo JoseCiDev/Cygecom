@@ -7,8 +7,8 @@
     $isOwnRequest = isset($user) && auth()->user()->id === $user->id;
     $isDisabled = !$isAdmin && (!$isGestorUsuarios || ($isGestorUsuarios && $isOwnRequest));
 
-    $action = isset($user) ? 'user.update' : 'register';
-    $route = isset($user) ? route($action, $user->id) : route('register');
+    $action = isset($user) ? 'users.update' : 'register';
+    $route = isset($user) ? route($action, $user->id) : route('users.store');
     $formId = isset($user) ? 'form-update' : 'form-register';
     $userProfile = isset($user) ? $user->profile->name : null;
     $isBuyer = isset($user) ? $user->is_buyer : null;

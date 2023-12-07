@@ -99,13 +99,13 @@
             <li class="list-group-item bg-transparent"> Evite perfis específicos que serão usados apenas em excessões. Ex.: suprimentos_luis, diretor_luis </li>
             <li class="list-group-item bg-transparent"> Garanta que as habilidades estejam corretas. Isso ajuda a evitar perfis com acessos incorretos ou incompletos. </li>
             <li class="list-group-item bg-transparent"> Escolha um nome de perfil que facilite o processo de entendimento dos usuários. Ex.: suprimentos_hkm, suprimentos_inp </li>
-            <li class="list-group-item bg-transparent"> Analise <a href="{{ route('abilities.index') }}" class="link-danger">usuários e habilidades</a> antes de
+            <li class="list-group-item bg-transparent"> Analise <a href="{{ route('users.index') }}" class="link-danger">usuários e habilidades</a> antes de
                 criar um novo perfil. Pode ser que ajustar um ou poucos usuários seja a melhor solução. </li>
             <li class="list-group-item bg-transparent"> Conjunto de habilidades é único. Mesmo perfis idênticos com nomes diferentes não são permitidos. </li>
         </ul>
     </div>
 
-    <form id="form-create-profile" action="{{ route('abilities.profile.store') }}" method="POST" class="profile-form mt-5">
+    <form id="form-create-profile" action="{{ route('profile.store') }}" method="POST" class="profile-form mt-5">
         @csrf
         <div class="profile-name">
             <label for="name">Nome do perfil:</label>

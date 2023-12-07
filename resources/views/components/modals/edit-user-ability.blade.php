@@ -153,7 +153,7 @@
             const button = $(event.relatedTarget);
             const id = button.data('user-id');
             const apiUrlGetUser = `api/user/show/${id}`;
-            const apiUrlStoreUser = `api/abilities/store/${id}`;
+            const apiUrlStoreUser = `api/user/abilities/store/${id}`;
             const $form = $('#modal-form-user-ability');
             const $loaderSpinner = $('#store-user-abilities .spinner-border');
 

@@ -12,15 +12,14 @@ class Abilities extends Seeder
     {
         $routesAbilities = [
             // Abilities
-            ['id' => 1, 'name' => 'get.abilities.index', 'description' => 'Acessar tela do painel de gestão de perfis e habilidades'],
-            ['id' => 45, 'name' => 'post.abilities.store.json', 'description' => 'API: Atualizar habilidades dos usuários'],
-            ['id' => 57, 'name' => 'get.abilities.profile.create', 'description' => 'Acessar tela de criação de perfil'],
-            ['id' => 2, 'name' => 'post.abilities.profile.store', 'description' => 'Registrar novo perfil'],
-            ['id' => 58, 'name' => 'get.abilities.user', 'description' => 'Acessar tela de todas habilidades de um usuário'],
+            ['id' => 1, 'name' => 'get.users.show', 'description' => 'Acessar tela de um usuário'],
+            ['id' => 2, 'name' => 'post.profile.store', 'description' => 'Registrar novo perfil'],
+            ['id' => 45, 'name' => 'post.user.abilities.store', 'description' => 'API: Atualizar habilidades dos usuários'],
+            ['id' => 57, 'name' => 'get.profile.create', 'description' => 'Acessar tela de criação de perfil'],
 
             // Web
             ['id' => 3, 'name' => 'get.profile', 'description' => 'Acessar tela do seu perfil'],
-            ['id' => 4, 'name' => 'post.user.update', 'description' => 'Atualizar usuário'],
+            ['id' => 4, 'name' => 'post.users.update', 'description' => 'Atualizar usuário'],
             ['id' => 5, 'name' => 'post.supplier.register', 'description' => 'Registrar novo fornecedor'],
 
             // Supplies
@@ -59,11 +58,11 @@ class Abilities extends Seeder
             ['id' => 50, 'name' => 'post.api.supplies.files.upload', 'description' => 'API: Upload de anexos da solicitação'],
 
             // Users
-            ['id' => 31, 'name' => 'get.register', 'description' => 'Acessar tela de registrar novo usuário'],
-            ['id' => 32, 'name' => 'post.store', 'description' => 'Registrar novo usuário'],
-            ['id' => 33, 'name' => 'post.destroy', 'description' => 'Excluir usuário'],
-            ['id' => 34, 'name' => 'get.users', 'description' => 'Acessar tela de lista de usuários'],
-            ['id' => 35, 'name' => 'get.user', 'description' => 'Acessar tela de edição do usuário'],
+            ['id' => 31, 'name' => 'get.users.create', 'description' => 'Acessar tela de registrar novo usuário'],
+            ['id' => 32, 'name' => 'post.users.store', 'description' => 'Registrar novo usuário'],
+            ['id' => 33, 'name' => 'post.users.destroy', 'description' => 'Excluir usuário'],
+            ['id' => 34, 'name' => 'get.users.index', 'description' => 'Acessar tela de lista de usuários'],
+            ['id' => 35, 'name' => 'get.user.edit', 'description' => 'Acessar tela de edição do usuário'],
             ['id' => 46, 'name' => 'get.user.show.json', 'description' => 'API: Buscar usuário por id'],
 
             // Suppliers

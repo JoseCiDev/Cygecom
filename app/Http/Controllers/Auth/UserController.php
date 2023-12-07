@@ -5,15 +5,14 @@ namespace App\Http\Controllers\Auth;
 use Exception;
 use Illuminate\View\View;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\{JsonResponse, RedirectResponse};
 use Illuminate\Support\Facades\Gate;
 use App\Providers\UserService;
 use App\Contracts\UserControllerInterface;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\{StoreUserRequest, UpdateUserRequest};
-use App\Models\{Company, User};
+use App\Http\Requests\User\{StoreAbilitiesRequest, StoreUserRequest, UpdateUserRequest};
+use App\Models\{Ability, Company, User};
 use App\Services\UserProfileService;
-use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller implements UserControllerInterface
 {
@@ -42,6 +41,8 @@ class UserController extends Controller implements UserControllerInterface
         $loggedId = auth()->user()->id;
         $isAdmin = Gate::allows('admin');
 
+        $abilities = Ability::with('users', 'profiles')->get();
+        $profiles = $this->userProfileService->profiles()->get();
         $users = $this->userService->getUsers()->where('id', '!=', $loggedId);
 
         if (!$isAdmin) {
@@ -52,7 +53,13 @@ class UserController extends Controller implements UserControllerInterface
 
         $users = $users->get();
 
-        return view('users.index', ['users' => $users]);
+        $params = [
+            'abilities' => $abilities,
+            'profiles' => $profiles,
+            'users' => $users
+        ];
+
+        return view('users.index', $params);
     }
 
     /**
@@ -74,7 +81,19 @@ class UserController extends Controller implements UserControllerInterface
             'companies' => $companies
         ];
 
-        return view('users.user', $params);
+        return view('users.store-edit', $params);
+    }
+
+    /**
+     * Tela que mostra usuário e suas todas habilidades
+     * @param int $id ID usado para encontrar usuário
+     * @return View Tela de habilidades do usuário encontrado
+     */
+    public function show(int $id): View
+    {
+        $user = $this->userService->getUserById($id);
+
+        return view('users.show', ['user' => $user]);
     }
 
     /**
@@ -101,16 +120,13 @@ class UserController extends Controller implements UserControllerInterface
      */
     public function edit(int $id): View
     {
-        $user = User::with([
-            'person',
-            'person.phone',
-            'person.costCenter',
-            'profile',
-            'approver',
-            'userCostCenterPermission.costCenter',
-        ])->where('id', $id)->whereNull('deleted_at')->first();
+        if (!Gate::allows('get.user.edit')) {
+            $id = auth()->user()->id;
+        }
 
-        $approvers = $this->userService->getApprovers('user.update', $id);
+        $user = $this->userService->getUserById($id);
+
+        $approvers = $this->userService->getApprovers('users.update', $user->id);
         $costCenters = $this->userService->getCostCenters();
         $profiles = $this->userProfileService->profiles()->get();
         $companies = Company::select('id', 'corporate_name', 'name', 'cnpj', 'group')->get();
@@ -123,7 +139,7 @@ class UserController extends Controller implements UserControllerInterface
             'companies' => $companies
         ];
 
-        return view('users.user', $params);
+        return view('users.store-edit', $params);
     }
 
     /**
@@ -175,7 +191,7 @@ class UserController extends Controller implements UserControllerInterface
 
         session()->flash('success', "Usuário deletado com sucesso!");
 
-        return redirect()->route('users');
+        return redirect()->route('users.index');
     }
 
     public function showJson(int $id)
@@ -184,5 +200,27 @@ class UserController extends Controller implements UserControllerInterface
         return response()->json([
             'data' => $user,
         ], 200);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StoreAbilitiesRequest $request
+     */
+    public function storeAbilities(StoreAbilitiesRequest $request, int $userId)
+    {
+        $validated = $request->validated();
+        $abilities = $validated['abilities'] ?? [];
+
+        $user = $this->userService->getUserById($userId);
+        $userProfileAbilities = $user->profile->abilities->pluck('id');
+
+        if ($userProfileAbilities->intersect($abilities)->isNotEmpty()) {
+            return response()->json(['error' => 'Não é possível adicionar habilidades já existentes no perfil do usuário.'], 400);
+        }
+
+        $user->abilities()->sync($abilities);
+
+        return response()->json($user, 200);
     }
 }

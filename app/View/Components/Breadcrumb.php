@@ -10,27 +10,19 @@ class Breadcrumb extends Component
     public $items;
 
     private array $itemsMap = [
-        'users' => [
+        'users.index' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'users', 'label' => 'Usuários'],
+            ['route' => 'users.index', 'label' => 'Usuários'],
         ],
-        'user' => [
+        'users.edit' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'users', 'label' => 'Usuários'],
-            ['route' => 'user', 'label' => 'Usuário'],
+            ['route' => 'users.index', 'label' => 'Usuários'],
+            ['route' => 'users.edit', 'label' => 'Usuário'],
         ],
-        'profile' => [
+        'users.create' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'profile', 'label' => 'Perfil'],
-        ],
-        'register' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'users', 'label' => 'Usuários'],
-            ['route' => 'register', 'label' => 'Cadastro de usuário'],
-        ],
-        'email' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'email', 'label' => 'Envio de e-mail'],
+            ['route' => 'users.index', 'label' => 'Usuários'],
+            ['route' => 'users.create', 'label' => 'Cadastro de usuário'],
         ],
         'requests' => [
             ['route' => 'home', 'label' => 'Home'],
@@ -133,18 +125,14 @@ class Breadcrumb extends Component
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'reports.index.view', 'label' => 'Relatórios de solicitações'],
         ],
-        'abilities.index' => [
+        'users.show' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'abilities.index', 'label' => 'Usuários e habilidades'],
+            ['route' => 'users.index', 'label' => 'Usuários'],
+            ['route' => 'users.show', 'label' => 'Usuário'],
         ],
-        'abilities.user' => [
+        'profile.create' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'abilities.index', 'label' => 'Usuários e habilidades'],
-            ['route' => 'abilities.user', 'label' => 'Usuários'],
-        ],
-        'abilities.profile.create' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'abilities.profile.create', 'label' => 'Criação de perfil'],
+            ['route' => 'profile.create', 'label' => 'Criação de perfil'],
         ],
     ];
 
