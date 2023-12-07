@@ -80,6 +80,20 @@ $.fn.showModalAlert = (title = '', message, callback = null, modalDialogClass = 
     modalAlert.show();
 }
 
+$.fn.createToast = (message, title = 'Sucesso!', className = null) => {
+    const $toastContainer = $('.toast-container');
+    const $toast = $('.toast');
+
+    const $toastClone = $toast.first().clone();
+    $toastContainer.append($toastClone);
+
+    $toastClone.find('.toast-header').addClass(className);
+    $toastClone.find('.toast-header-title').text(title);
+    $toastClone.find('.toast-body').text(message);
+
+    bootstrap.Toast.getOrCreateInstance($toastClone).show();
+}
+
 // Renderiza menu -> Aciona botões -> Fecha menu
 $.fn.setStorageDtColumnConfig = () =>{
     $('button.dt-button.buttons-collection.buttons-colvis').trigger('click').trigger('click')
@@ -191,4 +205,5 @@ $(() => {
     });
 
     $('[data-bs-toggle="tooltip"]').each((_, tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+    $('.toast').each((_, toastEl) => new bootstrap.Toast(toastEl));
 });

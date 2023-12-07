@@ -28,6 +28,19 @@
                 padding: 20px 0;
             }
 
+            .form-user #submit {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+            }
+
+            .form-user #submit .spinner-border {
+                width: 20px;
+                height: 20px;
+                display: none;
+            }
+
             .form-user .personal-data,
             .form-user .user-data,
             .form-user .advanced-user-data {
@@ -133,6 +146,7 @@
     @endpush
 
     <x-modals.delete />
+    <x-toast />
 
     <div class="user-header">
         <h1 class="page-title">{{ isset($user) ? 'Editar usuário' : 'Novo usuário' }}</h1>
@@ -421,7 +435,8 @@
                         </button>
 
                         @foreach ($companies as $company)
-                            <button type="button" class="btn btn-secondary btn-mini supplies-cost-center-btn" data-bs-toggle='tooltip' data-bs-placement='top'
+                            <button type="button" class="btn btn-secondary btn-mini supplies-cost-center-btn" data-company-id="{{ $company->id }}" data-bs-toggle='tooltip'
+                                data-bs-placement='top'
                                 data-bs-title="Adicionar todos centros de custos vinculados a empresa {{ $company->corporate_name }}: {{ preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $company->cnpj) }}">
                                 <i class="fa-solid fa-plus"></i> {{ $company->name }}
                             </button>
@@ -456,12 +471,16 @@
             </div>
         @endif
 
-        <button id="submit" type="submit" class="btn btn-primary btn-large" data-cy="btn-submit-salvar">Salvar</button>
+        <button id="submit" type="submit" class="btn btn-primary btn-large" data-cy="btn-submit-salvar">
+            <div class="spinner-border" role="status"></div>
+            Salvar
+        </button>
     </form>
 
     @push('scripts')
         <script type="module">
             $(() => {
+                const isRegister = @json($action) === 'register';
                 const $btnClearCostCenters = $('.btn-clear-cost-centers');
                 const $btnClearSuppliesCostCenters = $('.clear-supplies-cost-centers');
                 const $costCenterBtn = $('.cost-center-btn');
@@ -473,6 +492,7 @@
                 const $hiddenApproveLimit = $('.approve_limit');
                 const $identificationDocument = $('.cpf_cnpj');
                 const $phoneNumber = $('.phone_number');
+                const $formUser = $('.form-user');
 
                 const addCostCenters = (event, costCenterSelector) => {
                     const $currentElement = $(event.target);
@@ -493,13 +513,100 @@
                         }
 
                         const matchCompanyId = $optionElement.data('company-id') === $companyId;
-                        if (matchCompanyId || $optionElement.is(':selected')) {
+                        if ((matchCompanyId || $optionElement.is(':selected')) && !$companyGroup) {
                             return $optionElement.val();
                         }
                     });
 
                     $(costCenterSelector).val(values).trigger('change');
                 }
+
+                const submit = (event) => {
+                    event.preventDefault();
+                    const $form = $(event.target);
+
+                    if (!$form.valid()) {
+                        const message = 'Verifique os campos obrigatórios antes de salvar';
+                        const title = 'Ops! Verique os campos';
+                        const className = 'bg-danger';
+                        $.fn.createToast(message, title, className);
+                        return false;
+                    }
+
+                    const $submitBtn = $('#submit');
+                    const $loader = $submitBtn.find('.spinner-border');
+                    let stageCompleted = 0;
+                    let userId = null;
+
+                    $submitBtn.prop('disabled', true);
+                    $loader.show();
+
+                    const formData = $form.serializeArray();
+                    const csrfToken = formData.find(el => el.name === "_token");
+
+                    const userData = $(formData).filter((_, element) => element.name !== 'supplies_cost_centers[]').toArray();
+                    const suppliesCostCentersData = $(formData).filter((_, element) => element.name === 'supplies_cost_centers[]').toArray();
+
+                    const sendData = async (url, data, successMessage = null) => {
+                        try {
+                            const response = await $.ajax({
+                                url,
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken.value
+                                },
+                                data,
+                            });
+
+                            stageCompleted++;
+
+                            const reponseUserId = response.id;
+                            if (reponseUserId) {
+                                userId = reponseUserId;
+                            }
+
+                            if (successMessage) {
+                                $.fn.createToast(successMessage, 'Sucesso!', 'bg-success');
+                            }
+                        } catch (error) {
+                            const message = 'Desculpe, ocorreu algum erro no envio dos dados';
+                            const title = 'Ops! Algo deu errado';
+                            const className = 'bg-warning';
+                            $.fn.createToast(message, title, className);
+
+                            stageCompleted = 0;
+                        } finally {
+                            if (!stageCompleted) {
+                                console.error('Erro ao enviar o formulário');
+                                $submitBtn.prop('disabled', false);
+                                $loader.hide();
+                            }
+                        }
+                    };
+
+                    const action = $form.attr('action');
+
+                    if (isRegister) {
+                        sendData(action, userData)
+                            .then(() => sendData(`/users/${userId}`, suppliesCostCentersData, 'Usuário criado com sucesso'))
+                            .then(() => {
+                                const message = 'Redirecionando para lista de usuários';
+                                const title = 'Redirecionando...';
+                                $.fn.createToast(message, title);
+                                setTimeout(() => location.href = '/users', 2000)
+                            });
+                        return;
+                    }
+
+                    Promise.all([sendData(action, userData), sendData(action, suppliesCostCentersData)])
+                        .then(() => {
+                            const message = 'Usuário atualizado com sucesso. Recarregando página atual...';
+                            const title = 'Sucesso! Recarregando...';
+                            const className = 'bg-success';
+                            $.fn.createToast(message, title, className);
+                            setTimeout(() => location.reload(), 2000)
+                        })
+                };
 
                 $btnClearCostCenters.on('click', () => $costCentersPermissions.val('').trigger("change"));
                 $costCenterBtn.on('click', (event) => addCostCenters(event, '.cost-centers-permissions'));
@@ -560,6 +667,8 @@
                         $('.approve_limit').val(rawValue.toFixed(2));
                     }
                 });
+
+                $formUser.on('submit', submit);
             })
         </script>
     @endpush

@@ -73,10 +73,6 @@ class StoreUserRequest extends FormRequest
                 'nullable',
                 new ArrayOfIntenger
             ],
-            'supplies_cost_centers' => [
-                'nullable',
-                new ArrayOfIntenger
-            ],
         ];
     }
 

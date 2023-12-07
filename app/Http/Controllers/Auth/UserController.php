@@ -7,13 +7,13 @@ use Illuminate\View\View;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
-use App\Models\User;
 use App\Providers\UserService;
 use App\Contracts\UserControllerInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\{StoreUserRequest, UpdateUserRequest};
-use App\Models\Company;
+use App\Models\{Company, User};
 use App\Services\UserProfileService;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller implements UserControllerInterface
 {
@@ -81,16 +81,16 @@ class UserController extends Controller implements UserControllerInterface
      * Register a new user.
      *
      * @param StoreUserRequest $request
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function store(StoreUserRequest $request): RedirectResponse
+    public function store(StoreUserRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $user = $this->userService->registerUser($validated);
 
-        session()->flash('success', "Usuário cadastrado com sucesso! E-mail: {$user['email']}");
+        $successMessage = "Usuário cadastrado com sucesso! E-mail: $user->email";
 
-        return redirect()->route('users');
+        return response()->json(['message' => $successMessage, 'id' => $user->id]);
     }
 
     /**
@@ -131,9 +131,9 @@ class UserController extends Controller implements UserControllerInterface
      *
      * @param UpdateUserRequest $request
      * @param User $user
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function update(UpdateUserRequest $request, User $user): RedirectResponse
+    public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         $id = $user->id;
         $isAdmin = Gate::allows('admin');
@@ -141,7 +141,7 @@ class UserController extends Controller implements UserControllerInterface
         $isOwnId = $id === auth()->user()->id;
 
         if ((!$isAdmin && !$isGestorUsuarios) && !$isOwnId) {
-            return redirect()->route('profile');
+            return response()->json(['message' => 'Você não tem permissão para realizar esta ação.'], 403);
         }
 
         try {
@@ -149,17 +149,13 @@ class UserController extends Controller implements UserControllerInterface
 
             $this->userService->userUpdate($validated, $id);
 
-            if (auth()->user()->id === $id) {
-                session()->flash('success', "Seu usuário foi atualizado com sucesso!");
+            $successMessage = auth()->user()->id === $id
+                ? 'Seu usuário foi atualizado com sucesso!'
+                : 'Usuário atualizado com sucesso!';
 
-                return redirect()->route('profile');
-            }
-
-            session()->flash('success', "Usuário atualizado com sucesso!");
-
-            return redirect()->route('users');
+            return response()->json(['message' => $successMessage]);
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors([$error->getMessage()]);
+            return response()->json(['message' => $error->getMessage()], 500);
         }
     }
 

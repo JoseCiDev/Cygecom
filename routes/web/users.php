@@ -12,6 +12,6 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'users'], function () {
         Route::middleware('can:get.users')->get('/', [App\Http\Controllers\Auth\UserController::class, 'index'])->name('users');
         Route::middleware('can:get.user')->get('/{id}', [App\Http\Controllers\Auth\UserController::class, 'edit'])->name('user');
-        Route::middleware('can:post.user.update')->post('/users/{user}', [App\Http\Controllers\Auth\UserController::class, 'update'])->name('user.update');
+        Route::middleware('can:post.user.update')->post('/{user}', [App\Http\Controllers\Auth\UserController::class, 'update'])->name('user.update');
     });
 });
