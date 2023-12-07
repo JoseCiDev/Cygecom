@@ -105,7 +105,7 @@
         </ul>
     </div>
 
-    <form id="form-create-profile" action="{{ route('abilities.profile.create') }}" method="POST" class="profile-form mt-5">
+    <form id="form-create-profile" action="{{ route('abilities.profile.store') }}" method="POST" class="profile-form mt-5">
         @csrf
         <div class="profile-name">
             <label for="name">Nome do perfil:</label>

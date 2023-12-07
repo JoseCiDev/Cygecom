@@ -14,8 +14,8 @@ class Abilities extends Seeder
             // Abilities
             ['id' => 1, 'name' => 'get.abilities.index', 'description' => 'Acessar tela do painel de gestão de perfis e habilidades'],
             ['id' => 45, 'name' => 'post.abilities.store.json', 'description' => 'API: Atualizar habilidades dos usuários'],
-            ['id' => 57, 'name' => 'get.abilities.profile', 'description' => 'Acessar tela de criação de perfil'],
-            ['id' => 2, 'name' => 'post.abilities.profile.create', 'description' => 'Registrar novo perfil'],
+            ['id' => 57, 'name' => 'get.abilities.profile.create', 'description' => 'Acessar tela de criação de perfil'],
+            ['id' => 2, 'name' => 'post.abilities.profile.store', 'description' => 'Registrar novo perfil'],
             ['id' => 58, 'name' => 'get.abilities.user', 'description' => 'Acessar tela de todas habilidades de um usuário'],
 
             // Web

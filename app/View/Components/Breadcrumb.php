@@ -142,9 +142,9 @@ class Breadcrumb extends Component
             ['route' => 'abilities.index', 'label' => 'Usuários e habilidades'],
             ['route' => 'abilities.user', 'label' => 'Usuários'],
         ],
-        'abilities.profile' => [
+        'abilities.profile.create' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'abilities.profile', 'label' => 'Criação de perfil'],
+            ['route' => 'abilities.profile.create', 'label' => 'Criação de perfil'],
         ],
     ];
 
