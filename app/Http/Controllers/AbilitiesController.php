@@ -18,7 +18,8 @@ class AbilitiesController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Lista usuários e suas habilidades
+     * @return View authorizations.abilities
      */
     public function index(): View
     {
@@ -38,6 +39,10 @@ class AbilitiesController extends Controller
         return view('authorizations.abilities', $params);
     }
 
+    /**
+     * Tela de criação de perfil com nova coleção de habilidades
+     * @return View authorizations.profile
+     */
     public function profile(): View
     {
         $abilities = Ability::with('users', 'profiles')->get();
@@ -62,7 +67,7 @@ class AbilitiesController extends Controller
      * @param CreateProfileRequest $request Valida formato dos dados: name e abilities
      * @return RedirectResponse Retorna para página de submit
      */
-    public function create(CreateProfileRequest $request): RedirectResponse
+    public function store(CreateProfileRequest $request): RedirectResponse
     {
         $name = $request->get('name');
         $abilities = collect($request->get('abilities'));
