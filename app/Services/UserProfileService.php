@@ -30,4 +30,16 @@ class UserProfileService
             $profile->abilities()->sync($abilities);
         });
     }
+
+    public function destroy(int $id, string $name): void
+    {
+        DB::transaction(function () use ($id, $name) {
+            UserProfile::where('id', $id)->where('name', $name)->first()->delete();
+        });
+    }
+
+    public function profileByName(string $name): Builder
+    {
+        return UserProfile::with('abilities', 'user.person')->where('name', $name);
+    }
 }

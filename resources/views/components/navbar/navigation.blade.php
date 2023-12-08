@@ -93,6 +93,7 @@
                     Autorizações
                 </button>
                 <ul class="dropdown-menu">
+                    <li> <a href="{{ route('profile.index') }}">Lista de perfis</a> </li>
                     <li> <a href="{{ route('profile.create') }}">Criação de perfis</a> </li>
                 </ul>
             </div>

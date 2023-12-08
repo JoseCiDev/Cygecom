@@ -130,8 +130,13 @@ class Breadcrumb extends Component
             ['route' => 'users.index', 'label' => 'Usuários'],
             ['route' => 'users.show', 'label' => 'Usuário'],
         ],
+        'profile.index' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'profile.index', 'label' => 'Lista de perfis'],
+        ],
         'profile.create' => [
             ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'profile.index', 'label' => 'Lista de perfis'],
             ['route' => 'profile.create', 'label' => 'Criação de perfil'],
         ],
     ];

@@ -31,9 +31,10 @@
 
             const routes = {
                 products: `/products/delete/${id}`,
-                user: `/user/delete/${id}`,
+                user: `/users/delete/${id}`,
                 supplier: `/suppliers/delete/${id}`,
-                purchaseRequests: `/request/delete/${id}`
+                purchaseRequests: `/request/delete/${id}`,
+                'profile.destroy': `/profile/destroy/${id}`
             }
 
             const action = routes[route] || "#";

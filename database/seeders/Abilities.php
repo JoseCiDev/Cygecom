@@ -16,6 +16,8 @@ class Abilities extends Seeder
             ['id' => 2, 'name' => 'post.profile.store', 'description' => 'Registrar novo perfil'],
             ['id' => 45, 'name' => 'post.user.abilities.store', 'description' => 'API: Atualizar habilidades dos usuários'],
             ['id' => 57, 'name' => 'get.profile.create', 'description' => 'Acessar tela de criação de perfil'],
+            ['id' => 58, 'name' => 'get.profile.index', 'description' => 'Acessar tela de lista de perfis'],
+            ['id' => 59, 'name' => 'post.profile.destroy', 'description' => 'Excluir um perfil'],
 
             // Web
             ['id' => 3, 'name' => 'get.profile', 'description' => 'Acessar tela do seu perfil'],
