@@ -47,16 +47,18 @@
         </div>
     </div>
     <div class="row mt-3" style="padding: 0 20px 5px 20px">
-        <div class="col-sm-2">
+        {{-- QUANTIDADE --}}
+        <div class="col-sm-1">
             <div class="form-group">
                 <label for="qtd" class="regular-text">Quantidade</label>
                 <input min="1" max="10000" step="1" data-rule-required="true" type="text" class="form-control product-quantity" value="{{ $product->quantity ?? null }}"
                         name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][quantity]"
-                        data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][quantity]">
+                        data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][quantity]"
+                >
             </div>
         </div>
         {{-- COR --}}
-        <div class="col-sm-2">
+        <div class="col-sm-1">
             <div class="form-group">
                 <label for="" class="regular-text">Cor</label>
                 <input type="text" name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex}}][color]"
@@ -65,7 +67,7 @@
             </div>
         </div>
         {{-- TAMANHO --}}
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <div class="form-group">
                 <label for="" class="regular-text">Tamanho</label>
                 <input type="text" data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][size]"
@@ -73,12 +75,22 @@
                     class="form-control product-size" value="{{ $product->size ?? null }}">
             </div>
         </div>
-        <div class="col-sm-4">
+        {{-- MODELO --}}
+        <div class="col-sm-3">
             <div class="form-group">
                 <label for="" class="regular-text">Modelo</label>
-                <input type="text" data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][model]"
+                <input type="text" maxlength="255" data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][model]"
                     name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][model]"
                     class="form-control product-model" value="{{ $product->model ?? null }}">
+            </div>
+        </div>
+        {{-- LINK --}}
+        <div class="col-sm-5">
+            <div class="form-group">
+                <label for="" class="regular-text">Link do produto</label>
+                <input type="text" maxlength="1000" data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][link]"
+                    name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][link]"
+                    class="form-control product-link" value="{{ $product->link ?? null }}">
             </div>
         </div>
     </div>
