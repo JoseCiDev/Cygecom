@@ -9,7 +9,7 @@
             </button>
             <ul class="dropdown-menu">
                 <li>
-                    <a data-cy="route-profile" class="dropdown-item" href="{{ route('user.edit', ['id' => auth()->user()->id]) }}">Configurações da conta</a>
+                    <a data-cy="route-profile" class="dropdown-item" href="{{ route('users.edit', ['user' => auth()->user()]) }}">Configurações da conta</a>
                 </li>
                 <li>
                     <a data-cy="btn-logout" class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">

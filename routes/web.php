@@ -13,7 +13,7 @@ require __DIR__ . '/web/profile.php';
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    Route::get('/users/{id}', [App\Http\Controllers\Auth\UserController::class, 'edit'])->name('user.edit');
+    Route::get('/users/edit/{user}', [App\Http\Controllers\Auth\UserController::class, 'edit'])->name('users.edit');
 });
 
 Route::fallback(function () {

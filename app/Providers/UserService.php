@@ -6,10 +6,9 @@ use Exception;
 use Illuminate\Support\Facades\{DB, Gate, Hash};
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
-use App\Contracts\UserServiceInterface;
 use App\Models\{CostCenter, Person, Phone, User, UserCostCenterPermission, UserProfile};
 
-class UserService extends ServiceProvider implements UserServiceInterface
+class UserService extends ServiceProvider
 {
     public function getUserById(int $id): User
     {

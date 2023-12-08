@@ -69,7 +69,7 @@
                         <td>{{ $user->created_at->formatCustom('d/m/Y - H:i:s') }}</td>
                         <td>
                             <div class="actions">
-                                <a data-cy="btn-editar-usuario-{{ $index }}" href="{{ route('user.edit', ['id' => $user->id]) }}" class="btn btn-mini btn-secondary"
+                                <a data-cy="btn-editar-usuario-{{ $index }}" href="{{ route('users.edit', ['user' => $user]) }}" class="btn btn-mini btn-secondary"
                                     rel="tooltip">
                                     <i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar dados usuário"></i>
                                 </a>
@@ -80,7 +80,7 @@
                                 <button class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-edit-user-ability" data-user-id={{ $user->id }}>
                                     <i class="fa-solid fa-sliders" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar habilidades do usuário"></i>
                                 </button>
-                                <a href="{{ route('users.show', ['id' => $user->id]) }}" class="btn btn-mini btn-secondary">
+                                <a href="{{ route('users.show', ['user' => $user]) }}" class="btn btn-mini btn-secondary">
                                     <i class="fa-solid fa-eye" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ver todas habilidades do usuário"></i>
                                 </a>
                             </div>

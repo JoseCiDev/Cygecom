@@ -8,13 +8,12 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\{JsonResponse, RedirectResponse};
 use Illuminate\Support\Facades\Gate;
 use App\Providers\UserService;
-use App\Contracts\UserControllerInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\{StoreAbilitiesRequest, StoreUserRequest, UpdateUserRequest};
 use App\Models\{Ability, Company, User};
 use App\Services\UserProfileService;
 
-class UserController extends Controller implements UserControllerInterface
+class UserController extends Controller
 {
     use RegistersUsers;
 
@@ -86,13 +85,11 @@ class UserController extends Controller implements UserControllerInterface
 
     /**
      * Tela que mostra usuário e suas todas habilidades
-     * @param int $id ID usado para encontrar usuário
+     * @param User $user
      * @return View Tela de habilidades do usuário encontrado
      */
-    public function show(int $id): View
+    public function show(User $user): View
     {
-        $user = $this->userService->getUserById($id);
-
         return view('users.show', ['user' => $user]);
     }
 
@@ -115,16 +112,14 @@ class UserController extends Controller implements UserControllerInterface
     /**
      * Show the edit user form.
      *
-     * @param int $id
+     * @param User $user
      * @return View
      */
-    public function edit(int $id): View
+    public function edit(User $user): View
     {
         if (!Gate::allows('get.user.edit')) {
-            $id = auth()->user()->id;
+            $user = auth()->user();
         }
-
-        $user = $this->userService->getUserById($id);
 
         $approvers = $this->userService->getApprovers('users.update', $user->id);
         $costCenters = $this->userService->getCostCenters();
