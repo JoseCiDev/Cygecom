@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\MainProfile;
 use Illuminate\View\View;
-use Illuminate\Http\{Request, RedirectResponse};
-use App\Http\Requests\User\CreateProfileRequest;
+use Illuminate\Http\RedirectResponse;
+use App\Enums\MainProfile;
+use App\Http\Requests\User\{UpdateProfileRequest, StoreProfileRequest};
 use App\Models\{UserProfile, Ability};
 use App\Services\UserProfileService;
 
@@ -38,10 +38,10 @@ class UserProfileController extends Controller
 
     /**
      * Cria novo perfil validando integridade para perfis únicos
-     * @param CreateProfileRequest $request Valida formato dos dados: name e abilities
+     * @param StoreProfileRequest $request Valida formato dos dados: name e abilities
      * @return RedirectResponse Retorna para página de submit
      */
-    public function store(CreateProfileRequest $request): RedirectResponse
+    public function store(StoreProfileRequest $request): RedirectResponse
     {
         $name = $request->get('name');
         $abilities = collect($request->get('abilities'));
@@ -93,8 +93,11 @@ class UserProfileController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @param UpdateProfileRequest $request
+     * @param UserProfile $userProfile
+     * @return RedirectResponse
      */
-    public function update(Request $request, UserProfile $userProfile)
+    public function update(UpdateProfileRequest $request, UserProfile $userProfile): RedirectResponse
     {
         $abilities = collect($request->get('abilities'));
 
@@ -128,7 +131,7 @@ class UserProfileController extends Controller
             $this->userProfileService->update($profile, $abilities);
 
             session()->flash('success', "Perfil $userProfile->name foi atualizado com sucesso.");
-            return redirect()->back();
+            return redirect()->route('profile.index');
         } catch (\Throwable $th) {
             return redirect()->back()->withErrors($th->getMessage());
         }
@@ -154,7 +157,7 @@ class UserProfileController extends Controller
                 throw new \Exception("Ops! Desculpe, a exclusão do perfil foi interrompida. Ainda existe(m) $profileUsers usuário(s) com perfil $name.");
             }
 
-            $this->userProfileService->destroy($profile->id, $profile->name);
+            $this->userProfileService->destroy($profile);
 
             session()->flash('success', "Perfil $name foi excluído com sucesso.");
             return redirect()->back();

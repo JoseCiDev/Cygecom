@@ -5,7 +5,7 @@ namespace App\Http\Requests\User;
 use App\Rules\ArrayOfIntenger;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateProfileRequest extends FormRequest
+class StoreProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

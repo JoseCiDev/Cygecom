@@ -44,13 +44,22 @@ class UserProfileService
         });
     }
 
-    public function destroy(int $id, string $name): void
+    /**
+     * Exclui perfil hard
+     * @param UserProfile $userProfile
+     * @return void
+     */
+    public function destroy(UserProfile $userProfile): void
     {
-        DB::transaction(function () use ($id, $name) {
-            UserProfile::where('id', $id)->where('name', $name)->first()->delete();
+        DB::transaction(function () use ($userProfile) {
+            $userProfile->delete();
         });
     }
 
+    /**
+     * @param string $name
+     * @return Builder Query builder de UserProfile pelo nome e com relações
+     */
     public function profileByName(string $name): Builder
     {
         return UserProfile::with('abilities', 'user.person')->where('name', $name);
