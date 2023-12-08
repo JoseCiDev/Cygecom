@@ -18,8 +18,8 @@ return new class extends Migration
         Schema::create('abilities_profiles', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(UserProfile::class)->constrained('user_profiles');
-            $table->foreignIdFor(Ability::class)->constrained('abilities');
+            $table->foreignIdFor(UserProfile::class)->constrained('user_profiles')->onDelete('cascade');
+            $table->foreignIdFor(Ability::class)->constrained('abilities')->onDelete('cascade');
 
             $table->unique(['user_profile_id', 'ability_id']);
         });
