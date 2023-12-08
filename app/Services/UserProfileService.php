@@ -31,6 +31,19 @@ class UserProfileService
         });
     }
 
+    /**
+     * Atualiza perfil com habilidades
+     * @param UserProfile $userProfile
+     * @param Collection|array $abilities
+     * @return void
+     */
+    public function update(UserProfile $userProfile, Collection|array $abilities): void
+    {
+        DB::transaction(function () use ($userProfile, $abilities) {
+            $userProfile->abilities()->sync($abilities);
+        });
+    }
+
     public function destroy(int $id, string $name): void
     {
         DB::transaction(function () use ($id, $name) {

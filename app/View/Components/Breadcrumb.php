@@ -139,6 +139,11 @@ class Breadcrumb extends Component
             ['route' => 'profile.index', 'label' => 'Lista de perfis'],
             ['route' => 'profile.create', 'label' => 'Criação de perfil'],
         ],
+        'profile.edit' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'profile.index', 'label' => 'Lista de perfis'],
+            ['route' => 'profile.edit', 'label' => 'Edição de perfil'],
+        ],
     ];
 
     public function __construct()

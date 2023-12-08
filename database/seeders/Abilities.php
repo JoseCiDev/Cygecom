@@ -18,6 +18,8 @@ class Abilities extends Seeder
             ['id' => 57, 'name' => 'get.profile.create', 'description' => 'Acessar tela de criação de perfil'],
             ['id' => 58, 'name' => 'get.profile.index', 'description' => 'Acessar tela de lista de perfis'],
             ['id' => 59, 'name' => 'post.profile.destroy', 'description' => 'Excluir um perfil'],
+            ['id' => 60, 'name' => 'get.profile.edit', 'description' => 'Acessar tela de edição de perfil'],
+            ['id' => 61, 'name' => 'post.profile.update', 'description' => 'Atualizar perfil'],
 
             // Web
             ['id' => 3, 'name' => 'get.profile', 'description' => 'Acessar tela do seu perfil'],

@@ -87,7 +87,8 @@ class UserProfileController extends Controller
      */
     public function edit(UserProfile $userProfile)
     {
-        //
+        $abilities = Ability::with('users', 'profiles')->get();
+        return view('user-profiles.edit', ['abilities' => $abilities, 'profile' => $userProfile]);
     }
 
     /**
@@ -95,7 +96,42 @@ class UserProfileController extends Controller
      */
     public function update(Request $request, UserProfile $userProfile)
     {
-        //
+        $abilities = collect($request->get('abilities'));
+
+        try {
+            if (MainProfile::tryFrom($userProfile->name)) {
+                throw new \Exception('Não é possível atualizar esse perfil!');
+            }
+
+            $profile = $this->userProfileService->profileByName($userProfile->name)->first();
+            if (!$profile) {
+                throw new \Exception('Ops! Esse não perfil existe.');
+            }
+
+            if ($abilities->isEmpty()) {
+                throw new \Exception("Não é possível atualizar o perfil sem habilidades!");
+            }
+
+            $profiles = $this->userProfileService->profiles()->get();
+            foreach ($profiles as $profile) {
+                $profileName = $profile->name;
+                $profileAbilities = $profile->abilities->pluck('id');
+
+                $profileAbilitiesDiff = $profileAbilities->diff($abilities);
+                $abilitiesDiff = $abilities->diff($profileAbilities);
+
+                if ($abilitiesDiff->isEmpty() && $profileAbilitiesDiff->isEmpty()) {
+                    throw new \Exception("Já exite o perfil $profileName que possui as habilidades idênticas. Por favor, analise melhor as necessidades do perfil $userProfile->name!");
+                }
+            }
+
+            $this->userProfileService->update($profile, $abilities);
+
+            session()->flash('success', "Perfil $userProfile->name foi atualizado com sucesso.");
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            return redirect()->back()->withErrors($th->getMessage());
+        }
     }
 
     /**

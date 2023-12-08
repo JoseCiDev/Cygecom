@@ -56,8 +56,8 @@
                         <td>
                             <div class="actions">
                                 @if (!MainProfile::tryFrom($profile->name))
-                                    <a href="#" class="btn btn-mini btn-secondary" rel="tooltip" data-bs-toggle="tooltip" data-bs-placement="top"
-                                        data-bs-title="Editar habilidades do perfil">
+                                    <a href="{{ route('profile.edit', ['userProfile' => $profile]) }}" class="btn btn-mini btn-secondary" rel="tooltip" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" data-bs-title="Editar habilidades do perfil">
                                         <i class="fa-solid fa-sliders"></i>
                                     </a>
 
