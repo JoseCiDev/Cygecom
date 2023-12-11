@@ -96,7 +96,7 @@
             <li class="list-group-item bg-transparent"> Não é possível alterar o nome do perfil </li>
             <li class="list-group-item bg-transparent"> Evite perfil específico que será usado apenas em excessões. Ex.: suprimentos_luis, diretor_luis </li>
             <li class="list-group-item bg-transparent"> Garanta que as habilidades estejam corretas. Isso ajuda a evitar perfis com acessos incorretos ou incompletos. </li>
-            <li class="list-group-item bg-transparent"> Facilite o processo de entendimento dos usuários. Se o nome do perfil precisar fazer sentido com suas habildiades</li>
+            <li class="list-group-item bg-transparent"> Facilite o processo de entendimento dos usuários. O nome do perfil precisa fazer sentido com suas habilidades</li>
             <li class="list-group-item bg-transparent"> Analise <a href="{{ route('users.index') }}" class="link-danger">usuários e habilidades</a> antes de
                 ajustar o perfil. Pode ser que ajustar um ou poucos usuários seja a melhor solução. </li>
             <li class="list-group-item bg-transparent"> Conjunto de habilidades é único. Mesmo perfis idênticos com nomes diferentes não são permitidos. </li>
