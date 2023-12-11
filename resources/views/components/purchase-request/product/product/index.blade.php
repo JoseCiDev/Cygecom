@@ -88,7 +88,7 @@
         <div class="col-sm-5">
             <div class="form-group">
                 <label for="" class="regular-text">Link do produto</label>
-                <input type="text" maxlength="1000" data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][link]"
+                <input type="url" maxlength="500" data-cy="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][link]"
                     name="purchase_request_products[{{ $supplierIndex }}][products][{{ $productIndex }}][link]"
                     class="form-control product-link" value="{{ $product->link ?? null }}">
             </div>
