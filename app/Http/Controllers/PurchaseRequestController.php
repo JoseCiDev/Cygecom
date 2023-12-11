@@ -35,7 +35,7 @@ class PurchaseRequestController extends Controller
         return view('components.purchase-request.index', $params);
     }
 
-    public function ownRequests(Request $request)
+    public function indexOwn(Request $request)
     {
         $statusData = $request->input('status');
         $userRequests = $this->purchaseRequestService->purchaseRequestsByUser()
@@ -56,7 +56,7 @@ class PurchaseRequestController extends Controller
     }
 
 
-    public function formList()
+    public function dashboard()
     {
         return view('components.purchase-request.form-list');
     }
@@ -82,7 +82,7 @@ class PurchaseRequestController extends Controller
         }
     }
 
-    public function delete(int $id): RedirectResponse
+    public function destroy(int $id): RedirectResponse
     {
         $route = 'requests';
 
@@ -97,7 +97,7 @@ class PurchaseRequestController extends Controller
             }
 
             $this->purchaseRequestService->deletePurchaseRequest($id);
-            $route = 'requests.own';
+            $route = 'requests.index.own';
 
             session()->flash('success', "Solicitação deletada com sucesso!");
 

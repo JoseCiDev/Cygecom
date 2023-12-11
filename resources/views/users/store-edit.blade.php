@@ -151,7 +151,7 @@
     <div class="user-header">
         <h1 class="page-title">{{ isset($user) ? 'Editar usuário' : 'Novo usuário' }}</h1>
         @if (isset($user) && auth()->user()->id !== $user->id)
-            <button data-route="user" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario" data-bs-toggle="modal"
+            <button data-route="users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario" data-bs-toggle="modal"
                 data-bs-target="#modal-delete" rel="tooltip" title="Excluir" class="btn btn-primary btn-small btn-danger pull-right">
                 Excluir usuário
             </button>

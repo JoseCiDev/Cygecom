@@ -9,6 +9,6 @@ Route::middleware('auth')->group(function () {
         Route::middleware('can:post.users.store')->post('/store', [App\Http\Controllers\Auth\UserController::class, 'store'])->name('users.store');
         Route::middleware('can:get.users.show')->get('/show/{user}', [App\Http\Controllers\Auth\UserController::class, 'show'])->name('users.show');
         Route::middleware('can:post.users.update')->post('/update/{user}', [App\Http\Controllers\Auth\UserController::class, 'update'])->name('users.update');
-        Route::middleware('can:post.users.destroy')->post('/delete/{user}', [App\Http\Controllers\Auth\UserController::class, 'destroy'])->name('users.destroy');
+        Route::middleware('can:post.users.destroy')->post('/destroy/{user}', [App\Http\Controllers\Auth\UserController::class, 'destroy'])->name('users.destroy');
     });
 });

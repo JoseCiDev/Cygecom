@@ -73,9 +73,10 @@
                                     rel="tooltip">
                                     <i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar dados usuário"></i>
                                 </a>
-                                <button data-route="user" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" rel="tooltip" class="btn btn-mini btn-secondary"
-                                    data-bs-toggle="modal" data-bs-target="#modal-delete" data-cy="btn-modal-excluir-usuario-{{ $index }}">
-                                    <i class="fa fa-times" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Excluir usuário"></i>
+                                <button data-route="users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" rel="tooltip"
+                                    class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-delete"
+                                    data-cy="btn-modal-excluir-usuario-{{ $index }}">
+                                    <i class="fa-solid fa-trash" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Excluir usuário"></i>
                                 </button>
                                 <button class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-edit-user-ability" data-user-id={{ $user->id }}>
                                     <i class="fa-solid fa-sliders" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar habilidades do usuário"></i>

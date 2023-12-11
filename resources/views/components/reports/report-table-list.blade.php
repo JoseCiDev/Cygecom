@@ -487,6 +487,24 @@
                         render: (id, _, row) => {
                             const type = row.type;
                             if (type === enumProductValue) {
+                                const rows = row.purchase_request_product.map((element) => {
+                                    const {
+                                        name,
+                                        category,
+                                        quantity,
+                                        color,
+                                        model,
+                                        size
+                                    } = element;
+                                    return `<tr>
+                                        <td>${name}</td>
+                                        <td>${category.name}</td>
+                                        <td>${quantity}</td>
+                                        <td>${color || '---'}</td>
+                                        <td>${model || '---'}</td>
+                                        <td>${size || '---'}</td>
+                                        </tr>`
+                                }).join('');
                                 const productDetailContainer = `
                                     <table class="product-detail-container table table-hover table-nomargin table-bordered" style="display: none">
                                         <thead>
@@ -498,35 +516,9 @@
                                             <th>Tamanho</th>
                                         </thead>
                                         <tbody>
-                                            ${row.purchase_request_product.map((element) => {
-                                                const { name, category, quantity, color, model, size } = element;
-                                                return ` <
-                                    tr >
-                                    <
-                                    td > $ {
-                                        name
-                                    } < /td> <
-                                td > $ {
-                                    category.name
-                                } < /td> <
-                                td > $ {
-                                    quantity
-                                } < /td> <
-                                td > $ {
-                                    color || '---'
-                                } < /td> <
-                                td > $ {
-                                    model || '---'
-                                } < /td> <
-                                td > $ {
-                                    size || '---'
-                                } < /td> < /
-                                tr >
-                                    `;
-                                            }).join('')}
+                                            ${rows}
                                         </tbody>
-                                    </table>
-                                `;
+                                    </table>`;
 
                                 return id + ` ${productDetailContainer}`;
                             }

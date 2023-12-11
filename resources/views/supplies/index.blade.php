@@ -13,7 +13,7 @@
                             solicitações no total
                         </p>
                         <div class="supplies-dashboard-requests-item-info-top-btns">
-                            <a href="{{ route('supplies.product') }}" class="supplies-dashboard-requests-item-info-top-btns-btn" data-cy="btn-all-products">
+                            <a href="{{ route('supplies.product.index') }}" class="supplies-dashboard-requests-item-info-top-btns-btn" data-cy="btn-all-products">
                                 Ver todas
                             </a>
                         </div>
@@ -66,7 +66,7 @@
                             solicitações no total
                         </p>
                         <div class="supplies-dashboard-requests-item-info-top-btns">
-                            <a href="{{ route('supplies.service') }}" class="supplies-dashboard-requests-item-info-top-btns-btn" data-cy="btn-all-services">
+                            <a href="{{ route('supplies.service.index') }}" class="supplies-dashboard-requests-item-info-top-btns-btn" data-cy="btn-all-services">
                                 Ver todas
                             </a>
                         </div>
@@ -119,7 +119,7 @@
                             solicitações no total
                         </p>
                         <div class="supplies-dashboard-requests-item-info-top-btns">
-                            <a href="{{ route('supplies.contract') }}" class="supplies-dashboard-requests-item-info-top-btns-btn" data-cy="btn-all-contracts">
+                            <a href="{{ route('supplies.contract.index') }}" class="supplies-dashboard-requests-item-info-top-btns-btn" data-cy="btn-all-contracts">
                                 Ver todas
                             </a>
                         </div>

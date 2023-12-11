@@ -19,9 +19,9 @@ class ContractController extends Controller
     ) {
     }
 
-    public function registerContract(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $route      = 'requests';
+        $route      = 'requests.index';
         $data       = $request->all();
         $files       = $request->file('arquivos');
         $routeParams = [];
@@ -38,7 +38,7 @@ class ContractController extends Controller
 
         try {
             $purchaseRequest = $this->purchaseRequestService->registerContractRequest($data, $files);
-            $route           = 'request.edit';
+            $route           = 'requests.edit';
             $routeParams      = ["type" => $purchaseRequest->type, "id" => $purchaseRequest->id];
 
             $msg = "Solicitação de serviço recorrente nº $purchaseRequest->id  criada com sucesso!";
@@ -49,7 +49,7 @@ class ContractController extends Controller
                 $msg = "Solicitação de serviço recorrente nº $purchaseRequest->id criada e enviada ao setor de suprimentos responsável!";
             }
 
-            $route = 'requests.own';
+            $route = 'requests.index.own';
         } catch (Exception $error) {
             $msg = 'Não foi possível fazer o registro no banco de dados.';
             return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
@@ -60,7 +60,7 @@ class ContractController extends Controller
         return redirect()->route($route, $routeParams);
     }
 
-    public function contractForm(int $purchaseRequestIdToCopy = null)
+    public function create(int $purchaseRequestIdToCopy = null)
     {
         $companies = Company::all();
         $costCenters = CostCenter::all();
@@ -95,15 +95,15 @@ class ContractController extends Controller
      * @param int $id
      * @return RedirectResponse
      */
-    public function updateContract(UpdateContractRequest $request, int $id): RedirectResponse
+    public function update(UpdateContractRequest $request, int $id): RedirectResponse
     {
-        $route = 'requests.own';
+        $route = 'requests.index.own';
         $data = $request->all();
         $action = $request->input('action');
 
         $files = $request->file('arquivos');
         $currentUser = auth()->user();
-        $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.contract.update";
+        $isSuppliesUpdate = Route::currentRouteName() === "supplies.contract.update";
 
         try {
             $msg = "Solicitação de serviço recorrente atualizada com sucesso!";
@@ -152,7 +152,7 @@ class ContractController extends Controller
         return redirect()->route($route);
     }
 
-    public function details(int $id)
+    public function show(int $id)
     {
         $allRequestStatus = PurchaseRequestStatus::cases();
 

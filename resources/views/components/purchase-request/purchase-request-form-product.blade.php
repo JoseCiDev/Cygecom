@@ -64,7 +64,7 @@
             background-color: #ffffff;
         }
 
-        .supplier-container{
+        .supplier-container {
             display: flex;
             flex-direction: column;
         }
@@ -90,10 +90,9 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right" style="padding: 0">
             <x-modals.delete />
-            <button data-cy="btn-delete-request" data-route="purchaseRequests"
-                data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-bs-toggle="modal" data-bs-target="#modal-delete" rel="tooltip"
-                title="Excluir" class="btn btn-primary btn-danger pull-right">
+            <button data-cy="btn-delete-request" data-route="requests.destroy" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
+                data-id="{{ $purchaseRequest->id }}" data-bs-toggle="modal" data-bs-target="#modal-delete" rel="tooltip" title="Excluir"
+                class="btn btn-primary btn-danger pull-right">
                 Excluir solicitação
             </button>
         </div>
@@ -106,8 +105,8 @@
 
 <div class="box-content">
     <form enctype="multipart/form-data" class="form-validate" id="request-form" method="POST"
-        action="@if (isset($purchaseRequest) && !$isCopy) {{ route('request.product.update', ['type' => $purchaseRequest->type, 'id' => $id]) }}
-                    @else {{ route('request.product.register') }} @endif">
+        action="@if (isset($purchaseRequest) && !$isCopy) {{ route('requests.product.update', ['type' => $purchaseRequest->type, 'id' => $id]) }}
+                    @else {{ route('requests.product.store') }} @endif">
         @csrf
 
         <input type="hidden" name="type" value="product">
@@ -132,8 +131,7 @@
                         <label for="requester" style="display:block;" class="regular-text">
                             Atribuir um solicitante
                         </label>
-                        <select name="requester_person_id" class='select2-me' data-cy="requester"
-                            data-placeholder="Escolha um colaborador" style="width:100%;">
+                        <select name="requester_person_id" class='select2-me' data-cy="requester" data-placeholder="Escolha um colaborador" style="width:100%;">
                             <option value=""></option>
                             @foreach ($people as $person)
                                 @php
@@ -154,11 +152,9 @@
 
                 <div class="col-sm-2">
                     <div class="form-group" style="display: flex">
-                        <input name="is_only_quotation" type="checkbox" id="checkbox-only-quotation"
-                            data-cy="checkbox-only-quotation" class="checkbox-only-quotation no-validation"
+                        <input name="is_only_quotation" type="checkbox" id="checkbox-only-quotation" data-cy="checkbox-only-quotation" class="checkbox-only-quotation no-validation"
                             style="margin:0" @checked((bool) $purchaseRequest?->is_only_quotation)>
-                        <label for="checkbox-only-quotation" class="regular-text form-check-label"
-                            style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
+                        <label for="checkbox-only-quotation" class="regular-text form-check-label" style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
                     </div>
                 </div>
 
@@ -169,14 +165,11 @@
                         <fieldset data-rule-required="true">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <input name="is_supplies_contract"value="1" class="radio-who-wants" required
-                                        id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
-                                        @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label secondary-text"
-                                        for="is-supplies-contract">Suprimentos</label>
-                                    <input name="is_supplies_contract" value="0" class="radio-who-wants"
-                                        type="radio" required id="is-area-contract" data-cy="is-area-contract"
-                                        style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
+                                    <input name="is_supplies_contract"value="1" class="radio-who-wants" required id="is-supplies-contract" data-cy="is-supplies-contract"
+                                        type="radio" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
+                                    <label class="form-check-label secondary-text" for="is-supplies-contract">Suprimentos</label>
+                                    <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio" required id="is-area-contract"
+                                        data-cy="is-area-contract" style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
                                     <label class="form-check-label secondary-text" for="is-area-contract">Eu (Área
                                         solicitante)</label>
                                 </div>
@@ -194,13 +187,10 @@
                         <fieldset data-rule-required="true">
                             <div class="row">
                                 <div class="col-sm-5">
-                                    <input name="is_comex" data-cy="is-comex" value="1"
-                                        @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
-                                        data-skin="minimal" required>
-                                    <label class="form-check-label secondary-text" for="services"
-                                        style="margin-right:15px;">Sim</label>
-                                    <input name="is_comex" data-cy="is-not-comex" value="0"
-                                        @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
+                                    <input name="is_comex" data-cy="is-comex" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex" type="radio" data-skin="minimal"
+                                        required>
+                                    <label class="form-check-label secondary-text" for="services" style="margin-right:15px;">Sim</label>
+                                    <input name="is_comex" data-cy="is-not-comex" value="0" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
                                         data-skin="minimal" required>
                                     <label class="form-check-label secondary-text" for="">Não</label>
                                 </div>
@@ -220,8 +210,7 @@
                             Motivo da solicitação
                         </label>
                         <textarea data-rule-required="true" minlength="20" name="reason" id="reason" data-cy="reason" rows="4"
-                            placeholder="Ex.: Devido aumento da demanda de produção, necessário a compra de uma máquina/equipamento."
-                            class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
+                            placeholder="Ex.: Devido aumento da demanda de produção, necessário a compra de uma máquina/equipamento." class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
                     <div class="small" style="margin-top: 10px; margin-bottom:20px;">
                         <p class="secondary-text">*Informe o motivo que você está solicitando essa compra.</p>
@@ -231,8 +220,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="regular-text">Data desejada entrega do produto</label>
-                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
-                            max="2100-01-01" class="form-control"
+                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date" max="2100-01-01" class="form-control"
                             value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
@@ -242,10 +230,8 @@
                         <label for="local-description" class="regular-text">
                             Em qual sala/prédio ficará o produto solicitado
                         </label>
-                        <input name="local_description"
-                            value="@if (isset($purchaseRequest)) {{ $purchaseRequest->local_description }} @endif"
-                            type="text" id="local-description" data-cy="local-description"
-                            placeholder="Informe em qual local / sala ficará o produto" class="form-control"
+                        <input name="local_description" value="@if (isset($purchaseRequest)) {{ $purchaseRequest->local_description }} @endif" type="text"
+                            id="local-description" data-cy="local-description" placeholder="Informe em qual local / sala ficará o produto" class="form-control"
                             data-rule-required="true" data-rule-minlength="2">
                     </div>
                 </div>
@@ -254,10 +240,8 @@
                 <div class="col-sm-7" hidden>
                     <div class="form-group">
                         <label for="description" class="regular-text">Descrição</label>
-                        <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
-                            rows="4"
-                            placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM."
-                            class="form-control text-area no-resize">Solicitação de produto(s).</textarea>
+                        <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description" rows="4"
+                            placeholder="Ex.: Contratação de serviço para consertar e verificar o estado dos ar-condicionados da HKM." class="form-control text-area no-resize">Solicitação de produto(s).</textarea>
                     </div>
                     <div class="small" style="color:rgb(85, 85, 85); margin-top: 5px; margin-bottom:20px;">
                         <p>* Descreva com detalhes o que deseja solicitar e informações úteis para uma possível cotação. </p>
@@ -272,16 +256,16 @@
                     <div class="form-group">
                         <label for="support-links" class="regular-text">Links de apoio / sugestão
                         </label>
-                        <textarea placeholder="Adicione link(s) de sugestão de compra, site do fornecedor, etc." rows="3"
-                            name="support_links" id="support-links" data-cy="support-links" class="form-control text-area no-resize">{{ $purchaseRequest?->support_links ?? null }}</textarea>
+                        <textarea placeholder="Adicione link(s) de sugestão de compra, site do fornecedor, etc." rows="3" name="support_links" id="support-links" data-cy="support-links"
+                            class="form-control text-area no-resize">{{ $purchaseRequest?->support_links ?? null }}</textarea>
                     </div>
                 </div>
 
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="observation" class="regular-text"> Observação </label>
-                        <textarea name="observation" id="request-observation" data-cy="request-observation" rows="3"
-                            placeholder="Informações complementares desta solicitação" class="form-control text-area no-resize">{{ $purchaseRequest?->observation ?? null }}</textarea>
+                        <textarea name="observation" id="request-observation" data-cy="request-observation" rows="3" placeholder="Informações complementares desta solicitação"
+                            class="form-control text-area no-resize">{{ $purchaseRequest?->observation ?? null }}</textarea>
                     </div>
                 </div>
             </div>
@@ -296,9 +280,8 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="regular-text">Condição de pagamento</label>
-                            <select name="product[payment_info][payment_terms]" id="payment-terms"
-                                data-cy="payment-terms" class='select2-me product[payment_info][payment_terms]'
-                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
+                            <select name="product[payment_info][payment_terms]" id="payment-terms" data-cy="payment-terms"
+                                class='select2-me product[payment_info][payment_terms]' style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentTerms as $paymentTerm)
                                     <option value="{{ $paymentTerm->value }}" @selected($paymentTerm->value === $selectedPaymentTerm?->value)>
@@ -315,11 +298,10 @@
                             <label for="format-amount" class="regular-text">Valor total do(s) produto(s)</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
-                                <input type="text" id="format-amount" name="format-amount"
-                                    data-cy="format-amount" placeholder="0.00" class="form-control format-amount"
+                                <input type="text" id="format-amount" name="format-amount" data-cy="format-amount" placeholder="0.00" class="form-control format-amount"
                                     value="{{ str_replace('.', ',', $purchaseRequestProductAmount) }}">
-                                <input type="hidden" name="product[amount]" id="amount" data-cy="amount"
-                                    class="amount no-validation" value="{{ $purchaseRequestProductAmount }}">
+                                <input type="hidden" name="product[amount]" id="amount" data-cy="amount" class="amount no-validation"
+                                    value="{{ $purchaseRequestProductAmount }}">
                             </div>
                         </div>
                     </div>
@@ -328,8 +310,7 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="regular-text">Forma de pagamento</label>
-                            <select name="product[payment_info][payment_method]" id="payment-method"
-                                data-cy="payment-method" class='select2-me payment-method'
+                            <select name="product[payment_info][payment_method]" id="payment-method" data-cy="payment-method" class='select2-me payment-method'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentMethods as $paymentMethod)
@@ -341,20 +322,17 @@
                         </div>
                     </div>
 
-                    <input type="hidden" id="product-payment-info-id" data-cy="product-payment-info-id"
-                        class="no-validation" value="{{ $purchaseRequest?->product?->paymentInfo?->id ?? null }}"
-                        name="product[payment_info][id]">
+                    <input type="hidden" id="product-payment-info-id" data-cy="product-payment-info-id" class="no-validation"
+                        value="{{ $purchaseRequest?->product?->paymentInfo?->id ?? null }}" name="product[payment_info][id]">
 
                     {{-- Nº PARCELAS --}}
                     <div class="col-sm-1">
                         <div class="form-group">
                             <label class="control-label regular-text">Nº parcelas</label>
-                            <input type="text" class="form-control format-installments-number"
-                                name="installments-number" placeholder="Ex: 24"
+                            <input type="text" class="form-control format-installments-number" name="installments-number" placeholder="Ex: 24"
                                 value="{{ $productQuantityOfInstallments }}">
-                            <input type="hidden" name="product[quantity_of_installments]" id="installments-number"
-                                data-cy="installments-number" class="installments-number no-validation"
-                                value="{{ $productQuantityOfInstallments }}">
+                            <input type="hidden" name="product[quantity_of_installments]" id="installments-number" data-cy="installments-number"
+                                class="installments-number no-validation" value="{{ $productQuantityOfInstallments }}">
                         </div>
                     </div>
 
@@ -364,9 +342,8 @@
                             <label for="payment-info-description" class="regular-text">
                                 Detalhes do pagamento
                             </label>
-                            <textarea name="product[payment_info][description]" id="payment-info-description" data-cy="payment-info-description"
-                                rows="3" placeholder="Ex: chave PIX, dados bancários do fornecedor, etc."
-                                class="form-control text-area no-resize">{{ $purchaseRequest->product->paymentInfo->description ?? null }}</textarea>
+                            <textarea name="product[payment_info][description]" id="payment-info-description" data-cy="payment-info-description" rows="3"
+                                placeholder="Ex: chave PIX, dados bancários do fornecedor, etc." class="form-control text-area no-resize">{{ $purchaseRequest->product->paymentInfo->description ?? null }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -382,8 +359,7 @@
                     <div class="col-sm-12">
                         <div class="box">
                             <div class="box-content nopadding regular-text">
-                                <table class="table table-hover table-nomargin table-striped"
-                                    id="installments-table-striped">
+                                <table class="table table-hover table-nomargin table-striped" id="installments-table-striped">
                                     <thead>
                                         <tr>
                                             <th class="col-sm-2">
@@ -426,8 +402,7 @@
                 @php $supplierIndex = 0; @endphp
                 @if ($issetPurchaseRequest)
                     @foreach ($productSuppliers as $supplierId => $products)
-                        <x-purchase-request.product.supplier :productCategories="$productCategories" :suppliers="$suppliers" :supplierId="$supplierId"
-                            :products="$products" :supplierIndex="$supplierIndex" :isCopy="$isCopy" />
+                        <x-purchase-request.product.supplier :productCategories="$productCategories" :suppliers="$suppliers" :supplierId="$supplierId" :products="$products" :supplierIndex="$supplierIndex" :isCopy="$isCopy" />
                         @php $supplierIndex++; @endphp
                     @endforeach
                 @else
@@ -458,14 +433,13 @@
                     Salvar rascunho
                 </button>
 
-                <button type="submit" name="submit_request" class="btn btn-primary btn-success btn-submit-request"
-                    value="submit-request">
+                <button type="submit" name="submit_request" class="btn btn-primary btn-success btn-submit-request" value="submit-request">
                     Salvar e enviar solicitação
                 </button>
             @endif
 
             @if ($hasSentRequest)
-                <a href="{{ route('requests.own') }}" class="btn btn-primary btn-large">VOLTAR</a>
+                <a href="{{ route('requests.index.own') }}" class="btn btn-primary btn-large">VOLTAR</a>
             @endif
         </div>
     </form>
@@ -550,15 +524,15 @@
                 autofix: 'pad'
             });
 
-        const $filesGroup = $('fieldset#files-group');
-        const csrfToken = $('meta[name="csrf-token"]').attr('content');
+            const $filesGroup = $('fieldset#files-group');
+            const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
             // muda data desejada mínima quando serviço já prestado
             const $desiredDate = $('#desired-date');
             const currentDate = moment();
             const minInitialDate = moment('2020-01-01').format('YYYY-MM-DD');
 
-        $desiredDate.attr('min', currentDate.format('YYYY-MM-DD'))
+            $desiredDate.attr('min', currentDate.format('YYYY-MM-DD'))
 
             // trata valor serviço mascara
             $serviceAmount.on('input', function() {
@@ -776,8 +750,8 @@
                 .prop('disabled', true)
                 .trigger('change.select2');
 
-        $radioIsContractedBySupplies.on('change', function() {
-            const isContractedBySupplies = $(this).val() === "1";
+            $radioIsContractedBySupplies.on('change', function() {
+                const isContractedBySupplies = $(this).val() === "1";
 
                 // muda label
                 const supplierSelect = $('select.select-supplier');
@@ -787,13 +761,13 @@
 
                 supplierSelect.before().removeAttr('data-rule-required');
 
-            // muda label data desejada
-            const labelDesiredDateAlreadyProvided = "Data da entrega do produto";
-            const labelDesiredDateDefault = "Data desejada entrega do produto";
-            const newLabelDate = isContractedBySupplies ? labelDesiredDateDefault: labelDesiredDateAlreadyProvided;
-            $desiredDate.siblings('label').text(newLabelDate);
+                // muda label data desejada
+                const labelDesiredDateAlreadyProvided = "Data da entrega do produto";
+                const labelDesiredDateDefault = "Data desejada entrega do produto";
+                const newLabelDate = isContractedBySupplies ? labelDesiredDateDefault : labelDesiredDateAlreadyProvided;
+                $desiredDate.siblings('label').text(newLabelDate);
 
-            isContractedBySupplies ? $desiredDate.removeRequired() : $desiredDate.makeRequired()
+                isContractedBySupplies ? $desiredDate.removeRequired() : $desiredDate.makeRequired()
 
                 // desabilita e limpa inputs pagamento
                 $paymentBlock
@@ -805,10 +779,10 @@
                     .prop('disabled', isContractedBySupplies)
                     .trigger('change.select2');
 
-            if (isContractedBySupplies) {
-                supplierSelect.removeRequired();
-                supplierSelect.closest('.form-group').removeClass('has-error');
-                $supplierBlock.find('.help-block').remove();
+                if (isContractedBySupplies) {
+                    supplierSelect.removeRequired();
+                    supplierSelect.closest('.form-group').removeClass('has-error');
+                    $supplierBlock.find('.help-block').remove();
 
                     $paymentBlock
                         .find('input, textarea')
@@ -821,8 +795,8 @@
                     $installmentsTable.clear().draw();
                     hiddenInputsContainer.empty();
 
-                return;
-            }
+                    return;
+                }
 
                 supplierSelect.makeRequired();
             });
@@ -1207,7 +1181,8 @@
                 event.preventDefault();
 
                 const title = "Atenção!"
-                const message = "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?";
+                const message =
+                    "Esta solicitação será <strong>enviada</strong> para o setor de <strong>suprimentos responsável</strong>. <br><br> Deseja confirmar esta ação?";
                 $.fn.showModalAlert(title, message, () => {
                     $sendAction.val('submit-request');
                     $('#request-form').trigger('submit');

@@ -2,7 +2,7 @@
     use App\Enums\PurchaseRequestStatus;
     use App\Enums\PaymentMethod;
 
-    $currentUser =  auth()->user();
+    $currentUser = auth()->user();
 
     $issetPurchaseRequest = isset($purchaseRequest);
     $purchaseRequest ??= null;
@@ -87,10 +87,8 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right" style="padding: 0">
             <x-modals.delete />
-            <button data-cy="btn-delete-request" data-route="purchaseRequests"
-                data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-bs-toggle="modal" data-bs-target="#modal" rel="tooltip"
-                title="Excluir" class="btn btn-primary btn-danger pull-right">
+            <button data-cy="btn-delete-request" data-route="requests.destroy" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
+                data-id="{{ $purchaseRequest->id }}" data-bs-toggle="modal" data-bs-target="#modal" rel="tooltip" title="Excluir" class="btn btn-primary btn-danger pull-right">
                 Excluir solicitação
             </button>
         </div>
@@ -101,8 +99,8 @@
 
 <div class="box-content">
     <form enctype="multipart/form-data" class="form-validate" id="request-form" data-cy="request-form" method="POST"
-        action="@if (isset($purchaseRequest) && !$isCopy) {{ route('request.service.update', ['id' => $id]) }}
-                    @else {{ route('request.service.register') }} @endif">
+        action="@if (isset($purchaseRequest) && !$isCopy) {{ route('requests.service.update', ['id' => $id]) }}
+                    @else {{ route('requests.service.store') }} @endif">
         @csrf
 
         <input type="hidden" name="type" value="service" class="no-validation" data-cy="type">
@@ -112,10 +110,8 @@
             <div class="col-sm-6 contract-title">
                 <div class="form-group">
                     <label for="service-title" class="regular-text label-service-title">Nome serviço pontual: </label>
-                    <input type="text" id="service-title" data-cy="service-title" name="service[name]"
-                        placeholder="Ex: Serviço manutenção elevador - 07/23 - HKM" class="form-control"
-                        data-rule-required="true" minlength="15" maxlength="200"
-                        value="{{ $serviceName }}">
+                    <input type="text" id="service-title" data-cy="service-title" name="service[name]" placeholder="Ex: Serviço manutenção elevador - 07/23 - HKM"
+                        class="form-control" data-rule-required="true" minlength="15" maxlength="200" value="{{ $serviceName }}">
                 </div>
             </div>
         </div>
@@ -140,9 +136,7 @@
                         <label for="requester" style="display:block;" class="regular-text">
                             Atribuir um solicitante
                         </label>
-                        <select name="requester_person_id" class='select2-me'
-                            data-cy="requester" data-placeholder="Escolha um colaborador"
-                            style="width:100%;">
+                        <select name="requester_person_id" class='select2-me' data-cy="requester" data-placeholder="Escolha um colaborador" style="width:100%;">
                             <option value=""></option>
                             @foreach ($people as $person)
                                 @php
@@ -151,7 +145,7 @@
                                     }
                                     $selected = $person->id === $purchaseRequest?->requester?->id;
                                 @endphp
-                                <option value="{{ $person->id }}" @selected($selected)>{{$person->name}}</option>
+                                <option value="{{ $person->id }}" @selected($selected)>{{ $person->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -162,11 +156,9 @@
 
                 <div class="col-sm-2">
                     <div class="form-group" style="display: flex">
-                        <input name="is_only_quotation" type="checkbox" id="checkbox-only-quotation"
-                            data-cy="checkbox-only-quotation" class="checkbox-only-quotation no-validation"
+                        <input name="is_only_quotation" type="checkbox" id="checkbox-only-quotation" data-cy="checkbox-only-quotation" class="checkbox-only-quotation no-validation"
                             style="margin:0" @checked((bool) $purchaseRequest?->is_only_quotation)>
-                        <label for="checkbox-only-quotation" class="regular-text form-check-label"
-                            style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
+                        <label for="checkbox-only-quotation" class="regular-text form-check-label" style="margin-left:10px;">Solicitação somente de cotação/orçamento</label>
                     </div>
                 </div>
 
@@ -179,14 +171,11 @@
                         <fieldset data-rule-required="true">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <input name="is_supplies_contract"value="1" class="radio-who-wants" required
-                                        id="is-supplies-contract" data-cy="is-supplies-contract" type="radio"
-                                        @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
-                                    <label class="form-check-label secondary-text"
-                                        for="is-supplies-contract">Suprimentos</label>
-                                    <input name="is_supplies_contract" value="0" class="radio-who-wants"
-                                        type="radio" required id="is-area-contract" data-cy="is-area-contract"
-                                        style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
+                                    <input name="is_supplies_contract"value="1" class="radio-who-wants" required id="is-supplies-contract" data-cy="is-supplies-contract"
+                                        type="radio" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_supplies_contract)>
+                                    <label class="form-check-label secondary-text" for="is-supplies-contract">Suprimentos</label>
+                                    <input name="is_supplies_contract" value="0" class="radio-who-wants" type="radio" required id="is-area-contract"
+                                        data-cy="is-area-contract" style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_supplies_contract)>
                                     <label class="form-check-label secondary-text" for="is-area-contract">Eu (Área
                                         solicitante)</label>
                                 </div>
@@ -204,13 +193,10 @@
                         <fieldset data-rule-required="true">
                             <div class="row">
                                 <div class="col-sm-5">
-                                    <input name="is_comex" data-cy="is_comex_true" value="1"
-                                        @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
+                                    <input name="is_comex" data-cy="is_comex_true" value="1" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
                                         data-skin="minimal" required>
-                                    <label class="form-check-label secondary-text" for="services"
-                                        style="margin-right:15px;">Sim</label>
-                                    <input name="is_comex" data-cy="is_comex_false" value="0"
-                                        @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
+                                    <label class="form-check-label secondary-text" for="services" style="margin-right:15px;">Sim</label>
+                                    <input name="is_comex" data-cy="is_comex_false" value="0" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->is_comex) class="radio-comex" type="radio"
                                         data-skin="minimal" required>
                                     <label class="form-check-label secondary-text" for="">Não</label>
                                 </div>
@@ -227,8 +213,7 @@
                 <div class="col-sm-5">
                     <div class="form-group">
                         <label for="reason" class="regular-text"> Motivo da solicitação </label>
-                        <textarea data-rule-required="true" minlength="20" name="reason" id="reason" data-cy="reason" rows="4"
-                            class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
+                        <textarea data-rule-required="true" minlength="20" name="reason" id="reason" data-cy="reason" rows="4" class="form-control text-area no-resize">{{ $purchaseRequest->reason ?? null }}</textarea>
                     </div>
                     <div class="small" style="margin-top: 10px; margin-bottom:20px;">
                         <p class="secondary-text">*Informe o motivo pelo qual você está solicitando esta contratação
@@ -240,10 +225,8 @@
                 <div class="col-sm-7">
                     <div class="form-group">
                         <label for="description" class="regular-text">Descrição</label>
-                        <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description"
-                            rows="4"
-                            placeholder="Ex.: Contratação de serviço para conserto de uma máquina da produção que está apresentando defeitos."
-                            class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
+                        <textarea data-rule-required="true" minlength="20" name="description" id="description" data-cy="description" rows="4"
+                            placeholder="Ex.: Contratação de serviço para conserto de uma máquina da produção que está apresentando defeitos." class="form-control text-area no-resize">{{ $purchaseRequest->description ?? null }}</textarea>
                     </div>
                     <div class="small" style="margin-top: 10px; margin-bottom:20px;">
                         <p class="secondary-text">*Descreva com detalhes o tipo de serviço que está solicitando.</p>
@@ -258,11 +241,8 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="local-description" class="regular-text"> Local de prestação do serviço </label>
-                        <input data-rule-required="true" minlength="5" name="local_description"
-                            value="{{ $purchaseRequest->local_description ?? null }}" type="text"
-                            id="local-description" data-cy="local-description"
-                            placeholder="Ex: HKM - Av. Gentil Reinaldo Cordioli, 161 - Jardim Eldorado"
-                            class="form-control">
+                        <input data-rule-required="true" minlength="5" name="local_description" value="{{ $purchaseRequest->local_description ?? null }}" type="text"
+                            id="local-description" data-cy="local-description" placeholder="Ex: HKM - Av. Gentil Reinaldo Cordioli, 161 - Jardim Eldorado" class="form-control">
                     </div>
                 </div>
 
@@ -273,13 +253,11 @@
                             Este serviço já foi prestado?
                         </label>
                         <fieldset data-rule-required="true">
-                            <input name="service[already_provided]" value="1" class="radio-already-provided"
-                                @checked(isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided) id="already-provided" data-cy="already-provided"
-                                type="radio" required>
+                            <input name="service[already_provided]" value="1" class="radio-already-provided" @checked(isset($purchaseRequest) && (bool) $purchaseRequest->service->already_provided) id="already-provided"
+                                data-cy="already-provided" type="radio" required>
                             <label class="form-check-label secondary-text" for="already-provided">Sim</label>
-                            <input name="service[already_provided]" value="0" class="radio-already-provided"
-                                required type="radio" id="not-provided" data-cy="not-provided"
-                                style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided)>
+                            <input name="service[already_provided]" value="0" class="radio-already-provided" required type="radio" id="not-provided"
+                                data-cy="not-provided" style="margin-left: 7px;" @checked(isset($purchaseRequest) && !(bool) $purchaseRequest->service->already_provided)>
                             <label class="form-check-label secondary-text" for="not-provided">Não</label>
                         </fieldset>
                     </div>
@@ -288,8 +266,7 @@
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="desired-date" class="regular-text">Data desejada do serviço</label>
-                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date"
-                            max="2100-01-01" class="form-control" min="2023-07-24"
+                        <input type="date" name="desired_date" id="desired-date" data-cy="desired-date" max="2100-01-01" class="form-control" min="2023-07-24"
                             value="{{ $purchaseRequest->desired_date ?? null }}">
                     </div>
                 </div>
@@ -302,8 +279,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="support_links" class="regular-text">Links de apoio / sugestão</label>
-                        <textarea rows="3" name="support_links" id="support_links" data-cy="support_links"
-                            class="form-control text-area no-resize">{{ isset($purchaseRequest->support_links) && $purchaseRequest->support_links ? $purchaseRequest->support_links : '' }}</textarea>
+                        <textarea rows="3" name="support_links" id="support_links" data-cy="support_links" class="form-control text-area no-resize">{{ isset($purchaseRequest->support_links) && $purchaseRequest->support_links ? $purchaseRequest->support_links : '' }}</textarea>
                     </div>
                 </div>
 
@@ -313,8 +289,8 @@
                         <label for="observation" class="regular-text">
                             Observações
                         </label>
-                        <textarea name="observation" id="observation" data-cy="observation" rows="3"
-                            placeholder="Informações complementares desta solicitação" class="form-control text-area no-resize">{{ $purchaseRequest->observation ?? null }}</textarea>
+                        <textarea name="observation" id="observation" data-cy="observation" rows="3" placeholder="Informações complementares desta solicitação"
+                            class="form-control text-area no-resize">{{ $purchaseRequest->observation ?? null }}</textarea>
                     </div>
                 </div>
 
@@ -332,9 +308,8 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="regular-text">Condição de pagamento</label>
-                            <select name="service[payment_info][payment_terms]" id="payment-terms"
-                                data-cy="payment-terms" class='select2-me service[payment_info][payment_terms]'
-                                style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
+                            <select name="service[payment_info][payment_terms]" id="payment-terms" data-cy="payment-terms"
+                                class='select2-me service[payment_info][payment_terms]' style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentTerms as $paymentTerm)
                                     <option value="{{ $paymentTerm->value }}" @selected($paymentTerm->value === $selectedPaymentTerm?->value)>
@@ -351,11 +326,10 @@
                             <label for="format-amount" class="regular-text">Valor total do serviço</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
-                                <input type="text" id="format-amount" name="format-amount"
-                                    data-cy="format-amount" placeholder="0.00" class="form-control format-amount"
+                                <input type="text" id="format-amount" name="format-amount" data-cy="format-amount" placeholder="0.00" class="form-control format-amount"
                                     value="{{ str_replace('.', ',', $purchaseRequestServicePrice) }}">
-                                <input type="hidden" name="service[price]" id="amount" data-cy="amount"
-                                    class="amount no-validation" value="{{ $purchaseRequestServicePrice }}">
+                                <input type="hidden" name="service[price]" id="amount" data-cy="amount" class="amount no-validation"
+                                    value="{{ $purchaseRequestServicePrice }}">
                             </div>
                         </div>
                     </div>
@@ -364,8 +338,7 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="regular-text">Forma de pagamento</label>
-                            <select name="service[payment_info][payment_method]" id="payment-method"
-                                data-cy="payment-method" class='select2-me payment-method'
+                            <select name="service[payment_info][payment_method]" id="payment-method" data-cy="payment-method" class='select2-me payment-method'
                                 style="width:100%; padding-top:2px;" data-placeholder="Escolha uma opção">
                                 <option value=""></option>
                                 @foreach ($paymentMethods as $paymentMethod)
@@ -377,20 +350,16 @@
                         </div>
                     </div>
 
-                    <input type="hidden" class="no-validation"
-                        value="{{ $purchaseRequest?->service?->paymentInfo?->id ?? null }}"
-                        name="service[payment_info][id]">
+                    <input type="hidden" class="no-validation" value="{{ $purchaseRequest?->service?->paymentInfo?->id ?? null }}" name="service[payment_info][id]">
 
                     {{-- Nº PARCELAS --}}
                     <div class="col-sm-1">
                         <div class="form-group">
                             <label class="control-label regular-text">Nº de parcelas</label>
-                            <input type="text" class="form-control format-installments-number"
-                                name="installments-number" data-cy="format-installments-number" placeholder="Ex: 24"
-                                value="{{ $serviceQuantityOfInstallments }}">
-                            <input type="hidden" name="service[quantity_of_installments]" id="installments-number"
-                                data-cy="installments-number" class="installments-number no-validation"
-                                value="{{ $serviceQuantityOfInstallments }}">
+                            <input type="text" class="form-control format-installments-number" name="installments-number" data-cy="format-installments-number"
+                                placeholder="Ex: 24" value="{{ $serviceQuantityOfInstallments }}">
+                            <input type="hidden" name="service[quantity_of_installments]" id="installments-number" data-cy="installments-number"
+                                class="installments-number no-validation" value="{{ $serviceQuantityOfInstallments }}">
                         </div>
                     </div>
 
@@ -398,9 +367,8 @@
                     <div class="col-sm-5" style="margin-bottom: -20px;">
                         <div class="form-group">
                             <label for="payment-info-description" class="regular-text"> Detalhes do pagamento </label>
-                            <textarea name="service[payment_info][description]" id="payment-info-description" data-cy="payment-info-description"
-                                rows="3" placeholder="Ex: chave PIX, dados bancários do fornecedor, etc."
-                                class="form-control text-area no-resize">{{ $purchaseRequest->service->paymentInfo->description ?? null }}</textarea>
+                            <textarea name="service[payment_info][description]" id="payment-info-description" data-cy="payment-info-description" rows="3"
+                                placeholder="Ex: chave PIX, dados bancários do fornecedor, etc." class="form-control text-area no-resize">{{ $purchaseRequest->service->paymentInfo->description ?? null }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -416,8 +384,7 @@
                     <div class="col-sm-12">
                         <div class="box">
                             <div class="box-content nopadding regular-text">
-                                <table class="table table-hover table-nomargin table-striped"
-                                    id="installments-table-striped" style="width:100%">
+                                <table class="table table-hover table-nomargin table-striped" id="installments-table-striped" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th class="col-sm-2">
@@ -469,8 +436,7 @@
                         <label for="service[supplier_id]" style="display:block;" class="regular-text">
                             Fornecedor (CNPJ - Razão social)
                         </label>
-                        <select name="service[supplier_id]" class='select2-me select-supplier'
-                            data-cy="service[supplier_id]" data-placeholder="Escolha um fornecedor"
+                        <select name="service[supplier_id]" class='select2-me select-supplier' data-cy="service[supplier_id]" data-placeholder="Escolha um fornecedor"
                             style="width:100%;">
                             <option value="">Informe um fornecedor ou cadastre um novo</option>
                             @foreach ($suppliers as $supplier)
@@ -488,8 +454,7 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="attendant" class="regular-text">Vendedor/Atendente</label>
-                            <input type="text" id="attendant" name="service[seller]" data-cy="attendant"
-                                placeholder="Pessoa responsável pela cotação" class="form-control"
+                            <input type="text" id="attendant" name="service[seller]" data-cy="attendant" placeholder="Pessoa responsável pela cotação" class="form-control"
                                 data-rule-minlength="2" value="{{ $purchaseRequest?->service?->seller ?? null }}">
                         </div>
                     </div>
@@ -498,9 +463,8 @@
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label for="phone-number" class="regular-text">Telefone</label>
-                            <input type="text" name="service[phone]" id="phone-number" data-cy="phone-number"
-                                placeholder="(00) 0000-0000" class="form-control" minLength="14"
-                                value="{{ $purchaseRequest?->service?->phone ?? null }}">
+                            <input type="text" name="service[phone]" id="phone-number" data-cy="phone-number" placeholder="(00) 0000-0000" class="form-control"
+                                minLength="14" value="{{ $purchaseRequest?->service?->phone ?? null }}">
                         </div>
                     </div>
 
@@ -508,9 +472,8 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="email" class="regular-text">E-mail</label>
-                            <input type="email" name="service[email]" id="email" data-cy="email"
-                                placeholder="user_email@vendedor.com.br" class="form-control" data-rule-email="true"
-                                value="{{ $purchaseRequest?->service?->email ?? null }}">
+                            <input type="email" name="service[email]" id="email" data-cy="email" placeholder="user_email@vendedor.com.br" class="form-control"
+                                data-rule-email="true" value="{{ $purchaseRequest?->service?->email ?? null }}">
                         </div>
                     </div>
 
@@ -530,20 +493,18 @@
                 @if (!$hasSentRequest)
                     <input type="hidden" name="action" id="action" data-cy="action" value="">
 
-                    <button type="submit" data-cy="save-draft" class="btn btn-primary btn-draft"
-                        style="margin-right: 10px">
+                    <button type="submit" data-cy="save-draft" class="btn btn-primary btn-draft" style="margin-right: 10px">
                         Salvar rascunho
                     </button>
 
-                    <button type="submit" name="submit_request" data-cy="submit_request" style="margin-right: 10px"
-                        class="btn btn-primary btn-success btn-submit-request" value="submit-request">
+                    <button type="submit" name="submit_request" data-cy="submit_request" style="margin-right: 10px" class="btn btn-primary btn-success btn-submit-request"
+                        value="submit-request">
                         Salvar e enviar solicitação
                     </button>
                 @endif
 
                 @if ($hasSentRequest)
-                    <a href="{{ route('requests.own') }}" class="btn btn-primary btn-large"
-                        data-cy="btn-back">VOLTAR</a>
+                    <a href="{{ route('requests.index.own') }}" class="btn btn-primary btn-large" data-cy="btn-back">VOLTAR</a>
                 @endif
             </div>
 

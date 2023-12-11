@@ -20,8 +20,7 @@
                         <h1 class="page-title">Todos os fornecedores</h1>
                     </div>
                     <div class="col-md-6" style="padding: 0">
-                        <a data-cy="btn-cadastrar-novo" href="{{ route('supplier.form') }}"
-                            class="btn btn-primary btn-large pull-right">Cadastrar novo</a>
+                        <a data-cy="btn-cadastrar-novo" href="{{ route('suppliers.create') }}" class="btn btn-primary btn-large pull-right">Cadastrar novo</a>
                     </div>
                 </div>
 
@@ -36,8 +35,7 @@
                     </select>
 
                     <span class="loader-box"></span>
-                    <table id="supplierTable" class="table table-hover table-nomargin table-bordered" data-nosort="0"
-                        data-checkall="all" style="width:100%">
+                    <table id="supplierTable" class="table table-hover table-nomargin table-bordered" data-nosort="0" data-checkall="all" style="width:100%">
                         <thead>
                             <tr>
                                 <th class="noColvis">CNPJ</th>
@@ -82,8 +80,13 @@
                 infoEmpty: "Nenhum registro disponível",
                 infoFiltered: "(filtrado de _MAX_ registros no total)",
                 search: "Buscar:",
-                paginate: { first: "Primeiro", last: "Último", next: "Próximo", previous: "Anterior"},
-                processing:  $('.loader-box').show(),
+                paginate: {
+                    first: "Primeiro",
+                    last: "Último",
+                    next: "Próximo",
+                    previous: "Anterior"
+                },
+                processing: $('.loader-box').show(),
             },
             ajax: {
                 url: @json(route('api.suppliers.index')),
@@ -130,10 +133,10 @@
                     data: null,
                     orderable: false,
                     render: (data) => (
-                        '<a href="suppliers/view/' + data.id + '" ' +
+                        '<a href="suppliers/edit/' + data.id + '" ' +
                         'class="btn" rel="tooltip" title="Editar" data-cy="btn-edit-supplier-' +
                         data.id + '"><i class="fa fa-edit"></i></a>' +
-                        '<button data-route="supplier" data-name="' + data.corporate_name +
+                        '<button data-route="suppliers.destroy" data-name="' + data.corporate_name +
                         '" data-id="' + data.id +
                         '" rel="tooltip" title="Excluir" class="btn" data-bs-toggle="modal" data-bs-target="#modal-delete" data-cy="btn-modal-delete-supplier"><i class="fa fa-times"></i></button>'
                     )
@@ -147,14 +150,12 @@
 
                 $.fn.setStorageDtColumnConfig();
             },
-            buttons: [
-                {
-                    extend: 'colvis',
-                    columns: ':not(.noColvis)',
-                    text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
-                    columnText: (dt, idx, title ) => title,
-                }
-            ],
+            buttons: [{
+                extend: 'colvis',
+                columns: ':not(.noColvis)',
+                text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
+                columnText: (dt, idx, title) => title,
+            }],
         });
     });
 </script>

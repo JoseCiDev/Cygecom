@@ -16,7 +16,7 @@ class ReportController extends Controller
     {
     }
 
-    public function indexView(): View
+    public function index(): View
     {
         return view('reports');
     }

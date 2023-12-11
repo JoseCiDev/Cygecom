@@ -136,7 +136,7 @@
                                             $isOwnUserRequest = $service->user->id === auth()->user()->id;
                                             $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
                                         @endphp
-                                        <a href="{{ route('supplies.service.detail', ['id' => $service->id]) }}" class="btn btn-link openDetail" rel="tooltip" title="Abrir"
+                                        <a href="{{ route('supplies.service.show', ['id' => $service->id]) }}" class="btn btn-link openDetail" rel="tooltip" title="Abrir"
                                             data-is-to-show="{{ $isToShow ? 'true' : 'false' }}" data-cy="btn-open-details-{{ $index }}">
                                             <i class="fa fa-external-link"></i>
                                         </a>

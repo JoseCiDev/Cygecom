@@ -25,7 +25,7 @@
     <div class='main-nav'>
         <span id="menu-hambuguer-icon-closer" style="display: none"> <i class="fa-solid fa-arrow-left-long"></i> </span>
 
-        @if (Gate::any(['get.users.index', 'get.suppliers']))
+        @if (Gate::any(['get.users.index', 'get.suppliers.index']))
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Cadastros
@@ -36,9 +36,9 @@
                             <a href="{{ route('users.index') }}" data-cy="dropdown-cadastros-usuarios">Usuários</a>
                         </li>
                     @endcan
-                    @can('get.suppliers')
+                    @can('get.suppliers.index')
                         <li>
-                            <a href="{{ route('suppliers') }}" data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
+                            <a href="{{ route('suppliers.index') }}" data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
                         </li>
                     @endcan
                 </ul>
@@ -50,14 +50,14 @@
                 Solicitações
             </button>
             <ul class="dropdown-menu">
-                @can('get.request.links')
-                    <li><a href="{{ route('request.links') }}" data-cy="dropdown-solicitacoes-novas">Nova solicitação</a></li>
+                @can('get.requests.dashboard')
+                    <li><a href="{{ route('requests.dashboard') }}" data-cy="dropdown-solicitacoes-novas">Nova solicitação</a></li>
                 @endcan
-                @can('get.requests.own')
-                    <li><a href="{{ route('requests.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas solicitações</a></li>
+                @can('get.requests.index.own')
+                    <li><a href="{{ route('requests.index.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas solicitações</a></li>
                 @endcan
-                @can('get.requests')
-                    <li><a href="{{ route('requests') }}" data-cy="dropdown-solicitacoes-gerais">Solicitações gerais</a></li>
+                @can('get.requests.index')
+                    <li><a href="{{ route('requests.index') }}" data-cy="dropdown-solicitacoes-gerais">Solicitações gerais</a></li>
                 @endcan
             </ul>
         </div>
@@ -69,10 +69,10 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li><a href="{{ route('supplies.index') }}" data-cy="dropdown-suprimentos-dashboard">Dashboard</a></li>
-                    @if (Gate::any(['get.supplies.product', 'get.supplies.service', 'get.supplies.contract']))
-                        <li><a href="{{ route('supplies.product') }}" data-cy="dropdown-suprimentos-produtos">Produtos</a></li>
-                        <li><a href="{{ route('supplies.service') }}" data-cy="dropdown-suprimentos-servicos-pontuais">Serviços pontuais</a></li>
-                        <li><a href="{{ route('supplies.contract') }}" data-cy="dropdown-suprimentos-servicos-recorrentes">Serviços recorrentes</a></li>
+                    @if (Gate::any(['get.supplies.product.index', 'get.supplies.service.index', 'get.supplies.contract.index']))
+                        <li><a href="{{ route('supplies.product.index') }}" data-cy="dropdown-suprimentos-produtos">Produtos</a></li>
+                        <li><a href="{{ route('supplies.service.index') }}" data-cy="dropdown-suprimentos-servicos-pontuais">Serviços pontuais</a></li>
+                        <li><a href="{{ route('supplies.contract.index') }}" data-cy="dropdown-suprimentos-servicos-recorrentes">Serviços recorrentes</a></li>
                     @endif
                 </ul>
             </div>
@@ -83,7 +83,7 @@
                 Relatórios
             </button>
             <ul class="dropdown-menu">
-                <li> <a href="{{ route('reports.index.view') }}">Relatórios de solicitações</a> </li>
+                <li> <a href="{{ route('reports.index') }}">Relatórios de solicitações</a> </li>
             </ul>
         </div>
 

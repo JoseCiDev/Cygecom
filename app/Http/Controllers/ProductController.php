@@ -19,9 +19,9 @@ class ProductController extends Controller
     ) {
     }
 
-    public function registerProduct(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $route = 'requests.own';
+        $route = 'requests.index.own';
         $data       = $request->all();
         // captura o botão submit clicado (se for submit_request update status);
         $action = $request->input('action');
@@ -56,7 +56,7 @@ class ProductController extends Controller
         return redirect()->route($route);
     }
 
-    public function productForm(int $purchaseRequestIdToCopy = null)
+    public function create(int $purchaseRequestIdToCopy = null)
     {
         $companies   = Company::all();
         $costCenters = CostCenter::all();
@@ -86,14 +86,14 @@ class ProductController extends Controller
      * @param int $id
      * @return RedirectResponse
      */
-    public function updateProduct(UpdateProductRequest $request, int $id): RedirectResponse
+    public function update(UpdateProductRequest $request, int $id): RedirectResponse
     {
         $route = 'request.own';
         $data = $request->all();
         $action = $request->input('action');
 
         $files = $request->file('arquivos');
-        $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.product.update";
+        $isSuppliesUpdate = Route::currentRouteName() === "supplies.product.update";
         $currentUser = auth()->user();
 
         try {
@@ -131,7 +131,7 @@ class ProductController extends Controller
             }
             DB::commit();
 
-            $route = 'requests.own';
+            $route = 'requests.index.own';
         } catch (Exception $error) {
             DB::rollBack();
             $msg = 'Não foi possível atualizar o registro no banco de dados.';
@@ -151,7 +151,7 @@ class ProductController extends Controller
         return redirect()->route($route);
     }
 
-    public function details(int $id)
+    public function show(int $id)
     {
         $allRequestStatus = PurchaseRequestStatus::cases();
         $purchaseRequest = $this->purchaseRequestService->purchaseRequestById($id);

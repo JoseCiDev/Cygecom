@@ -19,9 +19,9 @@ class ServiceController extends Controller
     ) {
     }
 
-    public function registerService(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $route = 'requests';
+        $route = 'requests.index';
         $routeParam = [];
         $data       = $request->all();
         $files       = $request->file('arquivos');
@@ -50,7 +50,7 @@ class ServiceController extends Controller
 
             DB::commit();
 
-            $route           = 'requests.own';
+            $route           = 'requests.index.own';
         } catch (Exception $error) {
             $msg = 'Não foi possível fazer o registro no banco de dados.';
             DB::rollBack();
@@ -62,7 +62,7 @@ class ServiceController extends Controller
         return redirect()->route($route, $routeParam);
     }
 
-    public function serviceForm(int $purchaseRequestIdToCopy = null)
+    public function create(int $purchaseRequestIdToCopy = null)
     {
         $companies   = Company::all();
         $costCenters = CostCenter::all();
@@ -92,15 +92,15 @@ class ServiceController extends Controller
      * @param int $id
      * @return RedirectResponse
      */
-    public function updateService(UpdateServiceRequest $request, int $id): RedirectResponse
+    public function update(UpdateServiceRequest $request, int $id): RedirectResponse
     {
-        $route = 'requests.own';
+        $route = 'requests.index.own';
         $data = $request->all();
         $action = $request->input('action');
 
         $files = $request->file('arquivos');
         $currentUser = auth()->user();
-        $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.service.update";
+        $isSuppliesUpdate = Route::currentRouteName() === "supplies.service.update";
 
         try {
             $msg = "Solicitação de serviço pontual atualizada com sucesso!";
@@ -150,7 +150,7 @@ class ServiceController extends Controller
         return redirect()->route($route);
     }
 
-    public function details(int $id)
+    public function show(int $id)
     {
         $allRequestStatus = PurchaseRequestStatus::cases();
 

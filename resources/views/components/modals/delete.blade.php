@@ -30,10 +30,9 @@
             const route = button.data('route');
 
             const routes = {
-                products: `/products/delete/${id}`,
-                user: `/users/delete/${id}`,
-                supplier: `/suppliers/delete/${id}`,
-                purchaseRequests: `/request/delete/${id}`,
+                'users.destroy': `/users/destroy/${id}`,
+                'suppliers.destroy': `/suppliers/destroy/${id}`,
+                'requests.destroy': `/requests/destroy/${id}`,
                 'profile.destroy': `/profile/destroy/${id}`
             }
 

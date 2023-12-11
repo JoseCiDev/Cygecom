@@ -28,7 +28,7 @@ class SuppliesRequestEditContainer extends Component
         public ?string $amount,
         public ?string $purchaseOrder,
     ) {
-        $this->route = "supplies.request." . $this->requestType->value . ".update";
+        $this->route = "supplies." . $this->requestType->value . ".update";
         $this->allRequestStatus = PurchaseRequestStatus::cases();
         $this->requestIsFromLogged = $this->requestUserId === auth()->user()->id;
 

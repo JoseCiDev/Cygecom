@@ -58,7 +58,7 @@ class SupplierController extends Controller
         ], 200);
     }
 
-    public function supplier(int $id): RedirectResponse|View
+    public function edit(int $id): RedirectResponse|View
     {
         $supplier = $this->supplierService->getSupplierById($id);
 
@@ -74,12 +74,12 @@ class SupplierController extends Controller
         return view('components.supplier.edit', $params);
     }
 
-    public function showRegistrationForm(): View
+    public function create(): View
     {
         return view('components.supplier.form');
     }
 
-    public function register(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $data = $request->all();
         $cnpj = $request->cpf_cnpj;
@@ -100,7 +100,7 @@ class SupplierController extends Controller
 
         session()->flash('success', "Fornecedor cadastrado com sucesso!");
 
-        return redirect()->route('suppliers');
+        return redirect()->route('suppliers.index');
     }
 
     public function registerAPI(Request $request): RedirectResponse|JsonResponse
@@ -159,10 +159,10 @@ class SupplierController extends Controller
 
         session()->flash('success', "Fornecedor atualizado com sucesso!");
 
-        return redirect()->route('supplier', ['id' => $id]);
+        return redirect()->route('suppliers.edit', ['id' => $id]);
     }
 
-    public function delete(int $id): RedirectResponse
+    public function destroy(int $id): RedirectResponse
     {
         try {
             $this->supplierService->deleteSupplier($id);
@@ -172,6 +172,6 @@ class SupplierController extends Controller
 
         session()->flash('success', "Fornecedor deletado com sucesso!");
 
-        return redirect()->route('suppliers');
+        return redirect()->route('suppliers.index');
     }
 }

@@ -61,21 +61,21 @@ class SuppliesController extends Controller
         return view('supplies.index', $params);
     }
 
-    public function product(SuppliesParamsRequest $request): View
+    public function productIndex(SuppliesParamsRequest $request): View
     {
         $params = $this->getRequestsParams($request, PurchaseRequestType::PRODUCT);
 
         return view('supplies.product.page', $params);
     }
 
-    public function service(SuppliesParamsRequest $request): View
+    public function serviceIndex(SuppliesParamsRequest $request): View
     {
         $params = $this->getRequestsParams($request, PurchaseRequestType::SERVICE);
 
         return view('supplies.service.page', $params);
     }
 
-    public function contract(SuppliesParamsRequest $request): View
+    public function contractIndex(SuppliesParamsRequest $request): View
     {
         $params = $this->getRequestsParams($request, PurchaseRequestType::CONTRACT);
 
