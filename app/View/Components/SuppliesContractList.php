@@ -32,11 +32,8 @@ class SuppliesContractList extends Component
             $purchaseRequests = $this->purchaseRequestService->requestsByStatus($this->status)->whereNotIn('status', [PurchaseRequestStatus::RASCUNHO->value])->get();
         } else {
             $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()
-                ->whereNotIn('status', [
-                    PurchaseRequestStatus::RASCUNHO->value,
-                    PurchaseRequestStatus::FINALIZADA->value,
-                    PurchaseRequestStatus::CANCELADA->value
-                ])->whereNull('deleted_at')->get();
+                ->where('status', PurchaseRequestStatus::PENDENTE->value)
+                ->whereNull('deleted_at')->get();
         }
 
         $contracts = $purchaseRequests->filter(function ($item) {
