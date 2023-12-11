@@ -916,6 +916,7 @@
                     addFixedInstallmentsEvent($inputsForInstallmentEvents);
                 } else {
                     $inputsForInstallmentEvents.off('change');
+                    $recurrence.select2();
                 }
             }).filter(':checked').trigger('change');
 
