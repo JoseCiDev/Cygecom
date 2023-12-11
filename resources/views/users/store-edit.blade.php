@@ -19,7 +19,20 @@
         <style>
             .user-header {
                 display: flex;
+                flex-direction: column;
+                gap: 10px;
                 justify-content: space-between;
+            }
+
+            .user-header .options {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .user-header .options>* {
+                min-width: fit-content;
+                flex: 1 0 auto;
             }
 
             .form-user {
@@ -122,6 +135,11 @@
                 .form-user #submit {
                     align-self: flex-end;
                 }
+
+                .user-header .options>* {
+                    flex-grow: 0;
+                }
+
             }
 
             @media(min-width: 1024px) {
@@ -129,6 +147,14 @@
                 .form-user .advanced-user-data .cost-center-permissions-box .cost-center-box-btns .btn-clear-cost-centers,
                 .form-user .advanced-user-data .cost-center-permissions-box .cost-center-box-btns .clear-supplies-cost-centers {
                     flex: 0;
+                }
+
+                .user-header {
+                    flex-direction: row;
+                }
+
+                .user-header .options {
+                    justify-content: flex-end;
                 }
             }
 
@@ -145,16 +171,32 @@
         </style>
     @endpush
 
+    <x-modals.edit-user-ability :abilities="$abilities" />
     <x-modals.delete />
     <x-toast />
 
     <div class="user-header">
         <h1 class="page-title">{{ isset($user) ? 'Editar usuário' : 'Novo usuário' }}</h1>
-        @if (isset($user) && auth()->user()->id !== $user->id)
-            <button data-route="users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario" data-bs-toggle="modal"
-                data-bs-target="#modal-delete" rel="tooltip" title="Excluir" class="btn btn-primary btn-small btn-danger pull-right">
-                Excluir usuário
-            </button>
+
+        @if (isset($user))
+            <div class="options">
+                <a href="{{ route('users.show', ['user' => $user]) }}" class="btn btn-small btn-secondary">
+                    <i class="fa-solid fa-eye"></i>
+                    Ver todas habilidades
+                </a>
+
+                <button class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-edit-user-ability" data-user-id={{ $user->id }}>
+                    <i class="fa-solid fa-sliders"></i>
+                    Editar habilidades
+                </button>
+
+                @if (auth()->user()->id !== $user->id)
+                    <button data-route="users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario"
+                        data-bs-toggle="modal" data-bs-target="#modal-delete" rel="tooltip" title="Excluir" class="btn btn-primary btn-small btn-danger pull-right">
+                        Excluir usuário
+                    </button>
+                @endif
+            </div>
         @endif
     </div>
 
@@ -226,8 +268,9 @@
             {{-- E-MAIL --}}
             <div class="form-group">
                 <label for="email" class="regular-text">E-mail</label>
-                <input type="email" name="email" id="email" data-cy="email" placeholder="user_email@essentia.com.br" @disabled($isDisabled) data-rule-required="true"
-                    data-rule-email="true" value="{{ old('email', isset($user) ? $user->email : '') }}" class="form-control @error('email') is-invalid @enderror">
+                <input type="email" name="email" id="email" data-cy="email" placeholder="user_email@essentia.com.br" @disabled($isDisabled)
+                    data-rule-required="true" data-rule-email="true" value="{{ old('email', isset($user) ? $user->email : '') }}"
+                    class="form-control @error('email') is-invalid @enderror">
                 @error('email')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror

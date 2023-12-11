@@ -125,13 +125,15 @@ class UserController extends Controller
         $costCenters = $this->userService->getCostCenters();
         $profiles = $this->userProfileService->profiles()->get();
         $companies = Company::select('id', 'corporate_name', 'name', 'cnpj', 'group')->get();
+        $abilities = Ability::with('users', 'profiles')->get();
 
         $params = [
             'user' => $user,
             'approvers' => $approvers,
             'costCenters' => $costCenters,
             'profiles' => $profiles,
-            'companies' => $companies
+            'companies' => $companies,
+            'abilities' => $abilities
         ];
 
         return view('users.store-edit', $params);

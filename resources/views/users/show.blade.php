@@ -48,6 +48,18 @@
                 border-left: 6px solid #000;
             }
 
+            .user-container .user-header .options {
+                padding: 15px 0;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .user-container .user-header .options>* {
+                min-width: fit-content;
+                flex: 1 0 auto;
+            }
+
             .user-container .info {
                 display: flex;
                 flex-wrap: wrap;
@@ -70,6 +82,12 @@
                 border-radius: 4px;
             }
 
+            @media(min-width: 768px) {
+                .user-container .user-header .options>* {
+                    flex-grow: 0;
+                }
+            }
+
             @media(min-width: 1024px) {
                 .user-container .info p {
                     flex-grow: 0;
@@ -86,6 +104,18 @@
                 .user-container .list-group .list-group-item {
                     flex: 1 0 45%;
                 }
+
+                .user-header .header {
+                    display: flex;
+                    justify-content: space-between;
+                    padding-bottom: 20px;
+                }
+
+                .user-container .user-header .options {
+                    padding: 0;
+                    justify-content: flex-end;
+                }
+
             }
 
             @media(min-width: 1440px) {
@@ -101,60 +131,79 @@
         </style>
     @endpush
 
+    <x-modals.delete />
+
     <div class="user-container">
-        <h1>Usuário {{ $name }}</h1>
+        <div class="user-header">
+            <div class="header">
+                <h1 class="page-title">Usuário {{ $name }}</h1>
 
-        <div class="info">
-            <p> <strong>E-mail:</strong> {{ $email }} </p>
-            <p> <strong>Telefone/Celular:</strong> {{ $phone }} </p>
-            <p> <strong>Perfil:</strong> {{ $profile }} </p>
-            <p> <strong>Setor:</strong> {{ $sector }} </p>
-            <p> <strong>Empresa:</strong> {{ $company }} / {{ $cnpj }}</p>
-            <p> <strong>Usuário aprovador:</strong> {{ $approverName }} / {{ $approverEmail }} </p>
-            <p> <strong>Autorização para solicitar:</strong> {{ $isBuyer }}</p>
-            <p> <strong>Solicita para outras pessoas:</strong> {{ $canAssociateRequest }}</p>
+                <div class="options">
+                    <a href="{{ route('users.edit', ['user' => $user]) }}" class="btn btn-small btn-secondary" rel="tooltip">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        Editar dados usuário
+                    </a>
+
+                    <button data-route="users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario" data-bs-toggle="modal"
+                        data-bs-target="#modal-delete" rel="tooltip" title="Excluir" class="btn btn-primary btn-small btn-danger">
+                        Excluir usuário
+                    </button>
+                </div>
+            </div>
+
+            <div class="info">
+                <p> <strong>E-mail:</strong> {{ $email }} </p>
+                <p> <strong>Telefone/Celular:</strong> {{ $phone }} </p>
+                <p> <strong>Perfil:</strong> {{ $profile }} </p>
+                <p> <strong>Setor:</strong> {{ $sector }} </p>
+                <p> <strong>Empresa:</strong> {{ $company }} / {{ $cnpj }}</p>
+                <p> <strong>Usuário aprovador:</strong> {{ $approverName }} / {{ $approverEmail }} </p>
+                <p> <strong>Autorização para solicitar:</strong> {{ $isBuyer }}</p>
+                <p> <strong>Solicita para outras pessoas:</strong> {{ $canAssociateRequest }}</p>
+            </div>
+
+            <hr>
+
+            <p><strong>Habilidades do perfil do usuário:</strong> </p>
+
+            <div class="color-info">
+                <small class="get">Acessar dados</small>
+                <small class="post">Modificar dados</small>
+                <small class="delete">Excluir dados</small>
+                <small class="type-authorize">Autorização de perfil</small>
+            </div>
+
+            <ul class="list-group list-group-abilities">
+                @foreach ($profileAbilities as $ability)
+                    @php
+                        $nameParts = explode('.', $ability->name);
+                        $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                    @endphp
+
+                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
+                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        {{ $ability->description }}
+                    </li>
+                @endforeach
+            </ul>
+
+            <hr>
+
+            <p><strong>Habilidades expecíficas do usuário:</strong> </p>
+            <ul class="list-group list-group-abilities">
+                @forelse ($userAbilities as $ability)
+                    @php
+                        $nameParts = explode('.', $ability->name);
+                        $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                    @endphp
+                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
+                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        {{ $ability->description }}
+                    </li>
+                @empty
+                    <small>Nenhuma habilidade além das existentes no perfil foi encontrada.</small>
+                @endforelse
+            </ul>
         </div>
-
-        <hr>
-
-        <p><strong>Habilidades do perfil do usuário:</strong> </p>
-
-        <div class="color-info">
-            <small class="get">Acessar dados</small>
-            <small class="post">Modificar dados</small>
-            <small class="delete">Excluir dados</small>
-            <small class="type-authorize">Autorização de perfil</small>
-        </div>
-
-        <ul class="list-group list-group-abilities">
-            @foreach ($profileAbilities as $ability)
-                @php
-                    $nameParts = explode('.', $ability->name);
-                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
-                @endphp
-
-                <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
-                    {{ $ability->description }}
-                </li>
-            @endforeach
-        </ul>
-
-        <hr>
-
-        <p><strong>Habilidades expecíficas do usuário:</strong> </p>
-        <ul class="list-group list-group-abilities">
-            @forelse ($userAbilities as $ability)
-                @php
-                    $nameParts = explode('.', $ability->name);
-                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
-                @endphp
-                <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
-                    {{ $ability->description }}
-                </li>
-            @empty
-                <small>Nenhuma habilidade além das existentes no perfil foi encontrada.</small>
-            @endforelse
-        </ul>
     </div>
-
 </x-app>
