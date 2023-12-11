@@ -14,7 +14,7 @@ class Abilities extends Seeder
             // Abilities
             ['id' => 1, 'name' => 'get.users.show', 'description' => 'Acessar tela de um usuário'],
             ['id' => 2, 'name' => 'post.profile.store', 'description' => 'Registrar novo perfil'],
-            ['id' => 45, 'name' => 'post.user.abilities.store', 'description' => 'API: Atualizar habilidades dos usuários'],
+            ['id' => 45, 'name' => 'post.user.abilities.store', 'description' => 'Permite atualizar habilidades dos usuários através da API'],
             ['id' => 57, 'name' => 'get.profile.create', 'description' => 'Acessar tela de criação de perfil'],
             ['id' => 58, 'name' => 'get.profile.index', 'description' => 'Acessar tela de lista de perfis'],
             ['id' => 59, 'name' => 'post.profile.destroy', 'description' => 'Excluir um perfil'],
@@ -37,8 +37,8 @@ class Abilities extends Seeder
             ['id' => 13, 'name' => 'post.supplies.service.update', 'description' => 'Atualizar solicitação de serviço pontual na tela de detalhes'],
             ['id' => 14, 'name' => 'post.supplies.product.update', 'description' => 'Atualizar solicitação de produto na tela de detalhes'],
             ['id' => 15, 'name' => 'post.supplies.conctract.update', 'description' => 'Atualizar solicitação de serviço recorrente na tela de detalhes'],
-            ['id' => 47, 'name' => 'get.api.suppliers.index', 'description' => 'API: Busca todos fornecedores. É usado na tabela de fornecedores'],
-            ['id' => 48, 'name' => 'post.api.suppliers.register', 'description' => 'API: Registrar novo fornecedor.'],
+            ['id' => 47, 'name' => 'get.api.suppliers.index', 'description' => 'Permite buscar todos fornecedores através da API. É usado na tabela de fornecedores'],
+            ['id' => 48, 'name' => 'post.api.suppliers.register', 'description' => 'Permite registrar novo fornecedor através da API'],
 
             // Admin
             ['id' => 16, 'name' => 'get.requests.index', 'description' => 'Acessar tela de solicitações gerais'],
@@ -58,8 +58,8 @@ class Abilities extends Seeder
             ['id' => 28, 'name' => 'get.requests.edit', 'description' => 'Acessar tela de editação de solicitação'],
             ['id' => 29, 'name' => 'delete.requests.file.delete', 'description' => 'Excluir anexos da solicitação'],
             ['id' => 30, 'name' => 'post.requests.destroy', 'description' => 'Excluir solicitação'],
-            ['id' => 49, 'name' => 'get.api.product.suggestion.index', 'description' => 'API: Busca sugestões de produtos. É usado em novas solicitações'],
-            ['id' => 50, 'name' => 'post.api.supplies.files.upload', 'description' => 'API: Upload de anexos da solicitação'],
+            ['id' => 49, 'name' => 'get.api.product.suggestion.index', 'description' => 'Permite buscar sugestões de produtos através da API. É usado em novas solicitações'],
+            ['id' => 50, 'name' => 'post.api.supplies.files.upload', 'description' => 'Permite upload de anexos da solicitação através da API'],
 
             // Users
             ['id' => 31, 'name' => 'get.users.create', 'description' => 'Acessar tela de registrar novo usuário'],
@@ -67,7 +67,7 @@ class Abilities extends Seeder
             ['id' => 33, 'name' => 'post.users.destroy', 'description' => 'Excluir usuário'],
             ['id' => 34, 'name' => 'get.users.index', 'description' => 'Acessar tela de lista de usuários'],
             ['id' => 35, 'name' => 'get.user.edit', 'description' => 'Acessar tela de edição do usuário'],
-            ['id' => 46, 'name' => 'get.user.show.json', 'description' => 'API: Buscar usuário por id'],
+            ['id' => 46, 'name' => 'get.user.show.json', 'description' => 'Permite buscar usuário por id através da API'],
 
             // Suppliers
             ['id' => 36, 'name' => 'get.suppliers.index', 'description' => 'Acessar tela de listagem de todos fornecedores'],
@@ -81,7 +81,7 @@ class Abilities extends Seeder
 
             // Reports
             ['id' => 44, 'name' => 'get.reports.index', 'description' => 'Acessar tela de relatório de solicitação'],
-            ['id' => 51, 'name' => 'get.reports.index.json', 'description' => 'API: Buscar dados de relatório de solicitação para tabela'],
+            ['id' => 51, 'name' => 'get.reports.index.json', 'description' => 'Permite buscar dados de relatório de solicitação para tabela através da API'],
         ];
 
         $authorizesAbilities = [
