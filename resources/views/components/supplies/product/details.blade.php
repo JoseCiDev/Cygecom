@@ -26,7 +26,7 @@
 
 @push('styles')
     <style>
-        #product-link {
+        .product-link {
             display: inline-block;
             width: 60%;
             white-space: nowrap;
@@ -434,10 +434,11 @@
                                                                         <strong><i class="fa fa-link"></i> Link de
                                                                             sugestão :</strong>
                                                                             @if ($productItem->link)
-                                                                                <a id="product-link"
-                                                                                    href="{{ $productItem->link ?? null }}"
+                                                                                <a class="product-link"
+                                                                                    href="{{ $productItem->link }}"
                                                                                     target="_blank"
-                                                                                    title="{{ $productItem->link ?? null }}">
+                                                                                    title="{{ $productItem->link }}">
+                                                                                    {{ $productItem->link }}
                                                                                 </a>
                                                                             @else
                                                                                 ---
