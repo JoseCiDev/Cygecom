@@ -423,6 +423,12 @@
                                                                         <strong>Modelo do produto:</strong>
                                                                         {{ $productItem->model ?? '---' }}
                                                                     </p>
+                                                                    <p class="col-xs-4" style="margin: 0">
+                                                                        <p><strong><i class="fa fa-link"></i> Link de sugestão:</strong></p>
+                                                                        <a href="{{ $productItem->link ?? '---' }}" target="_blank">
+                                                                            {{ $productItem->link ?? '---' }}
+                                                                        </a>
+                                                                    </p>
                                                                 </div>
                                                             </div>
                                                         @endforeach
