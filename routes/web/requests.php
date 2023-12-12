@@ -25,7 +25,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::group(['prefix' => 'contract'], function () {
             Route::middleware('can:get.requests.contract.create')->get('/create/{id?}', [App\Http\Controllers\ContractController::class, 'create'])->name('requests.contract.create');
-            Route::middleware('can:post.requests.contract.store')->post('/store', [App\Http\Controllers\ContractController::class, 'store'])->name('requests.product.store');
+            Route::middleware('can:post.requests.contract.store')->post('/store', [App\Http\Controllers\ContractController::class, 'store'])->name('requests.contract.store');
             Route::middleware('can:post.requests.contract.update')->post('/update/{id}', [App\Http\Controllers\ContractController::class, 'update'])->name('requests.contract.update');
         });
     });
