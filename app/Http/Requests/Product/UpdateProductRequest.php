@@ -36,6 +36,7 @@ class UpdateProductRequest extends FormRequest
             'desired_date' => ['nullable', 'date'],
             'purchase_request_files' => ['nullable', 'array'],
             'purchase_request_files.*.path' => ['nullable', 'string'],
+            'purchase_request_products.*.products.*.link' => ['nullable', 'url', 'max:500'],
             'purchase_order' => new PurchaseOrderIfStatusFinish($this->input('status')),
         ];
 
@@ -67,6 +68,8 @@ class UpdateProductRequest extends FormRequest
 
             'purchase_request_files.array' => 'Os arquivos de solicitação de cotação devem ser um array.',
             'purchase_request_files.*.path.string' => 'O caminho do arquivo deve ser uma string.',
+
+            'purchase_request_products.*.products.*.link' => 'Link de produto deve estar em um formato válido.'
         ];
     }
 }

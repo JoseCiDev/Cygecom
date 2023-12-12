@@ -27,7 +27,7 @@
                             @endif
                             @foreach (PurchaseRequestStatus::cases() as $statusCase)
                                 @php
-                                    $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
+                                    $statusDefaultFilter = $statusCase === PurchaseRequestStatus::PENDENTE;
                                     $isChecked = count($status) ? collect($status)->contains($statusCase) : $statusDefaultFilter;
                                 @endphp
 
