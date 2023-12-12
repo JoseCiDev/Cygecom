@@ -180,15 +180,19 @@
 
         @if (isset($user))
             <div class="options">
-                <a href="{{ route('users.show', ['user' => $user]) }}" class="btn btn-small btn-secondary">
-                    <i class="fa-solid fa-eye"></i>
-                    Ver todas habilidades
-                </a>
+                @can('get.users.show')
+                    <a href="{{ route('users.show', ['user' => $user]) }}" class="btn btn-small btn-secondary">
+                        <i class="fa-solid fa-eye"></i>
+                        Ver todas habilidades
+                    </a>
+                @endcan
 
-                <button class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-edit-user-ability" data-user-id={{ $user->id }}>
-                    <i class="fa-solid fa-sliders"></i>
-                    Editar habilidades
-                </button>
+                @can('get.user.show.json', 'post.user.abilities.store')
+                    <button class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-edit-user-ability" data-user-id={{ $user->id }}>
+                        <i class="fa-solid fa-sliders"></i>
+                        Editar habilidades
+                    </button>
+                @endcan
 
                 @if (auth()->user()->id !== $user->id)
                     <button data-route="users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario"
