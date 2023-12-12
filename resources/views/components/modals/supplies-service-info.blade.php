@@ -77,7 +77,7 @@
 @push('scripts')
     <script type="module">
         $(() => {
-            const baseUrl = @json(route('api.requests.products.show', ['id' => '__id__']));
+            const baseUrl = @json(route('api.requests.show', ['id' => '__id__']));
             const $suppliesProductInfo = $('#modal-supplies-service-info');
             const $modalRequestId = $('.modal-request-id');
             const $modalBody = $suppliesProductInfo.find('.modal-body');
