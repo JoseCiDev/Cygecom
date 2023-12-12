@@ -11,6 +11,8 @@
     </style>
 @endpush
 
+<x-modals.supplies-product-info />
+
 <div class="row">
     <div class="col-sm-12">
         <div class="box box-color box-bordered">
@@ -162,18 +164,18 @@
                                 </td>
 
                                 <td class="text-center" style="white-space: nowrap;">
-                                    <button data-modal-name="{{ 'Analisando Solicitação de Produto - Nº ' . $product->id }}" data-id="{{ $product->id }}"
-                                        data-request="{{ json_encode($modalData) }}" rel="tooltip" title="Analisar" class="btn" data-bs-toggle="modal"
-                                        data-bs-target="#modal-supplies" data-cy="btn-analisar-{{ $index }}">
-                                        <i class="fa fa-search"></i>
+                                    <button class="btn btn-mini btn-secondary" data-id="{{ $product->id }}" data-bs-toggle="modal" data-bs-target="#modal-supplies-product-info"
+                                        title="Analisar solicitação">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
                                     </button>
+
                                     @php
                                         $existSuppliesUser = (bool) $product->suppliesUser?->person->name;
                                         $existResponsibility = (bool) $product->responsibility_marked_at;
                                         $isOwnUserRequest = $product->user->id === auth()->user()->id;
                                         $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
                                     @endphp
-                                    <a href="{{ route('supplies.product.detail', ['id' => $product->id]) }}" class="btn btn-link openDetail" rel="tooltip" title="Abrir"
+                                    <a href="{{ route('supplies.product.detail', ['id' => $product->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
                                         data-is-to-show="{{ $isToShow ? 'true' : 'false' }}" data-cy="btn-open-details-{{ $index }}">
                                         <i class="fa fa-external-link"></i>
                                     </a>
