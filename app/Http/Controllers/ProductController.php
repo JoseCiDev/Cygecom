@@ -125,10 +125,6 @@ class ProductController extends Controller
                 $msg = "Solicitação de produto nº $purchaseRequest->id enviada ao setor de suprimentos responsável!";
             }
 
-            if ($action === 'submit-request') {
-                $purchaseRequest->update(['status' => 'pendente']);
-                $msg = "Solicitação de produto nº $purchaseRequest->id enviada ao setor de suprimentos responsável!";
-            }
             DB::commit();
 
             $route = 'requests.index.own';

@@ -29,7 +29,7 @@
     <select id="status-filter" name="status[]" class="select2-me" multiple>
         @foreach ($statusCases as $statusCase)
             @php
-                $isChecked = collect($status)->contains($statusCase->value);
+                $isChecked = $statusCase->value === PurchaseRequestStatus::PENDENTE->value;
             @endphp
 
             <option value="{{ $statusCase->value }}" @selected($isChecked)>{{ $statusCase->label() }}</option>
