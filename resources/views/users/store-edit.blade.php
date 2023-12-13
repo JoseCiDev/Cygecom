@@ -442,7 +442,7 @@
                         @endforeach
                     </div>
 
-                    <select @disabled(!$isAdmin) name="user_cost_center_permissions[]" id="user_cost_center_permissions" data-cy="user_cost_center_permissions"
+                    <select @disabled($isDisabled) name="user_cost_center_permissions[]" id="user_cost_center_permissions" data-cy="user_cost_center_permissions"
                         multiple="multiple" class="select2-me cost-centers-permissions"
                         data-placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras" data-rule-required="true">
                         @foreach ($costCenters as $costCenter)

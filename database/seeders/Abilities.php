@@ -111,7 +111,7 @@ class Abilities extends Seeder
 
         $userManagerAbilities = [
             ...$normalAbilities,
-            31, 32, 33, 34, 35, 46, // Users
+            1, 31, 32, 33, 34, 35, 46, // Users
             53 // Authorizes
         ];
 
