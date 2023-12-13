@@ -120,12 +120,7 @@ class SuppliesController extends Controller
         $status = collect($request->get('status'));
 
         if ($status->isEmpty()) {
-            $status = collect(PurchaseRequestStatus::cases())
-                ->pluck('value')->filter(fn ($status) => !collect([
-                    PurchaseRequestStatus::RASCUNHO->value,
-                    PurchaseRequestStatus::FINALIZADA->value,
-                    PurchaseRequestStatus::CANCELADA->value
-                ])->contains($status));
+            $status = collect([PurchaseRequestStatus::PENDENTE->value]);
         }
 
         $requests = $this->purchaseRequestService->requestsByStatus($status->toArray())
