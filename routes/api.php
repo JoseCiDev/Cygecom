@@ -42,4 +42,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::group(['prefix' => 'reports'], function () {
         Route::middleware('can:get.reports.index.json')->get('/index', [App\Http\Controllers\ReportController::class, 'indexJson'])->name('reports.index.json');
     });
+
+    Route::group(['prefix' => 'requests'], function () {
+        Route::get('/show/{id}', [PurchaseRequestController::class, 'showAPI'])->name('api.requests.show');
+    });
 });

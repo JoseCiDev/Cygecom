@@ -135,4 +135,13 @@ class PurchaseRequestController extends Controller
             return response()->json(['success' => false, 'error' => $e->getMessage()]);
         }
     }
+
+    public function showAPI(int $id)
+    {
+        $request = $this->purchaseRequestService->purchaseRequestById($id);
+
+        return response()->json([
+            'request' => $request
+        ], 200);
+    }
 }

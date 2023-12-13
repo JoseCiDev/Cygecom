@@ -24,6 +24,9 @@ window.moment = moment;
 
 import setColvisConfig from '../../public/js/utils/colvis-custom-user-preference.js';
 
+import Enum from './enums/enum.js';
+window.Enum = Enum;
+
 $.fn.imask = function(options) {
     const maskedElements = this.map((_, input) => new IMask(input, options)).toArray();
 

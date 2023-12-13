@@ -12,7 +12,7 @@
 
 <x-app>
     <x-modals.delete />
-    <x-modals.supplies />
+    <x-modals.supplies-service-info />
 
     <div class="row" style="margin-bottom: 15px">
         <div class="col-md-12 text-left">
@@ -125,18 +125,18 @@
                                     <td>{{ $showPurchaseOrder ? $service?->purchase_order : '---' }}</td>
 
                                     <td class="text-center" style="white-space: nowrap;">
-                                        <button data-modal-name="{{ 'Analisando Solicitação de Serviço - Nº ' . $service->id }}" data-id="{{ $service->id }}"
-                                            data-request="{{ json_encode($modalData) }}" rel="tooltip" title="Analisar" class="btn" data-bs-toggle="modal"
-                                            data-bs-target="#modal-supplies" data-cy="btn-analisar-{{ $index }}">
-                                            <i class="fa fa-search"></i>
+                                        <button class="btn btn-mini btn-secondary" data-id="{{ $service->id }}" data-bs-toggle="modal"
+                                            data-bs-target="#modal-supplies-service-info" title="Analisar solicitação">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
                                         </button>
+
                                         @php
                                             $existSuppliesUser = (bool) $service->suppliesUser?->person->name;
                                             $existResponsibility = (bool) $service->responsibility_marked_at;
                                             $isOwnUserRequest = $service->user->id === auth()->user()->id;
                                             $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
                                         @endphp
-                                        <a href="{{ route('supplies.service.show', ['id' => $service->id]) }}" class="btn btn-link openDetail" rel="tooltip" title="Abrir"
+                                        <a href="{{ route('supplies.service.show', ['id' => $service->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
                                             data-is-to-show="{{ $isToShow ? 'true' : 'false' }}" data-cy="btn-open-details-{{ $index }}">
                                             <i class="fa fa-external-link"></i>
                                         </a>

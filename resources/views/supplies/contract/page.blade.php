@@ -12,7 +12,7 @@
 
 <x-app>
     <x-modals.delete />
-    <x-modals.supplies />
+    <x-modals.supplies-contract-info />
 
     <div class="row" style="margin-bottom: 15px">
         <div class="col-md-12 text-left">
@@ -124,18 +124,18 @@
                                     <td>{{ $showPurchaseOrder ? $contract?->purchase_order : '---' }}</td>
 
                                     <td class="text-center" style="white-space: nowrap;">
-                                        <button data-modal-name="{{ 'Analisando solicitação de serviço recorrente - Nº ' . $contract->id }}" data-id="{{ $contract->id }}"
-                                            data-request="{{ json_encode($modalData) }}" rel="tooltip" title="Analisar" class="btn" data-bs-toggle="modal"
-                                            data-bs-target="#modal-supplies" data-cy="btn-analisar-{{ $index }}">
-                                            <i class="fa fa-search"></i>
+                                        <button class="btn btn-mini btn-secondary" data-id="{{ $contract->id }}" data-bs-toggle="modal"
+                                            data-bs-target="#modal-supplies-contract-info" title="Analisar solicitação">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
                                         </button>
+
                                         @php
                                             $existSuppliesUser = (bool) $contract->suppliesUser;
                                             $existResponsibility = (bool) $contract->responsibility_marked_at;
                                             $isOwnUserRequest = $contract->user->id === auth()->user()->id;
                                             $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
                                         @endphp
-                                        <a href="{{ route('supplies.contract.show', ['id' => $contract->id]) }}" class="btn btn-link openDetail" rel="tooltip" title="Abrir"
+                                        <a href="{{ route('supplies.contract.show', ['id' => $contract->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
                                             data-is-to-show="{{ $isToShow ? 'true' : 'false' }}" data-cy="btn-open-details-{{ $index }}">
                                             <i class="fa fa-external-link"></i>
                                         </a>
