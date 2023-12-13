@@ -2,59 +2,58 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\ServiceProvider;
 use App\Enums\PurchaseRequestStatus;
 use App\Mail\GenericEmail;
-use Illuminate\Support\ServiceProvider;
+use App\Models\PurchaseRequest;
 
 class EmailService extends ServiceProvider
 {
-    public function sendPendingApprovalEmail($purchaseRequest, $approver)
+    public function sendStatusUpdatedEmail(PurchaseRequest $purchaseRequest)
     {
-        $supplieUser = $purchaseRequest->suppliesUser;
+        $name = explode(' ', $purchaseRequest->user->person->name)[0];
+        $requestType = strtolower($purchaseRequest->type->label());
+        $requestStatus = strtolower($purchaseRequest->status->label());
+        $id = $purchaseRequest->id;
 
-        $subject = "Solicitação de " . $purchaseRequest->type->label() . " nº " . $purchaseRequest->id . ' - Aprovação pendente';
-        $message = "Olá, aprovador " . $approver->person->name . '! '
-            . "A solicitação de " . $purchaseRequest->type->label() . " nº " . $purchaseRequest->id . " está pendente."
-            . "Solicitante: " . $purchaseRequest->user->person->name . ". "
-            . "E-mail do solicitante: " . $purchaseRequest->user->email . ". "
-            . "Telefone/celular do solicitante: " . $purchaseRequest->user->person->phone->first()->number . ". ";
+        $requestName = $purchaseRequest[$purchaseRequest->type->value]->name;
 
-        if ($supplieUser) {
-            $message .= "Atribuição de responsável: " . $purchaseRequest->suppliesUser?->person->name . '. '
-                . "E-mail do responsável: " . $purchaseRequest->suppliesUser?->email . '. '
-                . "Telefone/celular do responsável: " . $purchaseRequest->suppliesUser?->person->phone->first()->number . '. ';
-        } else {
-            $message .= "No setor de suprimentos ainda não foi atribuído um responsável pela solicitação.";
-        }
-
-
-        $email = new GenericEmail($subject, $message, $approver->email);
-        $email->sendMail();
-    }
-
-    public function sendStatusUpdatedEmail($purchaseRequest)
-    {
-        $subject = "Solicitação de " . $purchaseRequest->type->label() . " nº " . $purchaseRequest->id . ' - Status atualizado para ' . $purchaseRequest->status->label();
-        $message = "Olá, " . $purchaseRequest->user->person->name . "! Sua solicitação de " . $purchaseRequest->type->label() . " teve o status atualizado para [" . $purchaseRequest->status->label() . '].';
+        $subject = "Solicitação de " . $requestType . " nº " . $id . ' - Status atualizado para ' . $requestStatus;
 
         $isCanceled = $purchaseRequest->status->value === PurchaseRequestStatus::CANCELADA->value;
-        if ($isCanceled) {
-            $message .= " Motivo do cancelamento: " . $purchaseRequest->supplies_update_reason;
-        }
+        $email = new GenericEmail($subject, $purchaseRequest->user->email, 'mails.status-updated', [
+            'name' => $name,
+            'requestType' => $requestType,
+            'requestStatus' => $requestStatus,
+            'cancelReason' => $isCanceled ? $purchaseRequest->supplies_update_reason : false,
+            'requestName' => $requestName,
+        ]);
 
-        $email = new GenericEmail($subject, $message, $purchaseRequest->user->email);
         $email->sendMail();
     }
 
     public function sendResponsibleAssignedEmail($purchaseRequest)
     {
-        $subject = "Solicitação de " . $purchaseRequest->type->label() . " nº " . $purchaseRequest->id . " - Atribuição de responsável";
-        $message = "Olá, " . $purchaseRequest->user->person->name . "! "
-            . "Sua solicitação de " . $purchaseRequest->type->label() . " nº " . $purchaseRequest->id . " foi atualizada. "
-            . "Foi atribuído o(a) " . $purchaseRequest->suppliesUser->person->name . " como responsável pelo processo. E-mail para eventual contato: "
-            . $purchaseRequest->suppliesUser->email;
+        $name = explode(' ', $purchaseRequest->user->person->name)[0];
+        $requestType = strtolower($purchaseRequest->type->label());
+        $requestStatus = strtolower($purchaseRequest->status->label());
+        $id = $purchaseRequest->id;
+        $suppliesUser = $purchaseRequest->suppliesUser->person->name;
+        $suppliesUserMail = $purchaseRequest->suppliesUser->email;
 
-        $email = new GenericEmail($subject, $message, $purchaseRequest->user->email);
+        $requestName = $purchaseRequest[$purchaseRequest->type->value]->name;
+
+        $subject = "Solicitação de " . $requestType . " nº " . $id . " - Atribuição de responsável";
+
+        $email = new GenericEmail($subject, $purchaseRequest->user->email, 'mails.responsible-assigned', [
+            'name' => $name,
+            'requestType' => $requestType,
+            'requestStatus' => $requestStatus,
+            'requestName' => $requestName,
+            'suppliesUser' => $suppliesUser,
+            'suppliesUserMail' => $suppliesUserMail,
+        ]);
+
         $email->sendMail();
     }
 }
