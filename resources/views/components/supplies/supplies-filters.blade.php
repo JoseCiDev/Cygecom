@@ -9,17 +9,22 @@
         .request-supplies-filter {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 10px;
             padding-bottom: 20px;
+        }
+
+        @media(min-width: 768px) {
+            .request-supplies-filter #supplies-filter-btn {
+                align-self: flex-start;
+                width: 180px;
+            }
         }
 
         @media(min-width: 1280px) {
             .request-supplies-filter {
-                max-width: 1080px;
-            }
-
-            .request-supplies-filter {
-                flex-direction: row;
+                width: fit-content;
+                min-width: 30%;
+                flex-direction: row-reverse;
             }
         }
     </style>
@@ -36,5 +41,5 @@
         @endforeach
     </select>
 
-    <button class="btn btn-primary btn-small" type="submit">Filtrar</button>
+    <button id="supplies-filter-btn" class="btn btn-primary btn-small" type="submit">Filtrar por status</button>
 </form>

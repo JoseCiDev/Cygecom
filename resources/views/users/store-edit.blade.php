@@ -17,6 +17,10 @@
 <x-app>
     @push('styles')
         <style>
+            .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+                overflow-y: scroll;
+            }
+
             .user-header {
                 display: flex;
                 flex-direction: column;
@@ -88,6 +92,7 @@
                 display: flex;
                 flex-direction: column;
                 gap: 15px;
+                width: 100%;
             }
 
             .form-user .advanced-user-data .request-auth-checkbox {
@@ -101,11 +106,13 @@
                 flex-wrap: wrap;
                 row-gap: 15px;
                 column-gap: 30px;
+                width: 100%;
             }
 
             .form-user .advanced-user-data .cost-center-permissions-box {
                 display: flex;
                 flex-direction: column;
+                width: 100%;
             }
 
             .form-user .advanced-user-data .cost-center-permissions-box .cost-center-box-btns {
