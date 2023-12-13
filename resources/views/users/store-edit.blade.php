@@ -603,9 +603,8 @@
 
                     const sendData = async (url, data, successMessage = null) => {
                         try {
-                            const response = await $.ajax({
+                            const response = await $.post({
                                 url,
-                                method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': csrfToken.value
                                 },
@@ -642,7 +641,7 @@
 
                     if (isRegister) {
                         sendData(action, userData)
-                            .then(() => sendData(`/users/${userId}`, suppliesCostCentersData, 'Usuário criado com sucesso'))
+                            .then(() => sendData(`/users/update/${userId}`, suppliesCostCentersData, 'Usuário criado com sucesso'))
                             .then(() => {
                                 const message = 'Redirecionando para lista de usuários';
                                 const title = 'Redirecionando...';
