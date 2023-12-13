@@ -87,6 +87,7 @@ class UserProfileController extends Controller
      */
     public function edit(UserProfile $userProfile)
     {
+        $userProfile = $this->userProfileService->profileByName($userProfile->name)->first();
         $abilities = Ability::with('users', 'profiles')->get();
         return view('user-profiles.edit', ['abilities' => $abilities, 'profile' => $userProfile]);
     }
