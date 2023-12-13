@@ -32,69 +32,81 @@
                 </button>
                 <ul class="dropdown-menu">
                     @can('get.users.index')
-                        <li>
-                            <a href="{{ route('users.index') }}" data-cy="dropdown-cadastros-usuarios">Usuários</a>
-                        </li>
+                        <li> <a href="{{ route('users.index') }}" data-cy="dropdown-cadastros-usuarios">Usuários</a> </li>
                     @endcan
                     @can('get.suppliers.index')
-                        <li>
-                            <a href="{{ route('suppliers.index') }}" data-cy="dropdown-cadastros-fornecedores">Fornecedores</a>
-                        </li>
+                        <li> <a href="{{ route('suppliers.index') }}" data-cy="dropdown-cadastros-fornecedores">Fornecedores</a> </li>
                     @endcan
                 </ul>
             </div>
         @endif
 
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Solicitações
-            </button>
-            <ul class="dropdown-menu">
-                @can('get.requests.dashboard')
-                    <li><a href="{{ route('requests.dashboard') }}" data-cy="dropdown-solicitacoes-novas">Nova solicitação</a></li>
-                @endcan
-                @can('get.requests.index.own')
-                    <li><a href="{{ route('requests.index.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas solicitações</a></li>
-                @endcan
-                @can('get.requests.index')
-                    <li><a href="{{ route('requests.index') }}" data-cy="dropdown-solicitacoes-gerais">Solicitações gerais</a></li>
-                @endcan
-            </ul>
-        </div>
+        @if (Gate::any(['get.requests.dashboard', 'get.requests.index.own', 'get.requests.index']))
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Solicitações
+                </button>
+                <ul class="dropdown-menu">
+                    @can('get.requests.dashboard')
+                        <li><a href="{{ route('requests.dashboard') }}" data-cy="dropdown-solicitacoes-novas">Nova solicitação</a></li>
+                    @endcan
+                    @can('get.requests.index.own')
+                        <li><a href="{{ route('requests.index.own') }}" data-cy="dropdown-solicitacoes-minhas">Minhas solicitações</a></li>
+                    @endcan
+                    @can('get.requests.index')
+                        <li><a href="{{ route('requests.index') }}" data-cy="dropdown-solicitacoes-gerais">Solicitações gerais</a></li>
+                    @endcan
+                </ul>
+            </div>
+        @endif
 
-        @can('get.supplies.index')
+        @if (Gate::any(['get.supplies.product.index', 'get.supplies.service.index', 'get.supplies.contract.index']))
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Suprimentos
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="{{ route('supplies.index') }}" data-cy="dropdown-suprimentos-dashboard">Dashboard</a></li>
-                    @if (Gate::any(['get.supplies.product.index', 'get.supplies.service.index', 'get.supplies.contract.index']))
+                    @can('get.supplies.index')
+                        <li><a href="{{ route('supplies.index') }}" data-cy="dropdown-suprimentos-dashboard">Dashboard</a></li>
+                    @endcan
+                    @can('get.supplies.product.index')
                         <li><a href="{{ route('supplies.product.index') }}" data-cy="dropdown-suprimentos-produtos">Produtos</a></li>
+                    @endcan
+                    @can('get.supplies.service.index')
                         <li><a href="{{ route('supplies.service.index') }}" data-cy="dropdown-suprimentos-servicos-pontuais">Serviços pontuais</a></li>
+                    @endcan
+                    @can('get.supplies.contract.index')
                         <li><a href="{{ route('supplies.contract.index') }}" data-cy="dropdown-suprimentos-servicos-recorrentes">Serviços recorrentes</a></li>
-                    @endif
+                    @endcan
                 </ul>
             </div>
-        @endcan
+        @endif
 
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Relatórios
-            </button>
-            <ul class="dropdown-menu">
-                <li> <a href="{{ route('reports.index') }}">Relatórios de solicitações</a> </li>
-            </ul>
-        </div>
+        @if (Gate::any(['get.reports.index']))
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Relatórios
+                </button>
+                <ul class="dropdown-menu">
+                    @can('get.reports.index')
+                        <li> <a href="{{ route('reports.index') }}">Relatórios de solicitações</a> </li>
+                    @endcan
+                </ul>
+            </div>
+        @endif
 
-        @if (Gate::any(['get.profile.create']))
+        @if (Gate::any(['get.profile.create', 'profile.index']))
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Autorizações
                 </button>
                 <ul class="dropdown-menu">
-                    <li> <a href="{{ route('profile.index') }}">Lista de perfis</a> </li>
-                    <li> <a href="{{ route('profile.create') }}">Criação de perfis</a> </li>
+                    @can('get.profile.index')
+                        <li> <a href="{{ route('profile.index') }}">Lista de perfis</a> </li>
+                    @endcan
+                    @can('get.profile.create')
+                        <li> <a href="{{ route('profile.create') }}">Criação de perfis</a> </li>
+                    @endcan
                 </ul>
             </div>
         @endif
