@@ -478,7 +478,10 @@
 
                 <div class="form-group">
                     <div class="select-filter-container">
-                        <label for="supplies-users" class="regular-text cost-center-filter-label">Responsável</label>
+                        <label for="supplies-users" class="regular-text cost-center-filter-label"><i class="fa-solid fa-circle-info" data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                data-bs-title="Selecionar todos trará apenas solicitações com responsável atribuído. Note que pode existir solicitações pendentes sem responsável."></i>
+                            Responsável</label>
                         <select id="supplies-users" data-cy="supplies-users" name="supplies-users[]" multiple="multiple" class="select2-me"
                             placeholder="Escolha uma ou mais opções">
                             @foreach ($suppliesUsers as $user)
