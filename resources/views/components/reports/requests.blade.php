@@ -350,14 +350,24 @@
                         $.fn.setStorageDtColumnConfig();
 
                         $generateCSVButton.on('click', () => {
-                            const $productDetail = $('.product-detail:checked').val();
-
-                            let updatedUrlAjax = getUrlWithParams(urlAjax);
-                            updatedUrlAjax += `&length=-1`;
+                            // const $productDetail = $('.product-detail:checked').val();
+                            const dataTable = $reportsTable.DataTable();
+                            const defaultParams = dataTable.ajax.params();
+                            const filterParameters = getFilterParameters();
 
                             $.ajax({
-                                url: updatedUrlAjax,
-                                type: 'GET',
+                                url: urlAjax,
+                                type: 'POST',
+                                contentType: 'application/json',
+                                dataType: 'json',
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken
+                                },
+                                data: JSON.stringify({
+                                    ...defaultParams,
+                                    ...filterParameters,
+                                    length: -1
+                                }),
                                 success: (data) => {
                                     const content = data.data;
                                     const headers = $('#reportsTable>thead>tr>th').toArray().map(header => header.textContent);
