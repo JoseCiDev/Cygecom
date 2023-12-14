@@ -107,8 +107,8 @@ class UserProfileController extends Controller
                 throw new \Exception('Não é possível atualizar esse perfil!');
             }
 
-            $profile = $this->userProfileService->profileByName($userProfile->name)->first();
-            if (!$profile) {
+            $userProfile = $this->userProfileService->profileByName($userProfile->name)->first();
+            if (!$userProfile) {
                 throw new \Exception('Ops! Esse não perfil existe.');
             }
 
@@ -123,13 +123,20 @@ class UserProfileController extends Controller
 
                 $profileAbilitiesDiff = $profileAbilities->diff($abilities);
                 $abilitiesDiff = $abilities->diff($profileAbilities);
+                $noDiff = $abilitiesDiff->isEmpty() && $profileAbilitiesDiff->isEmpty();
 
-                if ($abilitiesDiff->isEmpty() && $profileAbilitiesDiff->isEmpty()) {
+                $currentProfileUnchanged = $noDiff && $profileName === $userProfile->name;
+                if ($currentProfileUnchanged) {
+                    throw new \Exception("Você tentou atualizar $profileName sem novas alterações.");
+                }
+
+                $alreadyExistProfile = $noDiff && $profileName !== $userProfile->name;
+                if ($alreadyExistProfile) {
                     throw new \Exception("Já exite o perfil $profileName que possui as habilidades idênticas. Por favor, analise melhor as necessidades do perfil $userProfile->name!");
                 }
             }
 
-            $this->userProfileService->update($profile, $abilities);
+            $this->userProfileService->update($userProfile, $abilities);
 
             session()->flash('success', "Perfil $userProfile->name foi atualizado com sucesso.");
             return redirect()->route('profile.index');
