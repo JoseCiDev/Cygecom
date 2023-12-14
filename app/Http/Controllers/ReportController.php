@@ -54,19 +54,19 @@ class ReportController extends Controller
 
     public function requestsIndexJson(Request $request): JsonResponse
     {
-        $draw = (int) $request->query('draw', 1);
-        $start = (int) $request->query('start', 0);
-        $length = (int) $request->query('length', 10);
-        $searchValue = (string) $request->query('search', ['value' => null])['value'];
-        $orderColumnIndex = (int) $request->query('order', [0 => ['column' => 0]])[0]['column'];
-        $orderDirection = (string) $request->query('order', [0 => ['dir' => 'asc']])[0]['dir'];
-        $status = (array) $request->query('status', collect(PurchaseRequestStatus::cases())->map(fn ($el) => $el->value)->toArray());
-        $requestType = (array) $request->query('request-type', collect(PurchaseRequestType::cases())->map(fn ($el) => $el->value)->toArray());
-        $requestingUsersIds = (array) $request->query('requesting-users-ids', []);
-        $costCenterIds = (array) $request->query('cost-center-ids', []);
-        $dateSince = (string) $request->query('date-since', now()->subMonth()->format('Y-m-d'));
-        $dateUntil = (string) $request->query('date-until', now()->format('Y-m-d'));
-        $ownRequests = (string) $request->query('own-requests', true);
+        $draw = (int) $request->get('draw', 1);
+        $start = (int) $request->get('start', 0);
+        $length = (int) $request->get('length', 10);
+        $searchValue = (string) $request->get('search', ['value' => null])['value'];
+        $orderColumnIndex = (int) $request->get('order', [0 => ['column' => 0]])[0]['column'];
+        $orderDirection = (string) $request->get('order', [0 => ['dir' => 'asc']])[0]['dir'];
+        $status = (array) $request->get('status', collect(PurchaseRequestStatus::cases())->map(fn ($el) => $el->value)->toArray());
+        $requestType = (array) $request->get('request-type', collect(PurchaseRequestType::cases())->map(fn ($el) => $el->value)->toArray());
+        $requestingUsersIds = (array) $request->get('requesting-users-ids', []);
+        $costCenterIds = (array) $request->get('cost-center-ids', []);
+        $dateSince = (string) $request->get('date-since', now()->subMonth()->format('Y-m-d'));
+        $dateUntil = (string) $request->get('date-until', now()->format('Y-m-d'));
+        $ownRequests = (string) $request->get('own-requests', true);
         $currentPage = ($start / $length) + 1;
         $isAll = $length === -1;
 
