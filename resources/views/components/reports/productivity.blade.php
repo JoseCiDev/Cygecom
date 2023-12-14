@@ -548,17 +548,17 @@
                         <div class="inputs-container">
                             <label class="checkbox-label secondary-text">
                                 <input id="is-supplies-contract-none" type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input"
-                                    data-cy="is-supplies-contract-none" checked value="">
+                                    data-cy="is-supplies-contract-none" checked value="both">
                                 Ambos
                             </label>
                             <label class="checkbox-label secondary-text">
                                 <input type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input" data-cy="is-supplies-contract-true"
-                                    value="1">
+                                    value="is-supplies-contract">
                                 Suprimentos
                             </label>
                             <label class="checkbox-label secondary-text">
                                 <input type="radio" name="is-supplies-contract" class="is-supplies-contract form-check-input" data-cy="is-supplies-contract-false"
-                                    value="0">
+                                    value="is-not-supplies-contract">
                                 Área solicitante
                             </label>
                         </div>
@@ -687,6 +687,7 @@
     @push('scripts')
         <script type="module">
             $(() => {
+                const csrfToken = $('meta[name="csrf-token"]').attr('content');
                 const enumProductValue = @json(PurchaseRequestType::PRODUCT->value);
                 const enumServiceValue = @json(PurchaseRequestType::SERVICE->value);
                 const enumContractValue = @json(PurchaseRequestType::CONTRACT->value);
@@ -734,39 +735,39 @@
                     $desiredDate.val(null);
                 }
 
-                const getUrlWithParams = (urlAjax) => {
-                    let updatedUrlAjax = urlAjax + "?";
+                const getFilterParameters = () => {
+                    const $dateSince = $('#date-since').val();
+                    const $dateUntil = $('#date-until').val();
+                    const $desiredDate = $('#desired-date').val();
                     const $checkedStatusInputs = $('.status-checkbox:checked');
                     const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
                     const requistingUsersIds = $('#requisting-users-filter').val() || "";
                     const costCenterIdsFilter = $('#cost-center-filter').val() || "";
                     const suppliesUsers = $('#supplies-users').val() || "";
-                    const $dateSince = $('#date-since').val();
-                    const $dateUntil = $('#date-until').val();
                     const $isSuppliesContract = $('.is-supplies-contract:checked').val();
-                    const $desiredDate = $('#desired-date').val();
 
-                    updatedUrlAjax += `&date-since=${$dateSince}`;
-                    updatedUrlAjax += `&date-until=${$dateUntil}`;
-                    updatedUrlAjax += `&desired-date=${$desiredDate}`;
+                    const requestData = {
+                        'desired-date': $desiredDate,
+                        'status': $checkedStatusInputs.map((_, element) => element.value).get(),
+                        'request-type': $checkedRequestTypeInputs.map((_, element) => element.value).get(),
+                        'supplies-users': $(suppliesUsers).map((_, userId) => userId).get(),
+                        'cost-center-ids': $(costCenterIdsFilter).map((_, costCenterId) => costCenterId).get(),
+                        'requesting-users-ids': $(requistingUsersIds).map((_, userId) => userId).get(),
+                        'is-supplies-contract': $isSuppliesContract,
+                    };
 
-                    if ($isSuppliesContract !== undefined && $isSuppliesContract !== "") {
-                        updatedUrlAjax += `&is-supplies-contract=${$isSuppliesContract}`;
+                    if ($dateSince) {
+                        requestData['date-since'] = $dateSince;
                     }
 
-                    $checkedStatusInputs.each((_, element) => updatedUrlAjax += `&status[]=${element.value}`);
-                    $checkedRequestTypeInputs.each((_, element) => updatedUrlAjax += `&request-type[]=${element.value}`);
-                    $.each(suppliesUsers, (_, userId) => updatedUrlAjax += `&supplies-users[]=${userId}`);
-                    $.each(costCenterIdsFilter, (_, costCenterId) => updatedUrlAjax += `&cost-center-ids[]=${costCenterId}`);
-                    $.each(requistingUsersIds, (_, userId) => updatedUrlAjax += `&requesting-users-ids[]=${userId}`);
+                    if ($dateUntil) {
+                        requestData['date-until'] = $dateUntil;
+                    }
 
-                    return updatedUrlAjax;
+                    return requestData;
                 }
 
-                const filterDataTable = () => {
-                    const updatedUrlAjax = getUrlWithParams(urlAjax);
-                    $productivityTable.DataTable().ajax.url(updatedUrlAjax).load();
-                }
+                const filterDataTable = () => $productivityTable.DataTable().ajax.reload();
 
                 const clearFilters = (filter = false) => {
                     const clearOptions = {
@@ -846,12 +847,23 @@
                         $('#reports-filter-btn').on('click', filterDataTable);
 
                         $generateCSVButton.on('click', () => {
-                            let updatedUrlAjax = getUrlWithParams(urlAjax);
-                            updatedUrlAjax += `&length=-1`;
+                            const dataTable = $productivityTable.DataTable();
+                            const defaultParams = dataTable.ajax.params();
+                            const filterParameters = getFilterParameters();
 
                             $.ajax({
-                                url: updatedUrlAjax,
-                                type: 'GET',
+                                url: urlAjax,
+                                type: 'POST',
+                                contentType: 'application/json',
+                                dataType: 'json',
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken
+                                },
+                                data: JSON.stringify({
+                                    ...defaultParams,
+                                    ...filterParameters,
+                                    length: -1
+                                }),
                                 success: (data) => {
                                     const content = data.data;
                                     const headers = $('#productivityTable>thead>tr>th').toArray().map(header => header.textContent);
@@ -943,8 +955,19 @@
                     },
                     ajax: {
                         url: urlAjax,
-                        type: 'GET',
+                        type: 'POST',
+                        contentType: 'application/json',
                         dataType: 'json',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        data: function(defaultParams) {
+                            const filterParameters = getFilterParameters();
+                            return JSON.stringify({
+                                ...defaultParams,
+                                ...filterParameters
+                            });
+                        },
                         error: (response, textStatus, errorThrown) => {
                             const title = "Houve uma falha na busca dos registros!";
                             const message =

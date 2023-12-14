@@ -118,20 +118,20 @@ class ReportController extends Controller
 
     public function productivityIndexJson(Request $request): JsonResponse
     {
-        $draw = (int) $request->query('draw', 1);
-        $start = (int) $request->query('start', 0);
-        $length = (int) $request->query('length', 10);
-        $orderColumnIndex = (int) $request->query('order', [0 => ['column' => 0]])[0]['column'];
-        $orderDirection = (string) $request->query('order', [0 => ['dir' => 'asc']])[0]['dir'];
-        $status = (array) $request->query('status', [PurchaseRequestStatus::PENDENTE->value]);
-        $requestType = (array) $request->query('request-type', collect(PurchaseRequestType::cases())->map(fn ($el) => $el->value)->toArray());
-        $requestingUsersIds = (array) $request->query('requesting-users-ids', []);
-        $costCenterIds = (array) $request->query('cost-center-ids', []);
-        $dateSince = (string) $request->query('date-since', now()->subMonth()->format('Y-m-d'));
-        $dateUntil = (string) $request->query('date-until', now()->format('Y-m-d'));
-        $isSuppliesContract = (bool) $request->query('is-supplies-contract', null);
-        $desiredDate = (string) $request->query('desired-date', null);
-        $suppliesUsers = (array) $request->query('supplies-users', []);
+        $draw = (int) $request->get('draw', 1);
+        $start = (int) $request->get('start', 0);
+        $length = (int) $request->get('length', 10);
+        $orderColumnIndex = (int) $request->get('order', [0 => ['column' => 0]])[0]['column'];
+        $orderDirection = (string) $request->get('order', [0 => ['dir' => 'asc']])[0]['dir'];
+        $status = (array) $request->get('status', [PurchaseRequestStatus::PENDENTE->value]);
+        $requestType = (array) $request->get('request-type', collect(PurchaseRequestType::cases())->map(fn ($el) => $el->value)->toArray());
+        $requestingUsersIds = (array) $request->get('requesting-users-ids', []);
+        $costCenterIds = (array) $request->get('cost-center-ids', []);
+        $dateSince = (string) $request->get('date-since', now()->subMonth()->format('Y-m-d'));
+        $dateUntil = (string) $request->get('date-until', now()->format('Y-m-d'));
+        $isSuppliesContract = (string) $request->get('is-supplies-contract', 'both');
+        $desiredDate = (string) $request->get('desired-date', null);
+        $suppliesUsers = (array) $request->get('supplies-users', []);
         $currentPage = ($start / $length) + 1;
         $isAll = $length === -1;
 
@@ -142,7 +142,8 @@ class ReportController extends Controller
 
             $query = $this->reportService->requesterProductivityQuery($query, $requestingUsersIds);
 
-            if ($isSuppliesContract !== null) {
+            if ($isSuppliesContract !== 'both') {
+                $isSuppliesContract = $isSuppliesContract === 'is-supplies-contract' ? true : false;
                 $query->where('purchase_requests.is_supplies_contract', $isSuppliesContract);
             }
 
@@ -150,9 +151,7 @@ class ReportController extends Controller
                 $query = $this->reportService->whereInCostCenterQuery($query, $costCenterIds);
             }
 
-            if ($requestType) {
-                $query = $this->reportService->whereInRequestTypeQuery($query, $requestType);
-            }
+            $query = $this->reportService->whereInRequestTypeQuery($query, $requestType);
 
             if ($desiredDate) {
                 $query->where('purchase_requests.desired_date', $desiredDate);
