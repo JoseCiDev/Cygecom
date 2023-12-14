@@ -12,17 +12,19 @@ class GenericEmail extends Mailable
     use Queueable;
     use SerializesModels;
 
-    protected $body;
     protected $recipients;
-    public function __construct(string $subject, string $body, $recipients)
+    protected string $templateName;
+    protected array $templateParams;
+    public function __construct(string $subject, $recipients, string $templateName, array $templateParams)
     {
-        $this->body = $body;
         $this->subject($subject);
-        $this->recipients = config('app.env') === 'production' ? $recipients : auth()->user()->email;
+        $this->recipients = config('app.env') === 'production' ? $recipients : env('MAIL_TEST');
+        $this->templateName = $templateName;
+        $this->templateParams = $templateParams;
     }
     public function build()
     {
-        return $this->view('mails.generic')->with(['body' => $this->body]);
+        return $this->view($this->templateName)->with($this->templateParams);
     }
 
     public function sendMail()
