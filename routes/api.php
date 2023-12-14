@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::group(['prefix' => 'reports'], function () {
-        Route::get('/requests', [App\Http\Controllers\ReportController::class, 'requestsIndexJson'])->name('reports.index.json');
+        Route::post('/requests', [App\Http\Controllers\ReportController::class, 'requestsIndexJson'])->name('reports.index.json');
         Route::post('/productivity', [App\Http\Controllers\ReportController::class, 'productivityIndexJson'])->name('reports.productivity.json');
     });
 

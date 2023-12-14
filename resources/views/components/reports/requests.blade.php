@@ -196,6 +196,7 @@
     @push('scripts')
         <script type="module">
             $(() => {
+                const csrfToken = $('meta[name="csrf-token"]').attr('content');
                 const enumProductValue = @json(PurchaseRequestType::PRODUCT->value);
                 const enumServiceValue = @json(PurchaseRequestType::SERVICE->value);
                 const enumContractValue = @json(PurchaseRequestType::CONTRACT->value);
@@ -241,8 +242,7 @@
                     Object.values(clearOptions).forEach(el => el())
                 }
 
-                const getUrlWithParams = (urlAjax) => {
-                    let updatedUrlAjax = urlAjax + "?";
+                const getFilterParameters = (urlAjax) => {
                     const $checkedStatusInputs = $('.status-checkbox:checked');
                     const $checkedRequestTypeInputs = $('.request-type-checkbox:checked');
                     const requistingUsersIds = $('#requisting-users-filter').val() || "";
@@ -251,16 +251,23 @@
                     const $dateUntil = $('#date-until').val();
                     const $ownRequests = $('#own-requests:checked').val() || false;
 
-                    updatedUrlAjax += `&date-since=${$dateSince}`;
-                    updatedUrlAjax += `&date-until=${$dateUntil}`;
-                    updatedUrlAjax += `&own-requests=${$ownRequests}`;
+                    const requestData = {
+                        'status': $checkedStatusInputs.map((_, element) => element.value).get(),
+                        'request-type': $checkedRequestTypeInputs.map((_, element) => element.value).get(),
+                        'cost-center-ids': $(costCenterIds).map((_, costCenterId) => costCenterId).get(),
+                        'requesting-users-ids': $(requistingUsersIds).map((_, userId) => userId).get(),
+                        'own-requests': $ownRequests,
+                    };
 
-                    $checkedStatusInputs.each((_, element) => updatedUrlAjax += `&status[]=${element.value}`);
-                    $checkedRequestTypeInputs.each((_, element) => updatedUrlAjax += `&request-type[]=${element.value}`);
-                    $.each(costCenterIds, (_, costCenterId) => updatedUrlAjax += `&cost-center-ids[]=${costCenterId}`);
-                    $.each(requistingUsersIds, (userId) => updatedUrlAjax += `&requesting-users-ids[]=${userId}`);
+                    if ($dateSince) {
+                        requestData['date-since'] = $dateSince;
+                    }
 
-                    return updatedUrlAjax;
+                    if ($dateUntil) {
+                        requestData['date-until'] = $dateUntil;
+                    }
+
+                    return requestData;
                 }
 
                 const downloadCsv = (csv) => {
@@ -288,10 +295,7 @@
                     })
                 }
 
-                const filterDataTable = () => {
-                    const updatedUrlAjax = getUrlWithParams(urlAjax);
-                    $reportsTable.DataTable().ajax.url(updatedUrlAjax).load();
-                }
+                const filterDataTable = () => $reportsTable.DataTable().ajax.reload();
 
                 const focusOnSeachField = () => $("input[type='search']").first().focus();
 
@@ -498,8 +502,19 @@
                     },
                     ajax: {
                         url: urlAjax,
-                        type: 'GET',
+                        type: 'POST',
+                        contentType: 'application/json',
                         dataType: 'json',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        data: function(defaultParams) {
+                            const filterParameters = getFilterParameters();
+                            return JSON.stringify({
+                                ...defaultParams,
+                                ...filterParameters
+                            });
+                        },
                         error: (response, textStatus, errorThrown) => {
                             const title = "Houve uma falha na busca dos registros!";
                             const message =
