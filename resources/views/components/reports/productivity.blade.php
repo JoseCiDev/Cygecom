@@ -1,27 +1,9 @@
 @php
-    use App\Enums\{PurchaseRequestType, PurchaseRequestStatus, PaymentMethod, PaymentTerm};
+    use App\Enums\{PurchaseRequestType, PurchaseRequestStatus};
 
     $currentProfile = auth()->user()->profile->name;
     $isAdmin = $currentProfile === 'admin';
     $isDirector = $currentProfile === 'diretor';
-
-    $enumRequests = [
-        'type' => collect(PurchaseRequestType::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
-        'status' => collect(PurchaseRequestStatus::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
-        'paymentMethod' => collect(PaymentMethod::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
-        'paymentTerms' => collect(PaymentTerm::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
-    ];
-
-    $costCenters = $requestingUsers
-        ->pluck('purchaseRequest')
-        ->collapse()
-        ->filter(fn($item) => $item->status->value !== PurchaseRequestStatus::RASCUNHO->value)
-        ->pluck('costCenterApportionment')
-        ->collapse()
-        ->pluck('costCenter')
-        ->unique();
-
-    $buyingStatus = [PurchaseRequestStatus::PENDENTE->label(), PurchaseRequestStatus::EM_TRATATIVA->label(), PurchaseRequestStatus::EM_COTACAO->label(), PurchaseRequestStatus::AGUARDANDO_APROVACAO_DE_COMPRA->label()];
 @endphp
 
 @push('styles')
@@ -309,19 +291,32 @@
             gap: 10px
         }
 
+        .selects .form-group #cost-centers-btns-insert .card-body {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .selects .form-group #cost-centers-btns-insert .card-body button {
+            flex-grow: 1;
+            flex-shrink: 0;
+            flex-basis: 0;
+            text-align: center;
+        }
+
         @media(min-width: 768px) {
             .productivity-report-filters .selects .form-group {
                 display: flex;
-                align-items: center;
-                gap: 5px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0;
                 justify-content: space-between;
-                margin: 0;
             }
 
             .productivity-report-filters .selects .form-group .select-filter-btns {
                 display: flex;
                 gap: 5px;
-                padding-top: 10px;
             }
 
             .productivity-report-filters .checkboxs-container {
@@ -348,14 +343,6 @@
         @media(min-width: 1024px) {
             .charts-requests-sent {
                 width: 375px;
-            }
-
-            .productivity-report-filters .selects {
-                gap: 15px;
-            }
-
-            .productivity-report-filters .selects .select-filter-container {
-                margin-bottom: 0;
             }
 
             .productivity-report-filters .selects .form-group {
@@ -396,6 +383,19 @@
                 flex-direction: row;
             }
 
+            .productivity-report-filters .selects {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 15px;
+                justify-content: flex-start;
+                align-items: flex-start;
+            }
+
+            .productivity-report-filters .selects .form-group {
+                flex: 1 0 calc(50% - 15px);
+                max-width: calc(50% - 15px);
+            }
+
             .productivity-report-filters .dates-container .dates .span-info {
                 text-align: left;
                 padding: 0 20px;
@@ -403,16 +403,9 @@
         }
 
         @media(min-width: 1440px) {
-            .productivity-report-filters .selects {
-                flex-direction: row;
-                justify-content: left;
-                flex-wrap: wrap;
-                column-gap: 20px;
-                align-items: flex-start;
-            }
-
             .productivity-report-filters .selects .form-group {
-                flex: 1 0 45%;
+                flex: 1 0 calc(33.33% - 15px);
+                max-width: calc(33.33% - 15px);
             }
 
             .productivity-report-filters .dates-container,
@@ -433,69 +426,6 @@
         </div>
 
         <div class="productivity-report-filters">
-
-            <div class="selects">
-
-                <div class="form-group">
-                    <div class="select-filter-container">
-                        <label for="requisting-users-filter" class="regular-text cost-center-filter-label">Solicitante</label>
-                        <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]" multiple="multiple" class="select2-me"
-                            placeholder="Escolha uma ou mais opções">
-                            @foreach ($requestingUsers as $user)
-                                <option value="{{ $user->id }}">{{ $user->person->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="select-filter-btns">
-                        <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn" data-cy="filter-clear-users-btn">Limpar</button>
-                        <button class="btn btn-mini btn-secondary" id="all-requisting-users-btn" data-cy="all-requisting-users-btn">Todos</button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="select-filter-container">
-                        <label for="cost-center-filter" class="regular-text cost-center-filter-label">Centros de custos</label>
-                        <select id="cost-center-filter" data-cy="cost-center-filter" name="cost-center-filter[]" multiple="multiple" class="select2-me"
-                            placeholder="Escolha uma ou mais opções">
-                            @foreach ($costCenters as $costCenter)
-                                @php
-                                    $companyName = $costCenter->company->name;
-                                    $costCenterName = $costCenter->name;
-                                    $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
-                                @endphp
-
-                                <option value="{{ $costCenter->id }}">
-                                    {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="select-filter-btns">
-                        <button class="btn btn-mini btn-secondary" id="filter-clear-cost-centers-btn" data-cy="filter-clear-cost-centers-btn">Limpar</button>
-                        <button class="btn btn-mini btn-secondary" id="all-cost-center-btn" data-cy="all-cost-center-btn">Todos</button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="select-filter-container">
-                        <label for="supplies-users" class="regular-text cost-center-filter-label"><i class="fa-solid fa-circle-info" data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                data-bs-title="Selecionar todos trará apenas solicitações com responsável atribuído. Note que pode existir solicitações pendentes sem responsável."></i>
-                            Responsável</label>
-                        <select id="supplies-users" data-cy="supplies-users" name="supplies-users[]" multiple="multiple" class="select2-me"
-                            placeholder="Escolha uma ou mais opções">
-                            @foreach ($suppliesUsers as $user)
-                                <option value="{{ $user->id }}">{{ $user->person->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="select-filter-btns">
-                        <button class="btn btn-mini btn-secondary" id="filter-clear-supplies-users-btn" data-cy="filter-clear-supplies-users-btn">Limpar</button>
-                        <button class="btn btn-mini btn-secondary" id="all-suppliers-users-btn" data-cy="all-suppliers-users-btn">Todos</button>
-                    </div>
-                </div>
-
-            </div>
 
             <div class="dates-checkboxs-box">
                 <div class="dates-container">
@@ -587,6 +517,90 @@
                     @endforeach
                 </div>
                 <button id="all-status-checkbox" type="button" class="btn btn-mini btn-secondary">Marcar todos status</button>
+            </div>
+
+            <div class="selects">
+
+                <div class="form-group">
+                    <div class="select-filter-container">
+                        <label for="supplies-users" class="regular-text cost-center-filter-label"><i class="fa-solid fa-circle-info" data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                data-bs-title="Selecionar todos trará apenas solicitações com responsável atribuído. Note que pode existir solicitações pendentes sem responsável."></i>
+                            Responsável</label>
+                        <select id="supplies-users" data-cy="supplies-users" name="supplies-users[]" multiple="multiple" class="select2-me"
+                            placeholder="Escolha uma ou mais opções">
+                            @foreach ($suppliesUsers as $user)
+                                <option value="{{ $user->id }}">{{ $user->person->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="select-filter-btns">
+                        <button class="btn btn-mini btn-secondary" id="filter-clear-supplies-users-btn" data-cy="filter-clear-supplies-users-btn">Limpar</button>
+                        <button class="btn btn-mini btn-secondary" id="all-suppliers-users-btn" data-cy="all-suppliers-users-btn">Todos</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="select-filter-container">
+                        <label for="requisting-users-filter" class="regular-text cost-center-filter-label">Solicitante</label>
+                        <select id="requisting-users-filter" data-cy="requisting-users-filter" name="requisting-users-filter[]" multiple="multiple" class="select2-me"
+                            placeholder="Escolha uma ou mais opções">
+                            @foreach ($requestingUsers as $user)
+                                <option value="{{ $user->id }}">{{ $user->person->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="select-filter-btns">
+                        <button class="btn btn-mini btn-secondary" id="filter-clear-users-btn" data-cy="filter-clear-users-btn">Limpar</button>
+                        <button class="btn btn-mini btn-secondary" id="all-requisting-users-btn" data-cy="all-requisting-users-btn">Todos</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="select-filter-container">
+                        <label for="cost-center-filter" class="regular-text cost-center-filter-label">
+                            <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-title="Centros de custos para filtragem que possuem solicitações."></i>
+                            Centros de custos
+                        </label>
+                        <select id="cost-center-filter" data-cy="cost-center-filter" name="cost-center-filter[]" multiple="multiple" class="select2-me"
+                            placeholder="Escolha uma ou mais opções">
+                            @foreach ($costCenters as $costCenter)
+                                @php
+                                    $companyName = $costCenter->company->name;
+                                    $costCenterName = $costCenter->name;
+                                    $companyId = $costCenter->company->id;
+                                    $formattedCnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $costCenter->company->cnpj);
+                                @endphp
+
+                                <option value="{{ $costCenter->id }}" data-company-id="{{ $companyId }}">
+                                    {{ $formattedCnpj . ' - ' . $companyName . ' - ' . $costCenterName }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="select-filter-btns">
+                        <button class="btn btn-mini btn-secondary" id="filter-clear-cost-centers-btn" data-cy="filter-clear-cost-centers-btn">Limpar</button>
+                        <button class="btn btn-mini btn-secondary" id="all-cost-center-btn" data-cy="all-cost-center-btn">Todos</button>
+                        <button type="button" class="btn btn-mini btn-secondary" data-bs-toggle="collapse" data-bs-target="#cost-centers-btns-insert" aria-expanded="false"
+                            aria-controls="cost-centers-btns-insert">
+                            Por empresa <i class="fa-solid fa-caret-down"></i>
+                        </button>
+                    </div>
+                    <div class="collapse" id="cost-centers-btns-insert">
+                        <div class="card card-body">
+                            @foreach ($companies as $company)
+                                <button type="button" class="btn btn-secondary btn-mini dropdown-item cost-center-btn-insert" data-company-id="{{ $company->id }}"
+                                    data-bs-toggle='tooltip' data-bs-placement='top'
+                                    data-bs-title="Adicionar centros de custos da empresa {{ preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $company->cnpj) }}">
+                                    <i class="fa-solid fa-plus"></i> {{ $company->name }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
@@ -718,11 +732,29 @@
                 const $allRequistingUsersBtn = $('#all-requisting-users-btn');
                 const $allCostCenterBtn = $('#all-cost-center-btn');
                 const $allSuppliersUsersBtn = $('#all-suppliers-users-btn');
+                const $costCenterBtnInsert = $('.cost-center-btn-insert');
 
                 const $allStatusCheckbox = $('#all-status-checkbox');
 
                 const $tooltipTriggerList = $('[data-bs-toggle="tooltip"]');
                 const tooltipList = $tooltipTriggerList.map((_, tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+
+                const addCostCenters = (event, costCenterSelector) => {
+                    const $currentElement = $(event.target);
+                    const $companyId = $currentElement.data('company-id');
+                    const $costCentersOptions = $(`${costCenterSelector} option`);
+
+                    const values = $costCentersOptions.map((_, element) => {
+                        const $optionElement = $(element);
+
+                        const matchCompanyId = $optionElement.data('company-id') === $companyId;
+                        if ((matchCompanyId || $optionElement.is(':selected'))) {
+                            return $optionElement.val();
+                        }
+                    });
+
+                    $(costCenterSelector).val(values).trigger('change');
+                }
 
                 const handleDateChange = (event, isDesiredDate) => {
                     const currentElementVal = $(event.target).val();
@@ -1096,6 +1128,8 @@
 
                 $desiredDate.on('change', (event) => handleDateChange(event, true));
                 $dateSince.add($dateUntil).on('change', (event) => handleDateChange(event, false));
+
+                $costCenterBtnInsert.on('click', (event) => addCostCenters(event, '#cost-center-filter'));
             });
         </script>
     @endpush

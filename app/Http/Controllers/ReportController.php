@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\{PurchaseRequestType, PurchaseRequestStatus};
+use App\Enums\{PaymentMethod, PaymentTerm, PurchaseRequestType, PurchaseRequestStatus};
+use App\Models\Company;
 use App\Providers\{UserService, PurchaseRequestService};
 use App\Services\{ReportService, PersonService};
 use Carbon\Carbon;
 use Illuminate\Http\{Request, JsonResponse};
 use Illuminate\View\View;
-use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 class ReportController extends Controller
 {
@@ -33,6 +34,17 @@ class ReportController extends Controller
         $requestingUsers = $this->reportService->productivityRequestingUsers()->get();
         $suppliesUsers = $this->userService->getSuppliesUsers()->get();
 
+        $costCenters = $requestingUsers
+            ->pluck('purchaseRequest')
+            ->collapse()
+            ->filter(fn ($item) => $item->status->value !== PurchaseRequestStatus::RASCUNHO->value)
+            ->pluck('costCenterApportionment')
+            ->collapse()
+            ->pluck('costCenter')
+            ->unique();
+
+        $companies = Company::all();
+
         $allStatus = PurchaseRequestStatus::cases();
         $requestsStatusCounter = [];
         foreach ($allStatus as $status) {
@@ -43,10 +55,23 @@ class ReportController extends Controller
             $requestsStatusCounter[PurchaseRequestStatus::tryFrom($status->value)->label()] = $this->purchaseRequestService->allPurchaseRequests()->where('status', $status->value)->count();
         }
 
+        $enumRequests = [
+            'type' => collect(PurchaseRequestType::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
+            'status' => collect(PurchaseRequestStatus::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
+            'paymentMethod' => collect(PaymentMethod::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
+            'paymentTerms' => collect(PaymentTerm::cases())->mapWithKeys(fn ($enum) => [$enum->value => $enum->label()]),
+        ];
+
+        $buyingStatus = [PurchaseRequestStatus::PENDENTE->label(), PurchaseRequestStatus::EM_TRATATIVA->label(), PurchaseRequestStatus::EM_COTACAO->label(), PurchaseRequestStatus::AGUARDANDO_APROVACAO_DE_COMPRA->label()];
+
         $params = [
             'requestingUsers' => $requestingUsers,
             'requestsStatusCounter' => $requestsStatusCounter,
-            'suppliesUsers' => $suppliesUsers
+            'suppliesUsers' => $suppliesUsers,
+            'costCenters' => $costCenters,
+            'companies' => $companies,
+            'enumRequests' => $enumRequests,
+            'buyingStatus' => $buyingStatus,
         ];
 
         return view('components.reports.productivity', $params);
