@@ -11,6 +11,8 @@
     </style>
 @endpush
 
+<x-modals.supplies-product-info />
+
 <div class="row">
     <div class="col-sm-12">
         <div class="box box-color box-bordered">
@@ -27,14 +29,13 @@
                             @endif
                             @foreach (PurchaseRequestStatus::cases() as $statusCase)
                                 @php
-                                    $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
+                                    $statusDefaultFilter = $statusCase === PurchaseRequestStatus::PENDENTE;
                                     $isChecked = count($status) ? collect($status)->contains($statusCase) : $statusDefaultFilter;
                                 @endphp
 
                                 @if ($statusCase !== PurchaseRequestStatus::RASCUNHO)
                                     <label class="checkbox-label secondary-text">
-                                        <input type="checkbox" name="status[]" class="status-checkbox"
-                                            value="{{ $statusCase->value }}" @checked($isChecked)>
+                                        <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
                                         {{ $statusCase->label() }}
                                     </label>
                                 @endif
@@ -49,10 +50,11 @@
                     </div>
                 </div>
 
-                <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered" style="width:100%"
-                    data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
+                <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered" style="width:100%" data-column_filter_dateformat="dd-mm-yy"
+                    data-nosort="0" data-checkall="all">
                     <thead>
                         <tr class="search-bar">
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -76,6 +78,7 @@
                             <th>Empresa</th>
                             <th>Data desejada</th>
                             <th>Ord. compra</th>
+                            <th>Valor total</th>
                             <th class="noColvis ignore-search">Ações</th>
                         </tr>
                     </thead>
@@ -91,6 +94,9 @@
                                     'request' => $product,
                                     'suppliers' => $suppliers,
                                 ];
+
+                                $amount = $product->product?->amount;
+                                $formatedAmount = $amount ? number_format($amount, 2, ',', '.') : '---';
                             @endphp
                             <tr>
                                 <td style="min-width: 90px;">{{ $product->id }}</td>
@@ -151,25 +157,26 @@
                                     $showPurchaseOrder = isset($product->purchase_order) && $product->status === PurchaseRequestStatus::FINALIZADA;
                                 @endphp
                                 <td>{{ $showPurchaseOrder ? $product->purchase_order : '---' }}</td>
+                                <td>
+                                    {{-- str_pad para ordenação por string no dataTables --}}
+                                    <span hidden>{{ str_pad($amount, 10, '0', STR_PAD_LEFT) }}</span>
+                                    R$ {{ $formatedAmount }}
+                                </td>
 
                                 <td class="text-center" style="white-space: nowrap;">
-                                    <button
-                                        data-modal-name="{{ 'Analisando Solicitação de Produto - Nº ' . $product->id }}"
-                                        data-id="{{ $product->id }}" data-request="{{ json_encode($modalData) }}"
-                                        rel="tooltip" title="Analisar" class="btn" data-bs-toggle="modal"
-                                        data-bs-target="#modal-supplies" data-cy="btn-analisar-{{ $index }}">
-                                        <i class="fa fa-search"></i>
+                                    <button class="btn btn-mini btn-secondary" data-id="{{ $product->id }}" data-bs-toggle="modal" data-bs-target="#modal-supplies-product-info"
+                                        title="Analisar solicitação">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
                                     </button>
+
                                     @php
                                         $existSuppliesUser = (bool) $product->suppliesUser?->person->name;
                                         $existResponsibility = (bool) $product->responsibility_marked_at;
                                         $isOwnUserRequest = $product->user->id === auth()->user()->id;
                                         $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
                                     @endphp
-                                    <a href="{{ route('supplies.product.detail', ['id' => $product->id]) }}"
-                                        class="btn btn-link openDetail" rel="tooltip" title="Abrir"
-                                        data-is-to-show="{{ $isToShow ? 'true' : 'false' }}"
-                                        data-cy="btn-open-details-{{ $index }}">
+                                    <a href="{{ route('supplies.product.detail', ['id' => $product->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
+                                        data-is-to-show="{{ $isToShow ? 'true' : 'false' }}" data-cy="btn-open-details-{{ $index }}">
                                         <i class="fa fa-external-link"></i>
                                     </a>
                                 </td>
@@ -184,5 +191,5 @@
 
 @push('scripts')
     <script type="module" src="{{ asset('js/supplies/modal-confirm-supplies-responsability.js') }}"></script>
-    <script type="module" src="{{asset('js/utils/dataTables-column-search.js')}}"></script>
+    <script type="module" src="{{ asset('js/utils/dataTables-column-search.js') }}"></script>
 @endpush

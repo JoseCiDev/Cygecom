@@ -5,9 +5,7 @@
     $profile = $currentUser->profile->name;
 
     $isSupplies = match ($profile) {
-        'suprimentos_hkm',
-        'suprimentos_inp',
-        'admin' => true,
+         'suprimentos_hkm', 'suprimentos_inp', 'admin' => true,
 
         default => false,
     };
@@ -26,17 +24,25 @@
     $paymentMethod = $request?->product?->paymentInfo?->payment_method;
 @endphp
 
+@push('styles')
+    <style>
+        .product-link {
+            display: inline-block;
+            width: 60%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: top;
+        }
+    </style>
+@endpush
+
 <x-app>
     @if ($isSupplies)
         <div class="row">
             <div class="col-md-12">
-                <x-SuppliesRequestEditContainer
-                    :request-type="PurchaseRequestType::PRODUCT"
-                    :request-id="$request->id"
-                    :request-user-id="$request->user_id"
-                    :request-status="$request->status"
-                    :amount="$request?->product?->amount"
-                    :purchase-order="$request->purchase_order" />
+                <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::PRODUCT" :request-id="$request->id" :request-user-id="$request->user_id" :request-status="$request->status"
+                    :amount="$request?->product?->amount" :purchase-order="$request->purchase_order" />
             </div>
         </div>
 
@@ -117,7 +123,8 @@
                                     <h4><i class="fa fa-user"></i> <strong>Informações do solicitante</strong></h4>
                                     <hr>
                                     <div class="tab-content padding">
-                                        <p><strong>Quem está solicitando: </strong> {{ $request->requester?->name ?? '---' }}</p>
+                                        <p><strong>Quem está solicitando: </strong>
+                                            {{ $request->requester?->name ?? '---' }}</p>
                                         <p><strong>E-mail do solicitante:</strong> {{ $request->user->email }}</p>
                                         <p><strong>Nome do solicitante:</strong> {{ $request->user->person->name }}</p>
                                         <p>
@@ -247,7 +254,8 @@
                                 </div>
 
                                 <div class="request-details-content-box-product">
-                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong> Parcelas</strong></h4>
+                                    <h4 style="padding: 0 15px"><i class="glyphicon glyphicon-list-alt"></i> <strong>
+                                            Parcelas</strong></h4>
                                     @if ($request?->product?->installments)
                                         @foreach ($request->product->installments as $installmentIndex => $installment)
                                             <div class="request-details-content-box-product-installment">
@@ -394,8 +402,7 @@
                                                                 Categoria:</strong> {{ $productCategory }}</p>
 
                                                         @foreach ($products as $index => $productItem)
-                                                            <div
-                                                                class="request-details-content-box-products-product">
+                                                            <div class="request-details-content-box-products-product">
                                                                 <p><strong><i class="glyphicon glyphicon-tag"></i>
                                                                         Produto nº {{ $index + 1 }}:</strong></p>
 
@@ -422,6 +429,20 @@
                                                                     <p class="col-xs-4" style="margin: 0">
                                                                         <strong>Modelo do produto:</strong>
                                                                         {{ $productItem->model ?? '---' }}
+                                                                    </p>
+                                                                    <p class="col-xs-4" style="margin: 0">
+                                                                        <strong><i class="fa fa-link"></i> Link de
+                                                                            sugestão :</strong>
+                                                                            @if ($productItem->link)
+                                                                                <a class="product-link"
+                                                                                    href="{{ $productItem->link }}"
+                                                                                    target="_blank"
+                                                                                    title="{{ $productItem->link }}">
+                                                                                    {{ $productItem->link }}
+                                                                                </a>
+                                                                            @else
+                                                                                ---
+                                                                            @endif
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -498,6 +519,5 @@
 
     @push('scripts')
         <script type="module" src="{{ asset('js/supplies/details-purchase-request-amount.js') }}"></script>
-   @endpush
-
+    @endpush
 </x-app>

@@ -43,6 +43,7 @@ class PurchaseRequestProduct extends Model
         'model',
         'color',
         'size',
+        'link',
         'purchase_request_id',
         'product_category_id',
         'supplier_id',
