@@ -135,7 +135,7 @@ class UserProfileController extends Controller
                 }
             }
 
-            $this->userProfileService->update($userProfile, $abilities);
+            $userProfile->abilities()->sync($abilities);
 
             session()->flash('success', "Perfil $userProfile->name foi atualizado com sucesso.");
             return redirect()->route('profile.index');
@@ -147,26 +147,26 @@ class UserProfileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $name): RedirectResponse
+    public function destroy(UserProfile $userProfile): RedirectResponse
     {
         try {
-            if (MainProfile::tryFrom($name)) {
+            if (MainProfile::tryFrom($userProfile->name)) {
                 throw new \Exception('Não é possível excluir esse perfil!');
             }
 
-            $profile = $this->userProfileService->profileByName($name)->first();
+            $profile = $this->userProfileService->profileByName($userProfile->name)->first();
             if (!$profile) {
                 throw new \Exception('Ops! Esse não perfil existe.');
             }
 
             $profileUsers = $profile->user->count();
             if ($profileUsers) {
-                throw new \Exception("Ops! Desculpe, a exclusão do perfil foi interrompida. Ainda existe(m) $profileUsers usuário(s) com perfil $name.");
+                throw new \Exception("Ops! Desculpe, a exclusão do perfil foi interrompida. Ainda existe(m) $profileUsers usuário(s) com perfil $userProfile->name.");
             }
 
-            $this->userProfileService->destroy($profile);
+            $userProfile->delete();
 
-            session()->flash('success', "Perfil $name foi excluído com sucesso.");
+            session()->flash('success', "Perfil $userProfile->name foi excluído com sucesso.");
             return redirect()->back();
         } catch (\Throwable $th) {
             return redirect()->back()->withErrors($th->getMessage());

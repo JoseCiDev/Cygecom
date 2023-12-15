@@ -61,7 +61,7 @@
                                         <i class="fa-solid fa-sliders"></i>
                                     </a>
 
-                                    <button class="btn btn-mini btn-secondary" data-route="profile.destroy" data-name="perfil {{ $profile->name }}" data-id="{{ $profile->name }}"
+                                    <button class="btn btn-mini btn-secondary" data-route="profile.destroy" data-name="perfil {{ $profile->name }}" data-id="{{ $profile->id }}"
                                         data-bs-toggle="modal" data-bs-target="#modal-delete">
                                         <i class="fa-solid fa-trash" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Excluir perfil"></i>
                                     </button>

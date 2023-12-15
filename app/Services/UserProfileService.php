@@ -32,31 +32,6 @@ class UserProfileService
     }
 
     /**
-     * Atualiza perfil com habilidades
-     * @param UserProfile $userProfile
-     * @param Collection|array $abilities
-     * @return void
-     */
-    public function update(UserProfile $userProfile, Collection|array $abilities): void
-    {
-        DB::transaction(function () use ($userProfile, $abilities) {
-            $userProfile->abilities()->sync($abilities);
-        });
-    }
-
-    /**
-     * Exclui perfil hard
-     * @param UserProfile $userProfile
-     * @return void
-     */
-    public function destroy(UserProfile $userProfile): void
-    {
-        DB::transaction(function () use ($userProfile) {
-            $userProfile->delete();
-        });
-    }
-
-    /**
      * @param string $name
      * @return Builder Query builder de UserProfile pelo nome e com relações
      */
