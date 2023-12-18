@@ -673,6 +673,14 @@
                             </p>
                         </div>
                         <div class="productivity-report-item-info-bottom-row">
+                            <span id="requests-by-supplies-qtd" class="productivity-report-item-info-bottom-row-text-qtd">
+                                0
+                            </span>
+                            <p class="productivity-report-item-info-bottom-row-text">
+                                contratações por suprimentos
+                            </p>
+                        </div>
+                        <div class="productivity-report-item-info-bottom-row">
                             <span id="finished-requests-qtd" class="productivity-report-item-info-bottom-row-text-qtd">
                                 0
                             </span>
@@ -1018,6 +1026,7 @@
                             createOrUpdateChartBar(chartDataResponse);
 
                             $('#requests-by-users-qtd').text(response.requestsByUsersQtd);
+                            $('#requests-by-supplies-qtd').text(response.requestsBySuppliesQtd);
 
                             $('#productivityTable tbody').css('opacity', '1')
                         }

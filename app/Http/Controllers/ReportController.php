@@ -211,8 +211,11 @@ class ReportController extends Controller
                     }),
             ];
 
-            $countQuery = clone ($query);
-            $requestsByUsersQtd = $countQuery->where('is_supplies_contract', false)->count();
+            $countByUsersQuery = clone ($query);
+            $requestsByUsersQtd = $countByUsersQuery->where('is_supplies_contract', false)->count();
+
+            $countBySuppliesQuery = clone ($query);
+            $requestsBySuppliesQtd = $countBySuppliesQuery->where('is_supplies_contract', true)->count();
 
             $orderValue = $this->reportService->productivityOrder($query, $orderColumnIndex);
             $query->orderBy($orderValue, $orderDirection);
@@ -233,6 +236,7 @@ class ReportController extends Controller
             'recordsFiltered' => $isAll ? $requests->count() : $requests->total(),
             'chartData' => $chartData,
             'requestsByUsersQtd' => $requestsByUsersQtd,
+            'requestsBySuppliesQtd' => $requestsBySuppliesQtd,
             'days' => $days,
             'finishedRequests' => $finishedRequests
         ], 200);
