@@ -1,6 +1,10 @@
 <x-app>
     @push('styles')
         <style>
+            .ability-list-title {
+                margin-top: 20px;
+            }
+
             .color-info {
                 display: flex;
                 flex-wrap: wrap;
@@ -61,7 +65,8 @@
                 }
 
                 .profile-form .list-group .list-group-item {
-                    flex: 1 0 33%;
+                    flex: 1 0 calc(50% - 4px);
+                    max-width: calc(50% - 4px);
                 }
             }
 
@@ -78,7 +83,8 @@
 
             @media(min-width: 1440px) {
                 .profile-form .list-group .list-group-item {
-                    flex: 1 0 24%;
+                    flex: 1 0 calc(25% - 4px);
+                    max-width: calc(25% - 4px);
                 }
             }
         </style>
@@ -128,9 +134,9 @@
             <button class="btn btn-secondary" data-profile="diretor"><i class="fa-solid fa-plus-minus"></i> habililidades de diretor</button>
         </div>
 
-        <label for="user-abilities">Lista de habilidades para o novo perfil</label>
+        <h3 class="ability-list-title">Esse perfil pode acessar quais dados e telas?</h3>
         <ul class="list-group" id="user-abilities">
-            @foreach ($abilities as $ability)
+            @foreach ($getAbilities as $ability)
                 @php
                     $nameParts = explode('.', $ability->name);
                     $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
@@ -140,6 +146,66 @@
                     <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}" value="{{ $ability->id }}"
                             @checked($profileNames->contains('normal')) data-profiles='{{ $profileNames }}'>
+                        <label class="form-check-label" for="ability-{{ $ability->id }}">
+                            {{ $ability->description }}
+                        </label>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+
+        <h3 class="ability-list-title">Esse perfil pode modificar quais dados?</h3>
+        <ul class="list-group" id="user-abilities">
+            @foreach ($postAbilities as $ability)
+                @php
+                    $nameParts = explode('.', $ability->name);
+                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                    $profileNames = $ability->profiles->pluck('name');
+                @endphp
+                <li class="list-group-item {{ $method }}">
+                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
+                            value="{{ $ability->id }}" @checked($profileNames->contains('normal')) data-profiles='{{ $profileNames }}'>
+                        <label class="form-check-label" for="ability-{{ $ability->id }}">
+                            {{ $ability->description }}
+                        </label>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+
+        <h3 class="ability-list-title">O que esse perfil pode excluir?</h3>
+        <ul class="list-group" id="user-abilities">
+            @foreach ($deleteAbilities as $ability)
+                @php
+                    $nameParts = explode('.', $ability->name);
+                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                    $profileNames = $ability->profiles->pluck('name');
+                @endphp
+                <li class="list-group-item {{ $method }}">
+                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
+                            value="{{ $ability->id }}" @checked($profileNames->contains('normal')) data-profiles='{{ $profileNames }}'>
+                        <label class="form-check-label" for="ability-{{ $ability->id }}">
+                            {{ $ability->description }}
+                        </label>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+
+        <h3 class="ability-list-title">Ao acessar e modificar dados esse perfil é autorizado como?</h3>
+        <ul class="list-group" id="user-abilities">
+            @foreach ($authorizeAbilities as $ability)
+                @php
+                    $nameParts = explode('.', $ability->name);
+                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                    $profileNames = $ability->profiles->pluck('name');
+                @endphp
+                <li class="list-group-item {{ $method }}">
+                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
+                            value="{{ $ability->id }}" @checked($profileNames->contains('normal')) data-profiles='{{ $profileNames }}'>
                         <label class="form-check-label" for="ability-{{ $ability->id }}">
                             {{ $ability->description }}
                         </label>

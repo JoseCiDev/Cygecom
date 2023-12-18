@@ -34,7 +34,19 @@ class UserProfileController extends Controller
     {
         $abilities = Ability::with('users', 'profiles')->get();
 
-        return view('user-profiles.create', ['abilities' => $abilities]);
+        $groupedAbilities = $abilities->groupBy(function ($ability) {
+            $firstName = explode('.', $ability->name)[0];
+            return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
+        });
+
+        $params = [
+            'getAbilities' => $groupedAbilities->get('get', collect()),
+            'postAbilities' => $groupedAbilities->get('post', collect()),
+            'deleteAbilities' => $groupedAbilities->get('delete', collect()),
+            'authorizeAbilities' => $groupedAbilities->get('authorize', collect()),
+        ];
+
+        return view('user-profiles.create', $params);
     }
 
     /**
