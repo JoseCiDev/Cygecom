@@ -162,7 +162,11 @@ class ServiceController extends Controller
         }
 
         if ($this->isAuthorizedToUpdate($purchaseRequest)) {
-            $data = ['supplies_user_id' => auth()->user()->id, 'responsibility_marked_at' => now()];
+            $data = [
+                'supplies_user_id' => auth()->user()->id,
+                'responsibility_marked_at' => now(),
+                'status' => PurchaseRequestStatus::EM_TRATATIVA->value,
+            ];
             $purchaseRequestUpdated = $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
         }
 
