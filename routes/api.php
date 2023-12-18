@@ -17,18 +17,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::group(['prefix' => 'user'], function () {
-        Route::get('/', function (Request $request) {
-            return $request->user();
-        });
-
-        Route::middleware('can:get.user.show.json')->get('/show/{id}', [UserController::class, 'showJson'])->name('user.show.json');
-        Route::middleware('can:post.user.abilities.store')->post('/abilities/store/{userId}', [App\Http\Controllers\Auth\UserController::class, 'storeAbilities'])->name('user.abilities.store');
+    Route::group(['prefix' => 'users'], function () {
+        Route::middleware('can:get.api.users.show')->get('/show/{id}', [UserController::class, 'showJson'])->name('api.user.show');
+        Route::middleware('can:post.api.user.abilities.store')->post('/abilities/store/{userId}', [App\Http\Controllers\Auth\UserController::class, 'storeAbilities'])->name('api.user.abilities.store');
+        Route::middleware('can:delete.api.users.destroy')->delete('/destroy/{user}', [App\Http\Controllers\Auth\UserController::class, 'destroy'])->name('api.users.destroy');
     });
 
     Route::group(['prefix' => 'suppliers'], function () {
         Route::middleware('can:get.api.suppliers.index')->get('/', [SupplierController::class, 'indexAPI'])->name('api.suppliers.index');
         Route::middleware('can:post.api.suppliers.register')->post('/register', [SupplierController::class, 'registerAPI'])->name('api.supplier.register');
+        Route::middleware('can:delete.api.suppliers.destroy')->delete('/destroy/{supplier}', [App\Http\Controllers\SupplierController::class, 'destroy'])->name('api.suppliers.destroy');
     });
 
     Route::group(['prefix' => 'products'], function () {
@@ -45,5 +43,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::group(['prefix' => 'requests'], function () {
         Route::get('/show/{id}', [PurchaseRequestController::class, 'showAPI'])->name('api.requests.show');
+        Route::middleware('can:delete.api.requests.destroy')->delete('/destroy/{purchaseRequest}', [App\Http\Controllers\PurchaseRequestController::class, 'destroy'])->name('api.requests.destroy');
+    });
+
+    Route::group(['prefix' => 'profile'], function () {
+        Route::middleware('can:delete.api.userProfile.destroy')->delete('/destroy/{userProfile}', [App\Http\Controllers\UserProfileController::class, 'destroy'])->name('api.userProfile.destroy');
     });
 });

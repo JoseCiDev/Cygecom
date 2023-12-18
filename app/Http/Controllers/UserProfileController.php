@@ -8,6 +8,7 @@ use App\Enums\MainProfile;
 use App\Http\Requests\User\{UpdateProfileRequest, StoreProfileRequest};
 use App\Models\{UserProfile, Ability};
 use App\Services\UserProfileService;
+use Illuminate\Http\JsonResponse;
 
 class UserProfileController extends Controller
 {
@@ -146,8 +147,11 @@ class UserProfileController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param UserProfile $userProfile
+     * @return JsonResponse
      */
-    public function destroy(UserProfile $userProfile): RedirectResponse
+    public function destroy(UserProfile $userProfile): JsonResponse
     {
         try {
             if (MainProfile::tryFrom($userProfile->name)) {
@@ -166,10 +170,9 @@ class UserProfileController extends Controller
 
             $userProfile->delete();
 
-            session()->flash('success', "Perfil $userProfile->name foi excluído com sucesso.");
-            return redirect()->back();
+            return response()->json(['message' => "Perfil $userProfile->name foi excluído com sucesso. Recarregando...", 'redirect' => route('profile.index')]);
         } catch (\Throwable $th) {
-            return redirect()->back()->withErrors($th->getMessage());
+            return response()->json(['error' => 'Não foi possível deletar o registro no banco de dados.', 'message' => $th->getMessage()], 500);
         }
     }
 }

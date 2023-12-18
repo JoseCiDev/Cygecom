@@ -90,7 +90,9 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right" style="padding: 0">
             <x-modals.delete />
-            <button data-cy="btn-delete-request" data-route="requests.destroy" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
+            <x-toast />
+
+            <button data-cy="btn-delete-request" data-route="api.requests.destroy" data-name="{{ 'Solicitação de produto - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-bs-toggle="modal" data-bs-target="#modal-delete" rel="tooltip" title="Excluir"
                 class="btn btn-primary btn-danger pull-right">
                 Excluir solicitação

@@ -144,8 +144,8 @@
                         Editar dados usuário
                     </a>
 
-                    <button data-route="users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario" data-bs-toggle="modal"
-                        data-bs-target="#modal-delete" rel="tooltip" title="Excluir" class="btn btn-primary btn-small btn-danger">
+                    <button data-route="api.users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario"
+                        data-bs-toggle="modal" data-bs-target="#modal-delete" rel="tooltip" title="Excluir" class="btn btn-primary btn-small btn-danger">
                         Excluir usuário
                     </button>
                 </div>

@@ -35,38 +35,39 @@
     $hasSentRequest = $issetPurchaseRequest && $requestAlreadySent && !$isCopy;
 @endphp
 
+@push('styles')
+    <style>
+        #service-title {
+            border: 1px solid rgb(195, 195, 195);
+        }
 
-<style>
-    #service-title {
-        border: 1px solid rgb(195, 195, 195);
-    }
+        #service-title::placeholder {
+            font-size: 16px;
+        }
 
-    #service-title::placeholder {
-        font-size: 16px;
-    }
+        #service-title {
+            font-size: 20px;
+        }
 
-    #service-title {
-        font-size: 20px;
-    }
+        .label-service-title {
+            font-size: 16px;
+        }
 
-    .label-service-title {
-        font-size: 16px;
-    }
+        .cost-center-container {
+            margin-bottom: 5px;
+        }
 
-    .cost-center-container {
-        margin-bottom: 5px;
-    }
+        h4 {
+            font-size: 20px;
+        }
 
-    h4 {
-        font-size: 20px;
-    }
-
-    div.dataTables_wrapper div.dataTables_length,
-    div.dataTables_wrapper div.dataTables_info {
-        display: none;
-        /* remover espao em branco do datatables*/
-    }
-</style>
+        div.dataTables_wrapper div.dataTables_length,
+        div.dataTables_wrapper div.dataTables_info {
+            display: none;
+            /* remover espao em branco do datatables*/
+        }
+    </style>
+@endpush
 
 <div class="row" style="margin: 0 0 30px;">
 
@@ -87,8 +88,11 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right" style="padding: 0">
             <x-modals.delete />
-            <button data-cy="btn-delete-request" data-route="requests.destroy" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
-                data-id="{{ $purchaseRequest->id }}" data-bs-toggle="modal" data-bs-target="#modal" rel="tooltip" title="Excluir" class="btn btn-primary btn-danger pull-right">
+            <x-toast />
+
+            <button data-cy="btn-delete-request" data-route="api.requests.destroy" data-name="{{ 'Solicitação de serviço pontual - Nº ' . $purchaseRequest->id }}"
+                data-id="{{ $purchaseRequest->id }}" data-bs-toggle="modal" data-bs-target="#modal-delete" rel="tooltip" title="Excluir"
+                class="btn btn-primary btn-danger pull-right">
                 Excluir solicitação
             </button>
         </div>

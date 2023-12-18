@@ -8,7 +8,6 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware('can:get.requests.index.own')->get('/own', [App\Http\Controllers\PurchaseRequestController::class, 'indexOwn'])->name('requests.index.own');
         Route::middleware('can:get.requests.dashboard')->get('/dashboard', [App\Http\Controllers\PurchaseRequestController::class, 'dashboard'])->name('requests.dashboard');
         Route::middleware('can:get.requests.edit')->get('/{type}/edit/{id}', [App\Http\Controllers\PurchaseRequestController::class, 'edit'])->name('requests.edit');
-        Route::middleware('can:post.requests.destroy')->post('/destroy/{id}', [App\Http\Controllers\PurchaseRequestController::class, 'destroy'])->name('requests.destroy');
         Route::middleware('can:delete.requests.file.delete')->delete('/remove-file/{id}', [App\Http\Controllers\PurchaseRequestController::class, 'fileDelete'])->name('requests.file.delete');
 
         Route::group(['prefix' => 'service'], function () {

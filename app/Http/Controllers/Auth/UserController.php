@@ -178,19 +178,17 @@ class UserController extends Controller
      * Delete a user.
      *
      * @param User $user
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function destroy(int $id): RedirectResponse
+    public function destroy(int $id): JsonResponse
     {
         try {
             $this->userService->deleteUser($id);
+
+            return response()->json(['message' => 'Usuário deletado com sucesso! Recarregando...', 'redirect' => route('users.index')]);
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi deletar o registro no banco de dados.', $error->getMessage()]);
+            return response()->json(['error' => 'Não foi possível deletar o registro no banco de dados.', 'message' => $error->getMessage()], 500);
         }
-
-        session()->flash('success', "Usuário deletado com sucesso!");
-
-        return redirect()->route('users.index');
     }
 
     public function showJson(int $id)

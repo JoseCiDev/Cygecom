@@ -194,7 +194,7 @@
                     </a>
                 @endcan
 
-                @can('get.user.show.json', 'post.user.abilities.store')
+                @can('get.api.users.show', 'post.api.user.abilities.store')
                     <button class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-edit-user-ability" data-user-id={{ $user->id }}>
                         <i class="fa-solid fa-sliders"></i>
                         Editar habilidades
@@ -202,7 +202,7 @@
                 @endcan
 
                 @if (auth()->user()->id !== $user->id)
-                    <button data-route="users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario"
+                    <button data-route="api.users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario"
                         data-bs-toggle="modal" data-bs-target="#modal-delete" rel="tooltip" title="Excluir" class="btn btn-primary btn-small btn-danger pull-right">
                         Excluir usuário
                     </button>

@@ -35,37 +35,39 @@
     $hasSentRequest = $issetPurchaseRequest && $requestAlreadySent && !$isCopy;
 @endphp
 
-<style>
-    #contract-title {
-        border: 1px solid rgb(195, 195, 195);
-    }
+@push('styles')
+    <style>
+        #contract-title {
+            border: 1px solid rgb(195, 195, 195);
+        }
 
-    #contract-title::placeholder {
-        font-size: 16px;
-    }
+        #contract-title::placeholder {
+            font-size: 16px;
+        }
 
-    #contract-title {
-        font-size: 20px;
-    }
+        #contract-title {
+            font-size: 20px;
+        }
 
-    .label-contract-title {
-        font-size: 16px;
-    }
+        .label-contract-title {
+            font-size: 16px;
+        }
 
-    .cost-center-container {
-        margin-bottom: 10px;
-    }
+        .cost-center-container {
+            margin-bottom: 10px;
+        }
 
-    h4 {
-        font-size: 20px;
-    }
+        h4 {
+            font-size: 20px;
+        }
 
-    div.dataTables_wrapper div.dataTables_length,
-    div.dataTables_wrapper div.dataTables_info {
-        display: none;
-        /* remover espao em branco do datatables*/
-    }
-</style>
+        div.dataTables_wrapper div.dataTables_length,
+        div.dataTables_wrapper div.dataTables_info {
+            display: none;
+            /* remover espao em branco do datatables*/
+        }
+    </style>
+@endpush
 
 <div class="row" style="margin: 0 0 30px;">
 
@@ -87,7 +89,9 @@
     @if (isset($purchaseRequest) && !$requestAlreadySent)
         <div class="col-md-6 pull-right" style="padding: 0">
             <x-modals.delete />
-            <button data-cy="btn-delete-request" data-route="requests.destroy" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
+            <x-toast />
+
+            <button data-cy="btn-delete-request" data-route="api.requests.destroy" data-name="{{ 'Solicitação de serviço recorrente - Nº ' . $purchaseRequest->id }}"
                 data-id="{{ $purchaseRequest->id }}" data-bs-toggle="modal" data-bs-target="#modal-delete" rel="tooltip" title="Excluir"
                 class="btn btn-primary btn-danger pull-right">
                 Excluir solicitação
@@ -444,7 +448,7 @@
                     </h3>
                     <div class="col-sm-6 div-btn-add-installment" style="margin-top:15px;" hidden>
                         <button type="button" class="btn btn-primary btn-small btn-success pull-right btn-add-installment" data-cy="btn-add-installment"
-                            data-route="users.destroy" rel="tooltip" title="Adicionar Parcela">
+                            data-route="api.users.destroy" rel="tooltip" title="Adicionar Parcela">
                             + Adicionar parcela
                         </button>
                     </div>

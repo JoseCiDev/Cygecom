@@ -14,12 +14,12 @@ class Abilities extends Seeder
             // Abilities
             ['id' => 1, 'name' => 'get.users.show', 'description' => 'Acessar tela de um usuário'],
             ['id' => 2, 'name' => 'post.profile.store', 'description' => 'Registrar novo perfil'],
-            ['id' => 45, 'name' => 'post.user.abilities.store', 'description' => 'Permite atualizar habilidades dos usuários através da API'],
+            ['id' => 45, 'name' => 'post.api.user.abilities.store', 'description' => 'Permite atualizar habilidades dos usuários através da API'],
             ['id' => 57, 'name' => 'get.profile.create', 'description' => 'Acessar tela de criação de perfil'],
             ['id' => 58, 'name' => 'get.profile.index', 'description' => 'Acessar tela de lista de perfis'],
-            ['id' => 59, 'name' => 'post.profile.destroy', 'description' => 'Excluir um perfil'],
-            ['id' => 60, 'name' => 'get.profile.edit', 'description' => 'Acessar tela de edição de perfil'],
-            ['id' => 61, 'name' => 'post.profile.update', 'description' => 'Atualizar perfil'],
+            ['id' => 59, 'name' => 'delete.api.userProfile.destroy', 'description' => 'Excluir um perfil'],
+            ['id' => 41, 'name' => 'get.profile.edit', 'description' => 'Acessar tela de edição de perfil'],
+            ['id' => 42, 'name' => 'post.profile.update', 'description' => 'Atualizar perfil'],
 
             // Web
             ['id' => 3, 'name' => 'get.profile', 'description' => 'Acessar tela do seu perfil'],
@@ -57,27 +57,24 @@ class Abilities extends Seeder
             ['id' => 27, 'name' => 'post.requests.contract.update', 'description' => 'Atualizar nova solicitação de serviço recorrente'],
             ['id' => 28, 'name' => 'get.requests.edit', 'description' => 'Acessar tela de editação de solicitação'],
             ['id' => 29, 'name' => 'delete.requests.file.delete', 'description' => 'Excluir anexos da solicitação'],
-            ['id' => 30, 'name' => 'post.requests.destroy', 'description' => 'Excluir solicitação'],
+            ['id' => 30, 'name' => 'delete.api.requests.destroy', 'description' => 'Excluir solicitação'],
             ['id' => 49, 'name' => 'get.api.product.suggestion.index', 'description' => 'Permite buscar sugestões de produtos através da API. É usado em novas solicitações'],
             ['id' => 50, 'name' => 'post.api.supplies.files.upload', 'description' => 'Permite upload de anexos da solicitação através da API'],
 
             // Users
             ['id' => 31, 'name' => 'get.users.create', 'description' => 'Acessar tela de registrar novo usuário'],
             ['id' => 32, 'name' => 'post.users.store', 'description' => 'Registrar novo usuário'],
-            ['id' => 33, 'name' => 'post.users.destroy', 'description' => 'Excluir usuário'],
+            ['id' => 33, 'name' => 'delete.api.users.destroy', 'description' => 'Excluir usuário'],
             ['id' => 34, 'name' => 'get.users.index', 'description' => 'Acessar tela de lista de usuários'],
             ['id' => 35, 'name' => 'get.user.edit', 'description' => 'Acessar tela de edição do usuário'],
-            ['id' => 46, 'name' => 'get.user.show.json', 'description' => 'Permite buscar usuário por id através da API'],
+            ['id' => 46, 'name' => 'get.api.users.show', 'description' => 'Permite buscar usuário por id através da API'],
 
             // Suppliers
             ['id' => 36, 'name' => 'get.suppliers.index', 'description' => 'Acessar tela de listagem de todos fornecedores'],
             ['id' => 37, 'name' => 'get.suppliers.edit', 'description' => 'Acessar tela de edição de fornecedor'],
             ['id' => 38, 'name' => 'get.suppliers.create', 'description' => 'Acessar tela de registrar novo fornecedor'],
-            ['id' => 39, 'name' => 'post.suppliers.destroy', 'description' => 'Excluir fornecedor'],
+            ['id' => 39, 'name' => 'delete.api.suppliers.destroy', 'description' => 'Excluir fornecedor'],
             ['id' => 40, 'name' => 'post.suppliers.update', 'description' => 'Atualizar fornecedor'],
-            ['id' => 41, 'name' => 'get.supplier.service.detail', 'description' => 'Acessar tela de edição de detalhes de uma solicitação de serviço pontual a partir de um fornecedor'],
-            ['id' => 42, 'name' => 'get.supplier.product.detail', 'description' => 'Acessar tela de edição de detalhes de uma solicitação de produto a partir de um fornecedor'],
-            ['id' => 43, 'name' => 'get.supplier.contract.detail', 'description' => 'Acessar tela de edição de detalhes de uma solicitação de serviço recorrente a partir de um fornecedor'],
 
             // Reports
             ['id' => 44, 'name' => 'get.reports.index', 'description' => 'Acessar tela de relatório de solicitação'],
@@ -87,6 +84,7 @@ class Abilities extends Seeder
         $authorizesAbilities = [
             ['id' => 52, 'name' => 'admin', 'description' => 'Autorização interna de administrador'],
             ['id' => 53, 'name' => 'gestor_usuarios', 'description' => 'Autorização interna de gestor de usuários'],
+            ['id' => 43, 'name' => 'gestor_fornecedores', 'description' => 'Autorização interna de gestor de fornecedores'],
             ['id' => 54, 'name' => 'diretor', 'description' => 'Autorização interna de diretor'],
             ['id' => 55, 'name' => 'suprimentos_hkm', 'description' => 'Autorização interna de suprimentos HKM'],
             ['id' => 56, 'name' => 'suprimentos_inp', 'description' => 'Autorização interna de suprimentos INP'],
@@ -117,7 +115,9 @@ class Abilities extends Seeder
 
         $supplierManagerAbilities = [
             ...$normalAbilities,
-            36, 37, 38, 39, 40, 41, 42, 43, // Suppliers
+            36, 37, 38, 39, 40, // Suppliers
+            10, 11, 12, // Supplies
+            43 // Authorizes
         ];
 
         $directorAbilities = [

@@ -30,6 +30,7 @@
 
     <x-modals.delete />
     <x-modals.edit-user-ability :abilities="$abilities" />
+    <x-toast />
 
     <div class="box-content nopadding regular-text">
 
@@ -73,7 +74,7 @@
                                     rel="tooltip">
                                     <i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar dados usuário"></i>
                                 </a>
-                                <button data-route="users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" rel="tooltip"
+                                <button data-route="api.users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" rel="tooltip"
                                     class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-delete"
                                     data-cy="btn-modal-excluir-usuario-{{ $index }}">
                                     <i class="fa-solid fa-trash" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Excluir usuário"></i>

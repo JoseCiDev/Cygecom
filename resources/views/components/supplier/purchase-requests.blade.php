@@ -1,6 +1,6 @@
 @props([
     'supplier' => null,
-    'purchaseRequests' => null
+    'purchaseRequests' => null,
 ])
 
 <div class="alert alert-info">
@@ -19,8 +19,8 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box-content nopadding regular-text">
-            <table class="table table-hover table-nomargin table-striped" id="table-striped" style="width:100%"
-                data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
+            <table class="table table-hover table-nomargin table-striped" id="table-striped" style="width:100%" data-column_filter_dateformat="dd-mm-yy" data-nosort="0"
+                data-checkall="all">
                 <thead>
                     <tr>
                         <th>Nº</th>
@@ -45,12 +45,12 @@
                             $name = '---';
                             if ($purchaseRequest?->type === PurchaseRequestType::SERVICE) {
                                 $name = $purchaseRequest?->service?->name ?? '---';
-                                $route = 'supplier.service.detail';
+                                $route = 'supplies.service.show';
                             } elseif ($purchaseRequest?->type === PurchaseRequestType::CONTRACT) {
                                 $name = $purchaseRequest?->contract?->name ?? '---';
-                                $route = 'supplier.contract.detail';
+                                $route = 'supplier.contract.show';
                             } elseif ($purchaseRequest?->type === PurchaseRequestType::PRODUCT) {
-                                $route = 'supplier.product.detail';
+                                $route = 'supplier.product.show';
                             }
                         @endphp
                         <tr>
@@ -65,13 +65,8 @@
 
                             {{-- BTN AÇÕES --}}
                             <td style="white-space: nowrap;">
-                                <a href="{{route($route, ['id' => $purchaseRequest->id])}}"
-                                    class="btn btn-small btn-secondary"
-                                    rel="tooltip"
-                                    target="_blank"
-                                    title="Abrir"
-                                    data-cy="btn-open-supplier-request-details-{{$index}}"
-                                >
+                                <a href="{{ route($route, ['id' => $purchaseRequest->id]) }}" class="btn btn-small btn-secondary" rel="tooltip" target="_blank" title="Abrir"
+                                    data-cy="btn-open-supplier-request-details-{{ $index }}">
                                     Acessar detalhes <i class="fa fa-share"></i>
                                 </a>
                             </td>

@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Providers\{SupplierService, ValidatorService};
+use App\Models\Supplier;
 
 class SupplierController extends Controller
 {
@@ -162,16 +163,20 @@ class SupplierController extends Controller
         return redirect()->route('suppliers.edit', ['id' => $id]);
     }
 
-    public function destroy(int $id): RedirectResponse
+    /**
+     * Delete a supplier.
+     *
+     * @param Supplier $supplier
+     * @return JsonResponse
+     */
+    public function destroy(Supplier $supplier): JsonResponse
     {
         try {
-            $this->supplierService->deleteSupplier($id);
+            $this->supplierService->deleteSupplier($supplier->id);
+
+            return response()->json(['message' => 'Fornecedor deletado com sucesso!. Recarregando...', 'redirect' => route('suppliers.index')]);
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi deletar o registro no banco de dados.', $error->getMessage()]);
+            return response()->json(['error' => 'Não foi possível deletar o registro no banco de dados.', 'message' => $error->getMessage()], 500);
         }
-
-        session()->flash('success', "Fornecedor deletado com sucesso!");
-
-        return redirect()->route('suppliers.index');
     }
 }

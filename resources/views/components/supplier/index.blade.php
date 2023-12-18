@@ -11,6 +11,7 @@
 <x-app>
 
     <x-modals.delete />
+    <x-toast />
 
     <div class="row">
         <div class="col-sm-12">
@@ -134,11 +135,11 @@
                     orderable: false,
                     render: (data) => (
                         '<a href="suppliers/edit/' + data.id + '" ' +
-                        'class="btn" rel="tooltip" title="Editar" data-cy="btn-edit-supplier-' +
+                        'class="btn btn-mini btn-secondary" style="margin-right: 5px" rel="tooltip" title="Editar" data-cy="btn-edit-supplier-' +
                         data.id + '"><i class="fa fa-edit"></i></a>' +
-                        '<button data-route="suppliers.destroy" data-name="' + data.corporate_name +
+                        '<button data-route="api.suppliers.destroy" data-name="' + data.corporate_name +
                         '" data-id="' + data.id +
-                        '" rel="tooltip" title="Excluir" class="btn" data-bs-toggle="modal" data-bs-target="#modal-delete" data-cy="btn-modal-delete-supplier"><i class="fa fa-times"></i></button>'
+                        '" rel="tooltip" title="Excluir" class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-delete" data-cy="btn-modal-delete-supplier"><i class="fa-solid fa-trash"></i></button>'
                     )
                 }
             ],
