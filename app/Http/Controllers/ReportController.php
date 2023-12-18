@@ -25,14 +25,14 @@ class ReportController extends Controller
 
     public function requestsIndex(): View
     {
-        $requestingUsers = $this->reportService->getRequistingUsers();
+        $requestingUsers = $this->reportService->getRequistingUsers()->sortBy('person.name');
         return view('components.reports.requests', ['requestingUsers' => $requestingUsers]);
     }
 
     public function productivityIndex(): View
     {
-        $requestingUsers = $this->reportService->productivityRequestingUsers()->get();
-        $suppliesUsers = $this->userService->getSuppliesUsers()->get();
+        $requestingUsers = $this->reportService->productivityRequestingUsers()->get()->sortBy('person.name');
+        $suppliesUsers = $this->userService->getSuppliesUsers()->get()->sortBy('person.name');
 
         $costCenters = $requestingUsers
             ->pluck('purchaseRequest')
