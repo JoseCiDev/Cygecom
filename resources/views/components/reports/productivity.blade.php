@@ -927,7 +927,8 @@
                                         const requester = item.requester?.name || '---';
                                         const status = enumRequests['status'][item.status];
                                         const suppliesUserName = item.supplies_user?.person.name || '---';
-                                        const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name)
+                                        const costCenters = item.cost_center_apportionment.map((element) =>
+                                                `${element.cost_center.name} / ${element.cost_center.company.name}`)
                                             .join(', ');
                                         const isSuppliesContract = item.is_supplies_contract ? 'Suprimentos' : 'Área solicitante';
                                         const desiredDate = item.desired_date ? moment(item.desired_date).format('DD/MM/YYYY') : '---';
@@ -1073,7 +1074,7 @@
                             render: (costCenter) => {
                                 const $div = $(document.createElement('div')).addClass('tag-category');
 
-                                const costCenters = costCenter.map((element) => element.cost_center.name);
+                                const costCenters = costCenter.map((element) => `${element.cost_center.name} / ${element.cost_center.company.name}`);
                                 if (costCenter.length <= 0) {
                                     return $div.append(`<span class="tag-category-item">---</span>`)[0].outerHTML;
                                 }
