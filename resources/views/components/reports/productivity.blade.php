@@ -932,8 +932,18 @@
                                             .join(', ');
                                         const isSuppliesContract = item.is_supplies_contract ? 'Suprimentos' : 'Área solicitante';
                                         const desiredDate = item.desired_date ? moment(item.desired_date).format('DD/MM/YYYY') : '---';
-                                        const productCategories = item.purchase_request_product.map((product) => product.category.name)
-                                            .join(', ') || '---';
+
+                                        let categories = [];
+                                        item.purchase_request_product
+                                            .map((element) => element.category)
+                                            .forEach((category) => {
+                                                const alreadyExist = categories.some((item) => item.id === category.id);
+                                                if (!alreadyExist) {
+                                                    categories.push(category);
+                                                }
+                                            });
+
+                                        const productCategories = categories.map((category) => category.name).join(', ') || '---';
 
                                         let rowData = [
                                             [
@@ -1101,8 +1111,19 @@
 
                                 const $categoryDiv = $(`<div class="tag-list"></div`)
                                 const $tagListItem = $(`<span class="tag-list-item"></span>`)
-                                const categories = $(purchase_request_product)?.each((_, element) => {
-                                    const $newCategoryItem = $tagListItem.clone().text(element.category.name)
+
+                                let categories = [];
+                                const categoriesFromProducts = purchase_request_product
+                                    .map((element) => element.category)
+                                    .forEach((category) => {
+                                        const alreadyExist = categories.some((item) => item.id === category.id);
+                                        if (!alreadyExist) {
+                                            categories.push(category);
+                                        }
+                                    });
+
+                                $(categories).each((_, category) => {
+                                    const $newCategoryItem = $tagListItem.clone().text(category.name)
                                     $categoryDiv.append($newCategoryItem)
                                 })
 
