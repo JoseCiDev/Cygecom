@@ -485,6 +485,7 @@
                         })
                     },
                     scrollY: '400px',
+                    scrollCollapse: true,
                     scrollX: true,
                     paging: true,
                     processing: true,

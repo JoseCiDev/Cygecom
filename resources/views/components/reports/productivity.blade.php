@@ -500,7 +500,10 @@
             </div>
 
             <div class="request-status-filter form-group">
-                <label for="status" class="regular-text">Status da solicitação:</label>
+                <label for="status" class="regular-text">
+                    <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Status pendente é o filtro padrão"></i>
+                    Status da solicitação:
+                </label>
                 <div class="status">
                     @foreach (PurchaseRequestStatus::cases() as $statusCase)
                         @php
@@ -971,6 +974,7 @@
                         })
                     },
                     scrollY: '400px',
+                    scrollCollapse: true,
                     scrollX: true,
                     paging: true,
                     processing: true,
