@@ -519,7 +519,7 @@
                         @endif
                     @endforeach
                 </div>
-                <button id="all-status-checkbox" type="button" class="btn btn-mini btn-secondary">Marcar todos status</button>
+                <button id="all-status-checkbox" type="button" class="btn btn-mini btn-secondary">Marcar/Desmarcar todos status</button>
             </div>
 
             <div class="selects">
@@ -1159,7 +1159,15 @@
                     $suppliesUsers.val(allValues).trigger('change');
                 })
 
-                $allStatusCheckbox.on('click', (event) => $checkedStatusInputs.each((_, el) => $(el).prop('checked', true)))
+                $allStatusCheckbox.on('click', (event) => {
+                    $checkedStatusInputs.each((_, el) => {
+                        const isPending = $(el).val() === 'pendente';
+                        const isChecked = $(el).is(':checked');
+
+                        $(el).prop('checked', isPending || !isChecked);
+                    });
+
+                });
 
                 $desiredDate.on('change', (event) => handleDateChange(event, true));
                 $dateSince.add($dateUntil).on('change', (event) => handleDateChange(event, false));
