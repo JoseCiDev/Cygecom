@@ -148,7 +148,7 @@ class ReportController extends Controller
         $length = (int) $request->get('length', 10);
         $orderColumnIndex = (int) $request->get('order', [0 => ['column' => 0]])[0]['column'];
         $orderDirection = (string) $request->get('order', [0 => ['dir' => 'asc']])[0]['dir'];
-        $status = (array) $request->get('status', [PurchaseRequestStatus::PENDENTE->value]);
+        $status = (array) $request->get('status');
         $requestType = (array) $request->get('request-type', collect(PurchaseRequestType::cases())->map(fn ($el) => $el->value)->toArray());
         $requestingUsersIds = (array) $request->get('requesting-users-ids', []);
         $costCenterIds = (array) $request->get('cost-center-ids', []);
@@ -188,6 +188,10 @@ class ReportController extends Controller
 
             $suppliesUsersQuery = clone ($query);
             $suppliesUsersQuery = $this->reportService->whereInLogDate($suppliesUsersQuery, $dateSince, $dateUntil, PurchaseRequestStatus::FINALIZADA);
+
+            if (collect($status)->isEmpty()) {
+                $status = [PurchaseRequestStatus::PENDENTE->value];
+            }
 
             $query = $this->reportService->whereInStatusQuery($query, $status);
             $query = $this->reportService->whereInLogDate($query, $dateSince, $dateUntil);
