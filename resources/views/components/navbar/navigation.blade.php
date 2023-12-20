@@ -83,7 +83,8 @@
                 Relatórios
             </button>
             <ul class="dropdown-menu">
-                <li> <a href="{{ route('reports.index.view') }}">Relatórios de solicitações</a> </li>
+                <li> <a href="{{ route('reports.requests.index') }}">Relatório de solicitação</a> </li>
+                <li> <a href="{{route('reports.productivity.index')}}">Relatório de produtividade</a> </li>
             </ul>
         </div>
 

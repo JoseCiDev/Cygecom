@@ -16,7 +16,7 @@ class EmailService extends ServiceProvider
         $requestStatus = strtolower($purchaseRequest->status->label());
         $id = $purchaseRequest->id;
 
-        $requestName = $purchaseRequest[$purchaseRequest->type->value]->name;
+        $requestName = $purchaseRequest[$purchaseRequest->type->value]?->name;
 
         $subject = "Solicitação de " . $requestType . " nº " . $id . ' - Status atualizado para ' . $requestStatus;
 
@@ -41,7 +41,7 @@ class EmailService extends ServiceProvider
         $suppliesUser = $purchaseRequest->suppliesUser->person->name;
         $suppliesUserMail = $purchaseRequest->suppliesUser->email;
 
-        $requestName = $purchaseRequest[$purchaseRequest->type->value]->name;
+        $requestName = $purchaseRequest[$purchaseRequest->type->value]?->name;
 
         $subject = "Solicitação de " . $requestType . " nº " . $id . " - Atribuição de responsável";
 
