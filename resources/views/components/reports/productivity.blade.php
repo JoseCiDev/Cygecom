@@ -12,6 +12,15 @@
             cursor: help;
         }
 
+        .dataTables_wrapper .dataTables_paginate {
+            float: right;
+            margin: 17px 5px 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            row-gap: 5px;
+        }
+
         /* Gráficos */
         .charts-container {
             display: flex;
@@ -288,6 +297,7 @@
             margin: 10px 0;
             display: flex;
             justify-content: left;
+            flex-wrap: wrap;
             gap: 10px
         }
 
