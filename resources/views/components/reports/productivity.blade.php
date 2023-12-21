@@ -770,6 +770,8 @@
                 const $tooltipTriggerList = $('[data-bs-toggle="tooltip"]');
                 const tooltipList = $tooltipTriggerList.map((_, tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
 
+                let isAllStatusChecked = false;
+
                 const addCostCenters = (event, costCenterSelector) => {
                     const $currentElement = $(event.target);
                     const $companyId = $currentElement.data('company-id');
@@ -1180,13 +1182,13 @@
                 })
 
                 $allStatusCheckbox.on('click', (event) => {
+                    isAllStatusChecked = !isAllStatusChecked;
+
                     $checkedStatusInputs.each((_, el) => {
                         const isPending = $(el).val() === 'pendente';
-                        const isChecked = $(el).is(':checked');
 
-                        $(el).prop('checked', isPending || !isChecked);
+                        $(el).prop('checked', isAllStatusChecked || isPending);
                     });
-
                 });
 
                 $desiredDate.on('change', (event) => handleDateChange(event, true));
