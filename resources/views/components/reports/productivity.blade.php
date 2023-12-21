@@ -21,6 +21,12 @@
             row-gap: 5px;
         }
 
+        .finished-qtd-same-period {
+            border: 1px solid var(--grey-primary-color);
+            border-radius: 4px;
+            padding: 5px 10px;
+        }
+
         /* Gráficos */
         .charts-container {
             display: flex;
@@ -693,13 +699,17 @@
                                 contratações por suprimentos
                             </p>
                         </div>
-                        <div class="productivity-report-item-info-bottom-row">
+                        <div class="productivity-report-item-info-bottom-row finished-qtd-same-period">
                             <span id="finished-requests-qtd" class="productivity-report-item-info-bottom-row-text-qtd">
                                 0
                             </span>
                             <p class="productivity-report-item-info-bottom-row-text">
                                 finalizadas que foram pendentes no mesmo período
                             </p>
+                            <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-title="Representa as solicitações que passaram pelo status pendente no período escolhido
+                                e foram finalizadas dentro do mesmo período.
+                                *Aparece independente do status escolhido"></i>
                         </div>
                     </div>
                 </div>
