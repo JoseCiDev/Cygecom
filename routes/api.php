@@ -38,7 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::group(['prefix' => 'reports'], function () {
-        Route::middleware('can:get.reports.index.json')->get('/index', [App\Http\Controllers\ReportController::class, 'indexJson'])->name('reports.index.json');
+        Route::middleware('can:post.reports.requests.index')->post('/requests', [App\Http\Controllers\ReportController::class, 'requestsIndexAPI'])->name('api.reports.requests.index');
+        Route::middleware('can:post.reports.productivity.index')->post('/productivity', [App\Http\Controllers\ReportController::class, 'productivityIndexAPI'])->name('api.reports.productivity.index');
     });
 
     Route::group(['prefix' => 'requests'], function () {

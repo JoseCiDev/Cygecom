@@ -33,12 +33,21 @@ class ReportService
     }
 
     /**
-     * @param string $requestType Recebe uma string dos tipos de solicitação separados por vírgula. Exemplo: "product,service"
+     * @return Builder query para consulta de usuários que possuem solicitações diferentes de status rascunho
      */
-    public function whereInRequestTypeQuery(Builder $query, string $requestType): Builder|InvalidArgumentException
+    public function productivityRequestingUsers(): Builder
     {
-        $requestTypeArray = explode(',', $requestType);
-        $validRequestTypeArray  = collect($requestTypeArray)->filter(fn ($item) => PurchaseRequestType::tryFrom($item));
+        $requestingUsersQuery = User::with('person', 'purchaseRequest.costCenterApportionment.costCenter')
+            ->whereHas('purchaseRequest', fn ($query) => $query->where('status', '!=', PurchaseRequestStatus::RASCUNHO->value));
+        return $requestingUsersQuery;
+    }
+
+    /**
+     * @param array $requestType Recebe um array dos tipos de solicitação. Exemplo: ['product','service']
+     */
+    public function whereInRequestTypeQuery(Builder $query, array $requestType): Builder|InvalidArgumentException
+    {
+        $validRequestTypeArray  = collect($requestType)->filter(fn ($item) => PurchaseRequestType::tryFrom($item));
 
         if ($validRequestTypeArray->isEmpty()) {
             throw new InvalidArgumentException('Array de tipos de solicitações inválido.');
@@ -48,12 +57,11 @@ class ReportService
     }
 
     /**
-     * @param string $status Recebe uma string dos status de solicitação separados por vírgula. Exemplo: "pendente,em_tratativa,em_cotacao"
+     * @param array $status Recebe uma array dos status de solicitação. Exemplo: ['pendente','em_tratativa','em_cotacao']
      */
-    public function whereInStatusQuery(Builder $query, string $status): Builder|InvalidArgumentException
+    public function whereInStatusQuery(Builder $query, array $status): Builder|InvalidArgumentException
     {
-        $statusArray = explode(',', $status);
-        $validStatusArray = collect($statusArray)->filter(fn ($item) => PurchaseRequestStatus::tryFrom($item));
+        $validStatusArray = collect($status)->filter(fn ($item) => PurchaseRequestStatus::tryFrom($item));
 
         if ($validStatusArray->isEmpty()) {
             throw new InvalidArgumentException('Array de status inválido.');
@@ -63,13 +71,11 @@ class ReportService
     }
 
     /**
-     * @param string $requestingUsersIds Recebe uma string com ids de usuários separados por vírgula. Exemplo: "1,2,3"
+     * @param array $requestingUsersIds Recebe um array com ids de usuários.
      */
-    public function whereInRequistingUserQuery(Builder $query, ?string $requestingUsersIds = '', $hasOwnRequests = true): Builder
+    public function whereInRequistingUserQuery(Builder $query, array $requestingUsersIds, $hasOwnRequests = true): Builder
     {
-        $requestingUsersIdsArray = explode(',', $requestingUsersIds);
-
-        $validIds = collect($requestingUsersIdsArray)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id);
+        $validIds = collect($requestingUsersIds)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id);
 
         if (empty($requestingUsersIds)) {
             $validIds = self::getRequistingUsers()->pluck('id');
@@ -88,13 +94,29 @@ class ReportService
     }
 
     /**
-     * @param string $costCenterIds Recebe uma string com ids de cost centers separados por vírgula. Exemplo: "1,2,3"
+     * @param Builder $query Recebe query builder
+     * @param array $requestingUsersIds Recebe array ids de usuários
      */
-    public function whereInCostCenterQuery(Builder $query, ?string $costCenterIds = ''): Builder
+    public function requesterProductivityQuery(Builder $query, array $requestingUsersIds): Builder
     {
-        $costCenterIdsArray = explode(',', $costCenterIds);
+        $validIds = collect($requestingUsersIds)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id);
 
-        $validIds = collect($costCenterIdsArray)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id);
+        if ($validIds->isEmpty()) {
+            $validIds = User::whereHas('purchaseRequest', fn ($query) => $query->where('status', '!=', PurchaseRequestStatus::RASCUNHO->value))
+                ->get()->pluck('id');
+        }
+
+        return $query->whereIn('user_id', $validIds);
+    }
+
+    /**
+     * @param Builder $query
+     * @param array $costCenterIds Recebe uma array com ids de cost centers.
+     * @return Builder
+     */
+    public function whereInCostCenterQuery(Builder $query, array $costCenterIds): Builder
+    {
+        $validIds = collect($costCenterIds)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id);
 
         if ($validIds->isEmpty()) {
             throw new InvalidArgumentException('Array de ids de centros de custos inválido.');
@@ -114,12 +136,14 @@ class ReportService
     /**
      * @param string $dateSince Recebe uma string com a data inicial do período. Exemplo: "2023-09-20"
      * @param string $dateUntil Recebe uma string com a data final do período. Exemplo: "2023-09-28"
-     * @param Builder $query Retorna query builder de PurchaseRequest para status pendente atualizado dentro do período escolhido
+     * @param Builder $query Receber query builder de PurchaseRequest
+     * @param PurchaseRequestStatus $status
+     * @return Builder Retorna query builder de PurchaseRequest para status escolhido atualizado dentro do período escolhido
      */
-    public function whereInLogDate(Builder $query, string $dateSince, string $dateUntil): Builder
+    public function whereInLogDate(Builder $query, string $dateSince, string $dateUntil, PurchaseRequestStatus $status = PurchaseRequestStatus::PENDENTE): Builder
     {
-        $query->whereHas('logs', function ($query) use ($dateSince, $dateUntil) {
-            $query->where(DB::raw('JSON_EXTRACT(changes, "$.status")'), '=', 'pendente')
+        $query->whereHas('logs', function ($query) use ($dateSince, $dateUntil, $status) {
+            $query->where(DB::raw('JSON_EXTRACT(changes, "$.status")'), '=', $status)
                 ->orderBy('created_at', 'asc')
                 ->whereDate('created_at', '>=', $dateSince)
                 ->whereDate('created_at', '<=', $dateUntil)
@@ -167,6 +191,48 @@ class ReportService
             8 => 'purchase_requests.status',
             9 => $getPersonSupplies,
             14 => 'total_amount'
+        };
+
+        return $orderColumnMappings;
+    }
+
+    /**
+     * @param string $orderColumnIndex Recebe um index que determina o campo de ordenação com base no dicionário de mapeamento."
+     * @param string $orderDirection Recebe o tipo de ordenação, sendo 'asc' ou 'desc'.
+     */
+    public function productivityOrder(Builder $query, int $orderColumnIndex): string|Closure
+    {
+        $latestLogSubquery = fn ($query) => $query->select('logs.created_at')
+            ->from('logs')
+            ->where('logs.table', 'purchase_requests')
+            ->where('logs.foreign_id', '=', DB::raw('purchase_requests.id'))
+            ->where(DB::raw('JSON_UNQUOTE(JSON_EXTRACT(logs.changes, "$.status"))'), '=', 'pendente')
+            ->orderBy('logs.created_at', 'asc')
+            ->limit(1);
+
+        $getPersonName = fn ($query) => $query->select('people.name')
+            ->from('people')
+            ->join('users', 'users.person_id', '=', 'people.id')
+            ->where('users.id', DB::raw('purchase_requests.user_id'));
+
+        $getPersonRequester = fn ($query) => $query->select('people.name')
+            ->from('people')
+            ->where('people.id', DB::raw('purchase_requests.requester_person_id'));
+
+        $getPersonSupplies = fn ($query) => $query->select('people.name')
+            ->from('people')
+            ->where('people.id', DB::raw('purchase_requests.supplies_user_id'));
+
+        $orderColumnMappings = match ($orderColumnIndex) {
+            0 => 'purchase_requests.id',
+            1 => 'purchase_requests.type',
+            2 => $latestLogSubquery,
+            3 => $getPersonName,
+            4 => $getPersonRequester,
+            5 => 'purchase_requests.status',
+            6 => $getPersonSupplies,
+            8 => 'purchase_requests.is_supplies_contract',
+            9 => 'purchase_requests.desired_date',
         };
 
         return $orderColumnMappings;

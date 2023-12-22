@@ -22,7 +22,14 @@ import IMask from "imask";
 import moment from 'moment';
 window.moment = moment;
 
+import Chart from 'chart.js/auto';
+window.Chart = Chart;
+Chart.defaults.color = '#141414';
+
 import setColvisConfig from '../../public/js/utils/colvis-custom-user-preference.js';
+import {createChartDoughnut, createChartBar} from './create-chart-functions.js'
+window.createChartDoughnut = createChartDoughnut
+window.createChartBar = createChartBar
 
 import Enum from './enums/enum.js';
 window.Enum = Enum;
@@ -101,6 +108,18 @@ $.fn.createToast = (message, title = 'Sucesso!', className = null) => {
 $.fn.setStorageDtColumnConfig = () =>{
     $('button.dt-button.buttons-collection.buttons-colvis').trigger('click').trigger('click')
 };
+
+$.fn.downloadCsv = (csv, name) => {
+    const now = moment(new Date()).format('YYYY-MM-DD-HH-mm-ss-SSS');
+    const fileName = `relatorio-gecom-${now}-${name}.csv`;
+    const blob = new Blob([csv], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
+
+    window.URL.revokeObjectURL(link.href);
+}
 
 $(() => {
     // required style

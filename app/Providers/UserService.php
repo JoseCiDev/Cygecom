@@ -57,6 +57,19 @@ class UserService extends ServiceProvider
     }
 
     /**
+     * @return Builder query com usuários ativos do perfil suprimentos
+     */
+    public function getSuppliesUsers(): Builder
+    {
+        $query = User::whereHas('profile', function ($query) {
+            $query->where('name', 'suprimentos_hkm')
+                ->orWhere('name', 'suprimentos_inp');
+        })->whereNull('deleted_at')->with('person');
+
+        return $query;
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Collection retorna todos os centros de custo disponíveis
      */
     public function getCostCenters()

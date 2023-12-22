@@ -77,8 +77,10 @@ class Abilities extends Seeder
             ['id' => 40, 'name' => 'post.suppliers.update', 'description' => 'Atualizar fornecedor'],
 
             // Reports
-            ['id' => 44, 'name' => 'get.reports.index', 'description' => 'Acessar tela de relatório de solicitação'],
-            ['id' => 51, 'name' => 'get.reports.index.json', 'description' => 'Permite buscar dados de relatório de solicitação para tabela através da API'],
+            ['id' => 44, 'name' => 'get.reports.requests.index', 'description' => 'Acessar tela de relatório de solicitação'],
+            ['id' => 51, 'name' => 'post.reports.requests.index', 'description' => 'Permite buscar dados de relatório de solicitação para tabela através da API'],
+            ['id' => 60, 'name' => 'get.reports.productivity.index', 'description' => 'Acessar tela de relatório de produtividade'],
+            ['id' => 61, 'name' => 'post.reports.productivity.index', 'description' => 'Permite buscar dados de relatório de produtividade para tabela através da API'],
         ];
 
         $authorizesAbilities = [
@@ -122,7 +124,8 @@ class Abilities extends Seeder
 
         $directorAbilities = [
             ...$normalAbilities,
-            54 // Authorizes
+            54, // Authorizes
+            60, 61, // Reports
         ];
 
         $profilesAbilities = [

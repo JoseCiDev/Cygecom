@@ -82,14 +82,17 @@
             </div>
         @endif
 
-        @if (Gate::any(['get.reports.index']))
+        @if (Gate::any(['get.reports.requests.index', 'get.reports.productivity.index']))
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Relatórios
                 </button>
                 <ul class="dropdown-menu">
-                    @can('get.reports.index')
-                        <li> <a href="{{ route('reports.index') }}">Relatórios de solicitações</a> </li>
+                    @can('get.reports.requests.index')
+                        <li> <a href="{{ route('reports.requests.index') }}">Relatório de solicitação</a> </li>
+                    @endcan
+                    @can('get.reports.productivity.index')
+                        <li> <a href="{{ route('reports.productivity.index') }}">Relatório de produtividade</a> </li>
                     @endcan
                 </ul>
             </div>
