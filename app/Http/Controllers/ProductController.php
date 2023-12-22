@@ -106,7 +106,9 @@ class ProductController extends Controller
             $msg = "Solicitação de produto nº $purchaseRequest->id atualizada com sucesso!";
 
             $isOwnRequest = $purchaseRequest->user_id === $currentUser->id;
-            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && ($isOwnRequest || $isSuppliesUpdate);
+            $isSuppliesWithOwnRequest = $isOwnRequest && $isSuppliesUpdate;
+
+            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && !$isSuppliesWithOwnRequest && ($isOwnRequest || $isSuppliesUpdate);
 
             if ($request->purchase_order && $purchaseRequest->supplies_user_id !== $currentUser->id) {
                 $isAuthorized = false;
