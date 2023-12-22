@@ -23,7 +23,7 @@
         @media(min-width: 1280px) {
             .request-supplies-filter {
                 width: fit-content;
-                min-width: 30%;
+                min-width: 55%;
                 flex-direction: row-reverse;
             }
         }
