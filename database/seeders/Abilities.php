@@ -36,7 +36,7 @@ class Abilities extends Seeder
             ['id' => 12, 'name' => 'get.supplies.contract.show', 'description' => 'Acessar tela de detalhes de uma solicitações de serviço recorrente'],
             ['id' => 13, 'name' => 'post.supplies.service.update', 'description' => 'Atualizar solicitação de serviço pontual na tela de detalhes'],
             ['id' => 14, 'name' => 'post.supplies.product.update', 'description' => 'Atualizar solicitação de produto na tela de detalhes'],
-            ['id' => 15, 'name' => 'post.supplies.conctract.update', 'description' => 'Atualizar solicitação de serviço recorrente na tela de detalhes'],
+            ['id' => 15, 'name' => 'post.supplies.contract.update', 'description' => 'Atualizar solicitação de serviço recorrente na tela de detalhes'],
             ['id' => 47, 'name' => 'get.api.suppliers.index', 'description' => 'Permite buscar todos fornecedores através da API. É usado na tabela de fornecedores'],
             ['id' => 48, 'name' => 'post.api.suppliers.register', 'description' => 'Permite registrar novo fornecedor através da API'],
 
