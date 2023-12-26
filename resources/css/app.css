@@ -22,4 +22,5 @@
 @import './supplies/dataTables-column-search.css';
 @import './loader.css';
 @import './reports/report-table-list.css';
+@import './bootstrap-custom.css';
 @import './table.css';
