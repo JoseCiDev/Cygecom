@@ -51,6 +51,7 @@ class S3
                     }
                 }
             } catch (\Exception $e) {
+		dd($e);
                 $out['exception'] = $e->getMessage();
             }
         }

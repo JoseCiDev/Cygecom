@@ -36,6 +36,8 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
+	\URL::forceScheme('https');
+
         Carbon::macro('formatCustom', function ($format) {
             /**
              * @var Carbon $this
