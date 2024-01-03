@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,7 +37,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
-	\URL::forceScheme('https');
+        if(App::isProduction()) {
+            \URL::forceScheme('https');
+        }
 
         Carbon::macro('formatCustom', function ($format) {
             /**

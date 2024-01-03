@@ -24,12 +24,6 @@ window.moment = moment;
 
 import setColvisConfig from '../../public/js/utils/colvis-custom-user-preference.js';
 
-$.ajaxSetup({
-  xhrFields: {
-    withCredentials: true
-  }
-});
-
 $.fn.imask = function(options) {
     const maskedElements = this.map((_, input) => new IMask(input, options)).toArray();
 

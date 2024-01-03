@@ -31,9 +31,6 @@
                         url: apiUrl,
                         method: 'GET',
                         dataType: 'json',
-                        xhrFields: {
-                            withCredentials: false
-                        },
                         success: function(data) {
                             $('#country').val('Brasil');
                             $('#state').val(data.uf);
