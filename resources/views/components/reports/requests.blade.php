@@ -647,7 +647,7 @@
                             render: (costCenter) => {
                                 const $div = $(document.createElement('div')).addClass('tag-category');
 
-                                const costCenters = costCenter.map((element) => element.cost_center.name);
+                                const costCenters = costCenter.map((element) => `${element.cost_center.name} / ${element.cost_center.company.name}`);
                                 if (costCenter.length <= 0) {
                                     return $div.append(`<span class="tag-category-item">---</span>`)[0].outerHTML;
                                 }
