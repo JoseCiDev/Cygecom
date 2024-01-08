@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 
+const isProduction = process.env.APP_ENV === 'production';
+
 export default defineConfig({
     plugins: [
         laravel(
@@ -19,6 +21,6 @@ export default defineConfig({
         watch: {
             usePolling: true,
         },
-        https: false
+        https: isProduction,
     },
 });
