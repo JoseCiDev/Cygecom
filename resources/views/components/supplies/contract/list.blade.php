@@ -10,6 +10,8 @@
     </style>
 @endpush
 
+<x-modals.supplies-contract-info />
+
 <div class="row">
     <div class="col-sm-12">
         <div class="box box-color box-bordered">
@@ -18,14 +20,14 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                       <form action="{{ route('supplies.contract')}}" method="GET" class="form-status-filter">
+                        <form action="{{ route('supplies.contract') }}" method="GET" class="form-status-filter">
                             <button class="btn btn-primary btn-small" id="status-filter-btn" type="submit">Filtrar status</button>
                             @if ($suppliesGroup)
                                 <input type="hidden" name="suppliesGroup" value="{{ $suppliesGroup->value }}">
                             @endif
                             @foreach (PurchaseRequestStatus::cases() as $statusCase)
                                 @php
-                                    $statusDefaultFilter = $statusCase !== PurchaseRequestStatus::FINALIZADA && $statusCase !== PurchaseRequestStatus::CANCELADA;
+                                    $statusDefaultFilter = $statusCase === PurchaseRequestStatus::PENDENTE;
                                     $isChecked = count($status) ? collect($status)->contains($statusCase) : $statusDefaultFilter;
                                 @endphp
 
@@ -35,20 +37,19 @@
                                         {{ $statusCase->label() }}
                                     </label>
                                 @endif
-
                             @endforeach
-                       </form>
+                        </form>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-12">
-                        <p>Encontrado {{$contracts->count()}} registro(s).</p>
+                        <p>Encontrado {{ $contracts->count() }} registro(s).</p>
                     </div>
                 </div>
 
-                <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered" data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all"
-                    style="width:100%">
+                <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered" data-column_filter_dateformat="dd-mm-yy" data-nosort="0"
+                    data-checkall="all" style="width:100%">
                     <thead>
                         <tr class="search-bar">
                             <th></th>
@@ -86,14 +87,14 @@
                                 $suppliers = $contract->contract->supplier;
                                 $modalData = [
                                     'request' => $contract,
-                                    'suppliers' => $suppliers
+                                    'suppliers' => $suppliers,
                                 ];
                             @endphp
                             <tr>
-                                <td style="min-width: 90px;">{{$contract->id}}</td>
-                                <td>{{$contract->user->person->name}}</td>
-                                <td>{{$contract->suppliesUser?->person->name ?? '---'}}</td>
-                                <td>{{$contract->status->label()}}</td>
+                                <td style="min-width: 90px;">{{ $contract->id }}</td>
+                                <td>{{ $contract->user->person->name }}</td>
+                                <td>{{ $contract->suppliesUser?->person->name ?? '---' }}</td>
+                                <td>{{ $contract->status->label() }}</td>
                                 <td>
                                     <div class="tag-list">
                                         @php
@@ -109,7 +110,7 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td class="hidden-1024">{{$contract->is_supplies_contract ? 'Suprimentos' : 'Solicitante'}}</td>
+                                <td class="hidden-1024">{{ $contract->is_supplies_contract ? 'Suprimentos' : 'Solicitante' }}</td>
                                 <td class="hidden-1280">
                                     <div class="tag-list">
                                         @forelse ($companies as $company)
@@ -137,32 +138,19 @@
                                 <td>{{ $showPurchaseOrder ? $contract?->purchase_order : '---' }}</td>
 
                                 <td class="text-center" style="white-space: nowrap;">
-                                    <button
-                                        data-modal-name="{{ 'Analisando solicitação de serviço recorrente - Nº ' . $contract->id }}"
-                                        data-id="{{ $contract->id }}"
-                                        data-request="{{json_encode($modalData)}}"
-                                        rel="tooltip"
-                                        title="Analisar"
-                                        class="btn"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modal-supplies"
-                                        data-cy="btn-analisar-{{$index}}"
-                                    >
-                                        <i class="fa fa-search"></i>
+                                    <button class="btn btn-mini btn-secondary" data-id="{{ $contract->id }}" data-bs-toggle="modal" data-bs-target="#modal-supplies-contract-info"
+                                        title="Analisar solicitação">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
                                     </button>
+
                                     @php
                                         $existSuppliesUser = (bool) $contract->suppliesUser;
                                         $existResponsibility = (bool) $contract->responsibility_marked_at;
                                         $isOwnUserRequest = $contract->user->id === auth()->user()->id;
                                         $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
                                     @endphp
-                                    <a href="{{route('supplies.contract.detail', ['id' => $contract->id])}}"
-                                        class="btn btn-link openDetail"
-                                        rel="tooltip"
-                                        title="Abrir"
-                                        data-is-to-show="{{$isToShow ? 'true' : 'false'}}"
-                                        data-cy="btn-open-details-{{$index}}"
-                                    >
+                                    <a href="{{ route('supplies.contract.detail', ['id' => $contract->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
+                                        data-is-to-show="{{ $isToShow ? 'true' : 'false' }}" data-cy="btn-open-details-{{ $index }}">
                                         <i class="fa fa-external-link"></i>
                                     </a>
                                 </td>
@@ -176,6 +164,6 @@
 </div>
 
 @push('scripts')
-    <script type="module" src="{{asset('js/supplies/modal-confirm-supplies-responsability.js')}}"></script>
-    <script type="module" src="{{asset('js/utils/dataTables-column-search.js')}}"></script>
+    <script type="module" src="{{ asset('js/supplies/modal-confirm-supplies-responsability.js') }}"></script>
+    <script type="module" src="{{ asset('js/utils/dataTables-column-search.js') }}"></script>
 @endpush

@@ -129,9 +129,13 @@ class Breadcrumb extends Component
             ['route' => 'supplies.contract', 'label' => 'Solicitações de serviços recorrentes'],
             ['route' => 'supplies.contract.detail', 'label' => 'Serviço recorrente solicitado'],
         ],
-        'reports.index.view' => [
+        'reports.requests.index' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'reports.index.view', 'label' => 'Relatórios de solicitações'],
+            ['route' => 'reports.requests.index', 'label' => 'Relatórios de solicitações'],
+        ],
+        'reports.productivity.index' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'reports.productivity.index', 'label' => 'Relatório de produtividade'],
         ],
     ];
 
@@ -151,7 +155,8 @@ class Breadcrumb extends Component
             return;
         }
 
-        $this->items = $routeName !== 'home' ? $this->itemsMap[$routeName] : [];
+        $existRouteName = collect($this->itemsMap)->has($routeName);
+        $this->items = $existRouteName ? $this->itemsMap[$routeName] : [];
     }
 
     public function render()

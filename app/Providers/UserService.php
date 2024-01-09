@@ -3,12 +3,11 @@
 namespace App\Providers;
 
 use App\Contracts\UserServiceInterface;
-use App\Models\CostCenter;
-use App\Models\{Person, Phone, User, UserCostCenterPermission, UserProfile};
-use Carbon\Carbon;
+use App\Models\{CostCenter, Person, Phone, User, UserCostCenterPermission, UserProfile};
 use Exception;
 use Illuminate\Support\Facades\{DB, Hash};
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserService extends ServiceProvider implements UserServiceInterface
 {
@@ -56,6 +55,19 @@ class UserService extends ServiceProvider implements UserServiceInterface
         }
 
         return $query->get();
+    }
+
+    /**
+     * @return Builder query com usuários ativos do perfil suprimentos
+     */
+    public function getSuppliesUsers(): Builder
+    {
+        $query = User::whereHas('profile', function ($query) {
+            $query->where('name', 'suprimentos_hkm')
+                ->orWhere('name', 'suprimentos_inp');
+        })->whereNull('deleted_at')->with('person');
+
+        return $query;
     }
 
     /**

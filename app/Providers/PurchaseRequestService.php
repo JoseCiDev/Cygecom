@@ -136,9 +136,9 @@ class PurchaseRequestService extends ServiceProvider
 
 
     /**
-     * @return mixed Pelo id retorna solicitação com suas relações, exceto deletada.
+     * @return PurchaseRequest Pelo id retorna solicitação com suas relações, exceto deletada.
      */
-    public function purchaseRequestById(int $id)
+    public function purchaseRequestById(int $id): PurchaseRequest
     {
         return PurchaseRequest::with([
             'user.person.costCenter',
@@ -148,9 +148,11 @@ class PurchaseRequestService extends ServiceProvider
             'deletedByUser',
             'updatedByUser',
             'service.paymentInfo',
+            'service.supplier',
             'purchaseRequestProduct.category',
             'purchaseRequestProduct.supplier',
             'contract.installments',
+            'contract.supplier',
             'product.installments'
         ])->whereNull('deleted_at')->where('id', $id)->first();
     }

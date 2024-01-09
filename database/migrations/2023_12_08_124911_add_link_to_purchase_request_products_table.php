@@ -6,22 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('example', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('purchase_request_products', function (Blueprint $table) {
+            $table->text('link')->nullable()->after('size');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('example');
+        Schema::table('purchase_request_products', function (Blueprint $table) {
+            $table->dropColumn('link');
+        });
     }
 };
