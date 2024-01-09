@@ -6,6 +6,7 @@ use App\Enums\CompanyGroup;
 use App\Models\{Address, Phone, Supplier};
 use Carbon\Carbon;
 use Illuminate\Support\{Collection, Facades\DB, ServiceProvider};
+use Illuminate\Database\Eloquent\Builder;
 
 class SupplierService extends ServiceProvider
 {
@@ -120,5 +121,23 @@ class SupplierService extends ServiceProvider
             $supplier->phone_id = $newPhone->id;
             $supplier->save();
         }
+    }
+
+    /**
+     * @param string $orderColumnIndex Recebe um index que determina o campo de ordenação com base no dicionário de mapeamento."
+     * @param string $orderDirection Recebe o tipo de ordenação, sendo 'asc' ou 'desc'.
+     */
+    public function orderByMapped(Builder $query, int $orderColumnIndex): string
+    {
+        $orderColumnMappings = match ($orderColumnIndex) {
+            0 => 'suppliers.cpf_cnpj',
+            1 => 'suppliers.corporate_name',
+            2 => 'suppliers.name',
+            3 => 'suppliers.supplier_indication',
+            4 => 'suppliers.market_type',
+            5 => 'suppliers.qualification',
+        };
+
+        return $orderColumnMappings;
     }
 }
