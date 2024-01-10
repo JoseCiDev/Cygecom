@@ -1174,7 +1174,8 @@
 
                 observation.val(rowData.observation);
 
-                status.select2('val', statusValues.find((status) => status.description === rowData.status).id);
+                const statusToModal = (statusValues.find((status) => status.description === rowData.status)).id;
+                status.val(statusToModal).trigger('change');
 
                 $('#form-modal-edit-installment').on('submit', function(event) {
                     event.preventDefault();
