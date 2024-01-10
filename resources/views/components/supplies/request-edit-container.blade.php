@@ -6,6 +6,17 @@
     $requestStatusIsFinish = $requestStatus === PurchaseRequestStatus::FINALIZADA;
 @endphp
 
+@push('styles')
+    <style>
+        .confirm-update-list {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
+@endpush
+
 <h4 style="margin-bottom: 15px"><i class="glyphicon glyphicon-edit"></i> <strong>Editar solicitação</strong></h4>
 <form class="form-validate" data-cy="form-request-edit" id="form-request-edit" method="POST" action="{{ route($route, ['id' => $requestId]) }}">
     @csrf
@@ -157,7 +168,7 @@
 
                 const title = 'Atenção! Deseja realmente alterar os dados?';
                 const message = "Por favor, confirme os dados que serão enviados: " +
-                    "<ul>" +
+                    "<ul class='confirm-update-list'>" +
                     `<li class="regular-text" >Status: ${statusValue}</li>` +
                     (reasonUpdateStatus ? `<li class="regular-text">Motivo mudança de status: ${reasonUpdateStatus}</li>` : '') +
                     `<li class="regular-text">Valor total: ${amountValue}</li>` +
