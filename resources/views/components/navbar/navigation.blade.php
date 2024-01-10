@@ -84,7 +84,9 @@
             </button>
             <ul class="dropdown-menu">
                 <li> <a href="{{ route('reports.requests.index') }}">Relatório de solicitação</a> </li>
-                <li> <a href="{{route('reports.productivity.index')}}">Relatório de produtividade</a> </li>
+                @if ($currentProfile === 'admin' || $currentProfile === 'diretor')
+                    <li> <a href="{{route('reports.productivity.index')}}">Relatório de produtividade</a> </li>
+                @endif
             </ul>
         </div>
 
