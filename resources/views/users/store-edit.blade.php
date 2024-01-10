@@ -178,7 +178,7 @@
         </style>
     @endpush
 
-    <x-modals.edit-user-ability :abilities="$abilities" />
+    <x-modals.edit-user-ability :grouped-abilities="$groupedAbilities" />
     <x-modals.delete />
     <x-toast />
 

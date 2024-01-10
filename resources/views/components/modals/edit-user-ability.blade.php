@@ -1,7 +1,18 @@
-@props(['abilities' => $abilities])
+@props(['grouped-abilities' => $groupedAbilities])
+
+@php
+    $getAbilities = $groupedAbilities->get('get', collect());
+    $postAbilities = $groupedAbilities->get('post', collect());
+    $deleteAbilities = $groupedAbilities->get('delete', collect());
+    $authorizeAbilities = $groupedAbilities->get('authorize', collect());
+@endphp
 
 @push('styles')
     <style>
+        .ability-list-title {
+            margin-top: 20px;
+        }
+
         .color-info {
             display: flex;
             flex-wrap: wrap;
@@ -64,7 +75,15 @@
             }
 
             .user-abilities-container .list-group .list-group-item {
-                flex: 1 0 24%;
+                flex: 1 0 calc(50% - 4px);
+                max-width: calc(50% - 4px);
+            }
+        }
+
+        @media(min-width: 1440px) {
+            .user-abilities-container .list-group .list-group-item {
+                flex: 1 0 calc(25% - 4px);
+                max-width: calc(25% - 4px);
             }
         }
     </style>
@@ -93,7 +112,7 @@
                 </div>
 
 
-                <form id="modal-form-user-ability" method="POST">
+                <form id="modal-form-user-ability">
                     @csrf
 
                     <div class="user-abilities-container">
@@ -103,13 +122,14 @@
                             Apenas habilidades excedentes do perfil são gerenciáveis.
                         </small>
 
+                        <h5 class="ability-list-title">Pode acessar quais dados e telas?</h5>
                         <ul class="list-group" id="user-abilities">
-                            @foreach ($abilities as $ability)
+                            @forelse ($getAbilities as $ability)
                                 @php
                                     $nameParts = explode('.', $ability->name);
                                     $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                                    $profileNames = $ability->profiles->pluck('name');
                                 @endphp
-
                                 <li class="list-group-item {{ $method }}">
                                     <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top'
                                         data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
@@ -120,7 +140,78 @@
                                         </label>
                                     </div>
                                 </li>
-                            @endforeach
+                            @empty
+                                <small>Nenhuma habilidade além das existentes no perfil foi encontrada.</small>
+                            @endforelse
+                        </ul>
+
+                        <h5 class="ability-list-title">Pode modificar quais dados?</h5>
+                        <ul class="list-group" id="user-abilities">
+                            @forelse ($postAbilities as $ability)
+                                @php
+                                    $nameParts = explode('.', $ability->name);
+                                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                                    $profileNames = $ability->profiles->pluck('name');
+                                @endphp
+                                <li class="list-group-item {{ $method }}">
+                                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top'
+                                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                                        <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
+                                            value="{{ $ability->id }}">
+                                        <label class="form-check-label" for="ability-{{ $ability->id }}">
+                                            {{ $ability->description }}
+                                        </label>
+                                    </div>
+                                </li>
+                            @empty
+                                <small>Nenhuma habilidade além das existentes no perfil foi encontrada.</small>
+                            @endforelse
+                        </ul>
+
+                        <h5 class="ability-list-title">Pode excluir quais dados?</h5>
+                        <ul class="list-group" id="user-abilities">
+                            @forelse ($deleteAbilities as $ability)
+                                @php
+                                    $nameParts = explode('.', $ability->name);
+                                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                                    $profileNames = $ability->profiles->pluck('name');
+                                @endphp
+                                <li class="list-group-item {{ $method }}">
+                                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top'
+                                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                                        <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
+                                            value="{{ $ability->id }}">
+                                        <label class="form-check-label" for="ability-{{ $ability->id }}">
+                                            {{ $ability->description }}
+                                        </label>
+                                    </div>
+                                </li>
+                            @empty
+                                <small>Nenhuma habilidade além das existentes no perfil foi encontrada.</small>
+                            @endforelse
+                        </ul>
+
+                        <h5 class="ability-list-title">Ao acessar e modificar dados esse usuário é autorizado como?</h5>
+                        <ul class="list-group" id="user-abilities">
+                            @forelse ($authorizeAbilities as $ability)
+                                @php
+                                    $nameParts = explode('.', $ability->name);
+                                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                                    $profileNames = $ability->profiles->pluck('name');
+                                @endphp
+                                <li class="list-group-item {{ $method }}">
+                                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top'
+                                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                                        <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
+                                            value="{{ $ability->id }}">
+                                        <label class="form-check-label" for="ability-{{ $ability->id }}">
+                                            {{ $ability->description }}
+                                        </label>
+                                    </div>
+                                </li>
+                            @empty
+                                <small>Nenhuma habilidade além das existentes no perfil foi encontrada.</small>
+                            @endforelse
                         </ul>
                     </div>
 
@@ -148,6 +239,14 @@
         const $storeUserAbilities = $('#store-user-abilities');
         const $abilityToast = $('#abilityToast');
         const $modalEditUserAbility = $('#modal-edit-user-ability');
+
+        let refreshPage = false;
+
+        $modalEditUserAbility.on('hidden.bs.modal', (event) => {
+            if (refreshPage) {
+                location.reload();
+            }
+        });
 
         $modalEditUserAbility.on('show.bs.modal', (event) => {
             const button = $(event.relatedTarget);
@@ -177,6 +276,8 @@
                         $abilityToast.find('.toast-header-title').text('Sucesso!');
                         $abilityToast.find('.toast-body').text('Habilidades do usuários atualizadas com sucesso!');
                         bootstrap.Toast.getOrCreateInstance($abilityToast).show();
+
+                        refreshPage = true;
                     },
                     error: function(error) {
                         $abilityToast.find('.toast-header').addClass('bg-danger');
@@ -235,6 +336,7 @@
                         }
                     })
 
+                    console.log(id);
                     $form.attr('action', `/abilities/store/${id}`);
                 },
                 error: function(error) {
@@ -245,6 +347,7 @@
                 }
             });
 
+            $form.off('submit');
             $form.on('submit', submit);
         });
     </script>

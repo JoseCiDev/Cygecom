@@ -41,6 +41,11 @@ class UserController extends Controller
         $isAdmin = Gate::allows('admin');
 
         $abilities = Ability::with('users', 'profiles')->get();
+        $groupedAbilities = $abilities->groupBy(function ($ability) {
+            $firstName = explode('.', $ability->name)[0];
+            return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
+        });
+
         $profiles = $this->userProfileService->profiles()->get();
         $users = $this->userService->getUsers()->where('id', '!=', $loggedId);
 
@@ -53,7 +58,7 @@ class UserController extends Controller
         $users = $users->get();
 
         $params = [
-            'abilities' => $abilities,
+            'groupedAbilities' => $groupedAbilities,
             'profiles' => $profiles,
             'users' => $users
         ];
@@ -73,13 +78,17 @@ class UserController extends Controller
         $profiles = $this->userProfileService->profiles()->get();
         $companies = Company::select('id', 'corporate_name', 'name', 'cnpj', 'group')->get();
         $abilities = Ability::with('users', 'profiles')->get();
+        $groupedAbilities = $abilities->groupBy(function ($ability) {
+            $firstName = explode('.', $ability->name)[0];
+            return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
+        });
 
         $params = [
             'approvers' => $approvers,
             'costCenters' => $costCenters,
             'profiles' => $profiles,
             'companies' => $companies,
-            'abilities' => $abilities,
+            'groupedAbilities' => $groupedAbilities,
         ];
 
         return view('users.store-edit', $params);
@@ -167,6 +176,10 @@ class UserController extends Controller
         $profiles = $this->userProfileService->profiles()->get();
         $companies = Company::select('id', 'corporate_name', 'name', 'cnpj', 'group')->get();
         $abilities = Ability::with('users', 'profiles')->get();
+        $groupedAbilities = $abilities->groupBy(function ($ability) {
+            $firstName = explode('.', $ability->name)[0];
+            return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
+        });
 
         $params = [
             'user' => $user,
@@ -174,7 +187,7 @@ class UserController extends Controller
             'costCenters' => $costCenters,
             'profiles' => $profiles,
             'companies' => $companies,
-            'abilities' => $abilities
+            'groupedAbilities' => $groupedAbilities
         ];
 
         return view('users.store-edit', $params);
