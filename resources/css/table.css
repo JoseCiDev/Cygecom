@@ -1,0 +1,12 @@
+/* Classe para esconder textos longos em colunas e mostrar no hover */
+.column-text-limit {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 200px;
+
+    &:hover {
+        white-space: normal;
+        cursor: pointer;
+    }
+}
