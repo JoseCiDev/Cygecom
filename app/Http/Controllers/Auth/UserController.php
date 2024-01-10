@@ -86,13 +86,52 @@ class UserController extends Controller
     }
 
     /**
-     * Tela que mostra usuário e suas todas habilidades
+     * Tela que mostra usuário e todas suas habilidades
      * @param User $user
      * @return View Tela de habilidades do usuário encontrado
      */
     public function show(User $user): View
     {
-        return view('users.show', ['user' => $user]);
+        $profileAbilities = $user->profile->abilities;
+        $userAbilities = $user->abilities;
+
+        $groupedProfileAbilities = $profileAbilities->groupBy(function ($ability) {
+            $firstName = explode('.', $ability->name)[0];
+            return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
+        });
+
+        $groupedUserAbilities = $userAbilities->groupBy(function ($ability) {
+            $firstName = explode('.', $ability->name)[0];
+            return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
+        });
+
+        $params = [
+            'id' => $user->id,
+
+            'name' => $user->person->name,
+            'email' => $user->email,
+            'phone' => $user->person->phone?->number,
+            'profile' => $user->profile->name,
+            'sector' => $user->person->costCenter->name,
+            'company' => $user->person->costCenter->company->name,
+            'cnpj' => preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $user->person->costCenter->company->cnpj),
+            'approverName' => $user->approver?->person->name ?? '---',
+            'approverEmail' => $user->approver?->email ?? '---',
+            'isBuyer' => $user->is_buyer ? 'Autorizado' : 'Não autorizado',
+            'canAssociateRequest' => $user?->can_associate_requester ? 'Autorizado' : 'Não autorizado',
+
+            'getProfileAbilities' => $groupedProfileAbilities->get('get', collect()),
+            'postProfileAbilities' => $groupedProfileAbilities->get('post', collect()),
+            'deleteProfileAbilities' => $groupedProfileAbilities->get('delete', collect()),
+            'authorizeProfileAbilities' => $groupedProfileAbilities->get('authorize', collect()),
+
+            'getUserAbilities' => $groupedUserAbilities->get('get', collect()),
+            'postUserAbilities' => $groupedUserAbilities->get('post', collect()),
+            'deleteUserAbilities' => $groupedUserAbilities->get('delete', collect()),
+            'authorizeUserAbilities' => $groupedUserAbilities->get('authorize', collect()),
+        ];
+
+        return view('users.show', $params);
     }
 
     /**

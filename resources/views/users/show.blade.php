@@ -1,22 +1,14 @@
-@php
-    $name = $user->person->name;
-    $email = $user->email;
-    $phone = $user->person->phone?->number;
-    $profile = $user->profile->name;
-    $sector = $user->person->costCenter->name;
-    $company = $user->person->costCenter->company->name;
-    $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $user->person->costCenter->company->cnpj);
-    $approverName = $user->approver?->person->name ?? '---';
-    $approverEmail = $user->approver?->email ?? '---';
-    $isBuyer = $user->is_buyer ? 'Autorizado' : 'Não autorizado';
-    $canAssociateRequest = $user?->can_associate_requester ? 'Autorizado' : 'Não autorizado';
-    $profileAbilities = $user->profile->abilities;
-    $userAbilities = $user->abilities;
-@endphp
-
 <x-app>
     @push('styles')
         <style>
+            .ability-list-title {
+                margin-top: 20px;
+            }
+
+            .ability-list-title:first-of-type {
+                margin-top: 0;
+            }
+
             .color-info {
                 display: flex;
                 flex-wrap: wrap;
@@ -86,6 +78,16 @@
                 .user-container .user-header .options>* {
                     flex-grow: 0;
                 }
+
+                .user-container .list-group {
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                }
+
+                .user-container .list-group .list-group-item {
+                    flex: 1 0 calc(50% - 4px);
+                    max-width: calc(50% - 4px);
+                }
             }
 
             @media(min-width: 1024px) {
@@ -125,7 +127,8 @@
                 }
 
                 .user-container .list-group .list-group-item {
-                    flex: 1 0 32%;
+                    flex: 1 0 calc(25% - 4px);
+                    max-width: calc(25% - 4px);
                 }
             }
         </style>
@@ -139,13 +142,13 @@
                 <h1 class="page-title">Usuário {{ $name }}</h1>
 
                 <div class="options">
-                    <a href="{{ route('users.edit', ['user' => $user]) }}" class="btn btn-small btn-secondary" rel="tooltip">
+                    <a href="{{ route('users.edit', ['user' => $id]) }}" class="btn btn-small btn-secondary" rel="tooltip">
                         <i class="fa-solid fa-pen-to-square"></i>
                         Editar dados usuário
                     </a>
 
-                    <button data-route="api.users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" data-cy="btn-modal-excluir-usuario"
-                        data-bs-toggle="modal" data-bs-target="#modal-delete" rel="tooltip" title="Excluir" class="btn btn-primary btn-small btn-danger">
+                    <button data-route="api.users.destroy" data-name="{{ $name }}" data-id="{{ $id }}" data-cy="btn-modal-excluir-usuario" data-bs-toggle="modal"
+                        data-bs-target="#modal-delete" rel="tooltip" title="Excluir" class="btn btn-primary btn-small btn-danger">
                         Excluir usuário
                     </button>
                 </div>
@@ -164,7 +167,11 @@
 
             <hr>
 
-            <p><strong>Habilidades do perfil do usuário:</strong> </p>
+            <h4>
+                <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top"
+                    data-bs-title="Habilidades vinculadas diretamente ao perfil que o usuário possui. ({{ $profile }})"></i>
+                <strong>Habilidades do perfil do usuário:</strong>
+            </h4>
 
             <div class="color-info">
                 <small class="get">Acessar dados</small>
@@ -173,13 +180,59 @@
                 <small class="type-authorize">Autorização de perfil</small>
             </div>
 
-            <ul class="list-group list-group-abilities">
-                @foreach ($profileAbilities as $ability)
+            <h5 class="ability-list-title">Perfil do usuário pode acessar os seguintes dados e telas:</h5>
+            <ul class="list-group" id="user-abilities">
+                @foreach ($getProfileAbilities as $ability)
                     @php
                         $nameParts = explode('.', $ability->name);
                         $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                        $profileNames = $ability->profiles->pluck('name');
                     @endphp
+                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
+                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        {{ $ability->description }}
+                    </li>
+                @endforeach
+            </ul>
 
+            <h5 class="ability-list-title">Perfil do usuário pode modificar os seguintes dados:</h5>
+            <ul class="list-group" id="user-abilities">
+                @foreach ($postProfileAbilities as $ability)
+                    @php
+                        $nameParts = explode('.', $ability->name);
+                        $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                        $profileNames = $ability->profiles->pluck('name');
+                    @endphp
+                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
+                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        {{ $ability->description }}
+                    </li>
+                @endforeach
+            </ul>
+
+            <h5 class="ability-list-title">Perfil do usuário pode excluir os seguintes dados:</h5>
+            <ul class="list-group" id="user-abilities">
+                @foreach ($deleteProfileAbilities as $ability)
+                    @php
+                        $nameParts = explode('.', $ability->name);
+                        $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                        $profileNames = $ability->profiles->pluck('name');
+                    @endphp
+                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
+                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        {{ $ability->description }}
+                    </li>
+                @endforeach
+            </ul>
+
+            <h5 class="ability-list-title">Ao acessar e modificar dados esse perfil é autorizado como:</h5>
+            <ul class="list-group" id="user-abilities">
+                @foreach ($authorizeProfileAbilities as $ability)
+                    @php
+                        $nameParts = explode('.', $ability->name);
+                        $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                        $profileNames = $ability->profiles->pluck('name');
+                    @endphp
                     <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
                         data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
                         {{ $ability->description }}
@@ -189,12 +242,70 @@
 
             <hr>
 
-            <p><strong>Habilidades expecíficas do usuário:</strong> </p>
-            <ul class="list-group list-group-abilities">
-                @forelse ($userAbilities as $ability)
+            <h4>
+                <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top"
+                    data-bs-title="Habilidades configuradas para necessidades específicas desse usuário."></i>
+                <strong>Habilidades específicas do usuário:</strong>
+            </h4>
+
+            <h5 class="ability-list-title">Pode acessar quais dados e telas:</h5>
+            <ul class="list-group" id="user-abilities">
+                @forelse ($getUserAbilities as $ability)
                     @php
                         $nameParts = explode('.', $ability->name);
                         $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                        $profileNames = $ability->profiles->pluck('name');
+                    @endphp
+                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
+                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        {{ $ability->description }}
+                    </li>
+                @empty
+                    <small>Nenhuma habilidade além das existentes no perfil foi encontrada.</small>
+                @endforelse
+            </ul>
+
+            <h5 class="ability-list-title">Pode modificar o seguintes dados:</h5>
+            <ul class="list-group" id="user-abilities">
+                @forelse ($postUserAbilities as $ability)
+                    @php
+                        $nameParts = explode('.', $ability->name);
+                        $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                        $profileNames = $ability->profiles->pluck('name');
+                    @endphp
+                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
+                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        {{ $ability->description }}
+                    </li>
+                @empty
+                    <small>Nenhuma habilidade além das existentes no perfil foi encontrada.</small>
+                @endforelse
+            </ul>
+
+            <h5 class="ability-list-title">Pode excluir os seguintes dados:</h5>
+            <ul class="list-group" id="user-abilities">
+                @forelse ($deleteUserAbilities as $ability)
+                    @php
+                        $nameParts = explode('.', $ability->name);
+                        $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                        $profileNames = $ability->profiles->pluck('name');
+                    @endphp
+                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
+                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        {{ $ability->description }}
+                    </li>
+                @empty
+                    <small>Nenhuma habilidade além das existentes no perfil foi encontrada.</small>
+                @endforelse
+            </ul>
+
+            <h5 class="ability-list-title">Ao acessar e modificar dados esse usuário é autorizado como:</h5>
+            <ul class="list-group" id="user-abilities">
+                @forelse ($authorizeUserAbilities as $ability)
+                    @php
+                        $nameParts = explode('.', $ability->name);
+                        $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                        $profileNames = $ability->profiles->pluck('name');
                     @endphp
                     <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
                         data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
