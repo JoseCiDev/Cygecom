@@ -125,6 +125,7 @@
                             created_at,
                             updated_at,
                             desired_date,
+                            amount: contract?.amount,
                         };
 
                         const requesterInfo = {
@@ -174,6 +175,7 @@
                                             <li class="list-group-item"><strong>Tipo de solicitação:</strong> ${Enum.PurchaseRequestType.getLabel(item.type)}</li>
                                             <li class="list-group-item"><strong>Contratação deve ser por:</strong> ${item.is_supplies_contract ? 'Suprimentos' : 'Solicitante'}</li>
                                             <li class="list-group-item"><strong>COMEX:</strong> ${item.is_comex ? 'Sim' : 'Não'}</li>
+                                            <li class="list-group-item"><strong>Valor total:</strong> R$ ${numberFormat(item.amount)}</li>
                                             <li class="list-group-item"><strong>Solicitação criada em:</strong> ${dateFormatter(item.created_at)}</li>
                                             <li class="list-group-item"><strong>Solicitação atualizada em:</strong> ${dateFormatter(item.updated_at)}</li>
                                             <li class="list-group-item"><strong>Solicitação desejada para:</strong> ${dateFormatter(item.desired_date)}</li>

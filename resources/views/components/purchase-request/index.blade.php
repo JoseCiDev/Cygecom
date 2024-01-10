@@ -2,6 +2,7 @@
     use App\Enums\{PurchaseRequestStatus, PurchaseRequestType};
     $currentRoute = Route::currentRouteName();
 @endphp
+
 <x-app>
     <x-modals.delete />
 
@@ -61,10 +62,12 @@
                                         <th></th>
                                         <th></th>
                                         <th></th>
+                                        <th></th>
                                     </tr>
                                     <tr>
                                         <th class="noColvis">Nº</th>
                                         <th>Contratação por</th>
+                                        <th style="max-width: 200px">Motivo</th>
                                         <th>Tipo</th>
                                         <th>Nome do serviço</th>
                                         <th>Fornecedor(es)</th>
@@ -104,9 +107,10 @@
                                         <tr>
                                             <td style="min-width: 90px;">{{$purchaseRequest->id}}</td>
                                             <td class="hidden-1280">{{$purchaseRequest->is_supplies_contract ? 'Suprimentos' : 'Área Solicitante'}}</td>
+                                            <td style="max-width: 200px" class="column-text-limit">{{$purchaseRequest->reason}}</td>
                                             <td>{{$purchaseRequest->type->label()}}</td>
                                             <td>{{$name}}</td>
-                                            <td>{{$supplier?->corporate_name ? $supplier?->corporate_name . " - " . $cnpj . " " . $msg : '---'}}</td>
+                                            <td style="min-width: 200px">{{$supplier?->corporate_name ? $supplier?->corporate_name . " - " . $cnpj . " " . $msg : '---'}}</td>
                                             <td>{{$purchaseRequest->status->label()}}</td>
                                             <td>{{$purchaseRequest->suppliesUser?->person?->name ?? '---'}}</td>
                                             <td>

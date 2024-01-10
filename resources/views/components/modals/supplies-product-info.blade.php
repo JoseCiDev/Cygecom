@@ -137,7 +137,8 @@
                             is_buyer: user.is_buyer,
                         };
 
-                        const suppliers = purchase_request_product
+                        let suppliers = [];
+                        const suppliersFromProducts = purchase_request_product
                             .filter(product => product?.supplier)
                             .map(({
                                 supplier
@@ -146,6 +147,13 @@
                                 cpf_cnpj: supplier.cpf_cnpj,
                                 market_type: supplier.market_type
                             }));
+
+                        suppliersFromProducts.forEach((supplier) => {
+                            const alreadyExists = suppliers.some((el) => el.cpf_cnpj === supplier.cpf_cnpj);
+                            if (!alreadyExists) {
+                                suppliers.push(supplier);
+                            }
+                        });
 
                         const suppliesInfo = {
                             name: supplies_user?.person.name,
@@ -204,7 +212,7 @@
                                         <ul class="list-group half-width">
                                             <h5 class="mb-1"><strong><i class="fa fa-user"></i> Informações do solicitante</strong></h5>
                                             <li class="list-group-item"><strong>E-mail do solicitante:</strong> ${item.email || '---'}</li>
-                                            <li class="list-group-item"><strong>É comprador:</strong> ${item.is_buyer ? 'Sim' : 'Não'}</li>
+                                            <li class="list-group-item"><strong>Autorização para solicitar:</strong> ${item.is_buyer ? 'Autorizado' : 'Não autorizado'}</li>
                                         </ul>
                                     `);
 

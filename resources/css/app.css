@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:800,700,600,500,400,300);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:800,700,600,500,400,300);
 
 @import "bootstrap";
 @import "select2";
@@ -22,3 +22,5 @@
 @import './supplies/dataTables-column-search.css';
 @import './loader.css';
 @import './reports/report-table-list.css';
+@import './bootstrap-custom.css';
+@import './table.css';

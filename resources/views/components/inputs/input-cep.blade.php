@@ -1,18 +1,23 @@
 <span style="display: none" class="loading-icon"><i class="fa fa-spinner fa-spin"></i></span>
-<input value="{{$value}}" type="text" name="{{$name}}" id="{{$id}}" data-cy="{{$dataCy}}" placeholder="00.000-000" class="form-control postal-code"
-    data-rule-required="true" data-rule-minlength="10">
+<input value="{{ $value }}" type="text" name="{{ $name }}" id="{{ $id }}"
+    data-cy="{{ $dataCy }}" placeholder="00.000-000" class="form-control postal-code" data-rule-required="true"
+    data-rule-minlength="10">
 
 @push('scripts')
     <script type="module">
         $(() => {
-            $('#{{$id}}').imask({ mask: '00.000-000' })
+            $('#{{ $id }}').imask({
+                mask: '00.000-000'
+            })
 
-            const $postalCode = $('#{{$id}}');
+            const $postalCode = $('#{{ $id }}');
             $postalCode.on('input', function() {
                 if ($(this).val().length < 10) {
                     return;
                 }
-                const $inputFields = $('#{{$id}}, #country, #state, #city, #neighborhood, #street, #complement');
+                const $inputFields = $(
+                    '#{{ $id }}, #country, #state, #city, #neighborhood, #street, #complement'
+                );
                 const $loadingIcon = $('.loading-icon');
 
                 $inputFields.prop('disabled', true);
@@ -22,22 +27,26 @@
                 if (postalCode.length === 8) {
                     const apiUrl = `https://viacep.com.br/ws/${postalCode}/json`;
 
-                    $.getJSON(apiUrl, function(data) {
-                        if (data.erro) {
-                           $.fn.showModalAlert("Ops!", "Endereço não encontrado para esse CEP.")
-                            return;
+                    $.ajax({
+                        url: apiUrl,
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#country').val('Brasil');
+                            $('#state').val(data.uf);
+                            $('#city').val(data.localidade);
+                            $('#neighborhood').val(data.bairro);
+                            $('#street').val(data.logradouro);
+                            $('#complement').val(data.complemento);
+                        },
+                        error: function(error) {
+                            console.error('Erro:', error);
+                        },
+                        complete: () => {
+                            $inputFields.prop('disabled', false);
+                            $loadingIcon.hide();
+                            $postalCode.valid();
                         }
-
-                        $('#country').val('Brasil');
-                        $('#state').val(data.uf);
-                        $('#city').val(data.localidade);
-                        $('#neighborhood').val(data.bairro);
-                        $('#street').val(data.logradouro);
-                        $('#complement').val(data.complemento);
-                    }).done(() => {
-                        $inputFields.prop('disabled', false);
-                        $loadingIcon.hide();
-                        $postalCode.valid();
                     })
                 }
             })

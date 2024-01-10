@@ -128,10 +128,6 @@ table tr {
     gap: 5px;
 }
 
-.report-btns #generate-csv-button {
-    margin-left: auto;
-}
-
 @media (min-width: 768px) {
     #reportsTable_length {
         float: left;
