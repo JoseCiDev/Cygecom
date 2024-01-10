@@ -12,7 +12,7 @@ $(() => {
         }
 
         const modalTitle = "Confirmar atribuição de solicitação";
-        const message = "Ainda não existe responsável por essa solicitação. Ao atribuir responsável, a solicitação passará para status em tratativa.<br>Deseja se tornar o responsável?";
+        const message = "Ainda não existe responsável por essa solicitação. Ao atribuir responsável, a solicitação passará para status <strong>Em tratativa</strong>.<br>Deseja se tornar o responsável?";
         $.fn.showModalAlert(modalTitle, message, () => window.location.href = url);
     });
 });
