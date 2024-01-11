@@ -94,7 +94,7 @@
             },
             columns: [{
                     data: 'cpf_cnpj',
-                    orderable: false,
+                    orderable: true,
                     render: (value) => {
                         const cnpjRegex = /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/;
                         return cnpjRegex.test(value) ? value.replace(cnpjRegex,
@@ -103,24 +103,24 @@
                 },
                 {
                     data: 'corporate_name',
-                    orderable: false,
+                    orderable: true,
                 },
                 {
                     data: 'name',
-                    orderable: false,
+                    orderable: true,
                     defaultContent: '---'
                 },
                 {
                     data: 'supplier_indication',
-                    orderable: false,
+                    orderable: true,
                 },
                 {
                     data: 'market_type',
-                    orderable: false,
+                    orderable: true,
                 },
                 {
                     data: 'qualification',
-                    orderable: false,
+                    orderable: true,
                     render: (value) => {
                         const enumQualification = @json($enumQualification);
                         return enumQualification[value];
