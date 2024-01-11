@@ -121,6 +121,11 @@ $.fn.downloadCsv = (csv, name) => {
     window.URL.revokeObjectURL(link.href);
 }
 
+$.fn.setBootstrapTooltip = () => {
+    $('[data-bs-toggle="tooltip"]').each((_, tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+    $('.toast').each((_, toastEl) => new bootstrap.Toast(toastEl));
+}
+
 $(() => {
     // required style
     $('[data-rule-required]').each(function() {
@@ -226,6 +231,5 @@ $(() => {
         });
     });
 
-    $('[data-bs-toggle="tooltip"]').each((_, tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
-    $('.toast').each((_, toastEl) => new bootstrap.Toast(toastEl));
+    $.fn.setBootstrapTooltip();
 });
