@@ -95,6 +95,9 @@
                     $cnpj.prop('disabled', true)
                     $cnpj.removeRequired();
 
+                    $cnpj.closest('.form-group').removeClass('has-error');
+                    $cnpj.next('span').remove();
+
                     return;
                 }
 
