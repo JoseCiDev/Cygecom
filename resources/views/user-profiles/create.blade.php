@@ -150,6 +150,8 @@
         </style>
     @endpush
 
+    <x-toast />
+
     <h1>Criação de perfil</h1>
     <p>
         O módulo de criação de perfis permite configurar identidades significativas. Garantir que esses perfis sejam úteis e
@@ -161,8 +163,8 @@
         <div class="profile-name-container">
             <div class="profile-name">
                 <label for="name">Nome do novo perfil</label>
-                <input type="text" id="name" data-cy="name" name="name" placeholder="Ex: suprimentos_inp, diretor, admin" class="form-control" minlength="4"
-                    maxlength="30">
+                <input type="text" id="name" data-cy="name" name="name" placeholder="Ex: suprimentos_inp, diretor, admin" class="form-control" minlength="4" maxlength="30"
+                    required>
             </div>
 
             <div class="alert">
@@ -318,6 +320,22 @@
 
                 const createProfile = (event) => {
                     event.preventDefault();
+
+                    const $form = $('#form-create-profile');
+                    const $name = $('#name');
+                    const regex = /^[a-z_]+$/u;
+
+                    if (!$form.valid()) {
+                        $name.focus();
+                        $.fn.createToast('Nome de perfil é um campo obrigatório!', 'Ops... Faltou o nome', 'bg-warning');
+                        return;
+                    }
+
+                    if (!regex.test($name.val())) {
+                        $name.focus();
+                        $.fn.createToast('Espaços, letras maiúsculas, números e caracteres especiais não são permitidos, exceto _', 'Ops... Nome inválido', 'bg-warning');
+                        return;
+                    }
 
                     const title = 'Atenção! Confirme que deseja criar um novo perfil';
                     const message =
