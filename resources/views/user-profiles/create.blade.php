@@ -280,7 +280,7 @@
             @endforeach
         </ul>
 
-        <button type="button" class="btn btn-primary" id="create-profile">
+        <button type="button" class="btn btn-large btn-primary" id="create-profile">
             Criar perfil
         </button>
     </form>

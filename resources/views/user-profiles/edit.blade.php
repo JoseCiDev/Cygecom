@@ -250,7 +250,7 @@
             @endforeach
         </ul>
 
-        <button type="button" class="btn btn-primary" id="edit-profile">
+        <button type="button" class="btn btn-primary btn-large" id="edit-profile">
             Atualizar perfil
         </button>
     </form>
