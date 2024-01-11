@@ -122,8 +122,27 @@ $.fn.downloadCsv = (csv, name) => {
 }
 
 $.fn.setBootstrapTooltip = () => {
-    $('[data-bs-toggle="tooltip"]').each((_, tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
-    $('.toast').each((_, toastEl) => new bootstrap.Toast(toastEl));
+    $('[data-bs-toggle="tooltip"]').each((_, tooltipTriggerEl) => {
+        const tooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+
+        if (tooltip) {
+            tooltip.dispose();
+        }
+
+        new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+}
+
+$.fn.setBootstrapToast = () => {
+    $('.toast').each((_, toastTriggerEl) =>{
+        const toast = bootstrap.Toast.getInstance(toastTriggerEl);
+
+        if (toast) {
+            toast.dispose();
+        }
+
+        new bootstrap.Toast(toastTriggerEl)
+    });
 }
 
 $(() => {
@@ -232,4 +251,5 @@ $(() => {
     });
 
     $.fn.setBootstrapTooltip();
+    $.fn.setBootstrapToast();
 });
