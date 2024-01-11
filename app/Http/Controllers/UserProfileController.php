@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\{JsonResponse, RedirectResponse};
 use App\Enums\MainProfile;
 use App\Http\Requests\User\{UpdateProfileRequest, StoreProfileRequest};
 use App\Models\{UserProfile, Ability};
 use App\Services\UserProfileService;
-use Illuminate\Http\JsonResponse;
 
 class UserProfileController extends Controller
 {
@@ -101,7 +100,22 @@ class UserProfileController extends Controller
     public function edit(UserProfile $userProfile)
     {
         $abilities = Ability::with('users', 'profiles')->get();
-        return view('user-profiles.edit', ['abilities' => $abilities, 'profile' => $userProfile]);
+        $groupedAbilities = $abilities->groupBy(function ($ability) {
+            $firstName = explode('.', $ability->name)[0];
+            return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
+        });
+
+        $params = [
+            'getAbilities' => $groupedAbilities->get('get', collect()),
+            'postAbilities' => $groupedAbilities->get('post', collect()),
+            'deleteAbilities' => $groupedAbilities->get('delete', collect()),
+            'authorizeAbilities' => $groupedAbilities->get('authorize', collect()),
+            'profile' => $userProfile,
+
+            'abilities' => $abilities
+        ];
+
+        return view('user-profiles.edit', $params);
     }
 
     /**

@@ -1,6 +1,14 @@
 <x-app>
     @push('styles')
         <style>
+            .ability-list-title {
+                margin-top: 20px;
+            }
+
+            .ability-list-title:first-of-type {
+                margin-top: 0;
+            }
+
             .color-info {
                 display: flex;
                 flex-wrap: wrap;
@@ -10,6 +18,23 @@
 
             .color-info small {
                 padding: 0 3px;
+            }
+
+            .edit-profile.alert {
+                border: 1px solid var(--alert-color);
+                border-radius: 4px;
+                background-color: #FFFCEF;
+                color: #666;
+                font-size: 14px;
+                width: fit-content;
+            }
+
+            .edit-profile.alert ul {
+                margin-top: 8px;
+            }
+
+            .edit-profile.alert .fa-triangle-exclamation {
+                color: var(--alert-color);
             }
 
             .profile-form li.list-group-item.get,
@@ -54,14 +79,19 @@
                 border-radius: 4px;
             }
 
+            .profile-form .box-group {
+                padding-top: 20px;
+            }
+
             @media(min-width: 768px) {
                 .profile-form .list-group {
                     flex-direction: row;
                     flex-wrap: wrap;
                 }
 
-                .profile-form .list-group .list-group-item {
-                    flex: 1 0 33%;
+                .profile-form>.list-group .list-group-item {
+                    flex: 1 0 calc(50% - 4px);
+                    max-width: calc(50% - 4px);
                 }
             }
 
@@ -76,9 +106,18 @@
                 }
             }
 
+            @media(min-width: 1280px) {
+                .profile-form .color-info-container {
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                }
+            }
+
             @media(min-width: 1440px) {
-                .profile-form .list-group .list-group-item {
-                    flex: 1 0 24%;
+                .profile-form>.list-group .list-group-item {
+                    flex: 1 0 calc(25% - 4px);
+                    max-width: calc(25% - 4px);
                 }
             }
         </style>
@@ -90,41 +129,46 @@
         representativos é crucial para integridade do sistema.
     </p>
 
-    <div class="alert alert-warning" role="alert">
-        <strong>Regras de edição de perfil:</strong>
-        <ul class="list-group">
-            <li class="list-group-item bg-transparent"> Não é possível alterar o nome do perfil </li>
-            <li class="list-group-item bg-transparent"> Evite perfil específico que será usado apenas em excessões. Ex.: suprimentos_luis, diretor_luis </li>
-            <li class="list-group-item bg-transparent"> Garanta que as habilidades estejam corretas. Isso ajuda a evitar perfis com acessos incorretos ou incompletos. </li>
-            <li class="list-group-item bg-transparent"> Facilite o processo de entendimento dos usuários. O nome do perfil precisa fazer sentido com suas habilidades</li>
-            <li class="list-group-item bg-transparent"> Analise <a href="{{ route('users.index') }}" class="link-danger">usuários e habilidades</a> antes de
-                ajustar o perfil. Pode ser que ajustar um ou poucos usuários seja a melhor solução. </li>
-            <li class="list-group-item bg-transparent"> Conjunto de habilidades é único. Mesmo perfis idênticos com nomes diferentes não são permitidos. </li>
+    <div class="alert edit-profile">
+        <strong><i class="fa-solid fa-triangle-exclamation"></i> Regras de criação de perfil:</strong>
+        <ul>
+            <li> Não é possível alterar o nome do perfil </li>
+            <li> Escolha um nome de perfil que facilite o processo de entendimento dos usuários.</li>
+            <li> Evite perfis específicos que serão usados apenas em excessões. Ex.: suprimentos_luis, diretor_luis </li>
+            <li> Garanta que as habilidades estejam corretas. Isso ajuda a evitar perfis com acessos incorretos ou incompletos. </li>
+            <li> Analise <a href="{{ route('users.index') }}" class="link-danger">usuários e habilidades</a> antes de ajustar o perfil.
+                Talvez realizar ajustes em habilidades existentes seja a melhor opção. </li>
         </ul>
     </div>
 
-    <form id="form-edit-profile" action="{{ route('profile.update', ['userProfile' => $profile]) }}" method="POST" class="profile-form mt-5">
+    <form id="form-edit-profile" action="{{ route('profile.update', ['userProfile' => $profile]) }}" method="POST" class="profile-form">
         @csrf
 
-        <div class="color-info">
-            <small class="get">Acessar dados</small>
-            <small class="post">Modificar dados</small>
-            <small class="delete">Excluir dados</small>
-            <small class="type-authorize">Autorização de perfil</small>
+        <div class="box-group">
+            <h3>Escolha um grupo de habilidades</h3>
+            <div class="profile-types">
+                <button class="btn btn-secondary" data-profile="normal"><i class="fa-solid fa-plus-minus"></i> habililidades normais</button>
+                <button class="btn btn-secondary" data-profile="suprimentos_inp"><i class="fa-solid fa-plus-minus"></i> habililidades de suprimentos INP</button>
+                <button class="btn btn-secondary" data-profile="suprimentos_hkm"><i class="fa-solid fa-plus-minus"></i> habililidades de suprimentos HKM</button>
+                <button class="btn btn-secondary" data-profile="gestor_usuarios"><i class="fa-solid fa-plus-minus"></i> habililidades de gestor de usuários</button>
+                <button class="btn btn-secondary" data-profile="gestor_fornecedores"><i class="fa-solid fa-plus-minus"></i> habililidades de gestor de fornecedores</button>
+                <button class="btn btn-secondary" data-profile="diretor"><i class="fa-solid fa-plus-minus"></i> habililidades de diretor</button>
+            </div>
         </div>
 
-        <div class="profile-types">
-            <button class="btn btn-secondary" data-profile="normal"><i class="fa-solid fa-plus-minus"></i> habililidades normais</button>
-            <button class="btn btn-secondary" data-profile="suprimentos_inp"><i class="fa-solid fa-plus-minus"></i> habililidades de suprimentos INP</button>
-            <button class="btn btn-secondary" data-profile="suprimentos_hkm"><i class="fa-solid fa-plus-minus"></i> habililidades de suprimentos HKM</button>
-            <button class="btn btn-secondary" data-profile="gestor_usuarios"><i class="fa-solid fa-plus-minus"></i> habililidades de gestor de usuários</button>
-            <button class="btn btn-secondary" data-profile="gestor_fornecedores"><i class="fa-solid fa-plus-minus"></i> habililidades de gestor de fornecedores</button>
-            <button class="btn btn-secondary" data-profile="diretor"><i class="fa-solid fa-plus-minus"></i> habililidades de diretor</button>
+        <div class="box-group color-info-container">
+            <h3>Gerencie as habilidades do perfil {{ $profile->name }}</h3>
+            <div class="color-info">
+                <small class="get">Acessar dados</small>
+                <small class="post">Modificar dados</small>
+                <small class="delete">Excluir dados</small>
+                <small class="type-authorize">Autorização de perfil</small>
+            </div>
         </div>
 
-        <label for="user-abilities">Lista de habilidades do novo perfil {{ $profile->name }}</label>
+        <h5 class="ability-list-title">Esse perfil pode acessar quais dados e telas?</h5>
         <ul class="list-group" id="user-abilities">
-            @foreach ($abilities as $ability)
+            @foreach ($getAbilities as $ability)
                 @php
                     $nameParts = explode('.', $ability->name);
                     $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
@@ -135,6 +179,69 @@
                     <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}" value="{{ $ability->id }}"
                             @checked($isChecked) data-profiles='{{ $profileNames }}'>
+                        <label class="form-check-label" for="ability-{{ $ability->id }}">
+                            {{ $ability->description }}
+                        </label>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+
+        <h5 class="ability-list-title">Esse perfil pode modificar quais dados?</h5>
+        <ul class="list-group" id="user-abilities">
+            @foreach ($postAbilities as $ability)
+                @php
+                    $nameParts = explode('.', $ability->name);
+                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                    $profileNames = $ability->profiles->pluck('name');
+                    $isChecked = $profile->abilities->pluck('name')->contains($ability->name);
+                @endphp
+                <li class="list-group-item {{ $method }}">
+                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
+                            value="{{ $ability->id }}" @checked($isChecked) data-profiles='{{ $profileNames }}'>
+                        <label class="form-check-label" for="ability-{{ $ability->id }}">
+                            {{ $ability->description }}
+                        </label>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+
+        <h5 class="ability-list-title">O que esse perfil pode excluir?</h5>
+        <ul class="list-group" id="user-abilities">
+            @foreach ($deleteAbilities as $ability)
+                @php
+                    $nameParts = explode('.', $ability->name);
+                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                    $profileNames = $ability->profiles->pluck('name');
+                    $isChecked = $profile->abilities->pluck('name')->contains($ability->name);
+                @endphp
+                <li class="list-group-item {{ $method }}">
+                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
+                            value="{{ $ability->id }}" @checked($isChecked) data-profiles='{{ $profileNames }}'>
+                        <label class="form-check-label" for="ability-{{ $ability->id }}">
+                            {{ $ability->description }}
+                        </label>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+
+        <h5 class="ability-list-title">Ao acessar e modificar dados esse perfil é autorizado como?</h5>
+        <ul class="list-group" id="user-abilities">
+            @foreach ($authorizeAbilities as $ability)
+                @php
+                    $nameParts = explode('.', $ability->name);
+                    $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
+                    $profileNames = $ability->profiles->pluck('name');
+                    $isChecked = $profile->abilities->pluck('name')->contains($ability->name);
+                @endphp
+                <li class="list-group-item {{ $method }}">
+                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
+                            value="{{ $ability->id }}" @checked($isChecked) data-profiles='{{ $profileNames }}'>
                         <label class="form-check-label" for="ability-{{ $ability->id }}">
                             {{ $ability->description }}
                         </label>
