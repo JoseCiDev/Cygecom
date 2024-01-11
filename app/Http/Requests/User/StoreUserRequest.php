@@ -52,6 +52,12 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'max:255'
             ],
+            'approver_user_id' => [
+                'nullable',
+                'numeric',
+                'min:1',
+                'exists:users,id'
+            ],
             'number' => [
                 'required',
                 'string'
