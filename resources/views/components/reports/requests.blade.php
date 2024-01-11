@@ -398,8 +398,16 @@
                                             .join(', ');
 
                                         const supplierColumnMapping = {
-                                            product: () => item.purchase_request_product?.map((element) => element.supplier
-                                                ?.corporate_name),
+                                            product: () => {
+                                                const uniqueSuppliers = [];
+                                                item.purchase_request_product?.forEach((element) => {
+                                                    const supplierName = element.supplier?.corporate_name;
+                                                    if (!uniqueSuppliers.includes(supplierName)) {
+                                                        uniqueSuppliers.push(supplierName);
+                                                    }
+                                                });
+                                                return uniqueSuppliers;
+                                            },
                                             service: () => [item.service?.supplier?.corporate_name],
                                             contract: () => [item.contract?.supplier?.corporate_name],
                                         };
@@ -664,7 +672,16 @@
                                 const $div = $(document.createElement('div')).addClass('tag-category');
 
                                 const supplierColumnMapping = {
-                                    product: () => row.purchase_request_product?.map((element) => element.supplier?.corporate_name),
+                                    product: () => {
+                                        const uniqueSuppliers = [];
+                                        row.purchase_request_product?.forEach((element) => {
+                                            const supplierName = element.supplier?.corporate_name;
+                                            if (!uniqueSuppliers.includes(supplierName)) {
+                                                uniqueSuppliers.push(supplierName);
+                                            }
+                                        });
+                                        return uniqueSuppliers;
+                                    },
                                     service: () => [row.service?.supplier?.corporate_name],
                                     contract: () => [row.contract?.supplier?.corporate_name],
                                 };

@@ -696,9 +696,10 @@
 
                 $editValueInputModal.trigger('input');
 
-                observation.val(rowData.observation);
+                const statusToModal = (statusValues.find((status) => status.description === rowData.status)).id;
+                status.val(statusToModal).trigger('change');
 
-                status.select2('val', statusValues.find((status) => status.description === rowData.status).id);
+                observation.val(rowData.observation);
 
                 $('#form-modal-edit-service-installment').one('submit', function(event) {
                     event.preventDefault();
