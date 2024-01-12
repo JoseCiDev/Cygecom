@@ -7,10 +7,10 @@
         <span class="cnpj-span-warning">Inválido!</span>
         <input type="hidden" id="cnpj-validator" value="" required data-rule-required="true">
     </label>
-    <input value="{{ $cnpj }}" type="text" name="{{ $name }}" id="{{ $id }}"
+    <input value="{{ $cnpj }}" type="text" name="{{ $name }}" id="{{ $id }}" @disabled($supplier !== null && !$cnpj)
         data-cy="{{ $dataCy }}" placeholder="00.000.000/0000-00" class="form-control cpf-cnpj" minLength="18">
 
-    <input type="checkbox" id="is-international-supplier">
+    <input type="checkbox" id="is-international-supplier" @checked($supplier !== null && !$cnpj)>
     <label for="is-international-supplier" class="secondary-text"> É internacional. (Não possui CNPJ)</label>
 </div>
 
@@ -127,10 +127,6 @@
 
             if (cnpjBackend !== null) {
                 $cnpj.trigger('input');
-            }
-
-            if (cnpjBackend === null && supplier !== null) {
-                $('#is-international-supplier').trigger('click');
             }
 
             if($cnpj.val()) {
