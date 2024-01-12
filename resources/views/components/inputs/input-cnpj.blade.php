@@ -19,7 +19,7 @@
         $(() => {
             const $identificationDocument = $('.cpf-cnpj');
 
-            $identificationDocument.imask({
+            const $cnpjMask = $identificationDocument.imask({
                 mask: '00.000.000/0000-00'
             });
 
@@ -89,7 +89,7 @@
                 let isChecked = $(this).is(':checked');
 
                 if (isChecked) {
-                    $cnpj.val('');
+                    $cnpjMask.value = '';
                     $inputCnpjValidator.val(true);
                     $cnpjSpanWarning.hide();
                     $cnpj.prop('disabled', true)
