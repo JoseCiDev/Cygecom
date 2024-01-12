@@ -291,6 +291,7 @@
                 $address.each(function() {
                     if (isChecked) {
                         $(this).removeRequired().closest('.form-group').removeClass('has-error');
+                        $(this).valid();
                     } else if (!$(this).is('#street_number') || !$checkboxHasNoStreetNumber.is(':checked')) {
                         $(this).makeRequired();
                     }
@@ -306,7 +307,7 @@
                     $(this).closest('.form-group').removeClass('has-error');
                     $(this).closest('.form-group').removeClass('has-success');
                     $streetNumber.removeRequired();
-                } else {
+                } else if (!$isInternationalSupplier.is(':checked')) {
                     $streetNumber.makeRequired();
                 }
                 const currentValue = isChecked ? null : $(this).data('last-value');
