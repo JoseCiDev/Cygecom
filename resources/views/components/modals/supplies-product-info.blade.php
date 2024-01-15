@@ -212,7 +212,7 @@
                                         <ul class="list-group half-width">
                                             <h5 class="mb-1"><strong><i class="fa fa-user"></i> Informações do solicitante</strong></h5>
                                             <li class="list-group-item"><strong>E-mail do solicitante:</strong> ${item.email || '---'}</li>
-                                            <li class="list-group-item"><strong>É comprador:</strong> ${item.is_buyer ? 'Sim' : 'Não'}</li>
+                                            <li class="list-group-item"><strong>Autorização para solicitar:</strong> ${item.is_buyer ? 'Autorizado' : 'Não autorizado'}</li>
                                         </ul>
                                     `);
 

@@ -30,6 +30,8 @@ class SupplierController extends Controller
         $length = (int) request()->query('length', 10);
         $searchValue = request()->query('search')['value'];
         $currentPage = ($start / $length) + 1;
+        $orderColumnIndex = (int) request()->query('order', [0 => ['column' => 0]])[0]['column'];
+        $orderDirection = (string) request()->query('order', [0 => ['dir' => 'asc']])[0]['dir'];
 
         try {
             $query = $this->supplierService->getSuppliers();
@@ -44,6 +46,9 @@ class SupplierController extends Controller
                         ->orWhere('qualification', '=', "{$searchValue}");
                 });
             }
+
+            $orderValue = $this->supplierService->orderByMapped($query, $orderColumnIndex);
+            $query->orderBy($orderValue, $orderDirection);
 
             $suppliersQuery = $query->orderBy('created_at', 'desc')->paginate($length, ['*'], 'page', $currentPage);
         } catch (Exception $error) {
@@ -157,9 +162,9 @@ class SupplierController extends Controller
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
         }
 
-        session()->flash('success', "Fornecedor atualizado com sucesso!");
+        session()->flash('success', "Fornecedor $id atualizado com sucesso!");
 
-        return redirect()->route('supplier', ['id' => $id]);
+        return redirect()->route('suppliers');
     }
 
     public function delete(int $id): RedirectResponse
