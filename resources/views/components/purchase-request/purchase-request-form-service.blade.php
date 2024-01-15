@@ -378,7 +378,7 @@
                     </div>
 
                     <input type="hidden" class="no-validation"
-                        value="{{ $purchaseRequest?->service?->paymentInfo?->id ?? null }}"
+                        value="{{ $isCopy ? null : $purchaseRequest?->service?->paymentInfo?->id }}"
                         name="service[payment_info][id]">
 
                     {{-- Nº PARCELAS --}}
