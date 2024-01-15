@@ -342,7 +342,7 @@
                     </div>
 
                     <input type="hidden" id="product-payment-info-id" data-cy="product-payment-info-id"
-                        class="no-validation" value="{{ $purchaseRequest?->product?->paymentInfo?->id ?? null }}"
+                        class="no-validation" value="{{ $isCopy ? null : $purchaseRequest?->product?->paymentInfo?->id }}"
                         name="product[payment_info][id]">
 
                     {{-- Nº PARCELAS --}}

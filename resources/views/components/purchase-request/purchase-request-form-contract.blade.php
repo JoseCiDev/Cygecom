@@ -448,7 +448,7 @@
                         </div>
                     </div>
 
-                    <input type="hidden" value="{{ $purchaseRequest?->contract?->paymentInfo?->id ?? null }}" name="contract[payment_info][id]" data-cy="contract[payment_info][id]">
+                    <input type="hidden" value="{{ $isCopy ? null : $purchaseRequest?->contract?->paymentInfo?->id }}" name="contract[payment_info][id]" data-cy="contract[payment_info][id]">
 
                     <input type="hidden" value="" name="contract[quantity_of_installments]" id="qtd-installments" data-cy="qtd-installments">
                 </div>
