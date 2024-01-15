@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Enums\CompanyGroup;
-use App\Enums\PurchaseRequestStatus;
-use App\Enums\PurchaseRequestType;
-use App\Providers\PurchaseRequestService;
-use App\Providers\SupplierService;
 use Illuminate\Http\Request;
+use App\Enums\PurchaseRequestType;
+use App\Providers\SupplierService;
+use App\Enums\PurchaseRequestStatus;
+use App\Providers\PurchaseRequestService;
 
 class SuppliesController extends Controller
 {
@@ -21,57 +22,40 @@ class SuppliesController extends Controller
      */
     public function index()
     {
-        $currentProfile = auth()->user()->profile->name;
-
         $excludedStatus = [
             PurchaseRequestStatus::RASCUNHO,
             PurchaseRequestStatus::FINALIZADA,
             PurchaseRequestStatus::CANCELADA
         ];
-        $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()
+        $purchaseRequestsGoupedByType = $this->purchaseRequestService->allPurchaseRequests()
             ->whereNull('deleted_at')
+            ->whereNull('supplies_user_id')
             ->whereNotIn('status', $excludedStatus)
-            ->get();
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->type->value;
+            });
 
-        $typesGrouped = $purchaseRequests->groupBy(function ($item) {
-            return $item->type->value;
-        });
+        $productRequests = $this->purchaseRequestService->getRequestsByCompany(PurchaseRequestType::PRODUCT, $purchaseRequestsGoupedByType);
+        $serviceRequests = $this->purchaseRequestService->getRequestsByCompany(PurchaseRequestType::SERVICE, $purchaseRequestsGoupedByType);
+        $contractRequests = $this->purchaseRequestService->getRequestsByCompany(PurchaseRequestType::CONTRACT, $purchaseRequestsGoupedByType);
 
-        $products = $typesGrouped->get(PurchaseRequestType::PRODUCT->value, collect());
-        $services = $typesGrouped->get(PurchaseRequestType::SERVICE->value, collect());
-        $contracts = $typesGrouped->get(PurchaseRequestType::CONTRACT->value, collect());
+        $params = [
+            'productsQtdByCompany' => $productRequests['byCompany'],
+            'productsTotal' => $productRequests['total'],
+            'servicesQtdByCompany' => $serviceRequests['byCompany'],
+            'servicesTotal' => $serviceRequests['total'],
+            'contractQtdByCompany' => $contractRequests['byCompany'],
+            'contractsTotal' => $contractRequests['total'],
+        ];
+
+        $products = $purchaseRequestsGoupedByType->get(PurchaseRequestType::PRODUCT->value, collect());
+        $services = $purchaseRequestsGoupedByType->get(PurchaseRequestType::SERVICE->value, collect());
+        $contracts = $purchaseRequestsGoupedByType->get(PurchaseRequestType::CONTRACT->value, collect());
 
         $today = \Carbon\Carbon::today()->format('Y-m-d');
 
-        $productsFromInp = $this->supplierService->filterRequestByCompanyGroup($products, CompanyGroup::INP);
-        $productsFromHkm = $this->supplierService->filterRequestByCompanyGroup($products, CompanyGroup::HKM);
-
-        $servicesFromInp = $this->supplierService->filterRequestByCompanyGroup($services, CompanyGroup::INP);
-        $servicesFromHkm = $this->supplierService->filterRequestByCompanyGroup($services, CompanyGroup::HKM);
-
-        $contractsFromInp = $this->supplierService->filterRequestByCompanyGroup($contracts, CompanyGroup::INP);
-        $contractsFromHkm = $this->supplierService->filterRequestByCompanyGroup($contracts, CompanyGroup::HKM);
-
-        $params = [
-            'purchaseRequests' => $purchaseRequests,
-            'productQtd' => $products->count(),
-            'serviceQtd' => $services->count(),
-            'contractQtd' => $contracts->count(),
-            'productsFromInp' => $productsFromInp,
-            'productsFromHkm' => $productsFromHkm,
-            'servicesFromInp' => $servicesFromInp,
-            'servicesFromHkm' => $servicesFromHkm,
-            'contractsFromInp' => $contractsFromInp,
-            'contractsFromHkm' => $contractsFromHkm,
-        ];
-
-        if ($currentProfile === 'admin') {
-            $params = array_merge($params, $this->getComexAndDesiredTodayCounts($products, $services, $contracts, $today));
-        } elseif ($currentProfile === 'suprimentos_hkm') {
-            $params = array_merge($params, $this->getComexAndDesiredTodayCounts($productsFromHkm, $servicesFromHkm, $contractsFromHkm, $today));
-        } elseif ($currentProfile === 'suprimentos_inp') {
-            $params = array_merge($params, $this->getComexAndDesiredTodayCounts($productsFromInp, $servicesFromInp, $contractsFromInp, $today));
-        }
+        $params = array_merge($params, $this->getComexAndDesiredTodayCounts($products, $services, $contracts, $today));
 
         return view('components.supplies.index', $params);
     }

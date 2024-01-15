@@ -82,12 +82,12 @@ class SupplierService extends ServiceProvider
         $supplier->save();
     }
 
-    public function filterRequestByCompanyGroup(Collection $requests, CompanyGroup $companyGroup)
+    public function filterRequestByCompanyGroup(Collection $requests, string $company)
     {
-        return $requests->filter(function ($item) use ($companyGroup) {
+        return $requests->filter(function ($item) use ($company) {
             $costCenterApportionments = $item->costCenterApportionment;
-            return $costCenterApportionments->contains(function ($apportionment) use ($companyGroup) {
-                return $apportionment->costCenter->company->group->value === $companyGroup->value;
+            return $costCenterApportionments->contains(function ($apportionment) use ($company) {
+                return $apportionment->costCenter->company->name === $company;
             });
         });
     }
