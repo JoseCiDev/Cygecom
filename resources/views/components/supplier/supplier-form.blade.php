@@ -270,31 +270,40 @@
 @push('scripts')
     <script type="module">
         $(() => {
-            function setAddressRules() {
-                const isChecked = $(this).is(':checked');
-                const $address = $('#postal_code, #state, #city, #neighborhood, #street, #street_number');
-                isChecked ? $address.removeRequired() : $address.makeRequired();
-            }
-
-            $('#is-international-supplier').on('change', setAddressRules)
-        });
-    </script>
-
-    <script type="module">
-        $(() => {
             const $phoneNumber = $('.phone-number');
             const $streetNumber = $('.street-number');
             const $checkboxHasNoStreetNumber = $('.checkbox-has-no-street-number');
+            const $isInternationalSupplier = $('#is-international-supplier');
 
-            // checkbox sem número
+            if ($checkboxHasNoStreetNumber.is(':checked') || $isInternationalSupplier.is(':checked')) {
+                $streetNumber.removeRequired();
+            }
+
+            function setAddressRules() {
+                const isChecked = $(this).is(':checked');
+                const $address = $('#postal_code, #state, #city, #neighborhood, #street, #street_number');
+
+                $address.each(function() {
+                    if (isChecked) {
+                        $(this).removeRequired().closest('.form-group').removeClass('has-error');
+                        $(this).valid();
+                    } else if (!$(this).is('#street_number') || !$checkboxHasNoStreetNumber.is(':checked')) {
+                        $(this).makeRequired();
+                    }
+                });
+            }
+
+            $('#is-international-supplier').on('change', setAddressRules).trigger('change');
+
             $checkboxHasNoStreetNumber.on('click', function() {
                 const isChecked = $(this).is(':checked');
-                $streetNumber.data('rule-required', !isChecked);
-                $streetNumber.valid();
                 if (isChecked) {
                     $(this).data('last-value', $streetNumber.val());
                     $(this).closest('.form-group').removeClass('has-error');
                     $(this).closest('.form-group').removeClass('has-success');
+                    $streetNumber.removeRequired();
+                } else if (!$isInternationalSupplier.is(':checked')) {
+                    $streetNumber.makeRequired();
                 }
                 const currentValue = isChecked ? null : $(this).data('last-value');
                 $streetNumber.prop('readonly', isChecked).val(currentValue).valid();

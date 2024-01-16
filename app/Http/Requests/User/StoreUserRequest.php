@@ -53,6 +53,12 @@ class StoreUserRequest extends FormRequest
                 'max:255',
                 new ProfileType
             ],
+            'approver_user_id' => [
+                'nullable',
+                'numeric',
+                'min:1',
+                'exists:users,id'
+            ],
             'number' => [
                 'required',
                 'string'
