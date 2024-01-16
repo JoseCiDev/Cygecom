@@ -145,7 +145,7 @@
                                                     data-cy="btn-copy-request-{{ $index }}">
                                                     <i class="fa fa fa-copy"></i>
                                                 </a>
-                                                @if ($purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value)
+                                                @if ($purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value && Gate::allows('delete.api.requests.destroy'))
                                                     <button data-route="api.requests.destroy" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                                                         data-id="{{ $purchaseRequest->id }}" rel="tooltip" title="Excluir" class="btn" data-bs-toggle="modal"
                                                         data-bs-target="#modal-delete" data-cy="btn-delete-request-{{ $index }}">
