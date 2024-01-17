@@ -494,7 +494,7 @@
             </div>
 
             <div class="form-actions pull-right" style="margin-top:50px; padding-bottom:20px">
-                @if (!$hasSentRequest)
+                @if (!$hasSentRequest && Gate::any(['post.requests.service.store', 'post.requests.service.update']))
                     <input type="hidden" name="action" id="action" data-cy="action" value="">
 
                     <button type="submit" data-cy="save-draft" class="btn btn-primary btn-draft" style="margin-right: 10px">

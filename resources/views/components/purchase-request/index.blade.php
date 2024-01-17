@@ -14,9 +14,11 @@
                     <div class="col-md-6" style="padding: 0">
                         <h1 class="page-title">Solicitações de Compra/Serviço</h1>
                     </div>
-                    <div class="col-md-6" style="padding: 0">
-                        <a data-cy="btn-nova-solicitacao" href="{{ route('requests.dashboard') }}" class="btn btn-primary btn-large pull-right">Nova Solicitação</a>
-                    </div>
+                    @can('get.requests.dashboard')
+                        <div class="col-md-6" style="padding: 0">
+                            <a data-cy="btn-nova-solicitacao" href="{{ route('requests.dashboard') }}" class="btn btn-primary btn-large pull-right">Nova Solicitação</a>
+                        </div>
+                    @endcan
                 </div>
 
                 <div class="row">
@@ -129,22 +131,26 @@
 
                                             {{-- BTN AÇÕES --}}
                                             <td style="white-space: nowrap;">
-                                                <a href="{{ route('requests.edit', ['type' => $purchaseRequest->type, 'id' => $purchaseRequest->id]) }}" class="btn"
-                                                    rel="tooltip" title="{{ $isDraft ? 'Editar' : 'Visualizar' }}" data-cy="btn-edit-request-{{ $index }}">
-                                                    @if ($isDraft)
-                                                        <i class="fa fa-edit"></i>
-                                                    @else
-                                                        <i class="fa fa-eye"></i>
-                                                    @endif
-                                                </a>
+                                                @can('get.requests.edit')
+                                                    <a href="{{ route('requests.edit', ['type' => $purchaseRequest->type, 'id' => $purchaseRequest->id]) }}" class="btn"
+                                                        rel="tooltip" title="{{ $isDraft ? 'Editar' : 'Visualizar' }}" data-cy="btn-edit-request-{{ $index }}">
+                                                        @if ($isDraft)
+                                                            <i class="fa fa-edit"></i>
+                                                        @else
+                                                            <i class="fa fa-eye"></i>
+                                                        @endif
+                                                    </a>
+                                                @endcan
                                                 @php
                                                     $endpoint = $purchaseRequest->type->value;
                                                     $route = "requests.$endpoint.create";
                                                 @endphp
-                                                <a href="{{ route($route, ['id' => $purchaseRequest->id]) }}" rel="tooltip" title="Copiar" class="btn"
-                                                    data-cy="btn-copy-request-{{ $index }}">
-                                                    <i class="fa fa fa-copy"></i>
-                                                </a>
+                                                @can("get.$route")
+                                                    <a href="{{ route($route, ['id' => $purchaseRequest->id]) }}" rel="tooltip" title="Copiar" class="btn"
+                                                        data-cy="btn-copy-request-{{ $index }}">
+                                                        <i class="fa fa fa-copy"></i>
+                                                    </a>
+                                                @endcan
                                                 @if ($purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value && Gate::allows('delete.api.requests.destroy'))
                                                     <button data-route="api.requests.destroy" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
                                                         data-id="{{ $purchaseRequest->id }}" rel="tooltip" title="Excluir" class="btn" data-bs-toggle="modal"
