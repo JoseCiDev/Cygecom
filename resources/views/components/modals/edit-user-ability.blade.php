@@ -54,6 +54,7 @@
         .user-abilities-container .list-group .list-group-item {
             border: .25px solid var(--black-color);
             border-radius: 4px;
+            cursor: pointer;
         }
 
         #modal-form-user-ability #store-user-abilities {
@@ -239,8 +240,14 @@
         const $storeUserAbilities = $('#store-user-abilities');
         const $abilityToast = $('#abilityToast');
         const $modalEditUserAbility = $('#modal-edit-user-ability');
+        const $listGroupItem = $('.list-group-item');
 
         let refreshPage = false;
+
+        const toggleCheckbox = (event) => {
+            const $checkBox = $(event.target).find('input[name="abilities[]"]');
+            $checkBox.prop('checked', !$checkBox.prop('checked'));
+        }
 
         $modalEditUserAbility.on('hidden.bs.modal', (event) => {
             if (refreshPage) {
@@ -350,5 +357,7 @@
             $form.off('submit');
             $form.on('submit', submit);
         });
+
+        $listGroupItem.on('click', toggleCheckbox);
     </script>
 @endpush

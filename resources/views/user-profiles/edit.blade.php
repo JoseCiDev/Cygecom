@@ -77,6 +77,7 @@
             .profile-form .list-group .list-group-item {
                 border: .25px solid var(--black-color);
                 border-radius: 4px;
+                cursor: pointer;
             }
 
             .profile-form .box-group {
@@ -260,6 +261,7 @@
             $(() => {
                 const $updateProfileBtn = $('#edit-profile');
                 const $profileBtns = $('button[data-profile]');
+                const $listGroupItem = $('.list-group-item');
 
                 const setProfileAbilities = (event) => {
                     event.preventDefault();
@@ -296,9 +298,16 @@
                     $.fn.showModalAlert(title, message, () => $('#form-edit-profile').trigger('submit'), 'modal-lg');
                 }
 
+                const toggleCheckbox = (event) => {
+                    const $checkBox = $(event.target).find('input[name="abilities[]"]');
+                    $checkBox.prop('checked', !$checkBox.prop('checked'));
+                }
+
                 $updateProfileBtn.on('click', updateProfile);
 
                 $profileBtns.on('click', setProfileAbilities);
+
+                $listGroupItem.on('click', toggleCheckbox);
             });
         </script>
     @endpush

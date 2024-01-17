@@ -94,6 +94,7 @@
             .profile-form>.list-group .list-group-item {
                 border: .25px solid var(--black-color);
                 border-radius: 4px;
+                cursor: pointer;
             }
 
             .profile-form .box-group {
@@ -210,7 +211,7 @@
                     $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                     $profileNames = $ability->profiles->pluck('name');
                 @endphp
-                <li class="list-group-item {{ $method }}">
+                <li class="list-group-item {{ $method }}" for="ability-{{ $ability->id }}">
                     <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}" value="{{ $ability->id }}"
                             @checked($profileNames->contains('normal')) data-profiles='{{ $profileNames }}'>
@@ -292,6 +293,7 @@
             $(() => {
                 const $createProfileBtn = $('#create-profile');
                 const $profileBtns = $('button[data-profile]');
+                const $listGroupItem = $('.list-group-item');
 
                 const setProfileAbilities = (event) => {
                     event.preventDefault();
@@ -347,9 +349,16 @@
                     $.fn.showModalAlert(title, message, () => $('#form-create-profile').trigger('submit'), 'modal-lg');
                 }
 
+                const toggleCheckbox = (event) => {
+                    const $checkBox = $(event.target).find('input[name="abilities[]"]');
+                    $checkBox.prop('checked', !$checkBox.prop('checked'));
+                }
+
                 $createProfileBtn.on('click', createProfile);
 
                 $profileBtns.on('click', setProfileAbilities);
+
+                $listGroupItem.on('click', toggleCheckbox);
             });
         </script>
     @endpush
