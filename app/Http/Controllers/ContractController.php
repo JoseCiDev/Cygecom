@@ -141,8 +141,7 @@ class ContractController extends Controller
             return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
         }
 
-        $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === '/supplies';
-
+        $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === 'supplies/contract';
         if (!$isDraft && $isSuppliesRoute) {
             $msg = 'Valor total da solicitação atualizado com sucesso!';
             session()->flash('success', $msg);

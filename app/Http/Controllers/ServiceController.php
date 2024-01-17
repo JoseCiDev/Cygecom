@@ -139,7 +139,7 @@ class ServiceController extends Controller
             return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
         }
 
-        $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === '/supplies';
+        $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === 'supplies/service';
 
         if (!$isDraft && $isSuppliesRoute) {
             $msg = 'Valor total da solicitação atualizado com sucesso!';
