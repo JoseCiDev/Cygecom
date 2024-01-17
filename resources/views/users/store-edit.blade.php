@@ -528,10 +528,12 @@
             </div>
         @endif
 
-        <button id="submit" type="submit" class="btn btn-primary btn-large" data-cy="btn-submit-salvar">
-            <div class="spinner-border" role="status"></div>
-            Salvar
-        </button>
+        @if (Gate::any(['post.users.store', 'post.users.update']))
+            <button id="submit" type="submit" class="btn btn-primary btn-large" data-cy="btn-submit-salvar">
+                <div class="spinner-border" role="status"></div>
+                Salvar
+            </button>
+        @endif
     </form>
 
     @push('scripts')

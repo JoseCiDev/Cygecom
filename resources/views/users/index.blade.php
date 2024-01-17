@@ -36,7 +36,9 @@
 
         <div class="user-header">
             <h1 class="page-title">Lista de usuários</h1>
-            <a data-cy="btn-novo-usuario" href="{{ route('users.create') }}" class="btn btn-primary btn-large">Novo usuário</a>
+            @can('get.users.create')
+                <a data-cy="btn-novo-usuario" href="{{ route('users.create') }}" class="btn btn-primary btn-large">Novo usuário</a>
+            @endcan
         </div>
 
         <table style="width: 100%" class="table table-hover table-bordered dataTable" data-nosort="0" data-checkall="all" data-column_filter_dateformat="dd-mm-yy">
@@ -74,17 +76,23 @@
                                     rel="tooltip">
                                     <i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar dados usuário"></i>
                                 </a>
-                                <button data-route="api.users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" rel="tooltip"
-                                    class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-delete"
-                                    data-cy="btn-modal-excluir-usuario-{{ $index }}">
-                                    <i class="fa-solid fa-trash" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Excluir usuário"></i>
-                                </button>
-                                <button class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-edit-user-ability" data-user-id={{ $user->id }}>
-                                    <i class="fa-solid fa-sliders" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar habilidades do usuário"></i>
-                                </button>
-                                <a href="{{ route('users.show', ['user' => $user]) }}" class="btn btn-mini btn-secondary">
-                                    <i class="fa-solid fa-eye" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ver todas habilidades do usuário"></i>
-                                </a>
+                                @can('delete.api.users.destroy')
+                                    <button data-route="api.users.destroy" data-name="{{ $user->person->name }}" data-id="{{ $user->id }}" rel="tooltip"
+                                        class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-delete"
+                                        data-cy="btn-modal-excluir-usuario-{{ $index }}">
+                                        <i class="fa-solid fa-trash" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Excluir usuário"></i>
+                                    </button>
+                                @endcan
+                                @can('get.api.users.show')
+                                    <button class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-edit-user-ability" data-user-id={{ $user->id }}>
+                                        <i class="fa-solid fa-sliders" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar habilidades do usuário"></i>
+                                    </button>
+                                @endcan
+                                @can('get.users.show')
+                                    <a href="{{ route('users.show', ['user' => $user]) }}" class="btn btn-mini btn-secondary">
+                                        <i class="fa-solid fa-eye" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ver todas habilidades do usuário"></i>
+                                    </a>
+                                @endcan
                             </div>
                         </td>
                     </tr>

@@ -218,10 +218,12 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                        <button type="submit" id="store-user-abilities" class="btn btn-primary">
-                            <div class="spinner-border" role="status"></div>
-                            Salvar alterações
-                        </button>
+                        @can('post.api.user.abilities.store')
+                            <button type="submit" id="store-user-abilities" class="btn btn-primary">
+                                <div class="spinner-border" role="status"></div>
+                                Salvar alterações
+                            </button>
+                        @endcan
                     </div>
                 </form>
             </div>
