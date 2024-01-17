@@ -43,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::group(['prefix' => 'requests'], function () {
-        Route::get('/show/{id}', [PurchaseRequestController::class, 'showAPI'])->name('api.requests.show');
+        Route::middleware('can:get.api.requests.show')->get('/show/{id}', [PurchaseRequestController::class, 'showAPI'])->name('api.requests.show');
         Route::middleware('can:delete.api.requests.destroy')->delete('/destroy/{purchaseRequest}', [App\Http\Controllers\PurchaseRequestController::class, 'destroy'])->name('api.requests.destroy');
     });
 

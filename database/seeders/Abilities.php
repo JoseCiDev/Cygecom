@@ -60,6 +60,7 @@ class Abilities extends Seeder
             ['id' => 30, 'name' => 'delete.api.requests.destroy', 'description' => 'Excluir solicitação'],
             ['id' => 49, 'name' => 'get.api.product.suggestion.index', 'description' => 'Permite buscar sugestões de produtos através da API. É usado em novas solicitações'],
             ['id' => 50, 'name' => 'post.api.supplies.files.upload', 'description' => 'Permite upload de anexos da solicitação através da API'],
+            ['id' => 62, 'name' => 'get.api.requests.show', 'description' => 'Permite buscar dados de uma solicitação através da API. É usado na caixa flutuante de análise de solicitação.'],
 
             // Users
             ['id' => 31, 'name' => 'get.users.create', 'description' => 'Acessar tela de registrar novo usuário'],
@@ -99,7 +100,7 @@ class Abilities extends Seeder
 
         $normalAbilities = [
             3, 4, 5, // Web
-            17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 49, 50, // Requests
+            17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 49, 50, 62, // Requests
             44, 51, // Reports
             47, 48 // Supplies
         ];
