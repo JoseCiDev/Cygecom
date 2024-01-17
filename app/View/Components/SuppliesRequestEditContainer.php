@@ -6,7 +6,7 @@ use Closure;
 use App\Models\User;
 use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
-use App\Enums\{PurchaseRequestStatus, PurchaseRequestType};
+use App\Enums\{MainProfile, PurchaseRequestStatus, PurchaseRequestType};
 
 class SuppliesRequestEditContainer extends Component
 {
@@ -36,10 +36,16 @@ class SuppliesRequestEditContainer extends Component
             ? (PurchaseRequestType::SERVICE->value . "[price]")
             : ($this->requestType->value . "[amount]");
 
-        $this->allowedResponsables = User::with('person')
-            ->whereIn('user_profile_id', [1, 3, 4])
+        $allowedProfiles = [MainProfile::SUPRIMENTOS_HKM->value, MainProfile::SUPRIMENTOS_INP->value];
+        $users = User::with('person', 'profile.abilities', 'abilities')
+            ->whereHas('profile.abilities', fn ($subQuery) => $subQuery->whereIn('name', $allowedProfiles))
+            ->whereDoesntHave('profile.abilities', fn ($subQuery) => $subQuery->where('name', 'admin'))
+            ->orWhereHas('abilities', fn ($subQuery) => $subQuery->whereIn('name', $allowedProfiles))
+            ->whereDoesntHave('abilities', fn ($subQuery) => $subQuery->where('name', 'admin'))
             ->get()
             ->toArray();
+
+        $this->allowedResponsables = $users;
     }
 
     public function render(): View|Closure|string
