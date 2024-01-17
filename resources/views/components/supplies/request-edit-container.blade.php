@@ -93,9 +93,11 @@
 
     <div class="row" style="padding-top: 15px">
         <div class="col-sm-3">
-            <button data-cy="btn-edit-request" id="btn-edit-request" type="submit" class="btn btn-primary btn-small" @disabled($requestIsFromLogged)>
-                Atualizar solicitação
-            </button>
+            @if (Gate::any(['post.supplies.service.update', 'post.supplies.contract.update', 'post.supplies.product.update']))
+                <button data-cy="btn-edit-request" id="btn-edit-request" type="submit" class="btn btn-primary btn-small" @disabled($requestIsFromLogged)>
+                    Atualizar solicitação
+                </button>
+            @endif
         </div>
     </div>
 </form>

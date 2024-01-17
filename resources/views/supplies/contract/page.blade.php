@@ -124,21 +124,24 @@
                                     <td>{{ $showPurchaseOrder ? $contract?->purchase_order : '---' }}</td>
 
                                     <td class="text-center" style="white-space: nowrap;">
-                                        <button class="btn btn-mini btn-secondary" data-id="{{ $contract->id }}" data-bs-toggle="modal"
-                                            data-bs-target="#modal-supplies-contract-info" title="Analisar solicitação">
-                                            <i class="fa-solid fa-magnifying-glass"></i>
-                                        </button>
-
+                                        @can('get.api.requests.show')
+                                            <button class="btn btn-mini btn-secondary" data-id="{{ $contract->id }}" data-bs-toggle="modal"
+                                                data-bs-target="#modal-supplies-contract-info" title="Analisar solicitação">
+                                                <i class="fa-solid fa-magnifying-glass"></i>
+                                            </button>
+                                        @endcan
                                         @php
                                             $existSuppliesUser = (bool) $contract->suppliesUser;
                                             $existResponsibility = (bool) $contract->responsibility_marked_at;
                                             $isOwnUserRequest = $contract->user->id === auth()->user()->id;
                                             $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
                                         @endphp
-                                        <a href="{{ route('supplies.contract.show', ['id' => $contract->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
-                                            data-is-to-show="{{ $isToShow ? 'true' : 'false' }}" data-cy="btn-open-details-{{ $index }}">
-                                            <i class="fa fa-external-link"></i>
-                                        </a>
+                                        @can('get.supplies.product.contract')
+                                            <a href="{{ route('supplies.contract.show', ['id' => $contract->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
+                                                data-is-to-show="{{ $isToShow ? 'true' : 'false' }}" data-cy="btn-open-details-{{ $index }}">
+                                                <i class="fa fa-external-link"></i>
+                                            </a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

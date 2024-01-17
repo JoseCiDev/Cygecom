@@ -13,9 +13,11 @@
                             solicitações no total
                         </p>
                         <div class="supplies-dashboard-requests-item-info-top-btns">
-                            <a href="{{ route('supplies.product.index') }}" class="supplies-dashboard-requests-item-info-top-btns-btn" data-cy="btn-all-products">
-                                Ver todas
-                            </a>
+                            @can('get.supplies.product.index')
+                                <a href="{{ route('supplies.product.index') }}" class="supplies-dashboard-requests-item-info-top-btns-btn" data-cy="btn-all-products">
+                                    Ver todas
+                                </a>
+                            @endcan
                         </div>
                     </div>
                     <div class="supplies-dashboard-requests-item-info-bottom">
@@ -66,9 +68,11 @@
                             solicitações no total
                         </p>
                         <div class="supplies-dashboard-requests-item-info-top-btns">
-                            <a href="{{ route('supplies.service.index') }}" class="supplies-dashboard-requests-item-info-top-btns-btn" data-cy="btn-all-services">
-                                Ver todas
-                            </a>
+                            @can('get.supplies.service.index')
+                                <a href="{{ route('supplies.service.index') }}" class="supplies-dashboard-requests-item-info-top-btns-btn" data-cy="btn-all-services">
+                                    Ver todas
+                                </a>
+                            @endcan
                         </div>
                     </div>
                     <div class="supplies-dashboard-requests-item-info-bottom">
@@ -119,9 +123,11 @@
                             solicitações no total
                         </p>
                         <div class="supplies-dashboard-requests-item-info-top-btns">
-                            <a href="{{ route('supplies.contract.index') }}" class="supplies-dashboard-requests-item-info-top-btns-btn" data-cy="btn-all-contracts">
-                                Ver todas
-                            </a>
+                            @can('get.supplies.contract.index')
+                                <a href="{{ route('supplies.contract.index') }}" class="supplies-dashboard-requests-item-info-top-btns-btn" data-cy="btn-all-contracts">
+                                    Ver todas
+                                </a>
+                            @endcan
                         </div>
                     </div>
                     <div class="supplies-dashboard-requests-item-info-bottom">
