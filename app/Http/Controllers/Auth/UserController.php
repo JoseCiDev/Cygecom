@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\{StoreAbilitiesRequest, StoreUserRequest, UpdateUserRequest};
 use App\Models\{Ability, Company, User};
 use App\Services\UserProfileService;
+use App\Enums\MainProfile;
 
 class UserController extends Controller
 {
@@ -204,10 +205,9 @@ class UserController extends Controller
     {
         $id = $user->id;
         $isAdmin = Gate::allows('admin');
-        $isGestorUsuarios = Gate::allows('gestor_usuarios');
-        $isOwnId = $id === auth()->user()->id;
+        $userToUpdateIsAdmin = MainProfile::ADMIN->value === $user->profile->name;
 
-        if ((!$isAdmin && !$isGestorUsuarios) && !$isOwnId) {
+        if ($userToUpdateIsAdmin && !$isAdmin) {
             return response()->json(['message' => 'Você não tem permissão para realizar esta ação.'], 403);
         }
 

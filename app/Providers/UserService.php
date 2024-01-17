@@ -97,12 +97,9 @@ class UserService extends ServiceProvider
 
             $user->save();
 
-            if (Gate::any(['admin', 'gestor_usuarios'])) {
-                $costCenterPermissions = $request['user_cost_center_permissions'] ?? null;
-
-                if ($costCenterPermissions !== null) {
-                    $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
-                }
+            $costCenterPermissions = $request['user_cost_center_permissions'] ?? null;
+            if ($costCenterPermissions !== null) {
+                $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
             }
 
             return $user;

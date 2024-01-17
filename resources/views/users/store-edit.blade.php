@@ -4,14 +4,17 @@
 
     $isAdmin = Gate::allows('admin');
     $isGestorUsuarios = Gate::allows('gestor_usuarios');
-    $isOwnRequest = isset($user) && auth()->user()->id === $user->id;
-    $isDisabled = !$isAdmin && (!$isGestorUsuarios || ($isGestorUsuarios && $isOwnRequest));
+    $canStore = Gate::allows('post.users.store');
+    $isOwnUser = isset($user) && auth()->user()->id === $user->id;
 
     $action = isset($user) ? 'users.update' : 'register';
     $route = isset($user) ? route($action, $user->id) : route('users.store');
     $formId = isset($user) ? 'form-update' : 'form-register';
     $userProfile = isset($user) ? $user->profile->name : null;
     $isBuyer = isset($user) ? $user->is_buyer : null;
+
+    $isDisabledInputs = !$isAdmin && (($action === 'register' && !$canStore) || ($action === 'users.update' && $isOwnUser));
+    $renderAdvancedInputs = $isAdmin || (($action === 'register' && $canStore) || ($action === 'users.update' && $canStore && !$isOwnUser && ($isAdmin || $isGestorUsuarios)));
 @endphp
 
 <x-app>
@@ -220,7 +223,7 @@
             {{-- NOME --}}
             <div class="form-group">
                 <label for="name" class="required regular-text">Nome</label>
-                <input type="text" name="name" id="name" data-cy="name" placeholder="Nome completo" class="form-control" @disabled($isDisabled)
+                <input type="text" name="name" id="name" data-cy="name" placeholder="Nome completo" class="form-control" @disabled($isDisabledInputs)
                     data-rule-required="true" data-rule-minlength="2" value="{{ old('name', isset($user) ? $user->person->name : '') }}">
                 @error('name')
                     <span class="text-danger">{{ $message }}</span>
@@ -230,14 +233,14 @@
             {{-- DATA NASCIMENTO --}}
             <div class="form-group">
                 <label for="birthdate" class="regular-text">Data de nascimento</label>
-                <input type="date" name="birthdate" id="birthdate" data-cy="birthdate" class="form-control" @disabled($isDisabled)
+                <input type="date" name="birthdate" id="birthdate" data-cy="birthdate" class="form-control" @disabled($isDisabledInputs)
                     value="{{ old('birthdate', isset($user) ? $user['person']['birthdate'] : '') }}">
             </div>
 
             {{-- DOCUMENTO --}}
             <div class="form-group">
                 <label for="cpf_cnpj" class="regular-text">Nº CPF/CNPJ</label>
-                <input type="text" name="cpf_cnpj" id="cpf_cnpj" data-cy="cpf_cnpj" data-rule-required="true" minlength="14" @disabled($isDisabled)
+                <input type="text" name="cpf_cnpj" id="cpf_cnpj" data-cy="cpf_cnpj" data-rule-required="true" minlength="14" @disabled($isDisabledInputs)
                     placeholder="Ex: 000.000.000-00" class="form-control cpf_cnpj" value="{{ old('cpf_cnpj', isset($user) ? $user->person->cpf_cnpj : '') }}">
                 @error('cpf_cnpj')
                     <span class="text-danger">{{ $message }}</span>
@@ -247,7 +250,7 @@
             {{-- PHONE --}}
             <div class="form-group">
                 <label for="number" class="regular-text"> Telefone/Celular </label>
-                <input type="text" name="number" id="number" data-cy="number" placeholder="Ex: (00) 0000-0000" @disabled($isDisabled) class="form-control phone_number"
+                <input type="text" name="number" id="number" data-cy="number" placeholder="Ex: (00) 0000-0000" @disabled($isDisabledInputs) class="form-control phone_number"
                     data-rule-required="true" minlength="14" value="{{ old('number', isset($user) ? $user->person->phone?->number : '') }}">
                 @error('number')
                     <span class="text-danger">{{ $message }}</span>
@@ -255,13 +258,13 @@
 
                 <div class="phone-type-box">
                     <div class="form-check">
-                        <input class="form-check-input" @disabled($isDisabled) @checked(isset($user) && $user->person->phone?->phone_type === 'personal') type="radio" name="phone_type" id="personal" data-cy="personal"
+                        <input class="form-check-input" @disabled($isDisabledInputs) @checked(isset($user) && $user->person->phone?->phone_type === 'personal') type="radio" name="phone_type" id="personal" data-cy="personal"
                             value="personal" data-skin="minimal">
                         <label class="form-check-label" for="personal"> Pessoal </label>
                     </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" @disabled($isDisabled) @checked(isset($user) && $user->person->phone?->phone_type === 'commercial') type="radio" name="phone_type" id="commercial"
+                        <input class="form-check-input" @disabled($isDisabledInputs) @checked(isset($user) && $user->person->phone?->phone_type === 'commercial') type="radio" name="phone_type" id="commercial"
                             data-cy="commercial" value="commercial" data-skin="minimal" @if (!isset($user)) checked @endif>
                         <label class="form-check-label" for="commercial"> Comercial </label>
                     </div>
@@ -279,7 +282,7 @@
             {{-- E-MAIL --}}
             <div class="form-group">
                 <label for="email" class="regular-text">E-mail</label>
-                <input type="email" name="email" id="email" data-cy="email" placeholder="user_email@essentia.com.br" @disabled($isDisabled)
+                <input type="email" name="email" id="email" data-cy="email" placeholder="user_email@essentia.com.br" @disabled($isDisabledInputs)
                     data-rule-required="true" data-rule-email="true" value="{{ old('email', isset($user) ? $user->email : '') }}"
                     class="form-control @error('email') is-invalid @enderror">
                 @error('email')
@@ -314,7 +317,7 @@
             </div>
         </div>
 
-        @if (Gate::any(['admin', 'gestor_usuarios']))
+        @if ($renderAdvancedInputs)
             <h4>Dados avançados de usuário</h4>
             <div class="advanced-user-data">
 
@@ -442,9 +445,9 @@
                         @endforeach
                     </div>
 
-                    <select @disabled($isDisabled) name="user_cost_center_permissions[]" id="user_cost_center_permissions" data-cy="user_cost_center_permissions"
-                        multiple="multiple" class="select2-me cost-centers-permissions"
-                        data-placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras" data-rule-required="true">
+                    <select name="user_cost_center_permissions[]" id="user_cost_center_permissions" data-cy="user_cost_center_permissions" multiple="multiple"
+                        class="select2-me cost-centers-permissions" data-placeholder="Selecione o(s) centro(s) de custo que este usuário possui permissão para compras"
+                        data-rule-required="true">
                         @foreach ($costCenters as $costCenter)
                             @php
                                 $companyName = $costCenter->company->name;
