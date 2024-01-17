@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\{DB, Gate, Hash};
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
+use App\Enums\MainProfile;
 use App\Models\{CostCenter, Person, Phone, User, UserCostCenterPermission, UserProfile};
 
 class UserService extends ServiceProvider
@@ -147,15 +148,22 @@ class UserService extends ServiceProvider
     }
     public function deleteUser(int $id)
     {
-        $user = User::with('person')->find($id);
+        $user = User::with('person', 'profile')->find($id);
         $person = $user->person;
         $currentUserId = auth()->user()->id;
 
         if ($user) {
-            $user->update([
+            $toUpdate = [
                 'deleted_at' => now(),
                 'deleted_by' => $currentUserId
-            ]);
+            ];
+
+            $hasMainProfile = MainProfile::tryFrom($user->profile->name);
+            if (!$hasMainProfile) {
+                $toUpdate['user_profile_id'] = UserProfile::where('name', MainProfile::NORMAL->value)->value('id');
+            }
+
+            $user->update($toUpdate);
             $user->save();
 
             if ($person) {
