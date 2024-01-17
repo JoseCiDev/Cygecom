@@ -60,7 +60,7 @@
             </div>
         @endif
 
-        @if (Gate::any(['get.supplies.product.index', 'get.supplies.service.index', 'get.supplies.contract.index']))
+        @if (Gate::any(['get.supplies.index', 'get.supplies.product.index', 'get.supplies.service.index', 'get.supplies.contract.index']))
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Suprimentos
