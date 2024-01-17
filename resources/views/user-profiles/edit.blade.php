@@ -251,9 +251,11 @@
             @endforeach
         </ul>
 
-        <button type="button" class="btn btn-primary btn-large" id="edit-profile">
-            Atualizar perfil
-        </button>
+        @can('post.profile.update')
+            <button type="button" class="btn btn-primary btn-large" id="edit-profile">
+                Atualizar perfil
+            </button>
+        @endcan
     </form>
 
     @push('scripts')

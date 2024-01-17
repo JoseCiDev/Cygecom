@@ -98,7 +98,7 @@
             </div>
         @endif
 
-        @if (Gate::any(['get.profile.create', 'profile.index']))
+        @if (Gate::any(['get.profile.index']))
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Permissões

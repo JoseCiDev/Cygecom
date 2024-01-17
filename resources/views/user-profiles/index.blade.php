@@ -34,7 +34,9 @@
 
         <div class="header">
             <h1 class="page-title">Lista de perfis</h1>
-            <a href="{{ route('profile.create') }}" class="btn btn-primary btn-large">Novo perfil</a>
+            @can('get.profile.create')
+                <a href="{{ route('profile.create') }}" class="btn btn-primary btn-large">Novo perfil</a>
+            @endcan
         </div>
 
         <table id="profiles-table" style="width: 100%" class="table table-hover table-bordered dataTable">

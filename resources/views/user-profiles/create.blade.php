@@ -283,9 +283,11 @@
             @endforeach
         </ul>
 
-        <button type="button" class="btn btn-large btn-primary" id="create-profile">
-            Criar perfil
-        </button>
+        @can('post.profile.store')
+            <button type="button" class="btn btn-large btn-primary" id="create-profile">
+                Criar perfil
+            </button>
+        @endcan
     </form>
 
     @push('scripts')
