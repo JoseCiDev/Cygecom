@@ -163,9 +163,9 @@ class SupplierController extends Controller
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
         }
 
-        session()->flash('success', "Fornecedor $id atualizado com sucesso!");
+        session()->flash('success', "Fornecedor nº $id atualizado com sucesso!");
 
-        return redirect()->route('suppliers.edit', ['id' => $id]);
+        return redirect()->route('suppliers.index');
     }
 
     /**
