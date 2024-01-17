@@ -196,6 +196,9 @@ $(() => {
                 text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
             }
         ],
+        drawCallback: (settings) => {
+            $.fn.setBootstrapTooltip();
+        },
         initComplete: () => $.fn.setStorageDtColumnConfig(),
     }));
 
