@@ -25,7 +25,8 @@
 
             <div class="col-sm-3">
                 <label class="regular-text" for="amount">Editar valor total desta solicitação</label>
-                <input type="text" placeholder="0,00" class="form-control format-amount" id="format-amount" data-cy="format-amount" value="{{ $amount }}">
+                <input type="text" placeholder="0,00" class="form-control format-amount" id="format-amount" data-cy="format-amount" value="{{ $amount }}"
+                    @disabled($requestIsFromLogged)>
                 <input type="hidden" name="{{ $inputName }}" id="amount" data-cy="amount" class="amount no-validation" value="{{ $amount }}">
             </div>
 
