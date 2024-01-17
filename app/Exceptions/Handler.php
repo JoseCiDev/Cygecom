@@ -50,7 +50,15 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof AuthorizationException) {
-            return redirect()->back()->withErrors('Desculpe, você não tem autorização para fazer essa ação.');
+
+            // Verificar se a requisição é uma requisição API
+            if ($request->is('api/*') || $request->wantsJson()) {
+                // Retornar uma resposta JSON
+                return response()->json(['message' => 'Desculpe, você não tem autorização para fazer essa ação.'], 403);
+            } else {
+                // Se não for uma requisição API, redirecionar ou retornar uma resposta de acordo com sua lógica
+                return redirect()->back()->withErrors('Desculpe, você não tem autorização para fazer essa ação.');
+            }
         }
 
         return parent::render($request, $exception);
