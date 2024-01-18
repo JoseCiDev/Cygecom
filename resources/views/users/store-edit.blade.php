@@ -183,7 +183,6 @@
 
     <x-modals.edit-user-ability :grouped-abilities="$groupedAbilities" />
     <x-modals.delete />
-    <x-toast />
 
     <div class="user-header">
         <h1 class="page-title">{{ isset($user) ? 'Editar usuário' : 'Novo usuário' }}</h1>

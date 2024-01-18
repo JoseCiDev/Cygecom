@@ -7,3 +7,23 @@
         <div class="toast-body"></div>
     </div>
 </div>
+
+@if ($errors->any() || session('success'))
+    @push('scripts')
+        <script type="module">
+            $(() => {
+                const errors = @json($errors->all());
+                const success = @json(session('success'));
+
+                if (errors.length) {
+                    $.fn.createToast(errors, 'Ops! Algo deu errado', 'bg-danger');
+                }
+
+                if (success) {
+                    $.fn.createToast(success, 'Successo!', 'bg-success');
+                }
+
+            });
+        </script>
+    @endpush
+@endif

@@ -156,8 +156,6 @@
         </style>
     @endpush
 
-    <x-toast />
-
     <h1>Criação de perfil</h1>
     <p>
         O módulo de criação de perfis permite configurar identidades significativas. Garantir que esses perfis sejam úteis e

@@ -101,6 +101,10 @@ $.fn.createToast = (message, title = 'Sucesso!', className = null) => {
     $toastClone.find('.toast-header-title').text(title);
     $toastClone.find('.toast-body').text(message);
 
+    if(className === 'bg-success' || className === 'bg-danger') {
+        $toastClone.find('.toast-header-title').css('color', '#fff')
+    }
+
     bootstrap.Toast.getOrCreateInstance($toastClone).show();
 }
 

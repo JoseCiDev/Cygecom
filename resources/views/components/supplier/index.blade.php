@@ -11,7 +11,6 @@
 <x-app>
 
     <x-modals.delete />
-    <x-toast />
 
     <div class="row">
         <div class="col-sm-12">

@@ -28,7 +28,6 @@
     @endpush
 
     <x-modals.delete />
-    <x-toast />
 
     <div class="box">
 

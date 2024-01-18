@@ -30,7 +30,6 @@
 
     <x-modals.delete />
     <x-modals.edit-user-ability :grouped-abilities="$groupedAbilities" />
-    <x-toast />
 
     <div class="box-content nopadding regular-text">
 

@@ -13,24 +13,21 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('img/gecom/favicon.png') }}" />
 
-    @vite([
-        'resources/css/app.css',
-        'resources/js/app.js',
-    ])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('styles')
 </head>
 
 <body>
     <div id="app">
-        <x-navbar.navigation/>
-        <x-navbar.environment-info/>
-        <x-modals.alert/>
+        <x-navbar.navigation />
+        <x-navbar.environment-info />
+        <x-modals.alert />
+        <x-toast />
 
         <div id="main">
             <div class="container-fluid">
                 <x-breadcrumb />
-                <x-alert />
                 {{ $slot }}
             </div>
         </div>
