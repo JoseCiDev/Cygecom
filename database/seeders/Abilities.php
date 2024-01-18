@@ -100,7 +100,7 @@ class Abilities extends Seeder
 
         $normalAbilities = [
             3, 4, 5, // Web
-            17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 49, 50, 62, // Requests
+            17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 49, 50, // Requests
             44, 51, // Reports
             47, 48 // Supplies
         ];
@@ -108,6 +108,7 @@ class Abilities extends Seeder
         $suppliesAbilities = [
             ...$normalAbilities,
             6, 7, 8, 9, 10, 11, 12, 13, 14, 15, // Supplies
+            62 // Requests
         ];
 
         $userManagerAbilities = [
