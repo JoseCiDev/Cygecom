@@ -2,6 +2,7 @@
 
 @php
     $getAbilities = $groupedAbilities->get('get', collect());
+    $apiAbilities = $groupedAbilities->get('api', collect());
     $postAbilities = $groupedAbilities->get('post', collect());
     $deleteAbilities = $groupedAbilities->get('delete', collect());
     $authorizeAbilities = $groupedAbilities->get('authorize', collect());
@@ -38,6 +39,11 @@
         .user-abilities-container li.list-group-item.delete,
         .delete {
             border-left: 6px solid #E74C3C;
+        }
+
+        .user-abilities-container li.list-group-item.api,
+        .api {
+            border-left: 6px solid #9abf20;
         }
 
         .user-abilities-container li.list-group-item.type-authorize,
@@ -146,6 +152,31 @@
                             @endforelse
                         </ul>
 
+                        <h5 class="ability-list-title">
+                            <i class="fa-solid fa-circle-info" data-bs-toggle='tooltip' data-bs-placement='top'
+                                data-bs-title="API's são consultas dinâmicas que normalmente são usadas em caixas flutuantes, dados que precisam ser acessados sem recarregar páginas ou tabelas que estão consultando dados"></i>
+                            API's - Quais permissões dinâmicas esse perfil deve ter?
+                        </h5>
+                        <ul class="list-group" id="user-abilities">
+                            @forelse ($apiAbilities as $ability)
+                                @php
+                                    $profileNames = $ability->profiles->pluck('name');
+                                @endphp
+                                <li class="list-group-item api">
+                                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top'
+                                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                                        <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
+                                            value="{{ $ability->id }}">
+                                        <label class="form-check-label" for="ability-{{ $ability->id }}">
+                                            {{ $ability->description }}
+                                        </label>
+                                    </div>
+                                </li>
+                            @empty
+                                <small>Nenhuma habilidade além das existentes no perfil foi encontrada.</small>
+                            @endforelse
+                        </ul>
+
                         <h5 class="ability-list-title">Pode modificar quais dados?</h5>
                         <ul class="list-group" id="user-abilities">
                             @forelse ($postAbilities as $ability)
@@ -229,6 +260,7 @@
             </div>
             <div class="color-info">
                 <small class="get">Acessar dados</small>
+                <small class="api">API's - Ações dinâmicas</small>
                 <small class="post">Modificar dados</small>
                 <small class="delete">Excluir dados</small>
                 <small class="type-authorize">Autorização de perfil</small>

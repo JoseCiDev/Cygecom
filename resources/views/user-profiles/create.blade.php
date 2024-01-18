@@ -35,6 +35,11 @@
                 border-left: 6px solid #E74C3C;
             }
 
+            .profile-form li.list-group-item.api,
+            .api {
+                border-left: 6px solid #9abf20;
+            }
+
             .profile-form li.list-group-item.type-authorize,
             .type-authorize {
                 border-left: 6px solid #000;
@@ -197,6 +202,7 @@
             <h3>Gerencie as habilidades do novo perfil</h3>
             <div class="color-info">
                 <small class="get">Acessar dados</small>
+                <small class="api">API's - Ações dinâmicas</small>
                 <small class="post">Modificar dados</small>
                 <small class="delete">Excluir dados</small>
                 <small class="type-authorize">Autorização de perfil</small>
@@ -215,6 +221,28 @@
                     <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}" value="{{ $ability->id }}"
                             @checked($profileNames->contains('normal')) data-profiles='{{ $profileNames }}'>
+                        <label class="form-check-label" for="ability-{{ $ability->id }}">
+                            {{ $ability->description }}
+                        </label>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+
+        <h5 class="ability-list-title">
+            <i class="fa-solid fa-circle-info" data-bs-toggle='tooltip' data-bs-placement='top'
+                data-bs-title="API's são consultas dinâmicas que normalmente são usadas em caixas flutuantes, dados que precisam ser acessados sem recarregar páginas ou tabelas que estão consultando dados"></i>
+            API's - Quais permissões dinâmicas esse perfil deve ter?
+        </h5>
+        <ul class="list-group" id="user-abilities">
+            @foreach ($apiAbilities as $ability)
+                @php
+                    $profileNames = $ability->profiles->pluck('name');
+                @endphp
+                <li class="list-group-item api" for="ability-{{ $ability->id }}">
+                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
+                            value="{{ $ability->id }}" @checked($profileNames->contains('normal')) data-profiles='{{ $profileNames }}'>
                         <label class="form-check-label" for="ability-{{ $ability->id }}">
                             {{ $ability->description }}
                         </label>

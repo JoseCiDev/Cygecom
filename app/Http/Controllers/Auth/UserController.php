@@ -43,7 +43,12 @@ class UserController extends Controller
 
         $abilities = Ability::with('users', 'profiles')->get();
         $groupedAbilities = $abilities->groupBy(function ($ability) {
-            $firstName = explode('.', $ability->name)[0];
+            $name = $ability->name;
+            if (str_contains($name, '.api.') && !str_contains($name, 'delete')) {
+                return 'api';
+            }
+
+            $firstName = explode('.', $name)[0];
             return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
         });
 
@@ -80,7 +85,12 @@ class UserController extends Controller
         $companies = Company::select('id', 'corporate_name', 'name', 'cnpj', 'group')->get();
         $abilities = Ability::with('users', 'profiles')->get();
         $groupedAbilities = $abilities->groupBy(function ($ability) {
-            $firstName = explode('.', $ability->name)[0];
+            $name = $ability->name;
+            if (str_contains($name, '.api.') && !str_contains($name, 'delete')) {
+                return 'api';
+            }
+
+            $firstName = explode('.', $name)[0];
             return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
         });
 

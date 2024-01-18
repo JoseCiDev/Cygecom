@@ -34,12 +34,18 @@ class UserProfileController extends Controller
         $abilities = Ability::with('users', 'profiles')->get();
 
         $groupedAbilities = $abilities->groupBy(function ($ability) {
-            $firstName = explode('.', $ability->name)[0];
+            $name = $ability->name;
+            if (str_contains($name, '.api.') && !str_contains($name, 'delete')) {
+                return 'api';
+            }
+
+            $firstName = explode('.', $name)[0];
             return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
         });
 
         $params = [
             'getAbilities' => $groupedAbilities->get('get', collect()),
+            'apiAbilities' => $groupedAbilities->get('api', collect()),
             'postAbilities' => $groupedAbilities->get('post', collect()),
             'deleteAbilities' => $groupedAbilities->get('delete', collect()),
             'authorizeAbilities' => $groupedAbilities->get('authorize', collect()),
@@ -87,26 +93,24 @@ class UserProfileController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(UserProfile $userProfile)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(UserProfile $userProfile)
     {
         $abilities = Ability::with('users', 'profiles')->get();
         $groupedAbilities = $abilities->groupBy(function ($ability) {
-            $firstName = explode('.', $ability->name)[0];
+            $name = $ability->name;
+            if (str_contains($name, '.api.') && !str_contains($name, 'delete')) {
+                return 'api';
+            }
+
+            $firstName = explode('.', $name)[0];
             return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
         });
 
         $params = [
             'getAbilities' => $groupedAbilities->get('get', collect()),
+            'apiAbilities' => $groupedAbilities->get('api', collect()),
             'postAbilities' => $groupedAbilities->get('post', collect()),
             'deleteAbilities' => $groupedAbilities->get('delete', collect()),
             'authorizeAbilities' => $groupedAbilities->get('authorize', collect()),
