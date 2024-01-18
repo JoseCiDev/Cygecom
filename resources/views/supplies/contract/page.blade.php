@@ -136,7 +136,7 @@
                                             $isOwnUserRequest = $contract->user->id === auth()->user()->id;
                                             $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
                                         @endphp
-                                        @can('get.supplies.product.contract')
+                                        @can('get.supplies.contract.show')
                                             <a href="{{ route('supplies.contract.show', ['id' => $contract->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
                                                 data-is-to-show="{{ $isToShow ? 'true' : 'false' }}" data-cy="btn-open-details-{{ $index }}">
                                                 <i class="fa fa-external-link"></i>
