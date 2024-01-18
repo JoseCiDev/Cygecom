@@ -215,9 +215,12 @@ class UserController extends Controller
     {
         $id = $user->id;
         $isAdmin = Gate::allows('admin');
+        $isGestorUsuarios = Gate::allows('gestor_usuarios');
+        $isOwnId = $id === auth()->user()->id;
         $userToUpdateIsAdmin = MainProfile::ADMIN->value === $user->profile->name;
 
-        if ($userToUpdateIsAdmin && !$isAdmin) {
+        // Para atualizar outro usuário deve ser admin ou gestor || Apenas admin atualizar admin
+        if (((!$isAdmin && !$isGestorUsuarios) && !$isOwnId) || ($userToUpdateIsAdmin && !$isAdmin)) {
             return response()->json(['message' => 'Você não tem permissão para realizar esta ação.'], 403);
         }
 
