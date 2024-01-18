@@ -90,7 +90,7 @@
                                 @endcan
                                 @can('get.users.show')
                                     <a href="{{ route('users.show', ['user' => $user]) }}" class="btn btn-mini btn-secondary">
-                                        <i class="fa-solid fa-eye" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ver todas habilidades do usuário"></i>
+                                        <i class="fa-solid fa-eye" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Visualizar cadastro de usuário"></i>
                                     </a>
                                 @endcan
                             </div>
