@@ -39,7 +39,7 @@ $(() => {
         });
         errorMessage += "</ul>"
 
-        const title = "Não foi possível registrar novo fornecedor!";
+        const title = "Não foi possível cadastrar fornecedor!";
         $.fn.showModalAlert(title, errorMessage, function() {
             const $modalSupplierRegister = $("#modal-supplier-register").first();
             const $firstInputSupplier = $modalSupplierRegister.find('.form-control:input').first();
