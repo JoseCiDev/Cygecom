@@ -7,7 +7,7 @@
                 }
 
                 50% {
-                    box-shadow: inset 0px 0px 20px 0px var(--bs-warning);
+                    box-shadow: inset 0px 0px 5px 4px var(--bs-warning);
                 }
 
                 100% {
@@ -16,7 +16,7 @@
             }
 
             .ability-relation-alert {
-                animation: blink 1.5s infinite;
+                animation: blink 2s infinite;
             }
 
             .ability-list-title {
@@ -360,7 +360,7 @@
 
                 const setProfileAbilities = (event) => {
                     event.preventDefault();
-                    $$listGroupItem.removeClass('ability-relation-alert');
+                    $listGroupItem.removeClass('ability-relation-alert');
 
                     const $profileTarget = $(event.target).data('profile');
 
