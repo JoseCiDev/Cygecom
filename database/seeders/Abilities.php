@@ -67,7 +67,7 @@ class Abilities extends Seeder
             ['id' => 32, 'name' => 'post.users.store', 'description' => 'Cadastrar usuário.'],
             ['id' => 33, 'name' => 'delete.api.users.destroy', 'description' => 'Excluir usuário.'],
             ['id' => 34, 'name' => 'get.users.index', 'description' => 'Acessar lista de usuários.'],
-            ['id' => 35, 'name' => 'get.user.edit', 'description' => 'Acessar edição de usuário.'],
+            ['id' => 35, 'name' => 'get.user.edit', 'description' => 'Acessar edição de outros usuários.'],
             ['id' => 46, 'name' => 'get.api.users.show', 'description' => 'Permite buscar usuário por id através da API. Usado em caixas flutuantes.'],
 
             // Suppliers
