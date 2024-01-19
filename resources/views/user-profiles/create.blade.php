@@ -415,8 +415,6 @@
                 }
 
                 const toggleCheckbox = (event) => {
-                    event.stopPropagation();
-
                     const $checkBox = $(event.target).find('input[name="abilities[]"]');
                     $checkBox.prop('checked', !$checkBox.prop('checked'));
 
