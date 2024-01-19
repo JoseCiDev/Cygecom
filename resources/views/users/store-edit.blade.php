@@ -192,7 +192,7 @@
                 @can('get.users.show')
                     <a href="{{ route('users.show', ['user' => $user]) }}" class="btn btn-small btn-secondary">
                         <i class="fa-solid fa-eye"></i>
-                        Ver todas habilidades
+                        Ver cadastro e habilidades
                     </a>
                 @endcan
 
@@ -726,6 +726,8 @@
                 });
 
                 $formUser.on('submit', submit);
+
+                $.fn.setBootstrapTooltip();
             })
         </script>
     @endpush

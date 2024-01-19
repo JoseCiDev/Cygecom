@@ -1,6 +1,24 @@
 <x-app>
     @push('styles')
         <style>
+            @keyframes blink {
+                0% {
+                    box-shadow: inset 0px 0px 0 0px var(--bs-warning);
+                }
+
+                50% {
+                    box-shadow: inset 0px 0px 20px 0px var(--bs-warning);
+                }
+
+                100% {
+                    box-shadow: inset 0px 0px 0 0px var(--bs-warning);
+                }
+            }
+
+            .ability-relation-alert {
+                animation: blink 1.5s infinite;
+            }
+
             .ability-list-title {
                 margin-top: 20px;
             }
@@ -83,6 +101,17 @@
                 border: .25px solid var(--black-color);
                 border-radius: 4px;
                 cursor: pointer;
+                transition: box-shadow .2s ease-in-out, transform .2s ease-in-out;
+            }
+
+            .profile-form .list-group .list-group-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+
+            .profile-form .list-group .list-group-item:focus-within {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             }
 
             .profile-form .box-group {
@@ -183,7 +212,8 @@
                     $isChecked = $profile->abilities->pluck('name')->contains($ability->name);
                 @endphp
                 <li class="list-group-item {{ $method }}">
-                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <div class="form-check form-switch"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}" value="{{ $ability->id }}"
                             @checked($isChecked) data-profiles='{{ $profileNames }}'>
                         <label class="form-check-label" for="ability-{{ $ability->id }}">
@@ -206,7 +236,8 @@
                     $isChecked = $profile->abilities->pluck('name')->contains($ability->name);
                 @endphp
                 <li class="list-group-item api">
-                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <div class="form-check form-switch"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
                             value="{{ $ability->id }}" @checked($isChecked) data-profiles='{{ $profileNames }}'>
                         <label class="form-check-label" for="ability-{{ $ability->id }}">
@@ -227,7 +258,8 @@
                     $isChecked = $profile->abilities->pluck('name')->contains($ability->name);
                 @endphp
                 <li class="list-group-item {{ $method }}">
-                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <div class="form-check form-switch"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
                             value="{{ $ability->id }}" @checked($isChecked) data-profiles='{{ $profileNames }}'>
                         <label class="form-check-label" for="ability-{{ $ability->id }}">
@@ -248,7 +280,8 @@
                     $isChecked = $profile->abilities->pluck('name')->contains($ability->name);
                 @endphp
                 <li class="list-group-item {{ $method }}">
-                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <div class="form-check form-switch"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
                             value="{{ $ability->id }}" @checked($isChecked) data-profiles='{{ $profileNames }}'>
                         <label class="form-check-label" for="ability-{{ $ability->id }}">
@@ -269,7 +302,8 @@
                     $isChecked = $profile->abilities->pluck('name')->contains($ability->name);
                 @endphp
                 <li class="list-group-item {{ $method }}">
-                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <div class="form-check form-switch"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
                             value="{{ $ability->id }}" @checked($isChecked) data-profiles='{{ $profileNames }}'>
                         <label class="form-check-label" for="ability-{{ $ability->id }}">
@@ -293,9 +327,12 @@
                 const $updateProfileBtn = $('#edit-profile');
                 const $profileBtns = $('button[data-profile]');
                 const $listGroupItem = $('.list-group-item');
+                const $abilitiesInputs = $('input[name="abilities[]"]');
 
                 const setProfileAbilities = (event) => {
                     event.preventDefault();
+                    $listGroupItem.removeClass('ability-relation-alert');
+
                     const $profileTarget = $(event.target).data('profile');
 
                     const abilitiesTargetsUnchecked = $('.ability-input').filter((_, element) => {
@@ -339,6 +376,8 @@
                 $profileBtns.on('click', setProfileAbilities);
 
                 $listGroupItem.on('click', toggleCheckbox);
+
+                $abilitiesInputs.on('input', (event) => $.fn.checkAbilityRelations(event));
             });
         </script>
     @endpush

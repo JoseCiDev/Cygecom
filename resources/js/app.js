@@ -26,6 +26,9 @@ import Chart from 'chart.js/auto';
 window.Chart = Chart;
 Chart.defaults.color = '#141414';
 
+import { checkAbilityRelations } from './abilities-relations.js';
+$.fn.checkAbilityRelations = checkAbilityRelations;
+
 import setColvisConfig from '../../public/js/utils/colvis-custom-user-preference.js';
 import {createChartDoughnut, createChartBar} from './create-chart-functions.js'
 window.createChartDoughnut = createChartDoughnut

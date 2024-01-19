@@ -10,6 +10,24 @@
 
 @push('styles')
     <style>
+        @keyframes blink {
+            0% {
+                box-shadow: inset 0px 0px 0 0px var(--bs-warning);
+            }
+
+            50% {
+                box-shadow: inset 0px 0px 20px 0px var(--bs-warning);
+            }
+
+            100% {
+                box-shadow: inset 0px 0px 0 0px var(--bs-warning);
+            }
+        }
+
+        .ability-relation-alert {
+            animation: blink 1.5s infinite;
+        }
+
         .ability-list-title {
             margin-top: 20px;
         }
@@ -61,6 +79,17 @@
             border: .25px solid var(--black-color);
             border-radius: 4px;
             cursor: pointer;
+            transition: box-shadow .2s ease-in-out, transform .2s ease-in-out;
+        }
+
+        .user-abilities-container .list-group .list-group-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-abilities-container .list-group .list-group-item:focus-within {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         #modal-form-user-ability #store-user-abilities {
@@ -138,8 +167,8 @@
                                     $profileNames = $ability->profiles->pluck('name');
                                 @endphp
                                 <li class="list-group-item {{ $method }}">
-                                    <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top'
-                                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                                    <div class="form-check form-switch"
+                                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                                         <input class="form-check-input ability-input" type="checkbox" role="switch" name="abilities[]" id="ability-{{ $ability->id }}"
                                             value="{{ $ability->id }}">
                                         <label class="form-check-label" for="ability-{{ $ability->id }}">
@@ -275,6 +304,7 @@
         const $abilityToast = $('#abilityToast');
         const $modalEditUserAbility = $('#modal-edit-user-ability');
         const $listGroupItem = $('.list-group-item');
+        const $abilitiesInputs = $('input[name="abilities[]"]');
 
         let refreshPage = false;
 
@@ -393,5 +423,7 @@
         });
 
         $listGroupItem.on('click', toggleCheckbox);
+
+        $abilitiesInputs.on('input', (event) => $.fn.checkAbilityRelations(event));
     </script>
 @endpush
