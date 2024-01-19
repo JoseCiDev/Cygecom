@@ -307,6 +307,8 @@
         }
 
         $modalEditUserAbility.on('hidden.bs.modal', (event) => {
+            $('.list-group-item').removeClass('ability-relation-alert');
+
             if (refreshPage) {
                 location.reload();
             }

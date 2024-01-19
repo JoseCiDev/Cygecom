@@ -24,8 +24,8 @@ const checkAbilityRelations = (event) => {
     const $checkBox = $(event.target);
     const abilityId = $checkBox.val();
     const isChecked = $checkBox.is(':checked');
-    const relations = abilityRelations[abilityId].relations;
-    const isAutoCheck = abilityRelations[abilityId].autoCheck;
+    const relations = abilityRelations[abilityId]?.relations;
+    const isAutoCheck = abilityRelations[abilityId]?.autoCheck;
 
     relations?.forEach(abilityIdTarget => {
         const $input = $(`input[name="abilities[]"][value="${abilityIdTarget}"]`);
@@ -33,6 +33,9 @@ const checkAbilityRelations = (event) => {
 
         if (isChecked) {
             $groupItem.addClass('ability-relation-alert');
+
+            const positionTarget = $input.offset().top - $(window).height() / 2;
+            $('html, body').animate({ scrollTop: positionTarget}, 'slow');
 
             if(isAutoCheck) {
                 const isRequiredMessage ='Atenção! Relações recomendadas foram marcadas automaticamente. Analise as permissões destacadas e desmarque se necessário.';
