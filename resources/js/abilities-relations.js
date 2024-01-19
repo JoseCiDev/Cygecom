@@ -32,7 +32,7 @@ const checkAbilityRelations = (event) => {
 
         if (isChecked) {
             $groupItem.addClass('ability-relation-alert');
-            const message = 'Essa habilidade costuma ser usada em conjunto com outra(s). Recomendado marcar habilidade destacada.';
+            const message = ' Recomendado marcar habilidade destacada. Essa habilidade costuma ser usada em conjunto com outra(s). Ignore o aviso caso habilidade destacada já estiver marcada.';
             $.fn.createToast(message, 'Permissões relacionadas', 'bg-warning');
         } else {
             $groupItem.removeClass('ability-relation-alert');

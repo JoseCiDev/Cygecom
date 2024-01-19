@@ -415,8 +415,12 @@
                 }
 
                 const toggleCheckbox = (event) => {
+                    event.stopPropagation();
+
                     const $checkBox = $(event.target).find('input[name="abilities[]"]');
                     $checkBox.prop('checked', !$checkBox.prop('checked'));
+
+                    $checkBox.trigger('change');
                 }
 
                 $createProfileBtn.on('click', createProfile);
@@ -425,7 +429,7 @@
 
                 $listGroupItem.on('click', toggleCheckbox);
 
-                $abilitiesInputs.on('input', (event) => $.fn.checkAbilityRelations(event));
+                $abilitiesInputs.on('change', (event) => $.fn.checkAbilityRelations(event));
             });
         </script>
     @endpush
