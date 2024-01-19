@@ -164,7 +164,6 @@
                                 @php
                                     $nameParts = explode('.', $ability->name);
                                     $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
-                                    $profileNames = $ability->profiles->pluck('name');
                                 @endphp
                                 <li class="list-group-item {{ $method }}">
                                     <div class="form-check form-switch"
@@ -188,9 +187,6 @@
                         </h5>
                         <ul class="list-group" id="user-abilities">
                             @forelse ($apiAbilities as $ability)
-                                @php
-                                    $profileNames = $ability->profiles->pluck('name');
-                                @endphp
                                 <li class="list-group-item api">
                                     <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top'
                                         data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
@@ -212,7 +208,6 @@
                                 @php
                                     $nameParts = explode('.', $ability->name);
                                     $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
-                                    $profileNames = $ability->profiles->pluck('name');
                                 @endphp
                                 <li class="list-group-item {{ $method }}">
                                     <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top'
@@ -235,7 +230,6 @@
                                 @php
                                     $nameParts = explode('.', $ability->name);
                                     $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
-                                    $profileNames = $ability->profiles->pluck('name');
                                 @endphp
                                 <li class="list-group-item {{ $method }}">
                                     <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top'
@@ -258,7 +252,6 @@
                                 @php
                                     $nameParts = explode('.', $ability->name);
                                     $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
-                                    $profileNames = $ability->profiles->pluck('name');
                                 @endphp
                                 <li class="list-group-item {{ $method }}">
                                     <div class="form-check form-switch" data-bs-toggle='tooltip' data-bs-placement='top'

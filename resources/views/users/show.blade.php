@@ -1,3 +1,17 @@
+@php
+    $getProfileAbilities = $groupedProfileAbilities->get('get', collect());
+    $apiProfileAbilities = $groupedProfileAbilities->get('api', collect());
+    $postProfileAbilities = $groupedProfileAbilities->get('post', collect());
+    $deleteProfileAbilities = $groupedProfileAbilities->get('delete', collect());
+    $authorizeProfileAbilities = $groupedProfileAbilities->get('authorize', collect());
+
+    $getUserAbilities = $groupedUserAbilities->get('get', collect());
+    $apiUserAbilities = $groupedUserAbilities->get('api', collect());
+    $postUserAbilities = $groupedUserAbilities->get('post', collect());
+    $deleteUserAbilities = $groupedUserAbilities->get('delete', collect());
+    $authorizeUserAbilities = $groupedUserAbilities->get('authorize', collect());
+@endphp
+
 <x-app>
     @push('styles')
         <style>
@@ -33,6 +47,11 @@
             .user-container li.list-group-item.delete,
             .delete {
                 border-left: 6px solid #E74C3C;
+            }
+
+            .user-container li.list-group-item.api,
+            .api {
+                border-left: 6px solid #9abf20;
             }
 
             .user-container li.list-group-item.type-authorize,
@@ -135,6 +154,7 @@
     @endpush
 
     <x-modals.delete />
+    <x-modals.edit-user-ability :grouped-abilities="$groupedAbilities" />
 
     <div class="user-container">
         <div class="user-header">
@@ -146,6 +166,13 @@
                         <i class="fa-solid fa-pen-to-square"></i>
                         Editar dados usuário
                     </a>
+
+                    @can('get.api.users.show', 'post.api.user.abilities.store')
+                        <button class="btn btn-mini btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-edit-user-ability" data-user-id={{ $id }}>
+                            <i class="fa-solid fa-sliders"></i>
+                            Editar habilidades
+                        </button>
+                    @endcan
 
                     @can('delete.api.users.destroy')
                         <button data-route="api.users.destroy" data-name="{{ $name }}" data-id="{{ $id }}" data-cy="btn-modal-excluir-usuario" data-bs-toggle="modal"
@@ -190,8 +217,24 @@
                         $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                         $profileNames = $ability->profiles->pluck('name');
                     @endphp
-                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
-                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <li class="list-group-item {{ $method }}"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
+                        {{ $ability->description }}
+                    </li>
+                @endforeach
+            </ul>
+
+            <h5 class="ability-list-title">
+                <i class="fa-solid fa-circle-info" data-bs-toggle='tooltip' data-bs-placement='top'
+                    data-bs-title="API's são consultas dinâmicas que normalmente são usadas em caixas flutuantes, dados que precisam ser acessados sem recarregar páginas ou tabelas que estão consultando dados"></i>
+                API's - Permissões dinâmicas do perfil:
+            </h5>
+            <ul class="list-group" id="user-abilities">
+                @foreach ($apiProfileAbilities as $ability)
+                    @php
+                        $profileNames = $ability->profiles->pluck('name');
+                    @endphp
+                    <li class="list-group-item api" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
                         {{ $ability->description }}
                     </li>
                 @endforeach
@@ -205,8 +248,8 @@
                         $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                         $profileNames = $ability->profiles->pluck('name');
                     @endphp
-                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
-                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <li class="list-group-item {{ $method }}"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                         {{ $ability->description }}
                     </li>
                 @endforeach
@@ -220,8 +263,8 @@
                         $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                         $profileNames = $ability->profiles->pluck('name');
                     @endphp
-                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
-                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <li class="list-group-item {{ $method }}"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                         {{ $ability->description }}
                     </li>
                 @endforeach
@@ -235,8 +278,8 @@
                         $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                         $profileNames = $ability->profiles->pluck('name');
                     @endphp
-                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
-                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <li class="list-group-item {{ $method }}"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                         {{ $ability->description }}
                     </li>
                 @endforeach
@@ -250,7 +293,7 @@
                 <strong>Habilidades específicas do usuário:</strong>
             </h4>
 
-            <h5 class="ability-list-title">Pode acessar quais dados e telas:</h5>
+            <h5 class="ability-list-title">Pode acessar os seguintes dados e telas:</h5>
             <ul class="list-group" id="user-abilities">
                 @forelse ($getUserAbilities as $ability)
                     @php
@@ -258,13 +301,29 @@
                         $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                         $profileNames = $ability->profiles->pluck('name');
                     @endphp
-                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
-                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <li class="list-group-item {{ $method }}"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                         {{ $ability->description }}
                     </li>
                 @empty
                     <small>Nenhuma habilidade além das existentes no perfil foi encontrada.</small>
                 @endforelse
+            </ul>
+
+            <h5 class="ability-list-title">
+                <i class="fa-solid fa-circle-info" data-bs-toggle='tooltip' data-bs-placement='top'
+                    data-bs-title="API's são consultas dinâmicas que normalmente são usadas em caixas flutuantes, dados que precisam ser acessados sem recarregar páginas ou tabelas que estão consultando dados"></i>
+                API's - Permissões dinâmicas:
+            </h5>
+            <ul class="list-group" id="user-abilities">
+                @foreach ($apiUserAbilities as $ability)
+                    @php
+                        $profileNames = $ability->profiles->pluck('name');
+                    @endphp
+                    <li class="list-group-item api" data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                        {{ $ability->description }}
+                    </li>
+                @endforeach
             </ul>
 
             <h5 class="ability-list-title">Pode modificar o seguintes dados:</h5>
@@ -275,8 +334,8 @@
                         $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                         $profileNames = $ability->profiles->pluck('name');
                     @endphp
-                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
-                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <li class="list-group-item {{ $method }}"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                         {{ $ability->description }}
                     </li>
                 @empty
@@ -292,8 +351,8 @@
                         $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                         $profileNames = $ability->profiles->pluck('name');
                     @endphp
-                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
-                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <li class="list-group-item {{ $method }}"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                         {{ $ability->description }}
                     </li>
                 @empty
@@ -309,8 +368,8 @@
                         $method = count($nameParts) > 1 ? $nameParts[0] : 'type-authorize';
                         $profileNames = $ability->profiles->pluck('name');
                     @endphp
-                    <li class="list-group-item {{ $method }}" data-bs-toggle='tooltip' data-bs-placement='top'
-                        data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})">
+                    <li class="list-group-item {{ $method }}"
+                        @can('admin') data-bs-toggle='tooltip' data-bs-placement='top' data-bs-title="{{ $ability->name }} (ID: {{ $ability->id }})" @endcan>
                         {{ $ability->description }}
                     </li>
                 @empty

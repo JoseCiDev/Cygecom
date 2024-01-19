@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Auth;
 use Exception;
 use Illuminate\View\View;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Http\{JsonResponse, RedirectResponse};
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
 use App\Providers\UserService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\{StoreAbilitiesRequest, StoreUserRequest, UpdateUserRequest};
 use App\Models\{Ability, Company, User};
-use App\Services\UserProfileService;
+use App\Services\{UserProfileService, AbilityService};
 use App\Enums\MainProfile;
 
 class UserController extends Controller
@@ -27,7 +27,8 @@ class UserController extends Controller
 
     public function __construct(
         private UserService $userService,
-        private UserProfileService $userProfileService
+        private UserProfileService $userProfileService,
+        private AbilityService $abilityService,
     ) {
     }
 
@@ -114,16 +115,7 @@ class UserController extends Controller
     {
         $profileAbilities = $user->profile->abilities;
         $userAbilities = $user->abilities;
-
-        $groupedProfileAbilities = $profileAbilities->groupBy(function ($ability) {
-            $firstName = explode('.', $ability->name)[0];
-            return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
-        });
-
-        $groupedUserAbilities = $userAbilities->groupBy(function ($ability) {
-            $firstName = explode('.', $ability->name)[0];
-            return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
-        });
+        $abilities = Ability::with('users', 'profiles')->get();
 
         $params = [
             'id' => $user->id,
@@ -139,16 +131,9 @@ class UserController extends Controller
             'approverEmail' => $user->approver?->email ?? '---',
             'isBuyer' => $user->is_buyer ? 'Autorizado' : 'Não autorizado',
             'canAssociateRequest' => $user?->can_associate_requester ? 'Autorizado' : 'Não autorizado',
-
-            'getProfileAbilities' => $groupedProfileAbilities->get('get', collect()),
-            'postProfileAbilities' => $groupedProfileAbilities->get('post', collect()),
-            'deleteProfileAbilities' => $groupedProfileAbilities->get('delete', collect()),
-            'authorizeProfileAbilities' => $groupedProfileAbilities->get('authorize', collect()),
-
-            'getUserAbilities' => $groupedUserAbilities->get('get', collect()),
-            'postUserAbilities' => $groupedUserAbilities->get('post', collect()),
-            'deleteUserAbilities' => $groupedUserAbilities->get('delete', collect()),
-            'authorizeUserAbilities' => $groupedUserAbilities->get('authorize', collect()),
+            'groupedProfileAbilities' => $this->abilityService->groupAbilities($profileAbilities),
+            'groupedUserAbilities' => $this->abilityService->groupAbilities($userAbilities),
+            'groupedAbilities' => $this->abilityService->groupAbilities($abilities),
         ];
 
         return view('users.show', $params);
@@ -187,10 +172,6 @@ class UserController extends Controller
         $profiles = $this->userProfileService->profiles()->get();
         $companies = Company::select('id', 'corporate_name', 'name', 'cnpj', 'group')->get();
         $abilities = Ability::with('users', 'profiles')->get();
-        $groupedAbilities = $abilities->groupBy(function ($ability) {
-            $firstName = explode('.', $ability->name)[0];
-            return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
-        });
 
         $params = [
             'user' => $user,
@@ -198,7 +179,7 @@ class UserController extends Controller
             'costCenters' => $costCenters,
             'profiles' => $profiles,
             'companies' => $companies,
-            'groupedAbilities' => $groupedAbilities
+            'groupedAbilities' => $this->abilityService->groupAbilities($abilities)
         ];
 
         return view('users.store-edit', $params);

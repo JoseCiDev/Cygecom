@@ -7,12 +7,14 @@ use Illuminate\Http\{JsonResponse, RedirectResponse};
 use App\Enums\MainProfile;
 use App\Http\Requests\User\{UpdateProfileRequest, StoreProfileRequest};
 use App\Models\{UserProfile, Ability};
+use App\Services\AbilityService;
 use App\Services\UserProfileService;
 
 class UserProfileController extends Controller
 {
     public function __construct(
-        private UserProfileService $userProfileService
+        private UserProfileService $userProfileService,
+        private AbilityService $abilityService,
     ) {
     }
 
@@ -33,15 +35,7 @@ class UserProfileController extends Controller
     {
         $abilities = Ability::with('users', 'profiles')->get();
 
-        $groupedAbilities = $abilities->groupBy(function ($ability) {
-            $name = $ability->name;
-            if (str_contains($name, '.api.') && !str_contains($name, 'delete')) {
-                return 'api';
-            }
-
-            $firstName = explode('.', $name)[0];
-            return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
-        });
+        $groupedAbilities = $this->abilityService->groupAbilities($abilities);
 
         $params = [
             'getAbilities' => $groupedAbilities->get('get', collect()),
@@ -98,15 +92,7 @@ class UserProfileController extends Controller
     public function edit(UserProfile $userProfile)
     {
         $abilities = Ability::with('users', 'profiles')->get();
-        $groupedAbilities = $abilities->groupBy(function ($ability) {
-            $name = $ability->name;
-            if (str_contains($name, '.api.') && !str_contains($name, 'delete')) {
-                return 'api';
-            }
-
-            $firstName = explode('.', $name)[0];
-            return in_array($firstName, ['get', 'post', 'delete']) ? $firstName : 'authorize';
-        });
+        $groupedAbilities = $this->abilityService->groupAbilities($abilities);
 
         $params = [
             'getAbilities' => $groupedAbilities->get('get', collect()),
