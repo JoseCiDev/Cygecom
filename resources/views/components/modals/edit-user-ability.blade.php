@@ -304,6 +304,8 @@
         const toggleCheckbox = (event) => {
             const $checkBox = $(event.target).find('input[name="abilities[]"]');
             $checkBox.prop('checked', !$checkBox.prop('checked'));
+
+            $checkBox.trigger('change');
         }
 
         $modalEditUserAbility.on('hidden.bs.modal', (event) => {
@@ -419,6 +421,6 @@
 
         $listGroupItem.on('click', toggleCheckbox);
 
-        $abilitiesInputs.on('input', (event) => $.fn.checkAbilityRelations(event));
+        $abilitiesInputs.on('change', (event) => $.fn.checkAbilityRelations(event));
     </script>
 @endpush
