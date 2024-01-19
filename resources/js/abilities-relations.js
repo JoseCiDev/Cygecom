@@ -1,21 +1,21 @@
 // Habilidades dependentes de outras habilidades
 const abilityRelations = {
-    1: {required: true, relations: [34, ],},
-    10: {required: true, relations: [7, ],},
-    11: {required: true, relations: [8, ],},
-    12: {required: true, relations: [9, ],},
-    19: {required: true, relations: [18, ],},
-    22: {required: true, relations: [18, ],},
-    25: {required: true, relations: [18, ],},
-    28: {required: true, relations: [17, 16, ],},
-    31: {required: true, relations: [34, ],},
-    35: {required: true, relations: [34, ],},
-    37: {required: true, relations: [36, ],},
-    38: {required: true, relations: [36, ],},
-    41: {required: true, relations: [58, ],},
-    44: { required: true, relations: [51, ],},
-    57: {required: true, relations: [58, ],},
-    60: {required: true, relations:[61, ],},
+    1: {autoCheck: true, relations: [34, ],},
+    10: {autoCheck: true, relations: [7, ],},
+    11: {autoCheck: true, relations: [8, ],},
+    12: {autoCheck: true, relations: [9, ],},
+    19: {autoCheck: true, relations: [18, ],},
+    22: {autoCheck: true, relations: [18, ],},
+    25: {autoCheck: true, relations: [18, ],},
+    28: {autoCheck: true, relations: [17, 16, ],},
+    31: {autoCheck: true, relations: [34, ],},
+    35: {autoCheck: true, relations: [34, ],},
+    37: {autoCheck: true, relations: [36, ],},
+    38: {autoCheck: true, relations: [36, ],},
+    41: {autoCheck: true, relations: [58, ],},
+    44: {autoCheck: true, relations: [51, ],},
+    57: {autoCheck: true, relations: [58, ],},
+    60: {autoCheck: true, relations:[61, ],},
 }
 
 const checkAbilityRelations = (event) => {
@@ -25,7 +25,7 @@ const checkAbilityRelations = (event) => {
     const abilityId = $checkBox.val();
     const isChecked = $checkBox.is(':checked');
     const relations = abilityRelations[abilityId].relations;
-    const isRequired = abilityRelations[abilityId].required;
+    const isAutoCheck = abilityRelations[abilityId].autoCheck;
 
     relations?.forEach(abilityIdTarget => {
         const $input = $(`input[name="abilities[]"][value="${abilityIdTarget}"]`);
@@ -34,7 +34,7 @@ const checkAbilityRelations = (event) => {
         if (isChecked) {
             $groupItem.addClass('ability-relation-alert');
 
-            if(isRequired) {
+            if(isAutoCheck) {
                 const isRequiredMessage ='Atenção! Relações recomendadas foram marcadas automaticamente. Analise as permissões destacadas e desmarque se necessário.';
                 $.fn.createToast(isRequiredMessage, 'Permissões relacionadas', 'bg-warning');
                 $input.prop('checked', true)
