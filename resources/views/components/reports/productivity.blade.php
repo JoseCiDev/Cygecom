@@ -739,7 +739,7 @@
                 const enumProductValue = @json(PurchaseRequestType::PRODUCT->value);
                 const enumServiceValue = @json(PurchaseRequestType::SERVICE->value);
                 const enumContractValue = @json(PurchaseRequestType::CONTRACT->value);
-                const urlAjax = @json(route('reports.productivity.json'));
+                const urlAjax = @json(route('api.reports.productivity.index'));
                 const enumRequests = @json($enumRequests);
                 const requestsStatusCounter = @json($requestsStatusCounter);
                 const buyingStatus = @json($buyingStatus);
@@ -1050,9 +1050,9 @@
                         },
                         error: (response, textStatus, errorThrown) => {
                             const title = "Houve uma falha na busca dos registros!";
-                            const message =
-                                "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
+                            const message = response.responseJSON.message;
                             $.fn.showModalAlert(title, message);
+                            $('.loader-box').hide();
                         },
                         beforeSend: () => $('#productivityTable tbody').css('opacity', '0.2'),
                         complete: (data) => {

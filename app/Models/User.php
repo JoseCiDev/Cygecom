@@ -31,9 +31,24 @@ class User extends Authenticatable
         return $this->hasMany(UserCostCenterPermission::class);
     }
 
+    public function costCenterPermission()
+    {
+        return $this->belongsToMany(CostCenter::class, 'user_cost_center_permissions', 'user_id', 'cost_center_id');
+    }
+
+    public function suppliesCostCenters()
+    {
+        return $this->belongsToMany(CostCenter::class, 'supplies_cost_centers', 'user_id', 'cost_center_id');
+    }
+
     public function purchaseRequest()
     {
         return $this->hasMany(PurchaseRequest::class);
+    }
+
+    public function abilities()
+    {
+        return $this->belongsToMany(Ability::class, 'abilities_users', 'user_id', 'ability_id');
     }
 
     public function deletedByUser()

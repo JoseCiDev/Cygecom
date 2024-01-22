@@ -4,6 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\{ProfileType, ArrayOfIntenger};
 
 class UpdateUserRequest extends FormRequest
 {
@@ -57,7 +58,8 @@ class UpdateUserRequest extends FormRequest
             ],
             'profile_type' => [
                 'nullable',
-                'in:admin,normal,diretor,gestor_fornecedores,gestor_usuarios,suprimentos_hkm,suprimentos_inp'
+                'string',
+                new ProfileType
             ],
             'approver_user_id' => [
                 'nullable',
@@ -89,9 +91,13 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'max:20'
             ],
-            "user_cost_center_permissions" => [
+            'user_cost_center_permissions' => [
                 'nullable',
-                'array'
+                new ArrayOfIntenger
+            ],
+            'supplies_cost_centers' => [
+                'nullable',
+                new ArrayOfIntenger
             ],
         ];
     }
@@ -118,8 +124,6 @@ class UpdateUserRequest extends FormRequest
             'password_confirmation' => 'Confirmação de senha necessária',
 
             'birthdate.date' => 'Data inválida',
-
-            "user_cost_center_permissions.array" => "O campo permissões do centro de custo do usuário deve ser um array.",
         ];
     }
 }

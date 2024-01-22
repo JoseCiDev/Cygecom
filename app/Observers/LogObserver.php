@@ -2,10 +2,10 @@
 
 namespace App\Observers;
 
-use App\Enums\LogAction;
-use App\Models\Log;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\LogAction;
+use App\Models\Log;
 
 class LogObserver
 {
@@ -37,10 +37,12 @@ class LogObserver
 
     public function deleted(Model $model): void
     {
-        $this->createLog(LogAction::DELETE, $model);
+        $changes = null;
+        $isHardDelete = true;
+        $this->createLog(LogAction::DELETE, $model, $changes, $isHardDelete);
     }
 
-    private function createLog(LogAction $action, $model, ?array $changes = null): void
+    private function createLog(LogAction $action, $model, ?array $changes = null, bool $isHardDelete = false): void
     {
         $userId = Auth::id();
         if ($userId === null) {
@@ -54,6 +56,10 @@ class LogObserver
             'action' => $action->value,
             'changes' => $changes,
         ];
+
+        if ($isHardDelete) {
+            Log::create($logData);
+        }
 
         if ($changes !== null) {
             //trata quando 'supplies_update_reason' existe mas é null

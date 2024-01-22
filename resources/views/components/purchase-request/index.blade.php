@@ -13,10 +13,11 @@
                     <div class="col-md-6" style="padding: 0">
                         <h1 class="page-title">Solicitações de Compra/Serviço</h1>
                     </div>
-                    <div class="col-md-6" style="padding: 0">
-                        <a data-cy="btn-nova-solicitacao" href="{{ route('request.links') }}"
-                            class="btn btn-primary btn-large pull-right">Nova Solicitação</a>
-                    </div>
+                    @can('get.requests.dashboard')
+                        <div class="col-md-6" style="padding: 0">
+                            <a data-cy="btn-nova-solicitacao" href="{{ route('requests.dashboard') }}" class="btn btn-primary btn-large pull-right">Nova Solicitação</a>
+                        </div>
+                    @endcan
                 </div>
 
                 <div class="row">
@@ -32,8 +33,7 @@
                                 @endphp
 
                                 <label class="checkbox-label secondary-text">
-                                    <input type="checkbox" name="status[]" class="status-checkbox"
-                                        value="{{ $statusCase->value }}" @checked($isChecked)>
+                                    <input type="checkbox" name="status[]" class="status-checkbox" value="{{ $statusCase->value }}" @checked($isChecked)>
                                     {{ $statusCase->label() }}
                                 </label>
                             @endforeach
@@ -47,8 +47,8 @@
                     <div class="col-md-12">
                         <div class="box-content nopadding regular-text">
 
-                            <table id="table-supplies-list" style="width:100%" class="table table-hover table-nomargin table-bordered"
-                                data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
+                            <table id="table-supplies-list" style="width:100%" class="table table-hover table-nomargin table-bordered" data-column_filter_dateformat="dd-mm-yy"
+                                data-nosort="0" data-checkall="all">
                                 <thead>
                                     <tr class="search-bar">
                                         <th></th>
@@ -68,6 +68,7 @@
                                         <th class="noColvis">Nº</th>
                                         <th>Contratação por</th>
                                         <th style="max-width: 200px">Motivo</th>
+
                                         <th>Tipo</th>
                                         <th>Nome do serviço</th>
                                         <th>Fornecedor(es)</th>
@@ -88,7 +89,7 @@
                                             $name = '---';
 
                                             $requestType = $purchaseRequest->type->value;
-                                            if($requestType === PurchaseRequestType::PRODUCT->value) {
+                                            if ($requestType === PurchaseRequestType::PRODUCT->value) {
                                                 $countSuppliers = count($purchaseRequest?->purchaseRequestProduct?->groupBy('supplier_id'));
                                                 if ($countSuppliers > 1) {
                                                     $msg = ' (+' . ($countSuppliers - 1) . ')';
@@ -105,57 +106,55 @@
                                             $formatedAmount = $amount ? number_format($amount, 2, ',', '.') : '---';
                                         @endphp
                                         <tr>
-                                            <td style="min-width: 90px;">{{$purchaseRequest->id}}</td>
-                                            <td class="hidden-1280">{{$purchaseRequest->is_supplies_contract ? 'Suprimentos' : 'Área Solicitante'}}</td>
-                                            <td style="max-width: 200px" class="column-text-limit">{{$purchaseRequest->reason}}</td>
-                                            <td>{{$purchaseRequest->type->label()}}</td>
-                                            <td>{{$name}}</td>
-                                            <td style="min-width: 200px">{{$supplier?->corporate_name ? $supplier?->corporate_name . " - " . $cnpj . " " . $msg : '---'}}</td>
-                                            <td>{{$purchaseRequest->status->label()}}</td>
-                                            <td>{{$purchaseRequest->suppliesUser?->person?->name ?? '---'}}</td>
+                                            <td style="min-width: 90px;">{{ $purchaseRequest->id }}</td>
+                                            <td>{{ $purchaseRequest->is_supplies_contract ? 'Suprimentos' : 'Área Solicitante' }}</td>
+                                            <td style="max-width: 200px" class="column-text-limit">{{ $purchaseRequest->reason }}</td>
+                                            <td>{{ $purchaseRequest->type->label() }}</td>
+                                            <td>{{ $name }}</td>
+                                            <td style="min-width: 200px">{{ $supplier?->corporate_name ? $supplier?->corporate_name . ' - ' . $cnpj . ' ' . $msg : '---' }}</td>
+                                            <td>{{ $purchaseRequest->status->label() }}</td>
+                                            <td>{{ $purchaseRequest->suppliesUser?->person?->name ?? '---' }}</td>
                                             <td>
                                                 <span hidden> {{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('Y-m-d H:i:s') }}</span>
                                                 {{ \Carbon\Carbon::parse($purchaseRequest->desired_date)->format('d/m/Y') }}
                                             </td>
-                                            <td class="hidden-1440">
+                                            <td>
                                                 <span hidden> {{ \Carbon\Carbon::parse($purchaseRequest->updated_at)->format('Y-m-d H:i:s') }}</span>
-                                                {{ $purchaseRequest->updated_at->formatCustom('d/m/Y H:i:s')  }}
+                                                {{ $purchaseRequest->updated_at->formatCustom('d/m/Y H:i:s') }}
                                             </td>
                                             <td>
                                                 {{-- str_pad para ordenação por string no dataTables --}}
-                                                <span hidden>{{ str_pad($amount, 10, "0", STR_PAD_LEFT) }}</span>
+                                                <span hidden>{{ str_pad($amount, 10, '0', STR_PAD_LEFT) }}</span>
                                                 R$ {{ $formatedAmount }}
                                             </td>
 
                                             {{-- BTN AÇÕES --}}
                                             <td style="white-space: nowrap;">
-                                                <a href="{{ route('request.edit', ['type' => $purchaseRequest->type, 'id' => $purchaseRequest->id]) }}"
-                                                    class="btn" rel="tooltip"
-                                                    title="{{ $isDraft ? 'Editar' : 'Visualizar' }}"
-                                                    data-cy="btn-edit-request-{{ $index }}">
-                                                    @if ($isDraft)
-                                                        <i class="fa fa-edit"></i>
-                                                    @else
-                                                        <i class="fa fa-eye"></i>
-                                                    @endif
-                                                </a>
+                                                @can('get.requests.edit')
+                                                    <a href="{{ route('requests.edit', ['type' => $purchaseRequest->type, 'id' => $purchaseRequest->id]) }}" class="btn"
+                                                        rel="tooltip" title="{{ $isDraft ? 'Editar' : 'Visualizar' }}" data-cy="btn-edit-request-{{ $index }}">
+                                                        @if ($isDraft)
+                                                            <i class="fa fa-edit"></i>
+                                                        @else
+                                                            <i class="fa fa-eye"></i>
+                                                        @endif
+                                                    </a>
+                                                @endcan
                                                 @php
                                                     $endpoint = $purchaseRequest->type->value;
-                                                    $route = "request.$endpoint.register";
+                                                    $route = "requests.$endpoint.create";
                                                 @endphp
-                                                <a href="{{ route($route, ['id' => $purchaseRequest->id]) }}"
-                                                    rel="tooltip" title="Copiar" class="btn"
-                                                    data-cy="btn-copy-request-{{ $index }}">
-                                                    <i class="fa fa fa-copy"></i>
-                                                </a>
-                                                @if ($purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value)
-                                                    <button data-route="purchaseRequests"
-                                                        data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
-                                                        data-id="{{ $purchaseRequest->id }}" rel="tooltip"
-                                                        title="Excluir" class="btn" data-bs-toggle="modal"
-                                                        data-bs-target="#modal-delete"
-                                                        data-cy="btn-delete-request-{{ $index }}">
-                                                        <i class="fa fa-times"></i>
+                                                @can("get.$route")
+                                                    <a href="{{ route($route, ['id' => $purchaseRequest->id]) }}" rel="tooltip" title="Copiar" class="btn"
+                                                        data-cy="btn-copy-request-{{ $index }}">
+                                                        <i class="fa fa fa-copy"></i>
+                                                    </a>
+                                                @endcan
+                                                @if ($purchaseRequest->status->value === PurchaseRequestStatus::RASCUNHO->value && Gate::allows('delete.api.requests.destroy'))
+                                                    <button data-route="api.requests.destroy" data-name="{{ 'Solicitação de compra - Nº ' . $purchaseRequest->id }}"
+                                                        data-id="{{ $purchaseRequest->id }}" rel="tooltip" title="Excluir" class="btn" data-bs-toggle="modal"
+                                                        data-bs-target="#modal-delete" data-cy="btn-delete-request-{{ $index }}">
+                                                        <i class="fa-solid fa-trash"></i>
                                                     </button>
                                                 @endif
                                             </td>
@@ -170,6 +169,6 @@
         </div>
     </div>
 
-    <script type="module" src="{{asset('js/utils/dataTables-column-search.js')}}"></script>
+    <script type="module" src="{{ asset('js/utils/dataTables-column-search.js') }}"></script>
 
 </x-app>

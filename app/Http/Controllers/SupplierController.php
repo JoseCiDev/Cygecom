@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Providers\{SupplierService, ValidatorService};
+use App\Models\Supplier;
 
 class SupplierController extends Controller
 {
@@ -63,7 +64,7 @@ class SupplierController extends Controller
         ], 200);
     }
 
-    public function supplier(int $id): RedirectResponse|View
+    public function edit(int $id): RedirectResponse|View
     {
         $supplier = $this->supplierService->getSupplierById($id);
 
@@ -79,12 +80,12 @@ class SupplierController extends Controller
         return view('components.supplier.edit', $params);
     }
 
-    public function showRegistrationForm(): View
+    public function create(): View
     {
         return view('components.supplier.form');
     }
 
-    public function register(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $data = $request->all();
         $cnpj = $request->cpf_cnpj;
@@ -105,7 +106,7 @@ class SupplierController extends Controller
 
         session()->flash('success', "Fornecedor cadastrado com sucesso!");
 
-        return redirect()->route('suppliers');
+        return redirect()->route('suppliers.index');
     }
 
     public function registerAPI(Request $request): RedirectResponse|JsonResponse
@@ -162,21 +163,25 @@ class SupplierController extends Controller
             return redirect()->back()->withInput()->withErrors(['Não foi possível atualizar o registro no banco de dados.', $error->getMessage()]);
         }
 
-        session()->flash('success', "Fornecedor $id atualizado com sucesso!");
+        session()->flash('success', "Fornecedor nº $id atualizado com sucesso!");
 
-        return redirect()->route('suppliers');
+        return redirect()->route('suppliers.index');
     }
 
-    public function delete(int $id): RedirectResponse
+    /**
+     * Delete a supplier.
+     *
+     * @param Supplier $supplier
+     * @return JsonResponse
+     */
+    public function destroy(Supplier $supplier): JsonResponse
     {
         try {
-            $this->supplierService->deleteSupplier($id);
+            $this->supplierService->deleteSupplier($supplier->id);
+
+            return response()->json(['message' => 'Fornecedor deletado com sucesso!. Recarregando...', 'redirect' => route('suppliers.index')]);
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi deletar o registro no banco de dados.', $error->getMessage()]);
+            return response()->json(['error' => 'Não foi possível deletar o registro no banco de dados.', 'message' => $error->getMessage()], 500);
         }
-
-        session()->flash('success', "Fornecedor deletado com sucesso!");
-
-        return redirect()->route('suppliers');
     }
 }

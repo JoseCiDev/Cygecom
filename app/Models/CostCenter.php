@@ -19,9 +19,19 @@ class CostCenter extends Model
         return $this->hasMany(UserCostCenterPermission::class);
     }
 
+    public function userPermissions()
+    {
+        return $this->belongsToMany(CostCenter::class, 'user_cost_center_permissions', 'cost_center_id', 'user_id');
+    }
+
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    public function suppliesUsers()
+    {
+        return $this->belongsToMany(CostCenter::class, 'supplies_cost_centers', 'cost_center_id', 'user_id');
     }
 
     public $timestamps = false;

@@ -26,6 +26,9 @@ import Chart from 'chart.js/auto';
 window.Chart = Chart;
 Chart.defaults.color = '#141414';
 
+import { checkAbilityRelations } from './abilities-relations.js';
+$.fn.checkAbilityRelations = checkAbilityRelations;
+
 import setColvisConfig from '../../public/js/utils/colvis-custom-user-preference.js';
 import {createChartDoughnut, createChartBar} from './create-chart-functions.js'
 window.createChartDoughnut = createChartDoughnut
@@ -67,10 +70,15 @@ $.fn.removeRequired = function() {
     return $(this);
 }
 
-$.fn.showModalAlert = (title = '', message, callback = null) => {
+$.fn.showModalAlert = (title = '', message, callback = null, modalDialogClass = false) => {
     const modalAlert = new bootstrap.Modal('#modal-alert', { keyboard: false});
     $("#modal-alert-label").html(title);
     $("#modal-alert-message").html(message);
+
+    if(modalDialogClass) {
+        $('#modal-alert .modal-dialog').addClass(modalDialogClass);
+    }
+
     $("#modal-alert-submit").on('click', () => {
         if(callback) {
             callback();
@@ -83,6 +91,24 @@ $.fn.showModalAlert = (title = '', message, callback = null) => {
     }
 
     modalAlert.show();
+}
+
+$.fn.createToast = (message, title = 'Sucesso!', className = null) => {
+    const $toastContainer = $('.toast-container');
+    const $toast = $('.toast');
+
+    const $toastClone = $toast.first().clone();
+    $toastContainer.append($toastClone);
+
+    $toastClone.find('.toast-header').addClass(className);
+    $toastClone.find('.toast-header-title').text(title);
+    $toastClone.find('.toast-body').text(message);
+
+    if(className === 'bg-success' || className === 'bg-danger') {
+        $toastClone.find('.toast-header-title').css('color', '#fff')
+    }
+
+    bootstrap.Toast.getOrCreateInstance($toastClone).show();
 }
 
 // Renderiza menu -> Aciona botões -> Fecha menu
@@ -100,6 +126,30 @@ $.fn.downloadCsv = (csv, name) => {
     link.click();
 
     window.URL.revokeObjectURL(link.href);
+}
+
+$.fn.setBootstrapTooltip = () => {
+    $('[data-bs-toggle="tooltip"]').each((_, tooltipTriggerEl) => {
+        const tooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+
+        if (tooltip) {
+            tooltip.dispose();
+        }
+
+        new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+}
+
+$.fn.setBootstrapToast = () => {
+    $('.toast').each((_, toastTriggerEl) =>{
+        const toast = bootstrap.Toast.getInstance(toastTriggerEl);
+
+        if (toast) {
+            toast.dispose();
+        }
+
+        new bootstrap.Toast(toastTriggerEl)
+    });
 }
 
 $(() => {
@@ -120,7 +170,6 @@ $(() => {
         }
 
         $(element).select2(config);
-
     });
 
     // autocomplete off
@@ -154,6 +203,9 @@ $(() => {
                 text: `Mostrar / Ocultar colunas ${$badgeColumnsQtd[0].outerHTML}`,
             }
         ],
+        drawCallback: (settings) => {
+            $.fn.setBootstrapTooltip();
+        },
         initComplete: () => $.fn.setStorageDtColumnConfig(),
     }));
 
@@ -207,4 +259,7 @@ $(() => {
             },
         });
     });
+
+    $.fn.setBootstrapTooltip();
+    $.fn.setBootstrapToast();
 });

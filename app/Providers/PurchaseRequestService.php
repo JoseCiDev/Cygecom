@@ -97,9 +97,11 @@ class PurchaseRequestService extends ServiceProvider
     }
 
     /**
-     * @return mixed Pelo status da solicitação retorna todas com suas relações, exceto deletadas.
+     * Retorna query builder de solicitaçõesa usando whereIn com array de status
+     * @param array $status
+     * @return Builder Query builder de solicitações com suas relações, exceto deletadas
      */
-    public function requestsByStatus(array $status)
+    public function requestsByStatus(array $status): Builder
     {
         return PurchaseRequest::with([
             'user.person.costCenter',

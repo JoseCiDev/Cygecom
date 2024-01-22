@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             PopulateSuppliers::class,
             PopulatePeople::class,
             PopulateProductSuggestions::class,
+            Abilities::class,
         ]);
     }
 }

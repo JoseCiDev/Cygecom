@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{DB, Route, Gate};
+use Illuminate\Http\{RedirectResponse, Request};
 use App\Enums\PurchaseRequestStatus;
 use App\Http\Requests\Service\UpdateServiceRequest;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\{RedirectResponse, Request};
 use App\Models\{Company, CostCenter, PurchaseRequest, PurchaseRequestFile};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 
@@ -20,9 +19,9 @@ class ServiceController extends Controller
     ) {
     }
 
-    public function registerService(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $route = 'requests';
+        $route = 'requests.index';
         $routeParam = [];
         $data       = $request->all();
         $files       = $request->file('arquivos');
@@ -51,7 +50,7 @@ class ServiceController extends Controller
 
             DB::commit();
 
-            $route           = 'requests.own';
+            $route           = 'requests.index.own';
         } catch (Exception $error) {
             $msg = 'Não foi possível fazer o registro no banco de dados.';
             DB::rollBack();
@@ -63,12 +62,12 @@ class ServiceController extends Controller
         return redirect()->route($route, $routeParam);
     }
 
-    public function serviceForm(int $purchaseRequestIdToCopy = null)
+    public function create(int $purchaseRequestIdToCopy = null)
     {
         $companies   = Company::all();
         $costCenters = CostCenter::all();
         $params      = ["companies" => $companies, "costCenters" => $costCenters];
-        $isAdmin     = auth()->user()->profile->name === 'admin';
+        $isAdmin     = Gate::allows('admin');
 
         try {
             if ($purchaseRequestIdToCopy) {
@@ -93,20 +92,20 @@ class ServiceController extends Controller
      * @param int $id
      * @return RedirectResponse
      */
-    public function updateService(UpdateServiceRequest $request, int $id): RedirectResponse
+    public function update(UpdateServiceRequest $request, int $id): RedirectResponse
     {
-        $route = 'requests.own';
+        $route = 'requests.index.own';
         $data = $request->all();
         $action = $request->input('action');
 
         $files = $request->file('arquivos');
         $currentUser = auth()->user();
-        $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.service.update";
+        $isSuppliesUpdate = Route::currentRouteName() === "supplies.service.update";
 
         try {
             $msg = "Solicitação de serviço pontual atualizada com sucesso!";
 
-            $isAdmin = auth()->user()->profile->name === 'admin';
+            $isAdmin = Gate::allows('admin');
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
@@ -115,7 +114,9 @@ class ServiceController extends Controller
             $msg = "Solicitação de serviço nº $purchaseRequest->id atualizada com sucesso!";
 
             $isOwnRequest = $purchaseRequest->user_id === $currentUser->id;
-            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && ($isOwnRequest || $isSuppliesUpdate);
+            $isSuppliesWithOwnRequest = $isOwnRequest && $isSuppliesUpdate;
+
+            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && !$isSuppliesWithOwnRequest && ($isOwnRequest || $isSuppliesUpdate);
 
             if (!$isAuthorized) {
                 throw new Exception('Ação não permitida pelo sistema!');
@@ -138,7 +139,7 @@ class ServiceController extends Controller
             return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
         }
 
-        $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === '/supplies';
+        $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === 'supplies/service';
 
         if (!$isDraft && $isSuppliesRoute) {
             $msg = 'Valor total da solicitação atualizado com sucesso!';
@@ -151,7 +152,7 @@ class ServiceController extends Controller
         return redirect()->route($route);
     }
 
-    public function details(int $id)
+    public function show(int $id)
     {
         $allRequestStatus = PurchaseRequestStatus::cases();
 
@@ -178,17 +179,16 @@ class ServiceController extends Controller
             return throw new Exception('Não foi possível acessar essa solicitação.');
         }
 
-        return view('components.supplies.service.details', compact('service', 'allRequestStatus', 'files'));
+        return view('supplies.service.details', compact('service', 'allRequestStatus', 'files'));
     }
 
     private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool
     {
-        $allowedProfiles = ['admin', 'suprimentos_hkm', 'suprimentos_inp'];
-        $userProfile = auth()->user()->profile->name;
+        $allowedProfiles = Gate::any(['admin', 'suprimentos_hkm', 'suprimentos_inp']);
 
         $existSuppliesUserId = (bool) $purchaseRequest->supplies_user_id;
         $existSuppliesMarkedAt = (bool) $purchaseRequest->responsibility_marked_at;
 
-        return in_array($userProfile, $allowedProfiles) && !$existSuppliesUserId && !$existSuppliesMarkedAt && !auth()->user()->purchaseRequest->contains($purchaseRequest);
+        return $allowedProfiles && !$existSuppliesUserId && !$existSuppliesMarkedAt && !auth()->user()->purchaseRequest->contains($purchaseRequest);
     }
 }

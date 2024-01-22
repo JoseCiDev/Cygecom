@@ -1,5 +1,5 @@
 <fieldset id="files-group">
-    <h3 style="margin-bottom: 20px;"><i class="fa fa-paperclip"></i> Anexos {{$isSupplies ? 'de Suprimentos' : ''}} </h3>
+    <h3 style="margin-bottom: 20px;"><i class="fa fa-paperclip"></i> Anexos {{ $isSupplies ? 'de Suprimentos' : '' }} </h3>
     <span class="span-info-files"></span>
     <input type="file" class="form-control" name="arquivos[]" id="files" data-cy="files" multiple>
     <ul class="list-group" style="margin-top:15px">
@@ -15,7 +15,7 @@
                             <i class='fa fa-file'></i>
                             <a style='margin-left:5px' href="{{ env('AWS_S3_BASE_URL') . $each->path }}"target="_blank">{{ $filename }}</a>
                         </div>
-                        @if(!$isSupplies)
+                        @if (!$isSupplies)
                             <div class="col-xs-6 text-right">
                                 <button type="button" class="btn btn-primary file-remove">
                                     <i class='fa fa-trash' style='margin-right:5px'></i>Excluir
@@ -35,22 +35,24 @@
     </div>
 </fieldset>
 
-@if($isSupplies)
-    <button id="supplies-upload-btn" type="button" class="btn btn-primary btn-small btn-draft">
-        Salvar anexos
-    </button>
+@if ($isSupplies)
+    @can('post.api.supplies.files.upload')
+        <button id="supplies-upload-btn" type="button" class="btn btn-primary btn-small btn-draft">
+            Salvar anexos
+        </button>
+    @endcan
 
     @push('scripts')
         <script type="module">
             $(() => {
                 $('#supplies-upload-btn').on('click', function() {
                     const formData = new FormData();
-                    formData.append('purchase_request_id', {{$purchaseRequestId}});
-                    formData.append('purchaseRequestType', "{{$purchaseRequestType}}");
+                    formData.append('purchase_request_id', {{ $purchaseRequestId }});
+                    formData.append('purchaseRequestType', "{{ $purchaseRequestType }}");
 
                     const files = $('#files')[0].files;
 
-                    if(!files.length) {
+                    if (!files.length) {
                         $.fn.showModalAlert("Opa, não existe anexos para salvar.", "Por favor, verifique novamente o campo de anexos e tente novamente.");
                         return;
                     }
@@ -62,7 +64,7 @@
                     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                     $.ajax({
-                        url: '{{route("api.supplies.files.upload")}}',
+                        url: '{{ route('api.supplies.files.upload') }}',
                         method: 'POST',
                         data: formData,
                         processData: false,
@@ -71,16 +73,16 @@
                             'X-CSRF-TOKEN': csrfToken
                         },
                         success: function(response) {
-                            const title= "<i class='fa fa-check'></i> Envio de arquivo(s) concluído!";
-                            const message= `Os anexos adicionados foram salvos com sucesso.`;
+                            const title = "<i class='fa fa-check'></i> Envio de arquivo(s) concluído!";
+                            const message = `Os anexos adicionados foram salvos com sucesso.`;
                             $.fn.showModalAlert(title, message, () => {
                                 $('#files').val('');
                                 window.location.reload()
                             })
                         },
                         error: function(error) {
-                            const title= "<i class='fa fa-check'></i> Envio de arquivo(s) falhou!";
-                            const message= `Desculpe, não foi possível salvar novos arquivos.`;
+                            const title = "<i class='fa fa-check'></i> Envio de arquivo(s) falhou!";
+                            const message = `Desculpe, não foi possível salvar novos arquivos.`;
                             $.fn.showModalAlert(title, message, () => {
                                 $('#files').val('');
                                 window.location.reload()
@@ -96,13 +98,11 @@
 
 @push('scripts')
     <script>
-        const IS_SUPPLIES_FILES =  {!! json_encode($isSupplies) !!};
+        const IS_SUPPLIES_FILES = {!! json_encode($isSupplies) !!};
     </script>
-    <script type="module" src="{{asset('js/purchase-request/file-upload-validation.js')}}"></script>
+    <script type="module" src="{{ asset('js/purchase-request/file-upload-validation.js') }}"></script>
 
     @if (!$isSupplies)
         <script type="module" src="{{ asset('/js/service-form/file-remove-button-config.js') }}"></script>
     @endif
 @endpush
-
-

@@ -10,132 +10,143 @@ class Breadcrumb extends Component
     public $items;
 
     private array $itemsMap = [
-        'users' => [
+        'users.index' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'users', 'label' => 'Usuários'],
+            ['route' => 'users.index', 'label' => 'Usuários'],
         ],
-        'user' => [
+        'users.edit' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'users', 'label' => 'Usuários'],
-            ['route' => 'user', 'label' => 'Usuário'],
+            ['route' => 'users.index', 'label' => 'Usuários'],
+            ['route' => 'users.edit', 'label' => 'Usuário'],
         ],
-        'profile' => [
+        'users.create' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'profile', 'label' => 'Perfil'],
+            ['route' => 'users.index', 'label' => 'Usuários'],
+            ['route' => 'users.create', 'label' => 'Cadastro de usuário'],
         ],
-        'register' => [
+        'requests.index' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'users', 'label' => 'Usuários'],
-            ['route' => 'register', 'label' => 'Cadastro de usuário'],
+            ['route' => 'requests.index', 'label' => 'Solicitações'],
         ],
-        'email' => [
+        'requests.index.own' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'email', 'label' => 'Envio de e-mail'],
+            ['route' => 'requests.index.own', 'label' => 'Minhas solicitações'],
         ],
-        'requests' => [
+        'requests.dashboard' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests', 'label' => 'Solicitações'],
+            ['route' => 'requests.index.own', 'label' => 'Minhas solicitações'],
+            ['route' => 'requests.dashboard', 'label' => 'Nova solicitação'],
         ],
-        'requests.own' => [
+        'requests.service.create' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests.own', 'label' => 'Minhas solicitações'],
+            ['route' => 'requests.index.own', 'label' => 'Minhas solicitações'],
+            ['route' => 'requests.dashboard', 'label' => 'Nova solicitação'],
+            ['route' => 'requests.service.create', 'label' => 'Serviço'],
         ],
-        'request.links' => [
+        'requests.product.create' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests.own', 'label' => 'Minhas solicitações'],
-            ['route' => 'request.links', 'label' => 'Nova solicitação'],
+            ['route' => 'requests.index.own', 'label' => 'Minhas solicitações'],
+            ['route' => 'requests.dashboard', 'label' => 'Nova solicitação'],
+            ['route' => 'requests.product.create', 'label' => 'Produto(s)'],
         ],
-        'request.service.register' => [
+        'requests.contract.create' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests.own', 'label' => 'Minhas solicitações'],
-            ['route' => 'request.links', 'label' => 'Nova solicitação'],
-            ['route' => 'request.service.register', 'label' => 'Serviço'],
+            ['route' => 'requests.index.own', 'label' => 'Minhas solicitações'],
+            ['route' => 'requests.dashboard', 'label' => 'Nova solicitação'],
+            ['route' => 'requests.contract.create', 'label' => 'Serviço recorrente'],
         ],
-        'request.product.register' => [
+        'requests.edit' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests.own', 'label' => 'Minhas solicitações'],
-            ['route' => 'request.links', 'label' => 'Nova solicitação'],
-            ['route' => 'request.product.register', 'label' => 'Produto(s)'],
+            ['route' => 'requests.index.own', 'label' => 'Minhas solicitações'],
+            ['route' => 'requests.edit', 'label' => 'Editar solicitação'],
         ],
-        'request.contract.register' => [
+        'suppliers.index' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests.own', 'label' => 'Minhas solicitações'],
-            ['route' => 'request.links', 'label' => 'Nova solicitação'],
-            ['route' => 'request.contract.register', 'label' => 'Serviço recorrente'],
+            ['route' => 'suppliers.index', 'label' => 'Fornecedores'],
         ],
-        'request.edit' => [
+        'suppliers.edit' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'requests.own', 'label' => 'Minhas solicitações'],
-            ['route' => 'request.edit', 'label' => 'Editar solicitação'],
+            ['route' => 'suppliers.index', 'label' => 'Fornecedores'],
+            ['route' => 'supplier.edit', 'label' => 'Fornecedor'],
         ],
-        'suppliers' => [
+        'suppliers.create' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'suppliers', 'label' => 'Fornecedores'],
-        ],
-        'supplier' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'suppliers', 'label' => 'Fornecedores'],
-            ['route' => 'supplier', 'label' => 'Fornecedor'],
-        ],
-        'supplier.form' => [
-            ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'suppliers', 'label' => 'Fornecedores'],
-            ['route' => 'supplier.form', 'label' => 'Novo fornecedor'],
+            ['route' => 'suppliers.index', 'label' => 'Fornecedores'],
+            ['route' => 'suppliers.create', 'label' => 'Novo fornecedor'],
         ],
         'supplies.index' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
         ],
-        'supplies.service' => [
+        'supplies.service.index' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.service', 'label' => 'Solicitações de serviços pontuais'],
+            ['route' => 'supplies.service.index', 'label' => 'Solicitações de serviços pontuais'],
         ],
         'supplies.service.filter' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
             ['route' => 'supplies.service.filter', 'label' => 'Solicitações de serviços pontuais'],
         ],
-        'supplies.service.detail' => [
+        'supplies.service.show' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.service', 'label' => 'Solicitações de serviços pontuais'],
-            ['route' => 'supplies.service.detail', 'label' => 'Serviço pontual solicitado'],
+            ['route' => 'supplies.service.index', 'label' => 'Solicitações de serviços pontuais'],
+            ['route' => 'supplies.service.show', 'label' => 'Serviço pontual solicitado'],
         ],
-        'supplies.product' => [
+        'supplies.product.index' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.product', 'label' => 'Solicitações de produtos'],
+            ['route' => 'supplies.product.index', 'label' => 'Solicitações de produtos'],
         ],
-        'supplies.product.detail' => [
+        'supplies.product.show' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.product', 'label' => 'Solicitações de produtos'],
-            ['route' => 'supplies.product.detail', 'label' => 'Produto(s) solicitado(s)'],
+            ['route' => 'supplies.product.index', 'label' => 'Solicitações de produtos'],
+            ['route' => 'supplies.product.show', 'label' => 'Produto(s) solicitado(s)'],
         ],
-        'supplies.contract' => [
+        'supplies.contract.index' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.contract', 'label' => 'Solicitações de serviços recorrentes'],
+            ['route' => 'supplies.contract.index', 'label' => 'Solicitações de serviços recorrentes'],
         ],
         'supplies.contract.filter' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
             ['route' => 'supplies.contract.filter', 'label' => 'Solicitações de serviços recorrentes'],
         ],
-        'supplies.contract.detail' => [
+        'supplies.contract.show' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'supplies.index', 'label' => 'Suprimentos'],
-            ['route' => 'supplies.contract', 'label' => 'Solicitações de serviços recorrentes'],
-            ['route' => 'supplies.contract.detail', 'label' => 'Serviço recorrente solicitado'],
+            ['route' => 'supplies.contract.index', 'label' => 'Solicitações de serviços recorrentes'],
+            ['route' => 'supplies.contract.show', 'label' => 'Serviço recorrente solicitado'],
         ],
         'reports.requests.index' => [
             ['route' => 'home', 'label' => 'Home'],
-            ['route' => 'reports.requests.index', 'label' => 'Relatórios de solicitações'],
+            ['route' => 'reports.requests.index', 'label' => 'Relatório de solicitação'],
         ],
         'reports.productivity.index' => [
             ['route' => 'home', 'label' => 'Home'],
             ['route' => 'reports.productivity.index', 'label' => 'Relatório de produtividade'],
+        ],
+        'users.show' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'users.index', 'label' => 'Usuários'],
+            ['route' => 'users.show', 'label' => 'Usuário'],
+        ],
+        'profile.index' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'profile.index', 'label' => 'Lista de perfis'],
+        ],
+        'profile.create' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'profile.index', 'label' => 'Lista de perfis'],
+            ['route' => 'profile.create', 'label' => 'Criação de perfil'],
+        ],
+        'profile.edit' => [
+            ['route' => 'home', 'label' => 'Home'],
+            ['route' => 'profile.index', 'label' => 'Lista de perfis'],
+            ['route' => 'profile.edit', 'label' => 'Edição de perfil'],
         ],
     ];
 
@@ -155,8 +166,7 @@ class Breadcrumb extends Component
             return;
         }
 
-        $existRouteName = collect($this->itemsMap)->has($routeName);
-        $this->items = $existRouteName ? $this->itemsMap[$routeName] : [];
+        $this->items = $routeName !== 'home' ? $this->itemsMap[$routeName] : [];
     }
 
     public function render()

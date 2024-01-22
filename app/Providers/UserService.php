@@ -2,21 +2,22 @@
 
 namespace App\Providers;
 
-use App\Contracts\UserServiceInterface;
-use App\Models\{CostCenter, Person, Phone, User, UserCostCenterPermission, UserProfile};
 use Exception;
-use Illuminate\Support\Facades\{DB, Hash};
+use Illuminate\Support\Facades\{DB, Gate, Hash};
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
+use App\Enums\MainProfile;
+use App\Models\{CostCenter, Person, Phone, User, UserCostCenterPermission, UserProfile};
 
-class UserService extends ServiceProvider implements UserServiceInterface
+class UserService extends ServiceProvider
 {
     public function getUserById(int $id): User
     {
         return User::with([
-            'person',
+            'abilities',
             'person.phone',
-            'profile', 'approver',
+            'profile.abilities',
+            'approver',
             'person.costCenter',
             'deletedByUser',
             'updatedByUser'
@@ -24,20 +25,19 @@ class UserService extends ServiceProvider implements UserServiceInterface
     }
 
     /**
-     * @return array Retorna um array com todos usuários, exceto logado.
+     * @return Builder Retorna um query builder de todos usuários, exceto excluídos.
      */
-    public function getUsers()
+    public function getUsers(): Builder
     {
-        $loggedId = auth()->user()->id;
-        $isAdmin = auth()->user()->profile->name === 'admin';
-
-        return User::with('person', 'profile')->where('id', '!=', $loggedId)->whereNull('deleted_at')
-            ->whereHas('profile', function ($query) use ($isAdmin) {
-                $query->where('name', '!=', 'admin');
-                if (!$isAdmin) {
-                    $query->where('name', '!=', 'diretor');
-                }
-            })->get();
+        return User::with([
+            'abilities',
+            'person.phone',
+            'profile.abilities',
+            'approver',
+            'person.costCenter',
+            'deletedByUser',
+            'updatedByUser'
+        ])->whereNull('deleted_at');
     }
 
     /**
@@ -45,7 +45,7 @@ class UserService extends ServiceProvider implements UserServiceInterface
      */
     public function getApprovers(string $action, int $id = null)
     {
-        $isUserUpdate = $action === 'user.update';
+        $isUserUpdate = $action === 'users.update';
         $query = User::whereHas('profile', function ($query) {
             $query->where('name', 'diretor');
         })->whereNull('deleted_at')->with('profile');
@@ -81,8 +81,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
     public function registerUser(array $request): User
     {
         return DB::transaction(function () use ($request) {
-            $currentProfile = auth()->user()->profile->name;
-
             $phoneId = $this->createPhone($request);
             $request['phone_id'] = $phoneId;
             $person = $this->updateOrCreatePerson($request);
@@ -99,12 +97,9 @@ class UserService extends ServiceProvider implements UserServiceInterface
 
             $user->save();
 
-            if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios') {
-                $costCenterPermissions = $request['user_cost_center_permissions'] ?? null;
-
-                if ($costCenterPermissions !== null) {
-                    $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
-                }
+            $costCenterPermissions = $request['user_cost_center_permissions'] ?? null;
+            if ($costCenterPermissions !== null) {
+                $this->saveUserCostCenterPermissions($costCenterPermissions, $user->id);
             }
 
             return $user;
@@ -116,7 +111,6 @@ class UserService extends ServiceProvider implements UserServiceInterface
         DB::beginTransaction();
 
         try {
-            $currentProfile = auth()->user()->profile->name;
             $user = $this->getUserById($userId);
             $person = $user->person;
             $phone = $user->person->phone;
@@ -126,7 +120,11 @@ class UserService extends ServiceProvider implements UserServiceInterface
             $this->savePerson($person, $data);
             $this->savePhone($phone, $data);
 
-            if ($currentProfile === 'admin' || $currentProfile === 'gestor_usuarios') {
+            if (Gate::any(['admin', 'gestor_usuarios', 'suprimentos_hkm', 'suprimentos_inp']) && isset($data['supplies_cost_centers'])) {
+                $user->suppliesCostCenters()->sync($data['supplies_cost_centers']);
+            }
+
+            if (Gate::any(['admin', 'gestor_usuarios']) && isset($data['user_cost_center_permissions'])) {
                 $costCenterPermissions = $data['user_cost_center_permissions'] ?? null;
 
                 if (!$costCenterPermissions && !$isOwnUser) {
@@ -147,15 +145,22 @@ class UserService extends ServiceProvider implements UserServiceInterface
     }
     public function deleteUser(int $id)
     {
-        $user = User::with('person')->find($id);
+        $user = User::with('person', 'profile')->find($id);
         $person = $user->person;
         $currentUserId = auth()->user()->id;
 
         if ($user) {
-            $user->update([
+            $toUpdate = [
                 'deleted_at' => now(),
                 'deleted_by' => $currentUserId
-            ]);
+            ];
+
+            $hasMainProfile = MainProfile::tryFrom($user->profile->name);
+            if (!$hasMainProfile) {
+                $toUpdate['user_profile_id'] = UserProfile::where('name', MainProfile::NORMAL->value)->value('id');
+            }
+
+            $user->update($toUpdate);
             $user->save();
 
             if ($person) {

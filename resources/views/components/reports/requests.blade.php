@@ -200,7 +200,7 @@
                 const enumProductValue = @json(PurchaseRequestType::PRODUCT->value);
                 const enumServiceValue = @json(PurchaseRequestType::SERVICE->value);
                 const enumContractValue = @json(PurchaseRequestType::CONTRACT->value);
-                const urlAjax = @json(route('reports.index.json'));
+                const urlAjax = @json(route('api.reports.requests.index'));
                 const enumRequests = @json($enumRequests);
                 const $generateCSVButton = $('#generate-csv-button');
                 const $reportsTable = $('#reportsTable');
@@ -485,8 +485,7 @@
                                 },
                                 error: (response, textStatus, errorThrown) => {
                                     const title = "Houve uma falha na busca dos registros!";
-                                    const message =
-                                        "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
+                                    const message = response.responseJSON.message;
                                     $.fn.showModalAlert(title, message);
                                 },
                             });
@@ -536,9 +535,9 @@
                         },
                         error: (response, textStatus, errorThrown) => {
                             const title = "Houve uma falha na busca dos registros!";
-                            const message =
-                                "Desculpe, mas ocorreu algum erro na busca dos registros. Por favor, tente novamente mais tarde. Contate o suporte caso o problema persista.";
+                            const message = response.responseJSON.message;
                             $.fn.showModalAlert(title, message);
+                            $('.loader-box').hide();
                         },
                         beforeSend: () => $('#reportsTable tbody').css('opacity', '0.2'),
                         complete: () => $('#reportsTable tbody').css('opacity', '1')

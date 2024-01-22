@@ -55,7 +55,7 @@
                             </option>
                         @endforeach
                     </select>
-                    <a class="btn btn-danger btn-secondary btn-mini delete-supplier">Apagar fornecedor e produto(s) <i class="fa fa-times"></i></a>
+                    <a class="btn btn-danger btn-secondary btn-mini delete-supplier">Apagar fornecedor e produto(s) <i class="fa-solid fa-trash"></i></a>
                 </div>
             </div>
         </div>

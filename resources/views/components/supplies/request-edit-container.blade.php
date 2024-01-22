@@ -25,7 +25,8 @@
 
             <div class="col-sm-3">
                 <label class="regular-text" for="amount">Editar valor total desta solicitação</label>
-                <input type="text" placeholder="0,00" class="form-control format-amount" id="format-amount" data-cy="format-amount" value="{{ $amount }}">
+                <input type="text" placeholder="0,00" class="form-control format-amount" id="format-amount" data-cy="format-amount" value="{{ $amount }}"
+                    @disabled($requestIsFromLogged)>
                 <input type="hidden" name="{{ $inputName }}" id="amount" data-cy="amount" class="amount no-validation" value="{{ $amount }}">
             </div>
 
@@ -92,9 +93,11 @@
 
     <div class="row" style="padding-top: 15px">
         <div class="col-sm-3">
-            <button data-cy="btn-edit-request" id="btn-edit-request" type="submit" class="btn btn-primary btn-small" @disabled($requestIsFromLogged)>
-                Atualizar solicitação
-            </button>
+            @if (Gate::any(['post.supplies.service.update', 'post.supplies.contract.update', 'post.supplies.product.update']))
+                <button data-cy="btn-edit-request" id="btn-edit-request" type="submit" class="btn btn-primary btn-small" @disabled($requestIsFromLogged)>
+                    Atualizar solicitação
+                </button>
+            @endif
         </div>
     </div>
 </form>

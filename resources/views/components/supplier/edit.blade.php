@@ -1,24 +1,18 @@
 @php
     use App\Enums\SupplierQualificationStatus;
 
-    $currentUser = auth()->user();
-
     $productRequests = $supplier->purchaseRequestProduct;
     $serviceRequests = $supplier->service;
     $contractRequests = $supplier->contract;
     $purchaseRequests = $productRequests->concat($serviceRequests)->concat($contractRequests);
 
-    $isEmAnalise =  $supplier->qualification->value === SupplierQualificationStatus::EM_ANALISE->value;
-    $isGestorFornecedores = $currentUser->profile->name === 'gestor_fornecedores';
+    $isUnderAnalysis = $supplier->qualification->value === SupplierQualificationStatus::EM_ANALISE->value;
 @endphp
 
 <x-app>
 
-    @if ($isEmAnalise && $isGestorFornecedores)
-        <x-supplier.purchase-requests
-            :supplier="$supplier"
-            :purchaseRequests="$purchaseRequests"
-        />
+    @if ($isUnderAnalysis && Gate::allows('gestor_fornecedores'))
+        <x-supplier.purchase-requests :supplier="$supplier" :purchaseRequests="$purchaseRequests" />
     @endif
 
     <div class="row">
@@ -34,7 +28,7 @@
                 </div>
 
                 <div class="box-content">
-                    <x-SupplierForm :id="$id" :supplier="$supplier"/>
+                    <x-SupplierForm :id="$id" :supplier="$supplier" />
                     <span>(<span style="color:red"><strong>*</strong></span>) É obrigatório</span>
                 </div>
             </div>
