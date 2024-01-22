@@ -113,7 +113,7 @@
         <input type="hidden" name="type" value="product">
 
         <div class="row center-block" style="padding-bottom: 10px;">
-            <h3>Contrante</h3>
+            <h3>Contratante</h3>
         </div>
 
         {{-- CENTRO DE CUSTOS --}}
