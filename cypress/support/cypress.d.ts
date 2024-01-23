@@ -14,7 +14,7 @@ import { mount } from 'cypress/react'
 // cypress/support/index.ts
 
 
-import { DataHora, ValidationResult, dadosParametros } from '../dadosParametros'
+import { DateTime, ValidationResult, dataParameters } from '../DataParameters'
 
 declare global {
     namespace Cypress {
@@ -24,153 +24,31 @@ declare global {
              * Custom command para fazer login.
              * @example cy.login()
              */
-            login(email: string, senha: string): Chainable;
-            doLogin(email: string, senha: string): Chainable;
+            login(emailAccess: string, passwordAccess: string, elementError: string): ValidationResult;
 
             /**
             * comando customizado para selecinar elemento e verificar se esta visivel.
             * @example cy.getVisible()
             */
-            getVisible(element: string, options?: Partial<Cypress.Loggable & Cypress.Timeoutable & Cypress.Withinable>): Chainable<Subject>;
-
-            /**
-            * comando customizado para selecinar elemento e verificar se esta visivel.
-            * @example cy.getVisible()
-            */
-            loginLogoutWithViewport: (size: number | [number, number] | string,) => void;
-
-            /**
-            * comando customizado para inserir email no login Gecom.
-            * @example cy.inserirEmailLogin()
-            */
-            inserirEmailLogin(element: string, credenciais: string | { value: string }): Chainable<Element>;
-
-            /**
-            * comando customizado para inserir senha no login Gecom.
-            * @example cy.inserirSenhaLogin()
-            */
-            inserirSenhaLogin(element: string, credenciais: string | { value: string }): Chainable<Element>;
-
-            /**
-            * comando customizado para abrir a opcao de perfil de usuario em Gecom.
-            * @example cy.abrirPerfilUsuario()
-            */
-            abrirPerfilUsuario(element: string): Chainable<Element>
-
-
-            /**
-            * comando customizado para acessar Gecom.
-            * @example cy.entrarGecom()
-            */
-            entrarGecom(element: string): Chainable<Element>
-
-            /**
-             * comando customizado para sair Gecom.
-             * @example cy.sairGecom()
-            */
-            sairGecom(element: string): Chainable<Element>
-
-            /**
-             * comando customizado para acessar o menu cadastro em Gecom.
-             * @example cy.acessarMenuCadastro()
-            */
-            acessarMenuCadastro(element: string): Chainable<Element>
-
-            /**
-             * comando customizado para acessar o submenu cadastro em Gecom.
-             * @example cy.acessarSubmenuCadastroUsuario()
-            */
-            acessarSubmenuCadastroUsuario(element: string): Chainable<Element>
-
-            /**
-             * comando customizado para acessar a tela de cadastro de usuarios em Gecom.
-             * @example cy.acessarCadastroUsuario()
-            */
-            acessarCadastroUsuario(): Chainable<Element>
+            loginLogoutWithViewport: (size: number | [number, number] | string,) => ValidationResult;
 
             /**
              * comando customizado para verificar se o campo tem obrigatoriedade de preenchimento em Gecom.
              * @example cy.verificarObrigatoriedadeCampo()
             */
-            verificarObrigatoriedadeCampo(element: string, value: string, elementError: string, mensagemErro?: string): ValidationResult
+            checkRequiredField(element: string, value: string, elementError: string, mensagemErro?: string): ValidationResult
 
             /**
             * comando customizado para inserir Data.
             * @example cy.inserirData()
             */
-            inserirData(dataAtual: Date): Chainable<DataHora>
+            insertDate(currentDate: Date): Chainable<DateTime>
 
             /**
            * comando customizado para inserir Data de nascimento.
            * @example cy.inserirData()
            */
-            inserirDataNascimento(element: string): Chainable<Element>
-
-            /**
-            * comando customizado para inserir nome.
-            * @example cy.inserirNome()
-            */
-            inserirNome(element: string, nome: string): Chainable<Element>
-
-            /**
-            * comando customizado para inserir cpf.
-            * @example cy.inserirCpf()
-            */
-            inserirCpf(element: string, cpf: string): Chainable<Element>
-
-            /**
-            * comando customizado para inserir telefone.
-            * @example cy.inserirTelefone()
-            */
-            inserirTelefone(element: string, telefone: string): Chainable<Element>
-
-            /**
-            * comando customizado para inserir e-mail.
-            * @example cy.inserirEmail()
-            */
-            inserirEmail(element: string, email: string): Chainable<Element>
-
-            /**
-            * comando customizado para inserir senha.
-            * @example cy.inserirSenha()
-            */
-            inserirSenha(element: string, senha: string): Chainable<Element>
-
-            /**
-            * comando customizado para selecionar perfil do usuario.
-            * @example cy.selecionarPerfil()
-            */
-            selecionarPerfil(perfil): Chainable<Element>
-
-            /**
-            * comando customizado para selecionar se usuario é autorizado ou não para solicitar.
-            * @example cy.selecionarAutorizacaoParaSolicitar()
-            */
-            selecionarAutorizacaoParaSolicitar(opcao): Chainable<Element>
-
-            /**
-            * comando customizado para inserir setor do usuário.
-            * @example cy.inserirSetorUsuario()
-            */
-            inserirSetorUsuario(setorUsuario: string, opcaoSetorUsuario: string, opcaoSelectSetorUsuario: string, opcaoSelecionadaSetorUsuario: string): Chainable<Element>;
-
-            /**
-            * comando customizado para inserir usuario aprovador.
-            * @example cy.inserirUsuarioAprovador()
-            */
-            inserirUsuarioAprovador(usuarioAprovador: string, opcaoUsuarioAprovador: string): Chainable<Element>;
-
-            /**
-            * comando customizado para inserir limite de aprovação do usuário.
-            * @example cy.inserirLimiteAprovacao()
-            */
-            inserirLimiteAprovacao(value: string, element: string): Chainable<Element>;
-
-            /**
-            * comando customizado para inserir centros de custos permitidos para o usuario.
-            * @example cy.inserirCentroCustoPermitido()
-            */
-            inserirCentroCustoPermitido(element: string): Chainable<Element>;
+            insertBirthDate(element: string): Chainable<Element>
 
             /**
              * comando customizado para selecionar o elemento e clicar.
@@ -203,18 +81,46 @@ declare global {
             getSelectOptionByValue(dataCy: string, value: any): Chainable<Element>;
 
             /**
-             * comando customizado para selecionar opção do select.
-             * @example cy.verificarQuantidadeMinimaCaracteresAceitos(element, value)
+             * comando customizado para verificar a quantidade máxima de caracteres.
+             * @example cy.maximumNumberCharacters(element, value)
              */
-            quantidadeMinimaCaracteres(element: string, value: string, quantidadeMinima: number, elementError: string): ValidationResult;
+            maximumNumberCharacters(element: string, value: string, quantidadeMinima: number, elementError: string): ValidationResult;
 
             /**
-             * comando customizado para validar CNPJ.
-             * @example cy.validarCNPJ(element, value)
+             * comando customizado para verificar a quantidade minima de caracteres.
+             * @example cy.minimumNumberCharacters(element, value)
              */
-            validarCpfCnpj(element: string, value: string, elementError: string, mensagemErro?: string, mensagemErroCpf?: string, mensagemErroCnpj?: string): ValidationResult
+            minimumNumberCharacters(element: string, value: string, minimumQuantity: number, elementError: string): ValidationResult;
 
+            /**
+           * * comando customizado para guardar modal e clicar.
+           * @example cy.waitModalAndClick(orcamentista,atendente)
+           */
+            waitModalAndClick(jqueryElement: string, element: string): ValidationResult;
 
+            /**
+           * * comando customizado para selecionar elemento autocomplete apos digitar e capturar sugestão autocomplete clicando.
+           * @example cy.getElementAutocompleteTypeAndClick(orcamentista,atendente)
+           */
+            getElementAutocompleteTypeAndClick(element: string, data: string | number | boolean, autocomplete: string): ValidationResult;
+
+            /**
+            * comando customizado para ler arquivos
+            * @example cy.lerArquivo('orcamentoFilial.json')
+            */
+            readFile(nomeArquivo: string): ValidationResult;
+
+            /**
+            * comando customizado para inserir arquivos.
+            * @example cy.insertFile('img/ReceitaJpeg(1).jpeg', el.importarImagem);
+            */
+            insertFile(fixturePath, elementoBotao): ValidationResult;
+
+            /**
+           * comando customizado para inserir arquivos.
+           * @example cy.insertFile('img/ReceitaJpeg(1).jpeg', el.importarImagem);
+           */
+            validateCpfCnpj(element: string, value: string, elementError: string, errorMessage: string): ValidationResult;
         }
 
     }

@@ -30,3 +30,6 @@ cypress/screenshots
 
 # env variables
 cypress.env.json
+
+# hide write-access token
+.particularrc.json

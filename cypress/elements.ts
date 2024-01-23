@@ -1,79 +1,79 @@
 interface Elements<T = string> {
 
-    Compartilhado: {
+    Shared: {
         logout: T;
-        opcoesMenu: T;
-        menuReduzido: T;
+        optionsMenu: T;
+        menuReduced: T;
         breadcumbHome: T;
-        breadcumbUsuario: T;
-        mostraQuantidadeRegistros: T;
-        BuscaUsuarioCadastrado: T;
-        proximaPagina: T;
-        paginaAnterior: T;
+        breadcumbUser: T;
+        showQuantityRecords: T;
+        SearchRegisteredUser: T;
+        nextPage: T;
+        pagePrevious: T;
     };
 
     Login: {
-        tituloLogin: T;
+        titleLogin: T;
         email: T;
-        senha: T;
-        entrar: T;
-        msgDadosIncorretosLogin: T;
+        password: T;
+        access: T;
+        messageContainerIncorrectData: T;
     };
 
     CustomCommands: {
 
     },
 
-    Inicio: {
-        perfilUsuario: T;
-        inicioMenu: T;
+    Start: {
+        userProfile: T;
+        homeMenu: T;
         logoGecom: T;
-        telaInicio: T;
+        homeScreen: T;
     },
 
-    Cadastro: {
-        cadastroMenu: T;
-        cadastroMenuReduzido: T;
-        cadastroUsuarioSubMenu: T;
-        criaNovoUsuario: T;
-        nomeUsuario: T;
-        dataNascimentoUsuario: T;
-        cpfCnpjUsuario: T;
-        telefoneUsuario: T;
-        emailUsuario: T;
-        senhaUsuario: T;
-        confirmarSenhaUsuario: T;
-        setorUsuario: T;
-        opcaoSetorUsuario: T;
-        opcaoSelectSetorUsuario: T;
-        opcaoSelecionadaSetorUsuario: T;
-        usuarioAprovador: T;
-        opcaoUsuarioAprovador: T;
-        limiteAprovacaoUsuario: T;
-        centroCustoPermitidoUsuario: T;
-        selecionarTodosCentroCustoPermitidoUsuario: T;
-        limparCentroCustoPermitidoUsuario: T;
-        salvarCadastroUsuario: T;
-        cancelarCadastroUsuario: T;
-        cadastroFornecedorSubMenu: T;
-        mensagemObrigatoriedadeNome: T;
-        mensagemObrigatoriedadeCpfCnpj: T;
-        mensagemObrigatoriedadeTelefone: T;
+    Register: {
+        registrationMenu: T;
+        registrationMenuReduced: T;
+        registrationUserSubMenu: T;
+        createNewUser: T;
+        username: T;
+        birthdateUser: T;
+        cpfCnpjUser: T;
+        phoneUser: T;
+        emailUser: T;
+        userPassword: T;
+        confirmUserPassword: T;
+        sectorUser: T;
+        optionUserSector: T;
+        optionSelectUserSector: T;
+        optionSelectedSectorUser: T;
+        userApprover: T;
+        optionUserApprover: T;
+        limitUserApproval: T;
+        centerPermittedCostUser: T;
+        selectAllAllowedCostCenterUser: T;
+        clearCenterPermittedCostUser: T;
+        saveUserRegistration: T;
+        cancelUserRegistration: T;
+        registrationSupplierSubMenu: T;
+        messageRequirementName: T;
+        messageRequirementCpfCnpj: T;
+        messageRequiredTelephone: T;
     },
 
-    Solicitacao: {
-        solicitacaoMenu: T;
-        novaSolicitacaoSubMenu: T;
-        minhaSolicitacaoSubMenu: T;
-        solicitacaoGeralSubMenu: T;
+    Request: {
+        requestMenu: T;
+        newRequestSubMenu: T;
+        myRequestSubMenu: T;
+        requestGeneralSubMenu: T;
     },
 
-    Suprimento: {
-        suprimentoMenu: T;
+    Supply: {
+        supplyMenu: T;
         dashboardSubMenu: T;
-        produtoSubMenu: T;
-        servicoSubMenu: T;
-        contratoSubMenu: T;
+        productSubMenu: T;
+        serviceSubMenu: T;
+        contractSubMenu: T;
     },
 }
 
@@ -81,80 +81,80 @@ interface Elements<T = string> {
 
 export const elements: Elements = {
 
-    Compartilhado: {
+    Shared: {
         logout: '[data-cy="btn-logout"]',
-        opcoesMenu: 'ul.main-nav li',
-        menuReduzido: '.toggle-mobile',
+        optionsMenu: 'ul.main-nav li',
+        menuReduced: '.toggle-mobile',
         breadcumbHome: '[data-cy="breadcrumb-0"]',
-        breadcumbUsuario: '[data-cy="breadcrumb-1"]',
-        mostraQuantidadeRegistros: 'select',
-        BuscaUsuarioCadastrado: 'label > input',
-        proximaPagina: '#DataTables_Table_0_next',
-        paginaAnterior: '#DataTables_Table_0_previous',
+        breadcumbUser: '[data-cy="breadcrumb-1"]',
+        showQuantityRecords: 'select',
+        SearchRegisteredUser: 'label > input',
+        nextPage: '#DataTables_Table_0_next',
+        pagePrevious: '#DataTables_Table_0_previous',
     },
 
     Login: {
-        tituloLogin: '.login-logo',
+        titleLogin: '.login-logo',
         email: '[data-cy="email"]',
-        senha: '[data-cy="password"]',
-        entrar: '[data-cy="btn-login-entrar"]',
-        msgDadosIncorretosLogin: 'body > div > div > div > div > div > h5 > strong',
+        password: '[data-cy="password"]',
+        access: '[data-cy="btn-login-entrar"]',
+        messageContainerIncorrectData: '#login-form > div.alert.alert-danger',
     },
 
     CustomCommands: {
 
     },
 
-    Inicio: {
-        perfilUsuario: '[data-cy="profile-dropdown"]',
-        inicioMenu: '[data-cy="route-home"]',
+    Start: {
+        userProfile: '[data-cy="profile-dropdown"]',
+        homeMenu: '[data-cy="route-home"]',
         logoGecom: '[data-cy="logo-gecom"]',
-        telaInicio: '#main',
+        homeScreen: '#main',
     },
 
-    Cadastro: {
-        cadastroMenu: '[data-cy="dropdown-cadastros"]',
-        cadastroMenuReduzido: '.mobile-nav > :nth-child(2) > [href="#"]',
-        cadastroUsuarioSubMenu: '[data-cy="dropdown-cadastros-usuarios"]',
-        criaNovoUsuario: '[data-cy="btn-novo-usuario"]',
-        nomeUsuario: '[data-cy="name"]',
-        dataNascimentoUsuario: '[data-cy="birthdate"]',
-        cpfCnpjUsuario: '[data-cy="cpf_cnpj"]',
-        telefoneUsuario: '[data-cy="number"]',
-        emailUsuario: '[data-cy="email"]',
-        senhaUsuario: '[data-cy="password"]',
-        confirmarSenhaUsuario: '[data-cy="password-confirm"]',
-        setorUsuario: '#cost_center_id_chosen > .chosen-single',
-        opcaoSetorUsuario: 'select#cost_center_id.chosen-select.form-control>',
-        opcaoSelectSetorUsuario: 'select#cost_center_id.chosen-select.form-control',
-        opcaoSelecionadaSetorUsuario: 'ul.chosen-results li.active-result:nth-child(2)',
-        usuarioAprovador: '#approver_user_id_chosen > a',
-        opcaoUsuarioAprovador: 'ul.chosen-results li.active-result',
-        limiteAprovacaoUsuario: '[data-cy="format-approve-limit"]',
-        centroCustoPermitidoUsuario: '.chosen-choices',
-        selecionarTodosCentroCustoPermitidoUsuario: '[data-cy="btn-select-all-cost-centers"]',
-        limparCentroCustoPermitidoUsuario: '[data-cy="btn-clear-cost-centers"]',
-        salvarCadastroUsuario: '[data-cy="btn-submit-salvar"]',
-        cancelarCadastroUsuario: '[data-cy="btn-cancelar"]',
-        cadastroFornecedorSubMenu: '[data-cy="dropdown-cadastros-fornecedores"]',
-        mensagemObrigatoriedadeNome: '#name-error',
-        mensagemObrigatoriedadeCpfCnpj: '#cpf_cnpj-error',
-        mensagemObrigatoriedadeTelefone: '#number-error',
+    Register: {
+        registrationMenu: '[data-cy="dropdown-cadastros"]',
+        registrationMenuReduced: '.mobile-nav > :nth-child(2) > [href="#"]',
+        registrationUserSubMenu: '[data-cy="dropdown-cadastros-usuarios"]',
+        createNewUser: '[data-cy="btn-new-user"]',
+        username: '[data-cy="name"]',
+        birthdateUser: '[data-cy="birthdate"]',
+        cpfCnpjUser: '[data-cy="cpf_cnpj"]',
+        phoneUser: '[data-cy="number"]',
+        emailUser: '[data-cy="email"]',
+        userPassword: '[data-cy="password"]',
+        confirmUserPassword: '[data-cy="password-confirm"]',
+        sectorUser: '#cost_center_id_chosen > .chosen-single',
+        optionUserSector: 'select#cost_center_id.chosen-select.form-control>',
+        optionSelectUserSector: 'select#cost_center_id.chosen-select.form-control',
+        optionSelectedSectorUser: 'ul.chosen-results li.active-result:nth-child(2)',
+        userApprover: '#approve_user_id_chosen > a',
+        optionUserApprover: 'ul.chosen-results li.active-result',
+        limitUserApproval: '[data-cy="format-approve-limit"]',
+        centerPermittedCostUser: '.chosen-choices',
+        selectAllAllowedCostCenterUser: '[data-cy="btn-select-all-cost-centers"]',
+        clearCenterPermittedCostUser: '[data-cy="btn-clear-cost-centers"]',
+        saveUserRegistration: '[data-cy="btn-submit-salvar"]',
+        cancelUserRegistration: '[data-cy="btn-cancel"]',
+        registrationSupplierSubMenu: '[data-cy="dropdown-cadastros-vencedores"]',
+        messageRequirementName: '#name-error',
+        messageRequirementCpfCnpj: '#cpf_cnpj-error',
+        messageRequiredTelephone: '#number-error',
     },
 
-    Solicitacao: {
-        solicitacaoMenu: '[data-cy="dropdown-solicitacoes"]',
-        novaSolicitacaoSubMenu: '[data-cy="dropdown-solicitacoes-novas"]',
-        minhaSolicitacaoSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
-        solicitacaoGeralSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
+    Request: {
+        requestMenu: '[data-cy="dropdown-solicitacoes"]',
+        newRequestSubMenu: '[data-cy="dropdown-solicitacoes-novas"]',
+        myRequestSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
+        requestGeneralSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
     },
 
-    Suprimento: {
-        suprimentoMenu: '[data-cy="dropdown-suprimentos"]',
-        dashboardSubMenu: '[data-cy="dropdown-suprimentos-dashboard"]',
-        produtoSubMenu: '[data-cy="dropdown-suprimentos-produtos"]',
-        servicoSubMenu: '[data-cy="dropdown-suprimentos-servicos"]',
-        contratoSubMenu: '[data-cy="dropdown-suprimentos-contratos"]',
+    Supply: {
+        supplyMenu: '[data-cy="dropdown-suprimentos"]',
+        dashboardSubMenu: '[data-cy="dropdown-supplimentos-dashboard"]',
+        productSubMenu: '[data-cy="dropdown-supplimentos-produtos"]',
+        serviceSubMenu: '[data-cy="dropdown-suprimentos-servicos"]',
+        contractSubMenu: '[data-cy="dropdown-suprimentos-contratos"]',
     },
 
 

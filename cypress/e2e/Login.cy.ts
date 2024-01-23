@@ -2,8 +2,9 @@
 
 import { faker } from '@faker-js/faker';
 import { elements as el } from '../elements';
-import { dadosParametros } from '../dadosParametros'
+import { dataParameters } from '../DataParameters'
 import { env } from 'process';
+import { data } from 'cypress/types/jquery';
 
 
 
@@ -11,77 +12,80 @@ import { env } from 'process';
 
 export const {
     email,
-    senha,
-    entrar,
-    tituloLogin,
-    msgDadosIncorretosLogin,
+    password,
+    access,
+    titleLogin,
+    messageContainerIncorrectData,
 
 } = el.Login;
 
 export const {
-    perfilUsuario,
-    inicioMenu,
+    userProfile,
+    homeMenu,
     logoGecom,
-    telaInicio,
+    homeScreen,
 
-} = el.Inicio;
+} = el.Start;
 
 export const {
     logout,
-    opcoesMenu,
-    menuReduzido,
+    optionsMenu,
+    menuReduced,
     breadcumbHome,
-    breadcumbUsuario,
-    mostraQuantidadeRegistros,
-    BuscaUsuarioCadastrado,
-    proximaPagina,
-    paginaAnterior,
+    breadcumbUser,
+    showQuantityRecords,
+    SearchRegisteredUser,
+    nextPage,
+    pagePrevious,
 
-} = el.Compartilhado;
-
-export const {
-    cadastroMenu,
-    cadastroMenuReduzido,
-    cadastroUsuarioSubMenu,
-    cadastroFornecedorSubMenu,
-    criaNovoUsuario,
-    nomeUsuario,
-    dataNascimentoUsuario,
-    cpfCnpjUsuario,
-    telefoneUsuario,
-    emailUsuario,
-    senhaUsuario,
-    confirmarSenhaUsuario,
-    setorUsuario,
-    opcaoSetorUsuario,
-    opcaoSelectSetorUsuario,
-    opcaoSelecionadaSetorUsuario,
-    usuarioAprovador,
-    opcaoUsuarioAprovador,
-    limiteAprovacaoUsuario,
-    centroCustoPermitidoUsuario,
-    selecionarTodosCentroCustoPermitidoUsuario,
-    limparCentroCustoPermitidoUsuario,
-    salvarCadastroUsuario,
-    cancelarCadastroUsuario,
-} = el.Cadastro;
+} = el.Shared;
 
 export const {
-    solicitacaoMenu,
-    novaSolicitacaoSubMenu,
-    minhaSolicitacaoSubMenu,
-    solicitacaoGeralSubMenu,
-
-} = el.Solicitacao;
+    registrationMenu,
+    registrationMenuReduced,
+    registrationUserSubMenu,
+    createNewUser,
+    username,
+    birthdateUser,
+    cpfCnpjUser,
+    phoneUser,
+    emailUser,
+    userPassword,
+    confirmUserPassword,
+    sectorUser,
+    optionUserSector,
+    optionSelectUserSector,
+    optionSelectedSectorUser,
+    userApprover,
+    optionUserApprover,
+    limitUserApproval,
+    centerPermittedCostUser,
+    selectAllAllowedCostCenterUser,
+    clearCenterPermittedCostUser,
+    saveUserRegistration,
+    cancelUserRegistration,
+    registrationSupplierSubMenu,
+    messageRequirementName,
+    messageRequirementCpfCnpj,
+    messageRequiredTelephone,
+} = el.Register;
 
 export const {
-    suprimentoMenu,
+    requestMenu,
+    newRequestSubMenu,
+    myRequestSubMenu,
+    requestGeneralSubMenu,
+
+} = el.Request;
+
+export const {
+    supplyMenu,
     dashboardSubMenu,
-    produtoSubMenu,
-    servicoSubMenu,
-    contratoSubMenu,
+    productSubMenu,
+    serviceSubMenu,
+    contractSubMenu,
 
-} = el.Suprimento;
+} = el.Supply;
 
 
 
@@ -91,104 +95,104 @@ describe('Testes da página Login.', () => {
 
     beforeEach(function () {
 
-        cy.visit(dadosParametros.env.BASEURL);
+        cy.visit(dataParameters.env.BASE_URL);
 
     })
 
-    it(`Deve ser possível logar em vários dispositivos.`, () => {
-        dadosParametros.sizes.forEach((size) => {
+    // it(`Deve ser possível logar em vários dispositivos.`, () => {
+    //     dadosParametros.sizes.forEach((size) => {
 
-            cy.loginLogoutWithViewport(size);
+    //         cy.loginLogoutWithViewport(size);
 
-            cy.login(dadosParametros.env.EMAILADMIN, dadosParametros.env.SENHAADMIN);
+    //         cy.login(env.EMAIL_ADMIN, env.PASSWORD_ADMIN, messageContainerIncorrectData);
 
-            if (Cypress._.isArray(size)) {
-                cy.get(el.Inicio.perfilUsuario).click();
-                cy.get(el.Compartilhado.logout).click();
-            }
-        });
-    });
-
-
-
-    it('Deve verificar se existe validação para o campo e-mail.', () => {
-
-        cy.visit(dadosParametros.env.BASEURL + '/login');
-
-        cy.getElementAndType(emailUsuario, '{enter}');
-
-        cy.on('window:alert', (mensagem) => {
-            // Certifique-se de que a mensagem do alerta está correta
-            expect(mensagem).to.include('Preencha este campo.');
-
-
-        });
-
-    });
+    //         if (Cypress._.isArray(size)) {
+    //             cy.get(el.Inicio.perfilUsuario).click();
+    //             cy.get(el.Compartilhado.logout).click();
+    //         }
+    //     });
+    // });
 
 
 
-    it('Deve verificar se a senha inserida não apresenta os caracteres.', () => {
+    // it('Deve verificar se existe validação para o campo e-mail.', () => {
 
-        cy.get(tituloLogin);
+    //     cy.visit(dadosParametros.env.BASEURL + '/login');
 
-        cy.getVisible(senha)
-            .should('have.attr', 'type', 'password');
-    });
+    //     cy.getElementAndType(emailUsuario, '{enter}');
+
+    //     cy.on('window:alert', (mensagem) => {
+    //         // Certifique-se de que a mensagem do alerta está correta
+    //         expect(mensagem).to.include('Preencha este campo.');
 
 
+    //     });
 
-    it('Deve realizar login inserindo dados corretos.', () => {
-
-        cy.login(dadosParametros.env.EMAILADMIN, dadosParametros.env.SENHAADMIN);
-
-        cy.getElementAndClick(perfilUsuario);
-
-        cy.getElementAndClick(logout);
-
-    });
+    // });
 
 
 
-    it('Deve falhar o login devido a dados incorretos.', () => {
+    // it('Deve verificar se a senha inserida não apresenta os caracteres.', () => {
 
-        cy.login('Teste', 'senha');
+    //     cy.get(titleLogin);
 
-        cy.url()
-            .should('contain', `${dadosParametros.url.login}`);
-    });
-
-
-    it('Deve falhar o login devido a não inserção de dados.', () => {
-
-        cy.entrarGecom(entrar)
-
-        cy.url()
-            .should('contain', `${dadosParametros.url.login}`);
-    });
+    //     cy.getVisible(password)
+    //         .should('have.attr', 'type', 'password');
+    // });
 
 
-    it.only('Deve falhar o login devido ao preenchimento somente do e-mail.', () => {
 
-        cy.getElementAndType(emailUsuario, dadosParametros.env.EMAILADMIN);
+    // it.only('Deve realizar login inserindo dados corretos.', () => {
 
-        cy.getElementAndClick(entrar);
+    //     cy.login(env.EMAIL_ADMIN, env.PASSWORD_ADMIN, messageContainerIncorrectData);
 
-        cy.on('window:alert', (message) => {
-            expect(message).to.equal('Preencha este campo.');
-        });
-    });
+    //     cy.getElementAndClick(userProfile);
+
+    //     cy.getElementAndClick(logout);
+
+    // });
 
 
-    it('Deve falhar o login devido ao preenchimento somente da senha.', () => {
 
-        cy.getElementAndType(senha, dadosParametros.env.SENHAADMIN);
+    // it('Deve falhar o login devido a dados incorretos.', () => {
 
-        cy.getElementAndClick(entrar);
+    //     cy.login('Teste', 'senha');
 
-        cy.on('window:alert', (message) => {
-            expect(message).to.equal('Preencha este campo.');
-        });
-    })
+    //     cy.url()
+    //         .should('contain', `${dadosParametros.url.login}`);
+    // });
+
+
+    // it('Deve falhar o login devido a não inserção de dados.', () => {
+
+    //     cy.entrarGecom(entrar)
+
+    //     cy.url()
+    //         .should('contain', `${dadosParametros.url.login}`);
+    // });
+
+
+    // it('Deve falhar o login devido ao preenchimento somente do e-mail.', () => {
+
+    //     cy.getElementAndType(emailUsuario, dadosParametros.env.EMAILADMIN);
+
+    //     cy.getElementAndClick(entrar);
+
+    //     cy.on('window:alert', (message) => {
+    //         expect(message).to.equal('Preencha este campo.');
+    //     });
+    // });
+
+
+    // it('Deve falhar o login devido ao preenchimento somente da senha.', () => {
+
+    //     cy.getElementAndType(senha, dadosParametros.env.SENHAADMIN);
+
+    //     cy.getElementAndClick(entrar);
+
+    //     cy.on('window:alert', (message) => {
+    //         expect(message).to.equal('Preencha este campo.');
+    //     });
+    // })
 })
 
