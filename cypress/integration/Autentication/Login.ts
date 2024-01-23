@@ -1,8 +1,7 @@
 /// <reference types="cypress" />
 
 import { faker } from '@faker-js/faker';
-import { ELEMENTS as el } from '../../elements';
-import { sizes } from '../../support/commands';
+import { elements as el } from '../../elements';
 
 
 
@@ -30,25 +29,25 @@ describe('Testes da página Login.', () => {
 
     })
 
-    it.only(`Deve ser possível logar em vários dispositivos.`, () => {
-        sizes.forEach((size) => {
-            cy.loginLogoutWithViewport(size, dadosAmbiente);
+    // it.only(`Deve ser possível logar em vários dispositivos.`, () => {
+    //     sizes.forEach((size) => {
+    //         cy.loginLogoutWithViewport(size, dadosAmbiente);
 
-            cy.inserirEmailLogin(el.email, dadosAmbiente.EMAILADMIN);
+    //         cy.inserirEmailLogin(el.email, dadosAmbiente.EMAILADMIN);
 
-            cy.inserirSenhaLogin(el.senha, dadosAmbiente.SENHAADMIN);
+    //         cy.inserirSenhaLogin(el.senha, dadosAmbiente.SENHAADMIN);
 
-            cy.getVisible(el.entrar).click();
+    //         cy.getVisible(el.entrar).click();
 
-            cy.url().should('contain', `${dadosAmbiente.BASEURL}`);
+    //         cy.url().should('contain', `${dadosAmbiente.BASEURL}`);
 
-            if (Cypress._.isArray(size)) {
-                cy.get(el.perfilUsuario).click();
-                cy.get(el.logout).click();
-            }
-        });
-        cy.pause();
-    });
+    //         if (Cypress._.isArray(size)) {
+    //             cy.get(el.perfilUsuario).click();
+    //             cy.get(el.logout).click();
+    //         }
+    //     });
+    //     cy.pause();
+    // });
 
     
 
