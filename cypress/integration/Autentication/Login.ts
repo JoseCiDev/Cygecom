@@ -96,8 +96,7 @@ describe('Testes da página Login.', () => {
 
 
     it('Login Test.', () => {
-        cy.login(dataParameters.env.EMAIL_ADMIN, 'dataParameters.env.PASSWORD_ADMIN', messageContainer);
-        //dataParameters.env.EMAIL_ADMIN, 'dataParameters.env.PASSWORD_ADMIN', messageContainer
+        cy.login('.com', dataParameters.env.PASSWORD_ADMIN, messageContainer);
     })
 
 })

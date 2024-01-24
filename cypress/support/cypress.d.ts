@@ -122,7 +122,11 @@ declare global {
            */
             validateCpfCnpj(element: string, value: string, elementError: string, errorMessage: string): ValidationResult;
 
-            checkAlertsAndModals(): ValidationResult;
+            /**
+           * comando customizado para inserir arquivos.
+           * @example cy.checkValidation('img/ReceitaJpeg(1).jpeg', el.importarImagem);
+           */
+            checkValidation(text: string): ValidationResult;
         }
 
     }
