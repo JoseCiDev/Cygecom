@@ -51,7 +51,7 @@ const {
     email,
     password,
     access,
-    messageContainerIncorrectData,
+    messageContainer,
 } = el.Login
 
 const {
@@ -111,182 +111,124 @@ const {
 } = el.Supply
 
 
+
+
 Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elementError: string) => {
-    cy.visit(dataParameters.env.BASE_URL + '/login');
 
-    cy.get(titleLogin);
+    cy.visit(dataParameters.url.login);
 
-    cy.wrap(null).then(() => {
-        cy.get(email, { timeout: 20000 })
-            .as('elementloginAlias')
-            .each(($input) => {
-                cy.wrap($input)
-                    .type(emailAccess.toString(), { log: false })
-                    .should('have.value', email)
-                    .then(() => {
-                        const $emailValue = String($input.val());
-                        const $elementError = Cypress.$(elementError);
-
-                        if ($emailValue.length < 1 && !$elementError.is(':visible')) {
-                            throw new Error('Usuário não foi inserido, porém não é apresentado mensagem ao usuário.');
-                        };
-
-                        if (!$emailValue || $emailValue.length === 0 && !$elementError.is(':visible')) {
-                            throw new Error('Há digitos que não foram preenchidos, porém não é apresentado mensagem ao usuário.');
-                        };
-
-                    })
-            })
-    });
-
-    cy.wrap(null).then(() => {
-        cy.get(password, { timeout: 20000 })
-            .as('elementPasswordAlias')
-            .each(($input) => {
-                cy.wrap($input)
-                    .type(password.toString(), { log: false })
-                    .should('have.value', passwordAccess)
-                    .then(() => {
-                        const passwordValue = String($input.val());
-                        const $elementError = Cypress.$(elementError);
-
-                        if (password.length < 1 && !$elementError.is(':visible')) {
-                            throw new Error('Senha não foi inserida, porém não é apresentado mensagem ao usuário.');
-                        };
-
-                        if (!passwordValue || passwordValue.length === 0 && !$elementError.is(':visible')) {
-                            throw new Error('Alguns dígitos não foram preenchidos, porém não é apresentada mensagem de erro ao usuário.');
-                        };
-
-                    })
-            })
-    });
-
-
-
-    // const $elementErrorEmailPreechido = Cypress.$(el.Login.email)
-    //     .prop('prop', 'validationMessage')
-    //     .prop((text) => {
-    //         expect(text).to.contain('Preencha este campo.');
-    //     });
-    const $elementErrorEmailPreechido = Cypress.$(el.Login.email);
-    const valorCampoelementErrorEmailPreechido = String($elementErrorEmailPreechido.val()).trim();
-    const mensagemValidacaoelementErrorEmailPreechido = $elementErrorEmailPreechido.prop('validationMessage');
-    const isValidationEmailFilledelementErrorEmailPreechido =
-        valorCampoelementErrorEmailPreechido === '' || mensagemValidacaoelementErrorEmailPreechido.includes('Preencha este campo');
-
-    // const $elementErrorEmailFormatoAt = Cypress.$(el.Login.email)
-    //     .prop('prop', 'validationMessage')
-    //     .prop((text) => {
-    //         expect(text).to.contain('Inclua um "@" no endereço de e-mail. "a" está com um "@" faltando.');
-    //     });
-    const $elementErrorEmailFormatoAt = Cypress.$(el.Login.email);
-    const valorCampoErrorEmailFormatoAt = String($elementErrorEmailFormatoAt.val()).trim();
-    const mensagemValidacaoErrorEmailFormatoAt = $elementErrorEmailFormatoAt.prop('validationMessage');
-    const isValidationEmailFilledErrorEmailFormatoAt =
-        valorCampoErrorEmailFormatoAt === '' || mensagemValidacaoErrorEmailFormatoAt.includes('Preencha este campo');
-
-    // const $elementErrorEmailArroba = Cypress.$(el.Login.email)
-    //     .prop('prop', 'validationMessage')
-    //     .prop((text) => {
-    //         expect(text).to.contain(`insira uma parte depois de "@". "${text}@" está incompleto.`);
-    //     });
-    const $elementErrorEmailArroba = Cypress.$(el.Login.email);
-    const valorCampoErrorEmailArroba = String($elementErrorEmailArroba.val()).trim();
-    const mensagemValidacaoErrorEmailArroba = $elementErrorEmailArroba.prop('validationMessage');
-    const isValidationEmailFilledErrorEmailArroba =
-        valorCampoErrorEmailArroba === '' || mensagemValidacaoErrorEmailArroba.includes('Preencha este campo');
-
-    // const $elementErrorEmailFormatServer = Cypress.$(el.Login.email)
-    //     .prop('prop', 'validationMessage')
-    //     .prop((text) => {
-    //         expect(text).to.contain(`"." está sendo usado em uma posição incorreta em "${text}com`);
-    //     });
-    const $elementErrorEmailFormatServer = Cypress.$(el.Login.email);
-    const valorCampoErrorEmailFormatServer = String($elementErrorEmailFormatServer.val()).trim();
-    const mensagemValidacaoErrorEmailFormatServer = $elementErrorEmailFormatServer.prop('validationMessage');
-    const isValidationEmailFilledErrorEmailFormatServer =
-        valorCampoErrorEmailFormatServer === '' || mensagemValidacaoErrorEmailFormatServer.includes('Preencha este campo');
-
-    // const $elementErrorPassword = Cypress.$(el.Login.email)
-    //     .prop('prop', 'validationMessage')
-    //     .prop((text) => {
-    //         expect(text).to.contain('Preencha este campo.');
-    //     });
-    const $elementErrorPassword = Cypress.$(el.Login.email);
-    const valorCampoErrorPassword = String($elementErrorPassword.val()).trim();
-    const mensagemValidacaoErrorPassword = $elementErrorPassword.prop('validationMessage');
-    const isValidationEmailFilledErrorPassword =
-        valorCampoErrorPassword === '' || mensagemValidacaoErrorPassword.includes('Preencha este campo');
-
-
-    // if ($elementErrorEmailPreechido) {
-    //     return cy.wrap({ error: `Campo e-mail não foi preenchido.` });
-    // };
-    // if ($elementErrorEmailFormatoAt) {
-    //     return cy.wrap({ error: `Inclua um "@" no endereço de e-mail. ${emailAccess} está com um "@" faltando.` });
-    // };
-    // if ($elementErrorEmailFormatServer) {
-    //     return cy.wrap({ error: `Insira uma parte depois de "@". ${emailAccess} está incompleto.` });
-    // };
-    // if ($elementErrorPassword) {
-    //     return cy.wrap({ error: `Preencha este campo.` });
-    // };
-    // if ($elementErrorEmailArroba) {
-    //     return cy.wrap({ error: `Preencha este campo.` });
-    // };
-
-
-    const message: CheckAndThrowError[] = [
-        {
-            condition: isValidationEmailFilledelementErrorEmailPreechido.to.be.true,
-            errorMessage: `Campo e-mail não foi preenchido.`,
-        },
-        {
-            condition: isValidationEmailFilledErrorEmailFormatoAt.to.be.true,
-            errorMessage: `Inclua um "@" no endereço de e-mail. ${emailAccess} está com um "@" faltando.`,
-        },
-        {
-            condition: isValidationEmailFilledErrorEmailArroba.to.be.true,
-            errorMessage: `Insira uma parte depois de "@". ${emailAccess} está incompleto.`,
-        },
-        {
-            condition: isValidationEmailFilledErrorEmailFormatServer.to.be.true,
-            errorMessage: `Preencha este campo.`,
-        },
-        {
-            condition: isValidationEmailFilledErrorPassword.to.be.true,
-            errorMessage: `Preencha este campo.`,
-        },
-    ]
-    const checkAndThrowError = (params: CheckAndThrowError[], defaultMessage: string) => {
-        const successMessage = ''
-        for (const { condition, errorMessage } of params) {
-            if (condition && errorMessage === defaultMessage || !condition && successMessage === defaultMessage) {
-                throw new Error(`${errorMessage}`);
-            } else {
-                return cy.wrap({ success: 'Não foi identificado nenhum erro de condição ou requisito.' })
-            }
-        }
+    function validateEmail(email: string): boolean {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
     }
+    cy.get(email, { timeout: 20000 })
+        .each(($input) => {
+            cy.wrap($input)
+                .type(emailAccess.toString(), { log: false })
+                .should('have.value', emailAccess)
+                .then(() => {
+                    const $emailValue = String($input.val());
+                    const $elementError = Cypress.$(elementError);
+                    if ($emailValue.length < 1 && !$elementError.is(':visible')) {
+                        throw new Error('Usuário não foi inserido, porém não é apresentado mensagem ao usuário.');
+                    };
 
-    cy.get(access).as('access')
-        .click();
-    cy.wrap(null).then(() => {
-        cy.get(messageContainerIncorrectData, { timeout: 20000 })
-            .should('be.visible')
-            .as('messageModalAlias')
-            .then(($modal) => {
-                const messageModal = $modal.text();
-                cy.get('@access')
-                    .click();
-                checkAndThrowError(message, messageModal);
-            })
-    });
+                    if (!$emailValue || $emailValue.length === 0 && !$elementError.is(':visible')) {
+                        throw new Error('Há digitos que não foram preenchidos, porém não é apresentado mensagem ao usuário.');
+                    };
 
-    cy.url()
-        .should('contain', `${dataParameters.env.BASE_URL}`);
-});
+                    if (!validateEmail(emailAccess)) {
+                        throw new Error('Email inválido');
+                    }
+
+                });
+
+        })
+
+    function validatePassword(password: string): boolean {
+        const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@]{8,}$/;
+        return re.test(password);
+    }
+    cy.get(password, { timeout: 20000 })
+        .each(($input) => {
+            cy.wrap($input)
+                .type(passwordAccess.toString(), { log: false })
+                .should('have.value', passwordAccess)
+                .then(($input) => {
+                    const $passwordValue = String($input.val());
+                    const $elementError = Cypress.$(elementError);
+
+                    if (passwordAccess.length < 1 && !$elementError.is(':visible')) {
+                        throw new Error('Senha não foi inserida, porém não é apresentado mensagem ao usuário.');
+                    };
+
+                    if (!$passwordValue || $passwordValue.length === 0 && !$elementError.is(':visible')) {
+                        throw new Error('Alguns dígitos não foram preenchidos, porém não é apresentada mensagem de erro ao usuário.');
+                    };
+
+
+
+                });
+        })
+
+    cy.get(access)
+        .click()
+        .then(() => {
+            if (!validatePassword(passwordAccess)) {
+                cy.get(messageContainer).then(($modal) => {
+                    const messageModal = $modal.text().trim();
+                    if (messageModal.includes('As credenciais fornecidas não coincidem com nossos registros.')) {
+                        throw new Error('Foi informado usuário ou senha incorretos na aplicação');
+                    }
+                })
+            }
+
+            cy.window().then((win) => {
+                const $elementError = win.document.querySelector(messageContainer) as HTMLElement;
+
+                if ($elementError && $elementError.style.display !== 'none') {
+                    throw new Error('Usuário ou senha estão inválidos.');
+                };
+
+                function checkValidation(selector: string, errorMessage: string) {
+                    const $element = win.document.querySelector(selector) as HTMLInputElement;
+                    if ($element) {
+                        const validationMessage = $element.validationMessage;
+                        expect(validationMessage).to.contain(errorMessage);
+                    }
+                }
+
+                checkValidation(email, 'Preencha este campo.');
+                checkValidation(email, `Inclua um "@" no endereço de e-mail. "${emailAccess}" não contém um "@".`);
+                checkValidation(email, `Insira uma parte após "@". O "${emailAccess}@" está incompleto.`);
+                checkValidation(email, `Uma parte após '@' não deve conter o simbolo '${emailAccess}'`);
+                checkValidation(email, `'.' foi usado em uma posição incorreta em '${emailAccess}'`);
+                checkValidation(password, 'Preencha este campo.');
+            });
+
+            cy.url()
+                .should('contain', `${dataParameters.env.BASE_URL}`);
+        });
+
+
+    return cy.wrap({ success: 'Login realizado com sucesso.' });
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 Cypress.Commands.add('loginLogoutWithViewport', (size: Cypress.ViewportPreset | [number, number]) => {

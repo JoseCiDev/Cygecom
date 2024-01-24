@@ -2,16 +2,83 @@
 
 import { faker } from '@faker-js/faker';
 import { elements as el } from '../../elements';
+import { dataParameters } from '.././../DataParameters'
 
+const {
+    logout,
+    optionsMenu,
+    menuReduced,
+    breadcumbHome,
+    breadcumbUser,
+    showQuantityRecords,
+    SearchRegisteredUser,
+    nextPage,
+    pagePrevious,
+} = el.Shared
 
+const {
+    titleLogin,
+    email,
+    password,
+    access,
+    messageContainer,
+} = el.Login
 
+const {
 
+} = el.CustomCommands
 
+const {
+    userProfile,
+    homeMenu,
+    logoGecom,
+    homeScreen,
+} = el.Start
 
+const {
+    registrationMenu,
+    registrationMenuReduced,
+    registrationUserSubMenu,
+    createNewUser,
+    username,
+    birthdateUser,
+    cpfCnpjUser,
+    phoneUser,
+    emailUser,
+    userPassword,
+    confirmUserPassword,
+    sectorUser,
+    optionUserSector,
+    optionSelectUserSector,
+    optionSelectedSectorUser,
+    userApprover,
+    optionUserApprover,
+    limitUserApproval,
+    centerPermittedCostUser,
+    selectAllAllowedCostCenterUser,
+    clearCenterPermittedCostUser,
+    saveUserRegistration,
+    cancelUserRegistration,
+    registrationSupplierSubMenu,
+    messageRequirementName,
+    messageRequirementCpfCnpj,
+    messageRequiredTelephone,
+} = el.Register
 
+const {
+    requestMenu,
+    newRequestSubMenu,
+    myRequestSubMenu,
+    requestGeneralSubMenu,
+} = el.Request
 
-
-
+const {
+    supplyMenu,
+    dashboardSubMenu,
+    productSubMenu,
+    serviceSubMenu,
+    contractSubMenu,
+} = el.Supply
 
 describe('Testes da página Login.', () => {
     const ambiente = Cypress.env('AMBIENTE');
@@ -24,119 +91,13 @@ describe('Testes da página Login.', () => {
 
 
     beforeEach(function () {
-        cy.pause();
-        cy.visit(dadosAmbiente.BASEURL + '/login');
 
     })
 
-    // it.only(`Deve ser possível logar em vários dispositivos.`, () => {
-    //     sizes.forEach((size) => {
-    //         cy.loginLogoutWithViewport(size, dadosAmbiente);
 
-    //         cy.inserirEmailLogin(el.email, dadosAmbiente.EMAILADMIN);
+    it('Login Test.', () => {
+        cy.login(dataParameters.env.EMAIL_ADMIN, 'dataParameters.env.PASSWORD_ADMIN', messageContainer);
+        //dataParameters.env.EMAIL_ADMIN, 'dataParameters.env.PASSWORD_ADMIN', messageContainer
+    })
 
-    //         cy.inserirSenhaLogin(el.senha, dadosAmbiente.SENHAADMIN);
-
-    //         cy.getVisible(el.entrar).click();
-
-    //         cy.url().should('contain', `${dadosAmbiente.BASEURL}`);
-
-    //         if (Cypress._.isArray(size)) {
-    //             cy.get(el.perfilUsuario).click();
-    //             cy.get(el.logout).click();
-    //         }
-    //     });
-    //     cy.pause();
-    // });
-
-    
-
-    // it('Deve verificar se existe validação para o campo e-mail.', () => {
-
-    //     cy.visit(dadosAmbiente.BASEURL + '/login');
-
-    //     cy.inserirEmailLogin(el.email, 'jose.djalma');
-
-    //     cy.entrarGecom(el.entrar)
-
-    //     cy.on('window:alert', (message) => {
-    //         expect(message).to.equal('Inclua um "@" no endereço de e-mail. "jose.djalma" está com um "@" faltando.');
-    //     });
-    //     cy.pause();
-    // })
-
-
-
-    // it('Deve verificar se a senha inserida não apresenta os caracteres.', () => {
-
-    //     cy.getVisible(el.tituloLogin);
-
-    //     cy.inserirEmailLogin(el.email, (dadosAmbiente.EMAILADMIN));
-
-    //     cy.inserirSenhaLogin(el.senha, (dadosAmbiente.SENHAADMIN))
-
-    //     cy.getVisible(el.senha)
-    //         .should('have.attr', 'type', 'password');
-    // })
-
-
-
-    // it('Deve realizar login inserindo dados corretos.', () => {
-
-    //     cy.login(dadosAmbiente.EMAILADMIN, dadosAmbiente.SENHAADMIN);
-
-    //     cy.abrirPerfilUsuario(el.perfilUsuario)
-
-    //     cy.sairGecom(el.logout)
-    // })
-
-
-
-    // it('Deve falhar o login devido a dados incorretos.', () => {
-
-    //     cy.getVisible(el.tituloLogin);
-
-    //     cy.inserirEmailLogin(el.email, email);
-
-    //     cy.inserirSenhaLogin(el.senha, senha)
-
-    //     cy.entrarGecom(el.entrar)
-
-    //     cy.getVisible(el.msgDadosIncorretosLogin)
-    // })
-
-
-    // it('Deve falhar o login devido a não inserção de dados.', () => {
-
-    //     cy.entrarGecom(el.entrar)
-
-    //     cy.on('window:alert', (message) => {
-    //         expect(message).to.equal('Preencha este campo.');
-    //     });
-    // })
-
-
-    // it('Deve falhar o login devido ao preenchimento somente do e-mail.', () => {
-
-    //     cy.inserirEmailLogin(el.email, email);
-
-    //     cy.entrarGecom(el.entrar)
-
-    //     cy.on('window:alert', (message) => {
-    //         expect(message).to.equal('Preencha este campo.');
-    //     });
-    // })
-
-
-    // it('Deve falhar o login devido ao preenchimento somente da senha.', () => {
-
-    //     cy.inserirSenhaLogin(el.senha, senha)
-
-    //     cy.entrarGecom(el.entrar)
-
-    //     cy.on('window:alert', (message) => {
-    //         expect(message).to.equal('Preencha este campo.');
-    //     });
-    // })
 })
-

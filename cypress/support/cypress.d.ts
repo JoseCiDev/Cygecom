@@ -108,7 +108,7 @@ declare global {
             * comando customizado para ler arquivos
             * @example cy.lerArquivo('orcamentoFilial.json')
             */
-            readFile(nomeArquivo: string): ValidationResult;
+            readFileFromFixture(fileName: string): ValidationResult;
 
             /**
             * comando customizado para inserir arquivos.
@@ -121,6 +121,8 @@ declare global {
            * @example cy.insertFile('img/ReceitaJpeg(1).jpeg', el.importarImagem);
            */
             validateCpfCnpj(element: string, value: string, elementError: string, errorMessage: string): ValidationResult;
+
+            checkAlertsAndModals(): ValidationResult;
         }
 
     }

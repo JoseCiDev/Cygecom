@@ -53,7 +53,7 @@ const {
     email,
     password,
     access,
-    messageContainerIncorrectData,
+    messageContainer,
 } = el.Login
 
 const {
@@ -134,9 +134,9 @@ Cypress.Commands.add('insertFile', (filePath, element): void => {
 });
 
 
-Cypress.Commands.add('readFile', (fileName) => {
-    const caminhoArquivo = `${dataParameters.filePath}${fileName}`;
-    return cy.fixture(caminhoArquivo);
+Cypress.Commands.add('readFileFromFixture', (fileName) => {
+    const filePath = `${dataParameters.filePath}${fileName}`;
+    return cy.fixture(filePath);
 });
 
 Cypress.Commands.add('getElementAndClick', (...elements: string[]): void => {

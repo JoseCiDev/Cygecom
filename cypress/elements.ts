@@ -1,23 +1,23 @@
-interface Elements<T = string> {
+interface Elements<S = string> {
 
     Shared: {
-        logout: T;
-        optionsMenu: T;
-        menuReduced: T;
-        breadcumbHome: T;
-        breadcumbUser: T;
-        showQuantityRecords: T;
-        SearchRegisteredUser: T;
-        nextPage: T;
-        pagePrevious: T;
+        logout: S;
+        optionsMenu: S;
+        menuReduced: S;
+        breadcumbHome: S;
+        breadcumbUser: S;
+        showQuantityRecords: S;
+        SearchRegisteredUser: S;
+        nextPage: S;
+        pagePrevious: S;
     };
 
     Login: {
-        titleLogin: T;
-        email: T;
-        password: T;
-        access: T;
-        messageContainerIncorrectData: T;
+        titleLogin: S;
+        email: S;
+        password: S;
+        access: S;
+        messageContainer: S;
     };
 
     CustomCommands: {
@@ -25,55 +25,55 @@ interface Elements<T = string> {
     },
 
     Start: {
-        userProfile: T;
-        homeMenu: T;
-        logoGecom: T;
-        homeScreen: T;
+        userProfile: S;
+        homeMenu: S;
+        logoGecom: S;
+        homeScreen: S;
     },
 
     Register: {
-        registrationMenu: T;
-        registrationMenuReduced: T;
-        registrationUserSubMenu: T;
-        createNewUser: T;
-        username: T;
-        birthdateUser: T;
-        cpfCnpjUser: T;
-        phoneUser: T;
-        emailUser: T;
-        userPassword: T;
-        confirmUserPassword: T;
-        sectorUser: T;
-        optionUserSector: T;
-        optionSelectUserSector: T;
-        optionSelectedSectorUser: T;
-        userApprover: T;
-        optionUserApprover: T;
-        limitUserApproval: T;
-        centerPermittedCostUser: T;
-        selectAllAllowedCostCenterUser: T;
-        clearCenterPermittedCostUser: T;
-        saveUserRegistration: T;
-        cancelUserRegistration: T;
-        registrationSupplierSubMenu: T;
-        messageRequirementName: T;
-        messageRequirementCpfCnpj: T;
-        messageRequiredTelephone: T;
+        registrationMenu: S;
+        registrationMenuReduced: S;
+        registrationUserSubMenu: S;
+        createNewUser: S;
+        username: S;
+        birthdateUser: S;
+        cpfCnpjUser: S;
+        phoneUser: S;
+        emailUser: S;
+        userPassword: S;
+        confirmUserPassword: S;
+        sectorUser: S;
+        optionUserSector: S;
+        optionSelectUserSector: S;
+        optionSelectedSectorUser: S;
+        userApprover: S;
+        optionUserApprover: S;
+        limitUserApproval: S;
+        centerPermittedCostUser: S;
+        selectAllAllowedCostCenterUser: S;
+        clearCenterPermittedCostUser: S;
+        saveUserRegistration: S;
+        cancelUserRegistration: S;
+        registrationSupplierSubMenu: S;
+        messageRequirementName: S;
+        messageRequirementCpfCnpj: S;
+        messageRequiredTelephone: S;
     },
 
     Request: {
-        requestMenu: T;
-        newRequestSubMenu: T;
-        myRequestSubMenu: T;
-        requestGeneralSubMenu: T;
+        requestMenu: S;
+        newRequestSubMenu: S;
+        myRequestSubMenu: S;
+        requestGeneralSubMenu: S;
     },
 
     Supply: {
-        supplyMenu: T;
-        dashboardSubMenu: T;
-        productSubMenu: T;
-        serviceSubMenu: T;
-        contractSubMenu: T;
+        supplyMenu: S;
+        dashboardSubMenu: S;
+        productSubMenu: S;
+        serviceSubMenu: S;
+        contractSubMenu: S;
     },
 }
 
@@ -98,7 +98,7 @@ export const elements: Elements = {
         email: '[data-cy="email"]',
         password: '[data-cy="password"]',
         access: '[data-cy="btn-login-entrar"]',
-        messageContainerIncorrectData: '#login-form > div.alert.alert-danger',
+        messageContainer: '#login-form > div.alert.alert-danger',
     },
 
     CustomCommands: {

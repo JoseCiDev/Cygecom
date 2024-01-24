@@ -18,10 +18,7 @@ const cpf = fakerBr.br.cpf();
 const cnpj = fakerBr.br.cnpj();
 const birthDate = new Date();
 
-export type ValidationResult = Cypress.Chainable<{
-    error?: string;
-    success?: string;
-}>
+export type ValidationResult = Cypress.Chainable<{ error?: string; success?: string; }>
 
 
 export interface DateTime<S = string> {
@@ -32,6 +29,8 @@ export interface CheckAndThrowError {
     condition: boolean;
     errorMessage: string;
 }
+
+
 
 
 interface DataParameters<S = string> {
@@ -2552,7 +2551,7 @@ export const dataParameters: DataParameters = {
     ],
 
     url: {
-        login: 'http://192.168.0.66:9400/login',
+        login: 'http://192.168.0.66:9401/login',
     },
 
     Autentication: {

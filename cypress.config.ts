@@ -18,6 +18,7 @@ export default defineConfig({
     numTestsKeptInMemory: 150,
     excludeSpecPattern: [
       'cypress/support/*',
+      'cypress/support/commands/*',
       'cypress/DadosParametros.ts',
       'cypress/elements.ts',
       'cypress/reports/*',
