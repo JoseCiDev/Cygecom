@@ -2,7 +2,7 @@
 
 import { faker } from '@faker-js/faker';
 import { elements as el } from '../elements';
-import { dataParameters } from '../DataParameters'
+import { ValidationResult, dataParameters } from '../DataParameters'
 import { env } from 'process';
 import { data } from 'cypress/types/jquery';
 
@@ -15,7 +15,7 @@ export const {
     password,
     access,
     titleLogin,
-    messageContainerIncorrectData,
+    messageContainer,
 
 } = el.Login;
 
@@ -99,100 +99,124 @@ describe('Testes da página Login.', () => {
 
     })
 
-    // it(`Deve ser possível logar em vários dispositivos.`, () => {
-    //     dadosParametros.sizes.forEach((size) => {
+    it(`Deve ser possível logar em vários dispositivos.`, () => {
+        dataParameters.sizes.forEach((size) => {
+            cy.loginLogoutWithViewport(size);
 
-    //         cy.loginLogoutWithViewport(size);
+            cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer);
 
-    //         cy.login(env.EMAIL_ADMIN, env.PASSWORD_ADMIN, messageContainerIncorrectData);
-
-    //         if (Cypress._.isArray(size)) {
-    //             cy.get(el.Inicio.perfilUsuario).click();
-    //             cy.get(el.Compartilhado.logout).click();
-    //         }
-    //     });
-    // });
-
-
-
-    // it('Deve verificar se existe validação para o campo e-mail.', () => {
-
-    //     cy.visit(dadosParametros.env.BASEURL + '/login');
-
-    //     cy.getElementAndType(emailUsuario, '{enter}');
-
-    //     cy.on('window:alert', (mensagem) => {
-    //         // Certifique-se de que a mensagem do alerta está correta
-    //         expect(mensagem).to.include('Preencha este campo.');
-
-
-    //     });
-
-    // });
+            if (Cypress._.isArray(size)) {
+                cy.getElementAndClick(userProfile);
+                cy.getElementAndClick(logout);
+            }
+        });
+    });
 
 
 
-    // it('Deve verificar se a senha inserida não apresenta os caracteres.', () => {
+    it('Deve falhar quando o "@" está ausente no campo de e-mail.', () => {
+        cy.login('a', 'a', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
+    });
+    it('Deve falhar quando a parte após "@" está ausente no campo de e-mail.', () => {
+        cy.login('admin@ ', 'b', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
+    });
+    it('Deve falhar quando "@" é usado mais de uma vez no campo de e-mail.', () => {
+        cy.login('admin@@', 'b', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
+    });
+    it('Deve falhar quando "." é usado imediatamente após "@" no campo de e-mail.', () => {
+        cy.login('admin@.', 'b', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
+    });
+    it('Deve falhar quando um caractere inválido é usado após "@" no campo de e-mail.', () => {
+        cy.login('admin@&', 'b', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
+    });
+    it('Deve falhar quando o formato do e-mail é inválido.', () => {
+        cy.login('admin@.com', 'b', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
+    });
 
-    //     cy.get(titleLogin);
+    it('Deve verificar se o campo de senha está configurado como tipo "password" e se a senha digitada não é exibida na tela.', () => {
+        cy.get(password).should('have.attr', 'type', 'password');
+        cy.get(password).should('have.value', '');
 
-    //     cy.getVisible(password)
-    //         .should('have.attr', 'type', 'password');
-    // });
+        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
+        return cy.wrap({ success: 'Campo senha é do tipo password e ao digitar senha no campo não é possivel visualiza-la.' });
+    });
 
+    it('Deve efetuar o login utilizando as informações corretas.', () => {
+        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
+    });
 
+    it('Deve retornar falha no login devido à inserção de dados incorretos.', () => {
+        cy.login('dataParameters.env.EMAIL_ADMIN', 'dataParameters.env.PASSWORD_ADMIN', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
+    });
 
-    // it.only('Deve realizar login inserindo dados corretos.', () => {
+    it('Deve informar que o acesso não foi autorizado devido à ausência de dados de login', () => {
 
-    //     cy.login(env.EMAIL_ADMIN, env.PASSWORD_ADMIN, messageContainerIncorrectData);
+        cy.get(password)
+            .type(' ')
+            .then(($password) => {
+                if ($password.val() === '') {
+                    throw new Error('Acesso não foi autorizado devido à ausência de dados de login.');
+                }
+            });
+        cy.get(email)
+            .type(' ')
+            .then(($email) => {
+                if ($email.val() === '') {
+                    throw new Error('Acesso não foi autorizado devido à ausência de dados de login.');
+                }
+            });
 
-    //     cy.getElementAndClick(userProfile);
+    });
 
-    //     cy.getElementAndClick(logout);
+    it('Deve retornar falha no login devido ao preenchimento exclusivo do campo de e-mail.', () => {
+        cy.login(dataParameters.env.EMAIL_ADMIN, '  ', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
+    });
 
-    // });
-
-
-
-    // it('Deve falhar o login devido a dados incorretos.', () => {
-
-    //     cy.login('Teste', 'senha');
-
-    //     cy.url()
-    //         .should('contain', `${dadosParametros.url.login}`);
-    // });
-
-
-    // it('Deve falhar o login devido a não inserção de dados.', () => {
-
-    //     cy.entrarGecom(entrar)
-
-    //     cy.url()
-    //         .should('contain', `${dadosParametros.url.login}`);
-    // });
-
-
-    // it('Deve falhar o login devido ao preenchimento somente do e-mail.', () => {
-
-    //     cy.getElementAndType(emailUsuario, dadosParametros.env.EMAILADMIN);
-
-    //     cy.getElementAndClick(entrar);
-
-    //     cy.on('window:alert', (message) => {
-    //         expect(message).to.equal('Preencha este campo.');
-    //     });
-    // });
-
-
-    // it('Deve falhar o login devido ao preenchimento somente da senha.', () => {
-
-    //     cy.getElementAndType(senha, dadosParametros.env.SENHAADMIN);
-
-    //     cy.getElementAndClick(entrar);
-
-    //     cy.on('window:alert', (message) => {
-    //         expect(message).to.equal('Preencha este campo.');
-    //     });
-    // })
+    it('Deve retornar falha no login devido ao preenchimento exclusivo do campo de senha.', () => {
+        cy.get(password)
+            .type(' ')
+            .then(($password) => {
+                if ($password.val() === '') {
+                    throw new Error('Falha no login devido ao preenchimento exclusivo do campo de senha');
+                }
+            });
+        cy.get(email)
+            .type(' ')
+            .then(($email) => {
+                if ($email.val() === '') {
+                    throw new Error('Acesso não foi autorizado devido à ausência de dados de login.');
+                }
+            });
+    })
 })
 

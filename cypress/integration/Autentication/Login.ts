@@ -96,7 +96,10 @@ describe('Testes da página Login.', () => {
 
 
     it('Login Test.', () => {
-        cy.login('.com', dataParameters.env.PASSWORD_ADMIN, messageContainer);
+        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            })
     })
 
 })

@@ -106,7 +106,7 @@ export const elements: Elements = {
     },
 
     Start: {
-        userProfile: '[data-cy="profile-dropdown"]',
+        userProfile: '#navigation > div.user > div > button',
         homeMenu: '[data-cy="route-home"]',
         logoGecom: '[data-cy="logo-gecom"]',
         homeScreen: '#main',

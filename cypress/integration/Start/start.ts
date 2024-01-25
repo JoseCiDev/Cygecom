@@ -24,7 +24,7 @@ const {
     email,
     password,
     access,
-    messageContainerIncorrectData,
+    messageContainer,
 } = el.Login
 
 const {
@@ -91,7 +91,7 @@ describe('Testes da página Inicio', () => {
 
     beforeEach(function () {
 
-        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainerIncorrectData);
+        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer);
     })
 
     

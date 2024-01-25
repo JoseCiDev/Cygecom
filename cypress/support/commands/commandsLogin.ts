@@ -122,11 +122,12 @@ Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elem
         .each(($input) => {
             cy.wrap($input)
                 .type(emailAccess.toString(), { log: false })
-                .should('have.value', emailAccess)
+                .should('have.value', emailAccess, { log: false })
                 .then(() => {
                     checkInput($input, elementError, 'Usuário não foi inserido, porém não é apresentado mensagem ao usuário.');
-                    if (!validateEmail(emailAccess)) {
-                        throw new Error('Email com formato inválido');
+                    const emailError = validateEmail(emailAccess);
+                    if (emailError) {
+                        throw new Error(emailError);
                     }
                 });
         })
@@ -135,7 +136,7 @@ Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elem
         .each(($input) => {
             cy.wrap($input)
                 .type(passwordAccess.toString(), { log: false })
-                .should('have.value', passwordAccess)
+                .should('have.value', passwordAccess, { log: false })
                 .then(() => {
                     checkInput($input, elementError, 'Senha não foi inserida, porém não é apresentado mensagem ao usuário.');
                 });
@@ -144,6 +145,7 @@ Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elem
     cy.get(access)
         .click()
         .then(() => {
+
             cy.checkValidation(emailAccess);
 
             if (!validatePassword(passwordAccess)) {
@@ -154,6 +156,10 @@ Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elem
                             if (messageModal.includes('As credenciais fornecidas não coincidem com nossos registros.')) {
                                 throw new Error('Foi informado usuário ou senha incorretos na aplicação');
                             }
+                            if (messageModal.includes('The password field is required.')) {
+                                throw new Error('Foi inserida uma senha incorreta na aplicação ou não foi fornecida nenhuma senha na aplicação.');
+                            }
+
                         });
                     } else {
                         console.log('Element not found');
@@ -166,34 +172,16 @@ Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elem
     return cy.wrap({ success: 'Login realizado com sucesso.' });
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Cypress.Commands.add('loginLogoutWithViewport', (size: Cypress.ViewportPreset | [number, number]) => {
-    if (_.isArray(size) && typeof size[0] === 'number' && typeof size[1] === 'number') {
+    if (Array.isArray(size) && typeof size[0] === 'number' && typeof size[1] === 'number') {
         cy.viewport(size[0], size[1]);
         cy.log(`-Screen size: ${size[0]} x ${size[1]}-`);
     } else if (typeof size === 'string') {
         cy.viewport(size as Cypress.ViewportPreset);
         cy.log(`-Screen size: ${size}-`);
     }
+    return cy.wrap({ success: `Login realizado com sucesso na resolução ${size}` });
 });
-
-
 
 Cypress.Commands.add('checkValidation', (text: string) => {
     cy.window().then((win) => {
