@@ -172,16 +172,54 @@ Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elem
     return cy.wrap({ success: 'Login realizado com sucesso.' });
 })
 
-Cypress.Commands.add('loginLogoutWithViewport', (size: Cypress.ViewportPreset | [number, number]) => {
+Cypress.Commands.add('loginLogoutWithViewport', (size: Cypress.ViewportPreset | [number, number], elementAction: string, elementSubmit: string) => {
     if (Array.isArray(size) && typeof size[0] === 'number' && typeof size[1] === 'number') {
         cy.viewport(size[0], size[1]);
         cy.log(`-Screen size: ${size[0]} x ${size[1]}-`);
+        cy.get(elementAction, { timeout: 20000 }).each(($el) => {
+            cy.wrap($el).click({ timeout: 20000 });
+        });
+        cy.get(elementSubmit, { timeout: 20000 }).each(($el) => {
+            cy.wrap($el).click({ timeout: 20000 });
+        });
     } else if (typeof size === 'string') {
         cy.viewport(size as Cypress.ViewportPreset);
         cy.log(`-Screen size: ${size}-`);
+        cy.get(elementAction, { timeout: 20000 }).each(($el) => {
+            cy.wrap($el).click({ timeout: 20000 });
+        });
+        cy.get(elementSubmit, { timeout: 20000 }).each(($el) => {
+            cy.wrap($el).click({ timeout: 20000 });
+        });
     }
     return cy.wrap({ success: `Login realizado com sucesso na resolução ${size}` });
 });
+
+
+// it(`É necessário permitir o acesso em múltiplos dispositivos.`, () => {
+//     cy.visit('http://192.168.0.66:9430');
+
+//     dadosParametros.sizes.forEach((size) => {
+//         cy.loginLogoutWithViewport(size, dadosAmbiente);
+
+//         cy.inserirEmailLogin(el.CustomCommands.email, dadosAmbiente.EMAILADMIN);
+//         cy.inserirSenhaLogin(el.CustomCommands.senha, dadosAmbiente.SENHAADMIN);
+//         cy.get(el.CustomCommands.entrar).click();
+//         cy.url()
+//             .should('contain', `${dadosAmbiente.BASEURL}`);
+
+//         if (Array.isArray(size) && size[0] <= 414 && size[1] <= 914) {
+//             cy.get(el.Login.containerMenu)
+//                 // .invoke('removeAttr', 'style');
+//             cy.wait(1000);
+//             cy.getElementAndClick(el.Dashboard.perfilUsuarioMenuReduzido)
+//             cy.getElementAndClick(el.Dashboard.logoutMenuReduzido)
+//         } else if (Cypress._.isArray(size)) {
+//             cy.getElementAndClick(el.Dashboard.perfilUsuario);
+//             cy.getElementAndClick(el.Dashboard.logout);
+//         }
+//     });
+// });
 
 Cypress.Commands.add('checkValidation', (text: string) => {
     cy.window().then((win) => {

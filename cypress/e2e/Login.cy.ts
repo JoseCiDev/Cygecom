@@ -99,15 +99,17 @@ describe('Testes da página Login.', () => {
 
     })
 
-    it(`Deve ser possível logar em vários dispositivos.`, () => {
-        dataParameters.sizes.forEach((size) => {
-            cy.loginLogoutWithViewport(size);
+    it.only(`Deve ser possível logar em vários dispositivos.`, () => {
 
-            cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer);
+
+        dataParameters.sizes.forEach((size) => {
+            cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+                .then((result) => {
+                    assert.exists(result.success, result.error)
+                });
 
             if (Cypress._.isArray(size)) {
-                cy.getElementAndClick(userProfile);
-                cy.getElementAndClick(logout);
+                cy.loginLogoutWithViewport(size, userProfile, logout);
             }
         });
     });

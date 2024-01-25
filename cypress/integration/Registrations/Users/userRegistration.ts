@@ -2,58 +2,134 @@
 import * as faker from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { elements as el } from '../../../elements';
+import { ValidationResult, dataParameters } from '../../../DataParameters'
 
 
+const {
+    logout,
+    optionsMenu,
+    menuReduced,
+    breadcumbHome,
+    breadcumbUser,
+    showQuantityRecords,
+    SearchRegisteredUser,
+    nextPage,
+    pagePrevious,
+} = el.Shared
 
-// const acessarCadastroUsuario = () => {
-//     cy.acessarMenuCadastro(el.cadastroMenu);
+const {
+    titleLogin,
+    email,
+    password,
+    access,
+    messageContainer,
+} = el.Login
 
-//     cy.acessarSubmenuCadastroUsuario(el.cadastroUsuarioSubMenu);
+const {
 
-//     cy.acessarCadastroUsuario(el.criaNovoUsuario);
-// }
+} = el.CustomCommands
 
+const {
+    userProfile,
+    homeMenu,
+    logoGecom,
+    homeScreen,
+} = el.Start
 
+const {
+    registrationMenu,
+    registrationMenuReduced,
+    registrationUserSubMenu,
+    createNewUser,
+    username,
+    birthdateUser,
+    cpfCnpjUser,
+    phoneUser,
+    emailUser,
+    userPassword,
+    confirmUserPassword,
+    sectorUser,
+    optionUserSector,
+    optionSelectUserSector,
+    optionSelectedSectorUser,
+    userApprover,
+    optionUserApprover,
+    limitUserApproval,
+    centerPermittedCostUser,
+    selectAllAllowedCostCenterUser,
+    clearCenterPermittedCostUser,
+    saveUserRegistration,
+    cancelUserRegistration,
+    registrationSupplierSubMenu,
+    messageRequirementName,
+    messageRequirementCpfCnpj,
+    messageRequiredTelephone,
+} = el.Register
 
-// const inserirDataNascimentoUsuario = async (element: string, dataAtual: Date = new Date()): Promise<void> => {
-//     cy.inserirData(dataAtual)
-//         .then(({ DATA_FORMATADA }: { DATA_FORMATADA: string }) => {
-//             const dataAtual = `${DATA_FORMATADA}`;
+const {
+    requestMenu,
+    newRequestSubMenu,
+    myRequestSubMenu,
+    requestGeneralSubMenu,
+} = el.Request
 
-//             cy.getVisible(element)
-//                 .type(dataAtual.toString())
-//                 .then(() => {
-//                     cy.getVisible(element)
-//                         .should('have.value', dataAtual);
-//                 });
-//         })
-// }
+const {
+    supplyMenu,
+    dashboardSubMenu,
+    productSubMenu,
+    serviceSubMenu,
+    contractSubMenu,
+} = el.Supply
+
 
 describe('Testes da página Cadastro de Usuário', () => {
-    const ambiente = Cypress.env('AMBIENTE');
-    const dadosAmbiente = Cypress.env(ambiente);
-    const email: string = faker.faker.internet.userName() + '@'
-    const dominio: string = '@essentia.com.br';
-    const emailCompleto: string = faker.faker.internet.userName() + dominio;
-    const senha: string = faker.faker.number.int().toString();
-    const senhaGigante: string = faker.faker.lorem.word({ length: { min: 100, max: 102 }, strategy: 'longest' });
-    const nome: string = faker.faker.person.fullName();
-    const letraUnica: string = faker.faker.string.alpha();
-    const cpfAleatorio: string = fakerBr.br.cpf();
-    const cnpjAleatorio: string = fakerBr.br.cnpj();
-    const telefoneAleatorio: string = faker.faker.phone.number('(48) 9####-####')
-    const telefoneIncompleto: string = telefoneAleatorio.slice(0, -3)
-
-
 
 
     beforeEach(function () {
-
-        // cy.login(dadosAmbiente.EMAILGESTORUSUARIO, dadosAmbiente.SENHAGESTORUSUARIO);
-
-        // acessarCadastroUsuario()
+        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
     })
 
+    it(`userRegistration`, () => {
 
+    });
 
 })
+
+
+/*
+searchPrescription
+newUserRegistration
+    VALIDACOES DE CAMPOS
+    VALIDACAO CAMPO PASSWORD
+    VALIDACAO CAMPO CNPJ
+    VALIDACAO CAMPO TELEFONE CELULAR
+    VALIDACAO CAMPO EMAIL
+    OBRIGATORIEDADE DOS CAMPOS
+    LIMITE DE CARACTERES NO CAMPOS
+    TIPO DE DADO ACEITO NOS CAMPOS
+    VALIDAR MENSAGENS DE RETORNO
+    
+    telefone
+        pessoal
+        comercial
+    perfil
+    setor
+    usuárioAprovador
+    limite aprovacao    
+        valor de aprovacao definido
+        sem limite de aprovacao
+    autorizacao para solicitar
+        nao autorizado
+        autorizado
+    Solicitar para outros usuarios
+        sim
+        nao
+    centro de custo para solicitar
+    centro de custo para aprovar
+editNewUser
+deleteNewUser
+
+*/

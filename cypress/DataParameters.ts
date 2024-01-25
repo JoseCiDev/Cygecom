@@ -4,23 +4,55 @@ import { faker } from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { format } from 'date-fns';
 
+
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
 
-const domain = '@essentia.com.br';
-const email = faker.internet.userName() + domain;
-const password = faker.number.int().toString();
-const giantPassword = faker.lorem.word({ length: { min: 100, max: 102 }, strategy: 'longest' });
-const telephone = faker.string.alphanumeric('(48) 9####-####');
-const name = faker.person.fullName();
-const singleLetter = faker.string.alpha();
-const cpf = fakerBr.br.cpf();
-const cnpj = fakerBr.br.cnpj();
-const birthDate = new Date();
+let domain = '@essentia.com.br';
+let password = faker.number.int().toString();
+let confirmPassword = password;
+
 
 export type ValidationResult = Cypress.Chainable<{ error?: string; success?: string; }>
 
+export interface UserRegistration<S = string> {
+    name: S;
+    birthDate: Date;
+    cpf: number;
+    cnpj: number;
+    telephone: S;
+    email: S;
+    password: S;
+    confirmPassword: S;
+    userProfile: UserProfile;
+    sector: Sector;
+    approverUser: ApproverUser;
+    approvalLimit: number;
+    authorizationRequest: S;
+    requestOtherUsers: S;
+    allowedRequestCostCenter: AllowedRequestCostCenter;
+    allowedApprovalCostCenter: AllowedApprovalCostCenter,
+};
 
+export interface SupplierRegistration<S = string> {
+    CNPJ: S;
+    company: S;
+    companyName: S;
+    description: S;
+    marketType: S;
+    supplierIndication: S;
+    cep: S;
+    country: S;
+    state: S;
+    city: S;
+    district: S;
+    street: S;
+    number: S;
+    addressComplement: S;
+    telephone: S;
+    email: S;
+    tradeRepresentative: S;
+};
 export interface DateTime<S = string> {
     FORMATTED_DATE: S;
     FORMATTED_TIME: S;
@@ -29,9 +61,6 @@ export interface CheckAndThrowError {
     condition: boolean;
     errorMessage: string;
 }
-
-
-
 
 interface DataParameters<S = string> {
 
@@ -67,40 +96,18 @@ interface DataParameters<S = string> {
     };
 
     Register: {
-        name: S;
-        singleLetter: S;
-        cpf: S;
-        cnpj: S;
-        telephone: S;
+        userRegistration: UserRegistration;
+        // supplierRegistration: SupplierRegistration;
     };
-
-    registrationParams: {
-        name: S;
-        birthDate: Date;
-        cpf: number;
-        cnpj: number;
-        telephone: S;
-        email: S;
-        password: S;
-        giantPassword: S;
-        userProfile: UserProfile;
-        authorizationRequest: S;
-        requestOtherPeople: S;
-        sector: Sector;
-        approverUser: ApproverUser;
-        approvalLimit: number;
-        allowedCostCenter: AllowedRequestCostCenter;
-    };
-
 
     userProfile: typeof UserProfile;
     authorizationRequest: typeof AuthorizationRequest;
     requestOtherPeople: typeof RequestOtherPeople;
     allowedCostCenter: typeof AllowedRequestCostCenter;
     approverUser: typeof ApproverUser;
+    allowedApprovalCostCenter: typeof AllowedApprovalCostCenter,
 
 }
-
 
 
 export const getRandomValue = <T>(array: T[]): T => {
@@ -118,15 +125,6 @@ enum UserProfile {
 };
 
 
-enum AuthorizationRequest {
-    Autorizado = '1',
-    NaoAutorizado = '0',
-};
-
-enum RequestOtherPeople {
-    Sim = '[data-cy="can-associate-requester"]',
-    Nao = '[data-cy="can-not-associate-requester"]',
-};
 
 export enum Sector {
     HKM_LAB_SOLIDOS = "select2-cost_center_id-result-3vqv-1",
@@ -2514,9 +2512,6 @@ enum ApproverUser {
 
 }
 
-enum ApprovalLimit {
-    milReais = 1000
-}
 
 
 export const dataParameters: DataParameters = {
@@ -2552,32 +2547,48 @@ export const dataParameters: DataParameters = {
         giantPassword: faker.lorem.word({ length: { min: 100, max: 102 }, strategy: 'longest' }),
     },
 
+
+
+
     Register: {
-        name: name,
-        singleLetter: singleLetter,
-        cpf: cpf,
-        cnpj: cnpj,
-        telephone: telephone,
+        userRegistration: {
+            name: faker.person.fullName(),
+            birthDate: new Date(),
+            cpf: fakerBr.br.cpf(),
+            cnpj: fakerBr.br.cnpj(),
+            telephone: faker.string.alphanumeric('(48) 9####-####'),
+            email: faker.internet.userName() + domain,
+            password: faker.number.int().toString(),
+            confirmPassword: password,
+            userProfile: UserProfile.normal,
+            sector: Sector.HKM_SOFTWARE_E_SISTEMAS,
+            approverUser: ApproverUser.diretorgecom,
+            approvalLimit: 1500,
+            authorizationRequest: AuthorizationRequest.Autorizado,
+            requestOtherUsers: RequestOtherPeople.Sim,
+            allowedRequestCostCenter: AllowedRequestCostCenter.CGE_CONGRESSOS_E_EVENTOS,
+            allowedApprovalCostCenter: AllowedApprovalCostCenter.CGE_DIRETORIA,
 
-    },
-
-
-    registrationParams: {
-        name: name,
-        birthDate: birthDate,
-        cpf: cpf,
-        cnpj: cnpj,
-        telephone: telephone,
-        email: email,
-        password: password,
-        giantPassword: giantPassword,
-        userProfile: UserProfile.normal,
-        authorizationRequest: AuthorizationRequest.Autorizado,
-        requestOtherPeople: RequestOtherPeople.Sim,
-        sector: Sector.HKM_SOFTWARE_E_SISTEMAS,
-        approverUser: ApproverUser.diretorgecom,
-        approvalLimit: ApprovalLimit.milReais,
-        allowedCostCenter: AllowedRequestCostCenter.HKM_CONTROLADORIA,
+        },
+        // supplierRegistration: {
+        //     CNPJ: ,
+        //     company: ,
+        //     companyName: ,
+        //     description: ,
+        //     marketType: ,
+        //     supplierIndication: ,
+        //     cep: ,
+        //     country: ,
+        //     state: ,
+        //     city: ,
+        //     district: ,
+        //     street: ,
+        //     number: ,
+        //     addressComplement: ,
+        //     telephone: ,
+        //     email: ,
+        //     tradeRepresentative: ,
+        // },
     },
 
     userProfile: UserProfile,
@@ -2585,5 +2596,6 @@ export const dataParameters: DataParameters = {
     requestOtherPeople: RequestOtherPeople,
     allowedCostCenter: AllowedRequestCostCenter,
     approverUser: ApproverUser,
+    allowedApprovalCostCenter: AllowedApprovalCostCenter,
 };
 

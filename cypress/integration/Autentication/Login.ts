@@ -81,19 +81,10 @@ const {
 } = el.Supply
 
 describe('Testes da página Login.', () => {
-    const ambiente = Cypress.env('AMBIENTE');
-    const dadosAmbiente = Cypress.env(ambiente);
-    const dominio: string = '@essentia.com.br';
-    const email: string = faker.internet.userName() + dominio;
-    const senha: string = faker.number.int().toString()
-
-
-
-
+    
     beforeEach(function () {
 
     })
-
 
     it('Login Test.', () => {
         cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
@@ -101,5 +92,4 @@ describe('Testes da página Login.', () => {
                 assert.exists(result.success, result.error)
             })
     })
-
 })

@@ -30,7 +30,7 @@ declare global {
             * comando customizado para selecinar elemento e verificar se esta visivel.
             * @example cy.getVisible()
             */
-            loginLogoutWithViewport: (size: number | [number, number] | string,) => ValidationResult;
+            loginLogoutWithViewport: (size: Cypress.ViewportPreset | [number, number], elementAction: string, elementSubmit: string) => ValidationResult;
 
             /**
              * comando customizado para verificar se o campo tem obrigatoriedade de preenchimento em Gecom.
