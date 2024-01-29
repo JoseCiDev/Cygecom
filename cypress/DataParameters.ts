@@ -2763,7 +2763,7 @@ export const dataParameters: DataParameters = {
         // ...
         searchParameter: {
             showHideColumnsUserRegistration: [
-                // ShowHideColumnsUserRegistration.user,
+                ShowHideColumnsUserRegistration.user,
                 ShowHideColumnsUserRegistration.email,
                 ShowHideColumnsUserRegistration.profile,
                 ShowHideColumnsUserRegistration.specificSkills,

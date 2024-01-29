@@ -109,7 +109,6 @@ describe('Testes da página Cadastro de Usuário', () => {
         cy.getElementAndClick('[data-cy="dropdown-cadastros-usuarios"]')
 
         getColumnVisibilityCommand(TableTypesElements.uSerTable);
-        //criar um enum com a estrutura do menu,passar os elementos em um enum, criar um comando que clica no elemento do menu de acordo com o parametro passado, estudar essa estrutura.
     });
 
 })
