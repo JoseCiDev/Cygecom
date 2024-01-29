@@ -29,7 +29,19 @@
 
 
 import { elements as el } from '../../elements'
-import { dataParameters } from '../../DataParameters'
+import { dataParameters, TableTypes, ColumnEnums, SearchParameter, TableTypesElements } from '../../DataParameters'
+import {
+    ShowHideColumnsUserRegistration,
+    ShowHideColumnsSupplierRegistration,
+    ShowHideColumnsMyRequests,
+    ShowHideColumnsGeneralRequests,
+    ShowHideColumnsProductRequests,
+    ShowHideColumnsOneOffServiceRequests,
+    ShowHideColumnsRecurringServiceRequests,
+    ShowHideColumnsRequestReport,
+    ShowHideColumnsPoductivityReport,
+    ShowHideColumnsProfilesTable
+} from '../../DataParameters'
 
 import '../commands/commandsLogin';
 import './commandsUserRegistration';
@@ -132,7 +144,6 @@ Cypress.Commands.add('insertFile', (filePath, element): void => {
         });
     });
 });
-
 
 Cypress.Commands.add('readFileFromFixture', (fileName) => {
     const filePath = `${dataParameters.filePath}${fileName}`;
@@ -244,7 +255,7 @@ Cypress.Commands.add("insertDate", (currentDate: Date = new Date()) => {
 });
 
 Cypress.Commands.add('insertBirthDate', (element: string) => {
-    cy.insertDate(dataParameters.registrationParams.birthDate)
+    cy.insertDate(dataParameters.Register.userRegistration.birthDate)
         .then(({ FORMATTED_DATE }: { FORMATTED_DATE: string }) => {
             const currentDate = `${FORMATTED_DATE}`;
             cy.get(element)
@@ -256,10 +267,4 @@ Cypress.Commands.add('insertBirthDate', (element: string) => {
                 });
         });
 });
-
-
-
-
-
-
 
