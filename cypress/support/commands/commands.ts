@@ -29,7 +29,7 @@
 
 
 import { elements as el } from '../../elements'
-import { dataParameters, TableTypes, ColumnEnums, SearchParameter, TableTypesElements } from '../../DataParameters'
+import { dataParameters, ColumnEnums, ShowHideColumns, TableTypesElements } from '../../DataParameters'
 import {
     ShowHideColumnsUserRegistration,
     ShowHideColumnsSupplierRegistration,
@@ -39,7 +39,7 @@ import {
     ShowHideColumnsOneOffServiceRequests,
     ShowHideColumnsRecurringServiceRequests,
     ShowHideColumnsRequestReport,
-    ShowHideColumnsPoductivityReport,
+    ShowHideColumnsProductivityReport,
     ShowHideColumnsProfilesTable
 } from '../../DataParameters'
 

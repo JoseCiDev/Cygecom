@@ -1,7 +1,7 @@
 import * as faker from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { elements as el } from '../../../elements';
-import { ValidationResult, dataParameters, TableTypes, ColumnEnums, SearchParameter, TableTypesElements } from '../../../DataParameters'
+import { ValidationResult, dataParameters, ColumnEnums, ShowHideColumns, TableTypesElements } from '../../../DataParameters'
 import { ShowHideColumnsUserRegistration } from '../../../DataParameters';
 import { data } from 'cypress/types/jquery';
 
@@ -99,7 +99,7 @@ describe('Testes da página Cadastro de Usuário', () => {
         cy.getElementAndClick(':nth-child(2) > .btn')
         cy.getElementAndClick('[data-cy="dropdown-cadastros-usuarios"]')
 
-        cy.getColumnVisibilityCommand(TableTypesElements.uSerTable);
+        cy.getDataOnGrid(TableTypesElements.uSerTable);
     });
 
 })

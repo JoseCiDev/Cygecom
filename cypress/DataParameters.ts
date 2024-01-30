@@ -13,8 +13,8 @@ let password = faker.number.int().toString();
 let confirmPassword = password;
 
 
-export type TableTypes = 'showHideColumnsUserRegistration' | 'showHideColumnsSupplierRegistration' | 'showHideColumnsMyRequests' | 'showHideColumnsGeneralRequests' | 'showHideColumnsProductRequests' | 'showHideColumnsOneOffServiceRequests' | 'showHideColumnsRecurringServiceRequests' | 'showHideColumnsRequestReport' | 'showHideColumnsPoductivityReport' | 'showHideColumnsProfilesTable';
-export type ColumnEnums = ShowHideColumnsUserRegistration[keyof ShowHideColumnsUserRegistration] | ShowHideColumnsSupplierRegistration[keyof ShowHideColumnsSupplierRegistration] | ShowHideColumnsMyRequests[keyof ShowHideColumnsMyRequests] | ShowHideColumnsGeneralRequests[keyof ShowHideColumnsGeneralRequests] | ShowHideColumnsProductRequests[keyof ShowHideColumnsProductRequests] | ShowHideColumnsOneOffServiceRequests[keyof ShowHideColumnsOneOffServiceRequests] | ShowHideColumnsRecurringServiceRequests[keyof ShowHideColumnsRecurringServiceRequests] | ShowHideColumnsRequestReport[keyof ShowHideColumnsRequestReport] | ShowHideColumnsPoductivityReport[keyof ShowHideColumnsPoductivityReport] | ShowHideColumnsProfilesTable[keyof ShowHideColumnsProfilesTable];
+// export type TableTypes = 'showHideColumnsUserRegistration' | 'showHideColumnsSupplierRegistration' | 'showHideColumnsMyRequests' | 'showHideColumnsGeneralRequests' | 'showHideColumnsProductRequests' | 'showHideColumnsOneOffServiceRequests' | 'showHideColumnsRecurringServiceRequests' | 'showHideColumnsRequestReport' | 'showHideColumnsProductivityReport' | 'showHideColumnsProfilesTable';
+export type ColumnEnums = ShowHideColumnsUserRegistration[keyof ShowHideColumnsUserRegistration] | ShowHideColumnsSupplierRegistration[keyof ShowHideColumnsSupplierRegistration] | ShowHideColumnsMyRequests[keyof ShowHideColumnsMyRequests] | ShowHideColumnsGeneralRequests[keyof ShowHideColumnsGeneralRequests] | ShowHideColumnsProductRequests[keyof ShowHideColumnsProductRequests] | ShowHideColumnsOneOffServiceRequests[keyof ShowHideColumnsOneOffServiceRequests] | ShowHideColumnsRecurringServiceRequests[keyof ShowHideColumnsRecurringServiceRequests] | ShowHideColumnsRequestReport[keyof ShowHideColumnsRequestReport] | ShowHideColumnsProductivityReport[keyof ShowHideColumnsProductivityReport] | ShowHideColumnsProfilesTable[keyof ShowHideColumnsProfilesTable] | TableColumnsUserRegistration[keyof TableColumnsUserRegistration] | TableColumnsSupplierRegistration[keyof TableColumnsSupplierRegistration] | TableColumnsMyRequests[keyof TableColumnsMyRequests] | TableColumnsGeneralRequests[keyof TableColumnsGeneralRequests] | TableColumnsProductRequests[keyof TableColumnsProductRequests] | TableColumnsOneOffServiceRequests[keyof TableColumnsOneOffServiceRequests] | TableColumnsRecurringServiceRequests[keyof TableColumnsRecurringServiceRequests] | TableColumnsRequestReport[keyof TableColumnsRequestReport] | TableColumnsProductivityReport[keyof TableColumnsProductivityReport] | TableColumnsProfilesTable[keyof TableColumnsProfilesTable];
 
 export type ValidationResult = Cypress.Chainable<{ error?: string; success?: string; }>
 
@@ -56,7 +56,7 @@ export interface SupplierRegistration<S = string> {
     tradeRepresentative: S;
 };
 
-export interface SearchParameter {
+export interface ShowHideColumns {
     showHideColumnsUserRegistration: Record<ShowHideColumnsUserRegistration, boolean>,
     showHideColumnsSupplierRegistration: Record<ShowHideColumnsSupplierRegistration, boolean>,
     showHideColumnsMyRequests: Record<ShowHideColumnsMyRequests, boolean>,
@@ -65,8 +65,21 @@ export interface SearchParameter {
     showHideColumnsOneOffServiceRequests: Record<ShowHideColumnsOneOffServiceRequests, boolean>,
     showHideColumnsRecurringServiceRequests: Record<ShowHideColumnsRecurringServiceRequests, boolean>,
     showHideColumnsRequestReport: Record<ShowHideColumnsRequestReport, boolean>,
-    showHideColumnsPoductivityReport: Record<ShowHideColumnsPoductivityReport, boolean>,
+    showHideColumnsProductivityReport: Record<ShowHideColumnsProductivityReport, boolean>,
     showHideColumnsProfilesTable: Record<ShowHideColumnsProfilesTable, boolean>,
+}
+
+export interface GetDataOnGrid {
+    tableColumnsUserRegistration: Record<TableColumnsUserRegistration, boolean>
+    tableColumnsSupplierRegistration: Record<TableColumnsSupplierRegistration, boolean>,
+    tableColumnsMyRequests: Record<TableColumnsMyRequests, boolean>,
+    tableColumnsGeneralRequests: Record<TableColumnsGeneralRequests, boolean>,
+    tableColumnsProductRequests: Record<TableColumnsProductRequests, boolean>,
+    tableColumnsOneOffServiceRequests: Record<TableColumnsOneOffServiceRequests, boolean>,
+    tableColumnsRecurringServiceRequests: Record<TableColumnsRecurringServiceRequests, boolean>,
+    tableColumnsRequestReport: Record<TableColumnsRequestReport, boolean>,
+    tableColumnsProductivityReport: Record<TableColumnsProductivityReport, boolean>,
+    tableColumnsProfilesTable: Record<TableColumnsProfilesTable, boolean>
 }
 export interface DateTime<S = string> {
     FORMATTED_DATE: S;
@@ -88,7 +101,8 @@ interface DataParameters<S = string> {
     Register: {
         userRegistration: UserRegistration<S>;
         // supplierRegistration: SupplierRegistration<S>;
-        searchParameter: SearchParameter;
+        showHideColumns: ShowHideColumns;
+        getDataOnGrid: GetDataOnGrid;
     };
 
     env: {
@@ -133,8 +147,19 @@ interface DataParameters<S = string> {
     showHideColumnsOneOffServiceRequests: typeof ShowHideColumnsOneOffServiceRequests;
     showHideColumnsRecurringServiceRequests: typeof ShowHideColumnsRecurringServiceRequests;
     showHideColumnsRequestReport: typeof ShowHideColumnsRequestReport;
-    showHideColumnsPoductivityReport: typeof ShowHideColumnsPoductivityReport;
+    showHideColumnsProductivityReport: typeof ShowHideColumnsProductivityReport;
     showHideColumnsProfilesTable: typeof ShowHideColumnsProfilesTable;
+    tableColumnsUserRegistration: typeof TableColumnsUserRegistration;
+    tableColumnsSupplierRegistration: typeof TableColumnsSupplierRegistration;
+    tableColumnsMyRequests: typeof TableColumnsMyRequests;
+    tableColumnsGeneralRequests: typeof TableColumnsGeneralRequests;
+    tableColumnsProductRequests: typeof TableColumnsProductRequests;
+    tableColumnsOneOffServiceRequests: typeof TableColumnsOneOffServiceRequests;
+    tableColumnsRecurringServiceRequests: typeof TableColumnsRecurringServiceRequests;
+    tableColumnsRequestReport: typeof TableColumnsRequestReport;
+    tableColumnsProductivityReport: typeof TableColumnsProductivityReport;
+    tableColumnsProfilesTable: typeof TableColumnsProfilesTable;
+
 }
 
 
@@ -948,30 +973,6 @@ export enum Sector {
     SMART_FILIAL_1_ENDOMARKETING = "select2-cost_center_id-result-dv3i-784",
 }
 
-export enum ApproverUser {
-    elisaUrban = "select2-approver_user_id-result-lpj6-2",
-    felipePugliesi = "select2-approver_user_id-result-5yqt-3",
-    camilaTeixeira = "select2-approver_user_id-result-dm2r-4",
-    andreRoedel = "select2-approver_user_id-result-ljz6-5",
-    julianaRavanello = "select2-approver_user_id-result-lg2i-6",
-    anaMariaSantana = "select2-approver_user_id-result-7z8a-7",
-    brunoUrban = "select2-approver_user_id-result-f9x9-8",
-    thaisRighetto = "select2-approver_user_id-result-6mqf-9",
-    vitorUrban = "select2-approver_user_id-result-lqqm-10",
-    denizeVergilinoDaSilva = "select2-approver_user_id-result-bnp5-11",
-    fernandoRodrigues = "select2-approver_user_id-result-x9k4-12",
-    cirieleBoeiraCataneo = "select2-approver_user_id-result-iw86-13",
-    lucianoSaraceni = "select2-approver_user_id-result-rzqy-14",
-    catianeMoraes = "select2-approver_user_id-result-27gd-15",
-    silvanaUemura = "select2-approver_user_id-result-f8j1-16",
-    hudsonOliveira = "select2-approver_user_id-result-87c0-17",
-    barbaraPucci = "select2-approver_user_id-result-j5va-94",
-    patriciaPeixoto = "select2-approver_user_id-result-5dsz-128",
-    pedroUrban = "select2-approver_user_id-result-hc8e-129",
-    marceloFontoura = "select2-approver_user_id-result-s0z0-130",
-    clarissaPoletti = "select2-approver_user_id-result-6gk2-137",
-    diretorgecom = "select2-approver_user_id-result-t4ce-193",
-}
 
 export enum AllowedRequestCostCenter {
     HKM_LABSOLIDOS = "3227",
@@ -2546,6 +2547,31 @@ export enum AllowedApprovalCostCenter {
     SMART_FILIAL_1_ENDOMARKETING = "select2-supplies-cost-centers-result-nv92-784",
 }
 
+export enum ApproverUser {
+    elisaUrban = "select2-approver_user_id-result-lpj6-2",
+    felipePugliesi = "select2-approver_user_id-result-5yqt-3",
+    camilaTeixeira = "select2-approver_user_id-result-dm2r-4",
+    andreRoedel = "select2-approver_user_id-result-ljz6-5",
+    julianaRavanello = "select2-approver_user_id-result-lg2i-6",
+    anaMariaSantana = "select2-approver_user_id-result-7z8a-7",
+    brunoUrban = "select2-approver_user_id-result-f9x9-8",
+    thaisRighetto = "select2-approver_user_id-result-6mqf-9",
+    vitorUrban = "select2-approver_user_id-result-lqqm-10",
+    denizeVergilinoDaSilva = "select2-approver_user_id-result-bnp5-11",
+    fernandoRodrigues = "select2-approver_user_id-result-x9k4-12",
+    cirieleBoeiraCataneo = "select2-approver_user_id-result-iw86-13",
+    lucianoSaraceni = "select2-approver_user_id-result-rzqy-14",
+    catianeMoraes = "select2-approver_user_id-result-27gd-15",
+    silvanaUemura = "select2-approver_user_id-result-f8j1-16",
+    hudsonOliveira = "select2-approver_user_id-result-87c0-17",
+    barbaraPucci = "select2-approver_user_id-result-j5va-94",
+    patriciaPeixoto = "select2-approver_user_id-result-5dsz-128",
+    pedroUrban = "select2-approver_user_id-result-hc8e-129",
+    marceloFontoura = "select2-approver_user_id-result-s0z0-130",
+    clarissaPoletti = "select2-approver_user_id-result-6gk2-137",
+    diretorgecom = "select2-approver_user_id-result-t4ce-193",
+}
+
 export enum TelephoneType {
     personal = 'personal',
     commercial = 'commercial'
@@ -2660,7 +2686,7 @@ export enum ShowHideColumnsRequestReport {
     totalValue = 14
 }
 
-export enum ShowHideColumnsPoductivityReport {
+export enum ShowHideColumnsProductivityReport {
     type = 1,
     requestedOn = 2,
     requester = 3,
@@ -2680,6 +2706,126 @@ export enum ShowHideColumnsProfilesTable {
     skillsQuantity = 3,
 }
 
+
+
+export enum TableColumnsUserRegistration {
+    user = 0,
+    email = 1,
+    profile = 2,
+    memberSince = 3,
+}
+
+export enum TableColumnsSupplierRegistration {
+    CNPJ = 0,
+    company = 1,
+    companyName = 2,
+    situation = 3,
+}
+
+export enum TableColumnsMyRequests {
+    requestNumber = 0,
+    hiredBy = 1,
+    reason = 2,
+    type = 3,
+    nameService = 4,
+    suppliers = 5,
+    status = 6,
+    responsible = 7,
+    desiredDate = 8,
+    updatedAt = 9,
+    totalValue = 10,
+}
+
+export enum TableColumnsGeneralRequests {
+    requestNumber = 0,
+    hiredBy = 1,
+    reason = 2,
+    type = 3,
+    nameService = 4,
+    suppliers = 5,
+    status = 6,
+    responsible = 7,
+    desiredDate = 8,
+    updatedAt = 9,
+    totalValue = 10,
+}
+
+export enum TableColumnsProductRequests {
+    requestNumber = 0,
+    requester = 1,
+    responsible = 2,
+    category = 3,
+    status = 4,
+    suppliers = 5,
+    hiredBy = 6,
+    company = 7,
+    desiredDate = 8,
+    purchaseOrder = 9,
+    totalValue = 10,
+}
+
+export enum TableColumnsOneOffServiceRequests {
+    requestNumber = 0,
+    requester = 1,
+    responsible = 2,
+    status = 3,
+    suppliers = 4,
+    hiredBy = 5,
+    company = 6,
+    desiredDate = 7,
+    purchaseOrder = 8,
+}
+
+export enum TableColumnsRecurringServiceRequests {
+    requestNumber = 0,
+    requester = 1,
+    responsible = 2,
+    status = 3,
+    suppliers = 4,
+    hiredBy = 5,
+    company = 6,
+    desiredDate = 7,
+    purchaseOrder = 8,
+}
+
+export enum TableColumnsRequestReport {
+    requestNumber = 0,
+    type = 1,
+    requestedOn = 2,
+    assignmentDate = 3,
+    serviceName = 4,
+    hiredBy = 5,
+    requester = 6,
+    systemRequester = 7,
+    status = 8,
+    responsible = 9,
+    costCenter = 10,
+    supplier = 11,
+    paymentMethod = 12,
+    paymentCondition = 13,
+    totalValue = 14
+}
+
+export enum TableColumnsProductivityReport {
+    requestNumber = 0,
+    type = 1,
+    requestedOn = 2,
+    requester = 3,
+    systemRequester = 4,
+    status = 5,
+    responsible = 6,
+    costCenter = 7,
+    hiredBy = 8,
+    desiredDate = 9,
+    category = 10
+}
+
+export enum TableColumnsProfilesTable {
+    requestNumber = 0,
+    name = 1,
+    userQuantity = 2,
+    skillQuantity = 3,
+}
 
 
 
@@ -2761,7 +2907,7 @@ export const dataParameters: DataParameters = {
         // },
 
         // ...
-        searchParameter: {
+        showHideColumns: {
             showHideColumnsUserRegistration: {
                 [ShowHideColumnsUserRegistration.user]: true,
                 [ShowHideColumnsUserRegistration.email]: false,
@@ -2848,17 +2994,17 @@ export const dataParameters: DataParameters = {
                 [ShowHideColumnsRequestReport.paymentCondition]: true,
                 [ShowHideColumnsRequestReport.totalValue]: true,
             },
-            showHideColumnsPoductivityReport: {
-                [ShowHideColumnsPoductivityReport.type]: true,
-                [ShowHideColumnsPoductivityReport.requestedOn]: true,
-                [ShowHideColumnsPoductivityReport.requester]: true,
-                [ShowHideColumnsPoductivityReport.systemRequester]: true,
-                [ShowHideColumnsPoductivityReport.status]: true,
-                [ShowHideColumnsPoductivityReport.responsible]: true,
-                [ShowHideColumnsPoductivityReport.costCenter]: true,
-                [ShowHideColumnsPoductivityReport.hiredBy]: true,
-                [ShowHideColumnsPoductivityReport.desiredDate]: true,
-                [ShowHideColumnsPoductivityReport.categories]: true,
+            showHideColumnsProductivityReport: {
+                [ShowHideColumnsProductivityReport.type]: true,
+                [ShowHideColumnsProductivityReport.requestedOn]: true,
+                [ShowHideColumnsProductivityReport.requester]: true,
+                [ShowHideColumnsProductivityReport.systemRequester]: true,
+                [ShowHideColumnsProductivityReport.status]: true,
+                [ShowHideColumnsProductivityReport.responsible]: true,
+                [ShowHideColumnsProductivityReport.costCenter]: true,
+                [ShowHideColumnsProductivityReport.hiredBy]: true,
+                [ShowHideColumnsProductivityReport.desiredDate]: true,
+                [ShowHideColumnsProductivityReport.categories]: true,
             },
             showHideColumnsProfilesTable: {
                 [ShowHideColumnsProfilesTable.number]: true,
@@ -2867,6 +3013,126 @@ export const dataParameters: DataParameters = {
                 [ShowHideColumnsProfilesTable.skillsQuantity]: true,
             },
         },
+
+
+        
+        getDataOnGrid: {
+            tableColumnsUserRegistration: {
+                [TableColumnsUserRegistration.user]: false,
+                [TableColumnsUserRegistration.email]: false,
+                [TableColumnsUserRegistration.profile]: false,
+                [TableColumnsUserRegistration.memberSince]: true
+                //Adicione todas as outras propriedades necessárias aqui
+            },
+            tableColumnsSupplierRegistration: {
+                [TableColumnsSupplierRegistration.CNPJ]: false,
+                [TableColumnsSupplierRegistration.company]: false,
+                [TableColumnsSupplierRegistration.companyName]: false,
+                [TableColumnsSupplierRegistration.situation]: false,
+            }, // Add the necessary properties for this object
+            tableColumnsMyRequests: {
+                [TableColumnsMyRequests.requestNumber]: false,
+                [TableColumnsMyRequests.hiredBy]: false,
+                [TableColumnsMyRequests.reason]: false,
+                [TableColumnsMyRequests.type]: false,
+                [TableColumnsMyRequests.nameService]: false,
+                [TableColumnsMyRequests.suppliers]: false,
+                [TableColumnsMyRequests.status]: false,
+                [TableColumnsMyRequests.responsible]: false,
+                [TableColumnsMyRequests.desiredDate]: false,
+                [TableColumnsMyRequests.updatedAt]: false,
+                [TableColumnsMyRequests.totalValue]: false,
+            }, // Add the necessary properties for this object
+            tableColumnsGeneralRequests: {
+                [TableColumnsGeneralRequests.requestNumber]: false,
+                [TableColumnsGeneralRequests.hiredBy]: false,
+                [TableColumnsGeneralRequests.reason]: false,
+                [TableColumnsGeneralRequests.type]: false,
+                [TableColumnsGeneralRequests.nameService]: false,
+                [TableColumnsGeneralRequests.suppliers]: false,
+                [TableColumnsGeneralRequests.status]: false,
+                [TableColumnsGeneralRequests.responsible]: false,
+                [TableColumnsGeneralRequests.desiredDate]: false,
+                [TableColumnsGeneralRequests.updatedAt]: false,
+                [TableColumnsGeneralRequests.totalValue]: false,
+            }, // Add the necessary properties for this object
+            tableColumnsProductRequests: {
+                [TableColumnsProductRequests.requestNumber]: false,
+                [TableColumnsProductRequests.requester]: false,
+                [TableColumnsProductRequests.responsible]: false,
+                [TableColumnsProductRequests.category]: false,
+                [TableColumnsProductRequests.status]: false,
+                [TableColumnsProductRequests.suppliers]: false,
+                [TableColumnsProductRequests.hiredBy]: false,
+                [TableColumnsProductRequests.company]: false,
+                [TableColumnsProductRequests.desiredDate]: false,
+                [TableColumnsProductRequests.purchaseOrder]: false,
+                [TableColumnsProductRequests.totalValue]: false,
+            },
+            tableColumnsOneOffServiceRequests: {
+                [TableColumnsOneOffServiceRequests.requestNumber]: false,
+                [TableColumnsOneOffServiceRequests.requester]: false,
+                [TableColumnsOneOffServiceRequests.responsible]: false,
+                [TableColumnsOneOffServiceRequests.status]: false,
+                [TableColumnsOneOffServiceRequests.suppliers]: false,
+                [TableColumnsOneOffServiceRequests.hiredBy]: false,
+                [TableColumnsOneOffServiceRequests.company]: false,
+                [TableColumnsOneOffServiceRequests.desiredDate]: false,
+                [TableColumnsOneOffServiceRequests.purchaseOrder]: false,
+
+            },
+            tableColumnsRecurringServiceRequests: {
+                [TableColumnsRecurringServiceRequests.requestNumber]: false,
+                [TableColumnsRecurringServiceRequests.requester]: false,
+                [TableColumnsRecurringServiceRequests.responsible]: false,
+                [TableColumnsRecurringServiceRequests.status]: false,
+                [TableColumnsRecurringServiceRequests.suppliers]: false,
+                [TableColumnsRecurringServiceRequests.hiredBy]: false,
+                [TableColumnsRecurringServiceRequests.company]: false,
+                [TableColumnsRecurringServiceRequests.desiredDate]: false,
+                [TableColumnsRecurringServiceRequests.purchaseOrder]: false,
+            },
+            tableColumnsRequestReport: {
+                [TableColumnsRequestReport.requestNumber]: false,
+                [TableColumnsRequestReport.type]: false,
+                [TableColumnsRequestReport.requestedOn]: false,
+                [TableColumnsRequestReport.assignmentDate]: false,
+                [TableColumnsRequestReport.serviceName]: false,
+                [TableColumnsRequestReport.hiredBy]: false,
+                [TableColumnsRequestReport.requester]: false,
+                [TableColumnsRequestReport.systemRequester]: false,
+                [TableColumnsRequestReport.status]: false,
+                [TableColumnsRequestReport.responsible]: false,
+                [TableColumnsRequestReport.costCenter]: false,
+                [TableColumnsRequestReport.supplier]: false,
+                [TableColumnsRequestReport.paymentMethod]: false,
+                [TableColumnsRequestReport.paymentCondition]: false,
+                [TableColumnsRequestReport.totalValue]: false,
+            },
+            tableColumnsProductivityReport: {
+                [TableColumnsProductivityReport.requestNumber]: false,
+                [TableColumnsProductivityReport.type]: false,
+                [TableColumnsProductivityReport.requestedOn]: false,
+                [TableColumnsProductivityReport.requester]: false,
+                [TableColumnsProductivityReport.systemRequester]: false,
+                [TableColumnsProductivityReport.status]: false,
+                [TableColumnsProductivityReport.responsible]: false,
+                [TableColumnsProductivityReport.costCenter]: false,
+                [TableColumnsProductivityReport.hiredBy]: false,
+                [TableColumnsProductivityReport.desiredDate]: false,
+                [TableColumnsProductivityReport.category]: false,
+            },
+            tableColumnsProfilesTable: {
+                [TableColumnsProfilesTable.requestNumber]: false,
+                [TableColumnsProfilesTable.name]: false,
+                [TableColumnsProfilesTable.userQuantity]: false,
+                [TableColumnsProfilesTable.skillQuantity]: false,
+            }
+        }
+        /*
+
+}
+        */
 
         // ...
 
@@ -2890,7 +3156,16 @@ export const dataParameters: DataParameters = {
     showHideColumnsOneOffServiceRequests: ShowHideColumnsOneOffServiceRequests,
     showHideColumnsRecurringServiceRequests: ShowHideColumnsRecurringServiceRequests,
     showHideColumnsRequestReport: ShowHideColumnsRequestReport,
-    showHideColumnsPoductivityReport: ShowHideColumnsPoductivityReport,
+    showHideColumnsProductivityReport: ShowHideColumnsProductivityReport,
     showHideColumnsProfilesTable: ShowHideColumnsProfilesTable,
+    tableColumnsUserRegistration: TableColumnsUserRegistration,
+    tableColumnsSupplierRegistration: TableColumnsSupplierRegistration,
+    tableColumnsMyRequests: TableColumnsMyRequests,
+    tableColumnsGeneralRequests: TableColumnsGeneralRequests,
+    tableColumnsProductRequests: TableColumnsProductRequests,
+    tableColumnsOneOffServiceRequests: TableColumnsOneOffServiceRequests,
+    tableColumnsRecurringServiceRequests: TableColumnsRecurringServiceRequests,
+    tableColumnsRequestReport: TableColumnsRequestReport,
+    tableColumnsProductivityReport: TableColumnsProductivityReport,
+    tableColumnsProfilesTable: TableColumnsProfilesTable,
 };
-

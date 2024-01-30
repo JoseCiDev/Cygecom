@@ -59,6 +59,7 @@ interface Elements<S = string> {
         messageRequirementName: S;
         messageRequirementCpfCnpj: S;
         messageRequiredTelephone: S;
+        columnInTheGrid: S;
     },
 
     Request: {
@@ -140,6 +141,8 @@ export const elements: Elements = {
         messageRequirementName: '#name-error',
         messageRequirementCpfCnpj: '#cpf_cnpj-error',
         messageRequiredTelephone: '#number-error',
+
+        columnInTheGrid: '#DataTables_Table_0_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table > thead > tr',
     },
 
     Request: {

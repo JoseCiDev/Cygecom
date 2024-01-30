@@ -29,7 +29,7 @@
 
 
 import { elements as el } from '../../elements'
-import { ValidationResult, dataParameters, TableTypesElements } from '../../DataParameters'
+import { ValidationResult, dataParameters, TableTypesElements, TableColumnsUserRegistration } from '../../DataParameters'
 
 const {
     logout,
@@ -90,6 +90,7 @@ const {
     messageRequirementName,
     messageRequirementCpfCnpj,
     messageRequiredTelephone,
+    columnInTheGrid,
 } = el.Register
 
 const {
@@ -175,19 +176,42 @@ Cypress.Commands.add('validateCpfCnpj', (
 });
 
 
-Cypress.Commands.add('getColumnVisibilityCommand', (table: TableTypesElements) => {
+Cypress.Commands.add('getColumnVisibility', (element: TableTypesElements) => {
     cy.wait(1000);
-    cy.get(table, { timeout: 2000 })
+    cy.get(element, { timeout: 2000 })
         .as('btn')
         .click({ timeout: 2000, force: true })
 
     // Para cada coluna em columnVisibility, se o valor for true, clique para ocultar a coluna
-    for (const [key, isVisible] of Object.entries(dataParameters.Register.searchParameter.showHideColumnsUserRegistration)) {
-        // nesse caso, idx é o seletor da coluna
+    for (const [key, isVisible] of Object.entries(dataParameters.Register.showHideColumns.showHideColumnsUserRegistration)) {
         if (!isVisible) {
-            const idx = Number(key);
-            cy.get(`button[data-cv-idx="${idx}"]`).click();
+            const elementSelector = Number(key);
+            cy.get(`button[data-cv-idx="${elementSelector}"]`).click();
         }
     }
 
 })
+
+Cypress.Commands.add('getDataOnGrid', () => {
+    function sortByColumn(element: string, columnVisibility: Record<TableColumnsUserRegistration, boolean>) {
+        // Para cada coluna em columnVisibility, se o valor for true, clique para ocultar a coluna
+        for (const [key, isOrderedBy] of Object.entries(columnVisibility)) {
+            // Neste caso, idx é o seletor da coluna
+            if (isOrderedBy) {
+                const columnSelector = Number(key) + 1; // Adicione 1 porque nth-child começa em 1, não em 0
+                cy.get(`${element} > th:nth-child(${columnSelector})`).click();
+            }
+        }
+    }
+    sortByColumn(columnInTheGrid, dataParameters.Register.getDataOnGrid.tableColumnsUserRegistration);
+})
+
+//getDataOnGrid
+//cada grid tem uma coluna, mapear colunas em enums
+/*
+quantidade de registros apresentados - se o parametro "registrosApresentados" estiver preenchido seleciona o campo conforme o parametro
+funcao buscar por coluna
+funcao ordenar por coluna - sortByColumn
+funcao selecionar página
+buscar - se o parametro "buscar" estiver preenchido realize a busca pelo campo buscar inserindo o parametro
+*/

@@ -118,21 +118,28 @@ declare global {
 
             /**
            * comando customizado para inserir arquivos.
-           * @example cy.insertFile('img/ReceitaJpeg(1).jpeg', el.importarImagem);
+           * @example cy.insertFile();
            */
             validateCpfCnpj(element: string, value: string, elementError: string, errorMessage: string): ValidationResult;
 
             /**
-           * comando customizado para inserir arquivos.
-           * @example cy.checkValidation('img/ReceitaJpeg(1).jpeg', el.importarImagem);
+           * comando customizado para checar mensagens de erro nativas do navegador.
+           * @example cy.checkValidation();
            */
             checkValidation(text: string): ValidationResult;
 
             /**
-           * comando customizado para inserir arquivos.
-           * @example cy.checkValidation('img/ReceitaJpeg(1).jpeg', el.importarImagem);
+           * comando customizado para ocultar ou mostrar colunas das grids.
+           * @example cy.getColumnVisibility();
            */
-            getColumnVisibilityCommand(table: TableTypesElements): ValidationResult;
+            getColumnVisibility(table: TableTypesElements): ValidationResult;
+
+            /**
+           * comando customizado para ordenar dados pelas colunas da grid.
+           * @example cy.getDataOnGrid();
+           */
+            getDataOnGrid(table: TableTypesElements): ValidationResult;
+            
         }
 
     }
