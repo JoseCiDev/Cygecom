@@ -88,9 +88,11 @@ export function getColumnVisibilityCommand(table: TableTypesElements) {
         .click({ timeout: 2000, force: true })
 
     // Para cada coluna em columnVisibility, se o valor for true, clique para ocultar a coluna
-    for (const idx of dataParameters.Register.searchParameter.showHideColumnsUserRegistration) {
+    for (const [idx, isVisible] of Object.entries(dataParameters.Register.searchParameter.showHideColumnsUserRegistration)) {
         // nesse caso, idx é o seletor da coluna
-        cy.get(`button[data-cv-idx="${idx}"]`).click();
+        if (!isVisible) {
+            cy.get(`button[data-cv-idx="${dataParameters.Register.searchParameter.showHideColumnsUserRegistration[idx]}"]`).click();
+        }
     }
 }
 

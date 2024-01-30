@@ -29,7 +29,7 @@
 
 
 import { elements as el } from '../../elements'
-import { dadosParametros } from '../../DataParameters';
+import { dataParameters } from '../../DataParameters';
 
 
 

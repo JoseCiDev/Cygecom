@@ -56,17 +56,17 @@ export interface SupplierRegistration<S = string> {
     tradeRepresentative: S;
 };
 
-export interface SearchParameter<S = string> {
-    showHideColumnsUserRegistration: ShowHideColumnsUserRegistration[],
-    showHideColumnsSupplierRegistration: ShowHideColumnsSupplierRegistration[],
-    showHideColumnsMyRequests: ShowHideColumnsMyRequests[],
-    showHideColumnsGeneralRequests: ShowHideColumnsGeneralRequests[],
-    showHideColumnsProductRequests: ShowHideColumnsProductRequests[],
-    showHideColumnsOneOffServiceRequests: ShowHideColumnsOneOffServiceRequests[],
-    showHideColumnsRecurringServiceRequests: ShowHideColumnsRecurringServiceRequests[],
-    showHideColumnsRequestReport: ShowHideColumnsRequestReport[],
-    showHideColumnsPoductivityReport: ShowHideColumnsPoductivityReport[],
-    showHideColumnsProfilesTable: ShowHideColumnsProfilesTable[],
+export interface SearchParameter {
+    showHideColumnsUserRegistration: Record<ShowHideColumnsUserRegistration, boolean>,
+    showHideColumnsSupplierRegistration: Record<ShowHideColumnsSupplierRegistration, boolean>,
+    showHideColumnsMyRequests: Record<ShowHideColumnsMyRequests, boolean>,
+    showHideColumnsGeneralRequests: Record<ShowHideColumnsGeneralRequests, boolean>,
+    showHideColumnsProductRequests: Record<ShowHideColumnsProductRequests, boolean>,
+    showHideColumnsOneOffServiceRequests: Record<ShowHideColumnsOneOffServiceRequests, boolean>,
+    showHideColumnsRecurringServiceRequests: Record<ShowHideColumnsRecurringServiceRequests, boolean>,
+    showHideColumnsRequestReport: Record<ShowHideColumnsRequestReport, boolean>,
+    showHideColumnsPoductivityReport: Record<ShowHideColumnsPoductivityReport, boolean>,
+    showHideColumnsProfilesTable: Record<ShowHideColumnsProfilesTable, boolean>,
 }
 export interface DateTime<S = string> {
     FORMATTED_DATE: S;
@@ -88,7 +88,7 @@ interface DataParameters<S = string> {
     Register: {
         userRegistration: UserRegistration<S>;
         // supplierRegistration: SupplierRegistration<S>;
-        searchParameter: SearchParameter<S>;
+        searchParameter: SearchParameter;
     };
 
     env: {
@@ -2762,112 +2762,110 @@ export const dataParameters: DataParameters = {
 
         // ...
         searchParameter: {
-            showHideColumnsUserRegistration: [
-                ShowHideColumnsUserRegistration.user,
-                ShowHideColumnsUserRegistration.email,
-                ShowHideColumnsUserRegistration.profile,
-                ShowHideColumnsUserRegistration.specificSkills,
-                ShowHideColumnsUserRegistration.memberSince,
-            ],
-            showHideColumnsSupplierRegistration: [
-                ShowHideColumnsSupplierRegistration.company,
-                ShowHideColumnsSupplierRegistration.companyName,
-                ShowHideColumnsSupplierRegistration.indication,
-                ShowHideColumnsSupplierRegistration.marketType,
-                ShowHideColumnsSupplierRegistration.situation
-            ],
-            showHideColumnsMyRequests: [
-                ShowHideColumnsMyRequests.hiringBy,
-                ShowHideColumnsMyRequests.reason,
-                ShowHideColumnsMyRequests.type,
-                ShowHideColumnsMyRequests.serviceName,
-                ShowHideColumnsMyRequests.supplier,
-                ShowHideColumnsMyRequests.status,
-                ShowHideColumnsMyRequests.responsible,
-                ShowHideColumnsMyRequests.desiredDate,
-                ShowHideColumnsMyRequests.updatedAt,
-                ShowHideColumnsMyRequests.totalValue
-            ],
-            showHideColumnsGeneralRequests: [
-                ShowHideColumnsGeneralRequests.hiringBy,
-                ShowHideColumnsGeneralRequests.reason,
-                ShowHideColumnsGeneralRequests.type,
-                ShowHideColumnsGeneralRequests.serviceName,
-                ShowHideColumnsGeneralRequests.supplier,
-                ShowHideColumnsGeneralRequests.status,
-                ShowHideColumnsGeneralRequests.responsible,
-                ShowHideColumnsGeneralRequests.desiredDate,
-                ShowHideColumnsGeneralRequests.updatedAt,
-                ShowHideColumnsGeneralRequests.totalValue
-            ],
-            showHideColumnsProductRequests: [
-                ShowHideColumnsProductRequests.requester,
-                ShowHideColumnsProductRequests.responsible,
-                ShowHideColumnsProductRequests.categories,
-                ShowHideColumnsProductRequests.status,
-                ShowHideColumnsProductRequests.supplier,
-                ShowHideColumnsProductRequests.hiringBy,
-                ShowHideColumnsProductRequests.company,
-                ShowHideColumnsProductRequests.desiredDate,
-                ShowHideColumnsProductRequests.purchaseOrder,
-                ShowHideColumnsProductRequests.totalValue
-            ],
-            showHideColumnsOneOffServiceRequests: [
-                
-                ShowHideColumnsOneOffServiceRequests.requester,
-                ShowHideColumnsOneOffServiceRequests.responsible,
-                ShowHideColumnsOneOffServiceRequests.status,
-                ShowHideColumnsOneOffServiceRequests.supplier,
-                ShowHideColumnsOneOffServiceRequests.hiringBy,
-                ShowHideColumnsOneOffServiceRequests.company,
-                ShowHideColumnsOneOffServiceRequests.desiredDate,
-                ShowHideColumnsOneOffServiceRequests.purchaseOrder,
-            ],
-            showHideColumnsRecurringServiceRequests: [
-                
-                ShowHideColumnsRecurringServiceRequests.requester,
-                ShowHideColumnsRecurringServiceRequests.responsible,
-                ShowHideColumnsRecurringServiceRequests.status,
-                ShowHideColumnsRecurringServiceRequests.supplier,
-                ShowHideColumnsRecurringServiceRequests.hiringBy,
-                ShowHideColumnsRecurringServiceRequests.company,
-                ShowHideColumnsRecurringServiceRequests.desiredDate,
-                ShowHideColumnsRecurringServiceRequests.purchaseOrder,
-            ],
-            showHideColumnsRequestReport: [
-                ShowHideColumnsRequestReport.type,
-                ShowHideColumnsRequestReport.requestedOn,
-                ShowHideColumnsRequestReport.assignmentDate,
-                ShowHideColumnsRequestReport.serviceName,
-                ShowHideColumnsRequestReport.hiredBy,
-                ShowHideColumnsRequestReport.requester,
-                ShowHideColumnsRequestReport.systemRequester,
-                ShowHideColumnsRequestReport.status,
-                ShowHideColumnsRequestReport.responsible,
-                ShowHideColumnsRequestReport.costCenter,
-                ShowHideColumnsRequestReport.supplier,
-                ShowHideColumnsRequestReport.paymentMethod,
-                ShowHideColumnsRequestReport.paymentCondition,
-                ShowHideColumnsRequestReport.totalValue
-            ],
-            showHideColumnsPoductivityReport: [
-                ShowHideColumnsPoductivityReport.type,
-                ShowHideColumnsPoductivityReport.requestedOn,
-                ShowHideColumnsPoductivityReport.requester,
-                ShowHideColumnsPoductivityReport.systemRequester,
-                ShowHideColumnsPoductivityReport.status,
-                ShowHideColumnsPoductivityReport.responsible,
-                ShowHideColumnsPoductivityReport.costCenter,
-                ShowHideColumnsPoductivityReport.hiredBy,
-                ShowHideColumnsPoductivityReport.desiredDate,
-                ShowHideColumnsPoductivityReport.categories
-            ],
-            showHideColumnsProfilesTable: [
-                ShowHideColumnsProfilesTable.number,
-                ShowHideColumnsProfilesTable.name,
-                ShowHideColumnsProfilesTable.userQuantity,
-                ShowHideColumnsProfilesTable.skillsQuantity
-            ],
+            showHideColumnsUserRegistration: {
+                [ShowHideColumnsUserRegistration.user]: true,
+                [ShowHideColumnsUserRegistration.email]: true,
+                [ShowHideColumnsUserRegistration.profile]: true,
+                [ShowHideColumnsUserRegistration.specificSkills]: true,
+                [ShowHideColumnsUserRegistration.memberSince]: true,
+            },
+            showHideColumnsSupplierRegistration: {
+                [ShowHideColumnsSupplierRegistration.company]: true,
+                [ShowHideColumnsSupplierRegistration.companyName]: true,
+                [ShowHideColumnsSupplierRegistration.indication]: true,
+                [ShowHideColumnsSupplierRegistration.marketType]: true,
+                [ShowHideColumnsSupplierRegistration.situation]: true,
+            },
+            showHideColumnsMyRequests: {
+                [ShowHideColumnsMyRequests.hiringBy]: true,
+                [ShowHideColumnsMyRequests.reason]: true,
+                [ShowHideColumnsMyRequests.type]: true,
+                [ShowHideColumnsMyRequests.serviceName]: true,
+                [ShowHideColumnsMyRequests.supplier]: true,
+                [ShowHideColumnsMyRequests.status]: true,
+                [ShowHideColumnsMyRequests.responsible]: true,
+                [ShowHideColumnsMyRequests.desiredDate]: true,
+                [ShowHideColumnsMyRequests.updatedAt]: true,
+                [ShowHideColumnsMyRequests.totalValue]: true,
+            },
+            showHideColumnsGeneralRequests: {
+                [ShowHideColumnsGeneralRequests.hiringBy]: true,
+                [ShowHideColumnsGeneralRequests.reason]: true,
+                [ShowHideColumnsGeneralRequests.type]: true,
+                [ShowHideColumnsGeneralRequests.serviceName]: true,
+                [ShowHideColumnsGeneralRequests.supplier]: true,
+                [ShowHideColumnsGeneralRequests.status]: true,
+                [ShowHideColumnsGeneralRequests.responsible]: true,
+                [ShowHideColumnsGeneralRequests.desiredDate]: true,
+                [ShowHideColumnsGeneralRequests.updatedAt]: true,
+                [ShowHideColumnsGeneralRequests.totalValue]: true,
+            },
+            showHideColumnsProductRequests: {
+                [ShowHideColumnsProductRequests.requester]: true,
+                [ShowHideColumnsProductRequests.responsible]: true,
+                [ShowHideColumnsProductRequests.categories]: true,
+                [ShowHideColumnsProductRequests.status]: true,
+                [ShowHideColumnsProductRequests.supplier]: true,
+                [ShowHideColumnsProductRequests.hiringBy]: true,
+                [ShowHideColumnsProductRequests.company]: true,
+                [ShowHideColumnsProductRequests.desiredDate]: true,
+                [ShowHideColumnsProductRequests.purchaseOrder]: true,
+                [ShowHideColumnsProductRequests.totalValue]: true,
+            },
+            showHideColumnsOneOffServiceRequests: {
+                [ShowHideColumnsOneOffServiceRequests.requester]: true,
+                [ShowHideColumnsOneOffServiceRequests.responsible]: true,
+                [ShowHideColumnsOneOffServiceRequests.status]: true,
+                [ShowHideColumnsOneOffServiceRequests.supplier]: true,
+                [ShowHideColumnsOneOffServiceRequests.hiringBy]: true,
+                [ShowHideColumnsOneOffServiceRequests.company]: true,
+                [ShowHideColumnsOneOffServiceRequests.desiredDate]: true,
+                [ShowHideColumnsOneOffServiceRequests.purchaseOrder]: true,
+            },
+            showHideColumnsRecurringServiceRequests: {
+                [ShowHideColumnsRecurringServiceRequests.requester]: true,
+                [ShowHideColumnsRecurringServiceRequests.responsible]: true,
+                [ShowHideColumnsRecurringServiceRequests.status]: true,
+                [ShowHideColumnsRecurringServiceRequests.supplier]: true,
+                [ShowHideColumnsRecurringServiceRequests.hiringBy]: true,
+                [ShowHideColumnsRecurringServiceRequests.company]: true,
+                [ShowHideColumnsRecurringServiceRequests.desiredDate]: true,
+                [ShowHideColumnsRecurringServiceRequests.purchaseOrder]: true,
+            },
+            showHideColumnsRequestReport: {
+                [ShowHideColumnsRequestReport.type]: true,
+                [ShowHideColumnsRequestReport.requestedOn]: true,
+                [ShowHideColumnsRequestReport.assignmentDate]: true,
+                [ShowHideColumnsRequestReport.serviceName]: true,
+                [ShowHideColumnsRequestReport.hiredBy]: true,
+                [ShowHideColumnsRequestReport.requester]: true,
+                [ShowHideColumnsRequestReport.systemRequester]: true,
+                [ShowHideColumnsRequestReport.status]: true,
+                [ShowHideColumnsRequestReport.responsible]: true,
+                [ShowHideColumnsRequestReport.costCenter]: true,
+                [ShowHideColumnsRequestReport.supplier]: true,
+                [ShowHideColumnsRequestReport.paymentMethod]: true,
+                [ShowHideColumnsRequestReport.paymentCondition]: true,
+                [ShowHideColumnsRequestReport.totalValue]: true,
+            },
+            showHideColumnsPoductivityReport: {
+                [ShowHideColumnsPoductivityReport.type]: true,
+                [ShowHideColumnsPoductivityReport.requestedOn]: true,
+                [ShowHideColumnsPoductivityReport.requester]: true,
+                [ShowHideColumnsPoductivityReport.systemRequester]: true,
+                [ShowHideColumnsPoductivityReport.status]: true,
+                [ShowHideColumnsPoductivityReport.responsible]: true,
+                [ShowHideColumnsPoductivityReport.costCenter]: true,
+                [ShowHideColumnsPoductivityReport.hiredBy]: true,
+                [ShowHideColumnsPoductivityReport.desiredDate]: true,
+                [ShowHideColumnsPoductivityReport.categories]: true,
+            },
+            showHideColumnsProfilesTable: {
+                [ShowHideColumnsProfilesTable.number]: true,
+                [ShowHideColumnsProfilesTable.name]: true,
+                [ShowHideColumnsProfilesTable.userQuantity]: true,
+                [ShowHideColumnsProfilesTable.skillsQuantity]: true,
+            },
         },
 
         // ...
