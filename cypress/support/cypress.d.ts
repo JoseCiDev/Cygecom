@@ -14,7 +14,7 @@ import { mount } from 'cypress/react'
 // cypress/support/index.ts
 
 
-import { DateTime, ValidationResult, dataParameters } from '../DataParameters'
+import { DateTime, ValidationResult, dataParameters, TableTypesElements } from '../DataParameters'
 
 declare global {
     namespace Cypress {
@@ -127,6 +127,12 @@ declare global {
            * @example cy.checkValidation('img/ReceitaJpeg(1).jpeg', el.importarImagem);
            */
             checkValidation(text: string): ValidationResult;
+
+            /**
+           * comando customizado para inserir arquivos.
+           * @example cy.checkValidation('img/ReceitaJpeg(1).jpeg', el.importarImagem);
+           */
+            getColumnVisibilityCommand(table: TableTypesElements): ValidationResult;
         }
 
     }

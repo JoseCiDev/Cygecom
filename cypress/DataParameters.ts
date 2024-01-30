@@ -973,26 +973,6 @@ export enum ApproverUser {
     diretorgecom = "select2-approver_user_id-result-t4ce-193",
 }
 
-export enum TelephoneType {
-    personal = 'personal',
-    commercial = 'commercial'
-};
-
-export enum ApproveLimit {
-    approveLimit = 'approve_limit',
-    noApproveLimit = 'checkbox-has-no-approve-limit'
-}
-
-export enum AutorizedRequest {
-    authorized = 'is_buyer_true',
-    notAuthorized = 'is_buyer_false'
-}
-
-export enum RequestOtherUsers {
-    canAssociate = 'can-associate-requester',
-    cannotAssociate = 'can-not-associate-requester'
-}
-
 export enum AllowedRequestCostCenter {
     HKM_LABSOLIDOS = "3227",
     HKM_REVENDA = "3228",
@@ -2566,6 +2546,26 @@ export enum AllowedApprovalCostCenter {
     SMART_FILIAL_1_ENDOMARKETING = "select2-supplies-cost-centers-result-nv92-784",
 }
 
+export enum TelephoneType {
+    personal = 'personal',
+    commercial = 'commercial'
+};
+
+export enum ApproveLimit {
+    approveLimit = 'approve_limit',
+    noApproveLimit = 'checkbox-has-no-approve-limit'
+}
+
+export enum AutorizedRequest {
+    authorized = 'is_buyer_true',
+    notAuthorized = 'is_buyer_false'
+}
+
+export enum RequestOtherUsers {
+    canAssociate = 'can-associate-requester',
+    cannotAssociate = 'can-not-associate-requester'
+}
+
 export enum ShowHideColumnsUserRegistration {
     user = 0,
     email = 1,
@@ -2764,10 +2764,10 @@ export const dataParameters: DataParameters = {
         searchParameter: {
             showHideColumnsUserRegistration: {
                 [ShowHideColumnsUserRegistration.user]: true,
-                [ShowHideColumnsUserRegistration.email]: true,
+                [ShowHideColumnsUserRegistration.email]: false,
                 [ShowHideColumnsUserRegistration.profile]: true,
                 [ShowHideColumnsUserRegistration.specificSkills]: true,
-                [ShowHideColumnsUserRegistration.memberSince]: true,
+                [ShowHideColumnsUserRegistration.memberSince]: false,
             },
             showHideColumnsSupplierRegistration: {
                 [ShowHideColumnsSupplierRegistration.company]: true,

@@ -2,6 +2,7 @@ import * as faker from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { elements as el } from '../../../elements';
 import { ValidationResult, dataParameters, TableTypes, ColumnEnums, SearchParameter, TableTypesElements } from '../../../DataParameters'
+import { ShowHideColumnsUserRegistration } from '../../../DataParameters';
 import { data } from 'cypress/types/jquery';
 
 
@@ -81,20 +82,8 @@ const {
     contractSubMenu,
 } = el.Supply
 
-export function getColumnVisibilityCommand(table: TableTypesElements) {
-    cy.wait(1000);
-    cy.get(table, { timeout: 2000 })
-        .as('btn')
-        .click({ timeout: 2000, force: true })
 
-    // Para cada coluna em columnVisibility, se o valor for true, clique para ocultar a coluna
-    for (const [idx, isVisible] of Object.entries(dataParameters.Register.searchParameter.showHideColumnsUserRegistration)) {
-        // nesse caso, idx é o seletor da coluna
-        if (!isVisible) {
-            cy.get(`button[data-cv-idx="${dataParameters.Register.searchParameter.showHideColumnsUserRegistration[idx]}"]`).click();
-        }
-    }
-}
+
 
 describe('Testes da página Cadastro de Usuário', () => {
 
@@ -110,7 +99,7 @@ describe('Testes da página Cadastro de Usuário', () => {
         cy.getElementAndClick(':nth-child(2) > .btn')
         cy.getElementAndClick('[data-cy="dropdown-cadastros-usuarios"]')
 
-        getColumnVisibilityCommand(TableTypesElements.uSerTable);
+        cy.getColumnVisibilityCommand(TableTypesElements.uSerTable);
     });
 
 })

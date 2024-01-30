@@ -29,7 +29,7 @@
 
 
 import { elements as el } from '../../elements'
-import { ValidationResult, dataParameters } from '../../DataParameters'
+import { ValidationResult, dataParameters, TableTypesElements } from '../../DataParameters'
 
 const {
     logout,
@@ -173,3 +173,21 @@ Cypress.Commands.add('validateCpfCnpj', (
         })
 
 });
+
+
+Cypress.Commands.add('getColumnVisibilityCommand', (table: TableTypesElements) => {
+    cy.wait(1000);
+    cy.get(table, { timeout: 2000 })
+        .as('btn')
+        .click({ timeout: 2000, force: true })
+
+    // Para cada coluna em columnVisibility, se o valor for true, clique para ocultar a coluna
+    for (const [key, isVisible] of Object.entries(dataParameters.Register.searchParameter.showHideColumnsUserRegistration)) {
+        // nesse caso, idx é o seletor da coluna
+        if (!isVisible) {
+            const idx = Number(key);
+            cy.get(`button[data-cv-idx="${idx}"]`).click();
+        }
+    }
+
+})
