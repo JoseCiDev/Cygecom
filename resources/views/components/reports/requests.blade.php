@@ -350,7 +350,6 @@
                         $.fn.setStorageDtColumnConfig();
 
                         $generateCSVButton.on('click', () => {
-                            // const $productDetail = $('.product-detail:checked').val();
                             const dataTable = $reportsTable.DataTable();
                             const defaultParams = dataTable.ajax.params();
                             const filterParameters = getFilterParameters();

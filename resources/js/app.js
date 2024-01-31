@@ -30,6 +30,10 @@ import { checkAbilityRelations } from './abilities-relations.js';
 $.fn.checkAbilityRelations = checkAbilityRelations;
 
 import setColvisConfig from '../../public/js/utils/colvis-custom-user-preference.js';
+
+import {setSearchBarOnDt} from './dataTables-column-search.js';
+$.fn.setSearchBarOnDt = setSearchBarOnDt;
+
 import {createChartDoughnut, createChartBar} from './create-chart-functions.js'
 window.createChartDoughnut = createChartDoughnut
 window.createChartBar = createChartBar
@@ -206,7 +210,17 @@ $(() => {
         drawCallback: (settings) => {
             $.fn.setBootstrapTooltip();
         },
-        initComplete: () => $.fn.setStorageDtColumnConfig(),
+        initComplete: (settings) => {
+            $.fn.setStorageDtColumnConfig();
+            $.fn.setSearchBarOnDt(settings.oInstance);
+
+            $('.search-button').each((_, element) => {
+                const $currentInput = $(element);
+                if($currentInput.val()) {
+                    $currentInput.trigger('keyup');
+                }
+            });
+        },
     }));
 
     $('.form-validate').each(function () {

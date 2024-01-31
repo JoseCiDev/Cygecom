@@ -42,33 +42,17 @@
                     </div>
                 </div>
 
-
                 <div class="row">
                     <div class="col-md-12">
                         <div class="box-content nopadding regular-text">
 
-                            <table id="table-supplies-list" style="width:100%" class="table table-hover table-nomargin table-bordered" data-column_filter_dateformat="dd-mm-yy"
-                                data-nosort="0" data-checkall="all">
+                            <table style="width:100%" class="table table-hover table-nomargin table-bordered dataTable" data-column_filter_dateformat="dd-mm-yy" data-nosort="0"
+                                data-checkall="all">
                                 <thead>
-                                    <tr class="search-bar">
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
                                     <tr>
                                         <th class="noColvis">Nº</th>
                                         <th>Contratação por</th>
                                         <th style="max-width: 200px">Motivo</th>
-
                                         <th>Tipo</th>
                                         <th>Nome do serviço</th>
                                         <th>Fornecedor(es)</th>

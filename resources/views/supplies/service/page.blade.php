@@ -34,21 +34,9 @@
                         </div>
                     </div>
 
-                    <table id="table-supplies-list" class="table table-hover table-nomargin table-striped" data-column_filter_dateformat="dd-mm-yy" style="width:100%"
+                    <table id="table-supplies-list" class="table table-hover table-nomargin table-striped dataTable" data-column_filter_dateformat="dd-mm-yy" style="width:100%"
                         data-nosort="0" data-checkall="all">
                         <thead>
-                            <tr class="search-bar">
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
                             <tr>
                                 <th class="noColvis">Nº</th>
                                 <th>Solicitante</th>
@@ -155,7 +143,6 @@
 
     @push('scripts')
         <script type="module" src="{{ asset('js/supplies/modal-confirm-supplies-responsability.js') }}"></script>
-        <script type="module" src="{{ asset('js/utils/dataTables-column-search.js') }}"></script>
     @endpush
 
 </x-app>

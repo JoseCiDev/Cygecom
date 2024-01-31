@@ -48,7 +48,7 @@
                     <th>Perfil</th>
                     <th>Habilidades específicas</th>
                     <th>Membro desde</th>
-                    <th>Ações</th>
+                    <th class="ignore-search">Ações</th>
                 </tr>
             </thead>
             <tbody>
