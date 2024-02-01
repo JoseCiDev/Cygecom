@@ -350,7 +350,6 @@
                         $.fn.setStorageDtColumnConfig();
 
                         $generateCSVButton.on('click', () => {
-                            // const $productDetail = $('.product-detail:checked').val();
                             const dataTable = $reportsTable.DataTable();
                             const defaultParams = dataTable.ajax.params();
                             const filterParameters = getFilterParameters();
@@ -371,6 +370,14 @@
                                 success: (data) => {
                                     const content = data.data;
                                     const headers = $('#reportsTable>thead>tr>th').toArray().map(header => header.textContent);
+                                    headers.push(...['Vigência (início)', 'Vigência (fim)', 'Ordem de compra', 'COMEX',
+                                        'Descrição da solicitação', 'Local para solicitação', 'Motivo da solicitação',
+                                        'Solicitação criada em', 'Links de apoio', 'Observação da solicitação',
+                                        'Data deseja para solicitação', 'Apenas cotação', 'Motivo da atualização de status',
+                                        'Aprovação limite do solicitante', 'Solicitante ativo', 'CPF do solicitante', 'Nome da solicitação',
+                                        'Centro de custos/Rateio', 'Qtd. parcelas', 'Parcelas',
+                                    ]);
+
                                     const rows = content.map(item => {
                                         const id = item.id;
                                         const type = enumRequests['type'][item.type];
@@ -381,7 +388,8 @@
                                             .created_at;
 
                                         const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss');
-                                        const responsibilityMarkedAt = moment(item.responsibility_marked_at).format('DD/MM/YYYY HH:mm:ss');
+                                        const responsibilityMarkedAt = item.responsibility_marked_at ? moment(item.responsibility_marked_at)
+                                            .format('DD/MM/YYYY HH:mm:ss') : '---';
 
                                         const serviceNameColumnMapping = {
                                             product: () => null,
@@ -402,14 +410,87 @@
                                                 const uniqueSuppliers = [];
                                                 item.purchase_request_product?.forEach((element) => {
                                                     const supplierName = element.supplier?.corporate_name;
-                                                    if (!uniqueSuppliers.includes(supplierName)) {
-                                                        uniqueSuppliers.push(supplierName);
+                                                    const qualification = element.supplier?.qualification;
+                                                    const createdAt = element.supplier?.created_at;
+
+                                                    const userRegister = element.supplier?.logs
+                                                        ?.find((element) => element.action === 'create')
+                                                        ?.user.person.name;
+                                                    const userRegisterName = userRegister ? `Criado por: ${userRegister}` :
+                                                        'Importado';
+
+                                                    const tributaryObservation = element.supplier?.tributary_observation ||
+                                                        '---';
+
+                                                    const representative = element.supplier?.representative || '---';
+                                                    const representativeEmail = element.supplier?.email || '---';
+
+                                                    let name = `${supplierName} [${qualification}, ${userRegisterName}`;
+                                                    name += `, Criado em: ${moment(createdAt).format('DD/MM/YYYY')}`;
+                                                    name += `, Obs. tributária: ${tributaryObservation}`;
+                                                    name +=
+                                                        `, Representante: ${representative}/E-mail: ${representativeEmail}]`;
+
+                                                    if (supplierName && !uniqueSuppliers.includes(name)) {
+                                                        uniqueSuppliers.push(name);
                                                     }
                                                 });
                                                 return uniqueSuppliers;
                                             },
-                                            service: () => [item.service?.supplier?.corporate_name],
-                                            contract: () => [item.contract?.supplier?.corporate_name],
+                                            service: () => {
+                                                const supplierName = item.service?.supplier?.corporate_name;
+                                                if (!supplierName) {
+                                                    return ['---'];
+                                                }
+
+                                                const qualification = item.service?.supplier?.qualification;
+                                                const createdAt = item.service?.supplier?.created_at;
+
+                                                const userRegister = item.service?.supplier?.logs
+                                                    ?.find((element) => element.action === 'create')
+                                                    ?.user.person.name;
+                                                const userRegisterName = userRegister ? `Criado por: ${userRegister}` : 'Importado';
+
+                                                const tributaryObservation = item.service?.supplier?.tributary_observation ||
+                                                    '---';
+
+                                                const representative = item.service?.supplier?.representative || '---';
+                                                const representativeEmail = item.service?.supplier?.email || '---';
+
+                                                let name = `${supplierName} [${qualification}, ${userRegisterName}`
+                                                name += `, Criado em: ${moment(createdAt).format('DD/MM/YYYY')}`;
+                                                name += `, Obs. tributária: ${tributaryObservation}`;
+                                                name += `, Representante: ${representative}/E-mail: ${representativeEmail}]`;
+
+                                                return [name];
+                                            },
+                                            contract: () => {
+                                                const supplierName = item.contract?.supplier?.corporate_name;
+                                                if (!supplierName) {
+                                                    return ['---'];
+                                                }
+
+                                                const qualification = item.contract?.supplier?.qualification;
+                                                const createdAt = item.contract?.supplier?.created_at;
+
+                                                const userRegister = item.contract?.supplier?.logs
+                                                    ?.find((element) => element.action === 'create')
+                                                    ?.user.person.name;
+                                                const userRegisterName = userRegister ? `Criado por: ${userRegister}` : 'Importado';
+
+                                                const tributaryObservation = item.contract?.supplier?.tributary_observation ||
+                                                    '---';
+
+                                                const representative = item.contract?.supplier?.representative || '---';
+                                                const representativeEmail = item.contract?.supplier?.email || '---';
+
+                                                let name = `${supplierName} [${qualification}, ${userRegisterName}`;
+                                                name += `, Criado em: ${moment(createdAt).format('DD/MM/YYYY')}`;
+                                                name += `, Obs. tributária: ${tributaryObservation}`;
+                                                name += `, Representante: ${representative}/${representativeEmail}]`;
+
+                                                return [name];
+                                            },
                                         };
                                         const suppliers = supplierColumnMapping[item.type]().filter((el) => el)
                                             .join(', ') || '---';
@@ -429,6 +510,63 @@
                                         });
                                         const formattedAmount = amount ? formatter.format(amount) : '---';
 
+                                        const contractStartDate = item.contract?.start_date ? moment(item.contract?.start_date)
+                                            .format('DD/MM/YYYY') : '---';
+                                        const contractEndDate = item.contract?.end_date ? moment(item.contract?.end_date)
+                                            .format('DD/MM/YYYY') : '---';
+
+                                        const purchaseOrder = item.purchase_order || '---';
+                                        const isComex = item.is_comex ? 'É comex' : 'Não é comex';
+                                        const description = item.description || '---';
+                                        const localDescription = item.local_description || '---';
+                                        const reason = item.reason || '---';
+                                        const createdAt = moment(item.created_at).format('DD/MM/YYYY HH:mm:ss');
+                                        const supportLinks = item.support_links || '---';
+                                        const observation = item.observation || '---';
+                                        const desiredDate = item.desired_date ? moment(item.desired_date).format('DD/MM/YYYY') : '---';
+                                        const isOnlyQuotation = item.is_only_quotation ? 'Apenas cotação' : 'Não';
+                                        const suppliesUpdateReason = item.supplies_update_reason || '---';
+                                        const approverLimit = item.user.approver_limit ? formatter.format(item.user.approver_limit) :
+                                            'Sem limite';
+                                        const isBuyer = item.user.is_buyer ? 'Solic. ativo' : 'Solic. inativo';
+                                        const userCPF = item.user.person.cpf_cnpj;
+                                        const requestName = item[item.type]?.name || '---';
+
+                                        const costCenterApportionment = item.cost_center_apportionment
+                                            .map((element) => {
+                                                const name = element.cost_center.name;
+
+                                                const apportionmentPercentage = element.apportionment_percentage;
+
+                                                const apportionmnetCurrency = element.apportionment_currency;
+                                                const formattedAmount = formatter.format(apportionmnetCurrency);
+
+                                                const apportionmentLabel = apportionmentPercentage ? `${apportionmentPercentage}%` :
+                                                    formattedAmount;
+
+                                                const costCenterLabel =
+                                                    `${name} (${apportionmentLabel}) - CNPJ: ${element.cost_center.company.cnpj}`;
+
+                                                return costCenterLabel;
+                                            }).join(', ');
+
+                                        const installmentsQtd = item[item.type]?.quantity_of_installments || '---';
+                                        const installments = item[item.type]?.installments
+                                            ?.map((installment, index) => {
+                                                const {
+                                                    expire_date,
+                                                    observation,
+                                                    status,
+                                                    value
+                                                } = installment;
+                                                const expireDate = expire_date ? moment(expire_date).format('DD/MM/YYYY') : '---';
+
+                                                const installmentLabel =
+                                                    `Parcela ${index + 1}, Vencimento: ${expireDate}, Status: ${status}, Valor: ${formatter.format(value)}`;
+
+                                                return installmentLabel;
+                                            })?.join(' / ') || '---';
+
                                         let rowData = [
                                             [
                                                 id,
@@ -445,7 +583,27 @@
                                                 suppliers,
                                                 paymentMethodLabel,
                                                 paymentTermsLabel,
-                                                formattedAmount
+                                                formattedAmount,
+                                                contractStartDate,
+                                                contractEndDate,
+                                                purchaseOrder,
+                                                isComex,
+                                                description,
+                                                localDescription,
+                                                reason,
+                                                createdAt,
+                                                supportLinks,
+                                                observation,
+                                                desiredDate,
+                                                isOnlyQuotation,
+                                                suppliesUpdateReason,
+                                                approverLimit,
+                                                isBuyer,
+                                                userCPF,
+                                                requestName,
+                                                costCenterApportionment,
+                                                installmentsQtd,
+                                                installments,
                                             ]
                                         ];
 

@@ -45,6 +45,12 @@ class Supplier extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+    public function logs()
+    {
+        return $this->hasMany(Log::class, 'foreign_id', 'id')->where('table', 'suppliers');
+    }
+
+
     protected $fillable = [
         'corporate_name',
         'cpf_cnpj',
