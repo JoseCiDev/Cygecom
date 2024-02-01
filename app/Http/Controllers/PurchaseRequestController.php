@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PurchaseRequestStatus;
-use App\Enums\PurchaseRequestType;
+use Exception;
+use Illuminate\Http\{JsonResponse, RedirectResponse, Request};
+use Illuminate\Support\Facades\Gate;
+use Illuminate\View\View;
+use App\Enums\{PurchaseRequestStatus, PurchaseRequestType};
 use App\Models\{PurchaseRequestFile, PurchaseRequest};
 use App\Providers\{EmailService, PurchaseRequestService};
-use Illuminate\Http\{RedirectResponse, Request};
-use Exception;
 
 class PurchaseRequestController extends Controller
 {
@@ -15,7 +16,7 @@ class PurchaseRequestController extends Controller
     {
     }
 
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $statusData = $request->input('status');
         $purchaseRequests = $this->purchaseRequestService->purchaseRequests()
@@ -35,7 +36,7 @@ class PurchaseRequestController extends Controller
         return view('components.purchase-request.index', $params);
     }
 
-    public function ownRequests(Request $request)
+    public function indexOwn(Request $request): View
     {
         $statusData = $request->input('status');
         $userRequests = $this->purchaseRequestService->purchaseRequestsByUser()
@@ -56,14 +57,14 @@ class PurchaseRequestController extends Controller
     }
 
 
-    public function formList()
+    public function dashboard(): View
     {
         return view('components.purchase-request.form-list');
     }
 
-    public function edit(PurchaseRequestType $type, int $id)
+    public function edit(PurchaseRequestType $type, int $id): View|RedirectResponse
     {
-        $isAdmin = auth()->user()->profile->name === 'admin';
+        $isAdmin = Gate::allows('admin');
 
         try {
             $purchaseRequest = PurchaseRequest::find($id);
@@ -82,32 +83,30 @@ class PurchaseRequestController extends Controller
         }
     }
 
-    public function delete(int $id): RedirectResponse
+    public function destroy(PurchaseRequest $purchaseRequest): JsonResponse
     {
-        $route = 'requests';
+        $route = route('requests.index');
 
         try {
-            $isAdmin = auth()->user()->profile->name === 'admin';
-            $purchaseRequest = auth()->user()->purchaseRequest->find($id);
-            $isDeleted = $purchaseRequest?->deleted_at !== null;
-            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted;
+            $isAdmin = Gate::allows('admin');
+            $isOwnRequest = auth()->user()->id === $purchaseRequest->user_id;
+            $isDeleted = $purchaseRequest->deleted_at !== null;
+            $isAuthorized = ($isAdmin || $isOwnRequest) && !$isDeleted;
 
             if (!$isAuthorized) {
                 throw new Exception('Não autorizado. Não foi possível excluir essa solicitação.');
             }
 
-            $this->purchaseRequestService->deletePurchaseRequest($id);
-            $route = 'requests.own';
+            $this->purchaseRequestService->deletePurchaseRequest($purchaseRequest->id);
+            $route = route('requests.index.own');
 
-            session()->flash('success', "Solicitação deletada com sucesso!");
-
-            return redirect()->route($route);
+            return response()->json(['message' => 'Solicitação deletada com sucesso! Recarregando...', 'redirect' => $route]);
         } catch (Exception $error) {
-            return redirect()->back()->withInput()->withErrors(['Não foi possível deletar o registro no banco de dados.', $error->getMessage()]);
+            return response()->json(['error' => 'Não foi possível deletar o registro no banco de dados.', 'message' => $error->getMessage()], 500);
         }
     }
 
-    public function uploadSuppliesFilesAPI(Request $request)
+    public function uploadSuppliesFilesAPI(Request $request): JsonResponse
     {
         $isSupplies = true;
         $purchaseRequestId = $request->input('purchase_request_id');
@@ -125,7 +124,7 @@ class PurchaseRequestController extends Controller
         return response()->json(['message' => 'Anexos atualizados com sucesso']);
     }
 
-    public function fileDelete(int $id)
+    public function fileDelete(int $id): JsonResponse
     {
         try {
             $model = PurchaseRequestFile::findOrFail($id);
@@ -136,7 +135,7 @@ class PurchaseRequestController extends Controller
         }
     }
 
-    public function showAPI(int $id)
+    public function showAPI(int $id): JsonResponse
     {
         $request = $this->purchaseRequestService->purchaseRequestById($id);
 

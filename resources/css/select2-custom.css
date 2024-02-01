@@ -65,6 +65,10 @@
     border-radius: 0;
 }
 
+.select2-container--default .select2-selection--multiple {
+    max-width: 90vw;
+}
+
 .select2-selection__rendered {
     /* Altura máxima do select2 multiple */
     max-height: 150px;
@@ -84,4 +88,10 @@
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
     background-color: var(--gold-secondary-color);
     color: #000000;
+}
+
+@media(min-width: 768px) {
+    .select2-container--default .select2-selection--multiple {
+        max-width: none;
+    }
 }

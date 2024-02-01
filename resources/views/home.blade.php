@@ -15,12 +15,6 @@
                             Este portal tem como objetivo fazer com que suprimentos efetue e finalize todas as
                             solicitações de compras e contratações de serviços do Grupo Essentia.
                         </p>
-
-                        @if (config('app.env') === 'local' && auth()->user()->profile->name === 'admin')
-                            <p>TESTE E-MAIL</p>
-                            <a class="btn btn-primary" href="{{ route('email') }}">E-mail</a>
-                        @endif
-
                     </div>
                 </div>
             </div>

@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use App\Services\S3;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\{ServiceProvider, Collection, Arr};
 use App\Enums\PurchaseRequestType;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\{
@@ -17,6 +17,7 @@ use App\Models\{
     Contract,
     ContractInstallment,
     CostCenterApportionment,
+    Company,
     PaymentInfo,
     PurchaseRequest,
     PurchaseRequestFile,
@@ -96,9 +97,11 @@ class PurchaseRequestService extends ServiceProvider
     }
 
     /**
-     * @return mixed Pelo status da solicitação retorna todas com suas relações, exceto deletadas.
+     * Retorna query builder de solicitaçõesa usando whereIn com array de status
+     * @param array $status
+     * @return Builder Query builder de solicitações com suas relações, exceto deletadas
      */
-    public function requestsByStatus(array $status)
+    public function requestsByStatus(array $status): Builder
     {
         return PurchaseRequest::with([
             'user.person.costCenter',
@@ -290,7 +293,7 @@ class PurchaseRequestService extends ServiceProvider
      */
     public function updateServiceRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile|array|null $files): PurchaseRequest
     {
-        return DB::transaction(function () use ($id, $data, $isSuppliesUpdate,  $files) {
+        return DB::transaction(function () use ($id, $data, $isSuppliesUpdate, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, $isSuppliesUpdate, $files);
             $this->saveService($purchaseRequest->id, $data, $purchaseRequest->service->id);
 
@@ -302,7 +305,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de produto(s).
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveProduct para atualizar produto(s).
      */
-    public function updateProductRequest(int $id, array $data, bool $isSuppliesUpdate = false,  UploadedFile|array|null $files): PurchaseRequest
+    public function updateProductRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile|array|null $files): PurchaseRequest
     {
         return DB::transaction(function () use ($id, $data, $isSuppliesUpdate, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, $isSuppliesUpdate, $files);
@@ -545,5 +548,46 @@ class PurchaseRequestService extends ServiceProvider
                 $installment->delete();
             }
         }
+    }
+
+
+    /**
+     * Filtra as requisições por empresa.
+     *
+     * @param \Illuminate\Support\Collection $requests Coleção de requisições a serem filtradas.
+     * @param string $company Nome da empresa para filtrar as requisições.
+     * @return \Illuminate\Support\Collection Coleção de requisições filtradas pela empresa.
+     */
+    private function filterRequestByCompany(Collection $requests, string $company)
+    {
+        return $requests->filter(function ($item) use ($company) {
+            $costCenterApportionments = $item->costCenterApportionment;
+            return $costCenterApportionments->contains(function ($apportionment) use ($company) {
+                return $apportionment->costCenter->company->name === $company;
+            });
+        });
+    }
+
+    /**
+     * Obtém o número total de solicitações por empresa para um determinado tipo de solicitação.
+     *
+     * @param PurchaseRequestType $requestType Tipo de solicitação a ser considerado.
+     * @param \Illuminate\Support\Collection $typesGrouped Coleção de tipos de solicitação agrupados.
+     * @return \Illuminate\Support\Collection Coleção associativa com a contagem de requisições por empresa.
+     */
+    public function getRequestsByCompany(PurchaseRequestType $requestType, Collection $typesGrouped): array
+    {
+        $total = 0;
+        $result = Company::all()->mapWithKeys(function ($company) use ($typesGrouped, $requestType, &$total) {
+            $companyName = $company->name;
+            $requestsFiltered = $this->filterRequestByCompany($typesGrouped->get($requestType->value, collect()), $companyName);
+            $total += count($requestsFiltered);
+            return [$companyName => count($requestsFiltered)];
+        });
+
+        return [
+            'byCompany' => $result->sortDesc(),
+            'total' => $total,
+        ];
     }
 }

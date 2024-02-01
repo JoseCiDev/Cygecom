@@ -6,7 +6,7 @@ $(() => {
             class="btn btn-secondary btn-small add-btn-supplier"
             data-bs-toggle="modal" data-bs-target="#modal-supplier-register"
         >
-            <i class="fa fa-plus"></i> Registar novo fornecedor
+            <i class="fa fa-plus"></i> Cadastrar fornecedor
         </button>
     `);
 

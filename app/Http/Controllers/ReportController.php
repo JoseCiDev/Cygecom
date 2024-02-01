@@ -77,7 +77,7 @@ class ReportController extends Controller
         return view('components.reports.productivity', $params);
     }
 
-    public function requestsIndexJson(Request $request): JsonResponse
+    public function requestsIndexAPI(Request $request): JsonResponse
     {
         $draw = (int) $request->get('draw', 1);
         $start = (int) $request->get('start', 0);
@@ -141,7 +141,7 @@ class ReportController extends Controller
         ], 200);
     }
 
-    public function productivityIndexJson(Request $request): JsonResponse
+    public function productivityIndexAPI(Request $request): JsonResponse
     {
         $draw = (int) $request->get('draw', 1);
         $start = (int) $request->get('start', 0);

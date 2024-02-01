@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -44,5 +45,22 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof AuthorizationException) {
+
+            // Verificar se a requisição é uma requisição API
+            if ($request->is('api/*') || $request->wantsJson()) {
+                // Retornar uma resposta JSON
+                return response()->json(['message' => 'Desculpe, você não tem autorização para fazer essa ação.'], 403);
+            } else {
+                // Se não for uma requisição API, redirecionar ou retornar uma resposta de acordo com sua lógica
+                return redirect()->back()->withErrors('Desculpe, você não tem autorização para fazer essa ação.');
+            }
+        }
+
+        return parent::render($request, $exception);
     }
 }

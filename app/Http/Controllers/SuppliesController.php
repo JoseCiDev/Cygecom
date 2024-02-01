@@ -2,135 +2,94 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CompanyGroup;
-use App\Enums\PurchaseRequestStatus;
-use App\Enums\PurchaseRequestType;
-use App\Providers\PurchaseRequestService;
-use App\Providers\SupplierService;
+use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Database\Eloquent\Collection;
+use App\Enums\{PurchaseRequestType, PurchaseRequestStatus, CompanyGroup};
+use App\Providers\{SupplierService, PurchaseRequestService};
+use App\Http\Requests\Supplies\SuppliesParamsRequest;
+use Illuminate\Support\Facades\Gate;
 
 class SuppliesController extends Controller
 {
-    public function __construct(private PurchaseRequestService $purchaseRequestService, private SupplierService $supplierService)
-    {
-        $this->middleware('auth');
+    public function __construct(
+        private PurchaseRequestService $purchaseRequestService,
+        private SupplierService $supplierService
+    ) {
     }
 
     /**
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(): View
     {
-        $currentProfile = auth()->user()->profile->name;
-
         $excludedStatus = [
             PurchaseRequestStatus::RASCUNHO,
             PurchaseRequestStatus::FINALIZADA,
             PurchaseRequestStatus::CANCELADA
         ];
-        $purchaseRequests = $this->purchaseRequestService->allPurchaseRequests()
+        $purchaseRequestsGoupedByType = $this->purchaseRequestService->allPurchaseRequests()
             ->whereNull('deleted_at')
+            ->whereNull('supplies_user_id')
             ->whereNotIn('status', $excludedStatus)
-            ->get();
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->type->value;
+            });
 
-        $typesGrouped = $purchaseRequests->groupBy(function ($item) {
-            return $item->type->value;
-        });
+        $productRequests = $this->purchaseRequestService->getRequestsByCompany(PurchaseRequestType::PRODUCT, $purchaseRequestsGoupedByType);
+        $serviceRequests = $this->purchaseRequestService->getRequestsByCompany(PurchaseRequestType::SERVICE, $purchaseRequestsGoupedByType);
+        $contractRequests = $this->purchaseRequestService->getRequestsByCompany(PurchaseRequestType::CONTRACT, $purchaseRequestsGoupedByType);
 
-        $products = $typesGrouped->get(PurchaseRequestType::PRODUCT->value, collect());
-        $services = $typesGrouped->get(PurchaseRequestType::SERVICE->value, collect());
-        $contracts = $typesGrouped->get(PurchaseRequestType::CONTRACT->value, collect());
+        $params = [
+            'productsQtdByCompany' => $productRequests['byCompany'],
+            'productsTotal' => $productRequests['total'],
+            'servicesQtdByCompany' => $serviceRequests['byCompany'],
+            'servicesTotal' => $serviceRequests['total'],
+            'contractQtdByCompany' => $contractRequests['byCompany'],
+            'contractsTotal' => $contractRequests['total'],
+        ];
+
+        $products = $purchaseRequestsGoupedByType->get(PurchaseRequestType::PRODUCT->value, collect());
+        $services = $purchaseRequestsGoupedByType->get(PurchaseRequestType::SERVICE->value, collect());
+        $contracts = $purchaseRequestsGoupedByType->get(PurchaseRequestType::CONTRACT->value, collect());
 
         $today = \Carbon\Carbon::today()->format('Y-m-d');
 
-        $productsFromInp = $this->supplierService->filterRequestByCompanyGroup($products, CompanyGroup::INP);
-        $productsFromHkm = $this->supplierService->filterRequestByCompanyGroup($products, CompanyGroup::HKM);
+        $params = array_merge($params, $this->getComexAndDesiredTodayCounts($products, $services, $contracts, $today));
 
-        $servicesFromInp = $this->supplierService->filterRequestByCompanyGroup($services, CompanyGroup::INP);
-        $servicesFromHkm = $this->supplierService->filterRequestByCompanyGroup($services, CompanyGroup::HKM);
-
-        $contractsFromInp = $this->supplierService->filterRequestByCompanyGroup($contracts, CompanyGroup::INP);
-        $contractsFromHkm = $this->supplierService->filterRequestByCompanyGroup($contracts, CompanyGroup::HKM);
-
-        $params = [
-            'purchaseRequests' => $purchaseRequests,
-            'productQtd' => $products->count(),
-            'serviceQtd' => $services->count(),
-            'contractQtd' => $contracts->count(),
-            'productsFromInp' => $productsFromInp,
-            'productsFromHkm' => $productsFromHkm,
-            'servicesFromInp' => $servicesFromInp,
-            'servicesFromHkm' => $servicesFromHkm,
-            'contractsFromInp' => $contractsFromInp,
-            'contractsFromHkm' => $contractsFromHkm,
-        ];
-
-        if ($currentProfile === 'admin') {
-            $params = array_merge($params, $this->getComexAndDesiredTodayCounts($products, $services, $contracts, $today));
-        } elseif ($currentProfile === 'suprimentos_hkm') {
-            $params = array_merge($params, $this->getComexAndDesiredTodayCounts($productsFromHkm, $servicesFromHkm, $contractsFromHkm, $today));
-        } elseif ($currentProfile === 'suprimentos_inp') {
-            $params = array_merge($params, $this->getComexAndDesiredTodayCounts($productsFromInp, $servicesFromInp, $contractsFromInp, $today));
-        }
-
-        return view('components.supplies.index', $params);
+        return view('supplies.index', $params);
     }
 
-    public function product(Request $request)
+    public function productIndex(SuppliesParamsRequest $request): View
     {
-        $statusData = $request->input('status');
-        $querySuppliesGroup = request()->query('suppliesGroup');
+        $params = $this->getRequestsParams($request, PurchaseRequestType::PRODUCT);
 
-        $status = $statusData ? array_map(function ($item) {
-            return PurchaseRequestStatus::tryFrom($item);
-        }, $statusData) : [];
-
-        try {
-            $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
-        } catch (\ValueError $error) {
-            return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
-        }
-
-        return view('components.supplies.product.page', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
+        return view('supplies.product.page', $params);
     }
 
-    public function service(Request $request)
+    public function serviceIndex(SuppliesParamsRequest $request): View
     {
-        $statusData = $request->input('status');
-        $querySuppliesGroup = request()->query('suppliesGroup');
+        $params = $this->getRequestsParams($request, PurchaseRequestType::SERVICE);
 
-        $status = $statusData ? array_map(function ($item) {
-            return PurchaseRequestStatus::tryFrom($item);
-        }, $statusData) : [];
-
-        try {
-            $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
-        } catch (\ValueError $error) {
-            return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
-        }
-
-        return view('components.supplies.service.page', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
+        return view('supplies.service.page', $params);
     }
 
-    public function contract(Request $request)
+    public function contractIndex(SuppliesParamsRequest $request): View
     {
-        $statusData = $request->input('status');
-        $querySuppliesGroup = request()->query('suppliesGroup');
+        $params = $this->getRequestsParams($request, PurchaseRequestType::CONTRACT);
 
-        $status = $statusData ? array_map(function ($item) {
-            return PurchaseRequestStatus::tryFrom($item);
-        }, $statusData) : [];
-
-        try {
-            $suppliesGroup = $querySuppliesGroup ? CompanyGroup::from($querySuppliesGroup) : null;
-        } catch (\ValueError $error) {
-            return redirect()->back()->withInput()->withErrors("Parâmetro(s) inválido(s).");
-        }
-
-        return view('components.supplies.contract.page', ['suppliesGroup' => $suppliesGroup, "status" => $status]);
+        return view('supplies.contract.page', $params);
     }
 
-    private function getComexAndDesiredTodayCounts($products, $services, $contracts, $today)
+    /**
+     * Contabiliza quantos comex e datas desejadas existem para cada tipo de solicitação
+     * @param Collection $products
+     * @param Collection $services
+     * @param Collection $contracts
+     */
+    private function getComexAndDesiredTodayCounts($products, $services, $contracts, $today): array
     {
         return [
             'productComexQtd' => $products->where('is_comex', true)->count(),
@@ -140,5 +99,39 @@ class SuppliesController extends Controller
             'serviceDesiredTodayQtd' => $services->where('desired_date', $today)->count(),
             'contractDesiredTodayQtd' => $contracts->where('desired_date', $today)->count(),
         ];
+    }
+
+    /**
+     * Cria e retorna os parâmetros para view da solicitação do tipo escolhido
+     * @param SuppliesParamsRequest $request
+     * @param PurchaseRequestType $requestType
+     * @return array parâmetros da solcitação
+     */
+    private function getRequestsParams(SuppliesParamsRequest $request, PurchaseRequestType $requestType): array
+    {
+        $status = collect($request->get('status'));
+
+        if ($status->isEmpty()) {
+            $status = collect([PurchaseRequestStatus::PENDENTE->value]);
+        }
+
+        $requests = $this->purchaseRequestService->requestsByStatus($status->toArray())
+            ->whereNotIn('status', [PurchaseRequestStatus::RASCUNHO->value]);
+
+        if (!Gate::allows('admin')) {
+            $requests->whereHas('costCenterApportionment', fn ($query) => $query->whereHas(
+                'costCenter',
+                fn ($query) => $query->whereIn('id', auth()->user()->suppliesCostCenters->pluck('id'))
+            ));
+        }
+
+        $requests->where('type', $requestType);
+
+        $params = [
+            'status' => $status,
+            'requests' => $requests->get()
+        ];
+
+        return $params;
     }
 }

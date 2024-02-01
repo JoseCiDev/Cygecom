@@ -2,26 +2,25 @@
 
 namespace App\Services;
 
-use App\Enums\{PurchaseRequestType, PurchaseRequestStatus};
-use App\Models\User;
 use Closure;
+use InvalidArgumentException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use InvalidArgumentException;
+use Illuminate\Support\Facades\{DB, Gate};
+use App\Enums\{PurchaseRequestType, PurchaseRequestStatus};
+use App\Models\User;
 
 class ReportService
 {
     public function getRequistingUsers(): Collection
     {
-        $currentProfile = auth()->user()->profile->name;
         $currentUserId = auth()->user()->id;
 
         $requestingUsersQuery = User::with('person', 'purchaseRequest.costCenterApportionment.costCenter');
 
-        if ($currentProfile !== 'admin' && $currentProfile !== 'diretor') {
+        if (!Gate::allows('admin') && !Gate::allows('diretor')) {
             $requestingUsersQuery->where('id', $currentUserId);
-        } elseif ($currentProfile === 'diretor') {
+        } elseif (Gate::allows('diretor')) {
             $requestingUsersQuery
                 ->where('id', $currentUserId)
                 ->orWhere('approver_user_id', $currentUserId);
@@ -82,9 +81,8 @@ class ReportService
             $validIds = self::getRequistingUsers()->pluck('id');
         }
 
-        $currentProfile = auth()->user()->profile->name;
-        $isAdmin = $currentProfile === 'admin';
-        $isDirector = $currentProfile === 'diretor';
+        $isAdmin = Gate::allows('admin');
+        $isDirector = Gate::allows('diretor');
         $hasOwnRequestsFiltered = filter_var($hasOwnRequests, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
         $removeCurrentUserId = !$hasOwnRequestsFiltered && ($isAdmin || $isDirector);
         if ($removeCurrentUserId) {

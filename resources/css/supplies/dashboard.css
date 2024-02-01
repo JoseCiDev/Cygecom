@@ -32,11 +32,10 @@
 }
 
 .supplies-dashboard-requests-item-info {
-    padding: 25px;
+    padding: 27px;
 }
 
 .supplies-dashboard-requests-item-info-top {
-    display: flex;
     justify-content: space-between;
 }
 
@@ -47,14 +46,12 @@
     line-height: 20px;
     color: var(--grey-primary-color);
     margin: 0;
-    max-width: 100px;
-    gap: 12px;
 }
 
 .supplies-dashboard-requests-item-info-top-price-value {
     font-size: 38px;
     line-height: 46px;
-    margin: 0;
+    margin: 0 0 5px 0;
 }
 
 .supplies-dashboard-requests-item-info-top-btns {
@@ -62,6 +59,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    margin: 27px 0 0 0;
 }
 
 .supplies-dashboard-requests-item-info-top-btns-btn {
@@ -71,7 +69,7 @@
     font-size: 16px;
     line-height: 24px;
     padding: 10px;
-    min-width: 160px;
+    width: 60%;
     text-align: center;
 }
 
@@ -92,7 +90,7 @@
     flex-direction: column;
     justify-content: space-between;
     gap: 10px;
-    margin: 35px 0 0 0;
+    margin: 27px 0 0 0;
 }
 
 .supplies-dashboard-requests-item-info-bottom-row {
@@ -110,8 +108,12 @@
 }
 
 .supplies-dashboard-requests-item-info-bottom-row-text-qtd {
-    font-size: 22px;
+    font-size: 20px;
     line-height: 27px;
-    color: var(--black-color);
+    color: #666666;
     font-weight: bold;
+}
+
+.supplies-dashboard-requests-item-info-comex-desired-date {
+    margin: 0 0 19px 0;
 }

@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{Gate, Route, DB};
+use Illuminate\Http\{RedirectResponse, Request};
 use App\Enums\PurchaseRequestStatus;
 use App\Http\Requests\Product\UpdateProductRequest;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\{RedirectResponse, Request};
 use App\Models\{Company, CostCenter, PurchaseRequest, PurchaseRequestFile};
 use App\Providers\{EmailService, PurchaseRequestService, ValidatorService};
 
@@ -20,9 +19,9 @@ class ProductController extends Controller
     ) {
     }
 
-    public function registerProduct(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $route = 'requests.own';
+        $route = 'requests.index.own';
         $data       = $request->all();
         // captura o botão submit clicado (se for submit_request update status);
         $action = $request->input('action');
@@ -57,12 +56,12 @@ class ProductController extends Controller
         return redirect()->route($route);
     }
 
-    public function productForm(int $purchaseRequestIdToCopy = null)
+    public function create(int $purchaseRequestIdToCopy = null)
     {
         $companies   = Company::all();
         $costCenters = CostCenter::all();
         $params      = ["companies" => $companies, "costCenters" => $costCenters];
-        $isAdmin     = auth()->user()->profile->name === 'admin';
+        $isAdmin     = Gate::allows('admin');
 
         try {
             if ($purchaseRequestIdToCopy) {
@@ -87,18 +86,18 @@ class ProductController extends Controller
      * @param int $id
      * @return RedirectResponse
      */
-    public function updateProduct(UpdateProductRequest $request, int $id): RedirectResponse
+    public function update(UpdateProductRequest $request, int $id): RedirectResponse
     {
         $route = 'request.own';
         $data = $request->all();
         $action = $request->input('action');
 
         $files = $request->file('arquivos');
-        $isSuppliesUpdate = Route::currentRouteName() === "supplies.request.product.update";
+        $isSuppliesUpdate = Route::currentRouteName() === "supplies.product.update";
         $currentUser = auth()->user();
 
         try {
-            $isAdmin = $currentUser->profile->name === 'admin';
+            $isAdmin = Gate::allows('admin');
 
             $purchaseRequest = PurchaseRequest::find($id);
             $isDeleted = $purchaseRequest->deleted_at !== null;
@@ -107,7 +106,9 @@ class ProductController extends Controller
             $msg = "Solicitação de produto nº $purchaseRequest->id atualizada com sucesso!";
 
             $isOwnRequest = $purchaseRequest->user_id === $currentUser->id;
-            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && ($isOwnRequest || $isSuppliesUpdate);
+            $isSuppliesWithOwnRequest = $isOwnRequest && $isSuppliesUpdate;
+
+            $isAuthorized = ($isAdmin || $purchaseRequest) && !$isDeleted && !$isSuppliesWithOwnRequest && ($isOwnRequest || $isSuppliesUpdate);
 
             if ($request->purchase_order && $purchaseRequest->supplies_user_id !== $currentUser->id) {
                 $isAuthorized = false;
@@ -128,15 +129,14 @@ class ProductController extends Controller
 
             DB::commit();
 
-            $route = 'requests.own';
+            $route = 'requests.index.own';
         } catch (Exception $error) {
             DB::rollBack();
             $msg = 'Não foi possível atualizar o registro no banco de dados.';
             return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
         }
 
-        $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === '/supplies';
-
+        $isSuppliesRoute = Route::getCurrentRoute()->action['prefix'] === 'supplies/product';
         if (!$isDraft && $isSuppliesRoute) {
             $msg = 'Valor total da solicitação atualizado com sucesso!';
             session()->flash('success', $msg);
@@ -148,7 +148,7 @@ class ProductController extends Controller
         return redirect()->route($route);
     }
 
-    public function details(int $id)
+    public function show(int $id)
     {
         $allRequestStatus = PurchaseRequestStatus::cases();
         $purchaseRequest = $this->purchaseRequestService->purchaseRequestById($id);
@@ -160,7 +160,8 @@ class ProductController extends Controller
         if ($this->isAuthorizedToUpdate($purchaseRequest)) {
             $data = [
                 'supplies_user_id' => auth()->user()->id,
-                'responsibility_marked_at' => now()
+                'responsibility_marked_at' => now(),
+                'status' => PurchaseRequestStatus::EM_TRATATIVA->value,
             ];
             $purchaseRequestUpdated = $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
         }
@@ -173,13 +174,13 @@ class ProductController extends Controller
             return throw new Exception('Não foi possível acessar essa solicitação.');
         }
 
-        return view('components.supplies.product.details', compact('product', 'allRequestStatus', 'files'));
+        return view('supplies.product.details', compact('product', 'allRequestStatus', 'files'));
     }
 
     private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool
     {
-        $allowedProfiles = ['admin', 'suprimentos_hkm', 'suprimentos_inp'];
-        $userProfile = auth()->user()->profile->name;
+        $allowedProfiles = Gate::any(['admin', 'suprimentos_hkm', 'suprimentos_inp']);
+
         $existSuppliesUserId = (bool) $purchaseRequest->supplies_user_id;
         $existSuppliesMarkedAt = (bool) $purchaseRequest->responsibility_marked_at;
         $userContainsPurchaseRequest = auth()->user()->purchaseRequest->contains($purchaseRequest);
@@ -188,6 +189,6 @@ class ProductController extends Controller
             return false;
         }
 
-        return in_array($userProfile, $allowedProfiles);
+        return $allowedProfiles;
     }
 }
