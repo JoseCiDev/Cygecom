@@ -1,7 +1,7 @@
 import * as faker from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { elements as el } from '../../../elements';
-import { ValidationResult, dataParameters, ColumnEnums, ShowHideColumns, TableTypesElements } from '../../../DataParameters'
+import { ValidationResult, dataParameters, ColumnEnums, ShowHideColumns, TableTypesElements, ShowRecordsQuantityElement, SearchParameterElement, SortByColumnElement, SearchColumnElement } from '../../../DataParameters'
 import { ShowHideColumnsUserRegistration } from '../../../DataParameters';
 import { data } from 'cypress/types/jquery';
 
@@ -65,6 +65,7 @@ const {
     messageRequirementName,
     messageRequirementCpfCnpj,
     messageRequiredTelephone,
+    searchColumn,
 } = el.Register
 
 const {
@@ -97,11 +98,16 @@ describe('Testes da página Cadastro de Usuário', () => {
 
     it(`userRegistration`, () => {
         cy.getElementAndClick(':nth-child(2) > .btn')
-        cy.getElementAndClick('[data-cy="dropdown-cadastros-usuarios"]')
+        cy.getElementAndClick('[data-cy="dropdown-solicitacoes-minhas"]')
 
-        cy.getDataOnGrid(TableTypesElements.uSerTable);
+
+        cy.getDataOnGrid(
+            SearchParameterElement.requestsTable, dataParameters.getDataOnGrid.searchParameter,
+            ShowRecordsQuantityElement.requestsTable, dataParameters.getDataOnGrid.showRecordsQuantity,
+            SortByColumnElement.requestsTable, dataParameters.getDataOnGrid.tableColumnsMyRequests,
+            SearchColumnElement.requestsTable, dataParameters.getDataOnGrid.searchColumnMyRequests,
+        )
     });
-
 })
 
 

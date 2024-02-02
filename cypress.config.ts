@@ -4,7 +4,8 @@ export default defineConfig({
   projectId: "kserwh",
   includeShadowDom: true,
   defaultCommandTimeout: 10000,
-  // waitForAnimations: false,
+  waitForAnimations: false,
+  numTestsKeptInMemory: 15,
 
   e2e: {
     setupNodeEvents(on, config) {
@@ -15,7 +16,7 @@ export default defineConfig({
     redirectionLimit: 5000,
     viewportHeight: 1280,
     viewportWidth: 1024,
-    numTestsKeptInMemory: 150,
+    numTestsKeptInMemory: 15,
     excludeSpecPattern: [
       'cypress/support/*',
       'cypress/support/commands/*',

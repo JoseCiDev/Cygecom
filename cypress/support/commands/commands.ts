@@ -168,11 +168,28 @@ Cypress.Commands.add('getElementAndCheck', (element: string): void => {
     });
 });
 
-Cypress.Commands.add('getElementAndClick', (...elements: string[]): void => {
-    elements.forEach(element => {
-        cy.get(element, { timeout: 20000 }).each(($el) => {
-            cy.wrap($el).click({ timeout: 20000 });
-        });
+Cypress.Commands.add('getElementAndType', (element: string, text?: string): void => {
+    cy.wrap(null).then(() => {
+        cy.get(element, { timeout: 20000 })
+            .each(($input) => {
+                cy.wrap($input)
+                    .then(() => {
+                        if ($input.length > 1) {
+                            cy.wrap($input.first())
+                                .clear()
+                                .type(text, { timeout: 1000 })
+                        } else {
+                            cy.wrap($input.eq(0))
+                                .type(text, { timeout: 1000 })
+                        }
+                    })
+                    .invoke('val')
+                    .then(val => {
+                        if (!val) {
+                            throw new Error('Field is empty after typing');
+                        }
+                    });
+            })
     });
 });
 
@@ -191,14 +208,14 @@ Cypress.Commands.add('getSelectOptionByValue', (element: string, value: any): vo
     });
 });
 
-Cypress.Commands.add('getElementAutocompleteTypeAndClick', (element: string, data: string | number, autocomplete: string) => {
+Cypress.Commands.add('getElementAutocompleteTypeAndClick', (element: string, value: string | number, autocomplete: string) => {
     cy.get(element, { timeout: 20000 })
         .as('elementAlias')
         .each(($input) => {
             cy.wrap($input)
-                .type(data.toString())
+                .type(value.toString())
                 .then(() => {
-                    cy.contains(autocomplete, data)
+                    cy.contains(autocomplete, value)
                         .as('autocompleteAlias')
                         .click({ force: true });
                 });

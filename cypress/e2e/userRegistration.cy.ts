@@ -165,7 +165,6 @@ describe('Testes da página Cadastro de Usuário', () => {
     //         .should('contain', 'Valor inválido!');
 
     //     cy.getVisible(el.nomeUsuario)
-    //         .clear()
     //         .type(nome)
     //         .blur();
 
@@ -208,7 +207,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     //     acessarCadastroUsuario()
 
     //     cy.getVisible(el.cpfCnpjUsuario)
-    //         .clear()
+
     //         .type(cpfAleatorio)
     //         .should('have.attr', 'aria-invalid', 'true');
 
@@ -219,7 +218,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     //     acessarCadastroUsuario()
 
     //     cy.getVisible(el.cpfCnpjUsuario)
-    //         .clear()
+
     //         .type(cnpjAleatorio)
     //         .should('have.attr', 'aria-invalid', 'true');
     // })
@@ -236,10 +235,9 @@ describe('Testes da página Cadastro de Usuário', () => {
     //     acessarCadastroUsuario()
 
     //     cy.getVisible(el.telefoneUsuario)
-    //         .clear()
-    //         .type(telefoneIncompleto)
+        //         .type(telefoneIncompleto)
     //         .should('have.attr', 'aria-invalid', 'true')
-    //         .clear()
+    
     //         .type(telefoneAleatorio)
 
 
@@ -250,7 +248,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     //     acessarCadastroUsuario()
 
     //     cy.getVisible(el.telefoneUsuario)
-    //         .clear()
+    
     //         .type('11111111111')
     //         .should('have.value', '(11) 11111-1111')
     // })
@@ -260,7 +258,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     //     acessarCadastroUsuario()
 
     //     cy.getVisible(el.telefoneUsuario)
-    //         .clear()
+    
     //         .type('0000000000')
     //         .should('have.value', '(00) 0000-0000')
     // })
@@ -270,7 +268,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     //     acessarCadastroUsuario()
 
     //     cy.getVisible(el.telefoneUsuario)
-    //         .clear()
+    
     //         .type('99999999999')
     //         .should('have.value', '(99) 99999-9999')
     // })

@@ -29,7 +29,19 @@
 
 
 import { elements as el } from '../../elements'
-import { ValidationResult, dataParameters, TableTypesElements, TableColumnsUserRegistration } from '../../DataParameters'
+import {
+    ValidationResult,
+    dataParameters,
+    TableTypesElements,
+    TableColumnsUserRegistration,
+    ShowRecordsQuantityElement,
+    ShowRecordsQuantity,
+    SearchColumnMyRequests,
+    ColumnSearchParameter,
+    SortByColumnElement,
+    TableColumnsMyRequests,
+    SearchColumnElement,
+} from '../../DataParameters'
 
 const {
     logout,
@@ -90,7 +102,6 @@ const {
     messageRequirementName,
     messageRequirementCpfCnpj,
     messageRequiredTelephone,
-    columnInTheGrid,
 } = el.Register
 
 const {
@@ -175,43 +186,107 @@ Cypress.Commands.add('validateCpfCnpj', (
 
 });
 
-
 Cypress.Commands.add('getColumnVisibility', (element: TableTypesElements) => {
     cy.wait(1000);
-    cy.get(element, { timeout: 2000 })
+    cy.get(element, { timeout: 4000 })
         .as('btn')
-        .click({ timeout: 2000, force: true })
-
-    // Para cada coluna em columnVisibility, se o valor for true, clique para ocultar a coluna
-    for (const [key, isVisible] of Object.entries(dataParameters.Register.showHideColumns.showHideColumnsUserRegistration)) {
+        .click({ timeout: 2000, force: true });
+    for (const [key, isVisible] of Object.entries(dataParameters.showHideColumns.showHideColumnsUserRegistration)) {
+        const elementSelector = Number(key);
+        const $columnGrid = Cypress.$(`table th:contains("${elementSelector}")`);
         if (!isVisible) {
-            const elementSelector = Number(key);
-            cy.get(`button[data-cv-idx="${elementSelector}"]`).click();
-        }
-    }
-
-})
-
-Cypress.Commands.add('getDataOnGrid', () => {
-    function sortByColumn(element: string, columnVisibility: Record<TableColumnsUserRegistration, boolean>) {
-        // Para cada coluna em columnVisibility, se o valor for true, clique para ocultar a coluna
-        for (const [key, isOrderedBy] of Object.entries(columnVisibility)) {
-            // Neste caso, idx é o seletor da coluna
-            if (isOrderedBy) {
-                const columnSelector = Number(key) + 1; // Adicione 1 porque nth-child começa em 1, não em 0
-                cy.get(`${element} > th:nth-child(${columnSelector})`).click();
+            cy.get(`button[data-cv-idx="${elementSelector}"]`, { timeout: 4000 })
+                .click();
+            cy.wait(1000);
+            cy.get(`table th:contains("${elementSelector}")`, { timeout: 4000 })
+                .should('not.exist');
+            if ($columnGrid.is(':visible')) {
+                throw new Error("A coluna foi ocultada ou exibida na tela, no entanto, não houve nenhuma alteração ou ocorreu o oposto na tela.");
             }
         }
     }
-    sortByColumn(columnInTheGrid, dataParameters.Register.getDataOnGrid.tableColumnsUserRegistration);
+    return cy.wrap({ success: `Coluna(s) foi mostrada/ocultada na grid com sucesso.` });
 })
 
-//getDataOnGrid
-//cada grid tem uma coluna, mapear colunas em enums
+
+
+    Cypress.Commands.add('getDataOnGrid', (searchParameterElement?, searchParameterValue?, showRecordsQuantityElement?, showRecordsQuantityValue?, sortByColumnElement?, sortByColumnValue?, searchColumnElement?, searchColumnValue?) => {
+        function searchByParameter(element: string, value: string | number) {
+            cy.getElementAndType(element, value.toString());
+        }
+        function showRecordsQuantityByParameter(elementSelector: ShowRecordsQuantityElement, quantity: ShowRecordsQuantity) {
+            const dropdownValueMap = {
+                [ShowRecordsQuantity.ten]: '10',
+                [ShowRecordsQuantity.twentyFive]: '25',
+                [ShowRecordsQuantity.fifty]: '50',
+                [ShowRecordsQuantity.oneHundred]: '100',
+            };
+            const dropdownValue = dropdownValueMap[quantity];
+            cy.get(elementSelector)
+                .select(dropdownValue);
+        }//quando o valor apresentado for diferente do valor selecionado
+        function sortByColumn(element: string, columnVisibility: Record<TableColumnsMyRequests, boolean>) {
+            for (const [key, isOrderedBy] of Object.entries(columnVisibility)) {
+                if (isOrderedBy) {
+                    const columnSelector = Number(key);
+                    if (!isNaN(columnSelector)) {
+                        const columnElements = cy.get(`${element} > th:nth-child(${columnSelector})`);
+                        columnElements.eq(1).click({ force: true });
+                    }
+                }
+            }
+        }
+    function searchColumnsByParameter(element: SearchColumnElement, searchInformation: ColumnSearchParameter) {
+        cy.log('searchColumnElement:', searchColumnElement);
+        cy.log('searchColumnValue:', searchColumnValue);
+        cy.log('searchInformation:', searchInformation);
+        for (const [key, [isSearched, value]] of Object.entries(searchInformation)) {
+            if (isSearched) {
+                const elementSelector = Number(key);
+                cy.get(`${element} th:nth-child(${elementSelector})`)
+                    .each(($input, index) => {
+                        if ($input.find('.search-button').length > 0) {
+                            cy.get(`${element} th:nth-child(${elementSelector})`)
+                                .eq(index)
+                                .find('.search-button')
+                                .then(($btn) => {
+                                    if ($btn.length > 1) {
+                                        $btn.each((el) => {
+                                            const $el = cy.wrap(el);
+                                            $el.type(value, { force: true })
+                                                .invoke('val') // Use invoke('val') instead of accessing val property
+                                                .then((val) => {
+                                                    if (val === '') {
+                                                        throw new Error('Field is empty after typing');
+                                                    }
+                                                });
+                                        });
+                                    } else {
+                                        cy.wrap($btn)
+                                            .type(value, { force: true })
+                                            .then(() => {
+                                                if ($btn.val() === '') {
+                                                    throw new Error('Field is empty after typing');
+                                                }
+                                            });
+                                    }
+                                });
+                        }
+                    });
+            }
+        }
+    }
+    
+    searchByParameter(searchParameterElement, searchParameterValue);
+    showRecordsQuantityByParameter(showRecordsQuantityElement, showRecordsQuantityValue)
+    sortByColumn(sortByColumnElement, sortByColumnValue);
+    searchColumnsByParameter(SearchColumnElement.requestsTable, dataParameters.getDataOnGrid.searchColumnMyRequests,)
+    return cy.wrap({ success: `Coluna(s) foi mostrada/ocultada na grid com sucesso.` });
+})
+
+
+
 /*
-quantidade de registros apresentados - se o parametro "registrosApresentados" estiver preenchido seleciona o campo conforme o parametro
-funcao buscar por coluna
-funcao ordenar por coluna - sortByColumn
-funcao selecionar página
-buscar - se o parametro "buscar" estiver preenchido realize a busca pelo campo buscar inserindo o parametro
+getDataOnGrid
+
 */

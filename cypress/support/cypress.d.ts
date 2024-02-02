@@ -57,10 +57,10 @@ declare global {
             getElementAndClick(element: string): Chainable<Element>;
 
             /**
-             * comando customizado para pegar elemento e digitar.
-             * @example cy.getElementAndType(el.elemento,texto)
-             */
-            getElementAndType(element: string, text?: string): Chainable<Element>;
+            * comando customizado de login.
+            * @example cy.getElementAndClick(el.elemento)
+            */
+            getElementAndType(element: string, text?: string): Chainable<Element>
 
             /**
              * comando customizado para capturar elemento e marcar checkbox.
@@ -138,8 +138,8 @@ declare global {
            * comando customizado para ordenar dados pelas colunas da grid.
            * @example cy.getDataOnGrid();
            */
-            getDataOnGrid(table: TableTypesElements): ValidationResult;
-            
+            getDataOnGrid(searchParameterElement?, searchParameterValue?, showRecordsQuantityElement?, showRecordsQuantityValue?,sortByColumnElement?, sortByColumnValue?, searchColumnElement?, searchColumnValue?): ValidationResult;
+
         }
 
     }

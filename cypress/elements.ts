@@ -59,7 +59,7 @@ interface Elements<S = string> {
         messageRequirementName: S;
         messageRequirementCpfCnpj: S;
         messageRequiredTelephone: S;
-        columnInTheGrid: S;
+        searchColumn: S;
     },
 
     Request: {
@@ -142,7 +142,7 @@ export const elements: Elements = {
         messageRequirementCpfCnpj: '#cpf_cnpj-error',
         messageRequiredTelephone: '#number-error',
 
-        columnInTheGrid: '#DataTables_Table_0_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table > thead > tr',
+        searchColumn: 'tr.search-bar',
     },
 
     Request: {

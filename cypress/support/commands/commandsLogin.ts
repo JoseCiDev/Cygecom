@@ -31,7 +31,6 @@
 import { elements as el } from '../../elements'
 import { validateEmail, validatePassword, checkInput } from '../../utils';
 import { CheckAndThrowError, ValidationResult, dataParameters } from '../../DataParameters';
-import { data } from 'cypress/types/jquery';
 import _ from 'lodash';
 
 
