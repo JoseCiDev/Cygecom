@@ -51,6 +51,7 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
+                                <th></th>
                             </tr>
                             <tr>
                                 <th class="noColvis">Nº</th>
@@ -63,6 +64,7 @@
                                 <th>Empresa</th>
                                 <th>Data desejada</th>
                                 <th>Ord. compra</th>
+                                <th>ERP</th>
                                 <th>Valor total</th>
                                 <th class="noColvis ignore-search">Ações</th>
                             </tr>
@@ -142,6 +144,7 @@
                                         $showPurchaseOrder = isset($product->purchase_order) && $product->status === PurchaseRequestStatus::FINALIZADA;
                                     @endphp
                                     <td>{{ $showPurchaseOrder ? $product->purchase_order : '---' }}</td>
+                                    <td>{{ $product?->erp?->label() ?? '---' }}</td>
                                     <td>
                                         <span hidden>{{ str_pad($amount, 10, '0', STR_PAD_LEFT) }}</span>
                                         R$ {{ $formatedAmount }}
