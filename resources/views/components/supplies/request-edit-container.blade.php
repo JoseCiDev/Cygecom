@@ -1,5 +1,5 @@
 @php
-    use App\Enums\PurchaseRequestStatus;
+    use App\Enums\{PurchaseRequestStatus, ERP};
 
     $currentUser = auth()->user();
     $statusFinish = PurchaseRequestStatus::FINALIZADA->value;
@@ -23,14 +23,14 @@
     <div class="form-group">
         <div class="row" style="margin-bottom: -15px;">
 
-            <div class="col-sm-3">
+            <div class="col-sm-3 mb-3">
                 <label class="regular-text" for="amount">Editar valor total desta solicitação</label>
                 <input type="text" placeholder="0,00" class="form-control format-amount" id="format-amount" data-cy="format-amount" value="{{ $amount }}"
                     @disabled($requestIsFromLogged)>
                 <input type="hidden" name="{{ $inputName }}" id="amount" data-cy="amount" class="amount no-validation" value="{{ $amount }}">
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-sm-3 mb-3">
                 <label for="status" class="regular-text">Status da solicitação</label>
                 <select name="status" data-cy="status" id="status" @disabled($requestIsFromLogged) class='select2-me' style="width:100%;">
                     @foreach ($allRequestStatus as $status)
@@ -48,7 +48,7 @@
                 </select>
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-sm-3 mb-3">
                 <label for="supplies_user_id" class="regular-text">Atribuir novo responsável</label>
                 <select name="supplies_user_id" data-cy="supplies_user_id" id="supplies_user_id" class='select2-me' style="width: 100%" placeholder="Escolher novo responsável"
                     @disabled($requestIsFromLogged)>
@@ -66,13 +66,28 @@
                 </select>
             </div>
 
-            <div class="col-sm-3" id="purchase-order-box">
-                <div class="form-group">
+            <div class="col-sm-3 mb-3" style="min-width: 340px">
+                <div class="d-flex gap-3">
                     <label for="purchase_order" class="regular-text">Ordem de compra</label>
+                    <div class="d-flex gap-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" value="callisto" id="erp_callisto" name="erp" @disabled(!$purchaseOrder || ($purchaseOrder && !$requestStatusIsFinish))
+                                @checked(ERP::CALLISTO->value === $erp?->value)>
+                            <label class="form-check-label" for="erp_callisto"> Callisto </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" value="senior" id="erp_senior" name="erp" @disabled(!$purchaseOrder || ($purchaseOrder && !$requestStatusIsFinish)) @checked(ERP::SENIOR->value === $erp?->value)>
+                            <label class="form-check-label" for="erp_senior"> Senior </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <input type="text" name="purchase_order" id="purchase_order" data-cy="purchase_order" class="form-control" maxlength="20"
                         placeholder="Disponível ao finalizar solicitação" value="{{ $purchaseOrder }}" @disabled(!$purchaseOrder || ($purchaseOrder && !$requestStatusIsFinish))>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -106,14 +121,44 @@
     <script type="module">
         $(() => {
             const statusFinish = @json($statusFinish);
-            const $purchaseOrderBox = $("#purchase-order-box");
             const $purchaseOrder = $("#purchase_order");
+            const $erp = $('input[name="erp"]');
             const $form = $("#form-request-edit");
             const $status = $('#status');
             const $reasonUpdateStatus = $('#supplies-update-reason');
             const $reasonUpdateStatusDiv = $('.div-reason-update');
             const statusOldValue = $status.val();
             const requestStatusCancel = @json(PurchaseRequestStatus::CANCELADA);
+
+            let maskInstances = [];
+
+            $erp.on('change', (event) => {
+                const $currentElement = $(event.target);
+                const placeholderCallisto = 'Ex.: 08454/14';
+                const placeholderSenior = 'Ex.: 9929';
+
+                maskInstances.forEach(mask => mask.destroy());
+                maskInstances = [];
+
+                $purchaseOrder.attr('placeholder', $currentElement.val() === 'callisto' ? placeholderCallisto : placeholderSenior);
+
+                const maskOptions = $currentElement.val() === 'callisto' ? {
+                    mask: Number,
+                    min: 3,
+                    radix: "/",
+                    padFractionalZeros: true,
+                } : {
+                    mask: Number,
+                    min: 0,
+                };
+
+                $purchaseOrder.each((_, element) => {
+                    const mask = IMask(element, maskOptions);
+                    maskInstances.push(mask);
+                });
+
+                $purchaseOrder.attr('disabled', false);
+            });
 
             $status.on('change', function() {
                 const currentValue = $(this).val();
@@ -127,13 +172,14 @@
                 }
 
                 if (currentValue === statusFinish) {
-                    $purchaseOrder.makeRequired();
-                    $purchaseOrder.attr('placeholder', 'Ex.: 08454/14')
-                    $purchaseOrder.prop('disabled', false);
+                    $purchaseOrder.add($erp).makeRequired();
+                    $erp.prop('disabled', false);
+                    $purchaseOrder.attr('placeholder', 'Escolha o ERP');
                 } else {
-                    $purchaseOrder.removeRequired();
+                    $erp.prop('checked', false);
+                    $purchaseOrder.add($erp).removeRequired();
                     $purchaseOrder.attr('placeholder', 'Disponível ao finalizar solicitação')
-                    $purchaseOrder.prop('disabled', true);
+                    $purchaseOrder.add($erp).prop('disabled', true);
                     $purchaseOrder.val(null);
                 }
 
