@@ -3153,11 +3153,11 @@ export const dataParameters: DataParameters = {
 
 
     getDataOnGrid: {
-        searchParameter: 'produto',
-        showRecordsQuantity: ShowRecordsQuantity.fifty,
+        searchParameter: 'Pendente',
+        showRecordsQuantity: ShowRecordsQuantity.oneHundred,
 
         searchColumnMyRequests: {
-            [SearchColumnMyRequests.requestNumber]: [false, '---'],
+            [SearchColumnMyRequests.requestNumber]: [true, '3519'],
             [SearchColumnMyRequests.hiredBy]: [false, '---'],
             [SearchColumnMyRequests.reason]: [false, '---'],
             [SearchColumnMyRequests.type]: [false, '---'],
@@ -3167,7 +3167,7 @@ export const dataParameters: DataParameters = {
             [SearchColumnMyRequests.responsible]: [false, '---'],
             [SearchColumnMyRequests.desiredDate]: [false, '---'],
             [SearchColumnMyRequests.updatedAt]: [false, '---'],
-            [SearchColumnMyRequests.totalValue]: [true, '175'],
+            [SearchColumnMyRequests.totalValue]: [false, '---'],
         },
         searchColumnGeneralRequests: {
             [SearchColumnGeneralRequests.requestNumber]: [false, '---'],

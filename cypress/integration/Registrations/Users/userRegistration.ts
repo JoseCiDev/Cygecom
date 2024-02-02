@@ -102,10 +102,13 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
         cy.getDataOnGrid(
-            SearchParameterElement.requestsTable, dataParameters.getDataOnGrid.searchParameter,
             ShowRecordsQuantityElement.requestsTable, dataParameters.getDataOnGrid.showRecordsQuantity,
             SortByColumnElement.requestsTable, dataParameters.getDataOnGrid.tableColumnsMyRequests,
             SearchColumnElement.requestsTable, dataParameters.getDataOnGrid.searchColumnMyRequests,
+            SearchParameterElement.requestsTable, dataParameters.getDataOnGrid.searchParameter,
+            
+            
+            
         )
     });
 })

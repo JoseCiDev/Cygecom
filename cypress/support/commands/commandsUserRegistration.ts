@@ -41,6 +41,8 @@ import {
     SortByColumnElement,
     TableColumnsMyRequests,
     SearchColumnElement,
+    SearchParameterElement,
+    GetDataOnGrid,
 } from '../../DataParameters'
 
 const {
@@ -210,32 +212,33 @@ Cypress.Commands.add('getColumnVisibility', (element: TableTypesElements) => {
 
 
 
-    Cypress.Commands.add('getDataOnGrid', (searchParameterElement?, searchParameterValue?, showRecordsQuantityElement?, showRecordsQuantityValue?, sortByColumnElement?, sortByColumnValue?, searchColumnElement?, searchColumnValue?) => {
-        function searchByParameter(element: string, value: string | number) {
-            cy.getElementAndType(element, value.toString());
-        }
-        function showRecordsQuantityByParameter(elementSelector: ShowRecordsQuantityElement, quantity: ShowRecordsQuantity) {
-            const dropdownValueMap = {
-                [ShowRecordsQuantity.ten]: '10',
-                [ShowRecordsQuantity.twentyFive]: '25',
-                [ShowRecordsQuantity.fifty]: '50',
-                [ShowRecordsQuantity.oneHundred]: '100',
-            };
-            const dropdownValue = dropdownValueMap[quantity];
-            cy.get(elementSelector)
-                .select(dropdownValue);
-        }//quando o valor apresentado for diferente do valor selecionado
-        function sortByColumn(element: string, columnVisibility: Record<TableColumnsMyRequests, boolean>) {
-            for (const [key, isOrderedBy] of Object.entries(columnVisibility)) {
-                if (isOrderedBy) {
-                    const columnSelector = Number(key);
-                    if (!isNaN(columnSelector)) {
-                        const columnElements = cy.get(`${element} > th:nth-child(${columnSelector})`);
-                        columnElements.eq(1).click({ force: true });
-                    }
+
+Cypress.Commands.add('getDataOnGrid', (searchParameterElement?, searchParameterValue?, showRecordsQuantityElement?, showRecordsQuantityValue?, sortByColumnElement?, sortByColumnValue?, searchColumnElement?, searchColumnValue?) => {
+    function searchByParameter(element: SearchParameterElement, value: string | number) {
+        cy.getElementAndType(element, value.toString());
+    }
+    function showRecordsQuantityByParameter(elementSelector: ShowRecordsQuantityElement, quantity: ShowRecordsQuantity) {
+        const dropdownValueMap = {
+            [ShowRecordsQuantity.ten]: '10',
+            [ShowRecordsQuantity.twentyFive]: '25',
+            [ShowRecordsQuantity.fifty]: '50',
+            [ShowRecordsQuantity.oneHundred]: '100',
+        };
+        const dropdownValue = dropdownValueMap[quantity];
+        cy.get(elementSelector)
+            .select(dropdownValue);
+    }//quando o valor apresentado for diferente do valor selecionado
+    function sortByColumn(element: SortByColumnElement, columnVisibility: Record<TableColumnsMyRequests, boolean>) {
+        for (const [key, isOrderedBy] of Object.entries(columnVisibility)) {
+            if (isOrderedBy) {
+                const columnSelector = Number(key);
+                if (!isNaN(columnSelector)) {
+                    const columnElements = cy.get(`${element} > th:nth-child(${columnSelector})`);
+                    columnElements.eq(1).click({ force: true });
                 }
             }
         }
+    }
     function searchColumnsByParameter(element: SearchColumnElement, searchInformation: ColumnSearchParameter) {
         cy.log('searchColumnElement:', searchColumnElement);
         cy.log('searchColumnValue:', searchColumnValue);
@@ -257,7 +260,7 @@ Cypress.Commands.add('getColumnVisibility', (element: TableTypesElements) => {
                                                 .invoke('val') // Use invoke('val') instead of accessing val property
                                                 .then((val) => {
                                                     if (val === '') {
-                                                        throw new Error('Field is empty after typing');
+                                                        throw new Error('Após inserir os dados, o campo fica vazio.');
                                                     }
                                                 });
                                         });
@@ -266,7 +269,7 @@ Cypress.Commands.add('getColumnVisibility', (element: TableTypesElements) => {
                                             .type(value, { force: true })
                                             .then(() => {
                                                 if ($btn.val() === '') {
-                                                    throw new Error('Field is empty after typing');
+                                                    throw new Error('Após inserir os dados, o campo fica vazio.');
                                                 }
                                             });
                                     }
@@ -276,11 +279,14 @@ Cypress.Commands.add('getColumnVisibility', (element: TableTypesElements) => {
             }
         }
     }
-    
-    searchByParameter(searchParameterElement, searchParameterValue);
-    showRecordsQuantityByParameter(showRecordsQuantityElement, showRecordsQuantityValue)
+
+    showRecordsQuantityByParameter(ShowRecordsQuantityElement.requestsTable, dataParameters.getDataOnGrid.showRecordsQuantity)
     sortByColumn(sortByColumnElement, sortByColumnValue);
     searchColumnsByParameter(SearchColumnElement.requestsTable, dataParameters.getDataOnGrid.searchColumnMyRequests,)
+    searchByParameter(SearchParameterElement.requestsTable, dataParameters.getDataOnGrid.searchParameter);
+
+
+
     return cy.wrap({ success: `Coluna(s) foi mostrada/ocultada na grid com sucesso.` });
 })
 
