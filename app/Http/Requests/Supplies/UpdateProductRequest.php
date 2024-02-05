@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Supplies;
 
-class UpdateServiceRequest extends SuppliesUpdateRequest
+class UpdateProductRequest extends SuppliesUpdateRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,7 +13,7 @@ class UpdateServiceRequest extends SuppliesUpdateRequest
     {
         $rules = parent::rules();
 
-        $rules['service.price'] = $rules['type'];
+        $rules['product.amount'] = $rules['type'];
         unset($rules['type']);
 
         return $rules;
@@ -28,8 +28,8 @@ class UpdateServiceRequest extends SuppliesUpdateRequest
     {
         $messages = parent::messages();
 
-        $messages['service.price.required_if'] = 'O valor total é obrigatório se a solicitação for finalizada.';
-        $messages['service.price.numeric'] = 'Valor total inválido.';
+        $messages['product.amount.required_if'] = 'O valor total é obrigatório se a solicitação for finalizada.';
+        $messages['product.amount.numeric'] = 'Valor total inválido.';
 
         return $messages;
     }
