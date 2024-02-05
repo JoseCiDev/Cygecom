@@ -9,7 +9,7 @@ Route::middleware('auth')->group(function () {
         Route::group(['prefix' => 'service'], function () {
             Route::middleware('can:get.supplies.service.index')->get('/index', [App\Http\Controllers\SuppliesController::class, 'serviceIndex'])->name('supplies.service.index');
             Route::middleware('can:get.supplies.service.show')->get('/show/{id}', [App\Http\Controllers\ServiceController::class, 'show'])->name('supplies.service.show');
-            Route::middleware('can:post.supplies.service.update')->post('/update/{id}', [App\Http\Controllers\ServiceController::class, 'update'])->name('supplies.service.update');
+            Route::middleware('can:post.supplies.service.update')->post('/update/{purchaseRequest}', [App\Http\Controllers\SuppliesController::class, 'updateService'])->name('supplies.service.update');
         });
 
         Route::group(['prefix' => 'product'], function () {
