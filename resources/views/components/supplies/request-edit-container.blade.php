@@ -18,7 +18,7 @@
 @endpush
 
 <h4 style="margin-bottom: 15px"><i class="glyphicon glyphicon-edit"></i> <strong>Editar solicitação</strong></h4>
-<form class="form-validate" data-cy="form-request-edit" id="form-request-edit" method="POST" action="{{ route($route, ['id' => $requestId]) }}">
+<form class="form-validate" data-cy="form-request-edit" id="form-request-edit" method="POST" action="{{ route($route, ['purchaseRequest' => $requestId]) }}">
     @csrf
     <div class="form-group">
         <div class="row" style="margin-bottom: -15px;">
