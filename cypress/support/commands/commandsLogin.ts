@@ -30,7 +30,7 @@
 
 import { elements as el } from '../../elements'
 import { validateEmail, validatePassword, checkInput } from '../../utils';
-import { CheckAndThrowError, ValidationResult, dataParameters } from '../../DataParameters';
+import { dataParameters } from '../../DataParameters/dataParameters';
 import _ from 'lodash';
 
 

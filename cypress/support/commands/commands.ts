@@ -29,22 +29,11 @@
 
 
 import { elements as el } from '../../elements'
-import { dataParameters, ColumnEnums, ShowHideColumns, TableTypesElements } from '../../DataParameters'
-import {
-    ShowHideColumnsUserRegistration,
-    ShowHideColumnsSupplierRegistration,
-    ShowHideColumnsMyRequests,
-    ShowHideColumnsGeneralRequests,
-    ShowHideColumnsProductRequests,
-    ShowHideColumnsOneOffServiceRequests,
-    ShowHideColumnsRecurringServiceRequests,
-    ShowHideColumnsRequestReport,
-    ShowHideColumnsProductivityReport,
-    ShowHideColumnsProfilesTable
-} from '../../DataParameters'
+import { dataParameters } from '../../DataParameters/dataParameters'
+
 
 import '../commands/commandsLogin';
-import './commandsUserRegistration';
+import './commandsRegistration';
 import './commandsStart';
 
 

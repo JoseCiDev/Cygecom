@@ -14,8 +14,10 @@ import { mount } from 'cypress/react'
 // cypress/support/index.ts
 
 
-import { DateTime, ValidationResult, dataParameters, TableTypesElements } from '../DataParameters'
-
+import { dataParameters } from '../DataParameters/dataParameters'
+import { DateTime } from '../DataParameters/Interfaces/interfaces'
+import { ValidationResult } from '../DataParameters/Types/types'
+import { TableTypesElements } from '../DataParameters/Enums/tableTypesElements'
 declare global {
     namespace Cypress {
         interface Chainable<Subject = any> {
@@ -138,7 +140,13 @@ declare global {
            * comando customizado para ordenar dados pelas colunas da grid.
            * @example cy.getDataOnGrid();
            */
-            getDataOnGrid(searchParameterElement?, searchParameterValue?, showRecordsQuantityElement?, showRecordsQuantityValue?,sortByColumnElement?, sortByColumnValue?, searchColumnElement?, searchColumnValue?): ValidationResult;
+            getDataOnGrid(searchParameterElement?, searchParameterValue?, showRecordsQuantityElement?, showRecordsQuantityValue?, sortByColumnElement?, sortByColumnValue?, searchColumnElement?, searchColumnValue?): ValidationResult;
+
+            /**
+           * comando customizado para criar solicitações seja de produtos, serviços pontuais ou serviços recorrentes.
+           * @example cy.createRequest();
+           */
+            createRequest(): ValidationResult;
 
         }
 

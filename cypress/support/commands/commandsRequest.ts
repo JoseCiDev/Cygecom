@@ -1,8 +1,34 @@
-/// <reference types="cypress" />
+// ***********************************************
+// This example commands.js shows you how to
+// create various custom commands and overwrite
+// existing commands.
+//
+// For more comprehensive examples of custom
+// commands please read more here:
+// https://on.cypress.io/custom-commands
+// ***********************************************
+//
+//
+// -- This is a parent command --
+// Cypress.Commands.add('login', (email, password) => { ... })
+//
+//
+// -- This is a child command --
+// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
+//
+//
+// -- This is a dual command --
+// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
+//
+//
+// -- This will overwrite an existing command --
+// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+/// <reference types="Cypress" />
+/// <reference path="../cypress.d.ts" />
 
-import { faker } from '@faker-js/faker';
-import { elements as el } from '../../elements';
-import { dataParameters } from '../../DataParameters/dataParameters'
+
+
+import { elements as el } from '../../elements'
 
 const {
     logout,
@@ -80,16 +106,22 @@ const {
     contractSubMenu,
 } = el.Supply
 
-describe('Testes da página Login.', () => {
+
+Cypress.Commands.add('createRequest', function () {
     
-    beforeEach(function () {
+});
 
-    })
+/*
+data entrega
+Data desejada do serviço
+Data desejada da contratação
 
-    it('Login Test.', () => {
-        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
-            .then((result) => {
-                assert.exists(result.success, result.error)
-            })
-    })
-})
+--
+Descrição
+Detalhes do serviço recorrente*
+
+
+
+
+
+*/

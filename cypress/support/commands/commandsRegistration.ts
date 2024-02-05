@@ -29,21 +29,15 @@
 
 
 import { elements as el } from '../../elements'
-import {
-    ValidationResult,
-    dataParameters,
-    TableTypesElements,
-    TableColumnsUserRegistration,
-    ShowRecordsQuantityElement,
-    ShowRecordsQuantity,
-    SearchColumnMyRequests,
-    ColumnSearchParameter,
-    SortByColumnElement,
-    TableColumnsMyRequests,
-    SearchColumnElement,
-    SearchParameterElement,
-    GetDataOnGrid,
-} from '../../DataParameters'
+import { dataParameters, } from '../../DataParameters/dataParameters'
+import { SearchColumnElement } from '../../DataParameters/Enums/searchColumnElement'
+import { SearchParameterElement } from '../../DataParameters/Enums/searchParameterElement'
+import { ShowRecordsQuantity } from '../../DataParameters/Enums/showRecordsQuantity'
+import { ShowRecordsQuantityElement } from '../../DataParameters/Enums/showRecordsQuantityElement'
+import { SortByColumnElement } from '../../DataParameters/Enums/sortByColumnElement'
+import { TableColumnsMyRequests } from '../../DataParameters/Enums/tableColumnsMyRequests'
+import { TableTypesElements } from '../../DataParameters/Enums/tableTypesElements'
+import { ColumnSearchParameter } from '../../DataParameters/Types/types'
 
 const {
     logout,

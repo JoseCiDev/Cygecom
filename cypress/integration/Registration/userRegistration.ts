@@ -1,9 +1,12 @@
-import * as faker from '@faker-js/faker';
-import * as fakerBr from 'faker-br';
-import { elements as el } from '../../../elements';
-import { ValidationResult, dataParameters, ColumnEnums, ShowHideColumns, TableTypesElements, ShowRecordsQuantityElement, SearchParameterElement, SortByColumnElement, SearchColumnElement } from '../../../DataParameters'
-import { ShowHideColumnsUserRegistration } from '../../../DataParameters';
-import { data } from 'cypress/types/jquery';
+import { elements as el } from '../../elements';
+import { dataParameters } from '../../DataParameters/dataParameters'
+import { ShowRecordsQuantityElement } from '../../DataParameters/Enums/showRecordsQuantityElement';
+import { SortByColumnElement } from '../../DataParameters/Enums/sortByColumnElement';
+import { SearchColumnElement } from '../../DataParameters/Enums/searchColumnElement';
+import { SearchParameterElement } from '../../DataParameters/Enums/searchParameterElement';
+import { GetDataOnGrid } from '../../DataParameters/Interfaces/interfaces';
+
+
 
 
 const {
@@ -106,10 +109,11 @@ describe('Testes da página Cadastro de Usuário', () => {
             SortByColumnElement.requestsTable, dataParameters.getDataOnGrid.tableColumnsMyRequests,
             SearchColumnElement.requestsTable, dataParameters.getDataOnGrid.searchColumnMyRequests,
             SearchParameterElement.requestsTable, dataParameters.getDataOnGrid.searchParameter,
-            
-            
-            
+
+
+
         )
+
     });
 })
 
