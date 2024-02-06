@@ -20,7 +20,7 @@ class ReportService
 
         if (!Gate::allows('admin') && !Gate::allows('diretor')) {
             $requestingUsersQuery->where('id', $currentUserId);
-        } elseif (Gate::allows('diretor')) {
+        } elseif (Gate::allows('diretor') && !Gate::allows('admin')) {
             $requestingUsersQuery
                 ->where('id', $currentUserId)
                 ->orWhere('approver_user_id', $currentUserId);
