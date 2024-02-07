@@ -1,47 +1,55 @@
-/// <reference path="../support/cypress.d.ts" />
+/// <reference path="./support/cypress.d.ts" />
 
 import { faker } from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { format } from 'date-fns';
 
 
-import { DataParameters } from '../DataParameters/Interfaces/interfaces';
-import { Sector } from './Enums/sector';
-import { UserProfile } from './Enums/userProfile';
-import { ApproverUser } from './Enums/approverUser';
-import { AutorizedRequest } from './Enums/autorizedRequest';
-import { RequestOtherUsers } from './Enums/requestOtherUsers';
-import { AllowedRequestCostCenter } from './Enums/allowedRequestCostCenter';
-import { AllowedApprovalCostCenter } from './Enums/allowedApprovalCostCenter';
-import { ShowHideColumnsUserRegistration } from './Enums/showHideColumnsUserRegistration';
-import { ShowRecordsQuantity } from './Enums/showRecordsQuantity';
-import { SearchColumnProductRequests } from './Enums/searchColumnProductRequests';
-import { ShowHideColumnsSupplierRegistration } from './Enums/showHideColumnsSupplierRegistration';
-import { ShowHideColumnsMyRequests } from './Enums/showHideColumnsMyRequests';
-import { TelephoneType } from './Enums/telephoneType';
-import { ApproveLimit } from './Enums/approveLimit';
-import { ShowHideColumnsGeneralRequests } from './Enums/showHideColumnsGeneralRequests';
-import { ShowHideColumnsProductRequests } from './Enums/showHideColumnsProductRequests';
-import { ShowHideColumnsOneOffServiceRequests } from './Enums/showHideColumnsOneOffServiceRequests';
-import { ShowHideColumnsRecurringServiceRequests } from './Enums/showHideColumnsRecurringServiceRequests';
-import { ShowHideColumnsRequestReport } from './Enums/showHideColumnsRequestReport';
-import { ShowHideColumnsProductivityReport } from './Enums/showHideColumnsProductivityReport';
-import { ShowHideColumnsProfilesTable } from './Enums/showHideColumnsProfilesTable';
-import { SearchColumnMyRequests } from './Enums/searchColumnMyRequests';
-import { SearchColumnGeneralRequests } from './Enums/searchColumnGeneralRequests';
-import { SearchColumnOneOffServiceRequests } from './Enums/searchColumnOneOffServiceRequests';
-import { SearchColumnRecurringServiceRequests } from './Enums/searchColumnRecurringServiceRequests';
-import { TableColumnsUserRegistration } from './Enums/tableColumnsUserRegistration';
-import { TableColumnsGeneralRequests } from './Enums/tableColumnsGeneralRequests';
-import { TableColumnsMyRequests } from './Enums/tableColumnsMyRequests';
-import { TableColumnsOneOffServiceRequests } from './Enums/tableColumnsOneOffServiceRequests';
-import { TableColumnsProductRequests } from './Enums/tableColumnsProductRequests';
-import { TableColumnsProductivityReport } from './Enums/tableColumnsProductivityReport';
-import { TableColumnsProfilesTable } from './Enums/tableColumnsProfilesTable';
-import { TableColumnsRecurringServiceRequests } from './Enums/tableColumnsRecurringServiceRequests';
-import { TableColumnsRequestReport } from './Enums/tableColumnsRequestReport';
-import { TableColumnsSupplierRegistration } from './Enums/tableColumnsSupplierRegistration';
-
+import { DataParameters } from './DataParameters/Interfaces/interfaces';
+import { Sector } from './DataParameters/Enums/sector';
+import { UserProfile } from './DataParameters/Enums/userProfile';
+import { ApproverUser } from './DataParameters/Enums/approverUser';
+import { AutorizedRequest } from './DataParameters/Enums/autorizedRequest';
+import { RequestOtherUsers } from './DataParameters/Enums/requestOtherUsers';
+import { AllowedRequestCostCenter } from './DataParameters/Enums/allowedRequestCostCenter';
+import { AllowedApprovalCostCenter } from './DataParameters/Enums/allowedApprovalCostCenter';
+import { ShowHideColumnsUserRegistration } from './DataParameters/Enums/showHideColumnsUserRegistration';
+import { ShowRecordsQuantity } from './DataParameters/Enums/showRecordsQuantity';
+import { SearchColumnProductRequests } from './DataParameters/Enums/searchColumnProductRequests';
+import { ShowHideColumnsSupplierRegistration } from './DataParameters/Enums/showHideColumnsSupplierRegistration';
+import { ShowHideColumnsMyRequests } from './DataParameters/Enums/showHideColumnsMyRequests';
+import { TelephoneType } from './DataParameters/Enums/telephoneType';
+import { ApproveLimit } from './DataParameters/Enums/approveLimit';
+import { ShowHideColumnsGeneralRequests } from './DataParameters/Enums/showHideColumnsGeneralRequests';
+import { ShowHideColumnsProductRequests } from './DataParameters/Enums/showHideColumnsProductRequests';
+import { ShowHideColumnsOneOffServiceRequests } from './DataParameters/Enums/showHideColumnsOneOffServiceRequests';
+import { ShowHideColumnsRecurringServiceRequests } from './DataParameters/Enums/showHideColumnsRecurringServiceRequests';
+import { ShowHideColumnsRequestReport } from './DataParameters/Enums/showHideColumnsRequestReport';
+import { ShowHideColumnsProductivityReport } from './DataParameters/Enums/showHideColumnsProductivityReport';
+import { ShowHideColumnsProfilesTable } from './DataParameters/Enums/showHideColumnsProfilesTable';
+import { SearchColumnMyRequests } from './DataParameters/Enums/searchColumnMyRequests';
+import { SearchColumnGeneralRequests } from './DataParameters/Enums/searchColumnGeneralRequests';
+import { SearchColumnOneOffServiceRequests } from './DataParameters/Enums/searchColumnOneOffServiceRequests';
+import { SearchColumnRecurringServiceRequests } from './DataParameters/Enums/searchColumnRecurringServiceRequests';
+import { TableColumnsUserRegistration } from './DataParameters/Enums/tableColumnsUserRegistration';
+import { TableColumnsGeneralRequests } from './DataParameters/Enums/tableColumnsGeneralRequests';
+import { TableColumnsMyRequests } from './DataParameters/Enums/tableColumnsMyRequests';
+import { TableColumnsOneOffServiceRequests } from './DataParameters/Enums/tableColumnsOneOffServiceRequests';
+import { TableColumnsProductRequests } from './DataParameters/Enums/tableColumnsProductRequests';
+import { TableColumnsProductivityReport } from './DataParameters/Enums/tableColumnsProductivityReport';
+import { TableColumnsProfilesTable } from './DataParameters/Enums/tableColumnsProfilesTable';
+import { TableColumnsRecurringServiceRequests } from './DataParameters/Enums/tableColumnsRecurringServiceRequests';
+import { TableColumnsRequestReport } from './DataParameters/Enums/tableColumnsRequestReport';
+import { TableColumnsSupplierRegistration } from './DataParameters/Enums/tableColumnsSupplierRegistration';
+import { QuoteRequest } from './DataParameters/Enums/quoteRequest';
+import { AcquiringArea } from './DataParameters/Enums/acquiringArea';
+import { ComexImport } from './DataParameters/Enums/comexImport';
+import { PaymentCondition } from './DataParameters/Enums/paymentCondition';
+import { PaymentMethod } from './DataParameters/Enums/paymentMethod';
+import { SupplierOfRequest } from './DataParameters/Enums/supplierOfRequest';
+import { ProductCategory } from './DataParameters/Enums/productCategory';
+import { DateTimeRecord } from './DataParameters/Types/types';
+import { CostCenter } from './DataParameters/Enums/costCenter';
 
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
@@ -50,6 +58,15 @@ let domain = '@essentia.com.br';
 let password = faker.number.int().toString();
 let confirmPassword = password;
 
+const currentDate: Date = new Date();
+const year: number = currentDate.getFullYear();
+const month: string = String(currentDate.getMonth() + 1).padStart(2, '0');
+const day: string = String(currentDate.getDate()).padStart(2, '0');
+const hour: string = String(currentDate.getHours()).padStart(2, '0');
+const minutes: string = String(currentDate.getMinutes()).padStart(2, '0');
+const seconds: string = String(currentDate.getSeconds()).padStart(2, '0');
+export const FORMATTED_DATE: string = `${year}-${month}-${day}`;
+export const FORMATTED_TIME: string = `${hour}:${minutes}:${seconds}`;
 
 
 export const dataParameters: DataParameters = {
@@ -415,9 +432,49 @@ export const dataParameters: DataParameters = {
     },
 
     Request: {
-        product:{},
-        oneOffService:{},
-        recurringService:{},
+        product: {
+            costCenter: CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'],
+            apportionmentPercentage: faker.helpers.arrayElement([100]),
+            apportionmentValue: faker.helpers.arrayElement([100, 350, 700]),
+            quoteRequest: { [QuoteRequest.quoteRequest]: true, },
+            acquiringArea:
+                AcquiringArea.areaContract,
+            comexImport:
+                ComexImport.yes,
+            reasonForRequest: faker.lorem.lines(),
+            desiredDeliveryDate: [FORMATTED_DATE, true] as DateTimeRecord,
+            productStorageLocation: faker.lorem.lines(),
+            suggestionLinks: faker.lorem.lines(),
+            observation: faker.lorem.lines(),
+            paymentCondition: {
+                [PaymentCondition.anticipatedPayment]: true,
+                [PaymentCondition.cashPayment]: false,
+                [PaymentCondition.paymentInInstallments]: false,
+            },
+            totalValue: faker.helpers.arrayElement([1750.36, 350.87, 700.04]),
+            paymentMethod: {
+                [PaymentMethod.boleto]: false,
+                [PaymentMethod.creditCard]: false,
+                [PaymentMethod.debitCard]: false,
+                [PaymentMethod.cheque]: false,
+                [PaymentMethod.bankDeposit]: false,
+                [PaymentMethod.cash]: false,
+                [PaymentMethod.international]: false,
+                [PaymentMethod.pix]: true,
+            },
+            paymentInstallments: 3,
+            paymentDetails: faker.lorem.lines(),
+            supplier: SupplierOfRequest['00129393000138-AbelvolksComercioEServicosLtda'],
+            productCategory: ProductCategory.instalacoes,
+            productNameAndDescription: faker.lorem.lines(),
+            productQuantity: 3,
+            productColor: faker.lorem.word(),
+            productSize: faker.lorem.word(),
+            productModel: faker.lorem.word(),
+            productLink: faker.internet.url(),
+        },
+        oneOffService: {},
+        recurringService: {},
     },
     /*
 

@@ -2,7 +2,7 @@
 
 import { faker } from '@faker-js/faker';
 import { elements as el } from '../../elements';
-import { dataParameters } from '../../DataParameters/dataParameters'
+import { dataParameters } from '../../dataParameters'
 
 const {
     logout,
@@ -81,7 +81,7 @@ const {
 } = el.Supply
 
 describe('Testes da página Login.', () => {
-    
+
     beforeEach(function () {
 
     })

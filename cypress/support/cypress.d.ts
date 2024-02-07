@@ -14,7 +14,6 @@ import { mount } from 'cypress/react'
 // cypress/support/index.ts
 
 
-import { dataParameters } from '../DataParameters/dataParameters'
 import { DateTime } from '../DataParameters/Interfaces/interfaces'
 import { ValidationResult } from '../DataParameters/Types/types'
 import { TableTypesElements } from '../DataParameters/Enums/tableTypesElements'
@@ -68,7 +67,7 @@ declare global {
              * comando customizado para capturar elemento e marcar checkbox.
              * @example cy.getElementAndCheck(el.elemento)
              */
-            getElementAndCheck(element: string): Chainable<Element>;
+            getElementAndCheck(element: any,value?:any): Chainable<Element>;
 
             /**
              * comando customizado para selecionar a opcao radio.

@@ -5,7 +5,7 @@ import * as fakerBr from 'faker-br';
 import { format } from 'date-fns';
 
 
-import { dataParameters } from '../dataParameters';
+
 import { AllowedApprovalCostCenter } from '../Enums/allowedApprovalCostCenter';
 import { AllowedRequestCostCenter } from '../Enums/allowedRequestCostCenter';
 import { ApproveLimit } from '../Enums/approveLimit';
@@ -41,7 +41,14 @@ import { TableColumnsSupplierRegistration } from '../Enums/tableColumnsSupplierR
 import { TableColumnsUserRegistration } from '../Enums/tableColumnsUserRegistration';
 import { TelephoneType } from '../Enums/telephoneType';
 import { UserProfile } from '../Enums/userProfile';
-import { ColumnSearchParameter } from '../Types/types';
+import { ColumnSearchParameter, DateTimeRecord } from '../Types/types';
+import { AcquiringArea } from '../Enums/acquiringArea';
+import { ComexImport } from '../Enums/comexImport';
+import { QuoteRequest } from '../Enums/quoteRequest';
+import { PaymentCondition } from '../Enums/paymentCondition';
+import { PaymentMethod } from '../Enums/paymentMethod';
+import { SupplierOfRequest } from '../Enums/supplierOfRequest';
+import { ProductCategory } from '../Enums/productCategory';
 
 
 const environment = Cypress.env('ENVIRONMENT');
@@ -145,7 +152,31 @@ export interface DataParameters<S = string> {
     };
     Request: {
         product: {
-            
+            costCenter: S;
+            apportionmentPercentage: S | number;
+            apportionmentValue: S | number;
+            quoteRequest: Record<QuoteRequest, boolean>;
+            acquiringArea: AcquiringArea;
+            comexImport: ComexImport;
+            reasonForRequest: string;
+            desiredDeliveryDate: DateTimeRecord;
+            productStorageLocation: S;
+            suggestionLinks: S;
+            observation: S;
+            paymentCondition: Record<PaymentCondition, boolean>;
+            totalValue: S | number;
+            paymentMethod: Record<PaymentMethod, boolean>;
+            paymentInstallments: S | number;
+            paymentDetails: S;
+            supplier: SupplierOfRequest;
+            productCategory: ProductCategory;
+            productNameAndDescription: S;
+            productQuantity: S | number;
+            productColor: S;
+            productSize: S | number;
+            productModel: S;
+            productLink: S;
+
         },
         oneOffService: {},
         recurringService: {},

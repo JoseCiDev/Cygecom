@@ -1,5 +1,5 @@
 import { elements as el } from '../../elements';
-import { dataParameters } from '../../DataParameters/dataParameters'
+import { dataParameters } from '../../dataParameters'
 import { ShowRecordsQuantityElement } from '../../DataParameters/Enums/showRecordsQuantityElement';
 import { SortByColumnElement } from '../../DataParameters/Enums/sortByColumnElement';
 import { SearchColumnElement } from '../../DataParameters/Enums/searchColumnElement';
@@ -103,36 +103,14 @@ describe('Testes da página Cadastro de Usuário', () => {
         cy.getElementAndClick(':nth-child(2) > .btn')
         cy.getElementAndClick('[data-cy="dropdown-solicitacoes-minhas"]')
 
-
         cy.getDataOnGrid(
             ShowRecordsQuantityElement.requestsTable, dataParameters.getDataOnGrid.showRecordsQuantity,
             SortByColumnElement.requestsTable, dataParameters.getDataOnGrid.tableColumnsMyRequests,
             SearchColumnElement.requestsTable, dataParameters.getDataOnGrid.searchColumnMyRequests,
             SearchParameterElement.requestsTable, dataParameters.getDataOnGrid.searchParameter,
-
-
-
-        )
+        ).then((result) => {
+            assert.exists(result.success, result.error)
+        });
 
     });
 })
-
-
-/*
-searchPrescription
-newUserRegistration
-    VALIDACOES DE CAMPOS
-    VALIDACAO CAMPO PASSWORD
-    VALIDACAO CAMPO CNPJ
-    VALIDACAO CAMPO TELEFONE CELULAR
-    VALIDACAO CAMPO EMAIL
-    OBRIGATORIEDADE DOS CAMPOS
-    LIMITE DE CARACTERES NO CAMPOS
-    TIPO DE DADO ACEITO NOS CAMPOS
-    VALIDAR MENSAGENS DE RETORNO
-    
-    
-editNewUser
-deleteNewUser
-
-*/

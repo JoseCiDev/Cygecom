@@ -2,7 +2,7 @@
 
 import { faker } from '@faker-js/faker';
 import { elements as el } from '../elements';
-import { ValidationResult, dataParameters } from '../DataParameters/dataParameters'
+import { dataParameters } from '../dataParameters'
 import { env } from 'process';
 import { data } from 'cypress/types/jquery';
 

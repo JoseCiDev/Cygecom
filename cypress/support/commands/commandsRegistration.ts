@@ -29,7 +29,6 @@
 
 
 import { elements as el } from '../../elements'
-import { dataParameters, } from '../../DataParameters/dataParameters'
 import { SearchColumnElement } from '../../DataParameters/Enums/searchColumnElement'
 import { SearchParameterElement } from '../../DataParameters/Enums/searchParameterElement'
 import { ShowRecordsQuantity } from '../../DataParameters/Enums/showRecordsQuantity'
@@ -38,6 +37,7 @@ import { SortByColumnElement } from '../../DataParameters/Enums/sortByColumnElem
 import { TableColumnsMyRequests } from '../../DataParameters/Enums/tableColumnsMyRequests'
 import { TableTypesElements } from '../../DataParameters/Enums/tableTypesElements'
 import { ColumnSearchParameter } from '../../DataParameters/Types/types'
+import { dataParameters } from './../../dataParameters';
 
 const {
     logout,
@@ -278,15 +278,6 @@ Cypress.Commands.add('getDataOnGrid', (searchParameterElement?, searchParameterV
     sortByColumn(sortByColumnElement, sortByColumnValue);
     searchColumnsByParameter(SearchColumnElement.requestsTable, dataParameters.getDataOnGrid.searchColumnMyRequests,)
     searchByParameter(SearchParameterElement.requestsTable, dataParameters.getDataOnGrid.searchParameter);
-
-
-
     return cy.wrap({ success: `Coluna(s) foi mostrada/ocultada na grid com sucesso.` });
 })
 
-
-
-/*
-getDataOnGrid
-
-*/

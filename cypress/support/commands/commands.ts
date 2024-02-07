@@ -29,12 +29,12 @@
 
 
 import { elements as el } from '../../elements'
-import { dataParameters } from '../../DataParameters/dataParameters'
+import { FORMATTED_DATE, FORMATTED_TIME, dataParameters } from '../../dataParameters'
 
 
 import '../commands/commandsLogin';
 import './commandsRegistration';
-import './commandsStart';
+import './commandsRequest';
 
 
 const {
@@ -143,16 +143,22 @@ Cypress.Commands.add('getElementAndClick', (...elements: string[]): void => {
     elements.forEach(element => {
         cy.get(element, { timeout: 20000 }).then($elements => {
             if ($elements.length > 0) {
-                cy.wrap($elements.first()).click({ force: true });
+                cy.wrap($elements.first())
+                    .click({ force: true });
             }
         });
     });
 });
 
-Cypress.Commands.add('getElementAndCheck', (element: string): void => {
+Cypress.Commands.add('getElementAndCheck', (element: any, value?: any): void => {
     cy.get(element, { timeout: 20000 }).then($elements => {
         if ($elements.length > 0) {
-            cy.wrap($elements.first()).check({ force: true });
+            if (!value) {
+                cy.wrap($elements.first())
+                    .check({ force: true });
+            }
+            cy.wrap($elements.first())
+                .check(value, { force: true });
         }
     });
 });
@@ -247,16 +253,6 @@ Cypress.Commands.add('checkRequiredField', (element: string, value: string, elem
 });
 
 Cypress.Commands.add("insertDate", (currentDate: Date = new Date()) => {
-    const year: number = currentDate.getFullYear();
-    const month: string = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day: string = String(currentDate.getDate()).padStart(2, '0');
-    const hour: string = String(currentDate.getHours()).padStart(2, '0');
-    const minutes: string = String(currentDate.getMinutes()).padStart(2, '0');
-    const seconds: string = String(currentDate.getSeconds()).padStart(2, '0');
-
-    const FORMATTED_DATE: string = `${year}-${month}-${day}`;
-    const FORMATTED_TIME: string = `${hour}:${minutes}:${seconds}`;
-
     return cy.wrap({ FORMATTED_DATE, FORMATTED_TIME });
 });
 

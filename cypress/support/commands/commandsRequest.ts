@@ -27,8 +27,8 @@
 /// <reference path="../cypress.d.ts" />
 
 
-
 import { elements as el } from '../../elements'
+import { dataParameters } from './../../dataParameters';
 
 const {
     logout,
@@ -96,6 +96,16 @@ const {
     newRequestSubMenu,
     myRequestSubMenu,
     requestGeneralSubMenu,
+    costCenter,
+    costCenterAutocomplete,
+    apportionmentPercentage,
+    apportionmentValue,
+    quoteRequest,
+    reasonForRequest,
+    desiredDeliveryDate,
+    productStorageLocation,
+    suggestionLinks,
+    observation,
 } = el.Request
 
 const {
@@ -108,7 +118,40 @@ const {
 
 
 Cypress.Commands.add('createRequest', function () {
-    
+    //paymentData
+    //attachedFiles
+
+    // cy.getElementAutocompleteTypeAndClick(
+    //     costCenter,
+    //     dataParameters.Request.product.costCenter,
+    //     costCenterAutocomplete
+    // );
+
+    // cy.getElementAndType(apportionmentPercentage, dataParameters.Request.product.apportionmentPercentage.toString());
+
+    // cy.getElementAndType(apportionmentValue, dataParameters.Request.product.apportionmentPercentage.toString());
+
+    // cy.getElementAndCheck(quoteRequest, dataParameters.Request.product.quoteRequest);
+
+    cy.getElementAndCheck(dataParameters.Request.product.acquiringArea);
+
+    // cy.getElementAndCheck(dataParameters.Request.product.comexImport);
+
+    // cy.getElementAndType(reasonForRequest, dataParameters.Request.product.reasonForRequest);
+
+    // cy.getElementAndType(desiredDeliveryDate, dataParameters.Request.product.desiredDeliveryDate[0].toString());
+
+    // cy.getElementAndType(productStorageLocation, dataParameters.Request.product.productStorageLocation);
+
+    // cy.getElementAndType(suggestionLinks, dataParameters.Request.product.suggestionLinks);
+
+    // cy.getElementAndType(observation, dataParameters.Request.product.observation);
+    cy.get('[data-cy="payment-terms"]')
+    .select(0);
+    cy.pause();
+
+    // cy.getElementAutocompleteTypeAndClick('[data-cy="payment-terms"]', dataParameters.Request.product.paymentCondition)
+
 });
 
 /*

@@ -67,6 +67,16 @@ interface Elements<S = string> {
         newRequestSubMenu: S;
         myRequestSubMenu: S;
         requestGeneralSubMenu: S;
+        costCenter: S;
+        costCenterAutocomplete: S;
+        apportionmentPercentage: S;
+        apportionmentValue: S;
+        quoteRequest: S;
+        reasonForRequest: S;
+        desiredDeliveryDate: S;
+        productStorageLocation: S;
+        suggestionLinks: S;
+        observation: S;
     },
 
     Supply: {
@@ -150,6 +160,16 @@ export const elements: Elements = {
         newRequestSubMenu: '[data-cy="dropdown-solicitacoes-novas"]',
         myRequestSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
         requestGeneralSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
+        costCenter: '#select2-cost_center_apportionments0cost_center_id-container',
+        costCenterAutocomplete: '[id^="select2-cost_center_apportionments0cost_center_id-result-"]',
+        apportionmentPercentage: '[data-cy="cost_center_apportionments[0][apportionment_percentage]"]',
+        apportionmentValue: '[data-cy="cost_center_apportionments[0][apportionment_currency]"]',
+        quoteRequest: '[data-cy="checkbox-only-quotation"]',
+        reasonForRequest: '[data-cy="reason"]',
+        desiredDeliveryDate: '[data-cy="desired-date"]',
+        productStorageLocation: '[data-cy="local-description"]',
+        suggestionLinks: '[data-cy="support-links"]',
+        observation:'[data-cy="request-observation"]',
     },
 
     Supply: {

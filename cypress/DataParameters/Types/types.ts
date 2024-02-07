@@ -4,7 +4,6 @@ import { faker } from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { format } from 'date-fns';
 
-import { dataParameters } from '../dataParameters';
 import { SearchColumnGeneralRequests } from '../Enums/searchColumnGeneralRequests';
 import { SearchColumnMyRequests } from '../Enums/searchColumnMyRequests';
 import { SearchColumnOneOffServiceRequests } from '../Enums/searchColumnOneOffServiceRequests';
@@ -30,6 +29,8 @@ import { TableColumnsRecurringServiceRequests } from '../Enums/tableColumnsRecur
 import { TableColumnsRequestReport } from '../Enums/tableColumnsRequestReport';
 import { TableColumnsSupplierRegistration } from '../Enums/tableColumnsSupplierRegistration';
 import { TableColumnsUserRegistration } from '../Enums/tableColumnsUserRegistration';
+import { DataParameters, DateTime } from './../Interfaces/interfaces';
+import { dataParameters } from './../../dataParameters';
 
 
 const environment = Cypress.env('ENVIRONMENT');
@@ -74,3 +75,5 @@ export type ColumnSearchParameter =
     Record<SearchColumnRecurringServiceRequests, [boolean, string]>;
 
 export type ValidationResult = Cypress.Chainable<{ error?: string; success?: string; }>
+
+export type DateTimeRecord = [string | Date, boolean];

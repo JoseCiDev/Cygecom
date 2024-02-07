@@ -2,7 +2,7 @@
 import * as faker from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { elements as el } from '../elements';
-import { ValidationResult, dataParameters } from '../DataParameters/dataParameters'
+import { dataParameters } from '../dataParameters'
 
 const {
     logout,
@@ -235,9 +235,9 @@ describe('Testes da página Cadastro de Usuário', () => {
     //     acessarCadastroUsuario()
 
     //     cy.getVisible(el.telefoneUsuario)
-        //         .type(telefoneIncompleto)
+    //         .type(telefoneIncompleto)
     //         .should('have.attr', 'aria-invalid', 'true')
-    
+
     //         .type(telefoneAleatorio)
 
 
@@ -248,7 +248,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     //     acessarCadastroUsuario()
 
     //     cy.getVisible(el.telefoneUsuario)
-    
+
     //         .type('11111111111')
     //         .should('have.value', '(11) 11111-1111')
     // })
@@ -258,7 +258,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     //     acessarCadastroUsuario()
 
     //     cy.getVisible(el.telefoneUsuario)
-    
+
     //         .type('0000000000')
     //         .should('have.value', '(00) 0000-0000')
     // })
@@ -268,7 +268,7 @@ describe('Testes da página Cadastro de Usuário', () => {
     //     acessarCadastroUsuario()
 
     //     cy.getVisible(el.telefoneUsuario)
-    
+
     //         .type('99999999999')
     //         .should('have.value', '(99) 99999-9999')
     // })
