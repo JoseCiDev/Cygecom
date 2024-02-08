@@ -442,7 +442,7 @@ export const dataParameters: DataParameters = {
             comexImport:
                 ComexImport.yes,
             reasonForRequest: faker.lorem.lines(),
-            desiredDeliveryDate: [FORMATTED_DATE, true] as DateTimeRecord,
+            desiredDeliveryDate: [FORMATTED_DATE, true],
             productStorageLocation: faker.lorem.lines(),
             suggestionLinks: faker.lorem.lines(),
             observation: faker.lorem.lines(),

@@ -150,7 +150,7 @@ Cypress.Commands.add('getElementAndClick', (...elements: string[]): void => {
     });
 });
 
-Cypress.Commands.add('getElementAndCheck', (element: any, value?: any): void => {
+Cypress.Commands.add('getElementAndCheck', (element: string, value?: string): void => {
     cy.get(element, { timeout: 20000 }).then($elements => {
         if ($elements.length > 0) {
             if (!value) {
@@ -195,7 +195,7 @@ Cypress.Commands.add('getRadioOptionByValue', (elemento: string, value): void =>
         .check({ force: true });
 });
 
-Cypress.Commands.add('getSelectOptionByValue', (element: string, value: any): void => {
+Cypress.Commands.add('getSelectOptionByValue', (element: string, value: string): void => {
     cy.get(element, { timeout: 20000 }).then(($select) => {
         if ($select.length > 0 && $select.is(':visible')) {
             cy.wrap($select).select(value, { force: true });
@@ -203,7 +203,7 @@ Cypress.Commands.add('getSelectOptionByValue', (element: string, value: any): vo
     });
 });
 
-Cypress.Commands.add('getElementAutocompleteTypeAndClick', (element: string, value: any | number, autocomplete: any) => {
+Cypress.Commands.add('getElementAutocompleteTypeAndClick', (element: string, value: string | number, autocomplete: string) => {
     cy.get(element, { timeout: 20000 })
         .as('elementAlias')
         .each(($input) => {

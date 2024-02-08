@@ -67,19 +67,19 @@ declare global {
              * comando customizado para capturar elemento e marcar checkbox.
              * @example cy.getElementAndCheck(el.elemento)
              */
-            getElementAndCheck(element: any,value?:any): Chainable<Element>;
+            getElementAndCheck(element: string, value?: string): Chainable<Element>;
 
             /**
              * comando customizado para selecionar a opcao radio.
              * @example cy.getRadioOptionByValue(element,valor)
              */
-            getRadioOptionByValue(dataCy: string, value: any): Chainable<Element>
+            getRadioOptionByValue(dataCy: string, value: string): Chainable<Element>
 
             /**
              * comando customizado para selecionar opção do select.
              * @example cy.getSelectOptionByValue(el.elemento)
              */
-            getSelectOptionByValue(dataCy: string, value: any): Chainable<Element>;
+            getSelectOptionByValue(dataCy: string, value: string): Chainable<Element>;
 
             /**
              * comando customizado para verificar a quantidade máxima de caracteres.
@@ -103,7 +103,7 @@ declare global {
            * * comando customizado para selecionar elemento autocomplete apos digitar e capturar sugestão autocomplete clicando.
            * @example cy.getElementAutocompleteTypeAndClick(orcamentista,atendente)
            */
-            getElementAutocompleteTypeAndClick(element: string, value: any | number, autocomplete: any): ValidationResult;
+            getElementAutocompleteTypeAndClick(element: string, value: string | number, autocomplete: string): ValidationResult;
 
             /**
             * comando customizado para ler arquivos
@@ -146,6 +146,13 @@ declare global {
            * @example cy.createRequest();
            */
             createRequest(): ValidationResult;
+
+            /**
+           * comando customizado para visualizar colunas selecionadas.
+           * @example cy.getColumnVisibilityCommand();
+           */
+            createRequest(): ValidationResult;
+            getColumnVisibilityCommand(table: TableTypesElements): ValidationResult
 
         }
 

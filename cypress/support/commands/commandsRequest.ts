@@ -137,38 +137,33 @@ Cypress.Commands.add('createRequest', function () {
 
     // cy.getElementAndCheck(quoteRequest, dataParameters.Request.product.quoteRequest);
 
-    cy.getElementAndCheck(dataParameters.Request.product.acquiringArea);
+    // cy.getElementAndCheck(dataParameters.Request.product.acquiringArea);
 
     // cy.getElementAndCheck(dataParameters.Request.product.comexImport);
 
     // cy.getElementAndType(reasonForRequest, dataParameters.Request.product.reasonForRequest);
 
-    // cy.getElementAndType(desiredDeliveryDate, dataParameters.Request.product.desiredDeliveryDate[0].toString());
+    cy.getElementAndType(desiredDeliveryDate, dataParameters.Request.product.desiredDeliveryDate[0].toString());
 
     // cy.getElementAndType(productStorageLocation, dataParameters.Request.product.productStorageLocation);
 
     // cy.getElementAndType(suggestionLinks, dataParameters.Request.product.suggestionLinks);
 
     // cy.getElementAndType(observation, dataParameters.Request.product.observation);
-
-    function selectOption(options: Record<string, boolean> | string | number, selector: string): void {
-        const keys = Object.keys(options) as string[];
-        for (let key of keys) {
-            if (options[key]) {
-                cy.get(selector)
-                    .type(key)
-                    cy.get('[id="select2-payment-method-result-"]')
-                    .type('{downarrow}')
-                    .type('{enter}');
-                break;
-            }
-        }
-    }
-    selectOption(dataParameters.Request.product.paymentCondition, paymentCondition);
-
-    // cy.getElementAndType('[id="format-amount"]', dataParameters.Request.product.totalValue.toString());
-
-    selectOption(dataParameters.Request.product.paymentMethod, paymentMethod);
+    // cy.getElementAutocompleteTypeAndClick('#select2-payment-terms-container','Antecipado','Antecipado');
+    // Cypress.Commands.add('getElementAutocompleteTypeAndClick', (element: string, value: string | number, autocomplete: string) => {
+    //     cy.get(element, { timeout: 20000 })
+    //         .as('elementAlias')
+    //         .each(($input) => {
+    //             cy.wrap($input)
+    //                 .type(value.toString())
+    //                 .then(() => {
+    //                     cy.contains(autocomplete, value)
+    //                         .as('autocompleteAlias')
+    //                         .click({ force: true });
+    //                 });
+    //         });
+    // });
 });
 
 /*
