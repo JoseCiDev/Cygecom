@@ -46,7 +46,7 @@
                     <th>Usuário</th>
                     <th>E-mail</th>
                     <th>Perfil</th>
-                    <th>Habilidades específicas</th>
+                    <th class="ignore-search">Habilidades específicas</th>
                     <th>Membro desde</th>
                     <th class="ignore-search">Ações</th>
                 </tr>

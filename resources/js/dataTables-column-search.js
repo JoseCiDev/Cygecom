@@ -1,13 +1,43 @@
+const getUserStorageItem = (itemName) => {
+    const storageItem = $.fn.getStorageItem(itemName);
+    if(!storageItem) {
+        return;
+    }
+
+    return storageItem[$.fn.getUserIdLogged()];
+};
+const getStorageKey = (dataTable) => 'search-bar-memory-' + $(dataTable).attr('id') + location.pathname;
+
 const setStorageDtSearchBar = (storageTableName, columnIndex, inputValue) =>{
-    const searchBarStorage = JSON.parse(localStorage.getItem(storageTableName)) || [];
-    searchBarStorage[columnIndex] = { value: inputValue };
-    localStorage.setItem(storageTableName, JSON.stringify(searchBarStorage));
+    const userId = $.fn.getUserIdLogged();
+    const storageItem = $.fn.getStorageItem(storageTableName) || {};
+    const loggedUserStorage = getUserStorageItem(storageTableName);
+    if(!loggedUserStorage) {
+        const userSearchPreference = {
+            userId: userId,
+            columns: [{ idx: columnIndex, inputValue: inputValue }]
+        };
+
+        storageItem[userId] = userSearchPreference;
+        $.fn.saveOnStorage(storageTableName, storageItem);
+        return;
+    }
+
+    const columnIdxPreference = loggedUserStorage.columns.find((element) => element.idx === columnIndex);
+    if(columnIdxPreference) {
+        columnIdxPreference.inputValue = inputValue;
+    } else {
+        loggedUserStorage.columns.push({idx: columnIndex, inputValue: inputValue});
+    }
+
+    storageItem[userId] = loggedUserStorage;
+
+    $.fn.saveOnStorage(storageTableName, storageItem);
 }
 
-
 const setSearchBarOnDt = (dataTable) =>{
-    const storageTableName = 'search-bar-memory-' + $(dataTable).attr('id') + location.pathname;
-    const searchBarStorage = JSON.parse(localStorage.getItem(storageTableName)) || [];
+    const storageTableName = getStorageKey(dataTable);
+    const loggedUserStorage = getUserStorageItem(storageTableName);
 
     dataTable.api().columns().every(function (columnIndex) {
         const column = this;
@@ -19,9 +49,9 @@ const setSearchBarOnDt = (dataTable) =>{
 
         const inputConfig = { width: '100%', placeholder: 'Buscar', }
 
-        const searchBarMemory = searchBarStorage[columnIndex];
-        if(searchBarMemory) {
-            inputConfig.value = searchBarMemory.value;
+        const columnIdxPreference = loggedUserStorage?.columns.find((element) => element.idx === columnIndex);
+        if(columnIdxPreference) {
+            inputConfig.value = columnIdxPreference.inputValue;
         }
 
         const $input = $('<input>', inputConfig);
