@@ -41,6 +41,10 @@ window.createChartBar = createChartBar
 import Enum from './enums/enum.js';
 window.Enum = Enum;
 
+$.fn.getUserIdLogged = () => $('meta[name="user-id"]').first().attr('content');
+$.fn.getStorageItem = (itemName) => JSON.parse(localStorage.getItem(itemName));
+$.fn.saveOnStorage = (itemName, object) => localStorage.setItem(itemName, JSON.stringify(object));
+
 $.fn.imask = function(options) {
     const maskedElements = this.map((_, input) => new IMask(input, options)).toArray();
 
