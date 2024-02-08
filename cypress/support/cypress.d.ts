@@ -103,7 +103,7 @@ declare global {
            * * comando customizado para selecionar elemento autocomplete apos digitar e capturar sugestão autocomplete clicando.
            * @example cy.getElementAutocompleteTypeAndClick(orcamentista,atendente)
            */
-            getElementAutocompleteTypeAndClick(element: string, data: string | number | boolean, autocomplete: string): ValidationResult;
+            getElementAutocompleteTypeAndClick(element: string, value: any | number, autocomplete: any): ValidationResult;
 
             /**
             * comando customizado para ler arquivos

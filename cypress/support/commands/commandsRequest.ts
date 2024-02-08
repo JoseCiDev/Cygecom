@@ -27,6 +27,7 @@
 /// <reference path="../cypress.d.ts" />
 
 
+import { PaymentCondition } from '../../DataParameters/Enums/paymentCondition';
 import { elements as el } from '../../elements'
 import { dataParameters } from './../../dataParameters';
 
@@ -106,6 +107,9 @@ const {
     productStorageLocation,
     suggestionLinks,
     observation,
+    paymentCondition,
+    paymentMethod,
+
 } = el.Request
 
 const {
@@ -146,12 +150,25 @@ Cypress.Commands.add('createRequest', function () {
     // cy.getElementAndType(suggestionLinks, dataParameters.Request.product.suggestionLinks);
 
     // cy.getElementAndType(observation, dataParameters.Request.product.observation);
-    cy.get('[data-cy="payment-terms"]')
-    .select(0);
-    cy.pause();
 
-    // cy.getElementAutocompleteTypeAndClick('[data-cy="payment-terms"]', dataParameters.Request.product.paymentCondition)
+    function selectOption(options: Record<string, boolean> | string | number, selector: string): void {
+        const keys = Object.keys(options) as string[];
+        for (let key of keys) {
+            if (options[key]) {
+                cy.get(selector)
+                    .type(key)
+                    cy.get('[id="select2-payment-method-result-"]')
+                    .type('{downarrow}')
+                    .type('{enter}');
+                break;
+            }
+        }
+    }
+    selectOption(dataParameters.Request.product.paymentCondition, paymentCondition);
 
+    // cy.getElementAndType('[id="format-amount"]', dataParameters.Request.product.totalValue.toString());
+
+    selectOption(dataParameters.Request.product.paymentMethod, paymentMethod);
 });
 
 /*

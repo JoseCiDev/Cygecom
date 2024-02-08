@@ -203,7 +203,7 @@ Cypress.Commands.add('getSelectOptionByValue', (element: string, value: any): vo
     });
 });
 
-Cypress.Commands.add('getElementAutocompleteTypeAndClick', (element: string, value: string | number, autocomplete: string) => {
+Cypress.Commands.add('getElementAutocompleteTypeAndClick', (element: string, value: any | number, autocomplete: any) => {
     cy.get(element, { timeout: 20000 })
         .as('elementAlias')
         .each(($input) => {

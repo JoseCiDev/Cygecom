@@ -77,6 +77,8 @@ interface Elements<S = string> {
         productStorageLocation: S;
         suggestionLinks: S;
         observation: S;
+        paymentCondition: S;
+        paymentMethod: S;
     },
 
     Supply: {
@@ -169,7 +171,9 @@ export const elements: Elements = {
         desiredDeliveryDate: '[data-cy="desired-date"]',
         productStorageLocation: '[data-cy="local-description"]',
         suggestionLinks: '[data-cy="support-links"]',
-        observation:'[data-cy="request-observation"]',
+        observation: '[data-cy="request-observation"]',
+        paymentCondition: '#select2-payment-terms-container > span',
+        paymentMethod: '#select2-payment-method-container > span',
     },
 
     Supply: {
