@@ -48,9 +48,9 @@
                                 $route = 'supplies.service.show';
                             } elseif ($purchaseRequest?->type === PurchaseRequestType::CONTRACT) {
                                 $name = $purchaseRequest?->contract?->name ?? '---';
-                                $route = 'supplier.contract.show';
+                                $route = 'supplies.contract.show';
                             } elseif ($purchaseRequest?->type === PurchaseRequestType::PRODUCT) {
-                                $route = 'supplier.product.show';
+                                $route = 'supplies.product.show';
                             }
                         @endphp
                         <tr>
