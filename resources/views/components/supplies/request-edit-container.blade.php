@@ -18,7 +18,7 @@
 @endpush
 
 <h4 style="margin-bottom: 15px"><i class="glyphicon glyphicon-edit"></i> <strong>Editar solicitação</strong></h4>
-<form class="form-validate" data-cy="form-request-edit" id="form-request-edit" method="POST" action="{{ route($route, ['id' => $requestId]) }}">
+<form class="form-validate" data-cy="form-request-edit" id="form-request-edit" method="POST" action="{{ route($route, ['purchaseRequest' => $requestId]) }}">
     @csrf
     <div class="form-group">
         <div class="row" style="margin-bottom: -15px;">
@@ -85,13 +85,13 @@
                 <textarea name="supplies_update_reason" id="supplies-update-reason" data-cy="supplies-update-reason" rows="3" maxlength="200" minlength="5"
                     class="form-control text-area no-resize"></textarea>
             </div>
-            <div class="small" style="margin-top: 10px; margin-bottom:20px;">
+            <div class="small" style="margin-top: 10px;">
                 <p class="secondary-text">* Informe o motivo para atualizar o status desta solicitação.</p>
             </div>
         </div>
     </div>
 
-    <div class="row" style="padding-top: 15px">
+    <div class="row mt-4">
         <div class="col-sm-3">
             @if (Gate::any(['post.supplies.service.update', 'post.supplies.contract.update', 'post.supplies.product.update']))
                 <button data-cy="btn-edit-request" id="btn-edit-request" type="submit" class="btn btn-primary btn-small" @disabled($requestIsFromLogged)>
@@ -112,14 +112,14 @@
             const $status = $('#status');
             const $reasonUpdateStatus = $('#supplies-update-reason');
             const $reasonUpdateStatusDiv = $('.div-reason-update');
-            const statusOldValue = $status.val();
+            const oldStatusValue = $status.val();
             const requestStatusCancel = @json(PurchaseRequestStatus::CANCELADA);
+            const $formatAmount = $('#format-amount');
 
             $status.on('change', function() {
                 const currentValue = $(this).val();
-                const isOriginValue = currentValue === statusOldValue;
 
-                if (isOriginValue) {
+                if (currentValue === oldStatusValue) {
                     $reasonUpdateStatusDiv.hide();
                     $reasonUpdateStatus.removeRequired();
                     $reasonUpdateStatus.val('');
@@ -130,11 +130,15 @@
                     $purchaseOrder.makeRequired();
                     $purchaseOrder.attr('placeholder', 'Ex.: 08454/14')
                     $purchaseOrder.prop('disabled', false);
+
+                    $formatAmount.makeRequired();
                 } else {
                     $purchaseOrder.removeRequired();
                     $purchaseOrder.attr('placeholder', 'Disponível ao finalizar solicitação')
                     $purchaseOrder.prop('disabled', true);
                     $purchaseOrder.val(null);
+
+                    $formatAmount.removeRequired().valid();
                 }
 
                 $reasonUpdateStatusDiv.show();
@@ -153,7 +157,7 @@
                     $reasonUpdateStatus.removeRequired();
                     $reasonUpdateStatus.rules('remove', 'required');
                 }
-            });
+            }).trigger('change');
 
             $form.on('submit', function(event) {
                 event.preventDefault();
