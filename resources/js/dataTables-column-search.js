@@ -6,7 +6,7 @@ const getUserStorageItem = (itemName) => {
 
     return storageItem[$.fn.getUserIdLogged()];
 };
-const getStorageKey = (dataTable) => 'search-bar-memory-' + $(dataTable).attr('id') + location.pathname;
+const getStorageKey = (dataTable) => 'search-column-' + $(dataTable).attr('id') + location.pathname;
 
 const setStorageDtSearchBar = (storageTableName, columnIndex, inputValue) =>{
     const userId = $.fn.getUserIdLogged();
