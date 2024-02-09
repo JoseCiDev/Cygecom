@@ -28,6 +28,7 @@
 
 
 import { PaymentCondition } from '../../DataParameters/Enums/paymentCondition';
+import { ConditionalWrite } from '../../DataParameters/Types/types';
 import { elements as el } from '../../elements'
 import { dataParameters } from './../../dataParameters';
 
@@ -109,6 +110,12 @@ const {
     observation,
     paymentCondition,
     paymentMethod,
+    highlightedOption,
+    searchPaymentMethodAndTerms,
+    totalValue,
+    paymentInstallments,
+    paymentDetails,
+    supplier,
 
 } = el.Request
 
@@ -121,9 +128,25 @@ const {
 } = el.Supply
 
 
+
 Cypress.Commands.add('createRequest', function () {
     //paymentData
     //attachedFiles
+
+    function setPaymentAndSupplier(element: string, searchPaymentMethodAndTerms: string, highlightedElement: string, paymentCondition: ConditionalWrite) {
+        for (const [key, [isTyped, value]] of Object.entries(paymentCondition)) {
+            if (isTyped) {
+                cy.get(element)
+                    .click();
+                cy.get(searchPaymentMethodAndTerms)
+                    .type(value, { force: true })
+                    .get(highlightedElement)
+                    .should('be.visible')
+                    .contains(value)
+                    .click({ force: true });
+            }
+        }
+    };
 
     // cy.getElementAutocompleteTypeAndClick(
     //     costCenter,
@@ -131,40 +154,93 @@ Cypress.Commands.add('createRequest', function () {
     //     costCenterAutocomplete
     // );
 
-    // cy.getElementAndType(apportionmentPercentage, dataParameters.Request.product.apportionmentPercentage.toString());
+    // cy.getElementAndType(
+    // apportionmentPercentage, 
+    // dataParameters.Request.product.apportionmentPercentage.toString()
+    // );
 
-    // cy.getElementAndType(apportionmentValue, dataParameters.Request.product.apportionmentPercentage.toString());
+    // cy.getElementAndType(
+    // apportionmentValue, 
+    // dataParameters.Request.product.apportionmentPercentage.toString()
+    // );
 
-    // cy.getElementAndCheck(quoteRequest, dataParameters.Request.product.quoteRequest);
+    // cy.getElementAndCheck(
+    // quoteRequest, 
+    // dataParameters.Request.product.quoteRequest
+    // );
 
     // cy.getElementAndCheck(dataParameters.Request.product.acquiringArea);
 
     // cy.getElementAndCheck(dataParameters.Request.product.comexImport);
 
-    // cy.getElementAndType(reasonForRequest, dataParameters.Request.product.reasonForRequest);
+    // cy.getElementAndType(
+    // reasonForRequest, 
+    // dataParameters.Request.product.reasonForRequest
+    // );
 
-    cy.getElementAndType(desiredDeliveryDate, dataParameters.Request.product.desiredDeliveryDate[0].toString());
+    // cy.getElementAndType(
+    // desiredDeliveryDate, 
+    // dataParameters.Request.product.desiredDeliveryDate[0].toString()
+    // );
 
-    // cy.getElementAndType(productStorageLocation, dataParameters.Request.product.productStorageLocation);
+    // cy.getElementAndType(
+    // productStorageLocation,
+    //     dataParameters.Request.product.productStorageLocation
+    //     );
 
-    // cy.getElementAndType(suggestionLinks, dataParameters.Request.product.suggestionLinks);
+    // cy.getElementAndType(
+    // suggestionLinks,
+    //     dataParameters.Request.product.suggestionLinks
+    //         );
 
-    // cy.getElementAndType(observation, dataParameters.Request.product.observation);
-    // cy.getElementAutocompleteTypeAndClick('#select2-payment-terms-container','Antecipado','Antecipado');
-    // Cypress.Commands.add('getElementAutocompleteTypeAndClick', (element: string, value: string | number, autocomplete: string) => {
-    //     cy.get(element, { timeout: 20000 })
-    //         .as('elementAlias')
-    //         .each(($input) => {
-    //             cy.wrap($input)
-    //                 .type(value.toString())
-    //                 .then(() => {
-    //                     cy.contains(autocomplete, value)
-    //                         .as('autocompleteAlias')
-    //                         .click({ force: true });
-    //                 });
-    //         });
-    // });
+    // cy.getElementAndType(
+    // observation,
+    //     dataParameters.Request.product.observation
+    //         );
+
+    // setPaymentAndSupplier(
+    //     paymentCondition,
+    //     searchPaymentMethodAndTerms,
+    //     highlightedOption,
+    //     dataParameters.Request.product.paymentCondition
+    // );
+
+    // cy.getElementAndType(
+    //     totalValue,
+    //     dataParameters.Request.product.totalValue.toString()
+    // );
+
+    // setPaymentAndSupplier(
+    //     paymentMethod,
+    //     searchPaymentMethodAndTerms,
+    //     highlightedOption,
+    //     dataParameters.Request.product.paymentMethod
+    // );
+
+    // cy.getElementAndType(
+    //     paymentInstallments,
+    //     dataParameters.Request.product.paymentInstallments.toString()
+    // );
+
+    // cy.getElementAndType(
+    //     paymentDetails,
+    //     dataParameters.Request.product.paymentDetails
+    // );
+
+    cy.getElementAutocompleteTypeAndClick(
+        supplier,
+        dataParameters.Request.product.supplier,
+        dataParameters.Request.product.supplier
+    )
+
+
 });
+
+
+
+
+
+
 
 /*
 data entrega

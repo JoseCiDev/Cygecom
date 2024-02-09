@@ -79,6 +79,12 @@ interface Elements<S = string> {
         observation: S;
         paymentCondition: S;
         paymentMethod: S;
+        highlightedOption: S;
+        searchPaymentMethodAndTerms: S;
+        totalValue: S;
+        paymentInstallments: S;
+        paymentDetails: S;
+        supplier: S;
     },
 
     Supply: {
@@ -172,8 +178,15 @@ export const elements: Elements = {
         productStorageLocation: '[data-cy="local-description"]',
         suggestionLinks: '[data-cy="support-links"]',
         observation: '[data-cy="request-observation"]',
-        paymentCondition: '#select2-payment-terms-container > span',
+        paymentCondition: '#select2-payment-terms-container',
         paymentMethod: '#select2-payment-method-container > span',
+        searchPaymentMethodAndTerms: '.select2-search__field',
+        highlightedOption: '[class="select2-results__option select2-results__option--highlighted"]',
+        totalValue: '[data-cy="format-amount"]',
+        paymentInstallments: '#request-form > div.full-product-line.product-form > div.payment-block > div:nth-child(2) > div.col-sm-1 > div > input.form-control.format-installments-number',
+        paymentDetails: '[data-cy="payment-info-description"]',
+        supplier: '[data-select2-id="2874"]',
+
     },
 
     Supply: {

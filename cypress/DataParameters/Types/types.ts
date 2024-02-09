@@ -31,6 +31,8 @@ import { TableColumnsSupplierRegistration } from '../Enums/tableColumnsSupplierR
 import { TableColumnsUserRegistration } from '../Enums/tableColumnsUserRegistration';
 import { DataParameters, DateTime } from './../Interfaces/interfaces';
 import { dataParameters } from './../../dataParameters';
+import { PaymentCondition } from '../Enums/paymentCondition';
+import { PaymentMethod } from '../Enums/paymentMethod';
 
 
 const environment = Cypress.env('ENVIRONMENT');
@@ -77,3 +79,7 @@ export type ColumnSearchParameter =
 export type ValidationResult = Cypress.Chainable<{ error?: string; success?: string; }>
 
 export type DateTimeRecord = [string | Date, boolean];
+
+export type ConditionalWrite =
+    Record<PaymentCondition, [boolean, string]> |
+    Record<PaymentMethod, [boolean, string]>

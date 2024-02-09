@@ -15,7 +15,7 @@ import { mount } from 'cypress/react'
 
 
 import { DateTime } from '../DataParameters/Interfaces/interfaces'
-import { ValidationResult } from '../DataParameters/Types/types'
+import { ConditionalWrite, ValidationResult } from '../DataParameters/Types/types'
 import { TableTypesElements } from '../DataParameters/Enums/tableTypesElements'
 declare global {
     namespace Cypress {
@@ -151,9 +151,9 @@ declare global {
            * comando customizado para visualizar colunas selecionadas.
            * @example cy.getColumnVisibilityCommand();
            */
-            createRequest(): ValidationResult;
             getColumnVisibilityCommand(table: TableTypesElements): ValidationResult
 
+            clickTypeAndSelect(element: string, text: string)
         }
 
     }

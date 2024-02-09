@@ -234,9 +234,6 @@ Cypress.Commands.add('getDataOnGrid', (searchParameterElement?, searchParameterV
         }
     }
     function searchColumnsByParameter(element: SearchColumnElement, searchInformation: ColumnSearchParameter) {
-        cy.log('searchColumnElement:', searchColumnElement);
-        cy.log('searchColumnValue:', searchColumnValue);
-        cy.log('searchInformation:', searchInformation);
         for (const [key, [isSearched, value]] of Object.entries(searchInformation)) {
             if (isSearched) {
                 const elementSelector = Number(key);

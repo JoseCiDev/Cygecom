@@ -41,7 +41,7 @@ import { TableColumnsSupplierRegistration } from '../Enums/tableColumnsSupplierR
 import { TableColumnsUserRegistration } from '../Enums/tableColumnsUserRegistration';
 import { TelephoneType } from '../Enums/telephoneType';
 import { UserProfile } from '../Enums/userProfile';
-import { ColumnSearchParameter, DateTimeRecord } from '../Types/types';
+import { ColumnSearchParameter, ConditionalWrite, DateTimeRecord } from '../Types/types';
 import { AcquiringArea } from '../Enums/acquiringArea';
 import { ComexImport } from '../Enums/comexImport';
 import { QuoteRequest } from '../Enums/quoteRequest';
@@ -163,9 +163,9 @@ export interface DataParameters<S = string> {
             productStorageLocation: S;
             suggestionLinks: S;
             observation: S;
-            paymentCondition: Record<PaymentCondition, boolean>;
+            paymentCondition: ConditionalWrite;
             totalValue: S | number;
-            paymentMethod: Record<PaymentMethod, boolean>;
+            paymentMethod: ConditionalWrite;
             paymentInstallments: S | number;
             paymentDetails: S;
             supplier: SupplierOfRequest;

@@ -35,6 +35,7 @@ import { FORMATTED_DATE, FORMATTED_TIME, dataParameters } from '../../dataParame
 import '../commands/commandsLogin';
 import './commandsRegistration';
 import './commandsRequest';
+import { ConditionalWrite } from '../../DataParameters/Types/types';
 
 
 const {
@@ -210,7 +211,7 @@ Cypress.Commands.add('getElementAutocompleteTypeAndClick', (element: string, val
             cy.wrap($input)
                 .type(value.toString())
                 .then(() => {
-                    cy.contains(autocomplete, value)
+                    cy.contains(value)
                         .as('autocompleteAlias')
                         .click({ force: true });
                 });
@@ -269,4 +270,3 @@ Cypress.Commands.add('insertBirthDate', (element: string) => {
                 });
         });
 });
-
