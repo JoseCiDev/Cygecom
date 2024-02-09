@@ -186,7 +186,7 @@ class SuppliesController extends Controller
 
         session()->flash('success', "Solicitação $purchase_request_id atualizada com sucesso!");
 
-        return redirect()->route('supplies.service.show', ['id' => $purchase_request_id]);
+        return redirect()->route('supplies.contract.show', ['id' => $purchase_request_id]);
     }
 
     /**
