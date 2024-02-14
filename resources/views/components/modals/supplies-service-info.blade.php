@@ -85,6 +85,10 @@
             const dateFormatter = (date, execeptionMessage) => date ? new Date(date).toLocaleDateString('pt-br') : (execeptionMessage || '---');
             const formatCnpj = (cnpj) => cnpj?.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
             const numberFormat = (amount, decimals = 2, decimalSeparator = ',', thousandsSeparator = '.') => {
+                if (!amount) {
+                    return '---';
+                }
+
                 const formattedAmount = Number(amount).toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, thousandsSeparator);
                 return formattedAmount.replace('.', decimalSeparator);
             }
