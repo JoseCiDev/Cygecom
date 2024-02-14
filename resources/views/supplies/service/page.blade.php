@@ -142,7 +142,7 @@
                                         @endphp
                                         @can('get.supplies.service.show')
                                             <a href="{{ route('supplies.service.show', ['id' => $service->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
-                                                data-is-to-show="{{ $isToShow ? 'true' : 'false' }}" data-cy="btn-open-details-{{ $index }}">
+                                                data-is-to-show="{{ $isToShow }}" data-cy="btn-open-details-{{ $index }}">
                                                 <i class="fa fa-external-link"></i>
                                             </a>
                                         @endcan
