@@ -88,21 +88,19 @@
                 </div>
             </div>
 
-        </div>
-    </div>
+            <div class="col-sm-3 div-reason-update" style="display: none">
+                <div class="form-group">
+                    <label for="supplies-update-reason" class="regular-text">
+                        Motivo para mudança de status
+                    </label>
+                    <textarea name="supplies_update_reason" id="supplies-update-reason" data-cy="supplies-update-reason" rows="3" maxlength="200" minlength="5"
+                        class="form-control text-area no-resize"></textarea>
+                </div>
+                <div class="small" style="margin-top: 10px;">
+                    <p class="secondary-text">* Informe o motivo para atualizar o status desta solicitação.</p>
+                </div>
+            </div>
 
-    <div class="row div-reason-update mt-3" style="padding-top: 15px; display: none">
-        <div class="col-sm-3">
-            <div class="form-group">
-                <label for="supplies-update-reason" class="regular-text">
-                    Motivo para mudança de status
-                </label>
-                <textarea name="supplies_update_reason" id="supplies-update-reason" data-cy="supplies-update-reason" rows="3" maxlength="200" minlength="5"
-                    class="form-control text-area no-resize"></textarea>
-            </div>
-            <div class="small" style="margin-top: 10px;">
-                <p class="secondary-text">* Informe o motivo para atualizar o status desta solicitação.</p>
-            </div>
         </div>
     </div>
 
