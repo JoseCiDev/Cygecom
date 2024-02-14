@@ -150,6 +150,7 @@
                 } : {
                     mask: Number,
                     min: 0,
+                    scale: 0,
                 };
 
                 $purchaseOrder.each((_, element) => {
