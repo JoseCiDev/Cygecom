@@ -1,10 +1,13 @@
 /// <reference types="cypress" />
 
 import { faker } from '@faker-js/faker';
+
 import { elements as el } from '../elements';
-import { dataParameters } from '../dataParameters'
 import { env } from 'process';
 import { data } from 'cypress/types/jquery';
+import { DataParameters } from '../import';
+import { dataParameters } from './../dataParameters';
+
 
 
 
@@ -95,7 +98,7 @@ describe('Testes da página Login.', () => {
 
     beforeEach(function () {
 
-        cy.visit(dataParameters.env.BASE_URL);
+        cy.visit(env.BASE_URL);
 
     })
 
@@ -103,7 +106,7 @@ describe('Testes da página Login.', () => {
 
 
         dataParameters.sizes.forEach((size) => {
-            cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+            cy.login(env.EMAIL_ADMIN, env.PASSWORD_ADMIN, messageContainer)
                 .then((result) => {
                     assert.exists(result.success, result.error)
                 });
@@ -157,7 +160,7 @@ describe('Testes da página Login.', () => {
         cy.get(password).should('have.attr', 'type', 'password');
         cy.get(password).should('have.value', '');
 
-        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+        cy.login(env.EMAIL_ADMIN, env.PASSWORD_ADMIN, messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
@@ -165,14 +168,14 @@ describe('Testes da página Login.', () => {
     });
 
     it('Deve efetuar o login utilizando as informações corretas.', () => {
-        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+        cy.login(env.EMAIL_ADMIN, env.PASSWORD_ADMIN, messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
     });
 
     it('Deve retornar falha no login devido à inserção de dados incorretos.', () => {
-        cy.login('dataParameters.env.EMAIL_ADMIN', 'dataParameters.env.PASSWORD_ADMIN', messageContainer)
+        cy.login('env.EMAIL_ADMIN', 'env.PASSWORD_ADMIN', messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
@@ -198,7 +201,7 @@ describe('Testes da página Login.', () => {
     });
 
     it('Deve retornar falha no login devido ao preenchimento exclusivo do campo de e-mail.', () => {
-        cy.login(dataParameters.env.EMAIL_ADMIN, '  ', messageContainer)
+        cy.login(env.EMAIL_ADMIN, '  ', messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });

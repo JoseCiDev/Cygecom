@@ -28,16 +28,19 @@
 
 
 
+import { dataParameters } from '../../dataParameters'
 import { elements as el } from '../../elements'
-import { SearchColumnElement } from '../../DataParameters/Enums/searchColumnElement'
-import { SearchParameterElement } from '../../DataParameters/Enums/searchParameterElement'
-import { ShowRecordsQuantity } from '../../DataParameters/Enums/showRecordsQuantity'
-import { ShowRecordsQuantityElement } from '../../DataParameters/Enums/showRecordsQuantityElement'
-import { SortByColumnElement } from '../../DataParameters/Enums/sortByColumnElement'
-import { TableColumnsMyRequests } from '../../DataParameters/Enums/tableColumnsMyRequests'
-import { TableTypesElements } from '../../DataParameters/Enums/tableTypesElements'
-import { ColumnSearchParameter } from '../../DataParameters/Types/types'
-import { dataParameters } from './../../dataParameters';
+import {
+    ColumnSearchParameter,
+    SearchColumnElement,
+    SearchParameterElement,
+    ShowRecordsQuantity,
+    ShowRecordsQuantityElement,
+    SortByColumnElement,
+    TableColumnsMyRequests,
+    TableTypesElements
+} from '../../import'
+
 
 const {
     logout,
@@ -209,7 +212,7 @@ Cypress.Commands.add('getColumnVisibility', (element: TableTypesElements) => {
 
 Cypress.Commands.add('getDataOnGrid', (searchParameterElement?, searchParameterValue?, showRecordsQuantityElement?, showRecordsQuantityValue?, sortByColumnElement?, sortByColumnValue?, searchColumnElement?, searchColumnValue?) => {
     function searchByParameter(element: SearchParameterElement, value: string | number) {
-        cy.getElementAndType(element, value.toString());
+        cy.getElementAndType({ [element]: value.toString() });
     }
     function showRecordsQuantityByParameter(elementSelector: ShowRecordsQuantityElement, quantity: ShowRecordsQuantity) {
         const dropdownValueMap = {

@@ -3,41 +3,38 @@
 import { faker } from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { format } from 'date-fns';
-//é biblico, não pode julgar pelas aparencias
-import { SearchColumnGeneralRequests } from '../Enums/searchColumnGeneralRequests';
-import { SearchColumnMyRequests } from '../Enums/searchColumnMyRequests';
-import { SearchColumnOneOffServiceRequests } from '../Enums/searchColumnOneOffServiceRequests';
-import { SearchColumnProductRequests } from '../Enums/searchColumnProductRequests';
-import { SearchColumnRecurringServiceRequests } from '../Enums/searchColumnRecurringServiceRequests';
-import { ShowHideColumnsGeneralRequests } from '../Enums/showHideColumnsGeneralRequests';
-import { ShowHideColumnsMyRequests } from '../Enums/showHideColumnsMyRequests';
-import { ShowHideColumnsOneOffServiceRequests } from '../Enums/showHideColumnsOneOffServiceRequests';
-import { ShowHideColumnsProductRequests } from '../Enums/showHideColumnsProductRequests';
-import { ShowHideColumnsProductivityReport } from '../Enums/showHideColumnsProductivityReport';
-import { ShowHideColumnsProfilesTable } from '../Enums/showHideColumnsProfilesTable';
-import { ShowHideColumnsRecurringServiceRequests } from '../Enums/showHideColumnsRecurringServiceRequests';
-import { ShowHideColumnsRequestReport } from '../Enums/showHideColumnsRequestReport';
-import { ShowHideColumnsSupplierRegistration } from '../Enums/showHideColumnsSupplierRegistration';
-import { ShowHideColumnsUserRegistration } from '../Enums/showHideColumnsUserRegistration';
-import { TableColumnsGeneralRequests } from '../Enums/tableColumnsGeneralRequests';
-import { TableColumnsMyRequests } from '../Enums/tableColumnsMyRequests';
-import { TableColumnsOneOffServiceRequests } from '../Enums/tableColumnsOneOffServiceRequests';
-import { TableColumnsProductRequests } from '../Enums/tableColumnsProductRequests';
-import { TableColumnsProductivityReport } from '../Enums/tableColumnsProductivityReport';
-import { TableColumnsProfilesTable } from '../Enums/tableColumnsProfilesTable';
-import { TableColumnsRecurringServiceRequests } from '../Enums/tableColumnsRecurringServiceRequests';
-import { TableColumnsRequestReport } from '../Enums/tableColumnsRequestReport';
-import { TableColumnsSupplierRegistration } from '../Enums/tableColumnsSupplierRegistration';
-import { TableColumnsUserRegistration } from '../Enums/tableColumnsUserRegistration';
-import { DataParameters, DateTime } from './../Interfaces/interfaces';
-import { dataParameters } from './../../dataParameters';
-import { PaymentCondition } from '../Enums/paymentCondition';
-import { PaymentMethod } from '../Enums/paymentMethod';
-
+import {
+    PaymentCondition,
+    PaymentMethod,
+    SearchColumnGeneralRequests,
+    SearchColumnMyRequests,
+    SearchColumnOneOffServiceRequests,
+    SearchColumnProductRequests,
+    SearchColumnRecurringServiceRequests,
+    ShowHideColumnsGeneralRequests,
+    ShowHideColumnsMyRequests,
+    ShowHideColumnsOneOffServiceRequests,
+    ShowHideColumnsProductRequests,
+    ShowHideColumnsProductivityReport,
+    ShowHideColumnsProfilesTable,
+    ShowHideColumnsRecurringServiceRequests,
+    ShowHideColumnsRequestReport,
+    ShowHideColumnsSupplierRegistration,
+    ShowHideColumnsUserRegistration,
+    TableColumnsGeneralRequests,
+    TableColumnsMyRequests,
+    TableColumnsOneOffServiceRequests,
+    TableColumnsProductRequests,
+    TableColumnsProductivityReport,
+    TableColumnsProfilesTable,
+    TableColumnsRecurringServiceRequests,
+    TableColumnsRequestReport,
+    TableColumnsSupplierRegistration,
+    TableColumnsUserRegistration
+} from '../../import';
 
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
-
 
 
 export type ColumnEnums =
@@ -83,3 +80,10 @@ export type DateTimeRecord = [string | Date, boolean];
 export type ConditionalWrite =
     Record<PaymentCondition, [boolean, string]> |
     Record<PaymentMethod, [boolean, string]>
+
+
+
+export type ElementTypeAndValueOpcional = {
+    element: string,
+    value?: string,
+}[];

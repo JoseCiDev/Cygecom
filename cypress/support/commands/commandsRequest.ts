@@ -27,10 +27,11 @@
 /// <reference path="../cypress.d.ts" />
 
 
-import { PaymentCondition } from '../../DataParameters/Enums/paymentCondition';
-import { ConditionalWrite } from '../../DataParameters/Types/types';
+import { faker } from '@faker-js/faker';
+
 import { elements as el } from '../../elements'
 import { dataParameters } from './../../dataParameters';
+import { ConditionalWrite } from '../../import';
 
 const {
     logout,
@@ -99,9 +100,8 @@ const {
     myRequestSubMenu,
     requestGeneralSubMenu,
     costCenter,
-    costCenterAutocomplete,
-    apportionmentPercentage,
-    apportionmentValue,
+    apportionmentPercentageElement,
+    apportionmentValueElement,
     quoteRequest,
     reasonForRequest,
     desiredDeliveryDate,
@@ -116,6 +116,14 @@ const {
     paymentInstallments,
     paymentDetails,
     supplier,
+    productCategory,
+    productNameAndDescription,
+    productQuantity,
+    productColor,
+    productSize,
+    productModel,
+    productLink,
+    attachedFile,
 
 } = el.Request
 
@@ -130,15 +138,13 @@ const {
 
 
 Cypress.Commands.add('createRequest', function () {
-    //paymentData
-    //attachedFiles
 
-    function setPaymentAndSupplier(element: string, searchPaymentMethodAndTerms: string, highlightedElement: string, paymentCondition: ConditionalWrite) {
-        for (const [key, [isTyped, value]] of Object.entries(paymentCondition)) {
+    function setPaymentAndSupplier(element: string, searchParameterValue: string, highlightedElement: string, conditionalWrite: ConditionalWrite) {
+        for (const [key, [isTyped, value]] of Object.entries(conditionalWrite)) {
             if (isTyped) {
                 cy.get(element)
                     .click();
-                cy.get(searchPaymentMethodAndTerms)
+                cy.get(searchParameterValue)
                     .type(value, { force: true })
                     .get(highlightedElement)
                     .should('be.visible')
@@ -148,92 +154,114 @@ Cypress.Commands.add('createRequest', function () {
         }
     };
 
-    // cy.getElementAutocompleteTypeAndClick(
-    //     costCenter,
-    //     dataParameters.Request.product.costCenter,
-    //     costCenterAutocomplete
-    // );
+    function setQuotation() {
+        const { product: { quoteRequest } } = dataParameters.Request;
+        for (const [key, value] of Object.entries(quoteRequest)) {
+            if (value) {
+                cy.getElementAndCheck([
+                    { element: key },
+                ]);
+            }
+        }
+    };
 
-    // cy.getElementAndType(
-    // apportionmentPercentage, 
-    // dataParameters.Request.product.apportionmentPercentage.toString()
-    // );
+    function setApportionment() {
+        const { apportionmentPercentage, apportionmentValue } = dataParameters.Request.product;
+        cy.get(apportionmentPercentageElement)
+            .invoke('val')
+            .then((percentageVal) => {
+                cy.get(apportionmentValueElement)
+                    .invoke('val')
+                    .then((valueVal) => {
+                        if (!percentageVal && !valueVal) {
+                            cy.get(apportionmentPercentageElement)
+                                .type(apportionmentPercentage.toString());
+                        }
+                        else if (!percentageVal) {
+                            cy.get(apportionmentPercentageElement)
+                                .type(apportionmentPercentage.toString());
+                        }
+                        else if (!valueVal) {
+                            cy.get(apportionmentValueElement)
+                                .type(apportionmentValue.toString());
+                        }
+                    });
+            });
+    };
 
-    // cy.getElementAndType(
-    // apportionmentValue, 
-    // dataParameters.Request.product.apportionmentPercentage.toString()
-    // );
-
-    // cy.getElementAndCheck(
-    // quoteRequest, 
-    // dataParameters.Request.product.quoteRequest
-    // );
-
-    // cy.getElementAndCheck(dataParameters.Request.product.acquiringArea);
-
-    // cy.getElementAndCheck(dataParameters.Request.product.comexImport);
-
-    // cy.getElementAndType(
-    // reasonForRequest, 
-    // dataParameters.Request.product.reasonForRequest
-    // );
-
-    // cy.getElementAndType(
-    // desiredDeliveryDate, 
-    // dataParameters.Request.product.desiredDeliveryDate[0].toString()
-    // );
-
-    // cy.getElementAndType(
-    // productStorageLocation,
-    //     dataParameters.Request.product.productStorageLocation
-    //     );
-
-    // cy.getElementAndType(
-    // suggestionLinks,
-    //     dataParameters.Request.product.suggestionLinks
-    //         );
-
-    // cy.getElementAndType(
-    // observation,
-    //     dataParameters.Request.product.observation
-    //         );
-
-    // setPaymentAndSupplier(
-    //     paymentCondition,
-    //     searchPaymentMethodAndTerms,
-    //     highlightedOption,
-    //     dataParameters.Request.product.paymentCondition
-    // );
-
-    // cy.getElementAndType(
-    //     totalValue,
-    //     dataParameters.Request.product.totalValue.toString()
-    // );
-
-    // setPaymentAndSupplier(
-    //     paymentMethod,
-    //     searchPaymentMethodAndTerms,
-    //     highlightedOption,
-    //     dataParameters.Request.product.paymentMethod
-    // );
-
-    // cy.getElementAndType(
-    //     paymentInstallments,
-    //     dataParameters.Request.product.paymentInstallments.toString()
-    // );
-
-    // cy.getElementAndType(
-    //     paymentDetails,
-    //     dataParameters.Request.product.paymentDetails
-    // );
+    function saveRequest() {
+        const { product: { saveRequest } } = dataParameters.Request;
+        for (const [key, saveAs] of Object.entries(saveRequest)) {
+            if (saveAs) {
+                cy.getElementAndClick([key]);
+            }
+        }
+    };
 
     cy.getElementAutocompleteTypeAndClick(
-        supplier,
-        dataParameters.Request.product.supplier,
-        dataParameters.Request.product.supplier
-    )
+        { [costCenter]: dataParameters.Request.product.costCenter },
+        highlightedOption
+    );
 
+    setApportionment();
 
+    setQuotation();
+
+    cy.getElementAndCheck([
+        { element: dataParameters.Request.product.acquiringArea },
+        { element: dataParameters.Request.product.comexImport },
+    ]);
+
+    cy.getElementAndType({
+        [reasonForRequest]: dataParameters.Request.product.reasonForRequest,
+        [desiredDeliveryDate]: dataParameters.Request.product.desiredDeliveryDate[0].toString(),
+        [productStorageLocation]: dataParameters.Request.product.productStorageLocation,
+        [suggestionLinks]: dataParameters.Request.product.suggestionLinks,
+        [observation]: dataParameters.Request.product.observation,
+    });
+
+    setPaymentAndSupplier(
+        paymentCondition,
+        searchPaymentMethodAndTerms,
+        highlightedOption,
+        dataParameters.Request.product.paymentCondition
+    );
+
+    cy.getElementAndType({
+        [totalValue]: dataParameters.Request.product.totalValue.toString(),
+    });
+
+    setPaymentAndSupplier(
+        paymentMethod,
+        searchPaymentMethodAndTerms,
+        highlightedOption,
+        dataParameters.Request.product.paymentMethod
+    );
+
+    cy.getElementAndType({
+        [paymentInstallments]: dataParameters.Request.product.paymentInstallments.toString(),
+        [paymentDetails]: dataParameters.Request.product.paymentDetails,
+    });
+
+    cy.getElementAutocompleteTypeAndClick({
+        [supplier]: dataParameters.Request.product.supplier,
+        [productCategory]: dataParameters.Request.product.productCategory,
+    },
+        highlightedOption
+    );
+
+    cy.getElementAndType({
+        [productNameAndDescription]: dataParameters.Request.product.productNameAndDescription,
+        [productQuantity]: dataParameters.Request.product.productQuantity.toString(),
+        [productColor]: dataParameters.Request.product.productColor,
+        [productSize]: dataParameters.Request.product.productSize.toString(),
+        [productModel]: dataParameters.Request.product.productModel,
+        [productLink]: dataParameters.Request.product.productLink,
+    });
+
+    cy.insertFile(dataParameters.Request.product.attachedFile, attachedFile);
+
+    saveRequest();
 });
 
 

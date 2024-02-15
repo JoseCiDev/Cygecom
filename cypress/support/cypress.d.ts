@@ -2,6 +2,13 @@
 /// <reference types="cypress" />
 
 import { mount } from 'cypress/react'
+import {
+    DateTime,
+    ElementTypeAndValueOpcional,
+    TableTypesElements,
+    ValidationResult
+} from '../import';
+
 // load the 3rd party command definition
 /// <reference types="cypress-wait-until" />
 
@@ -14,9 +21,7 @@ import { mount } from 'cypress/react'
 // cypress/support/index.ts
 
 
-import { DateTime } from '../DataParameters/Interfaces/interfaces'
-import { ConditionalWrite, ValidationResult } from '../DataParameters/Types/types'
-import { TableTypesElements } from '../DataParameters/Enums/tableTypesElements'
+
 declare global {
     namespace Cypress {
         interface Chainable<Subject = any> {
@@ -49,37 +54,37 @@ declare global {
            * comando customizado para inserir Data de nascimento.
            * @example cy.inserirData()
            */
-            insertBirthDate(element: string): Chainable<Element>
+            insertBirthDate(element: string): ValidationResult
 
             /**
              * comando customizado para selecionar o elemento e clicar.
              * @example cy.getElementAndClick(el.elemento)
              */
-            getElementAndClick(element: string): Chainable<Element>;
+            getElementAndClick(elements: string[]): ValidationResult;
 
             /**
             * comando customizado de login.
             * @example cy.getElementAndClick(el.elemento)
             */
-            getElementAndType(element: string, text?: string): Chainable<Element>
+            getElementAndType(elements: { [key: string]: string }): ValidationResult
 
             /**
              * comando customizado para capturar elemento e marcar checkbox.
              * @example cy.getElementAndCheck(el.elemento)
              */
-            getElementAndCheck(element: string, value?: string): Chainable<Element>;
+            getElementAndCheck(elements: ElementTypeAndValueOpcional): ValidationResult;
 
             /**
              * comando customizado para selecionar a opcao radio.
              * @example cy.getRadioOptionByValue(element,valor)
              */
-            getRadioOptionByValue(dataCy: string, value: string): Chainable<Element>
+            getRadioOptionByValue(elements: ElementTypeAndValueOpcional): ValidationResult
 
             /**
              * comando customizado para selecionar opção do select.
              * @example cy.getSelectOptionByValue(el.elemento)
              */
-            getSelectOptionByValue(dataCy: string, value: string): Chainable<Element>;
+            getSelectOptionByValue(elements: ElementTypeAndValueOpcional): ValidationResult;
 
             /**
              * comando customizado para verificar a quantidade máxima de caracteres.
@@ -103,7 +108,7 @@ declare global {
            * * comando customizado para selecionar elemento autocomplete apos digitar e capturar sugestão autocomplete clicando.
            * @example cy.getElementAutocompleteTypeAndClick(orcamentista,atendente)
            */
-            getElementAutocompleteTypeAndClick(element: string, value: string | number, autocomplete: string): ValidationResult;
+            getElementAutocompleteTypeAndClick(elements: { [key: string]: string }, autocomplete: string): ValidationResult;
 
             /**
             * comando customizado para ler arquivos

@@ -14,7 +14,7 @@ const elements = dom.window.document.querySelectorAll('li');
 // 4. Iterar sobre os elementos e extrair os IDs e o texto
 const elementsData = Array.from(elements).map(element => ({
   id: element.getAttribute('data-select2-id'),
-  text: element.textContent.trim().replace(/'/g, "\\'"), // Escapar apóstrofos
+  text: element.textContent.trim().replace(/'/g, "\\'").replace(/(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}) - /g, "$1  - "), // Escapar apóstrofos e adicionar espaço extra antes do hífen
 }));
 
 // 5. Criar um objeto TypeScript com esses IDs e nomes

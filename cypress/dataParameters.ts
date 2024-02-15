@@ -3,53 +3,53 @@
 import { faker } from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { format } from 'date-fns';
-
-
-import { DataParameters } from './DataParameters/Interfaces/interfaces';
-import { Sector } from './DataParameters/Enums/sector';
-import { UserProfile } from './DataParameters/Enums/userProfile';
-import { ApproverUser } from './DataParameters/Enums/approverUser';
-import { AutorizedRequest } from './DataParameters/Enums/autorizedRequest';
-import { RequestOtherUsers } from './DataParameters/Enums/requestOtherUsers';
-import { AllowedRequestCostCenter } from './DataParameters/Enums/allowedRequestCostCenter';
-import { AllowedApprovalCostCenter } from './DataParameters/Enums/allowedApprovalCostCenter';
-import { ShowHideColumnsUserRegistration } from './DataParameters/Enums/showHideColumnsUserRegistration';
-import { ShowRecordsQuantity } from './DataParameters/Enums/showRecordsQuantity';
-import { SearchColumnProductRequests } from './DataParameters/Enums/searchColumnProductRequests';
-import { ShowHideColumnsSupplierRegistration } from './DataParameters/Enums/showHideColumnsSupplierRegistration';
-import { ShowHideColumnsMyRequests } from './DataParameters/Enums/showHideColumnsMyRequests';
-import { TelephoneType } from './DataParameters/Enums/telephoneType';
-import { ApproveLimit } from './DataParameters/Enums/approveLimit';
-import { ShowHideColumnsGeneralRequests } from './DataParameters/Enums/showHideColumnsGeneralRequests';
-import { ShowHideColumnsProductRequests } from './DataParameters/Enums/showHideColumnsProductRequests';
-import { ShowHideColumnsOneOffServiceRequests } from './DataParameters/Enums/showHideColumnsOneOffServiceRequests';
-import { ShowHideColumnsRecurringServiceRequests } from './DataParameters/Enums/showHideColumnsRecurringServiceRequests';
-import { ShowHideColumnsRequestReport } from './DataParameters/Enums/showHideColumnsRequestReport';
-import { ShowHideColumnsProductivityReport } from './DataParameters/Enums/showHideColumnsProductivityReport';
-import { ShowHideColumnsProfilesTable } from './DataParameters/Enums/showHideColumnsProfilesTable';
-import { SearchColumnMyRequests } from './DataParameters/Enums/searchColumnMyRequests';
-import { SearchColumnGeneralRequests } from './DataParameters/Enums/searchColumnGeneralRequests';
-import { SearchColumnOneOffServiceRequests } from './DataParameters/Enums/searchColumnOneOffServiceRequests';
-import { SearchColumnRecurringServiceRequests } from './DataParameters/Enums/searchColumnRecurringServiceRequests';
-import { TableColumnsUserRegistration } from './DataParameters/Enums/tableColumnsUserRegistration';
-import { TableColumnsGeneralRequests } from './DataParameters/Enums/tableColumnsGeneralRequests';
-import { TableColumnsMyRequests } from './DataParameters/Enums/tableColumnsMyRequests';
-import { TableColumnsOneOffServiceRequests } from './DataParameters/Enums/tableColumnsOneOffServiceRequests';
-import { TableColumnsProductRequests } from './DataParameters/Enums/tableColumnsProductRequests';
-import { TableColumnsProductivityReport } from './DataParameters/Enums/tableColumnsProductivityReport';
-import { TableColumnsProfilesTable } from './DataParameters/Enums/tableColumnsProfilesTable';
-import { TableColumnsRecurringServiceRequests } from './DataParameters/Enums/tableColumnsRecurringServiceRequests';
-import { TableColumnsRequestReport } from './DataParameters/Enums/tableColumnsRequestReport';
-import { TableColumnsSupplierRegistration } from './DataParameters/Enums/tableColumnsSupplierRegistration';
-import { QuoteRequest } from './DataParameters/Enums/quoteRequest';
-import { AcquiringArea } from './DataParameters/Enums/acquiringArea';
-import { ComexImport } from './DataParameters/Enums/comexImport';
-import { PaymentCondition } from './DataParameters/Enums/paymentCondition';
-import { PaymentMethod } from './DataParameters/Enums/paymentMethod';
-import { SupplierOfRequest } from './DataParameters/Enums/supplierOfRequest';
-import { ProductCategory } from './DataParameters/Enums/productCategory';
-import { DateTimeRecord } from './DataParameters/Types/types';
-import { CostCenter } from './DataParameters/Enums/costCenter';
+import {
+    AcquiringArea,
+    AllowedApprovalCostCenter,
+    AllowedRequestCostCenter,
+    ApproveLimit,
+    ApproverUser,
+    AutorizedRequest,
+    ComexImport,
+    CostCenter,
+    DataParameters,
+    PaymentCondition,
+    PaymentMethod,
+    ProductCategory,
+    QuoteRequest,
+    RequestOtherUsers,
+    SaveRequest,
+    SearchColumnGeneralRequests,
+    SearchColumnMyRequests,
+    SearchColumnOneOffServiceRequests,
+    SearchColumnProductRequests,
+    SearchColumnRecurringServiceRequests,
+    Sector,
+    ShowHideColumnsGeneralRequests,
+    ShowHideColumnsMyRequests,
+    ShowHideColumnsOneOffServiceRequests,
+    ShowHideColumnsProductRequests,
+    ShowHideColumnsProductivityReport,
+    ShowHideColumnsProfilesTable,
+    ShowHideColumnsRecurringServiceRequests,
+    ShowHideColumnsRequestReport,
+    ShowHideColumnsSupplierRegistration,
+    ShowHideColumnsUserRegistration,
+    ShowRecordsQuantity,
+    SupplierOfRequest,
+    TableColumnsGeneralRequests,
+    TableColumnsMyRequests,
+    TableColumnsOneOffServiceRequests,
+    TableColumnsProductRequests,
+    TableColumnsProductivityReport,
+    TableColumnsProfilesTable,
+    TableColumnsRecurringServiceRequests,
+    TableColumnsRequestReport,
+    TableColumnsSupplierRegistration,
+    TableColumnsUserRegistration,
+    TelephoneType,
+    UserProfile
+} from './import';
 
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
@@ -67,6 +67,8 @@ const minutes: string = String(currentDate.getMinutes()).padStart(2, '0');
 const seconds: string = String(currentDate.getSeconds()).padStart(2, '0');
 export const FORMATTED_DATE: string = `${year}-${month}-${day}`;
 export const FORMATTED_TIME: string = `${hour}:${minutes}:${seconds}`;
+
+
 
 
 export const dataParameters: DataParameters = {
@@ -436,7 +438,7 @@ export const dataParameters: DataParameters = {
             costCenter: CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'],
             apportionmentPercentage: faker.helpers.arrayElement([100]),
             apportionmentValue: faker.helpers.arrayElement([100, 350, 700]),
-            quoteRequest: { [QuoteRequest.quoteRequest]: true, },
+            quoteRequest: { [QuoteRequest.quoteRequest]: true },
             acquiringArea:
                 AcquiringArea.areaContract,
             comexImport:
@@ -464,15 +466,20 @@ export const dataParameters: DataParameters = {
             },
             paymentInstallments: 3,
             paymentDetails: faker.lorem.lines(),
-            supplier: SupplierOfRequest['00.200.203/0001-21 - ANGELA MARIA MOVEIS E ELETRODOMESTICOS EIRELI'],
-            
-            productCategory: ProductCategory.instalacoes,
+            supplier: SupplierOfRequest['00.020.788/0001-06  - MADER COMERCIAL IMPORTADORA QUIM.FARMACEUTICA LTDA'],
+
+            productCategory: ProductCategory['Maquinas E Equipamentos No Laboratorio'],
             productNameAndDescription: faker.lorem.lines(),
             productQuantity: 3,
             productColor: faker.lorem.word(),
             productSize: faker.lorem.word(),
             productModel: faker.lorem.word(),
             productLink: faker.internet.url(),
+            attachedFile: '../fixtures/attachedFile.png',
+            saveRequest: {
+                [SaveRequest.draft]: true,
+                [SaveRequest.submit]: false,
+            },
         },
         oneOffService: {},
         recurringService: {},

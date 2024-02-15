@@ -68,9 +68,8 @@ interface Elements<S = string> {
         myRequestSubMenu: S;
         requestGeneralSubMenu: S;
         costCenter: S;
-        costCenterAutocomplete: S;
-        apportionmentPercentage: S;
-        apportionmentValue: S;
+        apportionmentPercentageElement: S;
+        apportionmentValueElement: S;
         quoteRequest: S;
         reasonForRequest: S;
         desiredDeliveryDate: S;
@@ -85,6 +84,14 @@ interface Elements<S = string> {
         paymentInstallments: S;
         paymentDetails: S;
         supplier: S;
+        productCategory: S;
+        productNameAndDescription: S;
+        productQuantity: S;
+        productColor: S;
+        productSize: S;
+        productModel: S;
+        productLink: S;
+        attachedFile: S;
     },
 
     Supply: {
@@ -169,9 +176,9 @@ export const elements: Elements = {
         myRequestSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
         requestGeneralSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
         costCenter: '#select2-cost_center_apportionments0cost_center_id-container',
-        costCenterAutocomplete: '[id^="select2-cost_center_apportionments0cost_center_id-result-"]',
-        apportionmentPercentage: '[data-cy="cost_center_apportionments[0][apportionment_percentage]"]',
-        apportionmentValue: '[data-cy="cost_center_apportionments[0][apportionment_currency]"]',
+        highlightedOption: '[class="select2-results__option select2-results__option--highlighted"]',
+        apportionmentPercentageElement: '[data-cy="cost_center_apportionments[0][apportionment_percentage]"]',
+        apportionmentValueElement: '[data-cy="cost_center_apportionments[0][apportionment_currency]"]',
         quoteRequest: '[data-cy="checkbox-only-quotation"]',
         reasonForRequest: '[data-cy="reason"]',
         desiredDeliveryDate: '[data-cy="desired-date"]',
@@ -181,12 +188,18 @@ export const elements: Elements = {
         paymentCondition: '#select2-payment-terms-container',
         paymentMethod: '#select2-payment-method-container > span',
         searchPaymentMethodAndTerms: '.select2-search__field',
-        highlightedOption: '[class="select2-results__option select2-results__option--highlighted"]',
         totalValue: '[data-cy="format-amount"]',
         paymentInstallments: '#request-form > div.full-product-line.product-form > div.payment-block > div:nth-child(2) > div.col-sm-1 > div > input.form-control.format-installments-number',
         paymentDetails: '[data-cy="payment-info-description"]',
         supplier: '[data-select2-id="2874"]',
-
+        productCategory: '[data-select2-id="11"]',
+        productNameAndDescription: '[data-cy="purchase_request_products[0][products][0][name]"]',
+        productQuantity: '[data-cy="purchase_request_products[0][products][0][quantity]"]',
+        productColor: '[data-cy="purchase_request_products[0][products][0][color]"]',
+        productSize: '[data-cy="purchase_request_products[0][products][0][size]"]',
+        productModel: '[data-cy="purchase_request_products[0][products][0][model]"]',
+        productLink: '[data-cy="purchase_request_products[0][products][0][link]"]',
+        attachedFile: '[data-cy="files"]',
     },
 
     Supply: {

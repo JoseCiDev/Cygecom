@@ -1,10 +1,11 @@
 import { elements as el } from '../../elements';
 import { dataParameters } from '../../dataParameters'
-import { ShowRecordsQuantityElement } from '../../DataParameters/Enums/showRecordsQuantityElement';
-import { SortByColumnElement } from '../../DataParameters/Enums/sortByColumnElement';
-import { SearchColumnElement } from '../../DataParameters/Enums/searchColumnElement';
-import { SearchParameterElement } from '../../DataParameters/Enums/searchParameterElement';
-import { GetDataOnGrid } from '../../DataParameters/Interfaces/interfaces';
+import { 
+    ShowRecordsQuantityElement, 
+    SortByColumnElement, 
+    SearchColumnElement, 
+    SearchParameterElement 
+} from '../../import';
 
 
 
@@ -100,8 +101,8 @@ describe('Testes da página Cadastro de Usuário', () => {
     })
 
     it(`userRegistration`, () => {
-        cy.getElementAndClick(':nth-child(2) > .btn')
-        cy.getElementAndClick('[data-cy="dropdown-solicitacoes-minhas"]')
+
+        cy.getElementAndClick(['[data-cy="dropdown-solicitacoes-minhas"]', ':nth-child(2) > .btn'])
 
         cy.getDataOnGrid(
             ShowRecordsQuantityElement.requestsTable, dataParameters.getDataOnGrid.showRecordsQuantity,

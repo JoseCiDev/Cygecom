@@ -1,10 +1,5 @@
 import { elements as el } from '../../../elements';
 import { dataParameters } from '../../../dataParameters'
-import { ShowRecordsQuantityElement } from '../../../DataParameters/Enums/showRecordsQuantityElement';
-import { SortByColumnElement } from '../../../DataParameters/Enums/sortByColumnElement';
-import { SearchColumnElement } from '../../../DataParameters/Enums/searchColumnElement';
-import { SearchParameterElement } from '../../../DataParameters/Enums/searchParameterElement';
-import { GetDataOnGrid } from '../../../DataParameters/Interfaces/interfaces';
 
 
 
@@ -99,12 +94,14 @@ describe('Testes da página de criação de solicitação de produtos', () => {
             });
     })
 
-    it(`userRegistration`, () => {
-        cy.getElementAndClick('.main-nav > :nth-child(3) > .btn');
-        cy.getElementAndClick('[data-cy="dropdown-solicitacoes-novas"]');
-        // cy.pause();
-        cy.getElementAndClick(':nth-child(1) > .request-dashboard-requests-item-btn');
-
+    it(`Solicitação de produtos`, () => {
+        cy.getElementAndClick([
+            '.main-nav > :nth-child(3) > .btn',
+            '[data-cy="dropdown-solicitacoes-novas"]',
+            '.main-nav > :nth-child(3) > .btn',
+            '[data-cy="dropdown-solicitacoes-novas"]',
+            ':nth-child(1) > .request-dashboard-requests-item-btn']
+        );
         cy.createRequest();
 
     });

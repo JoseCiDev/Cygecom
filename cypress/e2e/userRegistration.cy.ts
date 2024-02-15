@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 import * as faker from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
+
 import { elements as el } from '../elements';
 import { dataParameters } from '../dataParameters'
 
@@ -92,7 +93,7 @@ describe('Testes da página Cadastro de Usuário', () => {
 
         cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer);
 
-        cy.getElementAndClick(registrationMenu);
+        cy.getElementAndClick([registrationMenu]);
 
     })
 

@@ -35,7 +35,7 @@ import { FORMATTED_DATE, FORMATTED_TIME, dataParameters } from '../../dataParame
 import '../commands/commandsLogin';
 import './commandsRegistration';
 import './commandsRequest';
-import { ConditionalWrite } from '../../DataParameters/Types/types';
+import { ElementTypeAndValueOpcional } from '../../import';
 
 
 const {
@@ -140,7 +140,7 @@ Cypress.Commands.add('readFileFromFixture', (fileName) => {
     return cy.fixture(filePath);
 });
 
-Cypress.Commands.add('getElementAndClick', (...elements: string[]): void => {
+Cypress.Commands.add('getElementAndClick', (elements: string[]): void => {
     elements.forEach(element => {
         cy.get(element, { timeout: 20000 }).then($elements => {
             if ($elements.length > 0) {
@@ -151,72 +151,78 @@ Cypress.Commands.add('getElementAndClick', (...elements: string[]): void => {
     });
 });
 
-Cypress.Commands.add('getElementAndCheck', (element: string, value?: string): void => {
-    cy.get(element, { timeout: 20000 }).then($elements => {
-        if ($elements.length > 0) {
-            if (!value) {
-                cy.wrap($elements.first())
-                    .check({ force: true });
-            }
-            cy.wrap($elements.first())
-                .check(value, { force: true });
-        }
-    });
+Cypress.Commands.add('getElementAndCheck', (elements: ElementTypeAndValueOpcional): void => {
+    elements.forEach(({ element, value }) => {
+        cy.get(element, { timeout: 20000 })
+            .then($elements => {
+                if ($elements.length > 0) {
+                    cy.wrap($elements.first())
+                        .check(value, { force: true });
+                }
+            });
+    })
 });
 
-Cypress.Commands.add('getElementAndType', (element: string, text?: string): void => {
+Cypress.Commands.add('getElementAndType', (elements: { [key: string]: string }): void => {
     cy.wrap(null).then(() => {
-        cy.get(element, { timeout: 20000 })
-            .each(($input) => {
-                cy.wrap($input)
-                    .then(() => {
-                        if ($input.length > 1) {
+        Object.entries(elements).forEach(([element, text]) => {
+            cy.get(element, { timeout: 20000 })
+                .each(($input) => {
+                    cy.wrap($input)
+                        .then(() => {
                             cy.wrap($input.first())
                                 .clear()
                                 .type(text, { timeout: 1000 })
-                        } else {
-                            cy.wrap($input.eq(0))
-                                .type(text, { timeout: 1000 })
-                        }
-                    })
-                    .invoke('val')
-                    .then(val => {
-                        if (!val) {
-                            throw new Error('Field is empty after typing');
-                        }
-                    });
-            })
-    });
-});
-
-Cypress.Commands.add('getRadioOptionByValue', (elemento: string, value): void => {
-    cy.get(elemento, { timeout: 20000 })
-        .should('be.visible')
-        .find(`input[type="radio"][value="${value}"]`)
-        .check({ force: true });
-});
-
-Cypress.Commands.add('getSelectOptionByValue', (element: string, value: string): void => {
-    cy.get(element, { timeout: 20000 }).then(($select) => {
-        if ($select.length > 0 && $select.is(':visible')) {
-            cy.wrap($select).select(value, { force: true });
-        }
-    });
-});
-
-Cypress.Commands.add('getElementAutocompleteTypeAndClick', (element: string, value: string | number, autocomplete: string) => {
-    cy.get(element, { timeout: 20000 })
-        .as('elementAlias')
-        .each(($input) => {
-            cy.wrap($input)
-                .type(value.toString())
-                .then(() => {
-                    cy.contains(value)
-                        .as('autocompleteAlias')
-                        .click({ force: true });
-                });
+                        })
+                        .invoke('val')
+                        .then(val => {
+                            if (!val) {
+                                throw new Error('Field is empty after typing');
+                            }
+                        });
+                })
         });
+    });
 });
+
+Cypress.Commands.add('getRadioOptionByValue', (elements: ElementTypeAndValueOpcional): void => {
+    Object.entries(elements).forEach(([element, value]) => {
+        cy.get(element, { timeout: 20000 })
+            .should('be.visible')
+            .find(`input[type="radio"][value="${value}"]`)
+            .check({ force: true });
+    })
+});
+
+Cypress.Commands.add('getSelectOptionByValue', (elements: ElementTypeAndValueOpcional): void => {
+    Object.entries(elements).forEach(([element, value]) => {
+        cy.get(element, { timeout: 20000 }).then(($select) => {
+            if ($select.length > 0 && $select.is(':visible')) {
+                cy.wrap($select)
+                    .select(value.value, { force: true });
+            }
+        })
+    });
+});
+
+Cypress.Commands.add('getElementAutocompleteTypeAndClick', (elements: { [key: string]: string }, autocomplete: string) => {
+    cy.wrap(null).then(() => {
+        Object.entries(elements).forEach(([element, text]) => {
+            cy.get(element, { timeout: 20000 })
+                .each(($input) => {
+                    cy.wrap($input)
+                        .type(text)
+                        .then(() => {
+                            cy.get(autocomplete)
+                                .as('autocompleteAlias')
+                                .click({ force: true });
+                        })
+                })
+        })
+    });
+});
+
+
 
 Cypress.Commands.add('waitModalAndClick', (jqueryElement: string, element: string) => {
     const $aliasModal = Cypress.$(jqueryElement);

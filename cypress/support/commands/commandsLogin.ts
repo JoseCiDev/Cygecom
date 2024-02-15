@@ -29,7 +29,11 @@
 
 
 import { elements as el } from '../../elements'
-import { validateEmail, validatePassword, checkInput } from '../../utils';
+import { 
+    validateEmail, 
+    validatePassword, 
+    checkInput 
+} from '../../utils';
 import { dataParameters } from '../../dataParameters';
 import _ from 'lodash';
 

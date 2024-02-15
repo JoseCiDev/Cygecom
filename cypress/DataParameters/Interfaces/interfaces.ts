@@ -3,52 +3,52 @@
 import { faker } from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { format } from 'date-fns';
+import {
+    AllowedApprovalCostCenter,
+    AllowedRequestCostCenter,
+    ApproveLimit,
+    ApproverUser,
+    AutorizedRequest,
+    ColumnSearchParameter,
+    ComexImport,
+    ConditionalWrite,
+    DateTimeRecord,
+    ProductCategory,
+    QuoteRequest,
+    RequestOtherUsers,
+    SaveRequest,
+    SearchColumnGeneralRequests,
+    SearchColumnMyRequests,
+    SearchColumnOneOffServiceRequests,
+    SearchColumnProductRequests,
+    SearchColumnRecurringServiceRequests,
+    Sector,
+    ShowHideColumnsGeneralRequests,
+    ShowHideColumnsMyRequests,
+    ShowHideColumnsOneOffServiceRequests,
+    ShowHideColumnsProductRequests,
+    ShowHideColumnsProductivityReport,
+    ShowHideColumnsProfilesTable,
+    ShowHideColumnsRecurringServiceRequests,
+    ShowHideColumnsRequestReport,
+    ShowHideColumnsSupplierRegistration,
+    ShowHideColumnsUserRegistration,
+    ShowRecordsQuantity,
+    SupplierOfRequest,
+    TableColumnsGeneralRequests,
+    TableColumnsMyRequests,
+    TableColumnsOneOffServiceRequests,
+    TableColumnsProductRequests,
+    TableColumnsProductivityReport,
+    TableColumnsProfilesTable,
+    TableColumnsRecurringServiceRequests,
+    TableColumnsRequestReport,
+    TableColumnsSupplierRegistration,
+    TableColumnsUserRegistration,
+    TelephoneType,
+    UserProfile
+} from '../../import';
 
-
-
-import { AllowedApprovalCostCenter } from '../Enums/allowedApprovalCostCenter';
-import { AllowedRequestCostCenter } from '../Enums/allowedRequestCostCenter';
-import { ApproveLimit } from '../Enums/approveLimit';
-import { ApproverUser } from '../Enums/approverUser';
-import { AutorizedRequest } from '../Enums/autorizedRequest';
-import { RequestOtherUsers } from '../Enums/requestOtherUsers';
-import { SearchColumnGeneralRequests } from '../Enums/searchColumnGeneralRequests';
-import { SearchColumnMyRequests } from '../Enums/searchColumnMyRequests';
-import { SearchColumnOneOffServiceRequests } from '../Enums/searchColumnOneOffServiceRequests';
-import { SearchColumnProductRequests } from '../Enums/searchColumnProductRequests';
-import { SearchColumnRecurringServiceRequests } from '../Enums/searchColumnRecurringServiceRequests';
-import { Sector } from '../Enums/sector';
-import { ShowHideColumnsGeneralRequests } from '../Enums/showHideColumnsGeneralRequests';
-import { ShowHideColumnsMyRequests } from '../Enums/showHideColumnsMyRequests';
-import { ShowHideColumnsOneOffServiceRequests } from '../Enums/showHideColumnsOneOffServiceRequests';
-import { ShowHideColumnsProductRequests } from '../Enums/showHideColumnsProductRequests';
-import { ShowHideColumnsProductivityReport } from '../Enums/showHideColumnsProductivityReport';
-import { ShowHideColumnsProfilesTable } from '../Enums/showHideColumnsProfilesTable';
-import { ShowHideColumnsRecurringServiceRequests } from '../Enums/showHideColumnsRecurringServiceRequests';
-import { ShowHideColumnsRequestReport } from '../Enums/showHideColumnsRequestReport';
-import { ShowHideColumnsSupplierRegistration } from '../Enums/showHideColumnsSupplierRegistration';
-import { ShowHideColumnsUserRegistration } from '../Enums/showHideColumnsUserRegistration';
-import { ShowRecordsQuantity } from '../Enums/showRecordsQuantity';
-import { TableColumnsGeneralRequests } from '../Enums/tableColumnsGeneralRequests';
-import { TableColumnsMyRequests } from '../Enums/tableColumnsMyRequests';
-import { TableColumnsOneOffServiceRequests } from '../Enums/tableColumnsOneOffServiceRequests';
-import { TableColumnsProductRequests } from '../Enums/tableColumnsProductRequests';
-import { TableColumnsProductivityReport } from '../Enums/tableColumnsProductivityReport';
-import { TableColumnsProfilesTable } from '../Enums/tableColumnsProfilesTable';
-import { TableColumnsRecurringServiceRequests } from '../Enums/tableColumnsRecurringServiceRequests';
-import { TableColumnsRequestReport } from '../Enums/tableColumnsRequestReport';
-import { TableColumnsSupplierRegistration } from '../Enums/tableColumnsSupplierRegistration';
-import { TableColumnsUserRegistration } from '../Enums/tableColumnsUserRegistration';
-import { TelephoneType } from '../Enums/telephoneType';
-import { UserProfile } from '../Enums/userProfile';
-import { ColumnSearchParameter, ConditionalWrite, DateTimeRecord } from '../Types/types';
-import { AcquiringArea } from '../Enums/acquiringArea';
-import { ComexImport } from '../Enums/comexImport';
-import { QuoteRequest } from '../Enums/quoteRequest';
-import { PaymentCondition } from '../Enums/paymentCondition';
-import { PaymentMethod } from '../Enums/paymentMethod';
-import { SupplierOfRequest } from '../Enums/supplierOfRequest';
-import { ProductCategory } from '../Enums/productCategory';
 
 
 const environment = Cypress.env('ENVIRONMENT');
@@ -156,7 +156,7 @@ export interface DataParameters<S = string> {
             apportionmentPercentage: S | number;
             apportionmentValue: S | number;
             quoteRequest: Record<QuoteRequest, boolean>;
-            acquiringArea: AcquiringArea;
+            acquiringArea: string;
             comexImport: ComexImport;
             reasonForRequest: string;
             desiredDeliveryDate: DateTimeRecord;
@@ -176,6 +176,8 @@ export interface DataParameters<S = string> {
             productSize: S | number;
             productModel: S;
             productLink: S;
+            attachedFile: S;
+            saveRequest: Record<SaveRequest, boolean>;
 
         },
         oneOffService: {},
