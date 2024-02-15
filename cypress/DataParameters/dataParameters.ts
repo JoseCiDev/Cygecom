@@ -1,4 +1,4 @@
-/// <reference path="./support/cypress.d.ts" />
+/// <reference path="../support/cypress.d.ts" />
 
 import { faker } from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
@@ -49,7 +49,7 @@ import {
     TableColumnsUserRegistration,
     TelephoneType,
     UserProfile
-} from './import';
+} from '../import';
 
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
@@ -124,27 +124,8 @@ export const dataParameters: DataParameters = {
             allowedApprovalCostCenter: AllowedApprovalCostCenter.CGE_DIRETORIA,
 
         },
-        // supplierRegistration: {
-        //     CNPJ: ,
-        //     company: ,
-        //     companyName: ,
-        //     description: ,
-        //     marketType: ,
-        //     supplierIndication: ,
-        //     cep: ,
-        //     country: ,
-        //     state: ,
-        //     city: ,
-        //     district: ,
-        //     street: ,
-        //     number: ,
-        //     addressComplement: ,
-        //     telephone: ,
-        //     email: ,
-        //     tradeRepresentative: ,
-        // },
+
     },
-    // ...
     showHideColumns: {
         showHideColumnsUserRegistration: {
             [ShowHideColumnsUserRegistration.user]: false,
@@ -318,21 +299,18 @@ export const dataParameters: DataParameters = {
             [SearchColumnRecurringServiceRequests.purchaseOrder]: [false, '---'],
         },
 
-
-
         tableColumnsUserRegistration: {
             [TableColumnsUserRegistration.user]: false,
             [TableColumnsUserRegistration.email]: false,
             [TableColumnsUserRegistration.profile]: false,
             [TableColumnsUserRegistration.memberSince]: true,
-            //Adicione todas as outras propriedades necessárias aqui
         },
         tableColumnsSupplierRegistration: {
             [TableColumnsSupplierRegistration.CNPJ]: false,
             [TableColumnsSupplierRegistration.company]: false,
             [TableColumnsSupplierRegistration.companyName]: false,
             [TableColumnsSupplierRegistration.situation]: false,
-        }, // Add the necessary properties for this object
+        },
         tableColumnsMyRequests: {
             [TableColumnsMyRequests.requestNumber]: true,
             [TableColumnsMyRequests.hiredBy]: false,
@@ -484,15 +462,6 @@ export const dataParameters: DataParameters = {
         oneOffService: {},
         recurringService: {},
     },
-    /*
-
-}
-    */
-
-    // ...
-
-
-
 
     telephoneType: TelephoneType,
     userProfile: UserProfile,

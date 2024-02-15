@@ -34,7 +34,7 @@ import {
     validatePassword, 
     checkInput 
 } from '../../utils';
-import { dataParameters } from '../../dataParameters';
+import { dataParameters } from '../../DataParameters/dataParameters';
 import _ from 'lodash';
 
 

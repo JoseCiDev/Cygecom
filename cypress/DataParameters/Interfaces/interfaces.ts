@@ -73,25 +73,6 @@ export interface UserRegistration<S = string> {
     allowedRequestCostCenter: AllowedRequestCostCenter;
     allowedApprovalCostCenter: AllowedApprovalCostCenter;
 };
-export interface SupplierRegistration<S = string> {
-    CNPJ: S;
-    company: S;
-    companyName: S;
-    description: S;
-    marketType: S;
-    supplierIndication: S;
-    cep: S;
-    country: S;
-    state: S;
-    city: S;
-    district: S;
-    street: S;
-    number: S;
-    addressComplement: S;
-    telephone: S;
-    email: S;
-    tradeRepresentative: S;
-};
 
 export interface ShowHideColumns<S = string> {
     showHideColumnsUserRegistration: Record<ShowHideColumnsUserRegistration, boolean>,
@@ -148,7 +129,6 @@ export interface DataParameters<S = string> {
     };
     Register: {
         userRegistration: UserRegistration<S>;
-        // supplierRegistration: SupplierRegistration<S>;
     };
     Request: {
         product: {

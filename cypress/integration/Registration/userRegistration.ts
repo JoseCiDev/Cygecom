@@ -1,5 +1,5 @@
 import { elements as el } from '../../elements';
-import { dataParameters } from '../../dataParameters'
+import { dataParameters } from '../../DataParameters/dataParameters'
 import { 
     ShowRecordsQuantityElement, 
     SortByColumnElement, 

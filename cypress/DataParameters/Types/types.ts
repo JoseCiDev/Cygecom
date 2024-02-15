@@ -4,8 +4,6 @@ import { faker } from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { format } from 'date-fns';
 import {
-    PaymentCondition,
-    PaymentMethod,
     SearchColumnGeneralRequests,
     SearchColumnMyRequests,
     SearchColumnOneOffServiceRequests,
@@ -35,6 +33,7 @@ import {
 
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
+
 
 
 export type ColumnEnums =
@@ -75,15 +74,7 @@ export type ColumnSearchParameter =
 
 export type ValidationResult = Cypress.Chainable<{ error?: string; success?: string; }>
 
-export type DateTimeRecord = [string | Date, boolean];
-
-export type ConditionalWrite =
-    Record<PaymentCondition, [boolean, string]> |
-    Record<PaymentMethod, [boolean, string]>
-
-
-
-export type ElementTypeAndValueOpcional = {
-    element: string,
+export type ElementTypeAndValueOpcional = ({
+    [element: string]: string,
     value?: string,
-}[];
+})[]

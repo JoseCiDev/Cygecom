@@ -6,7 +6,7 @@ import { elements as el } from '../elements';
 import { env } from 'process';
 import { data } from 'cypress/types/jquery';
 import { DataParameters } from '../import';
-import { dataParameters } from './../dataParameters';
+import { dataParameters } from '../DataParameters/dataParameters';
 
 
 

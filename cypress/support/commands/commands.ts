@@ -29,7 +29,7 @@
 
 
 import { elements as el } from '../../elements'
-import { FORMATTED_DATE, FORMATTED_TIME, dataParameters } from '../../dataParameters'
+import { FORMATTED_DATE, FORMATTED_TIME, dataParameters } from '../../DataParameters/dataParameters'
 
 
 import '../commands/commandsLogin';

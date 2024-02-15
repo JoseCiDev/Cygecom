@@ -2,7 +2,7 @@
 
 import { faker } from '@faker-js/faker';
 import { elements as el } from '../../elements';
-import { dataParameters } from '../../dataParameters'
+import { dataParameters } from '../../DataParameters/dataParameters'
 
 const {
     logout,
