@@ -23,14 +23,14 @@
     <div class="form-group">
         <div class="row" style="margin-bottom: -15px;">
 
-            <div class="col-sm-3 mb-3">
+            <div class="col-sm-3 mb-3 form-group">
                 <label class="regular-text" for="amount">Editar valor total desta solicitação</label>
                 <input type="text" placeholder="0,00" class="form-control format-amount" id="format-amount" data-cy="format-amount" value="{{ $amount }}"
                     @disabled($requestIsFromLogged)>
                 <input type="hidden" name="{{ $inputName }}" id="amount" data-cy="amount" class="amount no-validation" value="{{ $amount }}">
             </div>
 
-            <div class="col-sm-3 mb-3">
+            <div class="col-sm-3 mb-3 form-group">
                 <label for="status" class="regular-text">Status da solicitação</label>
                 <select name="status" data-cy="status" id="status" @disabled($requestIsFromLogged) class='select2-me' style="width:100%;">
                     @foreach ($allRequestStatus as $status)
@@ -48,7 +48,7 @@
                 </select>
             </div>
 
-            <div class="col-sm-3 mb-3">
+            <div class="col-sm-3 mb-3 form-group">
                 <label for="supplies_user_id" class="regular-text">Atribuir novo responsável</label>
                 <select name="supplies_user_id" data-cy="supplies_user_id" id="supplies_user_id" class='select2-me' style="width: 100%" placeholder="Escolher novo responsável"
                     @disabled($requestIsFromLogged)>
@@ -70,12 +70,12 @@
                 <div class="d-flex gap-3">
                     <label for="purchase_order" class="regular-text">Ordem de compra</label>
                     <div class="d-flex gap-2">
-                        <div class="form-check">
+                        <div class="form-check form-group">
                             <input class="form-check-input" type="radio" value="callisto" id="erp_callisto" name="erp" @disabled(!$purchaseOrder || ($purchaseOrder && !$requestStatusIsFinish))
                                 @checked(ERP::CALLISTO->value === $erp?->value)>
                             <label class="form-check-label" for="erp_callisto"> Callisto </label>
                         </div>
-                        <div class="form-check">
+                        <div class="form-check form-group">
                             <input class="form-check-input" type="radio" value="senior" id="erp_senior" name="erp" @disabled(!$purchaseOrder || ($purchaseOrder && !$requestStatusIsFinish)) @checked(ERP::SENIOR->value === $erp?->value)>
                             <label class="form-check-label" for="erp_senior"> Senior </label>
                         </div>
@@ -131,42 +131,58 @@
 
             let maskInstances = [];
 
-            $erp.on('change', (event) => {
-                const $currentElement = $(event.target);
-                const placeholderCallisto = 'Ex.: 08454/14';
-                const placeholderSenior = 'Ex.: 9929';
-
+            const applyMask = () => {
                 maskInstances.forEach(mask => mask.destroy());
                 maskInstances = [];
 
-                $purchaseOrder.attr('placeholder', $currentElement.val() === 'callisto' ? placeholderCallisto : placeholderSenior);
+                const placeholderCallisto = 'Ex.: 08454/14';
+                const placeholderSenior = 'Ex.: 9929';
+                const erpChecked = $erp.filter(':checked').val();
+                const maskOptions = {
+                    callisto: {
+                        mask: Number,
+                        min: 3,
+                        radix: "/",
+                        padFractionalZeros: true,
+                    },
+                    senior: {
+                        mask: Number,
+                        min: 0,
+                        scale: 0,
+                    }
+                }
 
-                const maskOptions = $currentElement.val() === 'callisto' ? {
-                    mask: Number,
-                    min: 3,
-                    radix: "/",
-                    padFractionalZeros: true,
-                } : {
-                    mask: Number,
-                    min: 0,
-                    scale: 0,
-                };
+                if (!erpChecked) {
+                    return;
+                }
+
+                $purchaseOrder.attr('placeholder', erpChecked === 'callisto' ? placeholderCallisto : placeholderSenior);
 
                 $purchaseOrder.each((_, element) => {
-                    const mask = IMask(element, maskOptions);
+                    const mask = IMask(element, maskOptions[erpChecked]);
                     maskInstances.push(mask);
                 });
 
                 $purchaseOrder.attr('disabled', false);
-            });
+            }
 
-            $status.on('change', function() {
-                const currentValue = $(this).val();
+            const handleChangeStatus = (event) => {
+                const currentValue = $(event.target).val();
 
                 if (currentValue === oldStatusValue) {
+                    const isFinished = currentValue === statusFinish;
+                    const hasTotalAmount = $formatAmount.val();
+
                     $reasonUpdateStatusDiv.hide();
                     $reasonUpdateStatus.removeRequired();
                     $reasonUpdateStatus.val('');
+
+                    if (isFinished && !hasTotalAmount) {
+                        $formatAmount.makeRequired();
+                    } else {
+                        $formatAmount.removeRequired();
+                    }
+
                     return;
                 }
 
@@ -201,9 +217,9 @@
                     $reasonUpdateStatus.removeRequired();
                     $reasonUpdateStatus.rules('remove', 'required');
                 }
-            }).trigger('change');
+            }
 
-            $form.on('submit', function(event) {
+            const submit = (event) => {
                 event.preventDefault();
 
                 const formIsValid = $form.valid();
@@ -231,7 +247,12 @@
                     $form.off('submit');
                     $form.trigger('submit');
                 })
-            });
+            }
+
+            applyMask();
+            $erp.on('change', applyMask);
+            $status.on('change', handleChangeStatus).trigger('change');
+            $form.on('submit', submit);
         });
     </script>
 @endpush
