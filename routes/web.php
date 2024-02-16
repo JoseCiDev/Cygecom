@@ -10,6 +10,7 @@ require __DIR__ . '/web/users.php';
 require __DIR__ . '/web/suppliers.php';
 require __DIR__ . '/web/reports.php';
 require __DIR__ . '/web/profile.php';
+require __DIR__ . '/web/files.php';
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

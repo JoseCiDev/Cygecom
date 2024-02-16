@@ -82,6 +82,9 @@ class Abilities extends Seeder
             ['id' => 51, 'name' => 'post.api.reports.requests.index', 'description' => 'Permite buscar dados de relatório de solicitação para tabela através da API.'],
             ['id' => 60, 'name' => 'get.reports.productivity.index', 'description' => 'Acessar relatório de produtividade. (Página utiliza habilidades API)'],
             ['id' => 61, 'name' => 'post.api.reports.productivity.index', 'description' => 'Permite buscar dados de relatório de produtividade para tabela através da API.'],
+
+            // Files
+            ['id' => 63, 'name' => 'get.files.show', 'description' => 'Acessar qualquer arquivo/anexo enviado para o sistema.'],
         ];
 
         $authorizesAbilities = [
@@ -102,7 +105,8 @@ class Abilities extends Seeder
             3, 4, 5, // Web
             17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 49, 50, // Requests
             44, 51, // Reports
-            47, 48 // Supplies
+            47, 48, // Supplies
+            63, // Files
         ];
 
         $suppliesAbilities = [
