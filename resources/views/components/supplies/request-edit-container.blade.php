@@ -66,7 +66,7 @@
                 </select>
             </div>
 
-            <div class="col-sm-3 mb-3" style="min-width: 340px">
+            <div class="col-sm-3 mb-3" style="min-width: 360px">
                 <div class="d-flex gap-3">
                     <label for="purchase_order" class="regular-text">Ordem de compra</label>
                     <div class="d-flex gap-2">
