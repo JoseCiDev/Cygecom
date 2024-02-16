@@ -425,16 +425,20 @@
         <div class="row">
             <div class="col-md-12">
                 <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
-                @if ($files->count())
-                    <ul>
-                        @foreach ($files as $index => $file)
-                            <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank"
-                                    rel="noopener noreferrer">{{ $file->original_name }}</a></li>
-                        @endforeach
-                    </ul>
+                @can('get.files.show')
+                    @if ($files->count())
+                        <ul>
+                            @foreach ($files as $index => $file)
+                                <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ route('files.show', ['path' => $each->path]) }}"
+                                        target="_blank">{{ $file->original_name }}</a></li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p>Nenhum registro encontrado.</p>
+                    @endif
                 @else
-                    <p>Nenhum registro encontrado.</p>
-                @endif
+                    <p>Ops! Você não possui permissão para visualizar os anexos.</p>
+                @endcan
             </div>
         </div>
 
