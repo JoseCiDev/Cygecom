@@ -3,6 +3,11 @@
 import { faker } from '@faker-js/faker';
 import { elements as el } from '../../elements';
 import { dataParameters } from '../../DataParameters/dataParameters'
+import {
+    validateEmail,
+    validatePassword,
+    checkInput,
+} from '../../utils';
 
 const {
     logout,

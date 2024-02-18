@@ -1,7 +1,7 @@
 import { elements as el } from '../../../elements';
-import { dataParameters } from '../../../DataParameters/dataParameters'
-
-
+import {
+    dataParameters,
+} from '../../../DataParameters/dataParameters'
 
 
 const {
@@ -82,8 +82,6 @@ const {
 } = el.Supply
 
 
-
-
 describe('Testes da página de criação de solicitação de produtos', () => {
 
 
@@ -92,7 +90,7 @@ describe('Testes da página de criação de solicitação de produtos', () => {
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
-    })
+    });
 
     it(`Solicitação de produtos`, () => {
         cy.getElementAndClick([

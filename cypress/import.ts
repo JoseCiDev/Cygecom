@@ -1,4 +1,4 @@
-export { DataParameters, UserRegistration, SupplierRegistration, ShowHideColumns, GetDataOnGrid, DateTime, CheckAndThrowError } from './DataParameters/Interfaces/interfaces';
+export { DataParameters, UserRegistration, ShowHideColumns, GetDataOnGrid, DateTime, CheckAndThrowError } from './DataParameters/Interfaces/interfaces';
 export { Sector } from './DataParameters/Enums/sector';
 export { UserProfile } from './DataParameters/Enums/userProfile';
 export { ApproverUser } from './DataParameters/Enums/approverUser';
@@ -6,7 +6,7 @@ export { AutorizedRequest } from './DataParameters/Enums/autorizedRequest';
 export { RequestOtherUsers } from './DataParameters/Enums/requestOtherUsers';
 export { AllowedRequestCostCenter } from './DataParameters/Enums/allowedRequestCostCenter';
 export { AllowedApprovalCostCenter } from './DataParameters/Enums/allowedApprovalCostCenter';
-export { ColumnEnums, ColumnSearchParameter, ValidationResult, DateTimeRecord, ConditionalWrite, ElementTypeAndValueOpcional } from './DataParameters/Types/types';
+export { ColumnEnums, ColumnSearchParameter, ValidationResult, ConditionalWrite, ElementTypeAndValueOpcional } from './DataParameters/Types/types';
 export { AcquiringArea } from './DataParameters/Enums/acquiringArea';
 export { ApproveLimit } from './DataParameters/Enums/approveLimit';
 export { ComexImport } from './DataParameters/Enums/comexImport';
@@ -49,3 +49,4 @@ export { ShowRecordsQuantityElement } from './DataParameters/Enums/showRecordsQu
 export { SearchColumnElement } from './DataParameters/Enums/searchColumnElement';
 export { SearchParameterElement } from './DataParameters/Enums/searchParameterElement';
 export { SortByColumnElement } from './DataParameters/Enums/sortByColumnElement';
+export { FileData } from './DataParameters/Interfaces/interfaceJson';

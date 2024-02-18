@@ -3,7 +3,8 @@ import * as faker from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 
 import { elements as el } from '../elements';
-import { dataParameters } from '../DataParameters/dataParameters'
+import { dataParameters } from '../DataParameters/dataParameters';
+
 
 const {
     logout,

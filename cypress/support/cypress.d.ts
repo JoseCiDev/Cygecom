@@ -1,6 +1,7 @@
 // load the global Cypress types
 /// <reference types="cypress" />
 
+
 import { mount } from 'cypress/react'
 import {
     DateTime,
@@ -8,19 +9,6 @@ import {
     TableTypesElements,
     ValidationResult
 } from '../import';
-
-// load the 3rd party command definition
-/// <reference types="cypress-wait-until" />
-
-// import { mount } from 'cypress/react'
-
-// Augment the Cypress namespace to include type definitions for
-// your custom command.
-// Alternatively, can be defined in cypress/support/component.d.ts
-// with a <reference path="./component" /> at the top of your spec.
-// cypress/support/index.ts
-
-
 
 declare global {
     namespace Cypress {

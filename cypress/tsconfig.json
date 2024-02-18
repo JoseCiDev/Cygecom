@@ -2,6 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "target": "es5",
     "lib": [
       "es5",
@@ -11,5 +12,5 @@
   "include": [
     "**/*.ts",
     "./support/cypress.d.ts"
-  ]
+, "DataParameters/Interfaces/interfaceTestParameters.ts.old"  ]
 }

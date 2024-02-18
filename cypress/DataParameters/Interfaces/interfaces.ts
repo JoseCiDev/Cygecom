@@ -12,7 +12,7 @@ import {
     ColumnSearchParameter,
     ComexImport,
     ConditionalWrite,
-    DateTimeRecord,
+    FileData,
     ProductCategory,
     QuoteRequest,
     RequestOtherUsers,
@@ -48,12 +48,6 @@ import {
     TelephoneType,
     UserProfile
 } from '../../import';
-
-
-
-const environment = Cypress.env('ENVIRONMENT');
-const dataEnvironment = Cypress.env(environment);
-
 
 export interface UserRegistration<S = string> {
     name: S;
@@ -120,6 +114,25 @@ export interface CheckAndThrowError<S = string> {
 }
 
 export interface DataParameters<S = string> {
+    env: {
+        ENV: S;
+        EMAIL_ADMIN: S;
+        PASSWORD_ADMIN: S;
+        EMAIL_USER_PADRAO: S;
+        PASSWORD_USER_PADRAO: S;
+        EMAIL_GESTOR_USUARIO: S;
+        PASSWORD_GESTOR_USUARIO: S;
+        BASE_URL: S;
+        DB_NAME: S;
+        DB_USER: S;
+        DB_HOST: S;
+        DB_PORT: S;
+        DB_PASSWORD: S;
+    };
+
+    filePath: FileData;
+
+    sizes: Array<number | [number, number] | S>;
 
     Autentication: {
         domain;
@@ -139,7 +152,7 @@ export interface DataParameters<S = string> {
             acquiringArea: string;
             comexImport: ComexImport;
             reasonForRequest: string;
-            desiredDeliveryDate: DateTimeRecord;
+            desiredDeliveryDate: Date;
             productStorageLocation: S;
             suggestionLinks: S;
             observation: S;
@@ -166,30 +179,10 @@ export interface DataParameters<S = string> {
 
     showHideColumns: ShowHideColumns;
     getDataOnGrid: GetDataOnGrid;
-    env: {
-        ENV: S;
-        EMAIL_ADMIN: S;
-        PASSWORD_ADMIN: S;
-        EMAIL_USER_PADRAO: S;
-        PASSWORD_USER_PADRAO: S;
-        EMAIL_GESTOR_USUARIO: S;
-        PASSWORD_GESTOR_USUARIO: S;
-        BASE_URL: S;
-        DB_NAME: S;
-        DB_USER: S;
-        DB_HOST: S;
-        DB_PORT: S;
-        DB_PASSWORD: S;
-    };
 
     url: {
         login: S;
     };
-
-    sizes: Array<number | [number, number] | S>;
-
-    filePath: S;
-
 
     telephoneType: typeof TelephoneType;
     userProfile: typeof UserProfile;
@@ -229,3 +222,5 @@ export interface DataParameters<S = string> {
     searchColumnOneOffServiceRequests: typeof SearchColumnOneOffServiceRequests;
     searchColumnRecurringServiceRequests: typeof SearchColumnRecurringServiceRequests;
 }
+
+export { ConditionalWrite };

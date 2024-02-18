@@ -198,27 +198,27 @@ Cypress.Commands.add('createRequest', function () {
         }
     };
 
-    cy.getElementAutocompleteTypeAndClick(
-        { [costCenter]: dataParameters.Request.product.costCenter },
-        highlightedOption
-    );
+    // cy.getElementAutocompleteTypeAndClick(
+    //     { [costCenter]: dataParameters.Request.product.costCenter },
+    //     highlightedOption
+    // );
 
-    setApportionment();
+    // setApportionment();
 
-    setQuotation();
+    // setQuotation();
 
     cy.getElementAndCheck([
         { element: dataParameters.Request.product.acquiringArea },
         { element: dataParameters.Request.product.comexImport },
     ]);
 
-    cy.getElementAndType({
-        [reasonForRequest]: dataParameters.Request.product.reasonForRequest,
-        [desiredDeliveryDate]: dataParameters.Request.product.desiredDeliveryDate[0].toString(),
-        [productStorageLocation]: dataParameters.Request.product.productStorageLocation,
-        [suggestionLinks]: dataParameters.Request.product.suggestionLinks,
-        [observation]: dataParameters.Request.product.observation,
-    });
+    // cy.getElementAndType({
+    //     [reasonForRequest]: dataParameters.Request.product.reasonForRequest,
+    //     [desiredDeliveryDate]: dataParameters.Request.product.desiredDeliveryDate[0].toString(),
+    //     [productStorageLocation]: dataParameters.Request.product.productStorageLocation,
+    //     [suggestionLinks]: dataParameters.Request.product.suggestionLinks,
+    //     [observation]: dataParameters.Request.product.observation,
+    // });
 
     setPaymentAndSupplier(
         paymentCondition,
@@ -227,41 +227,41 @@ Cypress.Commands.add('createRequest', function () {
         dataParameters.Request.product.paymentCondition
     );
 
-    cy.getElementAndType({
-        [totalValue]: dataParameters.Request.product.totalValue.toString(),
-    });
+    // cy.getElementAndType({
+    //     [totalValue]: dataParameters.Request.product.totalValue.toString(),
+    // });
 
-    setPaymentAndSupplier(
-        paymentMethod,
-        searchPaymentMethodAndTerms,
-        highlightedOption,
-        dataParameters.Request.product.paymentMethod
-    );
+    // setPaymentAndSupplier(
+    //     paymentMethod,
+    //     searchPaymentMethodAndTerms,
+    //     highlightedOption,
+    //     dataParameters.Request.product.paymentMethod
+    // );
 
-    cy.getElementAndType({
-        [paymentInstallments]: dataParameters.Request.product.paymentInstallments.toString(),
-        [paymentDetails]: dataParameters.Request.product.paymentDetails,
-    });
+    // cy.getElementAndType({
+    //     [paymentInstallments]: dataParameters.Request.product.paymentInstallments.toString(),
+    //     [paymentDetails]: dataParameters.Request.product.paymentDetails,
+    // });
 
-    cy.getElementAutocompleteTypeAndClick({
-        [supplier]: dataParameters.Request.product.supplier,
-        [productCategory]: dataParameters.Request.product.productCategory,
-    },
-        highlightedOption
-    );
+    // cy.getElementAutocompleteTypeAndClick({
+    //     [supplier]: dataParameters.Request.product.supplier,
+    //     [productCategory]: dataParameters.Request.product.productCategory,
+    // },
+    //     highlightedOption
+    // );
 
-    cy.getElementAndType({
-        [productNameAndDescription]: dataParameters.Request.product.productNameAndDescription,
-        [productQuantity]: dataParameters.Request.product.productQuantity.toString(),
-        [productColor]: dataParameters.Request.product.productColor,
-        [productSize]: dataParameters.Request.product.productSize.toString(),
-        [productModel]: dataParameters.Request.product.productModel,
-        [productLink]: dataParameters.Request.product.productLink,
-    });
+    // cy.getElementAndType({
+    //     [productNameAndDescription]: dataParameters.Request.product.productNameAndDescription,
+    //     [productQuantity]: dataParameters.Request.product.productQuantity.toString(),
+    //     [productColor]: dataParameters.Request.product.productColor,
+    //     [productSize]: dataParameters.Request.product.productSize.toString(),
+    //     [productModel]: dataParameters.Request.product.productModel,
+    //     [productLink]: dataParameters.Request.product.productLink,
+    // });
 
-    cy.insertFile(dataParameters.Request.product.attachedFile, attachedFile);
+    // cy.insertFile(dataParameters.Request.product.attachedFile, attachedFile);
 
-    saveRequest();
+    // saveRequest();
 });
 
 

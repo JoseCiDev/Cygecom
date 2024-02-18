@@ -48,16 +48,19 @@ import {
     TableColumnsSupplierRegistration,
     TableColumnsUserRegistration,
     TelephoneType,
-    UserProfile
+    UserProfile,
+    ConditionalWrite,
 } from '../import';
+import * as data from './dados.json';
+import {
+    PaymentConditionData,
+    FileData,
+} from './Interfaces/interfaceJson';
 
-const environment = Cypress.env('ENVIRONMENT');
-const dataEnvironment = Cypress.env(environment);
 
 let domain = '@essentia.com.br';
 let password = faker.number.int().toString();
 let confirmPassword = password;
-
 const currentDate: Date = new Date();
 const year: number = currentDate.getFullYear();
 const month: string = String(currentDate.getMonth() + 1).padStart(2, '0');
@@ -68,29 +71,75 @@ const seconds: string = String(currentDate.getSeconds()).padStart(2, '0');
 export const FORMATTED_DATE: string = `${year}-${month}-${day}`;
 export const FORMATTED_TIME: string = `${hour}:${minutes}:${seconds}`;
 
+const environment = Cypress.env('ENVIRONMENT');
+const dataEnvironment = Cypress.env(environment);
 
-
+const paymentCondition: PaymentConditionData = {
+    anticipatedPayment: data.anticipatedPayment as [boolean, string],
+    cashPayment: data.cashPayment as [boolean, string],
+    paymentInInstallments: data.paymentInInstallments as [boolean, string]
+};
+const filePath: FileData = data.fileData as FileData;
 
 export const dataParameters: DataParameters = {
 
     env: dataEnvironment,
 
-    filePath: '/',
+    filePath: filePath,
 
     sizes: [
-        [1536, 960],
-        [1440, 900],
-        [1366, 768],
-        [1280, 800],
-        [1280, 720],
-        [1024, 768],
-        [1024, 600],
-        [820, 1180],
-        [768, 1024],
-        [412, 914],
-        [414, 896],
-        [414, 846],
-        [414, 736],
+        [
+            1536,
+            960
+        ],
+        [
+            1440,
+            900
+        ],
+        [
+            1366,
+            768
+        ],
+        [
+            1280,
+            800
+        ],
+        [
+            1280,
+            720
+        ],
+        [
+            1024,
+            768
+        ],
+        [
+            1024,
+            600
+        ],
+        [
+            820,
+            1180
+        ],
+        [
+            768,
+            1024
+        ],
+        [
+            412,
+            914
+        ],
+        [
+            414,
+            896
+        ],
+        [
+            414,
+            846
+        ],
+        [
+            414,
+            736
+        ]
     ],
 
     url: {
@@ -422,15 +471,18 @@ export const dataParameters: DataParameters = {
             comexImport:
                 ComexImport.yes,
             reasonForRequest: faker.lorem.lines(),
-            desiredDeliveryDate: [FORMATTED_DATE, true],
+            desiredDeliveryDate: new Date(),
             productStorageLocation: faker.lorem.lines(),
             suggestionLinks: faker.lorem.lines(),
             observation: faker.lorem.lines(),
-            paymentCondition: {
-                [PaymentCondition.anticipatedPayment]: [false, 'Antecipado'],
-                [PaymentCondition.cashPayment]: [false, 'À vista'],
-                [PaymentCondition.paymentInInstallments]: [true, 'Parcelado'],
-            },
+
+            // paymentCondition: {
+            //     [PaymentCondition.anticipatedPayment]: [false, 'Antecipado'],
+            //     [PaymentCondition.cashPayment]: [false, 'À vista'],
+            //     [PaymentCondition.paymentInInstallments]: [true, 'Parcelado'],
+            // },
+            paymentCondition: paymentCondition,
+
             totalValue: faker.helpers.arrayElement([1750.36, 350.87, 700.04]),
             paymentMethod: {
                 [PaymentMethod.boleto]: [false, 'Boleto'],

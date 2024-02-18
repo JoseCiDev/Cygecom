@@ -31,8 +31,7 @@ import {
     TableColumnsUserRegistration
 } from '../../import';
 
-const environment = Cypress.env('ENVIRONMENT');
-const dataEnvironment = Cypress.env(environment);
+
 
 
 
@@ -73,6 +72,11 @@ export type ColumnSearchParameter =
     Record<SearchColumnRecurringServiceRequests, [boolean, string]>;
 
 export type ValidationResult = Cypress.Chainable<{ error?: string; success?: string; }>
+
+
+export type ConditionalWrite = {
+    [key: string]: [boolean, string];
+};
 
 export type ElementTypeAndValueOpcional = ({
     [element: string]: string,

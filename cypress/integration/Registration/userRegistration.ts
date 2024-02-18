@@ -1,11 +1,12 @@
 import { elements as el } from '../../elements';
 import { dataParameters } from '../../DataParameters/dataParameters'
-import { 
-    ShowRecordsQuantityElement, 
-    SortByColumnElement, 
-    SearchColumnElement, 
-    SearchParameterElement 
+import {
+    ShowRecordsQuantityElement,
+    SortByColumnElement,
+    SearchColumnElement,
+    SearchParameterElement
 } from '../../import';
+
 
 
 

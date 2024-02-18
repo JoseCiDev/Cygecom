@@ -20,16 +20,21 @@ export function validateEmail(email: string): string | null {
         return 'Email com formato inválido';
     }
     return null;
-}
+};
 
 export function validatePassword(password: string): boolean {
     const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@]{8,}$/;
     return re.test(password);
-}
+};
 
 export function checkInput($input, elementError, errorMessage) {
     const inputValueFromInput = String($input.val());
     if (inputValueFromInput.length < 1 && !Cypress.$(elementError).is(':visible')) {
         throw new Error(errorMessage);
     }
-}
+};
+
+
+
+
+

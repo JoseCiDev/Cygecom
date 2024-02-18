@@ -1,0 +1,18 @@
+{
+    "fileData": {
+        "filePath": "/"
+    },
+    
+    "anticipatedPayment": [
+        false,
+        "Antecipado"
+    ],
+    "cashPayment": [
+        false,
+        "À vista"
+    ],
+    "paymentInInstallments": [
+        true,
+        "Parcelado"
+    ]
+}

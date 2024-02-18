@@ -29,13 +29,14 @@
 
 
 import { elements as el } from '../../elements'
-import { 
-    validateEmail, 
-    validatePassword, 
-    checkInput 
+import {
+    validateEmail,
+    validatePassword,
+    checkInput,
 } from '../../utils';
 import { dataParameters } from '../../DataParameters/dataParameters';
 import _ from 'lodash';
+// import data from '../../DataParameters/dataParameters.json';
 
 
 const {
