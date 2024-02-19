@@ -391,7 +391,7 @@
                     @if ($files->count())
                         <ul>
                             @foreach ($files as $index => $file)
-                                <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ route('files.show', ['path' => $each->path]) }}"
+                                <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ route('files.show', ['path' => $file->path]) }}"
                                         target="_blank">{{ $file->original_name }}</a></li>
                             @endforeach
                         </ul>
