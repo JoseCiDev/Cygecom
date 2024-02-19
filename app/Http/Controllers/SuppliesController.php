@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
-use Illuminate\Http\Request;
+use Exception;
 use Illuminate\View\View;
-use Illuminate\Database\Eloquent\Collection;
-use App\Enums\{PurchaseRequestType, PurchaseRequestStatus, CompanyGroup};
-use App\Providers\{SupplierService, PurchaseRequestService};
-use App\Http\Requests\Supplies\SuppliesParamsRequest;
+use App\Models\PurchaseRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Database\Eloquent\Collection;
+use App\Http\Requests\Supplies\SuppliesParamsRequest;
+use App\Enums\{PurchaseRequestType, PurchaseRequestStatus};
+use App\Providers\{SupplierService, PurchaseRequestService};
+use App\Http\Requests\Supplies\{
+    UpdateProductRequest as SuppliesProductUpdateRequest,
+    UpdateServiceRequest as SuppliesServiceUpdateRequest,
+    UpdateContractRequest as SuppliesContractUpdateRequest
+};
 
 class SuppliesController extends Controller
 {
@@ -103,6 +109,7 @@ class SuppliesController extends Controller
 
     /**
      * Cria e retorna os parâmetros para view da solicitação do tipo escolhido
+     *
      * @param SuppliesParamsRequest $request
      * @param PurchaseRequestType $requestType
      * @return array parâmetros da solcitação
@@ -119,10 +126,13 @@ class SuppliesController extends Controller
             ->whereNotIn('status', [PurchaseRequestStatus::RASCUNHO->value]);
 
         if (!Gate::allows('admin')) {
-            $requests->whereHas('costCenterApportionment', fn ($query) => $query->whereHas(
-                'costCenter',
-                fn ($query) => $query->whereIn('id', auth()->user()->suppliesCostCenters->pluck('id'))
-            ));
+            $requests->whereHas(
+                'costCenterApportionment',
+                fn($query) => $query->whereHas(
+                    'costCenter',
+                    fn($query) => $query->whereIn('id', auth()->user()->suppliesCostCenters->pluck('id'))
+                )
+            );
         }
 
         $requests->where('type', $requestType);
@@ -133,5 +143,71 @@ class SuppliesController extends Controller
         ];
 
         return $params;
+    }
+
+    /**
+     * @param SuppliesServiceUpdateRequest $request
+     * @param PurchaseRequest $purchaseRequest
+     * @return RedirectResponse
+     */
+    public function updateService(SuppliesServiceUpdateRequest $request, PurchaseRequest $purchaseRequest): RedirectResponse
+    {
+        $purchase_request_id = $purchaseRequest->id;
+
+        try {
+            $purchaseRequest = $this->purchaseRequestService
+                ->updateServiceRequest(id: $purchase_request_id, data: $request->all(), isSuppliesUpdate: true);
+        } catch (Exception $error) {
+            $msg = 'Não foi possível atualizar o registro no banco de dados.';
+            return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
+        }
+
+        session()->flash('success', "Solicitação $purchase_request_id atualizada com sucesso!");
+
+        return redirect()->route('supplies.service.show', ['id' => $purchase_request_id]);
+    }
+
+    /**
+     * @param SuppliesContractUpdateRequest $request
+     * @param PurchaseRequest $purchaseRequest
+     * @return RedirectResponse
+     */
+    public function updateContract(SuppliesContractUpdateRequest $request, PurchaseRequest $purchaseRequest): RedirectResponse
+    {
+        $purchase_request_id = $purchaseRequest->id;
+
+        try {
+            $purchaseRequest = $this->purchaseRequestService
+                ->updateContractRequest(id: $purchase_request_id, data: $request->all(), isSuppliesUpdate: true);
+        } catch (Exception $error) {
+            $msg = 'Não foi possível atualizar o registro no banco de dados.';
+            return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
+        }
+
+        session()->flash('success', "Solicitação $purchase_request_id atualizada com sucesso!");
+
+        return redirect()->route('supplies.contract.show', ['id' => $purchase_request_id]);
+    }
+
+    /**
+     * @param SuppliesProductUpdateRequest $request
+     * @param PurchaseRequest $purchaseRequest
+     * @return RedirectResponse
+     */
+    public function updateProduct(SuppliesProductUpdateRequest $request, PurchaseRequest $purchaseRequest): RedirectResponse
+    {
+        $purchase_request_id = $purchaseRequest->id;
+
+        try {
+            $purchaseRequest = $this->purchaseRequestService
+                ->updateProductRequest(id: $purchase_request_id, data: $request->all(), isSuppliesUpdate: true);
+        } catch (Exception $error) {
+            $msg = 'Não foi possível atualizar o registro no banco de dados.';
+            return redirect()->back()->withInput()->withErrors([$msg, $error->getMessage()]);
+        }
+
+        session()->flash('success', "Solicitação $purchase_request_id atualizada com sucesso!");
+
+        return redirect()->route('supplies.product.show', ['id' => $purchase_request_id]);
     }
 }
