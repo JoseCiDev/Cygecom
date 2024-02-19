@@ -1,13 +1,13 @@
 // Habilidades dependentes de outras habilidades
 const abilityRelations = {
     1: {autoCheck: true, relations: [34, ],},
-    10: {autoCheck: true, relations: [7, ],},
-    11: {autoCheck: true, relations: [8, ],},
-    12: {autoCheck: true, relations: [9, ],},
+    10: {autoCheck: true, relations: [7, 93,],},
+    11: {autoCheck: true, relations: [8, 63,],},
+    12: {autoCheck: true, relations: [9, 63,],},
     19: {autoCheck: true, relations: [18, ],},
     22: {autoCheck: true, relations: [18, ],},
     25: {autoCheck: true, relations: [18, ],},
-    28: {autoCheck: true, relations: [17, 16, ],},
+    28: {autoCheck: true, relations: [17, 16, 63,],},
     31: {autoCheck: true, relations: [34, ],},
     35: {autoCheck: true, relations: [34, ],},
     37: {autoCheck: true, relations: [36, ],},

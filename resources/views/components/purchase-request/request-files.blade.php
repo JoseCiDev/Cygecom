@@ -3,29 +3,33 @@
     <span class="span-info-files"></span>
     <input type="file" class="form-control" name="arquivos[]" id="files" data-cy="files" multiple>
     <ul class="list-group" style="margin-top:15px">
-        @if ($files)
-            @foreach ($files as $each)
-                @php
-                    $filenameSearch = explode('/', $each->original_name);
-                    $filename = end($filenameSearch);
-                @endphp
-                <li class="list-group-item" data-id-purchase-request-file="{{ $each->id }}">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <i class='fa fa-file'></i>
-                            <a style='margin-left:5px' href="{{ env('AWS_S3_BASE_URL') . $each->path }}"target="_blank">{{ $filename }}</a>
-                        </div>
-                        @if (!$isSupplies)
-                            <div class="col-xs-6 text-right">
-                                <button type="button" class="btn btn-primary file-remove">
-                                    <i class='fa fa-trash' style='margin-right:5px'></i>Excluir
-                                </button>
+        @can('get.files.show')
+            @if ($files)
+                @foreach ($files as $each)
+                    @php
+                        $filenameSearch = explode('/', $each->original_name);
+                        $filename = end($filenameSearch);
+                    @endphp
+                    <li class="list-group-item" data-id-purchase-request-file="{{ $each->id }}">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <i class='fa fa-file'></i>
+                                <a style='margin-left:5px' href="{{ route('files.show', ['path' => $each->path]) }}" target="_blank">{{ $filename }}</a>
                             </div>
-                        @endif
-                    </div>
-                </li>
-            @endforeach
-        @endif
+                            @if (!$isSupplies)
+                                <div class="col-xs-6 text-right">
+                                    <button type="button" class="btn btn-primary file-remove">
+                                        <i class='fa fa-trash' style='margin-right:5px'></i>Excluir
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </li>
+                @endforeach
+            @endif
+        @else
+            <p>Ops! Você não possui permissão para visualizar os anexos.</p>
+        @endcan
     </ul>
     <div class="alert alert-success" style="display:none;margin:15px 0px 15px 0px;">
         <i class="fa fa-check"></i> Excluído com sucesso!
