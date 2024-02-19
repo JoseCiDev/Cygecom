@@ -48,6 +48,7 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
+                                <th></th>
                             </tr>
                             <tr>
                                 <th class="noColvis">Nº</th>
@@ -59,6 +60,7 @@
                                 <th>Empresa</th>
                                 <th>Data desejada</th>
                                 <th>Ord. compra</th>
+                                <th>ERP</th>
                                 <th class="noColvis ignore-search">Ações</th>
                             </tr>
                         </thead>
@@ -123,6 +125,7 @@
                                         $showPurchaseOrder = isset($service->purchase_order) && $service->status === PurchaseRequestStatus::FINALIZADA;
                                     @endphp
                                     <td>{{ $showPurchaseOrder ? $service?->purchase_order : '---' }}</td>
+                                    <td>{{ $service?->erp?->label() ?? '---' }}</td>
 
                                     <td class="text-center" style="white-space: nowrap;">
                                         @can('get.api.requests.show')
