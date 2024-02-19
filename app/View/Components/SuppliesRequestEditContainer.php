@@ -6,7 +6,7 @@ use Closure;
 use App\Models\User;
 use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
-use App\Enums\{MainProfile, PurchaseRequestStatus, PurchaseRequestType};
+use App\Enums\{MainProfile, ERP, PurchaseRequestStatus, PurchaseRequestType};
 
 class SuppliesRequestEditContainer extends Component
 {
@@ -27,6 +27,7 @@ class SuppliesRequestEditContainer extends Component
         public ?int $requestUserId,
         public ?string $amount,
         public ?string $purchaseOrder,
+        public ?ERP $erp,
     ) {
         $this->route = "supplies." . $this->requestType->value . ".update";
         $this->allRequestStatus = PurchaseRequestStatus::cases();
