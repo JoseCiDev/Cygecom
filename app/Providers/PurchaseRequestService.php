@@ -37,6 +37,7 @@ class PurchaseRequestService extends ServiceProvider
             'user.person.costCenter',
             'requester',
             'purchaseRequestFile',
+            'requestSuppliesFiles',
             'costCenterApportionment.costCenter.company',
             'deletedByUser',
             'updatedByUser',
@@ -50,7 +51,7 @@ class PurchaseRequestService extends ServiceProvider
             'contract.installments',
             'product.installments',
             'suppliesUser.person.costCenter',
-            'logs'
+            'logs',
         ]);
     }
 

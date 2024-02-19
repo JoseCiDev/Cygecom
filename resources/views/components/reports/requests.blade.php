@@ -12,14 +12,7 @@
         'paymentTerms' => collect(PaymentTerm::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
     ];
 
-    $costCenters = $requestingUsers
-        ->pluck('purchaseRequest')
-        ->collapse()
-        ->filter(fn($item) => $item->status->value !== PurchaseRequestStatus::RASCUNHO->value)
-        ->pluck('costCenterApportionment')
-        ->collapse()
-        ->pluck('costCenter')
-        ->unique();
+    $costCenters = $requestingUsers->pluck('purchaseRequest')->collapse()->filter(fn($item) => $item->status->value !== PurchaseRequestStatus::RASCUNHO->value)->pluck('costCenterApportionment')->collapse()->pluck('costCenter')->unique();
 @endphp
 
 <x-app>
@@ -171,13 +164,13 @@
                                 <th class="noColvis">Nº</th>
                                 <th>Tipo</th>
                                 <th>Solicitado em</th>
+                                <th>Responsável</th>
                                 <th>Data de atribuição</th>
                                 <th>Nome Serviço</th>
                                 <th>Contratado por</th>
                                 <th>Solicitante</th>
                                 <th>Solicitante sistema</th>
                                 <th>Status</th>
-                                <th>Responsável</th>
                                 <th>Centro de custo</th>
                                 <th>Fornecedor</th>
                                 <th>Forma Pgto.</th>
@@ -370,15 +363,18 @@
                                 success: (data) => {
                                     const content = data.data;
                                     const headers = $('#reportsTable>thead>tr>th').toArray().map(header => header.textContent);
-                                    headers.push(...['Vigência (início)', 'Vigência (fim)', 'Ordem de compra', 'COMEX',
+                                    headers.push(...['Vigência (início)', 'Vigência (fim)', 'Ordem de compra', 'ERP', 'COMEX',
                                         'Descrição da solicitação', 'Local para solicitação', 'Motivo da solicitação',
-                                        'Solicitação criada em', 'Links de apoio', 'Observação da solicitação',
+                                        'Links de apoio', 'Observação da solicitação',
                                         'Data deseja para solicitação', 'Apenas cotação', 'Motivo da atualização de status',
-                                        'Aprovação limite do solicitante', 'Solicitante ativo', 'CPF do solicitante', 'Nome da solicitação',
-                                        'Centro de custos/Rateio', 'Qtd. parcelas', 'Parcelas',
+                                        'Aprovação limite do solicitante', 'Solicitante ativo', 'CPF do solicitante', 'Nome do serviço',
+                                        'Qtd. parcelas', 'Parcelas', 'Anexos do solicitante',
+                                        'Anexos do suprimentos', 'Categoria de produtos',
                                     ]);
 
                                     const rows = content.map(item => {
+                                        console.log(item);
+
                                         const id = item.id;
                                         const type = enumRequests['type'][item.type];
 
@@ -387,7 +383,8 @@
                                             .find((item) => item.created_at)
                                             .created_at;
 
-                                        const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss');
+                                        const firstPendingStatus = moment.utc(pendingStatus).format('DD/MM/YYYY HH:mm:ss');
+
                                         const responsibilityMarkedAt = item.responsibility_marked_at ? moment(item.responsibility_marked_at)
                                             .format('DD/MM/YYYY HH:mm:ss') : '---';
 
@@ -402,8 +399,6 @@
                                         const requester = item.requester?.name || '---';
                                         const status = enumRequests['status'][item.status];
                                         const suppliesUserName = item.supplies_user?.person.name || '---';
-                                        const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name)
-                                            .join(', ');
 
                                         const supplierColumnMapping = {
                                             product: () => {
@@ -516,11 +511,11 @@
                                             .format('DD/MM/YYYY') : '---';
 
                                         const purchaseOrder = item.purchase_order || '---';
+                                        const erp = item.erp || '---';
                                         const isComex = item.is_comex ? 'É comex' : 'Não é comex';
                                         const description = item.description || '---';
                                         const localDescription = item.local_description || '---';
                                         const reason = item.reason || '---';
-                                        const createdAt = moment(item.created_at).format('DD/MM/YYYY HH:mm:ss');
                                         const supportLinks = item.support_links || '---';
                                         const observation = item.observation || '---';
                                         const desiredDate = item.desired_date ? moment(item.desired_date).format('DD/MM/YYYY') : '---';
@@ -567,6 +562,13 @@
                                                 return installmentLabel;
                                             })?.join(' / ') || '---';
 
+                                        const hasFilesFromRequester = item.purchase_request_file.length ? 'Possui anexos' : '---';
+                                        const hasFilesFromSupplies = item.request_supplies_files.length ? 'Possui anexos' : '---';
+                                        const productCategories = item.purchase_request_product
+                                            .map((element) => element.category?.name)
+                                            .filter((name, index, self) => self.indexOf(name) === index)
+                                            .join(', ') || '---';
+
                                         let rowData = [
                                             [
                                                 id,
@@ -579,7 +581,8 @@
                                                 requester,
                                                 status,
                                                 suppliesUserName,
-                                                costCenters,
+                                                costCenterApportionment,
+
                                                 suppliers,
                                                 paymentMethodLabel,
                                                 paymentTermsLabel,
@@ -587,11 +590,11 @@
                                                 contractStartDate,
                                                 contractEndDate,
                                                 purchaseOrder,
+                                                erp,
                                                 isComex,
                                                 description,
                                                 localDescription,
                                                 reason,
-                                                createdAt,
                                                 supportLinks,
                                                 observation,
                                                 desiredDate,
@@ -601,9 +604,11 @@
                                                 isBuyer,
                                                 userCPF,
                                                 requestName,
-                                                costCenterApportionment,
                                                 installmentsQtd,
                                                 installments,
+                                                hasFilesFromRequester,
+                                                hasFilesFromSupplies,
+                                                productCategories,
                                             ]
                                         ];
 
@@ -760,8 +765,12 @@
                                     .find((item) => item.created_at)
                                     ?.created_at
 
-                                return firstPendingStatus ? moment(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
+                                return firstPendingStatus ? moment.utc(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
                             }
+                        },
+                        {
+                            data: 'supplies_user.person.name',
+                            render: (suppliesUserName) => (suppliesUserName ?? '---')
                         },
                         {
                             data: 'responsibility_marked_at',
@@ -801,10 +810,6 @@
                         {
                             data: 'status',
                             render: (status) => enumRequests['status'][status]
-                        },
-                        {
-                            data: 'supplies_user.person.name',
-                            render: (suppliesUserName) => (suppliesUserName ?? '---')
                         },
                         {
                             data: 'cost_center_apportionment',
