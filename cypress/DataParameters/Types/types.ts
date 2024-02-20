@@ -81,4 +81,4 @@ export type ConditionalWrite = {
 export type ElementTypeAndValueOpcional = ({
     [element: string]: string,
     value?: string,
-})[]
+})[];

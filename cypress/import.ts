@@ -49,4 +49,3 @@ export { ShowRecordsQuantityElement } from './DataParameters/Enums/showRecordsQu
 export { SearchColumnElement } from './DataParameters/Enums/searchColumnElement';
 export { SearchParameterElement } from './DataParameters/Enums/searchParameterElement';
 export { SortByColumnElement } from './DataParameters/Enums/sortByColumnElement';
-export { FileData } from './DataParameters/Interfaces/interfaceJson';

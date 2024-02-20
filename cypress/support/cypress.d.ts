@@ -146,7 +146,9 @@ declare global {
            */
             getColumnVisibilityCommand(table: TableTypesElements): ValidationResult
 
-            clickTypeAndSelect(element: string, text: string)
+            clickTypeAndSelect(element: string, text: string);
+
+            loginB();
         }
 
     }

@@ -86,6 +86,7 @@ describe('Testes da página de criação de solicitação de produtos', () => {
 
 
     beforeEach(function () {
+        
         cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)

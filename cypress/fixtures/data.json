@@ -1,0 +1,102 @@
+{
+    "file": {
+        "filePath": "/"
+    },
+    "viewport": {
+        "sizes": [
+            [
+                1536,
+                960
+            ],
+            [
+                1440,
+                900
+            ],
+            [
+                1366,
+                768
+            ],
+            [
+                1280,
+                800
+            ],
+            [
+                1280,
+                720
+            ],
+            [
+                1024,
+                768
+            ],
+            [
+                1024,
+                600
+            ],
+            [
+                820,
+                1180
+            ],
+            [
+                768,
+                1024
+            ],
+            [
+                412,
+                914
+            ],
+            [
+                414,
+                896
+            ],
+            [
+                414,
+                846
+            ],
+            [
+                414,
+                736
+            ]
+        ]
+    },
+    "Url": {
+        "login": "http://192.168.0.66:9401/login"
+    },
+    "Autentication": {
+        "email": "data@json.domain",
+        "password": "Xpto"
+    },
+    "Register": {
+        "userRegistration": {
+            "name": "xpto",
+            "birthDate": "01/02/1990",
+            "cpf": "fakerBr.br.cpf()",
+            "cnpj": "fakerBr.br.cnpj()",
+            "telephone": "48991888652",
+            "email": "data@json.domain",
+            "password": "Xpto",
+            "confirmPassword": "Xpto",
+            "userProfile": "profile_admin",
+            "sector": "HKM_SOFTWARE_E_SISTEMAS",
+            "approverUser": "ApproverUser.diretorgecom",
+            "approvalLimit": "1500",
+            "authorizationRequest": " AutorizedRequest.authorized",
+            "requestOtherUsers": "RequestOtherUsers.canAssociate",
+            "allowedRequestCostCenter": "AllowedRequestCostCenter.CGE_CONGRESSOS_E_EVENTOS",
+            "allowedApprovalCostCenter": "AllowedApprovalCostCenter.CGE_DIRETORIA"
+        }
+    },
+    "PaymentCondition": {
+        "anticipatedPayment": [
+            false,
+            "Antecipado"
+        ],
+        "cashPayment": [
+            false,
+            "À vista"
+        ],
+        "paymentInInstallments": [
+            true,
+            "Parcelado"
+        ]
+    }
+}

@@ -12,7 +12,6 @@ import {
     ColumnSearchParameter,
     ComexImport,
     ConditionalWrite,
-    FileData,
     ProductCategory,
     QuoteRequest,
     RequestOtherUsers,
@@ -130,7 +129,7 @@ export interface DataParameters<S = string> {
         DB_PASSWORD: S;
     };
 
-    filePath: FileData;
+    filePath: S;
 
     sizes: Array<number | [number, number] | S>;
 
@@ -180,9 +179,7 @@ export interface DataParameters<S = string> {
     showHideColumns: ShowHideColumns;
     getDataOnGrid: GetDataOnGrid;
 
-    url: {
-        login: S;
-    };
+    url: S | { login: S };
 
     telephoneType: typeof TelephoneType;
     userProfile: typeof UserProfile;

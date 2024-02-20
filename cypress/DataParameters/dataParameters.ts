@@ -1,5 +1,6 @@
 /// <reference path="../support/cypress.d.ts" />
 
+import fs from 'fs';
 import { faker } from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { format } from 'date-fns';
@@ -51,16 +52,38 @@ import {
     UserProfile,
     ConditionalWrite,
 } from '../import';
-import * as data from './dados.json';
-import {
-    PaymentConditionData,
-    FileData,
-} from './Interfaces/interfaceJson';
+import { } from './Interfaces/interface.json'
+
+
+
+import data from '../fixtures/data.json';
+import { UserRegistration } from './Interfaces/interfaces';
+const filePath = data.file.filePath;
+const paymentCondition: ConditionalWrite = {
+    anticipatedPayment: data.PaymentCondition.anticipatedPayment as [boolean, string],
+    cashPayment: data.PaymentCondition.cashPayment as [boolean, string],
+    paymentInInstallments: data.PaymentCondition.paymentInInstallments as [boolean, string],
+};
+const sizes: Array<[number, number]> = data.viewport.sizes as Array<[number, number]>;
+const url = data.Url.login;
+const emailAutentication = data.Autentication.email;
+const passwordAutentication = data.Autentication.password;
+const name = data.Register.userRegistration.name;
+const birthDate = data.Register.userRegistration.birthDate ? new Date() : new Date();
+const cpf = data.Register.userRegistration.cpf;
+const cnpj = data.Register.userRegistration.cnpj;
+const telephone = data.Register.userRegistration.telephone;
+const emailUserRegistration = data.Register.userRegistration.email;
+const passwordUserRegistration = data.Register.userRegistration.password;
+const userProfile = UserProfile[data.Register.userRegistration.userProfile as keyof typeof UserProfile];
+const sector = Sector[data.Register.userRegistration.sector as keyof typeof Sector];
+
+
+
 
 
 let domain = '@essentia.com.br';
-let password = faker.number.int().toString();
-let confirmPassword = password;
+// let confirmPassword = password;
 const currentDate: Date = new Date();
 const year: number = currentDate.getFullYear();
 const month: string = String(currentDate.getMonth() + 1).padStart(2, '0');
@@ -74,97 +97,90 @@ export const FORMATTED_TIME: string = `${hour}:${minutes}:${seconds}`;
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
 
-const paymentCondition: PaymentConditionData = {
-    anticipatedPayment: data.anticipatedPayment as [boolean, string],
-    cashPayment: data.cashPayment as [boolean, string],
-    paymentInInstallments: data.paymentInInstallments as [boolean, string]
-};
-const filePath: FileData = data.fileData as FileData;
 
 export const dataParameters: DataParameters = {
 
     env: dataEnvironment,
 
-    filePath: filePath,
+    filePath: filePath || '/',
 
-    sizes: [
+    sizes: sizes ||
         [
-            1536,
-            960
+            [
+                1536,
+                960
+            ],
+            [
+                1440,
+                900
+            ],
+            [
+                1366,
+                768
+            ],
+            [
+                1280,
+                800
+            ],
+            [
+                1280,
+                720
+            ],
+            [
+                1024,
+                768
+            ],
+            [
+                1024,
+                600
+            ],
+            [
+                820,
+                1180
+            ],
+            [
+                768,
+                1024
+            ],
+            [
+                412,
+                914
+            ],
+            [
+                414,
+                896
+            ],
+            [
+                414,
+                846
+            ],
+            [
+                414,
+                736
+            ]
         ],
-        [
-            1440,
-            900
-        ],
-        [
-            1366,
-            768
-        ],
-        [
-            1280,
-            800
-        ],
-        [
-            1280,
-            720
-        ],
-        [
-            1024,
-            768
-        ],
-        [
-            1024,
-            600
-        ],
-        [
-            820,
-            1180
-        ],
-        [
-            768,
-            1024
-        ],
-        [
-            412,
-            914
-        ],
-        [
-            414,
-            896
-        ],
-        [
-            414,
-            846
-        ],
-        [
-            414,
-            736
-        ]
-    ],
 
-    url: {
-        login: 'http://192.168.0.66:9401/login',
-    },
+    url: url || { login: 'http://192.168.0.66:9401/login' },
 
     Autentication: {
         domain: domain,
-        email: faker.internet.userName() + domain,
-        password: faker.number.int().toString(),
+        email: emailAutentication || faker.internet.userName() + domain,
+        password: passwordAutentication || faker.number.int().toString(),
         giantPassword: faker.lorem.word({ length: { min: 100, max: 102 }, strategy: 'longest' }),
     },
 
     Register: {
         userRegistration: {
-            name: faker.person.fullName(),
-            birthDate: new Date(),
-            cpf: fakerBr.br.cpf(),
-            cnpj: fakerBr.br.cnpj(),
-            telephone: faker.string.alphanumeric('(48) 9####-####'),
-            email: faker.internet.userName() + domain,
-            password: faker.number.int().toString(),
-            confirmPassword: password,
-            userProfile: UserProfile.normal,
-            sector: Sector.HKM_SOFTWARE_E_SISTEMAS,
+            name: name || faker.person.fullName(),
+            birthDate: birthDate || new Date(),
+            cpf: cpf || fakerBr.br.cpf(),
+            cnpj: cnpj || fakerBr.br.cnpj(),
+            telephone: telephone || faker.string.alphanumeric('(48) 9####-####'),
+            email: emailUserRegistration || faker.internet.userName() + domain,
+            password: passwordUserRegistration || faker.number.int().toString(),
+            confirmPassword: passwordUserRegistration,
+            userProfile: userProfile || UserProfile.normal,
+            sector: sector || Sector.HKM_SOFTWARE_E_SISTEMAS,
             approverUser: ApproverUser.diretorgecom,
             approvalLimit: 1500,
             authorizationRequest: AutorizedRequest.authorized,

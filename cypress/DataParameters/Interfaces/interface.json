@@ -1,0 +1,205 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "PaymentCondition": {
+            "type": "object",
+            "properties": {
+                "anticipatedPayment": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ],
+                    "minItems": 2,
+                    "maxItems": 2
+                },
+                "cashPayment": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ],
+                    "minItems": 2,
+                    "maxItems": 2
+                },
+                "paymentInInstallments": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ],
+                    "minItems": 2,
+                    "maxItems": 2
+                }
+            },
+            "required": [
+                "anticipatedPayment",
+                "cashPayment",
+                "paymentInInstallments"
+            ]
+        },
+        "file": {
+            "type": "object",
+            "properties": {
+                "filePath": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "filePath"
+            ]
+        },
+        "viewport": {
+            "type": "object",
+            "properties": {
+                "sizes": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "integer"
+                            }
+                        ],
+                        "minItems": 2,
+                        "maxItems": 2
+                    }
+                }
+            },
+            "required": [
+                "sizes"
+            ]
+        },
+        "Url": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string",
+                    "format": "uri"
+                }
+            },
+            "required": [
+                "login"
+            ]
+        },
+        "Autentication": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "format": "email"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "email",
+                "password"
+            ]
+        },
+        "Register": {
+            "type": "object",
+            "properties": {
+                "userRegistration": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "birthDate": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "cpf": {
+                            "type": "string"
+                        },
+                        "cnpj": {
+                            "type": "string"
+                        },
+                        "telephone": {
+                            "type": "string"
+                        },
+                        "email": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "password": {
+                            "type": "string"
+                        },
+                        "confirmPassword": {
+                            "type": "string"
+                        },
+                        "userProfile": {
+                            "type": "string"
+                        },
+                        "sector": {
+                            "type": "string"
+                        },
+                        "approverUser": {
+                            "type": "string"
+                        },
+                        "approvalLimit": {
+                            "type": "string"
+                        },
+                        "authorizationRequest": {
+                            "type": "string"
+                        },
+                        "requestOtherUsers": {
+                            "type": "string"
+                        },
+                        "allowedRequestCostCenter": {
+                            "type": "string"
+                        },
+                        "allowedApprovalCostCenter": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "birthDate",
+                        "cpf",
+                        "cnpj",
+                        "telephone",
+                        "email",
+                        "password",
+                        "confirmPassword",
+                        "userProfile",
+                        "sector",
+                        "approverUser",
+                        "approvalLimit",
+                        "authorizationRequest",
+                        "requestOtherUsers",
+                        "allowedRequestCostCenter",
+                        "allowedApprovalCostCenter"
+                    ]
+                }
+            },
+            "required": ["userRegistration"]
+        }
+    },
+    "required": [
+        "PaymentCondition",
+        "file",
+        "viewport",
+        "url",
+        "Autentication",
+        "Register"
+    ]
+}
