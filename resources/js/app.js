@@ -136,7 +136,7 @@ $.fn.setBootstrapTooltip = () => {
             tooltip.dispose();
         }
 
-        new bootstrap.Tooltip(tooltipTriggerEl)
+        new bootstrap.Tooltip(tooltipTriggerEl, {html: true})
     });
 }
 

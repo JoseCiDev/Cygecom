@@ -6,7 +6,8 @@ use Closure;
 use App\Models\User;
 use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
-use App\Enums\{MainProfile, ERP, PurchaseRequestStatus, PurchaseRequestType};
+use App\Enums\{MainProfile, ERP, LogAction, PurchaseRequestStatus, PurchaseRequestType};
+use Illuminate\Database\Eloquent\Collection;
 
 class SuppliesRequestEditContainer extends Component
 {
@@ -19,6 +20,7 @@ class SuppliesRequestEditContainer extends Component
     public array $allowedResponsables;
     public bool $requestIsFromLogged;
     public string $inputName;
+    public bool $hasUpdateOnAmount;
 
     public function __construct(
         public PurchaseRequestType $requestType,
@@ -28,6 +30,7 @@ class SuppliesRequestEditContainer extends Component
         public ?string $amount,
         public ?string $purchaseOrder,
         public ?ERP $erp,
+        public Collection $requestTypeLogs,
     ) {
         $this->route = "supplies." . $this->requestType->value . ".update";
         $this->allRequestStatus = PurchaseRequestStatus::cases();
@@ -47,6 +50,15 @@ class SuppliesRequestEditContainer extends Component
             ->toArray();
 
         $this->allowedResponsables = $users;
+
+        $amountType = [
+            PurchaseRequestType::SERVICE->value => 'price',
+            PurchaseRequestType::CONTRACT->value => 'amount',
+            PurchaseRequestType::PRODUCT->value => 'amount'
+        ][$this->requestType->value];
+
+        $updateOnAmount = $this->requestTypeLogs->filter(fn ($log) => $log->action->value === LogAction::UPDATE->value && isset($log->changes[$amountType]));
+        $this->hasUpdateOnAmount = $updateOnAmount->isNotEmpty();
     }
 
     public function render(): View|Closure|string
