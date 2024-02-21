@@ -52,18 +52,11 @@ import {
     UserProfile,
     ConditionalWrite,
 } from '../import';
-import { } from './Interfaces/interface.json'
-
 
 
 import data from '../fixtures/data.json';
 import { UserRegistration } from './Interfaces/interfaces';
 const filePath = data.file.filePath;
-const paymentCondition: ConditionalWrite = {
-    anticipatedPayment: data.PaymentCondition.anticipatedPayment as [boolean, string],
-    cashPayment: data.PaymentCondition.cashPayment as [boolean, string],
-    paymentInInstallments: data.PaymentCondition.paymentInInstallments as [boolean, string],
-};
 const sizes: Array<[number, number]> = data.viewport.sizes as Array<[number, number]>;
 const url = data.Url.login;
 const emailAutentication = data.Autentication.email;
@@ -77,7 +70,48 @@ const emailUserRegistration = data.Register.userRegistration.email;
 const passwordUserRegistration = data.Register.userRegistration.password;
 const userProfile = UserProfile[data.Register.userRegistration.userProfile as keyof typeof UserProfile];
 const sector = Sector[data.Register.userRegistration.sector as keyof typeof Sector];
-
+const costCenter = data.Request.product.costCenter;
+const apportionmentPercentage = data.Request.product.apportionmentPercentage;
+const apportionmentValue = data.Request.product.apportionmentValue;
+const quoteRequest = data.Request.product.quoteRequest;
+const acquiringArea = AcquiringArea[data.Request.product.acquiringArea as keyof typeof AcquiringArea];
+const comexImport = ComexImport[data.Request.product.comexImport as keyof typeof ComexImport];
+const reasonForRequest = data.Request.product.reasonForRequest;
+const desiredDeliveryDate = data.Request.product.desiredDeliveryDate;
+const productStorageLocation = data.Request.product.productStorageLocation;
+const suggestionLinks = data.Request.product.suggestionLinks;
+const observation = data.Request.product.observation;
+const paymentCondition: ConditionalWrite = {
+    anticipatedPayment: data.Request.product.PaymentCondition.anticipatedPayment as [boolean, string],
+    cashPayment: data.Request.product.PaymentCondition.cashPayment as [boolean, string],
+    paymentInInstallments: data.Request.product.PaymentCondition.paymentInInstallments as [boolean, string],
+};
+const totalValue = data.Request.product.totalValue;
+const paymentMethod: ConditionalWrite = {
+    boleto: data.Request.product.paymentMethod.boleto as [boolean, string],
+    creditCard: data.Request.product.paymentMethod.creditCard as [boolean, string],
+    debitCard: data.Request.product.paymentMethod.debitCard as [boolean, string],
+    cheque: data.Request.product.paymentMethod.cheque as [boolean, string],
+    bankDeposit: data.Request.product.paymentMethod.bankDeposit as [boolean, string],
+    cash: data.Request.product.paymentMethod.cash as [boolean, string],
+    international: data.Request.product.paymentMethod.international as [boolean, string],
+    pix: data.Request.product.paymentMethod.pix as [boolean, string],
+};
+const paymentInstallments = data.Request.product.paymentInstallments;
+const paymentDetails = data.Request.product.paymentDetails;
+const supplier: SupplierOfRequest = SupplierOfRequest[data.Request.product.supplier as keyof typeof SupplierOfRequest];
+const productCategory: ProductCategory = ProductCategory[data.Request.product.productCategory as keyof typeof ProductCategory];
+const productNameAndDescription = data.Request.product.productNameAndDescription;
+const productQuantity = data.Request.product.productQuantity;
+const productColor = data.Request.product.productColor;
+const productSize = data.Request.product.productSize;
+const productModel = data.Request.product.productModel;
+const productLink = data.Request.product.productLink;
+const attachedFile = data.Request.product.attachedFile;
+const saveRequest: Record<SaveRequest, boolean> = {
+    [SaveRequest.draft]: !!data.Request.product.saveRequest.draft,
+    [SaveRequest.submit]: !!data.Request.product.saveRequest.submit,
+};
 
 
 
@@ -160,7 +194,7 @@ export const dataParameters: DataParameters = {
             ]
         ],
 
-    url: url || { login: 'http://192.168.0.66:9401/login' },
+    url: url || 'http://192.168.0.66:9401/login',
 
     Autentication: {
         domain: domain,
@@ -478,51 +512,32 @@ export const dataParameters: DataParameters = {
 
     Request: {
         product: {
-            costCenter: CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'],
-            apportionmentPercentage: faker.helpers.arrayElement([100]),
-            apportionmentValue: faker.helpers.arrayElement([100, 350, 700]),
-            quoteRequest: { [QuoteRequest.quoteRequest]: true },
-            acquiringArea:
-                AcquiringArea.areaContract,
-            comexImport:
-                ComexImport.yes,
-            reasonForRequest: faker.lorem.lines(),
-            desiredDeliveryDate: new Date(),
-            productStorageLocation: faker.lorem.lines(),
-            suggestionLinks: faker.lorem.lines(),
-            observation: faker.lorem.lines(),
-
-            // paymentCondition: {
-            //     [PaymentCondition.anticipatedPayment]: [false, 'Antecipado'],
-            //     [PaymentCondition.cashPayment]: [false, 'À vista'],
-            //     [PaymentCondition.paymentInInstallments]: [true, 'Parcelado'],
-            // },
-            paymentCondition: paymentCondition,
-
-            totalValue: faker.helpers.arrayElement([1750.36, 350.87, 700.04]),
-            paymentMethod: {
-                [PaymentMethod.boleto]: [false, 'Boleto'],
-                [PaymentMethod.creditCard]: [false, 'Cartão de crédito'],
-                [PaymentMethod.debitCard]: [false, 'Cartão de débito'],
-                [PaymentMethod.cheque]: [false, 'Cheque'],
-                [PaymentMethod.bankDeposit]: [false, 'Depósito bancário'],
-                [PaymentMethod.cash]: [false, 'Dinheiro'],
-                [PaymentMethod.international]: [false, 'Internacional'],
-                [PaymentMethod.pix]: [true, 'Pix'],
-            },
-            paymentInstallments: 3,
-            paymentDetails: faker.lorem.lines(),
-            supplier: SupplierOfRequest['00.020.788/0001-06  - MADER COMERCIAL IMPORTADORA QUIM.FARMACEUTICA LTDA'],
-
-            productCategory: ProductCategory['Maquinas E Equipamentos No Laboratorio'],
-            productNameAndDescription: faker.lorem.lines(),
-            productQuantity: 3,
-            productColor: faker.lorem.word(),
-            productSize: faker.lorem.word(),
-            productModel: faker.lorem.word(),
-            productLink: faker.internet.url(),
-            attachedFile: '../fixtures/attachedFile.png',
-            saveRequest: {
+            costCenter: costCenter || CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'],
+            apportionmentPercentage: apportionmentPercentage | faker.helpers.arrayElement([100]),
+            apportionmentValue: apportionmentValue | faker.helpers.arrayElement([100, 350, 700]),
+            quoteRequest: { [QuoteRequest.quoteRequest]: quoteRequest !== undefined ? quoteRequest : true },
+            acquiringArea: acquiringArea || AcquiringArea.areaContract,
+            comexImport: comexImport || ComexImport.yes,
+            reasonForRequest: reasonForRequest || faker.lorem.lines(),
+            desiredDeliveryDate: (new Date(data.Request.product.desiredDeliveryDate || new Date())).toISOString().split('T')[0],
+            productStorageLocation: productStorageLocation || faker.lorem.lines(),
+            suggestionLinks: suggestionLinks || faker.lorem.lines(),
+            observation: observation || faker.lorem.lines(),
+            paymentCondition: Object.values(paymentMethod).some(([isEnabled]) => isEnabled) ? paymentCondition : { [PaymentCondition.anticipatedPayment]: [true, PaymentCondition.anticipatedPayment] },
+            totalValue: totalValue | faker.helpers.arrayElement([1750.36, 350.87, 700.04]),
+            paymentMethod: Object.values(paymentMethod).some(([isEnabled]) => isEnabled) ? paymentMethod : { [PaymentMethod.boleto]: [true, PaymentMethod.boleto] },
+            paymentInstallments: paymentInstallments | 3,
+            paymentDetails: paymentDetails || faker.lorem.lines(),
+            supplier: supplier ? SupplierOfRequest[data.Request.product.supplier] : SupplierOfRequest['47.960.950/0347-00  - MAGAZINE LUIZA SA'],
+            productCategory: productCategory || ProductCategory['Maquinas E Equipamentos No Laboratorio'],
+            productNameAndDescription: productNameAndDescription || faker.lorem.lines(),
+            productQuantity: productQuantity || 3,
+            productColor: productColor || faker.lorem.word(),
+            productSize: productSize || faker.lorem.word(),
+            productModel: productModel || faker.lorem.word(),
+            productLink: productLink || faker.internet.url(),
+            attachedFile: attachedFile || '../fixtures/attachedFile.png',
+            saveRequest: saveRequest || {
                 [SaveRequest.draft]: true,
                 [SaveRequest.submit]: false,
             },

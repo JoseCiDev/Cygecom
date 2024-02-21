@@ -86,7 +86,7 @@ describe('Testes da página de criação de solicitação de produtos', () => {
 
 
     beforeEach(function () {
-        
+
         cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
@@ -94,13 +94,15 @@ describe('Testes da página de criação de solicitação de produtos', () => {
     });
 
     it(`Solicitação de produtos`, () => {
+
         cy.getElementAndClick([
             '.main-nav > :nth-child(3) > .btn',
             '[data-cy="dropdown-solicitacoes-novas"]',
             '.main-nav > :nth-child(3) > .btn',
             '[data-cy="dropdown-solicitacoes-novas"]',
-            ':nth-child(1) > .request-dashboard-requests-item-btn']
-        );
+            ':nth-child(1) > .request-dashboard-requests-item-btn'
+        ]);
+
         cy.createRequest();
 
     });

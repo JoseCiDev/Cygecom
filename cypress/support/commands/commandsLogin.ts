@@ -120,7 +120,7 @@ const {
 
 Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elementError: string) => {
 
-    cy.visit(dataParameters.url.login);
+    cy.visit(dataParameters.url);
 
     cy.get(email, { timeout: 20000 })
         .each(($input) => {

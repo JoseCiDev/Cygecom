@@ -2,55 +2,6 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
-        "PaymentCondition": {
-            "type": "object",
-            "properties": {
-                "anticipatedPayment": {
-                    "type": "array",
-                    "items": [
-                        {
-                            "type": "boolean"
-                        },
-                        {
-                            "type": "string"
-                        }
-                    ],
-                    "minItems": 2,
-                    "maxItems": 2
-                },
-                "cashPayment": {
-                    "type": "array",
-                    "items": [
-                        {
-                            "type": "boolean"
-                        },
-                        {
-                            "type": "string"
-                        }
-                    ],
-                    "minItems": 2,
-                    "maxItems": 2
-                },
-                "paymentInInstallments": {
-                    "type": "array",
-                    "items": [
-                        {
-                            "type": "boolean"
-                        },
-                        {
-                            "type": "string"
-                        }
-                    ],
-                    "minItems": 2,
-                    "maxItems": 2
-                }
-            },
-            "required": [
-                "anticipatedPayment",
-                "cashPayment",
-                "paymentInInstallments"
-            ]
-        },
         "file": {
             "type": "object",
             "properties": {
@@ -191,11 +142,299 @@
                     ]
                 }
             },
-            "required": ["userRegistration"]
+            "required": [
+                "userRegistration"
+            ]
+        },
+        "Request": {
+            "type": "object",
+            "properties": {
+                "product": {
+                    "type": "object",
+                    "properties": {
+                        "costCenter": {
+                            "type": "string"
+                        },
+                        "apportionmentPercentage": {
+                            "type": "number"
+                        },
+                        "apportionmentValue": {
+                            "type": "number"
+                        },
+                        "quoteRequest": {
+                            "type": "object",
+                            "properties": {
+                                "quoteRequest": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "quoteRequest"
+                            ]
+                        },
+                        "acquiringArea": {
+                            "type": "string"
+                        },
+                        "comexImport": {
+                            "type": "string"
+                        },
+                        "reasonForRequest": {
+                            "type": "string"
+                        },
+                        "desiredDeliveryDate": {
+                            "type": "string"
+                        },
+                        "productStorageLocation": {
+                            "type": "string"
+                        },
+                        "suggestionLinks": {
+                            "type": "string"
+                        },
+                        "observation": {
+                            "type": "string"
+                        },
+                        "PaymentCondition": {
+                            "type": "object",
+                            "properties": {
+                                "anticipatedPayment": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                },
+                                "cashPayment": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                },
+                                "paymentInInstallments": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                }
+                            },
+                            "required": [
+                                "anticipatedPayment",
+                                "cashPayment",
+                                "paymentInInstallments"
+                            ]
+                        },
+                        "totalValue": {
+                            "type": "number"
+                        },
+                        "paymentMethod": {
+                            "type": "object",
+                            "properties": {
+                                "boleto": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "creditCard": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "debitCard": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "cheque": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "bankDeposit": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "cash": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "international": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                },
+                                "pix": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "boleto",
+                                "creditCard",
+                                "debitCard",
+                                "cheque",
+                                "bankDeposit",
+                                "cash",
+                                "international",
+                                "pix"
+                            ]
+                        },
+                        "paymentInstallments": {
+                            "type": "integer"
+                        },
+                        "paymentDetails": {
+                            "type": "string"
+                        },
+                        "supplier": {
+                            "type": "string"
+                        },
+                        "productCategory": {
+                            "type": "string"
+                        },
+                        "productNameAndDescription": {
+                            "type": "string"
+                        },
+                        "productQuantity": {
+                            "type": "integer"
+                        },
+                        "productColor": {
+                            "type": "string"
+                        },
+                        "productSize": {
+                            "type": "string"
+                        },
+                        "productModel": {
+                            "type": "string"
+                        },
+                        "productLink": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "attachedFile": {
+                            "type": "string"
+                        },
+                        "saveRequest": {
+                            "type": "object",
+                            "properties": {
+                                "draft": {
+                                    "type": "boolean"
+                                },
+                                "submit": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "draft",
+                                "submit"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "costCenter",
+                        "apportionmentPercentage",
+                        "apportionmentValue",
+                        "quoteRequest",
+                        "acquiringArea",
+                        "comexImport",
+                        "reasonForRequest",
+                        "desiredDeliveryDate",
+                        "productStorageLocation",
+                        "suggestionLinks",
+                        "observation",
+                        "PaymentCondition",
+                        "totalValue",
+                        "paymentMethod",
+                        "paymentInstallments",
+                        "paymentDetails",
+                        "supplier",
+                        "productCategory",
+                        "productNameAndDescription",
+                        "productQuantity",
+                        "productColor",
+                        "productSize",
+                        "productModel",
+                        "productLink",
+                        "attachedFile",
+                        "saveRequest"
+                    ]
+                }
+            },
+            "required": [
+                "product"
+            ]
         }
     },
     "required": [
-        "PaymentCondition",
+        "Request",
         "file",
         "viewport",
         "url",

@@ -85,18 +85,83 @@
             "allowedApprovalCostCenter": "AllowedApprovalCostCenter.CGE_DIRETORIA"
         }
     },
-    "PaymentCondition": {
-        "anticipatedPayment": [
-            false,
-            "Antecipado"
-        ],
-        "cashPayment": [
-            false,
-            "À vista"
-        ],
-        "paymentInInstallments": [
-            true,
-            "Parcelado"
-        ]
+    "Request": {
+        "product": {
+            "costCenter": "06.354.562/0001-10 - HKM - Software e Sistemas",
+            "apportionmentPercentage": 100,
+            "apportionmentValue": 100,
+            "quoteRequest": true,
+            "acquiringArea": "areaContract",
+            "comexImport": "yes",
+            "reasonForRequest": "Teste Json - Motivo da solicitação",
+            "desiredDeliveryDate": "02-22-2024",
+            "productStorageLocation": "Teste Json",
+            "suggestionLinks": "Teste Json",
+            "observation": "Teste Json",
+            "PaymentCondition": {
+                "anticipatedPayment": [
+                    false,
+                    "Antecipado"
+                ],
+                "cashPayment": [
+                    false,
+                    "À vista"
+                ],
+                "paymentInInstallments": [
+                    false,
+                    "Parcelado"
+                ]
+            },
+            "totalValue": 1750.36,
+            "paymentMethod": {
+                "boleto": [
+                    false,
+                    "Boleto"
+                ],
+                "creditCard": [
+                    false,
+                    "Cartão de crédito"
+                ],
+                "debitCard": [
+                    false,
+                    "Cartão de débito"
+                ],
+                "cheque": [
+                    false,
+                    "Cheque"
+                ],
+                "bankDeposit": [
+                    false,
+                    "Depósito bancário"
+                ],
+                "cash": [
+                    false,
+                    "Dinheiro"
+                ],
+                "international": [
+                    false,
+                    "Internacional"
+                ],
+                "pix": [
+                    false,
+                    "Pix"
+                ]
+            },
+            "paymentInstallments": 3,
+            "paymentDetails": "Teste Json",
+            "supplier": "73.243.222/0001-09  - GRAFICA CONTINENTE LTDA EPP",
+            "productCategory": "Maquinas E Equipamentos No Laboratorio",
+            "productNameAndDescription": "Teste Json",
+            "productQuantity": 3,
+            "productColor": "Teste Json",
+            "productSize": "Teste Json",
+            "productModel": "Teste Json",
+            "productLink": "https://essentia.com.br/",
+            "attachedFile": "../fixtures/attachedFile.png",
+            "saveRequest": {
+                "draft": true,
+                "submit": false
+            }
+        }
     }
 }

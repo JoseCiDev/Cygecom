@@ -151,7 +151,7 @@ export interface DataParameters<S = string> {
             acquiringArea: string;
             comexImport: ComexImport;
             reasonForRequest: string;
-            desiredDeliveryDate: Date;
+            desiredDeliveryDate: S;
             productStorageLocation: S;
             suggestionLinks: S;
             observation: S;
@@ -179,7 +179,7 @@ export interface DataParameters<S = string> {
     showHideColumns: ShowHideColumns;
     getDataOnGrid: GetDataOnGrid;
 
-    url: S | { login: S };
+    url: S ;
 
     telephoneType: typeof TelephoneType;
     userProfile: typeof UserProfile;

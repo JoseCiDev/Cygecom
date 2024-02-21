@@ -197,7 +197,7 @@ Cypress.Commands.add('createRequest', function () {
             }
         }
     };
-
+    
     cy.getElementAutocompleteTypeAndClick(
         { [costCenter]: dataParameters.Request.product.costCenter },
         highlightedOption
@@ -214,7 +214,7 @@ Cypress.Commands.add('createRequest', function () {
 
     cy.getElementAndType({
         [reasonForRequest]: dataParameters.Request.product.reasonForRequest,
-        [desiredDeliveryDate]: dataParameters.Request.product.desiredDeliveryDate[0].toString(),
+        [desiredDeliveryDate]: dataParameters.Request.product.desiredDeliveryDate,
         [productStorageLocation]: dataParameters.Request.product.productStorageLocation,
         [suggestionLinks]: dataParameters.Request.product.suggestionLinks,
         [observation]: dataParameters.Request.product.observation,
