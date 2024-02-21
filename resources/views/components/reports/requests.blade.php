@@ -12,14 +12,7 @@
         'paymentTerms' => collect(PaymentTerm::cases())->mapWithKeys(fn($enum) => [$enum->value => $enum->label()]),
     ];
 
-    $costCenters = $requestingUsers
-        ->pluck('purchaseRequest')
-        ->collapse()
-        ->filter(fn($item) => $item->status->value !== PurchaseRequestStatus::RASCUNHO->value)
-        ->pluck('costCenterApportionment')
-        ->collapse()
-        ->pluck('costCenter')
-        ->unique();
+    $costCenters = $requestingUsers->pluck('purchaseRequest')->collapse()->filter(fn($item) => $item->status->value !== PurchaseRequestStatus::RASCUNHO->value)->pluck('costCenterApportionment')->collapse()->pluck('costCenter')->unique();
 @endphp
 
 <x-app>
@@ -182,7 +175,8 @@
                                 <th>Fornecedor</th>
                                 <th>Forma Pgto.</th>
                                 <th>Condição Pgto.</th>
-                                <th>Valor total</th>
+                                <th>Valor total original</th>
+                                <th>Valor total final</th>
                             </tr>
                         </thead>
                         <tbody> {{-- Dinâmico --}} </tbody>
@@ -350,7 +344,6 @@
                         $.fn.setStorageDtColumnConfig();
 
                         $generateCSVButton.on('click', () => {
-                            // const $productDetail = $('.product-detail:checked').val();
                             const dataTable = $reportsTable.DataTable();
                             const defaultParams = dataTable.ajax.params();
                             const filterParameters = getFilterParameters();
@@ -370,7 +363,7 @@
                                 }),
                                 success: (data) => {
                                     const content = data.data;
-                                    const headers = $('#reportsTable>thead>tr>th').toArray().map(header => header.textContent);
+                                    const headers = dataTable.columns().header().toArray().map(header => header.textContent);
                                     const rows = content.map(item => {
                                         const id = item.id;
                                         const type = enumRequests['type'][item.type];
@@ -381,7 +374,8 @@
                                             .created_at;
 
                                         const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss');
-                                        const responsibilityMarkedAt = moment(item.responsibility_marked_at).format('DD/MM/YYYY HH:mm:ss');
+                                        const responsibilityMarkedAt = moment(item.responsibility_marked_at)
+                                            .format('DD/MM/YYYY HH:mm:ss');
 
                                         const serviceNameColumnMapping = {
                                             product: () => null,
@@ -422,11 +416,16 @@
                                         const paymentTerms = paymentInfo?.payment_terms || '---';
                                         const paymentTermsLabel = enumRequests['paymentTerms'][paymentTerms] || '---';
 
-                                        const amount = item[item.type]?.amount || item[item.type]?.price;
                                         const formatter = new Intl.NumberFormat('pt-BR', {
                                             style: 'currency',
                                             currency: 'BRL'
                                         });
+
+                                        const originalAmount = item[item.type]?.logs
+                                            ?.find(log => log.action === 'create')?.changes[item.type];
+                                        const formatedOriginalAmount = originalAmount ? formatter.format(originalAmount) : '---';
+
+                                        const amount = item[item.type]?.amount || item[item.type]?.price;
                                         const formattedAmount = amount ? formatter.format(amount) : '---';
 
                                         let rowData = [
@@ -445,7 +444,8 @@
                                                 suppliers,
                                                 paymentMethodLabel,
                                                 paymentTermsLabel,
-                                                formattedAmount
+                                                formatedOriginalAmount,
+                                                formattedAmount,
                                             ]
                                         ];
 
@@ -540,7 +540,7 @@
                             $('.loader-box').hide();
                         },
                         beforeSend: () => $('#reportsTable tbody').css('opacity', '0.2'),
-                        complete: () => $('#reportsTable tbody').css('opacity', '1')
+                        complete: (response) => $('#reportsTable tbody').css('opacity', '1'),
                     },
                     columns: [{
                             data: 'id',
@@ -724,6 +724,30 @@
                         },
                         {
                             data: 'type',
+                            orderable: false,
+                            render: (type, _, row) => {
+                                const amountType = {
+                                    service: 'price',
+                                    product: 'amount',
+                                    contract: 'amount'
+                                } [type];
+
+                                const originalAmount = row[type]?.logs?.find(log => log.action === 'create')?.changes[amountType];
+
+                                if (!originalAmount || !isFinite(originalAmount)) {
+                                    return 'R$ ---';
+                                }
+
+                                const formatter = new Intl.NumberFormat('pt-BR', {
+                                    style: 'currency',
+                                    currency: 'BRL'
+                                });
+
+                                return formatter.format(originalAmount);
+                            }
+                        },
+                        {
+                            data: 'type',
                             render: (type, _, row) => {
                                 const amount = row[type]?.amount || row[type]?.price;
 
@@ -735,8 +759,8 @@
                                     style: 'currency',
                                     currency: 'BRL'
                                 });
-                                const formattedAmount = formatter.format(amount);
-                                return formattedAmount;
+
+                                return formatter.format(amount);
                             }
                         },
                     ],
