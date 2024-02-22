@@ -166,15 +166,16 @@
                                 <th>Solicitado em</th>
                                 <th>Responsável</th>
                                 <th>Data de atribuição</th>
-                                <th>Nome Serviço</th>
+                                <th>Nome serviço</th>
                                 <th>Contratado por</th>
                                 <th>Solicitante</th>
                                 <th>Solicitante sistema</th>
                                 <th>Status</th>
                                 <th>Centro de custo</th>
                                 <th>Fornecedor</th>
-                                <th>Forma Pgto.</th>
-                                <th>Condição Pgto.</th>
+                                <th>Categ. produtos</th>
+                                <th>Forma pgto.</th>
+                                <th>Condição pgto.</th>
                                 <th>Valor total</th>
                             </tr>
                         </thead>
@@ -367,14 +368,13 @@
                                         'Descrição da solicitação', 'Local para solicitação', 'Motivo da solicitação',
                                         'Links de apoio', 'Observação da solicitação',
                                         'Data deseja para solicitação', 'Apenas cotação', 'Motivo da atualização de status',
-                                        'Aprovação limite do solicitante', 'Solicitante ativo', 'CPF do solicitante', 'Nome do serviço',
+                                        'Aprovação limite do solicitante', 'Solicitante ativo', 'CPF do solicitante',
+                                        'Setor do solicitante', 'Nome do serviço',
                                         'Qtd. parcelas', 'Parcelas', 'Anexos do solicitante',
-                                        'Anexos do suprimentos', 'Categoria de produtos',
+                                        'Anexos do suprimentos',
                                     ]);
 
                                     const rows = content.map(item => {
-                                        console.log(item);
-
                                         const id = item.id;
                                         const type = enumRequests['type'][item.type];
 
@@ -383,7 +383,8 @@
                                             .find((item) => item.created_at)
                                             .created_at;
 
-                                        const firstPendingStatus = moment.utc(pendingStatus).format('DD/MM/YYYY HH:mm:ss');
+                                        const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss');
+                                        const suppliesUserName = item.supplies_user?.person.name || '---';
 
                                         const responsibilityMarkedAt = item.responsibility_marked_at ? moment(item.responsibility_marked_at)
                                             .format('DD/MM/YYYY HH:mm:ss') : '---';
@@ -398,7 +399,7 @@
                                         const requistingUser = item.user.person.name
                                         const requester = item.requester?.name || '---';
                                         const status = enumRequests['status'][item.status];
-                                        const suppliesUserName = item.supplies_user?.person.name || '---';
+
 
                                         const supplierColumnMapping = {
                                             product: () => {
@@ -490,6 +491,11 @@
                                         const suppliers = supplierColumnMapping[item.type]().filter((el) => el)
                                             .join(', ') || '---';
 
+                                        const productCategories = item.purchase_request_product
+                                            .map((element) => element.category?.name)
+                                            .filter((name, index, self) => self.indexOf(name) === index)
+                                            .join(', ') || '---';
+
                                         const paymentInfo = item[item.type]?.payment_info || {};
 
                                         const paymentMethod = paymentInfo.payment_method;
@@ -525,6 +531,7 @@
                                             'Sem limite';
                                         const isBuyer = item.user.is_buyer ? 'Solic. ativo' : 'Solic. inativo';
                                         const userCPF = item.user.person.cpf_cnpj;
+                                        const userSector = item.user.person.cost_center.name;
                                         const requestName = item[item.type]?.name || '---';
 
                                         const costCenterApportionment = item.cost_center_apportionment
@@ -564,26 +571,22 @@
 
                                         const hasFilesFromRequester = item.purchase_request_file.length ? 'Possui anexos' : '---';
                                         const hasFilesFromSupplies = item.request_supplies_files.length ? 'Possui anexos' : '---';
-                                        const productCategories = item.purchase_request_product
-                                            .map((element) => element.category?.name)
-                                            .filter((name, index, self) => self.indexOf(name) === index)
-                                            .join(', ') || '---';
 
                                         let rowData = [
                                             [
                                                 id,
                                                 type,
                                                 firstPendingStatus,
+                                                suppliesUserName,
                                                 responsibilityMarkedAt,
                                                 serviceName,
                                                 isSuppliesContract,
                                                 requistingUser,
                                                 requester,
                                                 status,
-                                                suppliesUserName,
                                                 costCenterApportionment,
-
                                                 suppliers,
+                                                productCategories,
                                                 paymentMethodLabel,
                                                 paymentTermsLabel,
                                                 formattedAmount,
@@ -603,12 +606,12 @@
                                                 approverLimit,
                                                 isBuyer,
                                                 userCPF,
+                                                userSector,
                                                 requestName,
                                                 installmentsQtd,
                                                 installments,
                                                 hasFilesFromRequester,
                                                 hasFilesFromSupplies,
-                                                productCategories,
                                             ]
                                         ];
 
@@ -765,7 +768,7 @@
                                     .find((item) => item.created_at)
                                     ?.created_at
 
-                                return firstPendingStatus ? moment.utc(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
+                                return firstPendingStatus ? moment(firstPendingStatus).format('DD/MM/YYYY HH:mm:ss') : '---';
                             }
                         },
                         {
@@ -862,6 +865,30 @@
 
                                 return $div[0].outerHTML;
                             }
+                        },
+                        {
+                            data: 'purchase_request_product',
+                            orderable: false,
+                            render: (purchase_request_product) => {
+                                const $div = $(document.createElement('div')).addClass('tag-category');
+
+                                const productCategories = purchase_request_product
+                                    .map((element) => element.category?.name)
+                                    .filter((name, index, self) => self.indexOf(name) === index);
+
+                                if (!productCategories.length) {
+                                    return;
+                                }
+
+                                productCategories.forEach((element) => {
+                                    const $span = $(document.createElement('span')).addClass('tag-category-item');
+                                    $span.text(element);
+                                    $div.append($span);
+                                });
+
+                                return $div[0].outerHTML;
+                            },
+                            defaultContent: '---',
                         },
                         {
                             data: 'type',
