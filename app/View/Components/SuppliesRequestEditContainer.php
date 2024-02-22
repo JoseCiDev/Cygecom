@@ -6,7 +6,7 @@ use Closure;
 use App\Models\User;
 use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
-use App\Enums\{MainProfile, ERP, LogAction, PurchaseRequestStatus, PurchaseRequestType};
+use App\Enums\{MainProfile, ERP, PurchaseRequestStatus, PurchaseRequestType};
 use Illuminate\Database\Eloquent\Collection;
 
 class SuppliesRequestEditContainer extends Component
@@ -30,7 +30,7 @@ class SuppliesRequestEditContainer extends Component
         public ?string $amount,
         public ?string $purchaseOrder,
         public ?ERP $erp,
-        public Collection $requestTypeLogs,
+        public ?Collection $requestTypeLogs,
     ) {
         $this->route = "supplies." . $this->requestType->value . ".update";
         $this->allRequestStatus = PurchaseRequestStatus::cases();
@@ -57,7 +57,12 @@ class SuppliesRequestEditContainer extends Component
             PurchaseRequestType::PRODUCT->value => 'amount'
         ][$this->requestType->value];
 
-        $updateOnAmount = $this->requestTypeLogs->filter(fn ($log) => $log->action->value === LogAction::UPDATE->value && isset($log->changes[$amountType]));
+        $updateOnAmount = $this->requestTypeLogs?->filter(function ($log) use ($amountType) {
+            $updatedBySupplies = $log->user_id !== $this->requestUserId;
+            $hasUpdateOnAmount = isset($log->changes[$amountType]);
+
+            return $updatedBySupplies && $hasUpdateOnAmount;
+        }) ?? collect();
         $this->hasUpdateOnAmount = $updateOnAmount->isNotEmpty();
     }
 

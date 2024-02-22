@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-md-12">
                 <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::PRODUCT" :request-id="$request->id" :request-user-id="$request->user_id" :request-status="$request->status" :amount="$request?->product?->amount" :purchase-order="$request->purchase_order" :erp="$request->erp"
-                    :request-type-logs="$request->product->logs" />
+                    :request-type-logs="$request->product?->logs" />
             </div>
         </div>
 
