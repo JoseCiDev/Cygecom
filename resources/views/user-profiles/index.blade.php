@@ -41,11 +41,11 @@
         <table id="profiles-table" style="width: 100%" class="table table-hover table-bordered dataTable">
             <thead>
                 <tr>
-                    <th>Nº</th>
+                    <th class="noColvis">Nº</th>
                     <th>Nome</th>
                     <th>Qtd. usuários</th>
                     <th>Qtd. habilidades</th>
-                    <th>Ações</th>
+                    <th class="ignore-search">Ações</th>
                 </tr>
             </thead>
             <tbody>
