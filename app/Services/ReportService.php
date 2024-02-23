@@ -190,7 +190,7 @@ class ReportService
             7 => $getPersonRequester,
             8 => 'purchase_requests.status',
             9 => $getPersonSupplies,
-            14 => 'total_amount'
+            15 => 'total_amount'
         };
 
         return $orderColumnMappings;

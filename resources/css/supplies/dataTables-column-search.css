@@ -1,4 +1,7 @@
 input.search-button {
+    display: block;
     border: 1px solid #aaa;
-    background: #f6f6f6;;
+    background: #f6f6f6;
+    margin: 5px 0;
+    min-width: 65px;
 }

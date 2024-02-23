@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\{PurchaseRequestStatus, PurchaseRequestType};
+use App\Enums\{ERP, PurchaseRequestStatus, PurchaseRequestType};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -95,11 +95,13 @@ class PurchaseRequest extends Model
         'deleted_at',
         'is_only_quotation',
         'requester_person_id',
-        'purchase_order'
+        'purchase_order',
+        'erp',
     ];
 
     protected $casts = [
         'status' => PurchaseRequestStatus::class,
         'type' => PurchaseRequestType::class,
+        'erp' => ERP::class,
     ];
 }

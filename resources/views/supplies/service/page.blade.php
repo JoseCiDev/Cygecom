@@ -34,10 +34,11 @@
                         </div>
                     </div>
 
-                    <table id="table-supplies-list" class="table table-hover table-nomargin table-striped" data-column_filter_dateformat="dd-mm-yy" style="width:100%"
+                    <table id="table-supplies-list" class="table table-hover table-nomargin table-striped dataTable" data-column_filter_dateformat="dd-mm-yy" style="width:100%"
                         data-nosort="0" data-checkall="all">
                         <thead>
                             <tr class="search-bar">
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -59,6 +60,7 @@
                                 <th>Empresa</th>
                                 <th>Data desejada</th>
                                 <th>Ord. compra</th>
+                                <th>ERP</th>
                                 <th class="noColvis ignore-search">Ações</th>
                             </tr>
                         </thead>
@@ -123,6 +125,7 @@
                                         $showPurchaseOrder = isset($service->purchase_order) && $service->status === PurchaseRequestStatus::FINALIZADA;
                                     @endphp
                                     <td>{{ $showPurchaseOrder ? $service?->purchase_order : '---' }}</td>
+                                    <td>{{ $service?->erp?->label() ?? '---' }}</td>
 
                                     <td class="text-center" style="white-space: nowrap;">
                                         @can('get.api.requests.show')
@@ -155,7 +158,6 @@
 
     @push('scripts')
         <script type="module" src="{{ asset('js/supplies/modal-confirm-supplies-responsability.js') }}"></script>
-        <script type="module" src="{{ asset('js/utils/dataTables-column-search.js') }}"></script>
     @endpush
 
 </x-app>

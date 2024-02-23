@@ -20,7 +20,7 @@
                 }
 
                 if (success) {
-                    $.fn.createToast(success, 'Successo!', 'bg-success');
+                    $.fn.createToast(success, 'Sucesso!', 'bg-success');
                 }
 
             });
