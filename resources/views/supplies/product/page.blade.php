@@ -38,6 +38,21 @@
                     <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered dataTable" style="width:100%"
                         data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                         <thead>
+                            <tr class="search-bar">
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
                             <tr>
                                 <th class="noColvis">Nº</th>
                                 <th>Solicitante</th>
@@ -49,6 +64,7 @@
                                 <th>Empresa</th>
                                 <th>Data desejada</th>
                                 <th>Ord. compra</th>
+                                <th>ERP</th>
                                 <th>Valor total</th>
                                 <th class="noColvis ignore-search">Ações</th>
                             </tr>
@@ -128,6 +144,7 @@
                                         $showPurchaseOrder = isset($product->purchase_order) && $product->status === PurchaseRequestStatus::FINALIZADA;
                                     @endphp
                                     <td>{{ $showPurchaseOrder ? $product->purchase_order : '---' }}</td>
+                                    <td>{{ $product?->erp?->label() ?? '---' }}</td>
                                     <td>
                                         <span hidden>{{ str_pad($amount, 10, '0', STR_PAD_LEFT) }}</span>
                                         R$ {{ $formatedAmount }}

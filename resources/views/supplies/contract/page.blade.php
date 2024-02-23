@@ -37,6 +37,19 @@
                     <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered dataTable" data-column_filter_dateformat="dd-mm-yy"
                         data-nosort="0" data-checkall="all" style="width:100%">
                         <thead>
+                            <tr class="search-bar">
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
                             <tr>
                                 <th class="noColvis">Nº</th>
                                 <th>Solicitante</th>
@@ -47,6 +60,7 @@
                                 <th>Empresa</th>
                                 <th>Data desejada</th>
                                 <th>Ord. compra</th>
+                                <th>ERP</th>
                                 <th class="noColvis ignore-search">Ações</th>
                             </tr>
                         </thead>
@@ -110,6 +124,7 @@
                                         $showPurchaseOrder = isset($contract->purchase_order) && $contract->status === PurchaseRequestStatus::FINALIZADA;
                                     @endphp
                                     <td>{{ $showPurchaseOrder ? $contract?->purchase_order : '---' }}</td>
+                                    <td>{{ $contract?->erp?->label() ?? '---' }}</td>
 
                                     <td class="text-center" style="white-space: nowrap;">
                                         @can('get.api.requests.show')

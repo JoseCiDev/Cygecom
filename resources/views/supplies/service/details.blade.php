@@ -20,7 +20,8 @@
     @if ($isSupplies)
         <div class="row">
             <div class="col-md-12">
-                <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::SERVICE" :request-id="$request->id" :request-user-id="$request->user_id" :request-status="$request->status" :amount="$request->service->price" :purchase-order="$request->purchase_order" />
+                <x-SuppliesRequestEditContainer :request-type="PurchaseRequestType::SERVICE" :request-id="$request->id" :request-user-id="$request->user_id" :request-status="$request->status" :amount="$request->service->price" :purchase-order="$request->purchase_order" :erp="$request->erp"
+                    :request-type-logs="$request->service?->logs" />
             </div>
         </div>
 
@@ -77,6 +78,9 @@
                     <br>
                     <h4 class="text-highlight"><strong>Ordem de compra:</strong>
                         {{ $request->purchase_order ?? '---' }}
+                    </h4>
+                    <h4 class="text-highlight"><strong>ERP:</strong>
+                        {{ $request->erp?->label() ?? '---' }}
                     </h4>
                     <br>
                 </div>
@@ -387,16 +391,20 @@
         <div class="row">
             <div class="col-md-12">
                 <h4><i class="glyphicon glyphicon-file"></i> <strong>Anexos:</strong></h4>
-                @if ($files->count())
-                    <ul>
-                        @foreach ($files as $index => $file)
-                            <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ env('AWS_S3_BASE_URL') . $file->path }}" target="_blank"
-                                    rel="noopener noreferrer">{{ $file->original_name }}</a></li>
-                        @endforeach
-                    </ul>
+                @can('get.files.show')
+                    @if ($files->count())
+                        <ul>
+                            @foreach ($files as $index => $file)
+                                <li><a style="font-size: 16px" data-cy="link-{{ $index }}" href="{{ route('files.show', ['path' => $file->path]) }}"
+                                        target="_blank">{{ $file->original_name }}</a></li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p>Nenhum registro encontrado.</p>
+                    @endif
                 @else
-                    <p>Nenhum registro encontrado.</p>
-                @endif
+                    <p>Ops! Você não possui permissão para visualizar os anexos.</p>
+                @endcan
             </div>
         </div>
 

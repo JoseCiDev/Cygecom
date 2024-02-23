@@ -41,8 +41,11 @@ class PurchaseRequestService extends ServiceProvider
             'deletedByUser',
             'updatedByUser',
             'service.paymentInfo',
+            'service.logs',
             'contract.paymentInfo',
+            'contract.logs',
             'product.paymentInfo',
+            'product.logs',
             'service.supplier',
             'contract.supplier',
             'purchaseRequestProduct.supplier',
@@ -252,6 +255,7 @@ class PurchaseRequestService extends ServiceProvider
 
             $purchaseRequest->fill($data);
             $purchaseRequest->save();
+
             $type = $purchaseRequest->type;
             $id = $purchaseRequest->id;
 
@@ -291,7 +295,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de serviço.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveService para atualizar serviço.
      */
-    public function updateServiceRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile|array|null $files): PurchaseRequest
+    public function updateServiceRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile|array|null $files = null): PurchaseRequest
     {
         return DB::transaction(function () use ($id, $data, $isSuppliesUpdate, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, $isSuppliesUpdate, $files);
@@ -305,7 +309,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de produto(s).
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveProduct para atualizar produto(s).
      */
-    public function updateProductRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile|array|null $files): PurchaseRequest
+    public function updateProductRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile|array|null $files = null): PurchaseRequest
     {
         return DB::transaction(function () use ($id, $data, $isSuppliesUpdate, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, $isSuppliesUpdate, $files);
@@ -319,7 +323,7 @@ class PurchaseRequestService extends ServiceProvider
      * @abstract Atualiza solicitação de contrato.
      * Executa método updatePurchaseRequest para atualizar entidade de solicitação e método saveContract para atualizar contrato.
      */
-    public function updateContractRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile|array|null $files): PurchaseRequest
+    public function updateContractRequest(int $id, array $data, bool $isSuppliesUpdate = false, UploadedFile|array|null $files = null): PurchaseRequest
     {
         return DB::transaction(function () use ($id, $data, $isSuppliesUpdate, $files) {
             $purchaseRequest = $this->updatePurchaseRequest($id, $data, $isSuppliesUpdate, $files);

@@ -37,6 +37,19 @@
                     <table id="table-supplies-list" class="table table-hover table-nomargin table-striped dataTable" data-column_filter_dateformat="dd-mm-yy" style="width:100%"
                         data-nosort="0" data-checkall="all">
                         <thead>
+                            <tr class="search-bar">
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
                             <tr>
                                 <th class="noColvis">Nº</th>
                                 <th>Solicitante</th>
@@ -47,6 +60,7 @@
                                 <th>Empresa</th>
                                 <th>Data desejada</th>
                                 <th>Ord. compra</th>
+                                <th>ERP</th>
                                 <th class="noColvis ignore-search">Ações</th>
                             </tr>
                         </thead>
@@ -111,6 +125,7 @@
                                         $showPurchaseOrder = isset($service->purchase_order) && $service->status === PurchaseRequestStatus::FINALIZADA;
                                     @endphp
                                     <td>{{ $showPurchaseOrder ? $service?->purchase_order : '---' }}</td>
+                                    <td>{{ $service?->erp?->label() ?? '---' }}</td>
 
                                     <td class="text-center" style="white-space: nowrap;">
                                         @can('get.api.requests.show')
@@ -127,7 +142,7 @@
                                         @endphp
                                         @can('get.supplies.service.show')
                                             <a href="{{ route('supplies.service.show', ['id' => $service->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
-                                                data-is-to-show="{{ $isToShow ? 'true' : 'false' }}" data-cy="btn-open-details-{{ $index }}">
+                                                data-is-to-show="{{ $isToShow }}" data-cy="btn-open-details-{{ $index }}">
                                                 <i class="fa fa-external-link"></i>
                                             </a>
                                         @endcan
