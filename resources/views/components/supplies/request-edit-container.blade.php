@@ -14,6 +14,15 @@
             flex-direction: column;
             gap: 10px;
         }
+
+        #amount-update-info {
+            right: 25px;
+            top: 34px;
+            font-size: 14px;
+            color: var(--gold-primary-color);
+            display: block;
+            font-weight: bold;
+        }
     </style>
 @endpush
 
@@ -24,10 +33,19 @@
         <div class="row" style="margin-bottom: -15px;">
 
             <div class="col-sm-3 mb-3 form-group">
-                <label class="regular-text" for="amount">Editar valor total desta solicitação</label>
+                <label class="regular-text" for="amount" id="amount-label">Editar valor total desta solicitação
+                </label>
                 <input type="text" placeholder="0,00" class="form-control format-amount" id="format-amount" data-cy="format-amount" value="{{ $amount }}"
                     @disabled($requestIsFromLogged)>
                 <input type="hidden" name="{{ $inputName }}" id="amount" data-cy="amount" class="amount no-validation" value="{{ $amount }}">
+                <span id="amount-update-info">
+                    <span data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-title="Valor original é fornecido pelo solicitante ao criar solicitação.<br> Valor final é o valor acordado com fornecedor em cotação.">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </span>
+
+                    {{ $hasUpdateOnAmount ? 'Valor final alterado por suprimentos' : 'Valor original' }}
+                </span>
             </div>
 
             <div class="col-sm-3 mb-3 form-group">
