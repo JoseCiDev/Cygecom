@@ -35,7 +35,7 @@
                         </div>
                     </div>
 
-                    <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered" style="width:100%"
+                    <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered dataTable" style="width:100%"
                         data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                         <thead>
                             <tr class="search-bar">
@@ -181,7 +181,6 @@
 
     @push('scripts')
         <script type="module" src="{{ asset('js/supplies/modal-confirm-supplies-responsability.js') }}"></script>
-        <script type="module" src="{{ asset('js/utils/dataTables-column-search.js') }}"></script>
     @endpush
 
 </x-app>
