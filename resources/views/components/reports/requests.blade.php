@@ -23,7 +23,7 @@
 
                 <div class="row" style="margin: 0 0 30px">
                     <div class="col-md-6" style="padding: 0">
-                        <h1 class="page-title">Relatórios</h1>
+                        <h1 class="page-title">Relatório de solicitações</h1>
                     </div>
                 </div>
 
