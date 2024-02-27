@@ -243,7 +243,7 @@
 
                 $purchaseOrder.attr('placeholder', erpChecked === 'callisto' ? placeholderCallisto : placeholderSenior);
                 $purchaseOrder.attr('disabled', false);
-                $purchaseOrder.trigger('input');
+                $purchaseOrder.trigger('input').focus();
             }
 
             const applyMask = (input) => {
