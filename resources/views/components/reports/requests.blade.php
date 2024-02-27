@@ -364,15 +364,30 @@
                                 }),
                                 success: (data) => {
                                     const content = data.data;
-                                    const headers = dataTable.columns().header().toArray().map(header => header.textContent);
-                                    headers.push(...['Vigência (início)', 'Vigência (fim)', 'Ordem de compra', 'ERP', 'COMEX',
-                                        'Descrição da solicitação', 'Local para solicitação', 'Motivo da solicitação',
-                                        'Links de apoio', 'Observação da solicitação',
-                                        'Data deseja para solicitação', 'Apenas cotação', 'Motivo da atualização de status',
-                                        'Aprovação limite do solicitante', 'Solicitante ativo', 'CPF do solicitante',
-                                        'Setor do solicitante', 'Nome do serviço',
-                                        'Qtd. parcelas', 'Parcelas', 'Anexos do solicitante',
-                                        'Anexos do suprimentos',
+                                    const headers = dataTable.columns().header().toArray().map(header => `"${header.textContent}"`);
+                                    headers.push(...[
+                                        '"Vigência (início)"',
+                                        '"Vigência (fim)"',
+                                        '"Ordem de compra"',
+                                        '"ERP"',
+                                        '"COMEX"',
+                                        '"Descrição da solicitação"',
+                                        '"Local para solicitação"',
+                                        '"Motivo da solicitação"',
+                                        '"Links de apoio"',
+                                        '"Observação da solicitação"',
+                                        '"Data deseja para solicitação"',
+                                        '"Apenas cotação"',
+                                        '"Motivo da atualização de status"',
+                                        '"Aprovação limite do solicitante"',
+                                        '"Solicitante ativo"',
+                                        '"CPF do solicitante"',
+                                        '"Setor do solicitante"',
+                                        '"Nome do serviço"',
+                                        '"Qtd. parcelas"',
+                                        '"Parcelas"',
+                                        '"Anexos do solicitante"',
+                                        '"Anexos do suprimentos"',
                                     ]);
 
                                     const rows = content.map(item => {
