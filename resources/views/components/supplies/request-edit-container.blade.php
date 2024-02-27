@@ -149,41 +149,6 @@
 
             let maskInstances = [];
 
-            const applyMask = () => {
-                maskInstances.forEach(mask => mask.destroy());
-                maskInstances = [];
-
-                const placeholderCallisto = 'Ex.: 08454/14';
-                const placeholderSenior = 'Ex.: 9929';
-                const erpChecked = $erp.filter(':checked').val();
-                const maskOptions = {
-                    callisto: {
-                        mask: Number,
-                        min: 3,
-                        radix: "/",
-                        padFractionalZeros: true,
-                    },
-                    senior: {
-                        mask: Number,
-                        min: 0,
-                        scale: 0,
-                    }
-                }
-
-                if (!erpChecked) {
-                    return;
-                }
-
-                $purchaseOrder.attr('placeholder', erpChecked === 'callisto' ? placeholderCallisto : placeholderSenior);
-
-                $purchaseOrder.each((_, element) => {
-                    const mask = IMask(element, maskOptions[erpChecked]);
-                    maskInstances.push(mask);
-                });
-
-                $purchaseOrder.attr('disabled', false);
-            }
-
             const handleChangeStatus = (event) => {
                 const currentValue = $(event.target).val();
 
@@ -267,8 +232,45 @@
                 })
             }
 
-            applyMask();
-            $erp.on('change', applyMask);
+            const checkErp = () => {
+                const placeholderCallisto = 'Ex.: 08454/14';
+                const placeholderSenior = 'Ex.: 9929';
+                const erpChecked = $erp.filter(':checked').val();
+
+                if (!erpChecked) {
+                    return;
+                }
+
+                $purchaseOrder.attr('placeholder', erpChecked === 'callisto' ? placeholderCallisto : placeholderSenior);
+                $purchaseOrder.attr('disabled', false);
+                $purchaseOrder.trigger('input');
+            }
+
+            const applyMask = (input) => {
+                const currentTarget = $(input.target);
+                const value = currentTarget.val().replace(/\D/g, '');
+                if (!value) {
+                    currentTarget.val('');
+                    return;
+                }
+
+                if ($erp.filter(':checked').val() === Enum.ERP.SENIOR) {
+                    currentTarget.val(value);
+                    return;
+                }
+
+                if (value.length < 3) {
+                    return;
+                }
+
+                const prefixe = value.slice(0, -2);
+                const sufixe = value.slice(-2);
+
+                currentTarget.val(`${prefixe}/${sufixe}`);
+            }
+
+            $purchaseOrder.on('input', applyMask).trigger('input');
+            $erp.on('change', checkErp);
             $status.on('change', handleChangeStatus).trigger('change');
             $form.on('submit', submit);
         });
