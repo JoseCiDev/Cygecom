@@ -6,6 +6,7 @@ import PaymentTerm from './payment-term';
 import PurchaseRequestStatus from './purchase-request-status';
 import PurchaseRequestType from './purchase-request-type';
 import SupplierQualificationStatus from './supplier-qualification-status';
+import ERP from './erp';
 
 const Enum = {
     CompanyGroup,
@@ -16,6 +17,7 @@ const Enum = {
     PurchaseRequestStatus,
     PurchaseRequestType,
     SupplierQualificationStatus,
+    ERP,
 };
 
 export default Enum;
