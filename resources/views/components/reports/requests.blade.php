@@ -525,8 +525,14 @@
                                             currency: 'BRL'
                                         });
 
-                                        const originalAmount = item[item.type]?.logs
-                                            ?.find(log => log.action === 'create')?.changes[item.type];
+                                        const amountType = {
+                                            service: 'price',
+                                            product: 'amount',
+                                            contract: 'amount'
+                                        } [item.type];
+                                        const originalAmount = item[item.type]?.logs?.find(log => log.action === 'create')
+                                            ?.changes[amountType];
+
                                         const formatedOriginalAmount = originalAmount ? formatter.format(originalAmount) : '---';
 
                                         const amount = item[item.type]?.amount || item[item.type]?.price;
