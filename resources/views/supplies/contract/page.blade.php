@@ -134,10 +134,9 @@
                                             </button>
                                         @endcan
                                         @php
-                                            $existSuppliesUser = (bool) $contract->suppliesUser;
-                                            $existResponsibility = (bool) $contract->responsibility_marked_at;
+                                            $existSuppliesUser = (bool) $contract->suppliesUser?->person->name;
                                             $isOwnUserRequest = $contract->user->id === auth()->user()->id;
-                                            $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
+                                            $isToShow = !$existSuppliesUser && !$isOwnUserRequest;
                                         @endphp
                                         @can('get.supplies.contract.show')
                                             <a href="{{ route('supplies.contract.show', ['id' => $contract->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
