@@ -31,7 +31,10 @@ import { faker } from '@faker-js/faker';
 
 import { elements as el } from '../../elements'
 import { dataParameters } from '../../DataParameters/dataParameters';
-import { ConditionalWrite } from '../../import';
+import { ConditionalWrite, IsComexImportProduct, IsComexImportService, ObservationOfRequest, QuoteRequest, RequestType, ServiceName, SupportLinks } from '../../import';
+import data from '../../fixtures/data.json';
+
+
 
 const {
     logout,
@@ -106,8 +109,6 @@ const {
     reasonForRequest,
     desiredDeliveryDate,
     productStorageLocation,
-    suggestionLinks,
-    observation,
     paymentCondition,
     paymentMethod,
     highlightedOption,
@@ -136,26 +137,62 @@ const {
 } = el.Supply
 
 
+Cypress.Commands.add('createRequest', function (requestType: string) {
 
-Cypress.Commands.add('createRequest', function () {
-
-    function setPaymentAndSupplier(element: string, searchParameterValue: string, highlightedElement: string, conditionalWrite: ConditionalWrite) {
-        for (const [key, [isTyped, value]] of Object.entries(conditionalWrite)) {
-            if (isTyped) {
-                cy.get(element)
-                    .click();
-                cy.get(searchParameterValue)
-                    .type(value, { force: true })
-                    .get(highlightedElement)
-                    .should('be.visible')
-                    .contains(value)
-                    .click({ force: true });
+    function processRequestType(requestType, callback) {
+        if (requestTypeMap[requestType]) {
+            const requestKey = requestTypeMap[requestType];
+            if (dataParameters.Request[requestKey]) {
+                callback(requestKey);
             }
         }
     };
 
-    function setQuotation() {
-        const { product: { quoteRequest } } = dataParameters.Request;
+    const requestTypeMap = {
+        [RequestType.product]: 'product',
+        [RequestType.oneOffService]: 'oneOffService',
+        [RequestType.recurringService]: 'recurringService'
+    };
+    const optionsMap = {
+        [RequestType.oneOffService]: { selector: '[data-cy="service-title"]', property: 'oneOffService' },
+        [RequestType.recurringService]: { selector: '[data-cy="contract-title"]', property: 'recurringService' }
+    };
+    const comexMapping = {
+        product: {
+            [IsComexImportProduct.yes]: IsComexImportProduct.yes,
+            [IsComexImportProduct.no]: IsComexImportProduct.no
+        },
+        oneOffService: {
+            [IsComexImportService.yes]: IsComexImportService.yes,
+            [IsComexImportService.no]: IsComexImportService.no
+        },
+        recurringService: {
+            [IsComexImportService.yes]: IsComexImportService.yes,
+            [IsComexImportService.no]: IsComexImportService.no
+        }
+    };
+
+    function setPaymentAndSupplier(requestType, element: string, searchParameterValue: string, highlightedElement: string) {
+        processRequestType(requestType, (requestKey) => {
+            const conditionalWrite: ConditionalWrite = dataParameters.Request[requestKey];
+            if (conditionalWrite) {
+                for (const [key, [isTyped, value]] of Object.entries(conditionalWrite)) {
+                    if (isTyped) {
+                        cy.get(element)
+                            .click();
+                        cy.get(searchParameterValue)
+                            .type(value, { force: true })
+                            .get(highlightedElement)
+                            .should('be.visible')
+                            .contains(value)
+                            .click({ force: true });
+                    }
+                }
+            }
+        });
+    };
+    function setQuotation(requestKey: string) {
+        const quoteRequest = dataParameters.Request[requestKey];
         for (const [key, value] of Object.entries(quoteRequest)) {
             if (value) {
                 cy.getElementAndCheck([
@@ -164,123 +201,146 @@ Cypress.Commands.add('createRequest', function () {
             }
         }
     };
-
-    function setApportionment() {
-        const { apportionmentPercentage, apportionmentValue } = dataParameters.Request.product;
-        cy.get(apportionmentPercentageElement)
-            .invoke('val')
-            .then((percentageVal) => {
-                cy.get(apportionmentValueElement)
-                    .invoke('val')
-                    .then((valueVal) => {
-                        if (!percentageVal && !valueVal) {
-                            cy.get(apportionmentPercentageElement)
-                                .type(apportionmentPercentage.toString());
-                        }
-                        else if (!percentageVal) {
-                            cy.get(apportionmentPercentageElement)
-                                .type(apportionmentPercentage.toString());
-                        }
-                        else if (!valueVal) {
-                            cy.get(apportionmentValueElement)
-                                .type(apportionmentValue.toString());
-                        }
-                    });
-            });
+    function setApportionment(requestKey: string) {
+        const requestData = dataParameters.Request[requestKey];
+    
+        if (!requestData) {
+            throw new Error(`Request data not found for key: ${requestKey}`);
+        }
+    
+        const { apportionmentPercentage, apportionmentValue } = requestData;
+    
+        if (apportionmentValue && apportionmentValue !== " ") {
+            cy.get(apportionmentValueElement)
+                .type(apportionmentValue.toString());
+        }
+        else if (apportionmentPercentage && apportionmentPercentage !== " ") {
+            cy.get(apportionmentPercentageElement)
+                .type(apportionmentPercentage.toString());
+        } else {
+            throw new Error("Neither apportionmentValue nor apportionmentPercentage was provided");
+        }
     };
-
-    function saveRequest() {
-        const { product: { saveRequest } } = dataParameters.Request;
+    function saveRequest(requestKey) {
+        const saveRequest = dataParameters.Request[requestKey];
         for (const [key, saveAs] of Object.entries(saveRequest)) {
             if (saveAs) {
                 cy.getElementAndClick([key]);
             }
         }
     };
-    
-    cy.getElementAutocompleteTypeAndClick(
-        { [costCenter]: dataParameters.Request.product.costCenter },
-        highlightedOption
-    );
 
-    setApportionment();
 
-    setQuotation();
 
-    cy.getElementAndCheck([
-        { element: dataParameters.Request.product.acquiringArea },
-        { element: dataParameters.Request.product.comexImport },
-    ]);
-
-    cy.getElementAndType({
-        [reasonForRequest]: dataParameters.Request.product.reasonForRequest,
-        [desiredDeliveryDate]: dataParameters.Request.product.desiredDeliveryDate,
-        [productStorageLocation]: dataParameters.Request.product.productStorageLocation,
-        [suggestionLinks]: dataParameters.Request.product.suggestionLinks,
-        [observation]: dataParameters.Request.product.observation,
+    processRequestType(requestType, (requestKey) => {
+        cy.getElementAndClick([requestType]);
     });
 
-    setPaymentAndSupplier(
-        paymentCondition,
-        searchPaymentMethodAndTerms,
-        highlightedOption,
-        dataParameters.Request.product.paymentCondition
-    );
-
-    cy.getElementAndType({
-        [totalValue]: dataParameters.Request.product.totalValue.toString(),
+    processRequestType(requestType, (requestKey) => {
+        if (optionsMap[requestKey]) {
+            cy.get(optionsMap[requestKey].selector)
+                .type(dataParameters.Request[optionsMap[requestKey].property].serviceName);
+        }
     });
 
-    setPaymentAndSupplier(
-        paymentMethod,
-        searchPaymentMethodAndTerms,
-        highlightedOption,
-        dataParameters.Request.product.paymentMethod
-    );
-
-    cy.getElementAndType({
-        [paymentInstallments]: dataParameters.Request.product.paymentInstallments.toString(),
-        [paymentDetails]: dataParameters.Request.product.paymentDetails,
+    processRequestType(requestType, (requestKey) => {
+        if (dataParameters.Request[requestKey]) {
+            cy.getElementAutocompleteTypeAndClick(
+                { [costCenter]: dataParameters.Request[requestKey].costCenter },
+                highlightedOption
+            );
+        };
     });
 
-    cy.getElementAutocompleteTypeAndClick({
-        [supplier]: dataParameters.Request.product.supplier,
-        [productCategory]: dataParameters.Request.product.productCategory,
-    },
-        highlightedOption
-    );
+    if (requestTypeMap[requestType]) {
+        const requestKey = requestTypeMap[requestType];
+        if (dataParameters.Request[requestKey]) {
+            cy.fixture('data.json').then((data) => {
+                const requestKey = requestTypeMap[requestType];
+                if (dataParameters.Request[requestKey]) {
+                    setApportionment(requestKey);
+                }
+            });
+        }
+    };
 
-    cy.getElementAndType({
-        [productNameAndDescription]: dataParameters.Request.product.productNameAndDescription,
-        [productQuantity]: dataParameters.Request.product.productQuantity.toString(),
-        [productColor]: dataParameters.Request.product.productColor,
-        [productSize]: dataParameters.Request.product.productSize.toString(),
-        [productModel]: dataParameters.Request.product.productModel,
-        [productLink]: dataParameters.Request.product.productLink,
+    processRequestType('quoteRequest', setQuotation);
+
+    processRequestType(requestType, (requestKey) => {
+        let comexValue = dataParameters.Request[requestKey].isComex;
+        if (comexMapping[requestKey] && comexMapping[requestKey][comexValue]) {
+            const selector = comexMapping[requestKey][comexValue];
+            if (typeof selector === 'string') {
+                cy.get(selector)
+                    .should('be.visible')
+                    .check();
+            };
+        };
     });
 
-    cy.insertFile(dataParameters.Request.product.attachedFile, attachedFile);
+    processRequestType(requestType, (requestKey) => {
+        cy.getElementAndType({
+            [reasonForRequest]: dataParameters.Request[requestKey].reasonForRequest.trim() !== "" ? dataParameters.Request[requestKey].reasonForRequest : " ",
+            [desiredDeliveryDate]: dataParameters.Request[requestKey].desiredDeliveryDate.trim() !== "" ? dataParameters.Request[requestKey].desiredDeliveryDate : new Date().toISOString().split('T')[0],
+            [productStorageLocation]: dataParameters.Request[requestKey].localDescription.trim() !== "" ? dataParameters.Request[requestKey].localDescription : " ",
+        });
+    });
 
-    saveRequest();
+    processRequestType(requestType, (requestKey) => {
+        cy.getElementAndType({
+            [SupportLinks[requestKey]]: dataParameters.Request[requestKey].suggestionLinks,
+        });
+    });
+
+    processRequestType(requestType, (requestKey) => {
+        cy.getElementAndCheck([{ element: dataParameters.Request[requestKey].acquiringArea },]);
+    });
+
+    processRequestType(requestType, (requestKey) => {
+        cy.getElementAndType({
+            [ObservationOfRequest[requestKey]]: dataParameters.Request[requestKey].observation,
+        });
+    });
+
+    setPaymentAndSupplier('conditionalWrite', paymentCondition, searchPaymentMethodAndTerms, highlightedOption);
+
+    processRequestType(requestType, (requestKey) => {
+        cy.getElementAndType({
+            [totalValue]: dataParameters.Request[requestKey].totalValue,
+        });
+    });
+
+    processRequestType(requestType, (requestKey) => {
+        cy.getElementAndType({
+            [paymentInstallments]: dataParameters.Request[requestKey].paymentInstallments.toString(),
+            [paymentDetails]: dataParameters.Request[requestKey].paymentDetails,
+        });
+    });
+
+    processRequestType(requestType, (requestKey) => {
+        cy.getElementAutocompleteTypeAndClick({
+            [supplier]: dataParameters.Request[requestKey].supplier,
+            [productCategory]: dataParameters.Request[requestKey].productCategory,
+        },
+            highlightedOption
+        );
+    });
+
+    processRequestType(requestType, (requestKey) => {
+        cy.getElementAndType({
+            [productNameAndDescription]: dataParameters.Request[requestKey].productNameAndDescription,
+            [productQuantity]: dataParameters.Request[requestKey].productQuantity.toString(),
+            [productColor]: dataParameters.Request[requestKey].productColor,
+            [productSize]: dataParameters.Request[requestKey].productSize.toString(),
+            [productModel]: dataParameters.Request[requestKey].productModel,
+            [productLink]: dataParameters.Request[requestKey].productLink,
+        });
+    });
+
+    processRequestType(requestType, (requestKey) => {
+        cy.insertFile(dataParameters.Request[requestKey].attachedFile, attachedFile);
+    });
+
+    processRequestType('saveRequest', saveRequest);
+
 });
-
-
-
-
-
-
-
-/*
-data entrega
-Data desejada do serviço
-Data desejada da contratação
-
---
-Descrição
-Detalhes do serviço recorrente*
-
-
-
-
-
-*/

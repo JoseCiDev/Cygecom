@@ -10,11 +10,11 @@ import {
     ApproverUser,
     AutorizedRequest,
     ColumnSearchParameter,
-    ComexImport,
     ConditionalWrite,
     ProductCategory,
     QuoteRequest,
     RequestOtherUsers,
+    RequestType,
     SaveRequest,
     SearchColumnGeneralRequests,
     SearchColumnMyRequests,
@@ -45,8 +45,13 @@ import {
     TableColumnsSupplierRegistration,
     TableColumnsUserRegistration,
     TelephoneType,
-    UserProfile
+    UserProfile,
+    ObservationOfRequest,
+    IsComexImportProduct,
+    IsComexImportService,
 } from '../../import';
+import { ServiceName } from '../Enums/serviceName';
+
 
 export interface UserRegistration<S = string> {
     name: S;
@@ -143,16 +148,17 @@ export interface DataParameters<S = string> {
         userRegistration: UserRegistration<S>;
     };
     Request: {
+        requestType: RequestType;
         product: {
             costCenter: S;
             apportionmentPercentage: S | number;
             apportionmentValue: S | number;
             quoteRequest: Record<QuoteRequest, boolean>;
             acquiringArea: string;
-            comexImport: ComexImport;
+            isComex: IsComexImportProduct | IsComexImportService |string;
             reasonForRequest: string;
             desiredDeliveryDate: S;
-            productStorageLocation: S;
+            localDescription: S;
             suggestionLinks: S;
             observation: S;
             paymentCondition: ConditionalWrite;
@@ -172,14 +178,44 @@ export interface DataParameters<S = string> {
             saveRequest: Record<SaveRequest, boolean>;
 
         },
-        oneOffService: {},
-        recurringService: {},
+        oneOffService: {
+            serviceName: S;
+            costCenter: S;
+            apportionmentPercentage: S | number;
+            apportionmentValue: S | number;
+            quoteRequest: Record<QuoteRequest, boolean>;
+            acquiringArea: string;
+            isComex: IsComexImportProduct | string;
+            reasonForRequest: string;
+            desiredDeliveryDate: S;
+            localDescription: S;
+            suggestionLinks: S;
+            observation: S;
+            paymentCondition: ConditionalWrite;
+            totalValue: S | number;
+        },
+        recurringService: {
+            serviceName: S;
+            costCenter: S;
+            apportionmentPercentage: S | number;
+            apportionmentValue: S | number;
+            quoteRequest: Record<QuoteRequest, boolean>;
+            acquiringArea: string;
+            isComex: IsComexImportProduct | string;
+            reasonForRequest: string;
+            desiredDeliveryDate: S;
+            localDescription: S;
+            suggestionLinks: S;
+            observation: S;
+            paymentCondition: ConditionalWrite;
+            totalValue: S | number;
+        },
     },
 
     showHideColumns: ShowHideColumns;
     getDataOnGrid: GetDataOnGrid;
 
-    url: S ;
+    url: S;
 
     telephoneType: typeof TelephoneType;
     userProfile: typeof UserProfile;

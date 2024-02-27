@@ -67,6 +67,7 @@ interface Elements<S = string> {
         newRequestSubMenu: S;
         myRequestSubMenu: S;
         requestGeneralSubMenu: S;
+        serviceDescription: S;
         costCenter: S;
         apportionmentPercentageElement: S;
         apportionmentValueElement: S;
@@ -74,8 +75,6 @@ interface Elements<S = string> {
         reasonForRequest: S;
         desiredDeliveryDate: S;
         productStorageLocation: S;
-        suggestionLinks: S;
-        observation: S;
         paymentCondition: S;
         paymentMethod: S;
         highlightedOption: S;
@@ -83,6 +82,10 @@ interface Elements<S = string> {
         totalValue: S;
         paymentInstallments: S;
         paymentDetails: S;
+        initialPaymentTerm: S;
+        finalPaymentTerm: S;
+        recurrence: S;
+        dueDate: S;
         supplier: S;
         productCategory: S;
         productNameAndDescription: S;
@@ -91,6 +94,9 @@ interface Elements<S = string> {
         productSize: S;
         productModel: S;
         productLink: S;
+        seller: S;
+        telephone: S;
+        email: S;
         attachedFile: S;
     },
 
@@ -175,6 +181,7 @@ export const elements: Elements = {
         newRequestSubMenu: '[data-cy="dropdown-solicitacoes-novas"]',
         myRequestSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
         requestGeneralSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
+        serviceDescription: '.col-sm-7 > .form-group > [data-cy="description"]',
         costCenter: '#select2-cost_center_apportionments0cost_center_id-container',
         highlightedOption: '[class="select2-results__option select2-results__option--highlighted"]',
         apportionmentPercentageElement: '[data-cy="cost_center_apportionments[0][apportionment_percentage]"]',
@@ -183,15 +190,17 @@ export const elements: Elements = {
         reasonForRequest: '[data-cy="reason"]',
         desiredDeliveryDate: '[data-cy="desired-date"]',
         productStorageLocation: '[data-cy="local-description"]',
-        suggestionLinks: '[data-cy="support-links"]',
-        observation: '[data-cy="request-observation"]',
         paymentCondition: '#select2-payment-terms-container',
         paymentMethod: '#select2-payment-method-container > span',
         searchPaymentMethodAndTerms: '.select2-search__field',
         totalValue: '[data-cy="format-amount"]',
         paymentInstallments: '#request-form > div.full-product-line.product-form > div.payment-block > div:nth-child(2) > div.col-sm-1 > div > input.form-control.format-installments-number',
         paymentDetails: '[data-cy="payment-info-description"]',
-        supplier: '[data-select2-id="2874"]',
+        initialPaymentTerm: '[data-cy="contract[start_date]"]',
+        finalPaymentTerm: '[data-cy="contract[end_date]"]',
+        recurrence: '#select2-recurrence-container',
+        dueDate: '#select2-contract-payday-container',
+        supplier: '.select-supplier-container > .select2 > .selection > .select2-selection',
         productCategory: '[data-select2-id="11"]',
         productNameAndDescription: '[data-cy="purchase_request_products[0][products][0][name]"]',
         productQuantity: '[data-cy="purchase_request_products[0][products][0][quantity]"]',
@@ -199,6 +208,9 @@ export const elements: Elements = {
         productSize: '[data-cy="purchase_request_products[0][products][0][size]"]',
         productModel: '[data-cy="purchase_request_products[0][products][0][model]"]',
         productLink: '[data-cy="purchase_request_products[0][products][0][link]"]',
+        seller: '[data-cy="attendant"]',
+        telephone: '[data-cy="phone-number"]',
+        email: ':nth-child(4) > .form-group > [data-cy="email"]',
         attachedFile: '[data-cy="files"]',
     },
 

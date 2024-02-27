@@ -2,6 +2,7 @@ import { elements as el } from '../../../elements';
 import {
     dataParameters,
 } from '../../../DataParameters/dataParameters'
+import { RequestType } from '../../../DataParameters/Enums/requestType';
 
 
 const {
@@ -100,10 +101,8 @@ describe('Testes da página de criação de solicitação de produtos', () => {
             '[data-cy="dropdown-solicitacoes-novas"]',
             '.main-nav > :nth-child(3) > .btn',
             '[data-cy="dropdown-solicitacoes-novas"]',
-            ':nth-child(1) > .request-dashboard-requests-item-btn'
         ]);
-
-        cy.createRequest();
+        cy.createRequest(dataParameters.Request.requestType);
 
     });
 })

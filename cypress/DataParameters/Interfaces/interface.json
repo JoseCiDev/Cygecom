@@ -149,6 +149,14 @@
         "Request": {
             "type": "object",
             "properties": {
+                "requestType": {
+                    "type": "string",
+                    "enum": [
+                        "product",
+                        "oneOffService",
+                        "recurringService"
+                    ]
+                },
                 "product": {
                     "type": "object",
                     "properties": {
@@ -175,7 +183,7 @@
                         "acquiringArea": {
                             "type": "string"
                         },
-                        "comexImport": {
+                        "isComex": {
                             "type": "string"
                         },
                         "reasonForRequest": {
@@ -184,7 +192,7 @@
                         "desiredDeliveryDate": {
                             "type": "string"
                         },
-                        "productStorageLocation": {
+                        "localDescription": {
                             "type": "string"
                         },
                         "suggestionLinks": {
@@ -243,7 +251,10 @@
                             ]
                         },
                         "totalValue": {
-                            "type": "number"
+                            "type": [
+                                "string",
+                                "number"
+                            ]
                         },
                         "paymentMethod": {
                             "type": "object",
@@ -404,10 +415,10 @@
                         "apportionmentValue",
                         "quoteRequest",
                         "acquiringArea",
-                        "comexImport",
+                        "isComex",
                         "reasonForRequest",
                         "desiredDeliveryDate",
-                        "productStorageLocation",
+                        "localDescription",
                         "suggestionLinks",
                         "observation",
                         "PaymentCondition",
@@ -426,10 +437,238 @@
                         "attachedFile",
                         "saveRequest"
                     ]
+                },
+                "oneOffService": {
+                    "type": "object",
+                    "properties": {
+                        "serviceName": {
+                            "type": "string"
+                        },
+                        "costCenter": {
+                            "type": "string"
+                        },
+                        "apportionmentPercentage": {
+                            "type": "number"
+                        },
+                        "apportionmentValue": {
+                            "type": "number"
+                        },
+                        "quoteRequest": {
+                            "type": "object",
+                            "properties": {
+                                "quoteRequest": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "quoteRequest"
+                            ]
+                        },
+                        "acquiringArea": {
+                            "type": "string"
+                        },
+                        "isComex": {
+                            "type": "string"
+                        },
+                        "reasonForRequest": {
+                            "type": "string"
+                        },
+                        "desiredDeliveryDate": {
+                            "type": "string"
+                        },
+                        "localDescription": {
+                            "type": "string"
+                        },
+                        "suggestionLinks": {
+                            "type": "string"
+                        },
+                        "observation": {
+                            "type": "string"
+                        },
+                        "PaymentCondition": {
+                            "type": "object",
+                            "properties": {
+                                "anticipatedPayment": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                },
+                                "cashPayment": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                },
+                                "paymentInInstallments": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                }
+                            },
+                            "required": [
+                                "anticipatedPayment",
+                                "cashPayment",
+                                "paymentInInstallments"
+                            ]
+                        },
+                        "totalValue": {
+                            "type": [
+                                "string",
+                                "number"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "serviceName",
+                        "costCenter",
+                        "isComex",
+                        "reasonForRequest",
+                        "desiredDeliveryDate",
+                        "localDescription",
+                        "suggestionLinks",
+                        "observation",
+                        "PaymentCondition",
+                        "totalValue"
+                    ]
+                },
+                "recurringService": {
+                    "type": "object",
+                    "properties": {
+                        "serviceName": {
+                            "type": "string"
+                        },
+                        "costCenter": {
+                            "type": "string"
+                        },
+                        "apportionmentPercentage": {
+                            "type": "number"
+                        },
+                        "apportionmentValue": {
+                            "type": "number"
+                        },
+                        "quoteRequest": {
+                            "type": "object",
+                            "properties": {
+                                "quoteRequest": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "quoteRequest"
+                            ]
+                        },
+                        "acquiringArea": {
+                            "type": "string"
+                        },
+                        "isComex": {
+                            "type": "string"
+                        },
+                        "reasonForRequest": {
+                            "type": "string"
+                        },
+                        "desiredDeliveryDate": {
+                            "type": "string"
+                        },
+                        "localDescription": {
+                            "type": "string"
+                        },
+                        "suggestionLinks": {
+                            "type": "string"
+                        },
+                        "observation": {
+                            "type": "string"
+                        },
+                        "PaymentCondition": {
+                            "type": "object",
+                            "properties": {
+                                "anticipatedPayment": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                },
+                                "cashPayment": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                },
+                                "paymentInInstallments": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "boolean"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                }
+                            },
+                            "required": [
+                                "anticipatedPayment",
+                                "cashPayment",
+                                "paymentInInstallments"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "serviceName",
+                        "costCenter",
+                        "isComex",
+                        "reasonForRequest",
+                        "desiredDeliveryDate",
+                        "localDescription",
+                        "suggestionLinks",
+                        "observation",
+                        "PaymentCondition"
+                    ]
                 }
             },
             "required": [
-                "product"
+                "requestType",
+                "product",
+                "oneOffService",
+                "recurringService"
             ]
         }
     },

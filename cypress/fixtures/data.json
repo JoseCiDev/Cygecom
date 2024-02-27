@@ -86,18 +86,19 @@
         }
     },
     "Request": {
+        "requestType": "product",
         "product": {
             "costCenter": "06.354.562/0001-10 - HKM - Software e Sistemas",
-            "apportionmentPercentage": 100,
-            "apportionmentValue": 100,
+            "apportionmentPercentage": "100",
+            "apportionmentValue": "",
             "quoteRequest": true,
             "acquiringArea": "areaContract",
-            "comexImport": "yes",
-            "reasonForRequest": "Teste Json - Motivo da solicitação",
-            "desiredDeliveryDate": "02-22-2024",
-            "productStorageLocation": "Teste Json",
-            "suggestionLinks": "Teste Json",
-            "observation": "Teste Json",
+            "isComex": "no",
+            "reasonForRequest": "",
+            "desiredDeliveryDate": " ",
+            "localDescription": "",
+            "suggestionLinks": "https://www.essentialnutrition.com.br",
+            "observation": "",
             "PaymentCondition": {
                 "anticipatedPayment": [
                     false,
@@ -108,11 +109,11 @@
                     "À vista"
                 ],
                 "paymentInInstallments": [
-                    false,
+                    true,
                     "Parcelado"
                 ]
             },
-            "totalValue": 1750.36,
+            "totalValue": "1784,93",
             "paymentMethod": {
                 "boleto": [
                     false,
@@ -143,25 +144,83 @@
                     "Internacional"
                 ],
                 "pix": [
-                    false,
+                    true,
                     "Pix"
                 ]
             },
             "paymentInstallments": 3,
-            "paymentDetails": "Teste Json",
-            "supplier": "73.243.222/0001-09  - GRAFICA CONTINENTE LTDA EPP",
+            "paymentDetails": "",
+            "supplier": "47.960.950/0897-85  - MAGAZINE LUIZA S/A",
             "productCategory": "Maquinas E Equipamentos No Laboratorio",
-            "productNameAndDescription": "Teste Json",
+            "productNameAndDescription": "",
             "productQuantity": 3,
-            "productColor": "Teste Json",
-            "productSize": "Teste Json",
-            "productModel": "Teste Json",
+            "productColor": "",
+            "productSize": "",
+            "productModel": "",
             "productLink": "https://essentia.com.br/",
             "attachedFile": "../fixtures/attachedFile.png",
             "saveRequest": {
                 "draft": true,
                 "submit": false
             }
+        },
+        "oneOffService": {
+            "serviceName": "Teste_servico_pontual",
+            "costCenter": "06.354.562/0001-10 - HKM - Almoxarifado",
+            "apportionmentPercentage": "100",
+            "apportionmentValue": "100",
+            "quoteRequest": true,
+            "acquiringArea": "areaContract",
+            "isComex": "no",
+            "reasonForRequest": "",
+            "desiredDeliveryDate": " ",
+            "localDescription": "Teste Json",
+            "suggestionLinks": "",
+            "observation": "",
+            "PaymentCondition": {
+                "anticipatedPayment": [
+                    false,
+                    "Antecipado"
+                ],
+                "cashPayment": [
+                    false,
+                    "À vista"
+                ],
+                "paymentInInstallments": [
+                    true,
+                    "Parcelado"
+                ]
+            },
+            "totalValue": "100.00"
+        },
+        "recurringService": {
+            "serviceName": "Teste_servico_recorrente",
+            "costCenter": "06.354.562/0001-10 - HKM - DDH",
+            "apportionmentPercentage": "100",
+            "apportionmentValue": "100",
+            "quoteRequest": "false",
+            "acquiringArea": "areaContract",
+            "isComex": "no",
+            "reasonForRequest": "recurringService",
+            "desiredDeliveryDate": "01-01-3333",
+            "localDescription": " ",
+            "suggestionLinks": "",
+            "observation": "faker.lorem.lines()",
+            "PaymentCondition": {
+                "anticipatedPayment": [
+                    false,
+                    "Antecipado"
+                ],
+                "cashPayment": [
+                    false,
+                    "À vista"
+                ],
+                "paymentInInstallments": [
+                    "",
+                    "Parcelado"
+                ]
+            },
+            "totalValue": "305.90"
         }
     }
 }

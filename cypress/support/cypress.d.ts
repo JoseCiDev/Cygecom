@@ -138,17 +138,16 @@ declare global {
            * comando customizado para criar solicitações seja de produtos, serviços pontuais ou serviços recorrentes.
            * @example cy.createRequest();
            */
-            createRequest(): ValidationResult;
+            createRequest(requestType: string): ValidationResult;
 
             /**
-           * comando customizado para visualizar colunas selecionadas.
+           * comando customizado para ocultar/mostrar colunas selecionadas.
            * @example cy.getColumnVisibilityCommand();
            */
             getColumnVisibilityCommand(table: TableTypesElements): ValidationResult
 
-            clickTypeAndSelect(element: string, text: string);
 
-            loginB();
+            loginB(emailAccess: string, passwordAccess: string);
         }
 
     }

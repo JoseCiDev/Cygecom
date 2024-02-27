@@ -9,7 +9,7 @@ export { AllowedApprovalCostCenter } from './DataParameters/Enums/allowedApprova
 export { ColumnEnums, ColumnSearchParameter, ValidationResult, ConditionalWrite, ElementTypeAndValueOpcional } from './DataParameters/Types/types';
 export { AcquiringArea } from './DataParameters/Enums/acquiringArea';
 export { ApproveLimit } from './DataParameters/Enums/approveLimit';
-export { ComexImport } from './DataParameters/Enums/comexImport';
+export { IsComexImportProduct, IsComexImportService } from './DataParameters/Enums/isComexImport';
 export { CostCenter } from './DataParameters/Enums/costCenter';
 export { PaymentCondition } from './DataParameters/Enums/paymentCondition';
 export { PaymentMethod } from './DataParameters/Enums/paymentMethod';
@@ -49,3 +49,7 @@ export { ShowRecordsQuantityElement } from './DataParameters/Enums/showRecordsQu
 export { SearchColumnElement } from './DataParameters/Enums/searchColumnElement';
 export { SearchParameterElement } from './DataParameters/Enums/searchParameterElement';
 export { SortByColumnElement } from './DataParameters/Enums/sortByColumnElement';
+export { RequestType } from './DataParameters/Enums/requestType';
+export { ServiceName } from './DataParameters/Enums/serviceName';
+export { SupportLinks } from './DataParameters/Enums/supportLinks';
+export { ObservationOfRequest } from './DataParameters/Enums/observationOfRequest';
