@@ -48,10 +48,10 @@
                                                 style="font-family: Arial, Helvetica, sans-serif; font-size: 17px; line-height: 22px; color: #242424; margin: 0 0 20px; max-width: 375px; text-align: left;">
                                                 Sua solicitação de {{ $requestType }} <strong>{{ $requestName }}</strong> teve o status atualizado para {{ $requestStatus }}.
                                             </p>
-                                            @if ($cancelReason)
+                                            @if ($reason)
                                                 <p
                                                     style="font-family: Arial, Helvetica, sans-serif; font-size: 17px; line-height: 22px; color: #242424; margin: 0 0 20px; max-width: 375px; text-align: left;">
-                                                    Motivo do cancelamento: {{ $cancelReason }}
+                                                    Motivo do status ({{ $requestStatus }}): {{ $reason }}
                                                 </p>
                                             @endif
                                         </td>
