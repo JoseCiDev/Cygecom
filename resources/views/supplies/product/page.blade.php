@@ -159,9 +159,8 @@
                                         @endcan
                                         @php
                                             $existSuppliesUser = (bool) $product->suppliesUser?->person->name;
-                                            $existResponsibility = (bool) $product->responsibility_marked_at;
                                             $isOwnUserRequest = $product->user->id === auth()->user()->id;
-                                            $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
+                                            $isToShow = !$existSuppliesUser && !$isOwnUserRequest;
                                         @endphp
                                         @can('get.supplies.product.show')
                                             <a href="{{ route('supplies.product.show', ['id' => $product->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
