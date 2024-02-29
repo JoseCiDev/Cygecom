@@ -381,7 +381,7 @@
                                         '"Motivo da atualização de status"',
                                         '"Aprovação limite do solicitante"',
                                         '"Solicitante ativo"',
-                                        '"CPF do solicitante"',
+                                        '"cpf/cnpj"',
                                         '"Setor do solicitante"',
                                         '"Nome do serviço"',
                                         '"Qtd. parcelas"',
@@ -402,7 +402,9 @@
                                         const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss');
                                         const suppliesUserName = item.supplies_user?.person.name || '---';
 
-                                        const responsibilityMarkedAt = item.responsibility_marked_at ? moment(item.responsibility_marked_at)
+                                        const responsibilityMarkedAt = item.responsibility_marked_at ?
+                                            moment(item.responsibility_marked_at)
+                                            .subtract(3, 'hours')
                                             .format('DD/MM/YYYY HH:mm:ss') : '---';
 
                                         const serviceNameColumnMapping = {
