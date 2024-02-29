@@ -168,7 +168,7 @@ class ServiceController extends Controller
                 'responsibility_marked_at' => now(),
                 'status' => PurchaseRequestStatus::EM_TRATATIVA->value,
             ];
-            $purchaseRequestUpdated = $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
+            $purchaseRequestUpdated = $this->purchaseRequestService->updatePurchaseRequest($id, $data, isSuppliesUpdate: true);
         }
 
         $service = $this->purchaseRequestService->purchaseRequestById($id);
@@ -185,10 +185,13 @@ class ServiceController extends Controller
     private function isAuthorizedToUpdate(PurchaseRequest $purchaseRequest): bool
     {
         $allowedProfiles = Gate::any(['admin', 'suprimentos_hkm', 'suprimentos_inp']);
-
         $existSuppliesUserId = (bool) $purchaseRequest->supplies_user_id;
-        $existSuppliesMarkedAt = (bool) $purchaseRequest->responsibility_marked_at;
+        $userContainsPurchaseRequest = auth()->user()->purchaseRequest->contains($purchaseRequest);
 
-        return $allowedProfiles && !$existSuppliesUserId && !$existSuppliesMarkedAt && !auth()->user()->purchaseRequest->contains($purchaseRequest);
+        if ($userContainsPurchaseRequest || $existSuppliesUserId) {
+            return false;
+        }
+
+        return $allowedProfiles;
     }
 }

@@ -136,9 +136,8 @@
                                         @endcan
                                         @php
                                             $existSuppliesUser = (bool) $service->suppliesUser?->person->name;
-                                            $existResponsibility = (bool) $service->responsibility_marked_at;
                                             $isOwnUserRequest = $service->user->id === auth()->user()->id;
-                                            $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
+                                            $isToShow = !$existSuppliesUser && !$isOwnUserRequest;
                                         @endphp
                                         @can('get.supplies.service.show')
                                             <a href="{{ route('supplies.service.show', ['id' => $service->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"

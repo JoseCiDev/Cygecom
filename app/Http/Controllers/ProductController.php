@@ -163,7 +163,7 @@ class ProductController extends Controller
                 'responsibility_marked_at' => now(),
                 'status' => PurchaseRequestStatus::EM_TRATATIVA->value,
             ];
-            $purchaseRequestUpdated = $this->purchaseRequestService->updatePurchaseRequest($id, $data, true);
+            $purchaseRequestUpdated = $this->purchaseRequestService->updatePurchaseRequest($id, $data, isSuppliesUpdate: true);
         }
 
         $product = $this->purchaseRequestService->purchaseRequestById($id);
@@ -182,10 +182,9 @@ class ProductController extends Controller
         $allowedProfiles = Gate::any(['admin', 'suprimentos_hkm', 'suprimentos_inp']);
 
         $existSuppliesUserId = (bool) $purchaseRequest->supplies_user_id;
-        $existSuppliesMarkedAt = (bool) $purchaseRequest->responsibility_marked_at;
         $userContainsPurchaseRequest = auth()->user()->purchaseRequest->contains($purchaseRequest);
 
-        if ($userContainsPurchaseRequest || $existSuppliesUserId || $existSuppliesMarkedAt) {
+        if ($userContainsPurchaseRequest || $existSuppliesUserId) {
             return false;
         }
 
