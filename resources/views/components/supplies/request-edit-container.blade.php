@@ -115,7 +115,7 @@
                         class="form-control text-area no-resize"></textarea>
                 </div>
                 <div class="small" style="margin-top: 10px;">
-                    <p class="secondary-text">* Informe o motivo para atualizar o status desta solicitação.</p>
+                    <p class="secondary-text">Informe o motivo para atualizar o status desta solicitação.</p>
                 </div>
             </div>
 
