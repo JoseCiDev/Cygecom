@@ -46,12 +46,13 @@
                                             </p>
                                             <p
                                                 style="font-family: Arial, Helvetica, sans-serif; font-size: 17px; line-height: 22px; color: #242424; margin: 0 0 20px; max-width: 375px; text-align: left;">
-                                                Sua solicitação de {{ $requestType }} <strong>{{ $requestName }}</strong> teve o status atualizado para {{ $requestStatus }}.
+                                                Sua solicitação de {{ $requestType }} <strong>{{ $requestName }}</strong> teve o status atualizado para
+                                                <strong>{{ $requestStatus }}</strong>.
                                             </p>
                                             @if ($reason)
                                                 <p
                                                     style="font-family: Arial, Helvetica, sans-serif; font-size: 17px; line-height: 22px; color: #242424; margin: 0 0 20px; max-width: 375px; text-align: left;">
-                                                    Motivo do status ({{ $requestStatus }}): {{ $reason }}
+                                                    Motivo: {{ $reason }}
                                                 </p>
                                             @endif
                                         </td>
