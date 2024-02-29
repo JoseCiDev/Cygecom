@@ -23,7 +23,7 @@
 
                 <div class="row" style="margin: 0 0 30px">
                     <div class="col-md-6" style="padding: 0">
-                        <h1 class="page-title">Relatórios</h1>
+                        <h1 class="page-title">Relatório de solicitações</h1>
                     </div>
                 </div>
 
@@ -164,17 +164,18 @@
                                 <th class="noColvis">Nº</th>
                                 <th>Tipo</th>
                                 <th>Solicitado em</th>
+                                <th>Responsável</th>
                                 <th>Data de atribuição</th>
-                                <th>Nome Serviço</th>
+                                <th>Nome serviço</th>
                                 <th>Contratado por</th>
                                 <th>Solicitante</th>
                                 <th>Solicitante sistema</th>
                                 <th>Status</th>
-                                <th>Responsável</th>
                                 <th>Centro de custo</th>
                                 <th>Fornecedor</th>
-                                <th>Forma Pgto.</th>
-                                <th>Condição Pgto.</th>
+                                <th>Categ. produtos</th>
+                                <th>Forma pgto.</th>
+                                <th>Condição pgto.</th>
                                 <th>Valor total original</th>
                                 <th>Valor total final</th>
                             </tr>
@@ -363,7 +364,32 @@
                                 }),
                                 success: (data) => {
                                     const content = data.data;
-                                    const headers = dataTable.columns().header().toArray().map(header => header.textContent);
+                                    const headers = dataTable.columns().header().toArray().map(header => `"${header.textContent}"`);
+                                    headers.push(...[
+                                        '"Vigência (início)"',
+                                        '"Vigência (fim)"',
+                                        '"Ordem de compra"',
+                                        '"ERP"',
+                                        '"COMEX"',
+                                        '"Descrição da solicitação"',
+                                        '"Local para solicitação"',
+                                        '"Motivo da solicitação"',
+                                        '"Links de apoio"',
+                                        '"Observação da solicitação"',
+                                        '"Data deseja para solicitação"',
+                                        '"Apenas cotação"',
+                                        '"Motivo da atualização de status"',
+                                        '"Aprovação limite do solicitante"',
+                                        '"Solicitante ativo"',
+                                        '"cpf/cnpj"',
+                                        '"Setor do solicitante"',
+                                        '"Nome do serviço"',
+                                        '"Qtd. parcelas"',
+                                        '"Parcelas"',
+                                        '"Anexos do solicitante"',
+                                        '"Anexos do suprimentos"',
+                                    ]);
+
                                     const rows = content.map(item => {
                                         const id = item.id;
                                         const type = enumRequests['type'][item.type];
@@ -374,8 +400,12 @@
                                             .created_at;
 
                                         const firstPendingStatus = moment(pendingStatus).format('DD/MM/YYYY HH:mm:ss');
-                                        const responsibilityMarkedAt = moment(item.responsibility_marked_at)
-                                            .format('DD/MM/YYYY HH:mm:ss');
+                                        const suppliesUserName = item.supplies_user?.person.name || '---';
+
+                                        const responsibilityMarkedAt = item.responsibility_marked_at ?
+                                            moment(item.responsibility_marked_at)
+                                            .subtract(3, 'hours')
+                                            .format('DD/MM/YYYY HH:mm:ss') : '---';
 
                                         const serviceNameColumnMapping = {
                                             product: () => null,
@@ -387,25 +417,101 @@
                                         const requistingUser = item.user.person.name
                                         const requester = item.requester?.name || '---';
                                         const status = enumRequests['status'][item.status];
-                                        const suppliesUserName = item.supplies_user?.person.name || '---';
-                                        const costCenters = item.cost_center_apportionment.map((element) => element.cost_center.name)
-                                            .join(', ');
+
 
                                         const supplierColumnMapping = {
                                             product: () => {
                                                 const uniqueSuppliers = [];
                                                 item.purchase_request_product?.forEach((element) => {
                                                     const supplierName = element.supplier?.corporate_name;
-                                                    if (!uniqueSuppliers.includes(supplierName)) {
-                                                        uniqueSuppliers.push(supplierName);
+                                                    const qualification = element.supplier?.qualification;
+                                                    const createdAt = element.supplier?.created_at;
+
+                                                    const userRegister = element.supplier?.logs
+                                                        ?.find((element) => element.action === 'create')
+                                                        ?.user.person.name;
+                                                    const userRegisterName = userRegister ? `Criado por: ${userRegister}` :
+                                                        'Importado';
+
+                                                    const tributaryObservation = element.supplier?.tributary_observation ||
+                                                        '---';
+
+                                                    const representative = element.supplier?.representative || '---';
+                                                    const representativeEmail = element.supplier?.email || '---';
+
+                                                    let name = `${supplierName}, ${qualification}, ${userRegisterName}`;
+                                                    name += `, Criado em: ${moment(createdAt).format('DD/MM/YYYY')}`;
+                                                    name += `, Obs. tributária: ${tributaryObservation}`;
+                                                    name +=
+                                                        `, Representante: ${representative}, E-mail: ${representativeEmail} / `;
+
+                                                    if (supplierName && !uniqueSuppliers.includes(name)) {
+                                                        uniqueSuppliers.push(name);
                                                     }
                                                 });
                                                 return uniqueSuppliers;
                                             },
-                                            service: () => [item.service?.supplier?.corporate_name],
-                                            contract: () => [item.contract?.supplier?.corporate_name],
+                                            service: () => {
+                                                const supplierName = item.service?.supplier?.corporate_name;
+                                                if (!supplierName) {
+                                                    return ['---'];
+                                                }
+
+                                                const qualification = item.service?.supplier?.qualification;
+                                                const createdAt = item.service?.supplier?.created_at;
+
+                                                const userRegister = item.service?.supplier?.logs
+                                                    ?.find((element) => element.action === 'create')
+                                                    ?.user.person.name;
+                                                const userRegisterName = userRegister ? `Criado por: ${userRegister}` : 'Importado';
+
+                                                const tributaryObservation = item.service?.supplier?.tributary_observation ||
+                                                    '---';
+
+                                                const representative = item.service?.supplier?.representative || '---';
+                                                const representativeEmail = item.service?.supplier?.email || '---';
+
+                                                let name = `${supplierName}, ${qualification}, ${userRegisterName}`
+                                                name += `, Criado em: ${moment(createdAt).format('DD/MM/YYYY')}`;
+                                                name += `, Obs. tributária: ${tributaryObservation}`;
+                                                name += `, Representante: ${representative}, E-mail: ${representativeEmail} / `;
+
+                                                return [name];
+                                            },
+                                            contract: () => {
+                                                const supplierName = item.contract?.supplier?.corporate_name;
+                                                if (!supplierName) {
+                                                    return ['---'];
+                                                }
+
+                                                const qualification = item.contract?.supplier?.qualification;
+                                                const createdAt = item.contract?.supplier?.created_at;
+
+                                                const userRegister = item.contract?.supplier?.logs
+                                                    ?.find((element) => element.action === 'create')
+                                                    ?.user.person.name;
+                                                const userRegisterName = userRegister ? `Criado por: ${userRegister}` : 'Importado';
+
+                                                const tributaryObservation = item.contract?.supplier?.tributary_observation ||
+                                                    '---';
+
+                                                const representative = item.contract?.supplier?.representative || '---';
+                                                const representativeEmail = item.contract?.supplier?.email || '---';
+
+                                                let name = `${supplierName}, ${qualification}, ${userRegisterName}`;
+                                                name += `, Criado em: ${moment(createdAt).format('DD/MM/YYYY')}`;
+                                                name += `, Obs. tributária: ${tributaryObservation}`;
+                                                name += `, Representante: ${representative}, E-mail: ${representativeEmail} / `;
+
+                                                return [name];
+                                            },
                                         };
                                         const suppliers = supplierColumnMapping[item.type]().filter((el) => el)
+                                            .join(', ') || '---';
+
+                                        const productCategories = item.purchase_request_product
+                                            .map((element) => element.category?.name)
+                                            .filter((name, index, self) => self.indexOf(name) === index)
                                             .join(', ') || '---';
 
                                         const paymentInfo = item[item.type]?.payment_info || {};
@@ -421,31 +527,121 @@
                                             currency: 'BRL'
                                         });
 
-                                        const originalAmount = item[item.type]?.logs
-                                            ?.find(log => log.action === 'create')?.changes[item.type];
+                                        const amountType = {
+                                            service: 'price',
+                                            product: 'amount',
+                                            contract: 'amount'
+                                        } [item.type];
+                                        const originalAmount = item[item.type]?.logs?.find(log => log.action === 'create')
+                                            ?.changes[amountType];
+
                                         const formatedOriginalAmount = originalAmount ? formatter.format(originalAmount) : '---';
 
                                         const amount = item[item.type]?.amount || item[item.type]?.price;
                                         const formattedAmount = amount ? formatter.format(amount) : '---';
+
+                                        const contractStartDate = item.contract?.start_date ? moment(item.contract?.start_date)
+                                            .format('DD/MM/YYYY') : '---';
+                                        const contractEndDate = item.contract?.end_date ? moment(item.contract?.end_date)
+                                            .format('DD/MM/YYYY') : '---';
+
+                                        const purchaseOrder = item.purchase_order || '---';
+                                        const erp = item.erp || '---';
+                                        const isComex = item.is_comex ? 'É comex' : 'Não é comex';
+                                        const description = item.description || '---';
+                                        const localDescription = item.local_description || '---';
+                                        const reason = item.reason || '---';
+                                        const supportLinks = item.support_links || '---';
+                                        const observation = item.observation || '---';
+                                        const desiredDate = item.desired_date ? moment(item.desired_date).format('DD/MM/YYYY') : '---';
+                                        const isOnlyQuotation = item.is_only_quotation ? 'Apenas cotação' : 'Não';
+                                        const suppliesUpdateReason = item.supplies_update_reason || '---';
+                                        const approverLimit = item.user.approver_limit ? formatter.format(item.user.approver_limit) :
+                                            'Sem limite';
+                                        const isBuyer = item.user.is_buyer ? 'Solic. ativo' : 'Solic. inativo';
+                                        const userCPF = item.user.person.cpf_cnpj;
+                                        const userSector = item.user.person.cost_center.name;
+                                        const requestName = item[item.type]?.name || '---';
+
+                                        const costCenterApportionment = item.cost_center_apportionment
+                                            .map((element) => {
+                                                const name = element.cost_center.name;
+
+                                                const apportionmentPercentage = element.apportionment_percentage;
+
+                                                const apportionmnetCurrency = element.apportionment_currency;
+                                                const formattedAmount = formatter.format(apportionmnetCurrency);
+
+                                                const apportionmentLabel = apportionmentPercentage ? `${apportionmentPercentage}%` :
+                                                    formattedAmount;
+
+                                                const costCenterLabel =
+                                                    `${name} (${apportionmentLabel}) - CNPJ: ${element.cost_center.company.cnpj}`;
+
+                                                return costCenterLabel;
+                                            }).join(', ');
+
+                                        const installmentsQtd = item[item.type]?.quantity_of_installments || '---';
+                                        const installments = item[item.type]?.installments
+                                            ?.map((installment, index) => {
+                                                const {
+                                                    expire_date,
+                                                    observation,
+                                                    status,
+                                                    value
+                                                } = installment;
+                                                const expireDate = expire_date ? moment(expire_date).format('DD/MM/YYYY') : '---';
+
+                                                const installmentLabel =
+                                                    `Parcela ${index + 1}, Vencimento: ${expireDate}, Status: ${status}, Valor: ${formatter.format(value)}`;
+
+                                                return installmentLabel;
+                                            })?.join(' / ') || '---';
+
+                                        const hasFilesFromRequester = item.purchase_request_file.length ? 'Possui anexos' : '---';
+                                        const hasFilesFromSupplies = item.request_supplies_files.length ? 'Possui anexos' : '---';
 
                                         let rowData = [
                                             [
                                                 id,
                                                 type,
                                                 firstPendingStatus,
+                                                suppliesUserName,
                                                 responsibilityMarkedAt,
                                                 serviceName,
                                                 isSuppliesContract,
                                                 requistingUser,
                                                 requester,
                                                 status,
-                                                suppliesUserName,
-                                                costCenters,
+                                                costCenterApportionment,
                                                 suppliers,
+                                                productCategories,
                                                 paymentMethodLabel,
                                                 paymentTermsLabel,
                                                 formatedOriginalAmount,
                                                 formattedAmount,
+                                                contractStartDate,
+                                                contractEndDate,
+                                                purchaseOrder,
+                                                erp,
+                                                isComex,
+                                                description,
+                                                localDescription,
+                                                reason,
+                                                supportLinks,
+                                                observation,
+                                                desiredDate,
+                                                isOnlyQuotation,
+                                                suppliesUpdateReason,
+                                                approverLimit,
+                                                isBuyer,
+                                                userCPF,
+                                                userSector,
+                                                requestName,
+                                                installmentsQtd,
+                                                installments,
+                                                hasFilesFromRequester,
+                                                hasFilesFromSupplies,
                                             ]
                                         ];
 
@@ -606,6 +802,10 @@
                             }
                         },
                         {
+                            data: 'supplies_user.person.name',
+                            render: (suppliesUserName) => (suppliesUserName ?? '---')
+                        },
+                        {
                             data: 'responsibility_marked_at',
                             render: (responsibility_marked_at, _, row) => responsibility_marked_at ? moment.utc(responsibility_marked_at).utcOffset('-03:00')
                                 .format('DD/MM/YYYY HH:mm:ss') : '---'
@@ -643,10 +843,6 @@
                         {
                             data: 'status',
                             render: (status) => enumRequests['status'][status]
-                        },
-                        {
-                            data: 'supplies_user.person.name',
-                            render: (suppliesUserName) => (suppliesUserName ?? '---')
                         },
                         {
                             data: 'cost_center_apportionment',
@@ -699,6 +895,30 @@
 
                                 return $div[0].outerHTML;
                             }
+                        },
+                        {
+                            data: 'purchase_request_product',
+                            orderable: false,
+                            render: (purchase_request_product) => {
+                                const $div = $(document.createElement('div')).addClass('tag-category');
+
+                                const productCategories = purchase_request_product
+                                    .map((element) => element.category?.name)
+                                    .filter((name, index, self) => self.indexOf(name) === index);
+
+                                if (!productCategories.length) {
+                                    return;
+                                }
+
+                                productCategories.forEach((element) => {
+                                    const $span = $(document.createElement('span')).addClass('tag-category-item');
+                                    $span.text(element);
+                                    $div.append($span);
+                                });
+
+                                return $div[0].outerHTML;
+                            },
+                            defaultContent: '---',
                         },
                         {
                             data: 'type',

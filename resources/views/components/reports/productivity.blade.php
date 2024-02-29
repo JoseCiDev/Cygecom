@@ -934,7 +934,7 @@
                                 }),
                                 success: (data) => {
                                     const content = data.data;
-                                    const headers = dataTable.columns().header().toArray().map(header => header.textContent);
+                                    const headers = dataTable.columns().header().toArray().map(header => `"${header.textContent}"`);
                                     const rows = content.map(item => {
                                         const id = item.id;
                                         const type = enumRequests['type'][item.type];
