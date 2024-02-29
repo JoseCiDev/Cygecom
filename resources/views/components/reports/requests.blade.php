@@ -439,11 +439,11 @@
                                                     const representative = element.supplier?.representative || '---';
                                                     const representativeEmail = element.supplier?.email || '---';
 
-                                                    let name = `${supplierName} [${qualification}, ${userRegisterName}`;
+                                                    let name = `${supplierName}, ${qualification}, ${userRegisterName}`;
                                                     name += `, Criado em: ${moment(createdAt).format('DD/MM/YYYY')}`;
                                                     name += `, Obs. tributária: ${tributaryObservation}`;
                                                     name +=
-                                                        `, Representante: ${representative}/E-mail: ${representativeEmail}]`;
+                                                        `, Representante: ${representative}, E-mail: ${representativeEmail} / `;
 
                                                     if (supplierName && !uniqueSuppliers.includes(name)) {
                                                         uniqueSuppliers.push(name);
@@ -471,10 +471,10 @@
                                                 const representative = item.service?.supplier?.representative || '---';
                                                 const representativeEmail = item.service?.supplier?.email || '---';
 
-                                                let name = `${supplierName} [${qualification}, ${userRegisterName}`
+                                                let name = `${supplierName}, ${qualification}, ${userRegisterName}`
                                                 name += `, Criado em: ${moment(createdAt).format('DD/MM/YYYY')}`;
                                                 name += `, Obs. tributária: ${tributaryObservation}`;
-                                                name += `, Representante: ${representative}/E-mail: ${representativeEmail}]`;
+                                                name += `, Representante: ${representative}, E-mail: ${representativeEmail} / `;
 
                                                 return [name];
                                             },
@@ -498,10 +498,10 @@
                                                 const representative = item.contract?.supplier?.representative || '---';
                                                 const representativeEmail = item.contract?.supplier?.email || '---';
 
-                                                let name = `${supplierName} [${qualification}, ${userRegisterName}`;
+                                                let name = `${supplierName}, ${qualification}, ${userRegisterName}`;
                                                 name += `, Criado em: ${moment(createdAt).format('DD/MM/YYYY')}`;
                                                 name += `, Obs. tributária: ${tributaryObservation}`;
-                                                name += `, Representante: ${representative}/${representativeEmail}]`;
+                                                name += `, Representante: ${representative}, E-mail: ${representativeEmail} / `;
 
                                                 return [name];
                                             },
