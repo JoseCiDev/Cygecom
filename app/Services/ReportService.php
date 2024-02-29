@@ -184,12 +184,12 @@ class ReportService
             0 => 'purchase_requests.id',
             1 => 'purchase_requests.type',
             2 => $latestLogSubquery,
-            3 => 'purchase_requests.responsibility_marked_at',
-            5 => 'purchase_requests.is_supplies_contract',
-            6 => $getPersonName,
-            7 => $getPersonRequester,
-            8 => 'purchase_requests.status',
-            9 => $getPersonSupplies,
+            3 => $getPersonSupplies,
+            4 => 'purchase_requests.responsibility_marked_at',
+            6 => 'purchase_requests.is_supplies_contract',
+            7 => $getPersonName,
+            8 => $getPersonRequester,
+            9 => 'purchase_requests.status',
             16 => 'total_amount'
         };
 
