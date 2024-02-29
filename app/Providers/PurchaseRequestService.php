@@ -43,6 +43,7 @@ class PurchaseRequestService extends ServiceProvider
             'updatedByUser',
             'service.paymentInfo',
             'service.logs',
+            'service.installments',
             'contract.paymentInfo',
             'contract.logs',
             'product.paymentInfo',
