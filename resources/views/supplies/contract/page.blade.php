@@ -34,10 +34,11 @@
                         </div>
                     </div>
 
-                    <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered" data-column_filter_dateformat="dd-mm-yy" data-nosort="0"
-                        data-checkall="all" style="width:100%">
+                    <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered dataTable" data-column_filter_dateformat="dd-mm-yy"
+                        data-nosort="0" data-checkall="all" style="width:100%">
                         <thead>
                             <tr class="search-bar">
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -59,6 +60,7 @@
                                 <th>Empresa</th>
                                 <th>Data desejada</th>
                                 <th>Ord. compra</th>
+                                <th>ERP</th>
                                 <th class="noColvis ignore-search">Ações</th>
                             </tr>
                         </thead>
@@ -122,6 +124,7 @@
                                         $showPurchaseOrder = isset($contract->purchase_order) && $contract->status === PurchaseRequestStatus::FINALIZADA;
                                     @endphp
                                     <td>{{ $showPurchaseOrder ? $contract?->purchase_order : '---' }}</td>
+                                    <td>{{ $contract?->erp?->label() ?? '---' }}</td>
 
                                     <td class="text-center" style="white-space: nowrap;">
                                         @can('get.api.requests.show')
@@ -131,10 +134,9 @@
                                             </button>
                                         @endcan
                                         @php
-                                            $existSuppliesUser = (bool) $contract->suppliesUser;
-                                            $existResponsibility = (bool) $contract->responsibility_marked_at;
+                                            $existSuppliesUser = (bool) $contract->suppliesUser?->person->name;
                                             $isOwnUserRequest = $contract->user->id === auth()->user()->id;
-                                            $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
+                                            $isToShow = !$existSuppliesUser && !$isOwnUserRequest;
                                         @endphp
                                         @can('get.supplies.contract.show')
                                             <a href="{{ route('supplies.contract.show', ['id' => $contract->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
@@ -154,7 +156,6 @@
 
     @push('scripts')
         <script type="module" src="{{ asset('js/supplies/modal-confirm-supplies-responsability.js') }}"></script>
-        <script type="module" src="{{ asset('js/utils/dataTables-column-search.js') }}"></script>
     @endpush
 
 </x-app>

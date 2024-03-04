@@ -15,6 +15,11 @@ class Contract extends Model
         return $this->hasMany(ContractInstallment::class);
     }
 
+    public function logs()
+    {
+        return $this->hasMany(Log::class, 'foreign_id', 'id')->where('table', 'contracts');
+    }
+
     public function paymentInfo()
     {
         return $this->belongsTo(PaymentInfo::class, 'payment_info_id');

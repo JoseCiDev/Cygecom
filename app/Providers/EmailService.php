@@ -9,7 +9,12 @@ use App\Models\PurchaseRequest;
 
 class EmailService extends ServiceProvider
 {
-    public function sendStatusUpdatedEmail(PurchaseRequest $purchaseRequest)
+    /**
+     * Envio de e-mail quando o status da solicitação é atualizado para o usuário que a criou
+     * @param PurchaseRequest $purchaseRequest Solicitação de compra que teve o status atualizado
+     * @return void
+     */
+    public function sendStatusUpdatedEmail(PurchaseRequest $purchaseRequest): void
     {
         $name = explode(' ', $purchaseRequest->user->person->name)[0];
         $requestType = strtolower($purchaseRequest->type->label());
@@ -20,19 +25,23 @@ class EmailService extends ServiceProvider
 
         $subject = "Solicitação de " . $requestType . " nº " . $id . ' - Status atualizado para ' . $requestStatus;
 
-        $isCanceled = $purchaseRequest->status->value === PurchaseRequestStatus::CANCELADA->value;
         $email = new GenericEmail($subject, $purchaseRequest->user->email, 'mails.status-updated', [
             'name' => $name,
             'requestType' => $requestType,
             'requestStatus' => $requestStatus,
-            'cancelReason' => $isCanceled ? $purchaseRequest->supplies_update_reason : false,
+            'reason' => $purchaseRequest->supplies_update_reason ?? false,
             'requestName' => $requestName,
         ]);
 
         $email->sendMail();
     }
 
-    public function sendResponsibleAssignedEmail($purchaseRequest)
+    /**
+     * Envio de e-mail quando um responsável é atribuído a solicitação
+     * @param PurchaseRequest $purchaseRequest Solicitação de compra que teve o responsável atribuído
+     * @return void
+     */
+    public function sendResponsibleAssignedEmail($purchaseRequest): void
     {
         $name = explode(' ', $purchaseRequest->user->person->name)[0];
         $requestType = strtolower($purchaseRequest->type->label());

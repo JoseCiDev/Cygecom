@@ -14,6 +14,11 @@ class Product extends Model
         return $this->hasMany(ProductInstallment::class);
     }
 
+    public function logs()
+    {
+        return $this->hasMany(Log::class, 'foreign_id', 'id')->where('table', 'products');
+    }
+
     public function paymentInfo()
     {
         return $this->belongsTo(PaymentInfo::class, 'payment_info_id');

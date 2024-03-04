@@ -35,10 +35,11 @@
                         </div>
                     </div>
 
-                    <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered" style="width:100%"
+                    <table id="table-supplies-list" class="table table-hover table-nomargin table-striped table-bordered dataTable" style="width:100%"
                         data-column_filter_dateformat="dd-mm-yy" data-nosort="0" data-checkall="all">
                         <thead>
                             <tr class="search-bar">
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -63,6 +64,7 @@
                                 <th>Empresa</th>
                                 <th>Data desejada</th>
                                 <th>Ord. compra</th>
+                                <th>ERP</th>
                                 <th>Valor total</th>
                                 <th class="noColvis ignore-search">Ações</th>
                             </tr>
@@ -142,6 +144,7 @@
                                         $showPurchaseOrder = isset($product->purchase_order) && $product->status === PurchaseRequestStatus::FINALIZADA;
                                     @endphp
                                     <td>{{ $showPurchaseOrder ? $product->purchase_order : '---' }}</td>
+                                    <td>{{ $product?->erp?->label() ?? '---' }}</td>
                                     <td>
                                         <span hidden>{{ str_pad($amount, 10, '0', STR_PAD_LEFT) }}</span>
                                         R$ {{ $formatedAmount }}
@@ -156,9 +159,8 @@
                                         @endcan
                                         @php
                                             $existSuppliesUser = (bool) $product->suppliesUser?->person->name;
-                                            $existResponsibility = (bool) $product->responsibility_marked_at;
                                             $isOwnUserRequest = $product->user->id === auth()->user()->id;
-                                            $isToShow = !$existSuppliesUser && !$existResponsibility && !$isOwnUserRequest;
+                                            $isToShow = !$existSuppliesUser && !$isOwnUserRequest;
                                         @endphp
                                         @can('get.supplies.product.show')
                                             <a href="{{ route('supplies.product.show', ['id' => $product->id]) }}" class="btn btn-mini btn-secondary openDetail" title="Abrir"
@@ -178,7 +180,6 @@
 
     @push('scripts')
         <script type="module" src="{{ asset('js/supplies/modal-confirm-supplies-responsability.js') }}"></script>
-        <script type="module" src="{{ asset('js/utils/dataTables-column-search.js') }}"></script>
     @endpush
 
 </x-app>
