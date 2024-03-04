@@ -60,6 +60,11 @@ import {
 
 import data from '../fixtures/data.json';
 import { elements } from './../elements';
+<<<<<<< HEAD
+=======
+import { RequestType } from './Enums/requestType';
+import { IsComexImportProduct, IsComexImportService } from './Enums/isComexImport';
+>>>>>>> develop
 const requestType = RequestType[data.Request.requestType as keyof typeof RequestType];
 
 const filePath = data.file.filePath;

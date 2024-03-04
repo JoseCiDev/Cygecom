@@ -46,11 +46,18 @@ import {
     TableColumnsUserRegistration,
     TelephoneType,
     UserProfile,
+<<<<<<< HEAD
     ObservationOfRequest,
     IsComexImportProduct,
     IsComexImportService,
 } from '../../import';
 import { ServiceName } from '../Enums/serviceName';
+=======
+} from '../../import';
+import { IsComexImportProduct, IsComexImportService } from '../Enums/isComexImport';
+import { RequestType } from '../Enums/requestType';
+
+>>>>>>> develop
 
 
 export interface UserRegistration<S = string> {
@@ -155,7 +162,11 @@ export interface DataParameters<S = string> {
             apportionmentValue: S | number;
             quoteRequest: Record<QuoteRequest, boolean>;
             acquiringArea: string;
+<<<<<<< HEAD
             isComex: IsComexImportProduct | IsComexImportService |string;
+=======
+            isComex: IsComexImportProduct | IsComexImportService | string;
+>>>>>>> develop
             reasonForRequest: string;
             desiredDeliveryDate: S;
             localDescription: S;
