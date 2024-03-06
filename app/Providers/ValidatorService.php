@@ -324,7 +324,7 @@ class ValidatorService extends ServiceProvider
                 }
             }
 
-            if ($hasPercentage && $totalPercentage !== 100) {
+            if ($hasPercentage && $totalPercentage != 100) {
                 $validator->errors()->add('cost_center_apportionments', 'A soma das porcentagens de rateio deve ser igual a 100%.');
             }
         });
@@ -350,7 +350,7 @@ class ValidatorService extends ServiceProvider
                     }
                 }
 
-                if ($hasPercentage && $totalPercentage !== 100) {
+                if ($hasPercentage && $totalPercentage != 100) {
                     $validator->errors()->add('cost_center_apportionments', 'A soma das porcentagens de rateio deve ser igual a 100%.');
                 }
             });
