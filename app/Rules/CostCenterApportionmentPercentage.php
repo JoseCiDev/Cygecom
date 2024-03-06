@@ -21,7 +21,7 @@ class CostCenterApportionmentPercentage implements ValidationRule
         $percentage = collect($this->percentage)->filter();
         $currency = collect($this->currency)->filter();
 
-        if ($percentage->sum() !== 100) {
+        if ($percentage->sum() != 100) {
             $fail('A soma das porcentagens de rateio deve ser igual a 100%.');
         }
 
