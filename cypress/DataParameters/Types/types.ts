@@ -4,6 +4,11 @@ import { faker } from '@faker-js/faker';
 import * as fakerBr from 'faker-br';
 import { format } from 'date-fns';
 import {
+    Request,
+    ServiceRequest,
+    oneOffService,
+    ProductRequest,
+    recurringService,
     SearchColumnGeneralRequests,
     SearchColumnMyRequests,
     SearchColumnOneOffServiceRequests,
@@ -28,12 +33,9 @@ import {
     TableColumnsRecurringServiceRequests,
     TableColumnsRequestReport,
     TableColumnsSupplierRegistration,
-    TableColumnsUserRegistration
+    TableColumnsUserRegistration,
+
 } from '../../import';
-
-
-
-
 
 export type ColumnEnums =
     ShowHideColumnsUserRegistration[keyof ShowHideColumnsUserRegistration] |
@@ -73,7 +75,6 @@ export type ColumnSearchParameter =
 
 export type ValidationResult = Cypress.Chainable<{ error?: string; success?: string; }>
 
-
 export type ConditionalWrite = {
     [key: string]: [boolean, string];
 };
@@ -82,3 +83,6 @@ export type ElementTypeAndValueOpcional = ({
     [element: string]: string,
     value?: string,
 })[];
+
+export type Requests = ProductRequest | ServiceRequest | oneOffService | recurringService;
+export type RequestKeys = keyof Request | keyof ProductRequest | keyof ServiceRequest | keyof oneOffService | keyof recurringService;

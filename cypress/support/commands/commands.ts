@@ -116,7 +116,7 @@ const {
 
 
 
-Cypress.Commands.add('insertFile', (filePath, element): void => {
+Cypress.Commands.add('insertFile', (element,filePath): void => {
     cy.fixture(filePath, 'base64').then((conteudo_arquivo) => {
         const nome = filePath.split('/').pop(); // Extract the file name from the fixture path
         const mimeType = 'image/jpeg';
@@ -136,8 +136,8 @@ Cypress.Commands.add('insertFile', (filePath, element): void => {
 });
 
 Cypress.Commands.add('readFileFromFixture', (fileName) => {
-    const filePath = `${dataParameters.filePath}${fileName}`;
-    return cy.fixture(filePath);
+    // const filePath = `${dataParameters.filePath}${fileName}`;
+    // return cy.fixture(filePath);
 });
 
 Cypress.Commands.add('getElementAndClick', (elements: string[]): void => {
@@ -171,7 +171,7 @@ Cypress.Commands.add('getElementAndType', (elements: { [key: string]: string }):
                     cy.wrap($input)
                         .then(() => {
                             cy.wrap($input.first())
-                                .clear()
+                                .clear({force:true})
                                 .type(text, { timeout: 1000 })
                         })
                         .invoke('val')
@@ -263,16 +263,16 @@ Cypress.Commands.add("insertDate", (currentDate: Date = new Date()) => {
     return cy.wrap({ FORMATTED_DATE, FORMATTED_TIME });
 });
 
-Cypress.Commands.add('insertBirthDate', (element: string) => {
-    cy.insertDate(dataParameters.Register.userRegistration.birthDate)
-        .then(({ FORMATTED_DATE }: { FORMATTED_DATE: string }) => {
-            const currentDate = `${FORMATTED_DATE}`;
-            cy.get(element)
-                .as('element')
-                .type(currentDate.toString())
-                .then(() => {
-                    cy.get('@element')
-                        .should('have.value', currentDate);
-                });
-        });
-});
+// Cypress.Commands.add('insertBirthDate', (element: string) => {
+//     cy.insertDate(dataParameters.Register.userRegistration.birthDate)
+//         .then(({ FORMATTED_DATE }: { FORMATTED_DATE: string }) => {
+//             const currentDate = `${FORMATTED_DATE}`;
+//             cy.get(element)
+//                 .as('element')
+//                 .type(currentDate.toString())
+//                 .then(() => {
+//                     cy.get('@element')
+//                         .should('have.value', currentDate);
+//                 });
+//         });
+// });

@@ -1,5 +1,5 @@
 export enum CostCenter {
-    '06.354.562/0001-10 - HKM - Lab. Sólidos' = '06.354.562/0001-10 - HKM - Lab. Sólidos',
+  '06.354.562/0001-10 - HKM - Lab. Sólidos' = '06.354.562/0001-10 - HKM - Lab. Sólidos',
   '06.354.562/0001-10 - HKM - Material Aplicado' = '06.354.562/0001-10 - HKM - Material Aplicado',
   '06.354.562/0001-10 - HKM - Revenda' = '06.354.562/0001-10 - HKM - Revenda',
   '06.354.562/0001-10 - HKM - Lab. Injetáveis' = '06.354.562/0001-10 - HKM - Lab. Injetáveis',

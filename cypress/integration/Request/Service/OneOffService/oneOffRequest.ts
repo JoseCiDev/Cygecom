@@ -100,7 +100,7 @@ describe('Testes da página de criação de solicitação de serviços pontuais'
             '.main-nav > :nth-child(3) > .btn',
             '[data-cy="dropdown-solicitacoes-novas"]',
         ]);
-        cy.createRequest(dataParameters.Request.requestType);
+        cy.createRequest(dataParameters.request.requestType);
         /*
         Nome serviço pontual
         Descrição

@@ -102,7 +102,7 @@ describe('Testes da página de criação de solicitação de serviços pontuais'
             ':nth-child(1) > .request-dashboard-requests-item-btn'
         ]);
 
-        cy.createRequest(dataParameters.Request.requestType);
+        cy.createRequest(dataParameters.request.requestType);
 
 
     });

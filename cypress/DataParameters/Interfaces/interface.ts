@@ -15,7 +15,8 @@ import {
     QuoteRequest,
     RequestOtherUsers,
     RequestType,
-    SaveRequest,
+    SaveRequestDraft,
+    SaveRequestSubmit,
     SearchColumnGeneralRequests,
     SearchColumnMyRequests,
     SearchColumnOneOffServiceRequests,
@@ -49,29 +50,67 @@ import {
     ObservationOfRequest,
     IsComexImportProduct,
     IsComexImportService,
+    recurringServiceValue,
+    ServiceName,
+    PaymentCondition,
+    Requests,
+    ServiceAlreadyProvided,
+    PaymentDueDate,
+    TypeOfPaymentAmount
 } from '../../import';
-import { ServiceName } from '../Enums/serviceName';
+import { PaymentRecurrence } from '../Enums/paymentRecurrence';
 
 
-export interface UserRegistration<S = string> {
-    name: S;
-    birthDate: Date;
-    cpf: number;
-    cnpj: number;
-    telephone: S;
-    email: S;
-    password: S;
-    confirmPassword: S;
-    userProfile: UserProfile;
-    sector: Sector;
-    approverUser: ApproverUser;
-    approvalLimit: number;
-    authorizationRequest: S;
-    requestOtherUsers: S;
-    allowedRequestCostCenter: AllowedRequestCostCenter;
-    allowedApprovalCostCenter: AllowedApprovalCostCenter;
+
+
+export interface Request<S = string> {
+    requestType: RequestType;
+    costCenter: S;
+    apportionmentPercentage: S | number;
+    apportionmentValue: S | number;
+    quoteRequest: S | Record<QuoteRequest, boolean>;
+    acquiringArea: string;
+    isComex: S | IsComexImportProduct | IsComexImportService;
+    reasonForRequest: string;
+    desiredDeliveryDate: S;
+    localDescription: S;
+    suggestionLinks: S;
+    observation: S;
+    paymentCondition: PaymentCondition;
+    totalValue: S | number;
+    paymentMethod: ConditionalWrite;
+    paymentInstallments: S | number;
+    paymentDetails: S;
+    supplier: SupplierOfRequest;
+    attachedFile: S;
+    isSaved: Record<SaveRequestDraft, boolean> | Record<SaveRequestSubmit, boolean>;
 };
-
+export interface ProductRequest<S = string> extends Request<S> {
+    category: ProductCategory;
+    nameAndDescription: S;
+    quantity: S | number;
+    color: S;
+    size: S | number;
+    model: S;
+    link: S;
+};
+export interface ServiceRequest<S = string> extends Request<S> {
+    serviceName: S;
+    description: S;
+    seller: S;
+    sellerTelephone: S | number;
+    sellerEmail: S;
+}
+export interface oneOffService<S = string> extends ServiceRequest<S> {
+    serviceAlreadyProvided: ServiceAlreadyProvided
+}
+export interface recurringService<S = string> extends ServiceRequest<S> {
+    initialPaymentEffectiveDate: Date;
+    finalPaymentEffectiveDate: Date;
+    paymentRecurrence: PaymentRecurrence;
+    paymentDueDate: PaymentDueDate;
+    typeOfPaymentAmount: TypeOfPaymentAmount;
+}
 export interface ShowHideColumns<S = string> {
     showHideColumnsUserRegistration: Record<ShowHideColumnsUserRegistration, boolean>,
     showHideColumnsSupplierRegistration: Record<ShowHideColumnsSupplierRegistration, boolean>,
@@ -134,88 +173,29 @@ export interface DataParameters<S = string> {
         DB_PASSWORD: S;
     };
 
-    filePath: S;
+    // filePath: S;
 
-    sizes: Array<number | [number, number] | S>;
+    // sizes: Array<number | [number, number] | S>;
 
-    Autentication: {
-        domain;
-        email: S;
-        password: S;
-        giantPassword: S;
-    };
-    Register: {
-        userRegistration: UserRegistration<S>;
-    };
-    Request: {
-        requestType: RequestType;
-        product: {
-            costCenter: S;
-            apportionmentPercentage: S | number;
-            apportionmentValue: S | number;
-            quoteRequest: Record<QuoteRequest, boolean>;
-            acquiringArea: string;
-            isComex: IsComexImportProduct | IsComexImportService |string;
-            reasonForRequest: string;
-            desiredDeliveryDate: S;
-            localDescription: S;
-            suggestionLinks: S;
-            observation: S;
-            paymentCondition: ConditionalWrite;
-            totalValue: S | number;
-            paymentMethod: ConditionalWrite;
-            paymentInstallments: S | number;
-            paymentDetails: S;
-            supplier: SupplierOfRequest;
-            productCategory: ProductCategory;
-            productNameAndDescription: S;
-            productQuantity: S | number;
-            productColor: S;
-            productSize: S | number;
-            productModel: S;
-            productLink: S;
-            attachedFile: S;
-            saveRequest: Record<SaveRequest, boolean>;
+    url: S;
 
-        },
-        oneOffService: {
-            serviceName: S;
-            costCenter: S;
-            apportionmentPercentage: S | number;
-            apportionmentValue: S | number;
-            quoteRequest: Record<QuoteRequest, boolean>;
-            acquiringArea: string;
-            isComex: IsComexImportProduct | string;
-            reasonForRequest: string;
-            desiredDeliveryDate: S;
-            localDescription: S;
-            suggestionLinks: S;
-            observation: S;
-            paymentCondition: ConditionalWrite;
-            totalValue: S | number;
-        },
-        recurringService: {
-            serviceName: S;
-            costCenter: S;
-            apportionmentPercentage: S | number;
-            apportionmentValue: S | number;
-            quoteRequest: Record<QuoteRequest, boolean>;
-            acquiringArea: string;
-            isComex: IsComexImportProduct | string;
-            reasonForRequest: string;
-            desiredDeliveryDate: S;
-            localDescription: S;
-            suggestionLinks: S;
-            observation: S;
-            paymentCondition: ConditionalWrite;
-            totalValue: S | number;
-        },
-    },
+    // Autentication: {
+    //     domain;
+    //     email: S;
+    //     password: S;
+    //     giantPassword: S;
+    // };
+    // Register: {
+    //     userRegistration: UserRegistration<S>;
+    // };
+
+    request: Requests;
+
 
     showHideColumns: ShowHideColumns;
     getDataOnGrid: GetDataOnGrid;
 
-    url: S;
+
 
     telephoneType: typeof TelephoneType;
     userProfile: typeof UserProfile;
@@ -255,5 +235,3 @@ export interface DataParameters<S = string> {
     searchColumnOneOffServiceRequests: typeof SearchColumnOneOffServiceRequests;
     searchColumnRecurringServiceRequests: typeof SearchColumnRecurringServiceRequests;
 }
-
-export { ConditionalWrite };

@@ -74,7 +74,7 @@ interface Elements<S = string> {
         quoteRequest: S;
         reasonForRequest: S;
         desiredDeliveryDate: S;
-        productStorageLocation: S;
+        localDescription: S;
         paymentCondition: S;
         paymentMethod: S;
         highlightedOption: S;
@@ -86,18 +86,23 @@ interface Elements<S = string> {
         finalPaymentTerm: S;
         recurrence: S;
         dueDate: S;
-        supplier: S;
-        productCategory: S;
-        productNameAndDescription: S;
-        productQuantity: S;
-        productColor: S;
-        productSize: S;
-        productModel: S;
-        productLink: S;
+        category: S;
+        nameAndDescription: S;
+        quantity: S;
+        color: S;
+        size: S;
+        model: S;
+        link: S;
         seller: S;
         telephone: S;
         email: S;
         attachedFile: S;
+        description: S;
+        initialPaymentEffectiveDate: S;
+        finalPaymentEffectiveDate: S;
+        paymentRecurrence: S;
+        paymentDueDate: S;
+        toAgreeModalSubmitRequest: S;
     },
 
     Supply: {
@@ -172,7 +177,6 @@ export const elements: Elements = {
         messageRequirementName: '#name-error',
         messageRequirementCpfCnpj: '#cpf_cnpj-error',
         messageRequiredTelephone: '#number-error',
-
         searchColumn: 'tr.search-bar',
     },
 
@@ -189,7 +193,7 @@ export const elements: Elements = {
         quoteRequest: '[data-cy="checkbox-only-quotation"]',
         reasonForRequest: '[data-cy="reason"]',
         desiredDeliveryDate: '[data-cy="desired-date"]',
-        productStorageLocation: '[data-cy="local-description"]',
+        localDescription: '[data-cy="local-description"]',
         paymentCondition: '#select2-payment-terms-container',
         paymentMethod: '#select2-payment-method-container > span',
         searchPaymentMethodAndTerms: '.select2-search__field',
@@ -200,18 +204,23 @@ export const elements: Elements = {
         finalPaymentTerm: '[data-cy="contract[end_date]"]',
         recurrence: '#select2-recurrence-container',
         dueDate: '#select2-contract-payday-container',
-        supplier: '.select-supplier-container > .select2 > .selection > .select2-selection',
-        productCategory: '[data-select2-id="11"]',
-        productNameAndDescription: '[data-cy="purchase_request_products[0][products][0][name]"]',
-        productQuantity: '[data-cy="purchase_request_products[0][products][0][quantity]"]',
-        productColor: '[data-cy="purchase_request_products[0][products][0][color]"]',
-        productSize: '[data-cy="purchase_request_products[0][products][0][size]"]',
-        productModel: '[data-cy="purchase_request_products[0][products][0][model]"]',
-        productLink: '[data-cy="purchase_request_products[0][products][0][link]"]',
+        category: '#request-form > div.full-product-line.product-form > div.supplier-container > div > div.row.mt-2 > div > div > div > div:nth-child(1) > div.col-sm-5 > div > span > span.selection > span',
+        nameAndDescription: '[data-cy="purchase_request_products[0][products][0][name]"]',
+        quantity: '[data-cy="purchase_request_products[0][products][0][quantity]"]',
+        color: '[data-cy="purchase_request_products[0][products][0][color]"]',
+        size: '[data-cy="purchase_request_products[0][products][0][size]"]',
+        model: '[data-cy="purchase_request_products[0][products][0][model]"]',
+        link: '[data-cy="purchase_request_products[0][products][0][link]"]',
         seller: '[data-cy="attendant"]',
         telephone: '[data-cy="phone-number"]',
         email: ':nth-child(4) > .form-group > [data-cy="email"]',
         attachedFile: '[data-cy="files"]',
+        description: '.col-sm-7 > .form-group > [data-cy="description"]',
+        initialPaymentEffectiveDate: '[data-cy="contract[start_date]"]',
+        finalPaymentEffectiveDate: '[data-cy="contract[end_date]"]',
+        paymentRecurrence: '#select2-recurrence-container',
+        paymentDueDate: '#select2-contract-payday-container',
+        toAgreeModalSubmitRequest: '#modal-alert-submit',
     },
 
     Supply: {
@@ -221,6 +230,4 @@ export const elements: Elements = {
         serviceSubMenu: '[data-cy="dropdown-suprimentos-servicos"]',
         contractSubMenu: '[data-cy="dropdown-suprimentos-contratos"]',
     },
-
-
 }

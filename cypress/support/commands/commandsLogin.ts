@@ -36,7 +36,7 @@ import {
 } from '../../utils';
 import { dataParameters } from '../../DataParameters/dataParameters';
 import _ from 'lodash';
-// import data from '../../DataParameters/dataParameters.json';
+// import data from '../../DataParameters/dataParameters'.json';
 
 
 const {
@@ -171,42 +171,10 @@ Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elem
                 });
             }
             cy.url()
-                .should('contain', `${dataParameters.env.BASE_URL}`);
+                .should('contain', `${dataParameters.url}`);
         });
     return cy.wrap({ success: 'Login realizado com sucesso.' });
 });
-
-
-
-// Cypress.Commands.add('loginB', () => {
-//     cy.session('mySession', () => {
-//         cy.request('http://192.168.0.66:9401/login')
-//             .its('body')
-//             .then((body) => {
-//                 // Loga o corpo da resposta para depuração
-//                 console.log('Corpo da resposta: ', body);
-
-//                 // Usa uma expressão regular para extrair o token CSRF do corpo da resposta
-//                 const match = body.match(/<input type="hidden" name="_token" value="([^"]*)">/);
-
-//                 // Verifica se o token CSRF foi encontrado
-//                 if (!match || match.length < 2) {
-//                     throw new Error('Token CSRF não encontrado');
-//                 }
-
-//                 // Loga o token CSRF para depuração
-//                 console.log('Token CSRF encontrado: ', match[1]);
-//             });
-//     });
-
-//     cy.getCookie('YII_CSRF_TOKEN')
-//         .then((c) => {
-//             cy.log(c.value)
-//         });
-// });
-
-
-
 
 
 Cypress.Commands.add('loginLogoutWithViewport', (size: Cypress.ViewportPreset | [number, number], elementAction: string, elementSubmit: string) => {

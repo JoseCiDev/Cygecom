@@ -18,7 +18,8 @@ import {
     ProductCategory,
     QuoteRequest,
     RequestOtherUsers,
-    SaveRequest,
+    SaveRequestDraft,
+    SaveRequestSubmit,
     SearchColumnGeneralRequests,
     SearchColumnMyRequests,
     SearchColumnOneOffServiceRequests,
@@ -54,151 +55,251 @@ import {
     ObservationOfRequest,
     IsComexImportProduct,
     IsComexImportService,
+    elements,
+    Request,
+    Apportionment,
+    SuggestionLinks,
+    data,
+    ProductRequest,
+    Requests,
+    ServiceAlreadyProvided,
+    PaymentRecurrence,
+    ServiceName,
+    TypeOfPaymentAmount,
+    PaymentDueDate
 } from '../import';
 
+const environment = Cypress.env('ENVIRONMENT');
+const dataEnvironment = Cypress.env(environment);
+
+export const requestTypeString = data.Request.requestType || 'product';
+export const requestData = data.Request[requestTypeString];
+
+const url = dataEnvironment.BASE_URL;
+
+export const requestTyper = requestTypeString && requestTypeString !== " "
+    ? RequestType[requestTypeString]
+    : RequestType.product;
+
+const costCenter = requestData.costCenter && requestData.costCenter !== " "
+    ? CostCenter[requestData.costCenter]
+    : CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'];
+
+const apportionmentPercentage = requestData.apportionmentPercentage && requestData.apportionmentPercentage !== " "
+    ? requestData.apportionmentPercentage
+    : faker.helpers.arrayElement([100]);
+
+const apportionmentValue = requestData.apportionmentValue && requestData.apportionmentValue !== " "
+    ? requestData.apportionmentValue
+    : faker.helpers.arrayElement([' ']);
+
+const quoteRequest = requestData.quoteRequest && requestData.quoteRequest !== " " && requestData.quoteRequest.toLowerCase() === "true"
+    ? "true"
+    : "false";
+
+const acquiringArea = requestData.acquiringArea && requestData.acquiringArea !== " "
+    ? AcquiringArea[requestData.acquiringArea]
+    : AcquiringArea.suppliesContract;
+
+let isComex;
+const IsComexImport = requestTypeString === 'product'
+    ? IsComexImportProduct
+    : IsComexImportService;
+if (requestData.isComex && requestData.isComex !== " ") {
+    const isComexString = requestData.isComex;
+    isComex = IsComexImport[isComexString]
+}
+else {
+    isComex = IsComexImport.no
+}
+
+const reasonForRequest = requestData.reasonForRequest && requestData.reasonForRequest !== " "
+    ? requestData.reasonForRequest
+    : faker.lorem.lines(1);
+
+const desiredDeliveryDate = requestData.desiredDeliveryDate && requestData.desiredDeliveryDate !== " "
+    ? requestData.desiredDeliveryDate
+    : new Date().toISOString().split('T')[0];
+
+const localDescription = requestData.localDescription && requestData.localDescription !== " " ? requestData.localDescription : faker.lorem.lines(1);
+
+export const suggestionLinksString = requestTypeString === 'product'
+    ? SuggestionLinks.product
+    : SuggestionLinks.service;
+
+const suggestion = requestData.suggestionLinks && requestData.suggestionLinks !== " "
+    ? requestData.suggestionLinks
+    : faker.internet.url();
+
+export const observationString = requestTypeString === 'product' || requestTypeString === 'recurringService'
+    ? ObservationOfRequest.productAndRecurringService
+    : ObservationOfRequest.oneOffService;
+
+const observation = requestData.observation && requestData.observation !== " "
+    ? requestData.observation
+    : faker.lorem.lines(1);
+
+const paymentCondition = requestData.paymentCondition && requestData.paymentCondition !== " "
+    ? PaymentCondition[requestData.paymentCondition]
+    : PaymentCondition.cashPayment;
+
+const totalValue = requestData.totalValue && requestData.totalValue !== " "
+    ? requestData.totalValue
+    : faker.helpers.arrayElement([1750.85, 325.90, 1025]);
+
+const paymentMethod = requestData.paymentMethod && requestData.paymentMethod !== " "
+    ? PaymentMethod[requestData.paymentMethod]
+    : PaymentMethod.pix;
+
+const paymentInstallments = requestData.paymentInstallments && requestData.paymentInstallments !== " "
+    ? requestData.paymentInstallments
+    : faker.helpers.arrayElement([3, 8]);
+
+const paymentDetails = requestData.paymentDetails && requestData.paymentDetails !== " "
+    ? requestData.paymentDetails
+    : faker.lorem.lines(1);
+
+const supplier = requestData.supplier && requestData.supplier !== " "
+    ? SupplierOfRequest[requestData.supplier]
+    : SupplierOfRequest['05.876.012/0032-02  - PBTECH COM. E SERVIÇOS DE REVEST. CERAMICOS LTDA'];
+
+const category = requestData.category && requestData.category !== " "
+    ? ProductCategory[requestData.category]
+    : ProductCategory['Brinde - Mercadoria distribuida gratuitamente para nossos clientes e que não podemos vender. Ex. Toalha, Necessaire, etc...'];
+
+const attachedFile = requestData.file && requestData.file !== " "
+    ? requestData.file
+    : '../fixtures/attachedFile.png';
+
+export let isSaved;
+export let IsSavedRequest;
+if (requestData.saveRequest && requestData.saveRequest !== " ") {
+    const isSavedString = requestData.saveRequest;
+    IsSavedRequest = isSavedString !== "submit" ? SaveRequestDraft : SaveRequestSubmit;
+    isSaved = IsSavedRequest[requestTypeString];
+}
+else {
+    isSaved = SaveRequestDraft[requestTypeString];
+}
+
+const nameAndDescription = requestData.nameAndDescription && requestData.nameAndDescription !== " "
+    ? requestData.nameAndDescription
+    : faker.commerce.productName();
+
+const quantity = requestData.quantity && requestData.quantity !== " "
+    ? requestData.quantity
+    : faker.helpers.arrayElement([3, 8]);
+
+const color = requestData.color && requestData.color !== " "
+    ? requestData.color
+    : faker.helpers.arrayElement(['red', 'blue', 'green', 'yellow']);
+
+const size = requestData.size && requestData.size !== " "
+    ? requestData.size
+    : faker.helpers.arrayElement(['P', 'M', 'G', 'GG']);
+
+const model = requestData.model && requestData.model !== " "
+    ? requestData.model
+    : faker.helpers.arrayElement(['BASIC', 'ADVANCED']);
+
+const link = requestData.link && requestData.link !== " "
+    ? requestData.link
+    : faker.internet.url();
+
+export const serviceNameString = requestTypeString === 'oneOffService'
+    ? ServiceName.oneOffService
+    : ServiceName.recurringService;
+
+const serviceName = requestData.serviceName && requestData.serviceName !== " "
+    ? requestData.serviceName
+    : faker.lorem.lines(1).trim();
+
+const description = requestData.description && requestData.description !== " "
+    ? requestData.description
+    : faker.lorem.lines(1);
+
+const seller = requestData.seller && requestData.seller !== " "
+    ? requestData.seller
+    : faker.person.fullName();
+
+const sellerTelephone = requestData.sellerTelephone && requestData.sellerTelephone !== " "
+    ? requestData.sellerTelephone
+    : fakerBr.phone.phoneNumber();
+
+const sellerEmail = requestData.sellerEmail && requestData.sellerEmail !== " "
+    ? requestData.sellerEmail
+    : faker.internet.email();
+
+const serviceAlreadyProvided = requestData.serviceAlreadyProvided && requestData.serviceAlreadyProvided !== " "
+    ? ServiceAlreadyProvided[requestData.serviceAlreadyProvided]
+    : ServiceAlreadyProvided.no;
+
+const typeOfPaymentAmount = requestData.typeOfPaymentAmount && requestData.typeOfPaymentAmount !== " "
+    ? TypeOfPaymentAmount[requestData.typeOfPaymentAmount]
+    : TypeOfPaymentAmount.variable;
+
+const initialPaymentEffectiveDate = requestData.initialPaymentEffectiveDate && requestData.initialPaymentEffectiveDate !== " "
+    ? requestData.initialPaymentEffectiveDate
+    : new Date().toISOString().split('T')[0];
+
+const finalPaymentEffectiveDate = requestData.finalPaymentEffectiveDate && requestData.finalPaymentEffectiveDate !== " "
+    ? requestData.finalPaymentEffectiveDate
+    : new Date().toISOString().split('T')[0];
+
+const paymentRecurrence = requestData.paymentRecurrence && requestData.paymentRecurrence !== " "
+    ? PaymentRecurrence[requestData.paymentRecurrence]
+    : PaymentRecurrence.monthly;
+
+const paymentDueDate = requestData.paymentDueDate && requestData.paymentDueDate !== " "
+    ? PaymentDueDate[requestData.paymentDueDate]
+    : PaymentDueDate.one;
 
 
-import data from '../fixtures/data.json';
-import { elements } from './../elements';
 
-const requestType = RequestType[data.Request.requestType as keyof typeof RequestType];
+const request: Requests = {
+    requestType: requestTyper,
+    costCenter,
+    apportionmentPercentage,
+    apportionmentValue,
+    quoteRequest,
+    acquiringArea,
+    isComex: isComex,
+    reasonForRequest,
+    desiredDeliveryDate,
+    localDescription,
+    suggestionLinks: suggestion,
+    observation,
+    paymentCondition,
+    totalValue,
+    paymentMethod,
+    paymentInstallments,
+    paymentDetails,
+    supplier,
+    attachedFile,
+    isSaved,
 
-const filePath = data.file.filePath;
-const sizes: Array<[number, number]> = data.viewport.sizes as Array<[number, number]>;
-const url = data.Url.login;
+    category,
+    nameAndDescription,
+    quantity,
+    color,
+    size,
+    model,
+    link,
 
-const emailAutentication = data.Autentication.email;
-const passwordAutentication = data.Autentication.password;
+    serviceName,
+    description,
+    seller,
+    sellerTelephone,
+    sellerEmail,
 
-const name = data.Register.userRegistration.name;
-const birthDate = data.Register.userRegistration.birthDate ? new Date() : new Date();
-const cpf = data.Register.userRegistration.cpf;
-const cnpj = data.Register.userRegistration.cnpj;
-const telephone = data.Register.userRegistration.telephone;
-const email = data.Register.userRegistration.email;
-const password = data.Register.userRegistration.password;
-const confirmPassword = data.Register.userRegistration.confirmPassword;
-const userProfile = UserProfile[data.Register.userRegistration.userProfile as keyof typeof UserProfile];
-const sector = Sector[data.Register.userRegistration.sector as keyof typeof Sector];
+    serviceAlreadyProvided,
 
-const costCenterProduct = data.Request.product.costCenter;
-const apportionmentPercentageProduct = data.Request.product.apportionmentPercentage;
-const apportionmentValueProduct = data.Request.product.apportionmentValue;
-const quoteRequestProduct = data.Request.product.quoteRequest;
-const acquiringAreaProduct = AcquiringArea[data.Request.product.acquiringArea as keyof typeof AcquiringArea];
-const isComexProduct = data.Request.product.isComex;
-const reasonForRequestProduct = data.Request.product.reasonForRequest;
-const desiredDeliveryDateProduct = data.Request.product.desiredDeliveryDate;
-const localDescriptionProduct = data.Request.product.localDescription;
-const suggestionLinksProduct = data.Request.product.suggestionLinks;
-const observationProduct = data.Request.product.observation;
-const paymentConditionProduct: ConditionalWrite = {
-    anticipatedPayment: data.Request.product.PaymentCondition.anticipatedPayment as [boolean, string],
-    cashPayment: data.Request.product.PaymentCondition.cashPayment as [boolean, string],
-    paymentInInstallments: data.Request.product.PaymentCondition.paymentInInstallments as [boolean, string],
-};
-const totalValueProduct = data.Request.product.totalValue;
-const paymentMethodProduct: ConditionalWrite = {
-    boleto: data.Request.product.paymentMethod.boleto as [boolean, string],
-    creditCard: data.Request.product.paymentMethod.creditCard as [boolean, string],
-    debitCard: data.Request.product.paymentMethod.debitCard as [boolean, string],
-    cheque: data.Request.product.paymentMethod.cheque as [boolean, string],
-    bankDeposit: data.Request.product.paymentMethod.bankDeposit as [boolean, string],
-    cash: data.Request.product.paymentMethod.cash as [boolean, string],
-    international: data.Request.product.paymentMethod.international as [boolean, string],
-    pix: data.Request.product.paymentMethod.pix as [boolean, string],
-};
-const paymentInstallmentsProduct = data.Request.product.paymentInstallments;
-const paymentDetailsProduct = data.Request.product.paymentDetails;
-const supplierProduct: SupplierOfRequest = SupplierOfRequest[data.Request.product.supplier as keyof typeof SupplierOfRequest];
-const productCategoryProduct: ProductCategory = ProductCategory[data.Request.product.productCategory as keyof typeof ProductCategory];
-const productNameAndDescriptionProduct = data.Request.product.productNameAndDescription;
-const productQuantityProduct = data.Request.product.productQuantity;
-const productColorProduct = data.Request.product.productColor;
-const productSizeProduct = data.Request.product.productSize;
-const productModelProduct = data.Request.product.productModel;
-const productLinkProduct = data.Request.product.productLink;
-const attachedFileProduct = data.Request.product.attachedFile;
-const saveRequestProduct: Record<SaveRequest, boolean> = {
-    [SaveRequest.draft]: !!data.Request.product.saveRequest.draft,
-    [SaveRequest.submit]: !!data.Request.product.saveRequest.submit,
-};
-
-const serviceNameOneOffService = data.Request.oneOffService.serviceName;
-const costCenterOneOffService = data.Request.oneOffService.costCenter;
-const apportionmentPercentageOneOffService = data.Request.oneOffService.apportionmentPercentage;
-const apportionmentValueOneOffService = data.Request.oneOffService.apportionmentValue;
-const quoteRequestOneOffService = data.Request.oneOffService.quoteRequest;
-const acquiringAreaOneOffService = AcquiringArea[data.Request.oneOffService.acquiringArea as keyof typeof AcquiringArea];
-const isComexOneOffService = data.Request.oneOffService.isComex;
-const reasonForRequestOneOffService = data.Request.oneOffService.reasonForRequest;
-const desiredDeliveryDateOneOffService = data.Request.oneOffService.desiredDeliveryDate;
-const localDescriptionOneOffService = data.Request.oneOffService.localDescription;
-const suggestionLinksOneOffService = data.Request.oneOffService.suggestionLinks;
-const observationOneOffService = data.Request.oneOffService.observation;
-const paymentConditionOneOffService: ConditionalWrite = {
-    anticipatedPayment: data.Request.oneOffService.PaymentCondition.anticipatedPayment as [boolean, string],
-    cashPayment: data.Request.oneOffService.PaymentCondition.cashPayment as [boolean, string],
-    paymentInInstallments: data.Request.oneOffService.PaymentCondition.paymentInInstallments as [boolean, string],
-};
-const totalValueOneOffService = data.Request.oneOffService.totalValue;
-// const paymentMethodOneOffService: ConditionalWrite = {
-//     boleto: data.Request.OneOffService.paymentMethod.boleto as [boolean, string],
-//     creditCard: data.Request.OneOffService.paymentMethod.creditCard as [boolean, string],
-//     debitCard: data.Request.OneOffService.paymentMethod.debitCard as [boolean, string],
-//     cheque: data.Request.OneOffService.paymentMethod.cheque as [boolean, string],
-//     bankDeposit: data.Request.OneOffService.paymentMethod.bankDeposit as [boolean, string],
-//     cash: data.Request.OneOffService.paymentMethod.cash as [boolean, string],
-//     international: data.Request.OneOffService.paymentMethod.international as [boolean, string],
-//     pix: data.Request.OneOffService.paymentMethod.pix as [boolean, string],
-// };
-// const paymentInstallmentsOneOffService = data.Request.OneOffService.paymentInstallments;
-// const paymentDetailsOneOffService = data.Request.OneOffService.paymentDetails;
-// const supplierOneOffService: SupplierOfRequest = SupplierOfRequest[data.Request.OneOffService.supplier as keyof typeof SupplierOfRequest];
-// const sellerOneOffService: data.Request.OneOffService.seller
-// const attachedFileOneOffService = data.Request.OneOffService.attachedFile;
-// const saveRequestOneOffService: Record<SaveRequest, boolean> = {
-//     [SaveRequest.draft]: !!data.Request.OneOffService.saveRequest.draft,
-//     [SaveRequest.submit]: !!data.Request.OneOffService.saveRequest.submit,
-// };
-
-const serviceNamerecurringService = data.Request.recurringService.serviceName;
-const costCenterRecurringService = data.Request.recurringService.costCenter;
-const apportionmentPercentagerecurringService = data.Request.recurringService.apportionmentPercentage;
-const apportionmentValuerecurringService = data.Request.recurringService.apportionmentValue;
-const quoteRequestrecurringService = data.Request.recurringService.quoteRequest;
-const acquiringArearecurringService = AcquiringArea[data.Request.recurringService.acquiringArea as keyof typeof AcquiringArea];
-const isComexRecurringService = data.Request.product.isComex;
-const reasonForRequestrecurringService = data.Request.recurringService.reasonForRequest;
-const desiredDeliveryDaterecurringService = data.Request.recurringService.desiredDeliveryDate;
-const localDescriptionRecurringService = data.Request.recurringService.localDescription;
-const suggestionLinksrecurringService = data.Request.recurringService.suggestionLinks;
-const observationRecurringService = data.Request.recurringService.observation;
-const paymentConditionRecurringService: ConditionalWrite = {
-    anticipatedPayment: data.Request.recurringService.PaymentCondition.anticipatedPayment as [boolean, string],
-    cashPayment: data.Request.recurringService.PaymentCondition.cashPayment as [boolean, string],
-    paymentInInstallments: data.Request.recurringService.PaymentCondition.paymentInInstallments as [boolean, string],
-};
-const totalValuerecurringService = data.Request.recurringService.totalValue;
-// const paymentMethodRecurringService: ConditionalWrite = {
-//     boleto: data.Request.RecurringService.paymentMethod.boleto as [boolean, string],
-//     creditCard: data.Request.RecurringService.paymentMethod.creditCard as [boolean, string],
-//     debitCard: data.Request.RecurringService.paymentMethod.debitCard as [boolean, string],
-//     cheque: data.Request.RecurringService.paymentMethod.cheque as [boolean, string],
-//     bankDeposit: data.Request.RecurringService.paymentMethod.bankDeposit as [boolean, string],
-//     cash: data.Request.RecurringService.paymentMethod.cash as [boolean, string],
-//     international: data.Request.RecurringService.paymentMethod.international as [boolean, string],
-//     pix: data.Request.RecurringService.paymentMethod.pix as [boolean, string],
-// };
-// const paymentInstallmentsRecurringService = data.Request.RecurringService.paymentInstallments;
-// const paymentDetailsRecurringService = data.Request.RecurringService.paymentDetails;
-// const supplierRecurringService: SupplierOfRequest = SupplierOfRequest[data.Request.RecurringService.supplier as keyof typeof SupplierOfRequest];
-// const sellerRecurringService: data.Request.RecurringService.seller
-// const attachedFileRecurringService = data.Request.RecurringService.attachedFile;
-// const saveRequestRecurringService: Record<SaveRequest, boolean> = {
-//     [SaveRequest.draft]: !!data.Request.RecurringService.saveRequest.draft,
-//     [SaveRequest.submit]: !!data.Request.RecurringService.saveRequest.submit,
-// };
+    initialPaymentEffectiveDate,
+    finalPaymentEffectiveDate,
+    paymentRecurrence,
+    paymentDueDate,
+    typeOfPaymentAmount,
+}
 
 
 
@@ -214,103 +315,13 @@ const seconds: string = String(currentDate.getSeconds()).padStart(2, '0');
 export const FORMATTED_DATE: string = `${year}-${month}-${day}`;
 export const FORMATTED_TIME: string = `${hour}:${minutes}:${seconds}`;
 
-const environment = Cypress.env('ENVIRONMENT');
-const dataEnvironment = Cypress.env(environment);
 
 
 export const dataParameters: DataParameters = {
+    url: url,
 
     env: dataEnvironment,
 
-    filePath: filePath || '/',
-
-    sizes: sizes ||
-        [
-            [
-                1536,
-                960
-            ],
-            [
-                1440,
-                900
-            ],
-            [
-                1366,
-                768
-            ],
-            [
-                1280,
-                800
-            ],
-            [
-                1280,
-                720
-            ],
-            [
-                1024,
-                768
-            ],
-            [
-                1024,
-                600
-            ],
-            [
-                820,
-                1180
-            ],
-            [
-                768,
-                1024
-            ],
-            [
-                412,
-                914
-            ],
-            [
-                414,
-                896
-            ],
-            [
-                414,
-                846
-            ],
-            [
-                414,
-                736
-            ]
-        ],
-
-    url: url || 'http://192.168.0.66:9401/login',
-
-    Autentication: {
-        domain: domain,
-        email: emailAutentication || faker.internet.userName() + domain,
-        password: passwordAutentication || faker.number.int().toString(),
-        giantPassword: faker.lorem.word({ length: { min: 100, max: 102 }, strategy: 'longest' }),
-    },
-
-    Register: {
-        userRegistration: {
-            name: name || faker.person.fullName(),
-            birthDate: birthDate || new Date(),
-            cpf: cpf || fakerBr.br.cpf(),
-            cnpj: cnpj || fakerBr.br.cnpj(),
-            telephone: telephone || faker.string.alphanumeric('(48) 9####-####'),
-            email: email || faker.internet.userName() + domain,
-            password: password || faker.number.int().toString(),
-            confirmPassword: confirmPassword || password,
-            userProfile: userProfile || UserProfile.normal,
-            sector: sector || Sector.HKM_SOFTWARE_E_SISTEMAS,
-            approverUser: ApproverUser.diretorgecom,
-            approvalLimit: 1500,
-            authorizationRequest: AutorizedRequest.authorized,
-            requestOtherUsers: RequestOtherUsers.canAssociate,
-            allowedRequestCostCenter: AllowedRequestCostCenter.CGE_CONGRESSOS_E_EVENTOS,
-            allowedApprovalCostCenter: AllowedApprovalCostCenter.CGE_DIRETORIA,
-
-        },
-
-    },
     showHideColumns: {
         showHideColumnsUserRegistration: {
             [ShowHideColumnsUserRegistration.user]: false,
@@ -596,102 +607,7 @@ export const dataParameters: DataParameters = {
         }
     },
 
-    Request: {
-        requestType: requestType || RequestType.product,
-        product: {
-            costCenter: costCenterProduct || CostCenter['41.869.107/0001-58 - JML - Almoxarifado'],
-            apportionmentPercentage: apportionmentPercentageProduct && apportionmentPercentageProduct !== " " ? apportionmentPercentageProduct : faker.helpers.arrayElement([100]),
-            apportionmentValue: apportionmentValueProduct && apportionmentValueProduct !== " " ? apportionmentValueProduct : "",
-            quoteRequest: {
-                [QuoteRequest.quoteRequest]: typeof quoteRequestProduct === 'boolean'
-                    ? quoteRequestProduct
-                    : (quoteRequestProduct as string).trim().toLowerCase() === 'true' ? true : false
-            },
-            acquiringArea: acquiringAreaProduct || AcquiringArea.areaContract,
-            isComex: isComexProduct === "yes" ? IsComexImportProduct.yes : IsComexImportProduct.no,
-            reasonForRequest: reasonForRequestProduct.trim() !== "" ? reasonForRequestProduct : faker.lorem.lines(),
-            desiredDeliveryDate: (!isNaN(Date.parse(desiredDeliveryDateProduct)) ? new Date(desiredDeliveryDateProduct) : new Date()).toISOString().split('T')[0],
-            localDescription: localDescriptionProduct.trim() !== "" ? localDescriptionProduct : faker.lorem.lines(),
-            suggestionLinks: suggestionLinksProduct && suggestionLinksProduct !== " " ? suggestionLinksProduct : faker.lorem.lines(),
-            observation: observationProduct && observationProduct !== " " ? observationProduct : faker.lorem.lines(),
-
-            paymentCondition: paymentConditionProduct && Object.values(paymentConditionProduct).some(([isEnabled]) => isEnabled)
-                ? paymentConditionProduct
-                : (paymentMethodProduct && Object.values(paymentMethodProduct).some(([isEnabled]) => isEnabled)
-                    ? { [PaymentCondition.anticipatedPayment]: [true, PaymentCondition.paymentInInstallments] }
-                    : { [PaymentCondition.anticipatedPayment]: [true, "Antecipado"] }),
-
-            totalValue: totalValueProduct || totalValueProduct !== " "  ? totalValueProduct : faker.helpers.arrayElement([1]),
-            paymentMethod: Object.values(paymentMethodProduct).some(([isEnabled]) => isEnabled) ? paymentMethodProduct : { [PaymentMethod.boleto]: [true, PaymentMethod.boleto] },
-            paymentInstallments: paymentInstallmentsProduct | 3,
-            paymentDetails: paymentDetailsProduct || faker.lorem.lines(),
-            supplier: supplierProduct ? SupplierOfRequest[data.Request.product.supplier] : SupplierOfRequest['47.960.950/0897-85  - MAGAZINE LUIZA S/A'],
-            productCategory: productCategoryProduct || ProductCategory['Maquinas E Equipamentos No Laboratorio'],
-            productNameAndDescription: productNameAndDescriptionProduct || faker.lorem.lines(),
-            productQuantity: productQuantityProduct || 3,
-            productColor: productColorProduct || faker.lorem.word(),
-            productSize: productSizeProduct || faker.lorem.word(),
-            productModel: productModelProduct || faker.lorem.word(),
-            productLink: productLinkProduct || faker.internet.url(),
-            attachedFile: attachedFileProduct || '../fixtures/attachedFile.png',
-            saveRequest: saveRequestProduct || {
-                [SaveRequest.draft]: true,
-                [SaveRequest.submit]: false,
-            },
-        },
-        oneOffService: {
-            serviceName: serviceNameOneOffService || `Teste_servico_pontual${new Date().getTime()}`,
-            costCenter: costCenterOneOffService || CostCenter['11.847.299/0003-00 - SMART FILIAL 2 - Tele Atendimento'],
-            apportionmentPercentage: apportionmentPercentageOneOffService !== "" ? data.Request.product.apportionmentPercentage : faker.helpers.arrayElement([100]),
-            apportionmentValue: apportionmentValueOneOffService || faker.helpers.arrayElement([100, 350, 700]),
-            quoteRequest: {
-                [QuoteRequest.quoteRequest]: typeof quoteRequestOneOffService === 'boolean'
-                    ? quoteRequestOneOffService
-                    : (quoteRequestOneOffService as string).trim().toLowerCase() === 'true' ? true : false
-            },
-            acquiringArea: acquiringAreaOneOffService || AcquiringArea.areaContract,
-            isComex: isComexOneOffService === "yes" ? IsComexImportService.yes : IsComexImportService.no,
-            reasonForRequest: reasonForRequestOneOffService.trim() !== "" ? reasonForRequestOneOffService : faker.lorem.lines(),
-            desiredDeliveryDate: (!isNaN(Date.parse(desiredDeliveryDateOneOffService)) ? new Date(desiredDeliveryDateOneOffService) : new Date()).toISOString().split('T')[0],
-            localDescription: localDescriptionOneOffService.trim() !== "" ? localDescriptionOneOffService : faker.lorem.lines(),
-            suggestionLinks: suggestionLinksOneOffService && suggestionLinksOneOffService !== " " ? suggestionLinksOneOffService : faker.lorem.lines(),
-            observation: observationOneOffService || faker.lorem.lines(),
-
-            paymentCondition: paymentConditionOneOffService && Object.values(paymentConditionOneOffService).some(([isEnabled]) => isEnabled)
-                ? paymentConditionOneOffService
-                : (paymentConditionOneOffService && Object.values(paymentConditionOneOffService).some(([isEnabled]) => isEnabled)
-                    ? { [PaymentCondition.anticipatedPayment]: [true, PaymentCondition.paymentInInstallments] }
-                    : { [PaymentCondition.anticipatedPayment]: [true, "Antecipado"] }),
-
-                    totalValue: totalValueOneOffService ? totalValueOneOffService : faker.helpers.arrayElement([2]),
-        },
-        recurringService: {
-            serviceName: serviceNamerecurringService || `Teste_servico_recorrente${new Date().getTime()}`,
-            costCenter: costCenterRecurringService || CostCenter['06.354.562/0001-10 - HKM - P&d'],
-            apportionmentPercentage: apportionmentPercentagerecurringService !== "" ? data.Request.product.apportionmentPercentage : faker.helpers.arrayElement([100]),
-            apportionmentValue: apportionmentValuerecurringService || faker.helpers.arrayElement([100, 350, 700]),
-            quoteRequest: {
-                [QuoteRequest.quoteRequest]: typeof quoteRequestrecurringService === 'boolean'
-                    ? quoteRequestrecurringService
-                    : (quoteRequestrecurringService as string).trim().toLowerCase() === 'true' ? true : false
-            },
-            acquiringArea: acquiringArearecurringService || AcquiringArea.areaContract,
-            isComex: isComexRecurringService === "yes" ? IsComexImportService.yes : IsComexImportService.no,
-            reasonForRequest: reasonForRequestrecurringService.trim() !== "" ? reasonForRequestrecurringService : faker.lorem.lines(),
-            desiredDeliveryDate: (!isNaN(Date.parse(desiredDeliveryDaterecurringService)) ? new Date(desiredDeliveryDaterecurringService) : new Date()).toISOString().split('T')[0],
-            localDescription: localDescriptionRecurringService.trim() !== "" ? localDescriptionRecurringService : faker.lorem.lines(),
-            suggestionLinks: suggestionLinksrecurringService && suggestionLinksrecurringService !== " " ? suggestionLinksrecurringService : faker.lorem.lines(),
-            observation: observationRecurringService || faker.lorem.lines(),
-            
-            paymentCondition: paymentConditionRecurringService && Object.values(paymentConditionRecurringService).some(([isEnabled]) => isEnabled)
-                ? paymentConditionRecurringService
-                : (paymentConditionRecurringService && Object.values(paymentConditionRecurringService).some(([isEnabled]) => isEnabled)
-                    ? { [PaymentCondition.anticipatedPayment]: [true, PaymentCondition.paymentInInstallments] }
-                    : { [PaymentCondition.anticipatedPayment]: [true, "Antecipado"] }),
-
-                    totalValue: totalValuerecurringService ? totalValuerecurringService : faker.helpers.arrayElement([3]),
-        },
-    },
+    request: request,
 
     telephoneType: TelephoneType,
     userProfile: UserProfile,
@@ -729,17 +645,3 @@ export const dataParameters: DataParameters = {
     searchColumnOneOffServiceRequests: SearchColumnOneOffServiceRequests,
     searchColumnRecurringServiceRequests: SearchColumnRecurringServiceRequests,
 };
-
-
-
-/*
-
-if (requestTypeMap[requestType]) {
-        const requestKey = requestTypeMap[requestType];
-        if (dataParameters.Request[requestKey]) {
-            acao
-        };
-    };
-
-
-*/

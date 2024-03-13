@@ -6,6 +6,7 @@ import { mount } from 'cypress/react'
 import {
     DateTime,
     ElementTypeAndValueOpcional,
+    RequestKeys,
     TableTypesElements,
     ValidationResult
 } from '../import';
@@ -108,7 +109,7 @@ declare global {
             * comando customizado para inserir arquivos.
             * @example cy.insertFile('img/ReceitaJpeg(1).jpeg', el.importarImagem);
             */
-            insertFile(fixturePath, elementoBotao): ValidationResult;
+            insertFile(element,filePath): ValidationResult;
 
             /**
            * comando customizado para inserir arquivos.
@@ -144,10 +145,8 @@ declare global {
            * comando customizado para ocultar/mostrar colunas selecionadas.
            * @example cy.getColumnVisibilityCommand();
            */
-            getColumnVisibilityCommand(table: TableTypesElements): ValidationResult
+            getColumnVisibilityCommand(table: TableTypesElements): ValidationResult;
 
-
-            loginB(emailAccess: string, passwordAccess: string);
         }
 
     }

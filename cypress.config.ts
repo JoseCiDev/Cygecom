@@ -5,7 +5,7 @@ export default defineConfig({
   includeShadowDom: true,
   defaultCommandTimeout: 10000,
   waitForAnimations: false,
-  numTestsKeptInMemory: 15,
+  numTestsKeptInMemory: 5,
 
   e2e: {
     setupNodeEvents(on, config) {
@@ -16,7 +16,7 @@ export default defineConfig({
     redirectionLimit: 5000,
     viewportHeight: 1280,
     viewportWidth: 1024,
-    numTestsKeptInMemory: 15,
+    numTestsKeptInMemory: 5,
     excludeSpecPattern: [
       'cypress/support/*',
       'cypress/support/commands/*',

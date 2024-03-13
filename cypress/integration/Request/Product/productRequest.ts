@@ -1,10 +1,20 @@
-import { elements as el } from '../../../elements';
 import {
-    dataParameters,
-} from '../../../DataParameters/dataParameters'
-import { RequestType } from '../../../DataParameters/Enums/requestType';
-
-
+    ConditionalWrite,
+    IsComexImportProduct,
+    IsComexImportService,
+    ObservationOfRequest,
+    QuoteRequest,
+    RequestType,
+    ServiceName,
+    SuggestionLinks,
+    Request,
+    // ProductRequest,
+    // data,
+    elements as el,
+    DataParameters,
+    faker,
+    dataParameters
+} from '../../../import';
 const {
     logout,
     optionsMenu,
@@ -102,7 +112,7 @@ describe('Testes da página de criação de solicitação de produtos', () => {
             '.main-nav > :nth-child(3) > .btn',
             '[data-cy="dropdown-solicitacoes-novas"]',
         ]);
-        cy.createRequest(dataParameters.Request.requestType);
+        cy.createRequest(dataParameters.request.requestType);
 
     });
 })

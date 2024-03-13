@@ -40,13 +40,13 @@
         "Url": {
             "type": "object",
             "properties": {
-                "login": {
+                "baseUrlLogin": {
                     "type": "string",
                     "format": "uri"
                 }
             },
             "required": [
-                "login"
+                "baseUrlLogin"
             ]
         },
         "Autentication": {
@@ -201,54 +201,11 @@
                         "observation": {
                             "type": "string"
                         },
+                        "TypeOfPaymentAmount": {
+                            "type": "string"
+                        },
                         "PaymentCondition": {
-                            "type": "object",
-                            "properties": {
-                                "anticipatedPayment": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ],
-                                    "minItems": 2,
-                                    "maxItems": 2
-                                },
-                                "cashPayment": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ],
-                                    "minItems": 2,
-                                    "maxItems": 2
-                                },
-                                "paymentInInstallments": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ],
-                                    "minItems": 2,
-                                    "maxItems": 2
-                                }
-                            },
-                            "required": [
-                                "anticipatedPayment",
-                                "cashPayment",
-                                "paymentInInstallments"
-                            ]
+                            "type": "string"
                         },
                         "totalValue": {
                             "type": [
@@ -257,107 +214,7 @@
                             ]
                         },
                         "paymentMethod": {
-                            "type": "object",
-                            "properties": {
-                                "boleto": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ]
-                                },
-                                "creditCard": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ]
-                                },
-                                "debitCard": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ]
-                                },
-                                "cheque": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ]
-                                },
-                                "bankDeposit": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ]
-                                },
-                                "cash": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ]
-                                },
-                                "international": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ]
-                                },
-                                "pix": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ]
-                                }
-                            },
-                            "required": [
-                                "boleto",
-                                "creditCard",
-                                "debitCard",
-                                "cheque",
-                                "bankDeposit",
-                                "cash",
-                                "international",
-                                "pix"
-                            ]
+                            "type": "string"
                         },
                         "paymentInstallments": {
                             "type": "integer"
@@ -368,42 +225,34 @@
                         "supplier": {
                             "type": "string"
                         },
-                        "productCategory": {
+                        "category": {
                             "type": "string"
-                        },
-                        "productNameAndDescription": {
-                            "type": "string"
-                        },
-                        "productQuantity": {
-                            "type": "integer"
-                        },
-                        "productColor": {
-                            "type": "string"
-                        },
-                        "productSize": {
-                            "type": "string"
-                        },
-                        "productModel": {
-                            "type": "string"
-                        },
-                        "productLink": {
-                            "type": "string",
-                            "format": "uri"
                         },
                         "attachedFile": {
                             "type": "string"
                         },
+                        "nameAndDescription": {
+                            "type": "string"
+                        },
+                        "quantity": {
+                            "type": "integer"
+                        },
+                        "color": {
+                            "type": "string"
+                        },
+                        "size": {
+                            "type": "string"
+                        },
+                        "model": {
+                            "type": "string"
+                        },
+                        "link": {
+                            "type": "string",
+                            "format": "uri"
+                        },
                         "saveRequest": {
-                            "type": "object",
-                            "properties": {
-                                "draft": {
-                                    "type": "boolean"
-                                },
-                                "submit": {
-                                    "type": "boolean"
-                                }
-                            },
-                            "required": [
+                            "type": "string",
+                            "enum": [
                                 "draft",
                                 "submit"
                             ]
@@ -421,14 +270,15 @@
                         "localDescription",
                         "suggestionLinks",
                         "observation",
+                        "TypeOfPaymentAmount",
                         "PaymentCondition",
                         "totalValue",
                         "paymentMethod",
                         "paymentInstallments",
                         "paymentDetails",
                         "supplier",
-                        "productCategory",
-                        "productNameAndDescription",
+                        "category",
+                        "nameAndDescription",
                         "productQuantity",
                         "productColor",
                         "productSize",
@@ -473,6 +323,9 @@
                         "reasonForRequest": {
                             "type": "string"
                         },
+                        "description": {
+                            "type": "string"
+                        },
                         "desiredDeliveryDate": {
                             "type": "string"
                         },
@@ -486,58 +339,51 @@
                             "type": "string"
                         },
                         "PaymentCondition": {
-                            "type": "object",
-                            "properties": {
-                                "anticipatedPayment": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ],
-                                    "minItems": 2,
-                                    "maxItems": 2
-                                },
-                                "cashPayment": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ],
-                                    "minItems": 2,
-                                    "maxItems": 2
-                                },
-                                "paymentInInstallments": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ],
-                                    "minItems": 2,
-                                    "maxItems": 2
-                                }
-                            },
-                            "required": [
-                                "anticipatedPayment",
-                                "cashPayment",
-                                "paymentInInstallments"
-                            ]
+                            "type": "string"
                         },
                         "totalValue": {
                             "type": [
                                 "string",
                                 "number"
+                            ]
+                        },
+                        "paymentMethod": {
+                            "type": "string"
+                        },
+                        "paymentInstallments": {
+                            "type": "integer"
+                        },
+                        "paymentDetails": {
+                            "type": "string"
+                        },
+                        "supplier": {
+                            "type": "string"
+                        },
+                        "seller": {
+                            "type": "string"
+                        },
+                        "sellerTelephone": {
+                            "type": "string"
+                        },
+                        "sellerEmail": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "serviceAlreadyProvided": {
+                            "type": "string",
+                            "enum": [
+                                "yes",
+                                "no"
+                            ]
+                        },
+                        "attachedFile": {
+                            "type": "string"
+                        },
+                        "saveRequest": {
+                            "type": "string",
+                            "enum": [
+                                "draft",
+                                "submit"
                             ]
                         }
                     },
@@ -546,12 +392,23 @@
                         "costCenter",
                         "isComex",
                         "reasonForRequest",
+                        "description",
                         "desiredDeliveryDate",
                         "localDescription",
                         "suggestionLinks",
                         "observation",
                         "PaymentCondition",
-                        "totalValue"
+                        "totalValue",
+                        "paymentMethod",
+                        "paymentInstallments",
+                        "paymentDetails",
+                        "supplier",
+                        "seller",
+                        "sellerTelephone",
+                        "sellerEmail",
+                        "serviceAlreadyProvided",
+                        "attachedFile",
+                        "saveRequest"
                     ]
                 },
                 "recurringService": {
@@ -589,6 +446,9 @@
                         "reasonForRequest": {
                             "type": "string"
                         },
+                        "description": {
+                            "type": "string"
+                        },
                         "desiredDeliveryDate": {
                             "type": "string"
                         },
@@ -601,53 +461,45 @@
                         "observation": {
                             "type": "string"
                         },
+                        "TypeOfPaymentAmount": {
+                            "type": "string"
+                        },
                         "PaymentCondition": {
-                            "type": "object",
-                            "properties": {
-                                "anticipatedPayment": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ],
-                                    "minItems": 2,
-                                    "maxItems": 2
-                                },
-                                "cashPayment": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ],
-                                    "minItems": 2,
-                                    "maxItems": 2
-                                },
-                                "paymentInInstallments": {
-                                    "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "boolean"
-                                        },
-                                        {
-                                            "type": "string"
-                                        }
-                                    ],
-                                    "minItems": 2,
-                                    "maxItems": 2
-                                }
-                            },
-                            "required": [
-                                "anticipatedPayment",
-                                "cashPayment",
-                                "paymentInInstallments"
+                            "type": "string"
+                        },
+                        "totalValue": {
+                            "type": [
+                                "string",
+                                "number"
+                            ]
+                        },
+                        "paymentMethod": {
+                            "type": "string"
+                        },
+                        "paymentDetails": {
+                            "type": "string"
+                        },
+                        "supplier": {
+                            "type": "string"
+                        },
+                        "seller": {
+                            "type": "string"
+                        },
+                        "sellerTelephone": {
+                            "type": "string"
+                        },
+                        "sellerEmail": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "attachedFile": {
+                            "type": "string"
+                        },
+                        "saveRequest": {
+                            "type": "string",
+                            "enum": [
+                                "draft",
+                                "submit"
                             ]
                         }
                     },
@@ -656,11 +508,22 @@
                         "costCenter",
                         "isComex",
                         "reasonForRequest",
+                        "description",
                         "desiredDeliveryDate",
                         "localDescription",
                         "suggestionLinks",
                         "observation",
-                        "PaymentCondition"
+                        "TypeOfPaymentAmount",
+                        "PaymentCondition",
+                        "totalValue",
+                        "paymentMethod",
+                        "paymentDetails",
+                        "supplier",
+                        "seller",
+                        "sellerTelephone",
+                        "sellerEmail",
+                        "attachedFile",
+                        "saveRequest"
                     ]
                 }
             },

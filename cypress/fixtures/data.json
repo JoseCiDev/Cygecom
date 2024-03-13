@@ -59,7 +59,7 @@
         ]
     },
     "Url": {
-        "login": "http://192.168.0.66:9401/login"
+        "baseUrlLogin": " "
     },
     "Autentication": {
         "email": "data@json.domain",
@@ -76,7 +76,6 @@
             "password": "Xpto",
             "confirmPassword": "Xpto",
             "userProfile": "profile_admin",
-            "sector": "HKM_SOFTWARE_E_SISTEMAS",
             "approverUser": "ApproverUser.diretorgecom",
             "approvalLimit": "1500",
             "authorizationRequest": " AutorizedRequest.authorized",
@@ -90,137 +89,86 @@
         "product": {
             "costCenter": "06.354.562/0001-10 - HKM - Software e Sistemas",
             "apportionmentPercentage": "100",
-            "apportionmentValue": "",
-            "quoteRequest": true,
-            "acquiringArea": "areaContract",
-            "isComex": "no",
-            "reasonForRequest": "",
-            "desiredDeliveryDate": " ",
-            "localDescription": "",
-            "suggestionLinks": "https://www.essentialnutrition.com.br",
-            "observation": "",
-            "PaymentCondition": {
-                "anticipatedPayment": [
-                    false,
-                    "Antecipado"
-                ],
-                "cashPayment": [
-                    false,
-                    "À vista"
-                ],
-                "paymentInInstallments": [
-                    true,
-                    "Parcelado"
-                ]
-            },
-            "totalValue": "1784,93",
-            "paymentMethod": {
-                "boleto": [
-                    false,
-                    "Boleto"
-                ],
-                "creditCard": [
-                    false,
-                    "Cartão de crédito"
-                ],
-                "debitCard": [
-                    false,
-                    "Cartão de débito"
-                ],
-                "cheque": [
-                    false,
-                    "Cheque"
-                ],
-                "bankDeposit": [
-                    false,
-                    "Depósito bancário"
-                ],
-                "cash": [
-                    false,
-                    "Dinheiro"
-                ],
-                "international": [
-                    false,
-                    "Internacional"
-                ],
-                "pix": [
-                    true,
-                    "Pix"
-                ]
-            },
-            "paymentInstallments": 3,
-            "paymentDetails": "",
-            "supplier": "47.960.950/0897-85  - MAGAZINE LUIZA S/A",
-            "productCategory": "Maquinas E Equipamentos No Laboratorio",
-            "productNameAndDescription": "T",
-            "productQuantity": 3,
-            "productColor": "",
-            "productSize": "",
-            "productModel": "",
-            "productLink": "https://essentia.com.br/",
-            "attachedFile": "../fixtures/attachedFile.png",
-            "saveRequest": {
-                "draft": true,
-                "submit": false
-            }
-        },
-        "oneOffService": {
-            "serviceName": "Teste_servico_pontual",
-            "costCenter": "06.354.562/0001-10 - HKM - Almoxarifado",
-            "apportionmentPercentage": "100",
-            "apportionmentValue": "100",
-            "quoteRequest": true,
-            "acquiringArea": "areaContract",
-            "isComex": "no",
-            "reasonForRequest": "",
-            "desiredDeliveryDate": " ",
-            "localDescription": "Teste Json",
-            "suggestionLinks": "",
-            "observation": "",
-            "PaymentCondition": {
-                "anticipatedPayment": [
-                    false,
-                    "Antecipado"
-                ],
-                "cashPayment": [
-                    false,
-                    "À vista"
-                ],
-                "paymentInInstallments": [
-                    true,
-                    "Parcelado"
-                ]
-            },
-            "totalValue": "100.00"
-        },
-        "recurringService": {
-            "serviceName": "Teste_servico_recorrente",
-            "costCenter": "06.354.562/0001-10 - HKM - DDH",
-            "apportionmentPercentage": "100",
-            "apportionmentValue": "100",
+            "apportionmentValue": " ",
             "quoteRequest": "false",
             "acquiringArea": "areaContract",
-            "isComex": "no",
-            "reasonForRequest": "recurringService",
-            "desiredDeliveryDate": "01-01-3333",
-            "localDescription": " ",
-            "suggestionLinks": "",
-            "observation": "faker.lorem.lines()",
-            "PaymentCondition": {
-                "anticipatedPayment": [
-                    false,
-                    "Antecipado"
-                ],
-                "cashPayment": [
-                    false,
-                    "À vista"
-                ],
-                "paymentInInstallments": [
-                    "",
-                    "Parcelado"
-                ]
-            },
-            "totalValue": "305.90"
+            "isComex": "yes",
+            "reasonForRequest": "Automated product request testing - Reason for request.",
+            "desiredDeliveryDate": "",
+            "localDescription": "Automated product request testing - Description of the product storage location.",
+            "suggestionLinks": "https://essentia.com.br/",
+            "observation": "Automated Product Request Testing - Product Request Observations",
+            "PaymentCondition": "cashPayment",
+            "totalValue": "1784,93",
+            "paymentMethod": "pix",
+            "paymentInstallments": 3,
+            "paymentDetails": "Automated Product Request Testing - Payment Details",
+            "supplier": "17.895.646/0001-87  - UBER DO BRASIL TECNOLOGIA LTDA",
+            "category": "Brinde - Mercadoria distribuida gratuitamente para nossos clientes e que não podemos vender. Ex. Toalha, Necessaire, etc...",
+            "attachedFile": "../fixtures/attachedFile.png",
+            "nameAndDescription": "Automated product request testing - product name or description.",
+            "quantity": 3,
+            "color": "Green",
+            "size": "G",
+            "model": "Basic",
+            "link": "https://essentia.com.br/",
+            "saveRequest": "submit"
+        },
+        "oneOffService": {
+            "servicename": "servicoPontualTeste()",
+            "costCenter": "06.354.562/0001-10 - HKM - Software e Sistemas",
+            "apportionmentPercentage": "100",
+            "apportionmentValue": " ",
+            "quoteRequest": "true",
+            "acquiringArea": "areaContract",
+            "isComex": "yes",
+            "reasonForRequest": "Automated testing of one-off service requests - Reason for the one-off service request.",
+            "description": "Automated one-off service request testing - Service Description.",
+            "desiredDeliveryDate": "",
+            "localDescription": "Automated testing of one-off service requests - Description of the service execution location.",
+            "suggestionLinks": "https://essentia.com.br/",
+            "observation": "Automated spot service request testing - Spot service observations.",
+            "PaymentCondition": "cashPayment",
+            "totalValue": "1784,93",
+            "paymentMethod": "pix",
+            "paymentInstallments": 3,
+            "paymentDetails": "Automated one-off service request testing - Payment details.",
+            "supplier": "47.960.950/0897-85  - MAGAZINE LUIZA S/A",
+            "seller": "Paulo",
+            "sellerTelephone": "48991860504",
+            "sellerEmail": "oneOffService@gecom",
+            "serviceAlreadyProvided": "no",
+            "attachedFile": "../fixtures/attachedFile.png",
+            "saveRequest": "draft"
+        },
+        "recurringService": {
+            "servicename": "servicoRecorrenteTeste()",
+            "costCenter": "06.354.562/0001-10 - HKM - Software e Sistemas",
+            "apportionmentPercentage": "100",
+            "apportionmentValue": " ",
+            "quoteRequest": "true",
+            "acquiringArea": "areaContract",
+            "isComex": "yes",
+            "reasonForRequest": "Automated Recurring Service Request Testing - Reason for recurring service request.",
+            "desiredDeliveryDate": "",
+            "localDescription": "Automated testing of recurring service requests - Description of the service execution location.",
+            "suggestionLinks": "https://essentia.com.br/",
+            "observation": "Automated Recurring Service Request Testing - Recurring Service Observations.",
+            "initialPaymentEffectiveDate": "",
+            "finalPaymentEffectiveDate": "",
+            "paymentRecurrence": "mensal",
+            "paymentDueDate": "two",
+            "TypeOfPaymentAmount": "variable",
+            "PaymentCondition": "cashPayment",
+            "totalValue": "1784,93",
+            "paymentMethod": "pix",
+            "paymentDetails": "Automated Recurring Service Request Testing - Payment Details.",
+            "supplier": "80.680.093/0001-81  - SENIOR SISTEMAS SA",
+            "seller": "Augusto",
+            "sellerTelephone": "47992145080",
+            "sellerEmail": "recurringService@gecom",
+            "attachedFile": "../fixtures/attachedFile.png",
+            "saveRequest": "draft"
         }
     }
 }

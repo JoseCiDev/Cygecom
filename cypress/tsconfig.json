@@ -12,5 +12,5 @@
   "include": [
     "**/*.ts",
     "./support/cypress.d.ts"
-, "DataParameters/Interfaces/interfaceTestParameters.ts.old"  ]
+, "DataParameters/Interfaces/interfaceTestParameters.ts.old", "DataParameters/dataParameters copy", "DataParameters/Interfaces/interfaces copy", "DataParameters/Interfaces/interfaces.ts.old", "DataParameters/dataParameters.ts.old"  ]
 }

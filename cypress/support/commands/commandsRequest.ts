@@ -27,13 +27,40 @@
 /// <reference path="../cypress.d.ts" />
 
 
-import { faker } from '@faker-js/faker';
 
-import { elements as el } from '../../elements'
-import { dataParameters } from '../../DataParameters/dataParameters';
-import { ConditionalWrite, IsComexImportProduct, IsComexImportService, ObservationOfRequest, QuoteRequest, RequestType, ServiceName, SupportLinks } from '../../import';
-import data from '../../fixtures/data.json';
-
+import {
+    ConditionalWrite,
+    IsComexImportProduct,
+    IsComexImportService,
+    ObservationOfRequest,
+    QuoteRequest,
+    RequestType,
+    ServiceName,
+    SuggestionLinks,
+    elements as el,
+    faker,
+    RequestKeys,
+    Apportionment,
+    Requests,
+    data,
+    requestTypeString,
+    observationString,
+    suggestionLinksString,
+    ServiceAlreadyProvided,
+    requestData,
+    requestTyper,
+    PaymentRecurrence,
+    PaymentDueDate,
+    SupplierOfRequest,
+    ProductCategory,
+    SupplierElement,
+    dataParameters,
+    serviceNameString,
+    IsSavedRequest,
+    SaveRequestDraft,
+    SaveRequestSubmit,
+    isSaved,
+} from '../../import';
 
 
 const {
@@ -108,7 +135,7 @@ const {
     quoteRequest,
     reasonForRequest,
     desiredDeliveryDate,
-    productStorageLocation,
+    localDescription,
     paymentCondition,
     paymentMethod,
     highlightedOption,
@@ -116,16 +143,22 @@ const {
     totalValue,
     paymentInstallments,
     paymentDetails,
-    supplier,
-    productCategory,
-    productNameAndDescription,
-    productQuantity,
-    productColor,
-    productSize,
-    productModel,
-    productLink,
+    category,
+    nameAndDescription,
+    quantity,
+    color,
+    size,
+    model,
+    link,
     attachedFile,
-
+    description,
+    seller,
+    telephone,
+    initialPaymentEffectiveDate,
+    finalPaymentEffectiveDate,
+    paymentRecurrence,
+    paymentDueDate,
+    toAgreeModalSubmitRequest,
 } = el.Request
 
 const {
@@ -137,506 +170,265 @@ const {
 } = el.Supply
 
 
-// Cypress.Commands.add('createRequest', function (requestType: string) {
-//     cy.getElementAndClick([requestType]);
 
-//     const requestTypeMap = {
-//         [RequestType.product]: 'product',
-//         [RequestType.oneOffService]: 'oneOffService',
-//         [RequestType.recurringService]: 'recurringService'
-//     };
-//     function setPaymentAndSupplier(element: string, searchParameterValue: string, highlightedElement: string, conditionalWrite: ConditionalWrite) {
-//         if (conditionalWrite) {
-//             for (const [key, [isTyped, value]] of Object.entries(conditionalWrite)) {
-//                 if (isTyped) {
-//                     cy.get(element)
-//                         .click();
-//                     cy.get(searchParameterValue)
-//                         .type(value, { force: true })
-//                         .get(highlightedElement)
-//                         .should('be.visible')
-//                         .contains(value)
-//                         .click({ force: true });
-//                 }
-//             }
-//         }
-//     };
-//     function setQuotation(request) {
-//         const { quoteRequest } = request;
-//         for (const [key, value] of Object.entries(quoteRequest)) {
-//             if (value) {
-//                 cy.getElementAndCheck([
-//                     { element: key },
-//                 ]);
-//             }
-//         }
-//     };
-//     function setApportionment(request) {
-//         const { apportionmentPercentage, apportionmentValue } = dataParameters.Request.product;
+function processAttribute(attributes: { [K in RequestKeys]?: (attributeValue: string) => void }) {
 
-//         if (apportionmentValue && apportionmentValue !== " ") {
-//             cy.get(apportionmentValueElement)
-//                 .type(dataParameters.Request.product.apportionmentValue.toString());
-//         }
-//         else if (apportionmentPercentage && apportionmentPercentage !== " ") {
-//             cy.get(apportionmentPercentageElement)
-//                 .type(dataParameters.Request.product.apportionmentPercentage.toString());
-//         } else {
-//             throw new Error("Valor não foi passado");
-//         }
-//     };
-//     function saveRequest() {
-//         const { product: { saveRequest } } = dataParameters.Request;
-//         for (const [key, saveAs] of Object.entries(saveRequest)) {
-//             if (saveAs) {
-//                 cy.getElementAndClick([key]);
-//             }
-//         }
-//     };
-
-//     const optionsMap = {
-//         [RequestType.oneOffService]: { selector: '[data-cy="service-title"]', property: 'oneOffService' },
-//         [RequestType.recurringService]: { selector: '[data-cy="contract-title"]', property: 'recurringService' }
-//     };
-//     const comexMapping = {
-//         product: {
-//             [IsComexImportProduct.yes]: IsComexImportProduct.yes,
-//             [IsComexImportProduct.no]: IsComexImportProduct.no
-//         },
-//         oneOffService: {
-//             [IsComexImportService.yes]: IsComexImportService.yes,
-//             [IsComexImportService.no]: IsComexImportService.no
-//         },
-//         recurringService: {
-//             [IsComexImportService.yes]: IsComexImportService.yes,
-//             [IsComexImportService.no]: IsComexImportService.no
-//         }
-//     };
-
-//     if (optionsMap[requestType]) {
-//         cy.get(optionsMap[requestType].selector)
-//         .type(dataParameters.Request[optionsMap[requestType].property].serviceName);
-//     };
-
-//     if (requestTypeMap[requestType]) {
-//         const requestKey = requestTypeMap[requestType];
-//         if (dataParameters.Request[requestKey]) {
-//             cy.getElementAutocompleteTypeAndClick(
-//                 { [costCenter]: dataParameters.Request[requestKey].costCenter },
-//                 highlightedOption
-//             );
-//         };
-//     };
-
-//     if (requestTypeMap[requestType]) {
-//         const requestKey = requestTypeMap[requestType];
-//         if (dataParameters.Request[requestKey]) {
-//             cy.fixture('data.json').then((data) => {
-//                 const requestKey = requestTypeMap[requestType];
-//                 if (dataParameters.Request[requestKey]) {
-//                     setApportionment(data.Request[requestKey]);
-//                 }
-//             });
-//         }
-//     };
-
-//     if (requestTypeMap[requestType]) {
-//         const requestKey = requestTypeMap[requestType];
-//         if (dataParameters.Request[requestKey]) {
-//             setQuotation(dataParameters.Request[requestKey]);
-//         }
-//     }
-
-//     if (requestTypeMap[requestType]) {
-//         const requestKey = requestTypeMap[requestType];
-//         let comexValue = dataParameters.Request[requestKey].isComex;
-//         if (comexMapping[requestKey] && comexMapping[requestKey][comexValue]) {
-//             const selector = comexMapping[requestKey][comexValue];
-//             if (typeof selector === 'string') {
-//                 cy.get(selector)
-//                     .should('be.visible')
-//                     .check();
-//             };
-//         };
-//     };
-
-//     if (requestTypeMap[requestType]) {
-//         const requestKey = requestTypeMap[requestType];
-//         if (dataParameters.Request[requestKey]) {
-//             cy.getElementAndType({
-//                 [reasonForRequest]: dataParameters.Request[requestKey].reasonForRequest.trim() !== "" ? dataParameters.Request[requestKey].reasonForRequest : " ",
-//                 [desiredDeliveryDate]: dataParameters.Request[requestKey].desiredDeliveryDate.trim() !== "" ? dataParameters.Request[requestKey].desiredDeliveryDate : new Date().toISOString().split('T')[0],
-//                 [productStorageLocation]: dataParameters.Request[requestKey].localDescription.trim() !== "" ? dataParameters.Request[requestKey].localDescription : " ",
-//             });
-//         };
-//     };
-
-//     if (requestTypeMap[requestType]) {
-//         const requestKey = requestTypeMap[requestType];
-//         if (dataParameters.Request[requestKey]) {
-//             cy.getElementAndType({
-//                 [SupportLinks[requestKey]]: dataParameters.Request[requestKey].suggestionLinks,
-//             });
-//         };
-//     };
-
-
-//     if (requestTypeMap[requestType]) {
-//         const requestKey = requestTypeMap[requestType];
-//         if (dataParameters.Request[requestKey]) {
-//             cy.getElementAndCheck([{ element: dataParameters.Request[requestKey].acquiringArea },]);
-//         };
-//     };
-
-
-//     if (requestTypeMap[requestType]) {
-//         const requestKey = requestTypeMap[requestType];
-//         if (dataParameters.Request[requestKey]) {
-//             cy.getElementAndType({
-//                 [ObservationOfRequest[requestKey]]: dataParameters.Request[requestKey].observation,
-//             });
-//         };
-//     };
-
-
-//     if (requestTypeMap[requestType]) {
-//         const requestKey = requestTypeMap[requestType]
-
-//         if (dataParameters.Request[requestKey]) {
-//             setPaymentAndSupplier(
-//                 paymentCondition,
-//                 searchPaymentMethodAndTerms,
-//                 highlightedOption,
-//                 dataParameters.Request[requestKey].paymentCondition
-//             );
-
-//         };
-//     };
-
-
-//     if (requestTypeMap[requestType]) {
-//         const requestKey = requestTypeMap[requestType];
-//         if (dataParameters.Request[requestKey]) {
-
-//             cy.getElementAndType({
-//                 [totalValue]: dataParameters.Request[requestKey].totalValue,
-//             });
-//         }
-//     };
-
-
-//     if (requestTypeMap[requestType]) {
-//         const requestKey = requestTypeMap[requestType];
-//         if (dataParameters.Request[requestKey]) {
-//             setPaymentAndSupplier(
-//                 paymentMethod,
-//                 searchPaymentMethodAndTerms,
-//                 highlightedOption,
-//                 dataParameters.Request[requestKey].paymentMethod
-//             );
-
-//         };
-//     };
-
-
-//     cy.getElementAndType({
-//         [paymentInstallments]: dataParameters.Request.product.paymentInstallments.toString(),
-//         [paymentDetails]: dataParameters.Request.product.paymentDetails,
-//     });
-
-//     cy.getElementAutocompleteTypeAndClick({
-//         [supplier]: dataParameters.Request.product.supplier,
-//         [productCategory]: dataParameters.Request.product.productCategory,
-//     },
-//         highlightedOption
-//     );
-
-//     cy.getElementAndType({
-//         [productNameAndDescription]: dataParameters.Request.product.productNameAndDescription,
-//         [productQuantity]: dataParameters.Request.product.productQuantity.toString(),
-//         [productColor]: dataParameters.Request.product.productColor,
-//         [productSize]: dataParameters.Request.product.productSize.toString(),
-//         [productModel]: dataParameters.Request.product.productModel,
-//         [productLink]: dataParameters.Request.product.productLink,
-//     });
-
-//     cy.insertFile(dataParameters.Request.product.attachedFile, attachedFile);
-
-//     saveRequest();
-// });
+    for (const attribute of Object.entries(attributes)) {
+        const [attributeKey, callback] = attribute;
+        const attributeValue = dataParameters.request[attributeKey];
+        callback(attributeValue)
+    }
+}
+function handleRequestAttributes(attributeValue: string, types: RequestType[], action: (value: string) => void) {
+    if (types.includes(requestTyper)) {
+        action(attributeValue);
+    }
+}
 
 
 
-
-
-// --------------------------------------------------------------------------------
 Cypress.Commands.add('createRequest', function (requestType: string) {
-    const requestTypeMap = {
-        [RequestType.product]: 'product',
-        [RequestType.oneOffService]: 'oneOffService',
-        [RequestType.recurringService]: 'recurringService'
-    };
-    function processRequestType(requestType, callback) {
-        if (requestTypeMap[requestType]) {
-            const requestKey = requestTypeMap[requestType];
-            if (dataParameters.Request[requestKey]) {
-                callback(requestKey);
-            }
-        }
-    };
-    const optionsMap = {
-        [RequestType.oneOffService]: { selector: '[data-cy="service-title"]', property: 'oneOffService' },
-        [RequestType.recurringService]: { selector: '[data-cy="contract-title"]', property: 'recurringService' }
-    };
-    const comexMapping = {
-        product: {
-            [IsComexImportProduct.yes]: IsComexImportProduct.yes,
-            [IsComexImportProduct.no]: IsComexImportProduct.no
-        },
-        oneOffService: {
-            [IsComexImportService.yes]: IsComexImportService.yes,
-            [IsComexImportService.no]: IsComexImportService.no
-        },
-        recurringService: {
-            [IsComexImportService.yes]: IsComexImportService.yes,
-            [IsComexImportService.no]: IsComexImportService.no
-        }
-    };
 
-    // function setPaymentAndSupplier(element: string, searchParameterValue: string, highlightedElement: string, conditionalWrite: ConditionalWrite) {
-    //     if (conditionalWrite) {
-    //         for (const [key, [isTyped, value]] of Object.entries(conditionalWrite)) {
-    //             if (isTyped) {
-    //                 cy.get(element)
-    //                     .click();
-    //                 cy.get(searchParameterValue)
-    //                     .type(value, { force: true })
-    //                     .get(highlightedElement)
-    //                     .should('be.visible')
-    //                     .contains(value)
-    //                     .click({ force: true });
-    //             }
-    //         }
-    //     }
-    // };
-    function setPaymentAndSupplier(element: string, searchParameterValue: string, highlightedElement: string, conditionalWrite: ConditionalWrite) {
-        if (conditionalWrite) {
-            for (const [key, [isTyped, value]] of Object.entries(conditionalWrite)) {
-                if (isTyped) {
-                    cy.get(element)
-                        .click();
-                    cy.get(searchParameterValue)
-                        .type(value, { force: true })
-                        .get(highlightedElement)
-                        .should('be.visible')
-                        .contains(value)
-                        .click({ force: true });
-                }
-            }
-        }
-    };
-    // function setQuotation(requestKey: string) {
-    //     const quoteRequest = dataParameters.Request[requestKey];
-    //     for (const [key, value] of Object.entries(quoteRequest)) {
-    //         if (value) {
-    //             cy.getElementAndCheck([
-    //                 { element: key },
-    //             ]);
-    //         }
-    //     }
-    // };
-    function setQuotation(request) {
-        const { quoteRequest } = request;
-        for (const [key, value] of Object.entries(quoteRequest)) {
-            if (value) {
-                cy.getElementAndCheck([
-                    { element: key },
-                ]);
-            }
-        }
-    };
-    // function setApportionment(requestKey: string) {
-    //     const { apportionmentPercentage, apportionmentValue } = dataParameters.Request[requestKey];
-
-    //     if (apportionmentValue && apportionmentValue !== " ") {
-    //         cy.get(apportionmentValueElement)
-    //             .type(apportionmentValue.toString());
-    //     }
-    //     else if (apportionmentPercentage && apportionmentPercentage !== " ") {
-    //         cy.get(apportionmentPercentageElement)
-    //             .type(apportionmentPercentage.toString());
-    //     } else {
-    //         throw new Error("Valor não foi passado");
-    //     }
-    // };
-    function setApportionment(request) {
-        const { apportionmentPercentage, apportionmentValue } = dataParameters.Request.product;
+    function setApportionment() {
+        const { apportionmentPercentage, apportionmentValue } = dataParameters.request;
 
         if (apportionmentValue && apportionmentValue !== " ") {
             cy.get(apportionmentValueElement)
-                .type(dataParameters.Request.product.apportionmentValue.toString());
+                .type(apportionmentValue.toString());
         }
         else if (apportionmentPercentage && apportionmentPercentage !== " ") {
             cy.get(apportionmentPercentageElement)
-                .type(dataParameters.Request.product.apportionmentPercentage.toString());
+                .type(apportionmentPercentage.toString());
         } else {
             throw new Error("Valor não foi passado");
         }
     };
-    function saveRequest() {
-        const { product: { saveRequest } } = dataParameters.Request;
-        for (const [key, saveAs] of Object.entries(saveRequest)) {
-            if (saveAs) {
-                cy.getElementAndClick([key]);
+
+    processAttribute({
+        requestType: (attributeValue) => {
+            cy.getElementAndClick([requestType])
+            setApportionment();
+        },
+        //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        //valor menor que 100% e nao apresentar aviso - valor igual a 100% e apresentar aviso
+        'quoteRequest': (attributeValue) => {
+            if (attributeValue === "true") {
+                cy.log(attributeValue);
+                cy.getElementAndCheck([{ element: quoteRequest },]);
             }
-        }
-    };
-
-
-
-    processRequestType(requestType, (requestKey) => {
-        cy.getElementAndClick([requestType]);
-    });
-
-    processRequestType(requestType, (requestKey) => {
-        if (optionsMap[requestKey]) {
-            cy.get(optionsMap[requestKey].selector)
-                .type(dataParameters.Request[optionsMap[requestKey].property].serviceName);
-        }
-    });
-
-    processRequestType(requestType, (requestKey) => {
-        if (dataParameters.Request[requestKey]) {
+        },
+        'serviceName': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+                cy.getElementAndType({
+                    [serviceNameString]: attributeValue,
+                });
+            });
+        },
+        //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        'costCenter': (attributeValue) => {
             cy.getElementAutocompleteTypeAndClick(
-                { [costCenter]: dataParameters.Request[requestKey].costCenter },
+                { [costCenter]: attributeValue },
                 highlightedOption
             );
-        };
-    });
-
-    // processRequestType('product', setApportionment);
-    if (requestTypeMap[requestType]) {
-        const requestKey = requestTypeMap[requestType];
-        if (dataParameters.Request[requestKey]) {
-            cy.fixture('data.json').then((data) => {
-                const requestKey = requestTypeMap[requestType];
-                if (dataParameters.Request[requestKey]) {
-                    setApportionment(data.Request[requestKey]);
-                }
-            });
-        }
-    };
-
-    // processRequestType('quoteRequest', setQuotation);
-    if (requestTypeMap[requestType]) {
-        const requestKey = requestTypeMap[requestType];
-        if (dataParameters.Request[requestKey]) {
-            setQuotation(dataParameters.Request[requestKey]);
-        }
-    }
-
-    processRequestType(requestType, (requestKey) => {
-        let comexValue = dataParameters.Request[requestKey].isComex;
-        if (comexMapping[requestKey] && comexMapping[requestKey][comexValue]) {
-            const selector = comexMapping[requestKey][comexValue];
-            if (typeof selector === 'string') {
-                cy.get(selector)
-                    .should('be.visible')
-                    .check();
-            };
-        };
-    });
-
-    processRequestType(requestType, (requestKey) => {
-        cy.getElementAndType({
-            [reasonForRequest]: dataParameters.Request[requestKey].reasonForRequest.trim() !== "" ? dataParameters.Request[requestKey].reasonForRequest : " ",
-            [desiredDeliveryDate]: dataParameters.Request[requestKey].desiredDeliveryDate.trim() !== "" ? dataParameters.Request[requestKey].desiredDeliveryDate : new Date().toISOString().split('T')[0],
-            [productStorageLocation]: dataParameters.Request[requestKey].localDescription.trim() !== "" ? dataParameters.Request[requestKey].localDescription : " ",
-        });
-    });
-
-    processRequestType(requestType, (requestKey) => {
-        cy.getElementAndType({
-            [SupportLinks[requestKey]]: dataParameters.Request[requestKey].suggestionLinks,
-        });
-    });
-
-    processRequestType(requestType, (requestKey) => {
-        cy.getElementAndCheck([{ element: dataParameters.Request[requestKey].acquiringArea },]);
-    });
-
-    processRequestType(requestType, (requestKey) => {
-        cy.getElementAndType({
-            [ObservationOfRequest[requestKey]]: dataParameters.Request[requestKey].observation,
-        });
-    });
-
-    // setPaymentAndSupplier('conditionalWrite', paymentCondition, searchPaymentMethodAndTerms, highlightedOption);
-    if (requestTypeMap[requestType]) {
-        const requestKey = requestTypeMap[requestType];
-        if (dataParameters.Request[requestKey]) {
-            setPaymentAndSupplier(
-                paymentCondition,
-                searchPaymentMethodAndTerms,
-                highlightedOption,
-                dataParameters.Request[requestKey].paymentCondition as ConditionalWrite
-            );
-        }
-    };
-
-    processRequestType(requestType, (requestKey) => {
-        cy.getElementAndType({
-            [totalValue]: dataParameters.Request[requestKey].totalValue,
-        });
-    });
-
-    if (requestTypeMap[requestType]) {
-        const requestKey = requestTypeMap[requestType];
-        if (dataParameters.Request[requestKey]) {
-            setPaymentAndSupplier(
-                paymentMethod,
-                searchPaymentMethodAndTerms,
-                highlightedOption,
-                dataParameters.Request[requestKey].paymentMethod as ConditionalWrite
-            );
-        }
-    };
-    // function setPaymentAndSupplierWrapper(requestKey: string) {
-    //     setPaymentAndSupplier(paymentMethod, searchPaymentMethodAndTerms, highlightedOption, requestKey);
-    // }
-    // processRequestType('setPaymentAndSupplier', setPaymentAndSupplierWrapper);
-
-    processRequestType(requestType, (requestKey) => {
-        cy.getElementAndType({
-            [paymentInstallments]: dataParameters.Request[requestKey].paymentInstallments.toString(),
-            [paymentDetails]: dataParameters.Request[requestKey].paymentDetails,
-        });
-    });
-
-    processRequestType(requestType, (requestKey) => {
-        cy.getElementAutocompleteTypeAndClick({
-            [supplier]: dataParameters.Request[requestKey].supplier,
-            [productCategory]: dataParameters.Request[requestKey].productCategory,
         },
-            highlightedOption
-        );
+        //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        'acquiringArea': (attributeValue) => {
+            cy.getElementAndCheck([{ element: attributeValue },]);
+        },
+        //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        'isComex': (attributeValue) => {
+            cy.getElementAndCheck([{ element: attributeValue },]);
+        },
+        //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        'reasonForRequest': (attributeValue) => {
+            cy.getElementAndType({
+                [reasonForRequest]: attributeValue
+            })
+        },
+        //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        'description': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+                cy.getElementAndType({
+                    [description]: attributeValue
+                });
+            });
+        },
+        //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        'desiredDeliveryDate': (attributeValue) => {
+            cy.getElementAndType({
+                [desiredDeliveryDate]: attributeValue
+            })
+        },
+        //data menor que o dia atual e nao apresentar aviso
+        'localDescription': (attributeValue) => {
+            cy.getElementAndType({
+                [localDescription]: attributeValue
+            })
+        },
+        'suggestionLinks': (attributeValue) => {
+            cy.getElementAndType({
+                [suggestionLinksString]: attributeValue,
+            });
+        },
+        'observation': (attributeValue) => {
+            cy.getElementAndType({
+                [observationString]: attributeValue,
+            });
+        },
+
+        'typeOfPaymentAmount': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+                cy.getElementAndCheck([{ element: attributeValue },]);
+            });
+        },
+        'paymentCondition': (attributeValue) => {
+            cy.getElementAutocompleteTypeAndClick(
+                { [paymentCondition]: attributeValue },
+                highlightedOption);
+        },
+        'totalValue': (attributeValue) => {
+            cy.getElementAndType({
+                [totalValue]: attributeValue,
+            });
+        },
+        'paymentMethod': (attributeValue) => {
+            cy.getElementAutocompleteTypeAndClick(
+                { [paymentMethod]: attributeValue },
+                highlightedOption);
+        },
+        'paymentInstallments': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.product, RequestType.oneOffService], (value) => {
+                cy.getElementAndType({
+                    [paymentInstallments]: attributeValue,
+                })
+            });
+        },
+
+        'initialPaymentEffectiveDate': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+                cy.getElementAndType({
+                    [initialPaymentEffectiveDate]: attributeValue
+                })
+            });
+        },
+        'finalPaymentEffectiveDate': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+                cy.getElementAndType({
+                    [finalPaymentEffectiveDate]: attributeValue
+                })
+            });
+        },
+        'paymentRecurrence': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+                cy.getElementAutocompleteTypeAndClick(
+                    { [paymentRecurrence]: PaymentRecurrence.monthly },
+                    highlightedOption);
+            });
+        },
+        'paymentDueDate': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+                cy.getElementAutocompleteTypeAndClick(
+                    { [paymentDueDate]: attributeValue },
+                    highlightedOption);
+            });
+        },
+        'paymentDetails': (attributeValue) => {
+            cy.getElementAndType({
+                [paymentDetails]: attributeValue,
+            })
+        },
+        'supplier': (attributeValue) => {
+            cy.getElementAutocompleteTypeAndClick({
+                [SupplierElement[requestTypeString]]: attributeValue,
+            },
+                highlightedOption
+            );
+        },
+        'category': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+                cy.getElementAutocompleteTypeAndClick({
+                    [category]: attributeValue,
+                },
+                    highlightedOption
+                )
+            });
+        },
+        'nameAndDescription': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+                cy.getElementAndType({
+                    [nameAndDescription]: attributeValue,
+                });
+            });
+        },
+        'quantity': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+                cy.getElementAndType({
+                    [quantity]: attributeValue,
+                });
+            });
+        },
+        'color': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+                cy.getElementAndType({
+                    [color]: attributeValue,
+                });
+            });
+        },
+        'size': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+                cy.getElementAndType({
+                    [size]: attributeValue,
+                });
+            });
+
+        },
+        'model': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+                cy.getElementAndType({
+                    [model]: attributeValue,
+                });
+            });
+        },
+        'link': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+                cy.getElementAndType({
+                    [link]: attributeValue,
+                });
+            });
+        },
+        'attachedFile': (attributeValue) => {
+            cy.insertFile(attachedFile, attributeValue);
+        },
+        'seller': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+                cy.getElementAndType({ [seller]: value });
+            });
+        },
+        'sellerTelephone': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+                cy.getElementAndType({ [telephone]: attributeValue });
+            });
+        },
+        'sellerEmail': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+                cy.getElementAndType({ [':nth-child(4) > .form-group > [data-cy="email"]']: attributeValue });
+            });
+
+        },
+        'serviceAlreadyProvided': (attributeValue) => {
+            handleRequestAttributes(attributeValue, [RequestType.oneOffService], (value) => {
+                cy.getElementAndCheck([{ element: attributeValue },]);
+            });
+        },
+        'isSaved': (attributeValue) => {
+            cy.getElementAndClick([attributeValue])
+            cy.log(isSaved);
+            if (Object.values(SaveRequestSubmit).includes(isSaved)) {
+                cy.wait(1000);
+                cy.get(toAgreeModalSubmitRequest)
+                    .should('be.visible')
+                    .click({ force: true })
+            };
+        },
     });
-
-    processRequestType(requestType, (requestKey) => {
-        cy.getElementAndType({
-            [productNameAndDescription]: dataParameters.Request[requestKey].productNameAndDescription,
-            [productQuantity]: dataParameters.Request[requestKey].productQuantity.toString(),
-            [productColor]: dataParameters.Request[requestKey].productColor,
-            [productSize]: dataParameters.Request[requestKey].productSize.toString(),
-            [productModel]: dataParameters.Request[requestKey].productModel,
-            [productLink]: dataParameters.Request[requestKey].productLink,
-        });
-    });
-
-    processRequestType(requestType, (requestKey) => {
-        cy.insertFile(dataParameters.Request[requestKey].attachedFile, attachedFile);
-    });
-
-    saveRequest();
-
 });

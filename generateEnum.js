@@ -19,9 +19,8 @@ const elementsData = Array.from(elements).map(element => ({
 
 // 5. Criar um objeto TypeScript com esses IDs e nomes
 let objectCode = 'export const ElementIds = {\n';
-elementsData.forEach(({ id, text }) => {
-  let name = text;
-  objectCode += `  '${name}'= '${name}',\n`; // Agora o valor do objeto é igual ao nome
+elementsData.forEach(({ text }) => {
+  objectCode += `  '${text}'= '${text}',\n`; // Agora o nome e o valor da propriedade são o texto do elemento
 });
 objectCode += '}';
 
