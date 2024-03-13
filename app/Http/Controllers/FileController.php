@@ -3,27 +3,26 @@
 namespace App\Http\Controllers;
 
 use Aws\S3\S3Client;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Config;
 
 class FileController extends Controller
 {
-    /**
-     * Display the specified resource.
-     * @param string $path
-     * @return \Illuminate\Http\Response
-     */
-    public function show(string $path): \Illuminate\Http\Response
+    public function show(string $path): Response
     {
+        $config = Config::get('filesystems.disks.s3');
+
         $s3Client = new S3Client([
             'version' => 'latest',
-            'region'  => env('AWS_DEFAULT_REGION'),
+            'region'  => $config['region'],
             'credentials' => [
-                'key'    => env('AWS_ACCESS_KEY_ID'),
-                'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                'key'    => $config['key'],
+                'secret' => $config['secret'],
             ],
         ]);
 
         $result = $s3Client->getObject([
-            'Bucket' => env('AWS_BUCKET'),
+            'Bucket' => $config['bucket'],
             'Key'    => $path,
         ]);
 
