@@ -1,0 +1,52 @@
+name: CI #nome do fluxo de trabalho
+
+on: [push] #define quando será executado, será executado quando houver um push no repositório.
+
+jobs: #bloco que define o trabalho que será executado
+  build: #nome do trabalho
+    runs-on: ubuntu-latest #Define que o trabalho será executado em uma máquina virtual com a última versão do Ubuntu.
+
+    steps: #Define os passos que serão executados no trabalho.
+    - name: Checkout code
+      uses: actions/checkout@v2 #Faz o checkout do código do repositório.
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2 #Configura o PHP na versão 8.3 com as extensões especificadas e cobertura xdebug.
+      with:
+        php-version: '8.3'
+        extensions: mbstring, dom, fileinfo, mysql
+        coverage: xdebug
+
+    - name: Install PHP dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest #Instala as dependências do PHP usando o composer.
+
+    - name: Copy .env
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');" #Copia o arquivo .env.example para .env se .env não existir.
+
+    - name: Generate key
+      run: php artisan key:generate #Gera uma chave para a aplicação Laravel.
+
+    - name: Directory Permissions
+      run: chmod -R 777 storage bootstrap/cache #Altera as permissões dos diretórios especificados.
+
+    - name: Run migrations
+      run: php artisan migrate --force #Executa as migrações do Laravel.
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2 #Configura o Node.js na versão 14.
+      with:
+        node-version: '14'
+
+    - name: Install Node.js dependencies
+      run: npm install #Instala as dependências do Node.js.
+
+    - name: Checkout Cypress tests
+      uses: actions/checkout@v2 #Faz o checkout dos testes Cypress de um repositório específico.
+      with:
+        repository: JoseCyDev/Cygecom
+        path: cypress
+
+    - name: Run Cypress tests
+      run: npx cypress run #Executa os testes Cypress.
+
+      #configura o ambiente, instala as dependências necessárias, prepara a aplicação e executa os testes Cypress sempre que um novo código é enviado para o repositório.
