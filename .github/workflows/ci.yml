@@ -35,7 +35,7 @@ jobs: #bloco que define o trabalho que será executado
     - name: Setup Node.js
       uses: actions/setup-node@v2 #Configura o Node.js na versão 14.
       with:
-        node-version: '20'
+        node-version: '14'
 
     - name: Install Node.js dependencies
       run: npm install #Instala as dependências do Node.js.
@@ -47,6 +47,7 @@ jobs: #bloco que define o trabalho que será executado
         path: cypress
 
     - name: Run Cypress tests
-      run: npx cypress run #Executa os testes Cypress.
+      run: npm run login #Executa os testes Cypress.
+      working-directory: cypress
 
       #configura o ambiente, instala as dependências necessárias, prepara a aplicação e executa os testes Cypress sempre que um novo código é enviado para o repositório.
