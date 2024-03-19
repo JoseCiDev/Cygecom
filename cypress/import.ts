@@ -26,7 +26,7 @@ export {
     ConditionalWrite,
     ElementTypeAndValueOpcional,
     RequestKeys,
-    Requests
+    Requests,
 } from './DataParameters/Types/types';
 
 export {
@@ -106,4 +106,5 @@ export {
     serviceNameString,
     IsSavedRequest,
     isSaved,
+    Messages,
 } from './DataParameters/dataParameters';

@@ -87,7 +87,7 @@ const costCenter = requestData.costCenter && requestData.costCenter !== " "
 
 const apportionmentPercentage = requestData.apportionmentPercentage && requestData.apportionmentPercentage !== " "
     ? requestData.apportionmentPercentage
-    : faker.helpers.arrayElement([100]);
+    : faker.helpers.arrayElement(['100']);
 
 const apportionmentValue = requestData.apportionmentValue && requestData.apportionmentValue !== " "
     ? requestData.apportionmentValue
@@ -644,4 +644,23 @@ export const dataParameters: DataParameters = {
     searchColumnProductRequests: SearchColumnProductRequests,
     searchColumnOneOffServiceRequests: SearchColumnOneOffServiceRequests,
     searchColumnRecurringServiceRequests: SearchColumnRecurringServiceRequests,
+};
+
+export const Messages = {
+    validationMessages: {
+        REQUIRE_FIELD: 'Este campo é obrigatório.',
+        GREATER_THAN_ONE: 'Por favor, forneça um valor maior ou igual a 1.',
+        PERCENTAGEM_SUM: 'A soma da porcentagem deve ser 100%.',
+        GREATER_THEN_CURRENT_DATE: `Por favor, forneça um valor maior ou igual a ${new Date().toISOString().split('T')[0]}`,
+    },
+    returnMessages: {
+        fieldFilledAndMessageDisplayed:'Lamentamos informar que ocorreu um problema no preenchimento do campo, pois a mensagem de obrigatoriedade está sendo exibida mesmo com o campo já preenchido.',
+        fieldNotFilledAndMessageNotDisplayed:'O campo em questão não foi preenchido corretamente. No entanto, gostaríamos de ressaltar que a mensagem de obrigatoriedade não está sendo exibida conforme o esperado.',
+        sumPercentagesCorrectAndMessageDisplayed:'A soma total das porcentagens é igual a 100%. No entanto, a mensagem que indica que a porcentagem deve ser igual a 100% é exibida.',
+        sumPercentagesIncorrectAndMessageNotDisplayed:'Lamentamos informar que a soma das porcentagens é inferior a 100%. No entanto, a mensagem que indica que a porcentagem deve ser 100% não está sendo exibida.',
+        valueLessThanOrEqualToZeroAndMessageNotDisplayed:'Foi observado que um valor menor ou igual a zero foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
+    },
+
+    //Por favor, forneça um número válido.
+
 };

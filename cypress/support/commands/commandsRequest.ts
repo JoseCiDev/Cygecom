@@ -60,6 +60,8 @@ import {
     SaveRequestDraft,
     SaveRequestSubmit,
     isSaved,
+    ValidationResult,
+    Messages,
 } from '../../import';
 
 
@@ -159,6 +161,10 @@ const {
     paymentRecurrence,
     paymentDueDate,
     toAgreeModalSubmitRequest,
+    mandadatoryMessagePercentageElement,
+    mandadatoryMessageValueElement,
+    percentagemSumMessageElement,
+    greaterThanOneMessageElement,
 } = el.Request
 
 const {
@@ -178,12 +184,22 @@ function processAttribute(attributes: { [K in RequestKeys]?: (attributeValue: st
         const attributeValue = dataParameters.request[attributeKey];
         callback(attributeValue)
     }
-}
+};
 function handleRequestAttributes(attributeValue: string, types: RequestType[], action: (value: string) => void) {
     if (types.includes(requestTyper)) {
         action(attributeValue);
     }
-}
+};
+
+function validateElement(messageElement, elementValue, validationMessage, returnMessage1, returnMessage2, condition) {
+    cy.get(messageElement).then(($messageElement) => {
+        if (condition && $messageElement.is(':visible') && $messageElement.text() === validationMessage) {
+            throw new Error(returnMessage1);
+        } else if (!condition && !$messageElement.is(':visible')) {
+            throw new Error(returnMessage2);
+        }
+    });
+};
 
 
 
@@ -194,29 +210,69 @@ Cypress.Commands.add('createRequest', function (requestType: string) {
 
         if (apportionmentValue && apportionmentValue !== " ") {
             cy.get(apportionmentValueElement)
-                .type(apportionmentValue.toString());
+                .type(apportionmentValue.toString())
+                .then(($element) => {
+                    // cy.get(mandadatoryMessageElement).then(($messageModal) => {
+                    //     if ($element.val() !== '' && $messageModal.is(':visible') && $messageModal.text() === Messages.validationMessages.REQUIRE_FIELD) {
+                    //         throw new Error(Messages.returnMessages.fieldFilledAndMessageDisplayed)
+                    //     } else if ($element.val() === '' && !$messageModal.is(':visible')) {
+                    //         throw new Error(Messages.returnMessages.fieldNotFilledAndMessageNotDisplayed)
+                    //     }
+                    // })
+                    validateElement(
+                        mandadatoryMessageValueElement,
+                        $element.val(),
+                        Messages.validationMessages.REQUIRE_FIELD,
+                        Messages.returnMessages.fieldFilledAndMessageDisplayed,
+                        Messages.returnMessages.fieldNotFilledAndMessageNotDisplayed,
+                        $element.val() === ''
+                    );
+                })
         }
         else if (apportionmentPercentage && apportionmentPercentage !== " ") {
             cy.get(apportionmentPercentageElement)
-                .type(apportionmentPercentage.toString());
-        } else {
-            throw new Error("Valor não foi passado");
+                .type(apportionmentPercentage.toString())
+                .then(($elementValue) => {
+                    validateElement(
+                        mandadatoryMessagePercentageElement,
+                        $elementValue.val(),
+                        Messages.validationMessages.REQUIRE_FIELD,
+                        Messages.returnMessages.fieldFilledAndMessageDisplayed,
+                        Messages.returnMessages.fieldNotFilledAndMessageNotDisplayed,
+                        $elementValue.val() !== ''
+                    );
+                    validateElement(
+                        percentagemSumMessageElement,
+                        Number($elementValue.val().toString()),
+                        Messages.validationMessages.PERCENTAGEM_SUM,
+                        Messages.returnMessages.sumPercentagesIncorrectAndMessageNotDisplayed,
+                        Messages.returnMessages.sumPercentagesCorrectAndMessageDisplayed,
+                        Number($elementValue.val().toString()) < 100
+                    );
+                    validateElement(
+                        greaterThanOneMessageElement,
+                        Number($elementValue.val().toString()),
+                        Messages.validationMessages.GREATER_THAN_ONE,
+                        Messages.returnMessages.valueLessThanOrEqualToZeroAndMessageNotDisplayed,
+                        null,
+                        Number($elementValue.val().toString()) <= 0
+                    );
+                })
         }
-    };
+        return cy.wrap({ success: "Os avisos de obrigatoriedade são exibidos quando os campos não são preenchidos e quando são preenchidos incorretamente. Um aviso é exibido quando a porcentagem é menor que 100. Além disso, um aviso é exibido quando a porcentagem é preenchida com um valor menor ou igual a zero." });
+    }
 
     processAttribute({
         requestType: (attributeValue) => {
             cy.getElementAndClick([requestType])
             setApportionment();
         },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        //valor menor que 100% e nao apresentar aviso - valor igual a 100% e apresentar aviso
-        'quoteRequest': (attributeValue) => {
-            if (attributeValue === "true") {
-                cy.log(attributeValue);
-                cy.getElementAndCheck([{ element: quoteRequest },]);
-            }
-        },
+        // 'quoteRequest': (attributeValue) => {
+        //     if (attributeValue === "true") {
+        //         cy.log(attributeValue);
+        //         cy.getElementAndCheck([{ element: quoteRequest },]);
+        //     }
+        // },
         'serviceName': (attributeValue) => {
             handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
                 cy.getElementAndType({
@@ -225,210 +281,254 @@ Cypress.Commands.add('createRequest', function (requestType: string) {
             });
         },
         //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'costCenter': (attributeValue) => {
-            cy.getElementAutocompleteTypeAndClick(
-                { [costCenter]: attributeValue },
-                highlightedOption
-            );
-        },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'acquiringArea': (attributeValue) => {
-            cy.getElementAndCheck([{ element: attributeValue },]);
-        },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'isComex': (attributeValue) => {
-            cy.getElementAndCheck([{ element: attributeValue },]);
-        },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'reasonForRequest': (attributeValue) => {
-            cy.getElementAndType({
-                [reasonForRequest]: attributeValue
-            })
-        },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'description': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
-                cy.getElementAndType({
-                    [description]: attributeValue
-                });
-            });
-        },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'desiredDeliveryDate': (attributeValue) => {
-            cy.getElementAndType({
-                [desiredDeliveryDate]: attributeValue
-            })
-        },
-        //data menor que o dia atual e nao apresentar aviso
-        'localDescription': (attributeValue) => {
-            cy.getElementAndType({
-                [localDescription]: attributeValue
-            })
-        },
-        'suggestionLinks': (attributeValue) => {
-            cy.getElementAndType({
-                [suggestionLinksString]: attributeValue,
-            });
-        },
-        'observation': (attributeValue) => {
-            cy.getElementAndType({
-                [observationString]: attributeValue,
-            });
-        },
+        // 'costCenter': (attributeValue) => {
+        //     cy.getElementAutocompleteTypeAndClick(
+        //         { [costCenter]: attributeValue },
+        //         highlightedOption
+        //     );
+        // },
+        // //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        // 'acquiringArea': (attributeValue) => {
+        //     cy.getElementAndCheck([{ element: attributeValue },]);
+        // },
+        // //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        // 'isComex': (attributeValue) => {
+        //     cy.getElementAndCheck([{ element: attributeValue },]);
+        // },
+        // //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        // 'reasonForRequest': (attributeValue) => {
+        //     cy.getElementAndType({
+        //         [reasonForRequest]: attributeValue
+        //     })
+        // },
+        // //vazio e nao apresentar aviso - preenchido apresentando aviso
+        // //texto menor que 20 caracteres
+        // 'description': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+        //         cy.getElementAndType({
+        //             [description]: attributeValue
+        //         });
+        //     });
+        // },
+        // //vazio e nao apresentar aviso - preenchido apresentando aviso
+        // //menor que 2 caracteres
+        // 'desiredDeliveryDate': (attributeValue) => {
+        //     cy.getElementAndType({
+        //         [desiredDeliveryDate]: attributeValue
+        //     })
+        // },
+        // //data menor que o dia atual e nao apresentar aviso
+        // 'localDescription': (attributeValue) => {
+        //     cy.getElementAndType({
+        //         [localDescription]: attributeValue
+        //     })
+        // },
+        // 'suggestionLinks': (attributeValue) => {
+        //     cy.getElementAndType({
+        //         [suggestionLinksString]: attributeValue,
+        //     });
+        // },
+        // 'observation': (attributeValue) => {
+        //     cy.getElementAndType({
+        //         [observationString]: attributeValue,
+        //     });
+        // },
 
-        'typeOfPaymentAmount': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
-                cy.getElementAndCheck([{ element: attributeValue },]);
-            });
-        },
-        'paymentCondition': (attributeValue) => {
-            cy.getElementAutocompleteTypeAndClick(
-                { [paymentCondition]: attributeValue },
-                highlightedOption);
-        },
-        'totalValue': (attributeValue) => {
-            cy.getElementAndType({
-                [totalValue]: attributeValue,
-            });
-        },
-        'paymentMethod': (attributeValue) => {
-            cy.getElementAutocompleteTypeAndClick(
-                { [paymentMethod]: attributeValue },
-                highlightedOption);
-        },
-        'paymentInstallments': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product, RequestType.oneOffService], (value) => {
-                cy.getElementAndType({
-                    [paymentInstallments]: attributeValue,
-                })
-            });
-        },
+        // 'typeOfPaymentAmount': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+        //         cy.getElementAndCheck([{ element: attributeValue },]);
+        //     });
+        // },
+        // 'paymentCondition': (attributeValue) => {
+        //     cy.getElementAutocompleteTypeAndClick(
+        //         { [paymentCondition]: attributeValue },
+        //         highlightedOption);
+        // },
+        // 'totalValue': (attributeValue) => {
+        //     cy.getElementAndType({
+        //         [totalValue]: attributeValue,
+        //     });
+        // },
+        // 'paymentMethod': (attributeValue) => {
+        //     cy.getElementAutocompleteTypeAndClick(
+        //         { [paymentMethod]: attributeValue },
+        //         highlightedOption);
+        // },
+        // 'paymentInstallments': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.product, RequestType.oneOffService], (value) => {
+        //         cy.getElementAndType({
+        //             [paymentInstallments]: attributeValue,
+        //         })
+        //     });
+        // },
 
-        'initialPaymentEffectiveDate': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
-                cy.getElementAndType({
-                    [initialPaymentEffectiveDate]: attributeValue
-                })
-            });
-        },
-        'finalPaymentEffectiveDate': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
-                cy.getElementAndType({
-                    [finalPaymentEffectiveDate]: attributeValue
-                })
-            });
-        },
-        'paymentRecurrence': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
-                cy.getElementAutocompleteTypeAndClick(
-                    { [paymentRecurrence]: PaymentRecurrence.monthly },
-                    highlightedOption);
-            });
-        },
-        'paymentDueDate': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
-                cy.getElementAutocompleteTypeAndClick(
-                    { [paymentDueDate]: attributeValue },
-                    highlightedOption);
-            });
-        },
-        'paymentDetails': (attributeValue) => {
-            cy.getElementAndType({
-                [paymentDetails]: attributeValue,
-            })
-        },
-        'supplier': (attributeValue) => {
-            cy.getElementAutocompleteTypeAndClick({
-                [SupplierElement[requestTypeString]]: attributeValue,
-            },
-                highlightedOption
-            );
-        },
-        'category': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAutocompleteTypeAndClick({
-                    [category]: attributeValue,
-                },
-                    highlightedOption
-                )
-            });
-        },
-        'nameAndDescription': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAndType({
-                    [nameAndDescription]: attributeValue,
-                });
-            });
-        },
-        'quantity': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAndType({
-                    [quantity]: attributeValue,
-                });
-            });
-        },
-        'color': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAndType({
-                    [color]: attributeValue,
-                });
-            });
-        },
-        'size': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAndType({
-                    [size]: attributeValue,
-                });
-            });
+        // 'initialPaymentEffectiveDate': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+        //         cy.getElementAndType({
+        //             [initialPaymentEffectiveDate]: attributeValue
+        //         })
+        //     });
+        // },
+        // 'finalPaymentEffectiveDate': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+        //         cy.getElementAndType({
+        //             [finalPaymentEffectiveDate]: attributeValue
+        //         })
+        //     });
+        // },
+        // 'paymentRecurrence': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+        //         cy.getElementAutocompleteTypeAndClick(
+        //             { [paymentRecurrence]: PaymentRecurrence.monthly },
+        //             highlightedOption);
+        //     });
+        // },
+        // 'paymentDueDate': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+        //         cy.getElementAutocompleteTypeAndClick(
+        //             { [paymentDueDate]: attributeValue },
+        //             highlightedOption);
+        //     });
+        // },
+        // 'paymentDetails': (attributeValue) => {
+        //     cy.getElementAndType({
+        //         [paymentDetails]: attributeValue,
+        //     })
+        // },
+        // 'supplier': (attributeValue) => {
+        //     cy.getElementAutocompleteTypeAndClick({
+        //         [SupplierElement[requestTypeString]]: attributeValue,
+        //     },
+        //         highlightedOption
+        //     );
+        // },
+        // 'category': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+        //         cy.getElementAutocompleteTypeAndClick({
+        //             [category]: attributeValue,
+        //         },
+        //             highlightedOption
+        //         )
+        //     });
+        // },
+        // //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        // 'nameAndDescription': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+        //         cy.getElementAndType({
+        //             [nameAndDescription]: attributeValue,
+        //         });
+        //     });
+        // },
+        // //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        // 'quantity': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+        //         cy.getElementAndType({
+        //             [quantity]: attributeValue,
+        //         });
+        //     });
+        // },
+        // //vazio e nao apresentar aviso - preenchido apresentando aviso 
+        // 'color': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+        //         cy.getElementAndType({
+        //             [color]: attributeValue,
+        //         });
+        //     });
+        // },
+        // 'size': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+        //         cy.getElementAndType({
+        //             [size]: attributeValue,
+        //         });
+        //     });
 
-        },
-        'model': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAndType({
-                    [model]: attributeValue,
-                });
-            });
-        },
-        'link': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAndType({
-                    [link]: attributeValue,
-                });
-            });
-        },
-        'attachedFile': (attributeValue) => {
-            cy.insertFile(attachedFile, attributeValue);
-        },
-        'seller': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
-                cy.getElementAndType({ [seller]: value });
-            });
-        },
-        'sellerTelephone': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
-                cy.getElementAndType({ [telephone]: attributeValue });
-            });
-        },
-        'sellerEmail': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
-                cy.getElementAndType({ [':nth-child(4) > .form-group > [data-cy="email"]']: attributeValue });
-            });
+        // },
+        // 'model': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+        //         cy.getElementAndType({
+        //             [model]: attributeValue,
+        //         });
+        //     });
+        // },
+        // 'link': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+        //         cy.getElementAndType({
+        //             [link]: attributeValue,
+        //         });
+        //     });
+        // },
+        // //nao e url
+        // 'attachedFile': (attributeValue) => {
+        //     cy.insertFile(attachedFile, attributeValue);
+        // },
+        // 'seller': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+        //         cy.getElementAndType({ [seller]: value });
+        //     });
+        // },
+        // 'sellerTelephone': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+        //         cy.getElementAndType({ [telephone]: attributeValue });
+        //     });
+        // },
+        // 'sellerEmail': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+        //         cy.getElementAndType({ [':nth-child(4) > .form-group > [data-cy="email"]']: attributeValue });
+        //     });
 
-        },
-        'serviceAlreadyProvided': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.oneOffService], (value) => {
-                cy.getElementAndCheck([{ element: attributeValue },]);
-            });
-        },
-        'isSaved': (attributeValue) => {
-            cy.getElementAndClick([attributeValue])
-            cy.log(isSaved);
-            if (Object.values(SaveRequestSubmit).includes(isSaved)) {
-                cy.wait(1000);
-                cy.get(toAgreeModalSubmitRequest)
-                    .should('be.visible')
-                    .click({ force: true })
-            };
-        },
+        // },
+        // 'serviceAlreadyProvided': (attributeValue) => {
+        //     handleRequestAttributes(attributeValue, [RequestType.oneOffService], (value) => {
+        //         cy.getElementAndCheck([{ element: attributeValue },]);
+        //     });
+        // },
+        // 'isSaved': (attributeValue) => {
+        //     cy.getElementAndClick([attributeValue])
+        //     cy.log(isSaved);
+        //     if (Object.values(SaveRequestSubmit).includes(isSaved)) {
+        //         cy.wait(1000);
+        //         cy.get(toAgreeModalSubmitRequest)
+        //             .should('be.visible')
+        //             .click({ force: true })
+        //     };
+        // },
     });
+    return cy.wrap({ success: "Processo realizado com sucesso!" });
 });
+
+
+/*
+=>porcentagem
+--------
+valor inserido => -
+mensagem => Por favor, forneça um número válido. 
+elemento => #cost_center_apportionments\[0\]\[apportionment_percentage\]-error
+--------
+valor inserido => >=1 e <=99
+mensagem =>A soma da porcentagem deve ser 100%.
+elemento =>#request-form > div:nth-child(6) > div:nth-child(3) > span
+--------
+valor inserido => <=0
+mensagem => Por favor, forneça um valor maior ou igual a 1.
+elemento => #cost_center_apportionments\[0\]\[apportionment_percentage\]-error
+
+mensagem => A soma da porcentagem deve ser 100%.
+elemento => #request-form > div:nth-child(6) > div:nth-child(3) > span
+--------
+
+
+
+=>valor
+--------
+valor inserido => -
+mensagem => Por favor, forneça um número válido.
+elemento => #cost_center_apportionments\[0\]\[apportionment_currency\]-error
+--------
+valor inserido => <=0
+mensagem => Por favor, forneça um valor maior ou igual a 1.
+elemento => #cost_center_apportionments\[0\]\[apportionment_currency\]-error
+
+mensagem => Todos campos de rateio (R$) devem ser preenchidos.
+elemento => #request-form > div:nth-child(6) > div:nth-child(4) > span
+--------
+*/
