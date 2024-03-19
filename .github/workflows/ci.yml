@@ -29,13 +29,13 @@ jobs: #bloco que define o trabalho que será executado
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache #Altera as permissões dos diretórios especificados.
 
-    - name: Run migrations
-      run: php artisan migrate --force #Executa as migrações do Laravel.
+    #- name: Run migrations
+    #  run: php artisan migrate --force #Executa as migrações do Laravel.
 
     - name: Setup Node.js
       uses: actions/setup-node@v2 #Configura o Node.js na versão 14.
       with:
-        node-version: '14'
+        node-version: '20'
 
     - name: Install Node.js dependencies
       run: npm install #Instala as dependências do Node.js.
