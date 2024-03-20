@@ -64,6 +64,3 @@ jobs: #bloco que define o trabalho que será executado
     - name: Run Cypress tests
       run: npm run login #Executa os testes Cypress.
       working-directory: cypress
-    
-
-      
