@@ -81,4 +81,3 @@ jobs:
     - name: Run Cypress tests
       run: npm run login
       working-directory: cypress
-      
