@@ -38,6 +38,9 @@ jobs:
     - name: Install Node.js dependencies
       run: npm install
 
+    - name: Build front-end resources
+      run: npm run build
+
     # Configuração e execução dos testes Cypress
     - name: Checkout Cypress tests
       uses: actions/checkout@v2
@@ -63,4 +66,3 @@ jobs:
     - name: Run Cypress tests
       run: npm run login
       working-directory: cypress
-    
