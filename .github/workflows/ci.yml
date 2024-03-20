@@ -51,8 +51,12 @@ jobs: #bloco que define o trabalho que será executado
       run: npm install
       working-directory: cypress
 
+    - name: Setup Cypress environment variables
+      run: 'echo ''{ "BASE_URL": "${{ secrets.BASE_URL }}", "API_KEY": "${{ secrets.API_KEY }}" }'' > cypress.env.json'
+      working-directory: cypress
+
     - name: Run Cypress tests
       run: npm run login #Executa os testes Cypress.
       working-directory: cypress
 
-      #configura o ambiente, instala as dependências necessárias, prepara a aplicação e executa os testes Cypress sempre que um novo código é enviado para o repositório.
+      
