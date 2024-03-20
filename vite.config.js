@@ -23,4 +23,10 @@ export default defineConfig({
         },
         https: isProduction,
     },
+    build: {
+        rollupOptions: {
+          external: ['@popperjs/core'],
+        },
+      },
 });
+

@@ -38,6 +38,9 @@ jobs:
     - name: Install Node.js dependencies
       run: npm install
 
+    - name: Install @popperjs/core
+      run: npm install @popperjs/core
+
     - name: Build front-end resources
       run: npm run build
 
