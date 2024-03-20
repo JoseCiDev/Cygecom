@@ -27,7 +27,19 @@ jobs:
     - name: Generate key
       run: php artisan key:generate
 
-    - name: Directory Permissions
+    - name: Setup SQLite database #cria um novo arquivo de banco de dados SQLite em database/database.sqlite e atualiza o arquivo .env para usar a conexão SQLite e o novo banco de dados
+      run: |
+        touch database/database.sqlite
+        echo "DB_CONNECTION=sqlite" >> .env
+        echo "DB_DATABASE=database/database.sqlite" >> .env
+
+    - name: Run migrations #Executa migrations
+      run: php artisan migrate --force
+
+    - name: Run seeders #Executa seeders
+      run: php artisan db:seed --force
+
+    - name: Directory Permissions #Permissões totais de diretório
       run: chmod -R 777 storage bootstrap/cache
 
     - name: Setup Node.js
@@ -38,7 +50,7 @@ jobs:
     - name: Install Node.js dependencies
       run: npm install
 
-    - name: Install @popperjs/core
+    - name: Install @popperjs/core #instala popperjs(Teve que ser incluido como dependencia do projeto(npm install @popperjs/core), para que o bootstrap funcione corretamente no front-end)
       run: npm install @popperjs/core
 
     - name: Build front-end resources
