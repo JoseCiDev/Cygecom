@@ -52,7 +52,7 @@ jobs: #bloco que define o trabalho que será executado
       working-directory: cypress
 
     - name: Setup Cypress environment variables
-      run: 'echo ''{ "BASE_URL": "${{ secrets.BASE_URL }}", "API_KEY": "${{ secrets.API_KEY }}" }'' > cypress.env.json'
+      run: 'echo ''{ "BASE_URL": "${{ secrets.BASE_URL }}" }'' > cypress.env.json'
       working-directory: cypress
 
     - name: Run Cypress tests
