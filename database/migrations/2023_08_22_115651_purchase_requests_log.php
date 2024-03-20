@@ -22,12 +22,8 @@ return new class extends Migration
             $table->unsignedBigInteger('purchase_request_id');
             $table->unsignedBigInteger('user_id');
             $table->enum('action', ['create', 'update', 'delete']);
-            $table->timestamps();
-    
-            if (DB::connection()->getDriverName() !== 'sqlite') {
-                $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
-            }
-    
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable()->default(onUpdateCurrentTimestamp());
             $table->text('changes')->nullable();
         });
     }

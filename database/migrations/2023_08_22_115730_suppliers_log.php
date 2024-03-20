@@ -9,13 +9,12 @@ return new class extends Migration
     {
         Schema::create('suppliers_log', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('changed_supplier_id');
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('changed_supplier_id');
+            $table->unsignedBigInteger('user_id');
             $table->enum('action', ['create', 'update', 'delete']);
-            $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->dateTime('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
-
-            $table->jsonb('changes')->nullable();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable()->default(onUpdateCurrentTimestamp());
+            $table->text('changes')->nullable();
         });
     }
 

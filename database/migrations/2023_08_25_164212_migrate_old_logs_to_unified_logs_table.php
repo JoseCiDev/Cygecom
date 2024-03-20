@@ -60,12 +60,12 @@ return new class extends Migration
 
             Schema::create($oldTableName, function (Blueprint $table) use ($foreignIdKey) {
                 $table->id();
-                $table->unsignedInteger($foreignIdKey);
-                $table->unsignedInteger('user_id');
+                $table->unsignedBigInteger($foreignIdKey);
+                $table->unsignedBigInteger('user_id');
                 $table->enum('action', self::ACTIONS);
-                $table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-                $table->dateTime('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
-                $table->jsonb('changes')->nullable();
+                $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+                $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'))->nullable()->default(onUpdateCurrentTimestamp());
+                $table->text('changes')->nullable();
             });
         }
     }
