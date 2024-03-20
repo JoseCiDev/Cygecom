@@ -1,47 +1,46 @@
-name: CI #nome do fluxo de trabalho
+name: CI
 
-on: [push] #define quando será executado, será executado quando houver um push no repositório.
+on: [push]
 
-jobs: #bloco que define o trabalho que será executado
-  build: #nome do trabalho
-    runs-on: ubuntu-latest #Define que o trabalho será executado em uma máquina virtual com a última versão do Ubuntu.
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-    steps: #Define os passos que serão executados no trabalho.
+    steps:
     - name: Checkout code
-      uses: actions/checkout@v2 #Faz o checkout do código do repositório.
+      uses: actions/checkout@v2
 
+    # Configuração e instalação das dependências da aplicação
     - name: Setup PHP
-      uses: shivammathur/setup-php@v2 #Configura o PHP na versão 8.3 com as extensões especificadas e cobertura xdebug.
+      uses: shivammathur/setup-php@v2
       with:
         php-version: '8.3'
         extensions: mbstring, dom, fileinfo, mysql
         coverage: xdebug
 
     - name: Install PHP dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest #Instala as dependências do PHP usando o composer.
+      run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');" #Copia o arquivo .env.example para .env se .env não existir.
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
     - name: Generate key
-      run: php artisan key:generate #Gera uma chave para a aplicação Laravel.
+      run: php artisan key:generate
 
     - name: Directory Permissions
-      run: chmod -R 777 storage bootstrap/cache #Altera as permissões dos diretórios especificados.
-
-    #- name: Run migrations
-    #  run: php artisan migrate --force #Executa as migrações do Laravel.
+      run: chmod -R 777 storage bootstrap/cache
 
     - name: Setup Node.js
-      uses: actions/setup-node@v2 #Configura o Node.js na versão 14.
+      uses: actions/setup-node@v2
       with:
         node-version: '14'
 
     - name: Install Node.js dependencies
-      run: npm install #Instala as dependências do Node.js.
+      run: npm install
 
+    # Configuração e execução dos testes Cypress
     - name: Checkout Cypress tests
-      uses: actions/checkout@v2 #Faz o checkout dos testes Cypress de um repositório específico.
+      uses: actions/checkout@v2
       with:
         repository: JoseCyDev/Cygecom
         path: cypress
@@ -62,6 +61,5 @@ jobs: #bloco que define o trabalho que será executado
       working-directory: cypress
 
     - name: Run Cypress tests
-      run: npm run login #Executa os testes Cypress.
+      run: npm run login
       working-directory: cypress
-    
