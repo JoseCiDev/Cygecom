@@ -96,5 +96,7 @@ describe('Testes da página Login.', () => {
             .then((result) => {
                 assert.exists(result.success, result.error)
             })
+            
     })
+    
 })
