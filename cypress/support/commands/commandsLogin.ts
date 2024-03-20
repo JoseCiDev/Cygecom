@@ -26,7 +26,8 @@
 /// <reference types="Cypress" />
 /// <reference path="../cypress.d.ts" />
 
-
+const environment = Cypress.env('ENVIRONMENT');
+const dataEnvironment = Cypress.env(environment);
 
 import { elements as el } from '../../elements'
 import {
@@ -120,7 +121,7 @@ const {
 
 Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elementError: string) => {
 
-    cy.visit('https://gecom.essentia.com.br/');
+    cy.visit(dataEnvironment.BASE_URL);
 
     // cy.get(email, { timeout: 20000 })
     //     .each(($input) => {
