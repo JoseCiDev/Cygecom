@@ -6,8 +6,7 @@
   "scripts": {
     "test": "npx cypress run",
     "cloud": "cypress run --browser chrome --record --key 1c4613ae-0a1f-4414-8cb5-4fc6ea0da5b2 --spec \"cypress/e2e/Login.cy.ts\"",
-    "login": "cypress run --browser edge --spec \"cypress/integration/Autentication/Login.ts\""
-    
+    "login": "cypress run --browser chrome --spec \"cypress/integration/Autentication/Login.ts\""
   },
   "author": "Cypress",
   "license": "ISC",
@@ -15,7 +14,7 @@
     "@faker-js/faker": "^8.0.2",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.8.10",
-    "cypress": "^13.6.4",
+    "cypress": "^13.7.1",
     "faker": "^5.5.3",
     "faker-br": "^0.4.1",
     "ts-loader": "^9.4.4",
