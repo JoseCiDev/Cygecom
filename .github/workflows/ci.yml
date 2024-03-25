@@ -6,6 +6,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      TEST_BASE_URL: localhost
+      GH_TOKEN: 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
+
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -63,6 +68,7 @@ jobs:
         repository: JoseCyDev/Cygecom
         path: cypress
         ref: feature/GC-7
+        token: ${{ env.GH_TOKEN }}
 
     - name: Install Node.js dependencies for Cypress
       run: npm install
@@ -73,7 +79,7 @@ jobs:
         "ENVIRONMENT": "TEST",
         "TEST": {
           "ENV": "1",
-          "BASE_URL": "${{ secrets.TEST_BASE_URL }}"
+          "BASE_URL": "${{ env.TEST_BASE_URL }}"
           }
         }'' > cypress.env.json'
       working-directory: cypress
