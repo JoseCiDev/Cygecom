@@ -4,14 +4,16 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest #Executando em uma maquina virtual com o ultimo ubuntu
+    runs-on: ubuntu-latest #Configura um ambiente de execução em uma máquina virtual com a última versão do Ubuntu.
     services:
       cypress:
-        image: brunojoao3/docker-sm:cy-sm-hkm #Serviço cypress
+        image: brunojoao3/docker-sm:cy-sm-hkm #Define serviço Docker chamado cypress usando imagem Docker específica.
+
+
         options: cypress
 
       app:
-        image: brunojoao3/docker-sm:php-8.3-franken #Serviço aplicação
+        image: brunojoao3/docker-sm:php-8.3-franken #Define serviço Docker chamado app usando imagem Docker específica.
         options: >
           app
           --tty
@@ -24,6 +26,7 @@ jobs:
     env:
       TEST_BASE_URL: http://gerenciador-compras.docker.local:8085
       GH_TOKEN: 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
+    #Define variáveis de ambiente.
 
     steps:
       - name: Repository checkout for execution environment
@@ -34,29 +37,90 @@ jobs:
           while [ -z "$(docker ps --filter ancestor=brunojoao3/docker-sm:php-8.3-franken --format "{{.ID}}")" ]; do
             sleep 1
           done
+        #Aguardando container app estar em execução
 
       - name: Get container names
         id: get_name
         run: |
           echo "::set-output name=app_name::$(docker ps --filter ancestor=brunojoao3/docker-sm:php-8.3-franken --format "{{.Names}}")"
           echo "::set-output name=cypress_name::$(docker ps --filter ancestor=brunojoao3/docker-sm:cy-sm-hkm --format "{{.Names}}")"
-          
-      - name: build application
+        #Obtem o nome do container app e cypress
+
+      - name: List files in work directory
+        run: docker compose exec -it ${{ steps.get_name.outputs.app_name }} "ls -la /var/www/gerenciador-compras"
+        #Lista os arquivos no diretório de trabalho dentro do contêiner app.
+
+      - name: Check port mapping
+        run: docker port ${{ steps.get_name.outputs.app_name }}
+        #Verifica o mapeamento de portas para o contêiner app.
+
+      - name: List files in /var/www/gerenciador-compras
         run: |
-          sudo chown 1000:docker /var/run/docker.sock
+          docker compose exec ${{ steps.get_name.outputs.app_name }} bash -c "ls -la /var/www/gerenciador-compras"
+        #Lista os arquivos no diretório /var/www/gerenciador-compras dentro do contêiner app.
+
+      - name: List file composer.json in /var/www/gerenciador-compras
+        run: |
+          docker compose exec ${{ steps.get_name.outputs.app_name }} bash -c "ls -la /var/www/gerenciador-compras/composer.json"
+        #Lista o arquivo compose.json no diretório /var/www/gerenciador-compras dentro do contêiner app.
+
+      - name: build application
+        run: sudo chown 1000:docker /var/run/docker.sock
+      #Muda o proprietário do socket Docker.
+      
+      - name: Change owner of docker socket
+        run: sudo chown 1000:docker /var/run/docker.sock
+
+      - name: Install composer dependencies
+        run: |
+          docker compose exec ${{ steps.get_name.outputs.app_name }} bash -c "
+          composer install --prefer-dist --no-progress --no-suggest"
+      #instala as dependências do composer.
+
+      - name: Copy .env file if not exists
+        run: |
           docker compose exec app bash -c "
-            composer install --prefer-dist --no-progress --no-suggest && 
-            php -r \"file_exists('.env') || copy('.env.example', '.env');\" &&
-            php artisan key:generate &&
-            echo > database/database.sqlite &&
-            echo "DB_CONNECTION=sqlite\" >> .env &&
-            echo "DB_DATABASE=database/database.sqlite\" >> .env &&
-            php artisan migrate --force &&
-            php artisan db:seed --force &&
-            chmod -R 777 storage bootstrap/cache &&
-            npm install &&
-            npm run build &&
-            frankenphp run &"
+          php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+      #Copia o arquivo .env se ele não existir.
+
+      - name: Generate Laravel key
+        run: |
+          docker compose exec app bash -c "
+          php artisan key:generate"
+      #Gera uma chave Laravel.
+
+      - name: Setup SQLite database
+        run: |
+          docker compose exec app bash -c "
+          echo > database/database.sqlite &&
+          echo \"DB_CONNECTION=sqlite\" >> .env &&
+          echo \"DB_DATABASE=database/database.sqlite\" >> .env"
+      #Configura um banco de dados SQLite.
+
+      - name: Run Laravel migrations and seeders
+        run: |
+          docker compose exec app bash -c "
+          php artisan migrate --force &&
+          php artisan db:seed --force"
+      #Executa as migrações e seeders do Laravel.
+
+      - name: Set permissions
+        run: |
+          docker compose exec app bash -c "
+          chmod -R 777 storage bootstrap/cache"
+      #Define as permissões para os diretórios storage e bootstrap/cache.
+
+      - name: Install and build npm dependencies
+        run: |
+          docker compose exec app bash -c "
+          npm install &&
+          npm run build"
+      #Instala e constrói as dependências do npm.
+
+      - name: Run frankenphp
+        run: |
+          docker compose exec app bash -c "
+          frankenphp run"
         #Instala as dependencias do composer, cria o arquivo .env, gera a chave da aplicação, cria o banco de dados, executa as migrações, executa os seeds, da permissão de escrita para as pastas storage e bootstrap/cache, instala as dependencias do node, compila os assets e inicia o servidor
         # Verifica se um arquivo .env existe. Se não existir, copia o arquivo .env.example para .env.
         #Gera uma chave de aplicativo para o seu aplicativo Laravel.
@@ -66,7 +130,7 @@ jobs:
         #Altera as permissões dos diretórios storage e bootstrap/cache para permitir que qualquer usuário leia, escreva e execute arquivos nesses diretórios.
         # Instala as dependências do Node.js e constrói o frontend do aplicativo.
         #Executa o servidor FrankenPHP em segundo plano.
-
+        
       # Configuração e execução dos testes Cypress
       - name: Checkout Cypress tests
         uses: actions/checkout@v2
@@ -80,13 +144,13 @@ jobs:
           #e usando um token de autenticação armazenado na variável de ambiente GH_TOKEN.
 
       - name: Install Node.js dependencies for Cypress
-        run: docker exec ${{ steps.get_name.outputs.cypress_name }} npm install
+        run: docker compose exec ${{ steps.get_name.outputs.cypress_name }} npm install
         working-directory: cypress
       #Este passo está executando npm install dentro do contêiner cypress para instalar as dependências do Node.js necessárias para os testes Cypress, usando o nome do container.
 
       - name: Setup Cypress environment variables
         run: >
-          docker exec ${{ steps.get_name.outputs.cypress_name }} echo '{
+          docker compose exec ${{ steps.get_name.outputs.cypress_name }} echo '{
             "ENVIRONMENT": "TEST",
             "TEST": {
               "ENV": "1",
@@ -99,7 +163,7 @@ jobs:
         #e BASE_URL definido como o valor da variável de ambiente TEST_BASE_URL.
 
       - name: Run Cypress tests
-        run: docker exec ${{ steps.get_name.outputs.cypress_name }} npx cypress run --browser chromium --spec "cypress/integration/Autentication/Login.ts"
+        run: docker compose exec ${{ steps.get_name.outputs.cypress_name }} npx cypress run --browser chromium --spec "cypress/integration/Autentication/Login.ts"
         working-directory: cypress
       #Este passo está executando os testes Cypress dentro do contêiner cypress usando o comando npx cypress run.
         #ele está especificamente executando os testes definidos no arquivo cypress/integration/Autentication/Login.ts 
