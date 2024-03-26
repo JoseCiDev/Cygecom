@@ -5,86 +5,64 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: brunojoao3/docker-sm:cy-sm-hkm
 
     env:
-      TEST_BASE_URL: localhost
+      TEST_BASE_URL: http://gerenciador-compras.docker.local:8085
       GH_TOKEN: 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
 
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    # Configuração e instalação das dependências da aplicação
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.3'
-        extensions: mbstring, dom, fileinfo, mysql
-        coverage: xdebug
+      - name: build application
+        uses: addnab/docker-run-action@v3
+        with:
+          image: brunojoao3/docker-sm:php-8.3-franken
+          options: >
+            --tty
+            -v ${{ github.workspace }}:/var/www/gerenciador-compras
+            -w /var/www/gerenciador-compras
+            -p 8085:8085
+            -p 5173:5173
+          run: >
+            composer install --prefer-dist --no-progress --no-suggest &&
+            php -r "file_exists('.env') || copy('.env.example', '.env');" &&
+            php artisan key:generate &&
+            echo > database/database.sqlite &&
+            echo "DB_CONNECTION=sqlite" >> .env &&
+            echo "DB_DATABASE=database/database.sqlite" >> .env &&
+            php artisan migrate --force &&
+            php artisan db:seed --force &&
+            chmod -R 777 storage bootstrap/cache &&
+            npm install &&
+            npm run build &&
+            frankenphp run &
 
-    - name: Install PHP dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      # Configuração e execução dos testes Cypress
+      - name: Checkout Cypress tests
+        uses: actions/checkout@v2
+        with:
+          repository: JoseCyDev/Cygecom
+          path: cypress
+          ref: feature/GC-7
+          token: ${{ env.GH_TOKEN }}
 
-    - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      - name: Install Node.js dependencies for Cypress
+        run: npm install
+        working-directory: cypress
 
-    - name: Generate key
-      run: php artisan key:generate
+      - name: Setup Cypress environment variables
+        run: 'echo ''{
+          "ENVIRONMENT": "TEST",
+          "TEST": {
+            "ENV": "1",
+            "BASE_URL": "${{ env.TEST_BASE_URL }}"
+            }
+          }'' > cypress.env.json'
+        working-directory: cypress
 
-    - name: Setup SQLite database #cria um novo arquivo de banco de dados SQLite em database/database.sqlite e atualiza o arquivo .env para usar a conexão SQLite e o novo banco de dados
-      run: |
-        touch database/database.sqlite
-        echo "DB_CONNECTION=sqlite" >> .env
-        echo "DB_DATABASE=database/database.sqlite" >> .env
-
-    - name: Run migrations #Executa migrations
-      run: php artisan migrate --force
-
-    - name: Run seeders #Executa seeders
-      run: php artisan db:seed --force
-
-    - name: Directory Permissions #Permissões totais de diretório
-      run: chmod -R 777 storage bootstrap/cache
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-
-    - name: Install Node.js dependencies
-      run: npm install
-
-    - name: Install @popperjs/core #instala popperjs(Teve que ser incluido como dependencia do projeto(npm install @popperjs/core), para que o bootstrap funcione corretamente no front-end)
-      run: npm install @popperjs/core
-
-    - name: Build front-end resources
-      run: npm run build
-
-    # Configuração e execução dos testes Cypress
-    - name: Checkout Cypress tests
-      uses: actions/checkout@v2
-      with:
-        repository: JoseCyDev/Cygecom
-        path: cypress
-        ref: feature/GC-7
-        token: ${{ env.GH_TOKEN }}
-
-    - name: Install Node.js dependencies for Cypress
-      run: npm install
-      working-directory: cypress
-
-    - name: Setup Cypress environment variables
-      run: 'echo ''{ 
-        "ENVIRONMENT": "TEST",
-        "TEST": {
-          "ENV": "1",
-          "BASE_URL": "${{ env.TEST_BASE_URL }}"
-          }
-        }'' > cypress.env.json'
-      working-directory: cypress
-
-    - name: Run Cypress tests
-      run: npm run login
-      working-directory: cypress
-      
+      - name: Run Cypress tests
+        run: npx cypress run --browser chromium --spec "cypress/integration/Autentication/Login.ts"
+        working-directory: cypress
