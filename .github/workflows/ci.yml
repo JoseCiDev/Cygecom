@@ -8,8 +8,6 @@ jobs:
     services:
       cypress:
         image: brunojoao3/docker-sm:cy-sm-hkm #Define serviço Docker chamado cypress usando imagem Docker específica.
-
-
         options: cypress
 
       app:
@@ -32,6 +30,13 @@ jobs:
       - name: Repository checkout for execution environment
         uses: actions/checkout@v2 #Retira o codigo do repositorio e envia para o ambiente de execução.
 
+      - name: Check if composer.json exists in repository
+        run: |
+          if [ ! -f composer.json ]; then
+            echo "composer.json does not exist in the repository"
+            exit 1
+          fi
+
       - name: Wait for app container to be running
         run: |
           while [ -z "$(docker ps --filter ancestor=brunojoao3/docker-sm:php-8.3-franken --format "{{.ID}}")" ]; do
@@ -46,24 +51,6 @@ jobs:
           echo "::set-output name=cypress_name::$(docker ps --filter ancestor=brunojoao3/docker-sm:cy-sm-hkm --format "{{.Names}}")"
         #Obtem o nome do container app e cypress
 
-      - name: List files in work directory
-        run: docker compose exec -it ${{ steps.get_name.outputs.app_name }} "ls -la /var/www/gerenciador-compras"
-        #Lista os arquivos no diretório de trabalho dentro do contêiner app.
-
-      - name: Check port mapping
-        run: docker port ${{ steps.get_name.outputs.app_name }}
-        #Verifica o mapeamento de portas para o contêiner app.
-
-      - name: List files in /var/www/gerenciador-compras
-        run: |
-          docker compose exec ${{ steps.get_name.outputs.app_name }} bash -c "ls -la /var/www/gerenciador-compras"
-        #Lista os arquivos no diretório /var/www/gerenciador-compras dentro do contêiner app.
-
-      - name: List file composer.json in /var/www/gerenciador-compras
-        run: |
-          docker compose exec ${{ steps.get_name.outputs.app_name }} bash -c "ls -la /var/www/gerenciador-compras/composer.json"
-        #Lista o arquivo compose.json no diretório /var/www/gerenciador-compras dentro do contêiner app.
-
       - name: build application
         run: sudo chown 1000:docker /var/run/docker.sock
       #Muda o proprietário do socket Docker.
@@ -71,17 +58,43 @@ jobs:
       - name: Change owner of docker socket
         run: sudo chown 1000:docker /var/run/docker.sock
 
+      - name: List files in current directory
+        run: ls -la
+      #Listando os arquivos do diretorio
+
+      - name: List directories in container
+        run: |
+          docker exec ${{ steps.get_name.outputs.app_name }} ls -la /var/www
+      #Listando os diretórios do container
+
+      - name: Create directory in container
+        run: |
+          docker exec ${{ steps.get_name.outputs.app_name }} mkdir -p /var/www/gerenciador-compras
+      #Criando o diretório no container
+
+      - name: Copy composer.json to container
+        run: |
+          docker cp ./composer.json ${{ steps.get_name.outputs.app_name }}:/var/www/gerenciador-compras/composer.json
+      #Copiando composer.json para o container
+
+      - name: Check if composer.json exists in container
+        run: |
+          if ! docker exec ${{ steps.get_name.outputs.app_name }} test -f /var/www/gerenciador-compras/composer.json; then
+            echo "composer.json does not exist in the container"
+            exit 1
+          fi
+
       - name: Install composer dependencies
         run: |
-          docker compose exec ${{ steps.get_name.outputs.app_name }} bash -c "
-          composer install --prefer-dist --no-progress --no-suggest"
-      #instala as dependências do composer.
+          docker exec ${{ steps.get_name.outputs.app_name }} bash -c "
+          cd /var/www/gerenciador-compras && composer install --prefer-dist --no-progress --no-suggest"
+      #Instalando as dependências do composer.
 
       - name: Copy .env file if not exists
         run: |
           docker compose exec app bash -c "
           php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-      #Copia o arquivo .env se ele não existir.
+      #Copiando o arquivo .env se ele não existir.
 
       - name: Generate Laravel key
         run: |
