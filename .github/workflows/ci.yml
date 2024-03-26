@@ -4,41 +4,68 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container:
-      image: brunojoao3/docker-sm:cy-sm-hkm
+    runs-on: ubuntu-latest #Executando em uma maquina virtual com o ultimo ubuntu
+    services:
+      cypress:
+        image: brunojoao3/docker-sm:cy-sm-hkm #Serviço cypress
+        options: cypress
 
+      app:
+        image: brunojoao3/docker-sm:php-8.3-franken #Serviço aplicação
+        options: >
+          app
+          --tty
+          -v ${{ github.workspace }}:/var/www/gerenciador-compras
+          -w /var/www/gerenciador-compras
+          -p 8085:8085
+          -p 5173:5173  
+        #Mapeando o diretorio de trabalho para /var/www/gerenciador-compras
+        # Definindo como diretorio de trabalho nas portas informadas
     env:
       TEST_BASE_URL: http://gerenciador-compras.docker.local:8085
       GH_TOKEN: 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
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Repository checkout for execution environment
+        uses: actions/checkout@v2 #Retira o codigo do repositorio e envia para o ambiente de execução.
 
+      - name: Wait for app container to be running
+        run: |
+          while [ -z "$(docker ps --filter ancestor=brunojoao3/docker-sm:php-8.3-franken --format "{{.ID}}")" ]; do
+            sleep 1
+          done
+
+      - name: Get container names
+        id: get_name
+        run: |
+          echo "::set-output name=app_name::$(docker ps --filter ancestor=brunojoao3/docker-sm:php-8.3-franken --format "{{.Names}}")"
+          echo "::set-output name=cypress_name::$(docker ps --filter ancestor=brunojoao3/docker-sm:cy-sm-hkm --format "{{.Names}}")"
+          
       - name: build application
-        uses: addnab/docker-run-action@v3
-        with:
-          image: brunojoao3/docker-sm:php-8.3-franken
-          options: >
-            --tty
-            -v ${{ github.workspace }}:/var/www/gerenciador-compras
-            -w /var/www/gerenciador-compras
-            -p 8085:8085
-            -p 5173:5173
-          run: >
-            composer install --prefer-dist --no-progress --no-suggest &&
-            php -r "file_exists('.env') || copy('.env.example', '.env');" &&
+        run: |
+          sudo chown 1000:docker /var/run/docker.sock
+          docker compose exec app bash -c "
+            composer install --prefer-dist --no-progress --no-suggest && 
+            php -r \"file_exists('.env') || copy('.env.example', '.env');\" &&
             php artisan key:generate &&
             echo > database/database.sqlite &&
-            echo "DB_CONNECTION=sqlite" >> .env &&
-            echo "DB_DATABASE=database/database.sqlite" >> .env &&
+            echo "DB_CONNECTION=sqlite\" >> .env &&
+            echo "DB_DATABASE=database/database.sqlite\" >> .env &&
             php artisan migrate --force &&
             php artisan db:seed --force &&
             chmod -R 777 storage bootstrap/cache &&
             npm install &&
             npm run build &&
-            frankenphp run &
+            frankenphp run &"
+        #Instala as dependencias do composer, cria o arquivo .env, gera a chave da aplicação, cria o banco de dados, executa as migrações, executa os seeds, da permissão de escrita para as pastas storage e bootstrap/cache, instala as dependencias do node, compila os assets e inicia o servidor
+        # Verifica se um arquivo .env existe. Se não existir, copia o arquivo .env.example para .env.
+        #Gera uma chave de aplicativo para o seu aplicativo Laravel.
+        # Cria um novo arquivo de banco de dados SQLite vazio.
+        #Configura o aplicativo para usar o SQLite como banco de dados.
+        # Executa as migrações do banco de dados e semeia o banco de dados com dados iniciais.
+        #Altera as permissões dos diretórios storage e bootstrap/cache para permitir que qualquer usuário leia, escreva e execute arquivos nesses diretórios.
+        # Instala as dependências do Node.js e constrói o frontend do aplicativo.
+        #Executa o servidor FrankenPHP em segundo plano.
 
       # Configuração e execução dos testes Cypress
       - name: Checkout Cypress tests
@@ -48,21 +75,32 @@ jobs:
           path: cypress
           ref: feature/GC-7
           token: ${{ env.GH_TOKEN }}
+        #Este passo está usando a ação actions/checkout@v2 para fazer o checkout do código do repositório JoseCyDev/Cygecom para o diretório cypress 
+          #no ambiente de execução do GitHub Actions. Ele está especificamente fazendo o checkout da referência feature/GC-7 
+          #e usando um token de autenticação armazenado na variável de ambiente GH_TOKEN.
 
       - name: Install Node.js dependencies for Cypress
-        run: npm install
+        run: docker exec ${{ steps.get_name.outputs.cypress_name }} npm install
         working-directory: cypress
+      #Este passo está executando npm install dentro do contêiner cypress para instalar as dependências do Node.js necessárias para os testes Cypress, usando o nome do container.
 
       - name: Setup Cypress environment variables
-        run: 'echo ''{
-          "ENVIRONMENT": "TEST",
-          "TEST": {
-            "ENV": "1",
-            "BASE_URL": "${{ env.TEST_BASE_URL }}"
-            }
-          }'' > cypress.env.json'
+        run: >
+          docker exec ${{ steps.get_name.outputs.cypress_name }} echo '{
+            "ENVIRONMENT": "TEST",
+            "TEST": {
+              "ENV": "1",
+              "BASE_URL": "${{ env.TEST_BASE_URL }}"
+              }
+            }' > cypress.env.json
         working-directory: cypress
+      #Este passo está criando um arquivo cypress.env.json dentro do contêiner cypress que contém variáveis de ambiente para os testes Cypress. 
+        #as variáveis de ambiente são definidas como um objeto JSON, com ENVIRONMENT definido como TEST e TEST definido como um objeto com ENV definido como 1 
+        #e BASE_URL definido como o valor da variável de ambiente TEST_BASE_URL.
 
       - name: Run Cypress tests
-        run: npx cypress run --browser chromium --spec "cypress/integration/Autentication/Login.ts"
+        run: docker exec ${{ steps.get_name.outputs.cypress_name }} npx cypress run --browser chromium --spec "cypress/integration/Autentication/Login.ts"
         working-directory: cypress
+      #Este passo está executando os testes Cypress dentro do contêiner cypress usando o comando npx cypress run.
+        #ele está especificamente executando os testes definidos no arquivo cypress/integration/Autentication/Login.ts 
+        #e usando o Chromium como navegador para os testes.
