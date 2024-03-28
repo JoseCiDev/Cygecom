@@ -53,7 +53,7 @@
         php_server
 }
 
-http://127.0.0.1:2019 {
+http://gerenciador-compras.docker.local:8085{
 	root * /var/www/gerenciador-compras/public
 	php_server
 }
