@@ -53,7 +53,7 @@
         php_server
 }
 
-http://127.0.0.1:8085 {
+http://127.0.0.1:2019 {
 	root * /var/www/gerenciador-compras/public
 	php_server
 }
