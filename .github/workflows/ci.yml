@@ -19,7 +19,7 @@ jobs:
     services:
       cypress:
         image: brunojoao3/docker-sm:cy-sm-hkm #Define serviço Docker chamado cypress usando imagem Docker específica.
-        options: > 
+        options: >
           cypress
           -w /cypress
 
@@ -27,9 +27,7 @@ jobs:
         image: brunojoao3/docker-sm:php-8.3-franken
         options: >
           app
-          --network=host
           --tty
-          -v ${{ github.workspace }}:/var/www/gerenciador-compras
           -w /var/www/gerenciador-compras
           -p 8085:8085
           -p 5173:5173
@@ -43,9 +41,6 @@ jobs:
       - name: Repository checkout for execution environment
         uses: actions/checkout@v2 #Retira o codigo do repositorio e envia para o ambiente de execução.
 
-      - name: Set x-hosts permissions
-        run: sudo chmod 777 /etc/hosts
-
       - name: Get container names
         id: get_name
         run: |
@@ -53,64 +48,42 @@ jobs:
           echo "::set-output name=cypress_name::$(docker ps --filter ancestor=brunojoao3/docker-sm:cy-sm-hkm --format "{{.Names}}")"
         #Obtem o nome do container app e cypress
 
-      - name: build application
-        run: sudo chown 1000:docker /var/run/docker.sock
-      #Muda o proprietário do socket Docker.
-      
+      - name: Get ip address of application
+        id: get_ip
+        run: echo "::set-output name=app_ip::$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${{ steps.get_name.outputs.app_name }})"
+
+      - name: Add application entry to hosts file
+        run: docker exec ${{ steps.get_name.outputs.cypress_name }} bash -c "
+          echo -e '${{ steps.get_ip.outputs.app_ip }}\tgerenciador-compras.docker.local' >> /etc/hosts"
+
+      - name: copy project to application container
+        run: docker cp . ${{ steps.get_name.outputs.app_name }}:/var/www/gerenciador-compras
+
+      - name: Copy caddyfile to application container
+        run: docker cp Caddyfile ${{ steps.get_name.outputs.app_name }}:/etc/caddy/Caddyfile
+
       - name: Change owner of docker socket
         run: sudo chown 1000:docker /var/run/docker.sock
+      #Muda o proprietário do socket Docker.
 
-      - name: Create directory in container
-        run: |
-          docker exec ${{ steps.get_name.outputs.app_name }} mkdir -p /var/www/gerenciador-compras
-      #Criando o diretório no container
-
-      - name: Copy composer.json to container
-        run: |
-          docker cp ./composer.json ${{ steps.get_name.outputs.app_name }}:/var/www/gerenciador-compras/composer.json
-      #Copiando composer.json para o container
-
-      - name: Create necessary directories in container
-        run: |
-          docker exec ${{ steps.get_name.outputs.app_name }} mkdir -p /var/www/gerenciador-compras/app/Helpers
-        
-      - name: Copy helpers.php to container
-        run: |
-          docker cp ./app/Helpers/helpers.php ${{ steps.get_name.outputs.app_name }}:/var/www/gerenciador-compras/app/Helpers/helpers.php
-          
-      - name: Install Laravel in temporary directory
-        run: |
-          docker exec ${{ steps.get_name.outputs.app_name }} bash -c "
-          cd /var/www && composer create-project --prefer-dist laravel/laravel temp"
-        
-      - name: Copy Laravel files to /var/www/gerenciador-compras
-        run: |
-          docker exec ${{ steps.get_name.outputs.app_name }} bash -c "
-          cp -r /var/www/temp/* /var/www/gerenciador-compras/"
-      
       - name: Install composer dependencies
         run: |
           sudo docker exec ${{ steps.get_name.outputs.app_name }} bash -c "
-          cd /var/www/gerenciador-compras && composer install --prefer-dist --no-progress --no-suggest"
+          composer install"
       #Instalando as dependências do composer.
-
-      - name: Copy .env.example to container
-        run: |
-         docker cp ./.env.example ${{ steps.get_name.outputs.app_name }}:/var/www/gerenciador-compras/.env.example
 
       - name: Copy .env file if not exists
         run: |
-         docker exec ${{ steps.get_name.outputs.app_name }} bash -c "
-         cd /var/www/gerenciador-compras &&
-         if [ ! -f .env ]; then
-           cp .env.example .env
-         fi"
+          docker exec ${{ steps.get_name.outputs.app_name }} bash -c "
+          cd /var/www/gerenciador-compras &&
+          if [ ! -f .env ]; then
+            cp .env.example .env
+          fi"
       #Copiando o arquivo .env se ele não existir.
 
       - name: Generate Laravel key
         run: |
           docker exec ${{ steps.get_name.outputs.app_name }} bash -c "
-          cd /var/www/gerenciador-compras &&
           php artisan key:generate"
       #Gera uma chave Laravel.
 
@@ -145,20 +118,8 @@ jobs:
       - name: Run frankenphp
         run: |
           docker exec ${{ steps.get_name.outputs.app_name }} bash -c "
-          nohup frankenphp run > /dev/null 2>&1 &"
-       
-      - name: Show Docker logs
-        run: |
-          docker logs ${{ steps.get_name.outputs.app_name }}
+          frankenphp run --config /etc/caddy/Caddyfile &"
 
-      - name: Show Docker port
-        run: |
-          docker port ${{ steps.get_name.outputs.app_name }}
-
-      - name: Check if app is listening on port 8085
-        run: |
-          docker exec ${{ steps.get_name.outputs.app_name }} bash -c "apt-get update && apt-get install -y net-tools && netstat -tuln"
-        
       - name: Checkout Cypress tests
         uses: actions/checkout@v2
         with:
@@ -166,19 +127,12 @@ jobs:
           path: cypress
           ref: feature/GC-7
           token: ${{ env.GH_TOKEN }}
-      #Este passo está usando a ação actions/checkout@v2 para fazer o checkout do código do repositório JoseCyDev/Cygecom para o diretório cypress 
-        #no ambiente de execução do GitHub Actions. Ele está especificamente fazendo o checkout da referência feature/GC-7 
+      #Este passo está usando a ação actions/checkout@v2 para fazer o checkout do código do repositório JoseCyDev/Cygecom para o diretório cypress
+        #no ambiente de execução do GitHub Actions. Ele está especificamente fazendo o checkout da referência feature/GC-7
         #e usando um token de autenticação armazenado na variável de ambiente GH_TOKEN.
 
       - name: Copy cypress directory to Docker container
         run: docker cp ./cypress ${{ steps.get_name.outputs.cypress_name }}:/
-
-      # - name: Check Docker container structure and permissions
-      #   run: |
-      #     echo "Container name: ${{ steps.get_name.outputs.cypress_name }}"
-      #     docker ps
-      #     docker exec ${{ steps.get_name.outputs.cypress_name }} ls -la 
-      #     id
 
       - name: Install Node.js dependencies for Cypress
         run: docker exec ${{ steps.get_name.outputs.cypress_name }} sh -c 'npm install'
@@ -193,12 +147,12 @@ jobs:
             \"BASE_URL\": \"${{ secrets.TEST_BASE_URL }}\"
             }
           }' > cypress.env.json"
-        #Este passo está criando um arquivo cypress.env.json dentro do contêiner cypress que contém variáveis de ambiente para os testes Cypress. 
-          #as variáveis de ambiente são definidas como um objeto JSON, com ENVIRONMENT definido como TEST e TEST definido como um objeto com ENV definido como 1 
+        #Este passo está criando um arquivo cypress.env.json dentro do contêiner cypress que contém variáveis de ambiente para os testes Cypress.
+          #as variáveis de ambiente são definidas como um objeto JSON, com ENVIRONMENT definido como TEST e TEST definido como um objeto com ENV definido como 1
           #e BASE_URL definido como o valor da variável de ambiente TEST_BASE_URL.
 
       - name: Run Cypress tests
         run: docker exec ${{ steps.get_name.outputs.cypress_name }} npm run login
       #Este passo está executando os testes Cypress dentro do contêiner cypress usando o comando npx cypress run.
-        #ele está especificamente executando os testes definidos no arquivo cypress/integration/Autentication/Login.ts 
+        #ele está especificamente executando os testes definidos no arquivo cypress/integration/Autentication/Login.ts
         #e usando o Chromium como navegador para os testes.

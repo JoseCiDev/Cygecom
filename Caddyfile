@@ -53,7 +53,7 @@
         php_server
 }
 
-http://gerenciador-compras.docker.local:8085{
+http://gerenciador-compras.docker.local:8085 {
 	root * /var/www/gerenciador-compras/public
 	php_server
 }
