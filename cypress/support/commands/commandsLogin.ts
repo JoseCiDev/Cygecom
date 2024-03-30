@@ -120,7 +120,7 @@ const {
 
 Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elementError: string) => {
 
-    // cy.visit('https://gecom.essentia.com.br/login');
+    cy.visit('https://gecom.essentia.com.br');
    
 
     // cy.get(email, { timeout: 20000 })
@@ -174,7 +174,7 @@ Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elem
            
     //     });
         
-    // return cy.wrap({ success: 'Login realizado com sucesso.' });
+    return cy.wrap({ success: 'Login realizado com sucesso.' });
 });
 
 
