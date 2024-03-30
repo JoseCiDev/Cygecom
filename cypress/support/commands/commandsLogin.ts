@@ -121,7 +121,7 @@ const {
 Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elementError: string) => {
 
     // cy.visit('https://gecom.essentia.com.br/login');
-    cy.log('Teste')
+   
 
     // cy.get(email, { timeout: 20000 })
     //     .each(($input) => {
