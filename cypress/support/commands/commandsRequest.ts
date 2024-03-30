@@ -265,14 +265,14 @@ Cypress.Commands.add('createRequest', function (requestType: string) {
     processAttribute({
         requestType: (attributeValue) => {
             cy.getElementAndClick([requestType])
-            setApportionment();
+            // setApportionment();
         },
-        // 'quoteRequest': (attributeValue) => {
-        //     if (attributeValue === "true") {
-        //         cy.log(attributeValue);
-        //         cy.getElementAndCheck([{ element: quoteRequest },]);
-        //     }
-        // },
+        'quoteRequest': (attributeValue) => {
+            if (attributeValue === "true") {
+                cy.log(attributeValue);
+                cy.getElementAndCheck([{ element: quoteRequest },]);
+            }
+        },
         'serviceName': (attributeValue) => {
             handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
                 cy.getElementAndType({
