@@ -137,14 +137,15 @@ jobs:
       - name: Install Node.js dependencies for Cypress
         run: docker exec ${{ steps.get_name.outputs.cypress_name }} sh -c 'npm install'
       #Este passo está executando npm install dentro do contêiner cypress para instalar as dependências do Node.js necessárias para os testes Cypress, usando o nome do container.
-
       - name: Setup Cypress environment variables
         run: >
           docker exec ${{ steps.get_name.outputs.cypress_name }} sh -c "echo '{
           \"ENVIRONMENT\": \"TEST\",
           \"TEST\": {
             \"ENV\": \"1\",
-            \"BASE_URL\": \"${{ secrets.TEST_BASE_URL }}\"
+            \"BASE_URL\": \"${{ secrets.TEST_BASE_URL }}\",
+            \"EMAIL_ADMIN\": \"gecom_admin@essentia.com.br\",
+            \"PASSWORD_ADMIN\": \"essadmin@2023\"
             }
           }' > cypress.env.json"
         #Este passo está criando um arquivo cypress.env.json dentro do contêiner cypress que contém variáveis de ambiente para os testes Cypress.

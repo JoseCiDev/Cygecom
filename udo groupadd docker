@@ -1,0 +1,26 @@
+[0;1;32m●[0m docker.service - Docker Application Container Engine
+     Loaded: loaded (]8;;file://jose-cyDev/lib/systemd/system/docker.service/lib/systemd/system/docker.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (running)[0m since Fri 2024-03-29 07:23:36 -03; 15h ago
+TriggeredBy: [0;1;32m●[0m docker.socket
+       Docs: ]8;;https://docs.docker.comhttps://docs.docker.com]8;;
+   Main PID: 1567 (dockerd)
+      Tasks: 42
+     Memory: 1.2G
+        CPU: 18min 34.149s
+     CGroup: /system.slice/docker.service
+             ├─[0;38;5;245m  1567 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock[0m
+             ├─[0;38;5;245m404854 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 8085 -container-ip 172.31.0.3 -container-port 8085[0m
+             ├─[0;38;5;245m404860 /usr/bin/docker-proxy -proto tcp -host-ip :: -host-port 8085 -container-ip 172.31.0.3 -container-port 8085[0m
+             ├─[0;38;5;245m404874 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 5173 -container-ip 172.31.0.3 -container-port 5173[0m
+             └─[0;38;5;245m404881 /usr/bin/docker-proxy -proto tcp -host-ip :: -host-port 5173 -container-ip 172.31.0.3 -container-port 5173[0m
+
+mar 29 21:46:59 jose-cyDev dockerd[1567]: 2024/03/29 21:46:59 http: superfluous response.WriteHeader call from go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp.(*respWriterWrapper).WriteHeader (wrap.go:98)
+mar 29 21:48:19 jose-cyDev dockerd[1567]: time="2024-03-29T21:48:19.012400848-03:00" level=error msg="stream copy error: read /proc/self/fd/60: file already closed"
+mar 29 21:48:19 jose-cyDev dockerd[1567]: time="2024-03-29T21:48:19.015520964-03:00" level=error msg="stream copy error: read /proc/self/fd/59: file already closed"
+mar 29 21:56:18 jose-cyDev dockerd[1567]: 2024/03/29 21:56:18 http: superfluous response.WriteHeader call from go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp.(*respWriterWrapper).WriteHeader (wrap.go:98)
+mar 29 22:20:53 jose-cyDev dockerd[1567]: 2024/03/29 22:20:53 http: superfluous response.WriteHeader call from go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp.(*respWriterWrapper).WriteHeader (wrap.go:98)
+mar 29 22:20:53 jose-cyDev dockerd[1567]: time="2024-03-29T22:20:53.823921457-03:00" level=info msg="ignoring event" container=33673ebcb4bef882013b685e32b2fce6af246cc152a2d01d6f13a03fcb2a4ab4 module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"
+mar 29 22:20:59 jose-cyDev dockerd[1567]: time="2024-03-29T22:20:59.126507867-03:00" level=info msg="ignoring event" container=0a8e915cec22c602528d60ee4c40950aeb7260caf1cfd79154a8b5e3ce2d69f9 module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"
+mar 29 22:20:59 jose-cyDev dockerd[1567]: time="2024-03-29T22:20:59.427486963-03:00" level=info msg="ignoring event" container=fcc86b0c9fddd0e2d6ce2013ec612d7b93fa2301f46aaa59faed5a573acb91bb module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"
+mar 29 22:21:19 jose-cyDev dockerd[1567]: time="2024-03-29T22:21:19.398163696-03:00" level=info msg="No non-localhost DNS nameservers are left in resolv.conf. Using default external servers"
+mar 29 22:21:19 jose-cyDev dockerd[1567]: time="2024-03-29T22:21:19.429956082-03:00" level=info msg="No non-localhost DNS nameservers are left in resolv.conf. Using default external servers"
