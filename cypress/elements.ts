@@ -103,10 +103,10 @@ interface Elements<S = string> {
         paymentRecurrence: S;
         paymentDueDate: S;
         toAgreeModalSubmitRequest: S;
-        mandadatoryMessagePercentageElement: S;
-        mandadatoryMessageValueElement: S;
-        percentagemSumMessageElement: S;
-        greaterThanOneMessageElement: S;
+        firstWarningPercentageApportionment:S;
+        secondWarningPercentageApportionment:S;
+        firstWarningValueApportionment:S;
+        secondWarningValueApportionment:S;
     },
 
     Supply: {
@@ -225,12 +225,10 @@ export const elements: Elements = {
         paymentRecurrence: '#select2-recurrence-container',
         paymentDueDate: '#select2-contract-payday-container',
         toAgreeModalSubmitRequest: '#modal-alert-submit',
-        mandadatoryMessagePercentageElement: '[id="cost_center_apportionments[0][apportionment_percentage]-error"]',
-        mandadatoryMessageValueElement: '#cost_center_apportionments\[0\]\[apportionment_currency\]-error',
-        percentagemSumMessageElement: '.percentage-span-warning',
-        greaterThanOneMessageElement: '#cost_center_apportionments\\[0\\]\\[apportionment_percentage\\]-error.help-block.has-error',
-        // percentageReturnMessageContainer
-        // valueReturnMessageContainer
+        firstWarningPercentageApportionment:'[id="cost_center_apportionments[0][apportionment_percentage]-error"]',
+        secondWarningPercentageApportionment:'.percentage-span-warning',
+        firstWarningValueApportionment:'[id="cost_center_apportionments[0][apportionment_currency]-error"]',
+        secondWarningValueApportionment:'.currency-span-warning',
     },
 
     Supply: {
