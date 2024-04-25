@@ -17,8 +17,7 @@ jobs:
       cypress:
         image: cypress/included:3.4.0
         options: >
-          cypress
-          -w /cypress
+          -w /e2e
 
       app:
         image: brunojoao3/docker-sm:php-8.3-franken
