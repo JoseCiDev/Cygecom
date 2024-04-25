@@ -87,6 +87,12 @@ jobs:
       - name: Change owner of docker socket
         run: sudo chown 1000:docker /var/run/docker.sock
 
+      - name: Set permissions
+        run: |
+          docker exec ${{ steps.get_name.outputs.app_name }} bash -c "
+          chmod 755 /var/www/gerenciador-compras &&
+          chmod 755 /var/www/gerenciador-compras/composer.json"
+
       - name: Setup application
         run: |
           docker exec ${{ steps.get_name.outputs.app_name }} bash -c "
