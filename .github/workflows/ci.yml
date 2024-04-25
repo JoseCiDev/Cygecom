@@ -84,6 +84,15 @@ jobs:
       - name: Copy caddyfile to application container
         run: docker cp Caddyfile ${{ steps.get_name.outputs.app_name }}:/etc/caddy/Caddyfile
 
+      - name: List files in /var/www/gerenciador-compras
+        run: docker exec ${{ steps.get_name.outputs.app_name }} ls /var/www/gerenciador-compras
+
+      - name: Check current working directory
+        run: docker exec ${{ steps.get_name.outputs.app_name }} pwd
+
+      - name: Check permissions
+        run: docker exec ${{ steps.get_name.outputs.app_name }} ls -la /var/www/gerenciador-compras
+
       - name: Change owner of docker socket
         run: sudo chown 1000:docker /var/run/docker.sock
 
