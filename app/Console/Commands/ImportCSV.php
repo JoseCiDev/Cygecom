@@ -23,7 +23,7 @@ class ImportCSV extends Command
      * @var string
      */
     protected $description = 'Lê um arquivo CSV e gera php retornando um array de dados filtrados de acordo com o parâmetro type.
-    A partir do parâmetro $type, é buscado o nome da classe que possui referência com o $type. Essa classe deve ter um método filter().';
+    A partir do parâmetro $type, é buscado o nome da classe que possui referência com o $type. Essa classe deve ter um método filter()';
 
     /**
      * Execute the console command.
