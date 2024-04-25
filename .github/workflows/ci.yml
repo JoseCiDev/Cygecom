@@ -15,14 +15,13 @@ jobs:
 >>>>>>> d25369a (Realizado teste de login com url de produção, quando url esta para 66 é retornado erro, verificaremos se é um bloqueio de rede ou o que esta ocorrendo.)
     services:
       cypress:
-        image: cypress/included:3.4.0
+        image: brunojoao3/docker-sm:cy-sm-hkm
         options: >
-          -w /e2e
+          -w /cypress
 
       app:
         image: brunojoao3/docker-sm:php-8.3-franken
         options: >
-          app
           --tty
           -w /var/www/gerenciador-compras
           -p 8085:8085
