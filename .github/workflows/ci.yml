@@ -24,7 +24,6 @@ jobs:
         options: >
           --tty
           -w /var/www/gerenciador-compras
-          -p 8085:8085
     env:
 <<<<<<< HEAD
       GH_TOKEN: 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
