@@ -15,7 +15,7 @@ jobs:
 >>>>>>> d25369a (Realizado teste de login com url de produção, quando url esta para 66 é retornado erro, verificaremos se é um bloqueio de rede ou o que esta ocorrendo.)
     services:
       cypress:
-        image: brunojoao3/docker-sm:cy-sm-hkm
+        image: cypress/included:3.4.0
         options: >
           cypress
           -w /cypress
