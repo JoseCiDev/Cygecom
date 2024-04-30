@@ -15,6 +15,7 @@ on: [push]
 
 jobs:
   build:
+<<<<<<< HEAD
     runs-on: ubuntu-latest #Configura um ambiente de execução em uma máquina virtual com a última versão do Ubuntu.
     services:
       cypress:
@@ -36,17 +37,39 @@ jobs:
     env:
       GH_TOKEN: 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
     #Define variáveis de ambiente.
+=======
+    runs-on: ubuntu-latest
+    container:
+      image: brunojoao3/docker-sm:php-8.3-franken    
+>>>>>>> ed14dde (Ajustando CI)
 
     steps:
       - name: Repository checkout for execution environment
         uses: actions/checkout@v2 #Retira o codigo do repositorio e envia para o ambiente de execução.
 
+<<<<<<< HEAD
       - name: Get container names
         id: get_name
         run: |
           echo "::set-output name=app_name::$(docker ps --filter ancestor=brunojoao3/docker-sm:php-8.3-franken --format "{{.Names}}")"
           echo "::set-output name=cypress_name::$(docker ps --filter ancestor=brunojoao3/docker-sm:cy-sm-hkm --format "{{.Names}}")"
         #Obtem o nome do container app e cypress
+=======
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Run commands
+      run: |
+        -u root --restart always --name php8.3-franken -p 8085:8085 -p 5173:5173 -v ../projects/gerenciador-compras:/var/www/gerenciador-compras -v ./dockerfiles/configs/php8.3-franken/php.ini:/usr/local/etc/php/conf.d/local.ini -v ./dockerfiles/configs/php8.3-franken/Caddyfile:/etc/caddy/Caddyfile -v caddy_data:/data -v caddy_config:/config brunojoao3/docker-sm:php-8.3-franken sh -c "sh frankenphp run --config /etc/caddy/Caddyfile"
+
+    # Configuração e instalação das dependências da aplicação
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: mbstring, dom, fileinfo, mysql
+        coverage: xdebug
+>>>>>>> ed14dde (Ajustando CI)
 
       - name: Get ip address of application
         id: get_ip
