@@ -98,7 +98,7 @@ describe('Testes da página Login.', () => {
 
     beforeEach(function () {
 
-        cy.visit(env.BASE_URL);
+        // cy.visit(dataParameters.env.BASE_URL);
 
     })
 
