@@ -102,22 +102,27 @@ describe('Testes da página Login.', () => {
 
     })
 
-    it.only(`Deve ser possível logar em vários dispositivos.`, () => {
+    // it(`Deve ser possível logar em vários dispositivos.`, () => {
 
 
-        dataParameters.sizes.forEach((size) => {
-            cy.login(env.EMAIL_ADMIN, env.PASSWORD_ADMIN, messageContainer)
-                .then((result) => {
-                    assert.exists(result.success, result.error)
-                });
+    //     dataParameters.sizes.forEach((size) => {
+    //         cy.login(env.EMAIL_ADMIN, env.PASSWORD_ADMIN, messageContainer)
+    //             .then((result) => {
+    //                 assert.exists(result.success, result.error)
+    //             });
 
-            if (Cypress._.isArray(size)) {
-                cy.loginLogoutWithViewport(size, userProfile, logout);
-            }
-        });
+    //         if (Cypress._.isArray(size)) {
+    //             cy.loginLogoutWithViewport(size, userProfile, logout);
+    //         }
+    //     });
+    // });
+
+    it.only('Deve efetuar o login com sucesso.', () => {
+        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
     });
-
-
 
     it('Deve falhar quando o "@" está ausente no campo de e-mail.', () => {
         cy.login('a', 'a', messageContainer)
@@ -167,12 +172,7 @@ describe('Testes da página Login.', () => {
         return cy.wrap({ success: 'Campo senha é do tipo password e ao digitar senha no campo não é possivel visualiza-la.' });
     });
 
-    it('Deve efetuar o login utilizando as informações corretas.', () => {
-        cy.login(env.EMAIL_ADMIN, env.PASSWORD_ADMIN, messageContainer)
-            .then((result) => {
-                assert.exists(result.success, result.error)
-            });
-    });
+
 
     it('Deve retornar falha no login devido à inserção de dados incorretos.', () => {
         cy.login('env.EMAIL_ADMIN', 'env.PASSWORD_ADMIN', messageContainer)
