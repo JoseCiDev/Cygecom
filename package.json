@@ -16,7 +16,7 @@
     "@faker-js/faker": "^8.0.2",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.8.10",
-    "cypress": "^13.7.1",
+    "cypress": "^13.9.0",
     "faker": "^5.5.3",
     "faker-br": "^0.4.1",
     "ts-loader": "^9.4.4",

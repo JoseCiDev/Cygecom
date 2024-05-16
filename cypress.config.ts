@@ -6,6 +6,7 @@ export default defineConfig({
   defaultCommandTimeout: 10000,
   waitForAnimations: false,
   numTestsKeptInMemory: 5,
+  experimentalMemoryManagement:true,
 
   e2e: {
     setupNodeEvents(on, config) {
