@@ -101,7 +101,7 @@ describe('Testes da página Login.', () => {
     })
 
     it('Deve efetuar o login com sucesso.', () => {
-        cy.visit('http://192.168.0.66:9402/');
+        cy.visit('http://gerenciador-compras.docker.local:8085');
     });
 
     
