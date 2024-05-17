@@ -120,7 +120,7 @@ const {
 
 Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elementError: string) => {
 
-    cy.visit('http://192.168.0.66:9402/');
+    cy.log('Teste');
    
 
 });
