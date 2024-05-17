@@ -17,7 +17,7 @@ export default defineConfig({
     redirectionLimit: 5000,
     viewportHeight: 1280,
     viewportWidth: 1024,
-    numTestsKeptInMemory: 5,
+    numTestsKeptInMemory: 1,
     excludeSpecPattern: [
       'cypress/support/*',
       'cypress/support/commands/*',
