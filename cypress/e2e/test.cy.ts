@@ -102,7 +102,7 @@ describe('Testes da página Login.', () => {
 
     it('Deve retornar um log', () => {
         
-        cy.visit('https://gecom.essentia.com.br/login');
+        cy.log('http://gerenciador-compras.docker.local:8085');
     });
 
 
