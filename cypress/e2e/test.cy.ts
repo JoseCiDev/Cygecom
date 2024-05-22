@@ -102,7 +102,7 @@ describe('Testes da página Login.', () => {
 
     it('Deve retornar um log', () => {
         
-        cy.log('http://gerenciador-compras.docker.local:8085');
+        cy.log('http://localhost:8085');
     });
 
 
