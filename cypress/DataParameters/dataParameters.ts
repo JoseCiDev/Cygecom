@@ -75,7 +75,7 @@ const dataEnvironment = Cypress.env(environment);
 export const requestTypeString = data.Request.requestType || 'product';
 export const requestData = data.Request[requestTypeString];
 
-const url = 'http://localhost';
+const url = dataEnvironment.BASE_URL;
 
 export const requestTyper = requestTypeString && requestTypeString !== " "
     ? RequestType[requestTypeString]
