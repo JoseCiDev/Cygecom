@@ -104,7 +104,7 @@ describe('Testes da página Login.', () => {
         // cy.login('gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
         cy.log('http://gerenciador-compras.docker.local:8085');
 
-        cy.visit('http://gerenciador-compras.docker.local:8085');
+        cy.visit('https://gecom.essentia.com.br/');
         
 
     });
