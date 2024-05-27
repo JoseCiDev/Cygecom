@@ -101,7 +101,7 @@ describe('Testes da página Login.', () => {
     })
 
     it('Deve efetuar o login com sucesso.', () => {
-        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+        cy.login('gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
           
     
     });
