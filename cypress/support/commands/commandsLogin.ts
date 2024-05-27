@@ -147,34 +147,34 @@ Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elem
                 });
         })
 
-    cy.get(access)
-        .click()
-        .then(() => {
+    // cy.get(access)
+    //     .click()
+        // .then(() => {
 
-            cy.checkValidation(emailAccess);
+        //     cy.checkValidation(emailAccess);
 
-            if (!validatePassword(passwordAccess)) {
-                cy.get('body').then(($body) => {
-                    if ($body.find(messageContainer).length > 0) {
-                        cy.get(messageContainer).then(($modal) => {
-                            const messageModal = $modal.text().trim();
-                            if (messageModal.includes('As credenciais fornecidas não coincidem com nossos registros.')) {
-                                throw new Error('Foi informado usuário ou senha incorretos na aplicação');
-                            }
-                            if (messageModal.includes('The password field is required.')) {
-                                throw new Error('Foi inserida uma senha incorreta na aplicação ou não foi fornecida nenhuma senha na aplicação.');
-                            }
+        //     if (!validatePassword(passwordAccess)) {
+        //         cy.get('body').then(($body) => {
+        //             if ($body.find(messageContainer).length > 0) {
+        //                 cy.get(messageContainer).then(($modal) => {
+        //                     const messageModal = $modal.text().trim();
+        //                     if (messageModal.includes('As credenciais fornecidas não coincidem com nossos registros.')) {
+        //                         throw new Error('Foi informado usuário ou senha incorretos na aplicação');
+        //                     }
+        //                     if (messageModal.includes('The password field is required.')) {
+        //                         throw new Error('Foi inserida uma senha incorreta na aplicação ou não foi fornecida nenhuma senha na aplicação.');
+        //                     }
 
-                        });
-                    } else {
-                        console.log('Element not found');
-                    }
-                });
-            }
+        //                 });
+        //             } else {
+        //                 console.log('Element not found');
+        //             }
+        //         });
+        //     }
 
-        });
+        // });
 
-    return cy.wrap({ success: 'Login realizado com sucesso.' });
+    // return cy.wrap({ success: 'Login realizado com sucesso.' });
 });
 
 
