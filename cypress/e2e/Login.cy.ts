@@ -101,11 +101,10 @@ describe('Testes da página Login.', () => {
     })
 
     it('Deve efetuar o login com sucesso.', () => {
-        cy.login(dataParameters.baseUrlCi, dataParameters.env.EMAIL_ADMIN_CI, dataParameters.env.PASSWORD_ADMIN_CI, messageContainer)
+        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
-
     });
 });
 
