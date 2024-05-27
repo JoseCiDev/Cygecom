@@ -19,7 +19,7 @@ declare global {
              * Custom command para fazer login.
              * @example cy.login()
              */
-            login(emailAccess: string, passwordAccess: string, elementError: string): ValidationResult;
+            login(baseUrl: string, emailAccess: string, passwordAccess: string, elementError: string): ValidationResult;
 
             /**
             * comando customizado para selecinar elemento e verificar se esta visivel.
@@ -109,7 +109,7 @@ declare global {
             * comando customizado para inserir arquivos.
             * @example cy.insertFile('img/ReceitaJpeg(1).jpeg', el.importarImagem);
             */
-            insertFile(element,filePath): ValidationResult;
+            insertFile(element, filePath): ValidationResult;
 
             /**
            * comando customizado para inserir arquivos.

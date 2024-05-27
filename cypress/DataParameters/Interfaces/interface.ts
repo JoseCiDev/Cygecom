@@ -161,11 +161,14 @@ export interface DataParameters<S = string> {
         ENV: S;
         EMAIL_ADMIN: S;
         PASSWORD_ADMIN: S;
+        EMAIL_ADMIN_CI: S;
+        PASSWORD_ADMIN_CI: S;
         EMAIL_USER_PADRAO: S;
         PASSWORD_USER_PADRAO: S;
         EMAIL_GESTOR_USUARIO: S;
         PASSWORD_GESTOR_USUARIO: S;
         BASE_URL: S;
+        BASE_URL_CI: S;
         DB_NAME: S;
         DB_USER: S;
         DB_HOST: S;
@@ -173,65 +176,66 @@ export interface DataParameters<S = string> {
         DB_PASSWORD: S;
     };
 
-    // filePath: S;
+        // filePath: S;
 
-    // sizes: Array<number | [number, number] | S>;
+        // sizes: Array<number | [number, number] | S>;
 
-    url: S;
+        baseUrl: S;
+        baseUrlCi: S;
 
-    // Autentication: {
-    //     domain;
-    //     email: S;
-    //     password: S;
-    //     giantPassword: S;
-    // };
-    // Register: {
-    //     userRegistration: UserRegistration<S>;
-    // };
+        // Autentication: {
+        //     domain;
+        //     email: S;
+        //     password: S;
+        //     giantPassword: S;
+        // };
+        // Register: {
+        //     userRegistration: UserRegistration<S>;
+        // };
 
-    request: Requests;
-
-
-    showHideColumns: ShowHideColumns;
-    getDataOnGrid: GetDataOnGrid;
+        request: Requests;
 
 
+        showHideColumns: ShowHideColumns;
+        getDataOnGrid: GetDataOnGrid;
 
-    telephoneType: typeof TelephoneType;
-    userProfile: typeof UserProfile;
-    sector: typeof Sector;
-    approverUser: typeof ApproverUser;
-    approveLimit: typeof ApproveLimit;
-    autorizedRequest: typeof AutorizedRequest;
-    requestOtherUsers: typeof RequestOtherUsers;
-    allowedCostCenter: typeof AllowedRequestCostCenter;
-    allowedApprovalCostCenter: typeof AllowedApprovalCostCenter;
 
-    showHideColumnsUserRegistration: typeof ShowHideColumnsUserRegistration;
-    showHideColumnsSupplierRegistration: typeof ShowHideColumnsSupplierRegistration;
-    showHideColumnsMyRequests: typeof ShowHideColumnsMyRequests;
-    showHideColumnsGeneralRequests: typeof ShowHideColumnsGeneralRequests;
-    showHideColumnsProductRequests: typeof ShowHideColumnsProductRequests;
-    showHideColumnsOneOffServiceRequests: typeof ShowHideColumnsOneOffServiceRequests;
-    showHideColumnsRecurringServiceRequests: typeof ShowHideColumnsRecurringServiceRequests;
-    showHideColumnsRequestReport: typeof ShowHideColumnsRequestReport;
-    showHideColumnsProductivityReport: typeof ShowHideColumnsProductivityReport;
-    showHideColumnsProfilesTable: typeof ShowHideColumnsProfilesTable;
 
-    tableColumnsUserRegistration: typeof TableColumnsUserRegistration;
-    tableColumnsSupplierRegistration: typeof TableColumnsSupplierRegistration;
-    tableColumnsMyRequests: typeof TableColumnsMyRequests;
-    tableColumnsGeneralRequests: typeof TableColumnsGeneralRequests;
-    tableColumnsProductRequests: typeof TableColumnsProductRequests;
-    tableColumnsOneOffServiceRequests: typeof TableColumnsOneOffServiceRequests;
-    tableColumnsRecurringServiceRequests: typeof TableColumnsRecurringServiceRequests;
-    tableColumnsRequestReport: typeof TableColumnsRequestReport;
-    tableColumnsProductivityReport: typeof TableColumnsProductivityReport;
-    tableColumnsProfilesTable: typeof TableColumnsProfilesTable;
+        telephoneType: typeof TelephoneType;
+        userProfile: typeof UserProfile;
+        sector: typeof Sector;
+        approverUser: typeof ApproverUser;
+        approveLimit: typeof ApproveLimit;
+        autorizedRequest: typeof AutorizedRequest;
+        requestOtherUsers: typeof RequestOtherUsers;
+        allowedCostCenter: typeof AllowedRequestCostCenter;
+        allowedApprovalCostCenter: typeof AllowedApprovalCostCenter;
 
-    searchColumnMyRequests: typeof SearchColumnMyRequests;
-    searchColumnGeneralRequests: typeof SearchColumnGeneralRequests;
-    searchColumnProductRequests: typeof SearchColumnProductRequests;
-    searchColumnOneOffServiceRequests: typeof SearchColumnOneOffServiceRequests;
-    searchColumnRecurringServiceRequests: typeof SearchColumnRecurringServiceRequests;
-}
+        showHideColumnsUserRegistration: typeof ShowHideColumnsUserRegistration;
+        showHideColumnsSupplierRegistration: typeof ShowHideColumnsSupplierRegistration;
+        showHideColumnsMyRequests: typeof ShowHideColumnsMyRequests;
+        showHideColumnsGeneralRequests: typeof ShowHideColumnsGeneralRequests;
+        showHideColumnsProductRequests: typeof ShowHideColumnsProductRequests;
+        showHideColumnsOneOffServiceRequests: typeof ShowHideColumnsOneOffServiceRequests;
+        showHideColumnsRecurringServiceRequests: typeof ShowHideColumnsRecurringServiceRequests;
+        showHideColumnsRequestReport: typeof ShowHideColumnsRequestReport;
+        showHideColumnsProductivityReport: typeof ShowHideColumnsProductivityReport;
+        showHideColumnsProfilesTable: typeof ShowHideColumnsProfilesTable;
+
+        tableColumnsUserRegistration: typeof TableColumnsUserRegistration;
+        tableColumnsSupplierRegistration: typeof TableColumnsSupplierRegistration;
+        tableColumnsMyRequests: typeof TableColumnsMyRequests;
+        tableColumnsGeneralRequests: typeof TableColumnsGeneralRequests;
+        tableColumnsProductRequests: typeof TableColumnsProductRequests;
+        tableColumnsOneOffServiceRequests: typeof TableColumnsOneOffServiceRequests;
+        tableColumnsRecurringServiceRequests: typeof TableColumnsRecurringServiceRequests;
+        tableColumnsRequestReport: typeof TableColumnsRequestReport;
+        tableColumnsProductivityReport: typeof TableColumnsProductivityReport;
+        tableColumnsProfilesTable: typeof TableColumnsProfilesTable;
+
+        searchColumnMyRequests: typeof SearchColumnMyRequests;
+        searchColumnGeneralRequests: typeof SearchColumnGeneralRequests;
+        searchColumnProductRequests: typeof SearchColumnProductRequests;
+        searchColumnOneOffServiceRequests: typeof SearchColumnOneOffServiceRequests;
+        searchColumnRecurringServiceRequests: typeof SearchColumnRecurringServiceRequests;
+    }

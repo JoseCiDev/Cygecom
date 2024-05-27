@@ -118,9 +118,9 @@ const {
 
 
 
-Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elementError: string) => {
+Cypress.Commands.add('login', (baseUrl: string, emailAccess: string, passwordAccess: string, elementError: string) => {
 
-    cy.visit(dataParameters.url);
+    cy.visit(baseUrl);
 
 
     cy.get(email, { timeout: 20000 })
