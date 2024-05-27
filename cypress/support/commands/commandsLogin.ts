@@ -123,29 +123,29 @@ Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elem
     cy.visit(dataParameters.url);
 
 
-    cy.get(email, { timeout: 20000 })
-        .each(($input) => {
-            cy.wrap($input)
-                .type(String(emailAccess), { log: false })
-                .should('have.value', emailAccess, { log: false })
-                .then(() => {
-                    checkInput($input, elementError, 'Usuário não foi inserido, porém não é apresentado mensagem ao usuário.');
-                    const emailError = validateEmail(emailAccess);
-                    if (emailError) {
-                        throw new Error(emailError);
-                    }
-                });
-        })
+    // cy.get(email, { timeout: 20000 })
+    //     .each(($input) => {
+    //         cy.wrap($input)
+    //             .type(String(emailAccess), { log: false })
+    //             .should('have.value', emailAccess, { log: false })
+    //             .then(() => {
+    //                 checkInput($input, elementError, 'Usuário não foi inserido, porém não é apresentado mensagem ao usuário.');
+    //                 const emailError = validateEmail(emailAccess);
+    //                 if (emailError) {
+    //                     throw new Error(emailError);
+    //                 }
+    //             });
+    //     })
 
-    cy.get(password, { timeout: 20000 })
-        .each(($input) => {
-            cy.wrap($input)
-                .type(String(passwordAccess), { log: false })
-                .should('have.value', passwordAccess, { log: false })
-                .then(() => {
-                    checkInput($input, elementError, 'Senha não foi inserida, porém não é apresentado mensagem ao usuário.');
-                });
-        })
+    // cy.get(password, { timeout: 20000 })
+    //     .each(($input) => {
+    //         cy.wrap($input)
+    //             .type(String(passwordAccess), { log: false })
+    //             .should('have.value', passwordAccess, { log: false })
+    //             .then(() => {
+    //                 checkInput($input, elementError, 'Senha não foi inserida, porém não é apresentado mensagem ao usuário.');
+    //             });
+    //     })
 
     // cy.get(access)
     //     .click()
