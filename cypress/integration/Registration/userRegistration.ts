@@ -95,7 +95,7 @@ describe('Testes da página Cadastro de Usuário', () => {
 
 
     beforeEach(function () {
-        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+        cy.login('http://gerenciador-compras.docker.local:8085', dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });

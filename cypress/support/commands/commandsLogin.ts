@@ -118,9 +118,9 @@ const {
 
 
 
-Cypress.Commands.add('login', (emailAccess: string, passwordAccess: string, elementError: string) => {
+Cypress.Commands.add('login', (baseUrl: string, emailAccess: string, passwordAccess: string, elementError: string) => {
 
-    cy.visit('http://gerenciador-compras.docker.local:8085');
+    cy.visit(baseUrl);
 
 
     cy.get(email, { timeout: 20000 })
