@@ -98,7 +98,7 @@ describe('Testes da página de criação de solicitação de produtos', () => {
 
     beforeEach(function () {
 
-        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+        cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
