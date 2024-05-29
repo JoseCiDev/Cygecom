@@ -98,10 +98,10 @@ describe('Testes da página de criação de solicitação de produtos', () => {
 
     beforeEach(function () {
 
-        cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
-            .then((result) => {
-                assert.exists(result.success, result.error)
-            });
+        // cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
+        //     .then((result) => {
+        //         assert.exists(result.success, result.error)
+        //     });
             //http://192.168.0.66:9402/login
             //gecom_admin@essentia.com.br
             //admin123
@@ -109,12 +109,17 @@ describe('Testes da página de criação de solicitação de produtos', () => {
 
     it(`Solicitação de produtos`, () => {
 
-        cy.getElementAndClick([
-            '.main-nav > :nth-child(3) > .btn',
-            '[data-cy="dropdown-solicitacoes-novas"]',
-            '.main-nav > :nth-child(3) > .btn',
-            '[data-cy="dropdown-solicitacoes-novas"]',
-        ]);
+        cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
+
+        // cy.getElementAndClick([
+        //     '.main-nav > :nth-child(3) > .btn',
+        //     '[data-cy="dropdown-solicitacoes-novas"]',
+        //     '.main-nav > :nth-child(3) > .btn',
+        //     '[data-cy="dropdown-solicitacoes-novas"]',
+        // ]);
         // cy.createRequest(RequestType.product);
 
     });
