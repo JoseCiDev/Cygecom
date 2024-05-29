@@ -271,12 +271,12 @@ const request: Requests = {
     observation,
     paymentCondition,
     totalValue,
-    paymentMethod,
+    // paymentMethod,
     paymentInstallments,
     paymentDetails,
     supplier,
     attachedFile,
-    isSaved,
+    // isSaved,
 
     category,
     nameAndDescription,
@@ -294,8 +294,8 @@ const request: Requests = {
 
     serviceAlreadyProvided,
 
-    initialPaymentEffectiveDate,
-    finalPaymentEffectiveDate,
+    // initialPaymentEffectiveDate,
+    // finalPaymentEffectiveDate,
     paymentRecurrence,
     paymentDueDate,
     typeOfPaymentAmount,
