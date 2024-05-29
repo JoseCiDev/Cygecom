@@ -7,8 +7,8 @@
     "test": "npx cypress run",
     "cloud": "cypress run --browser chrome --record --key 1c4613ae-0a1f-4414-8cb5-4fc6ea0da5b2 --spec \"cypress/e2e/Login.ts\"",
     "login": "cypress run --browser electron --spec \"cypress/integration/Autentication/Login.ts\"",
-    "request": "cypress run --browser electron --headless --spec \"cypress/integration/Request/Product/productRequest.ts\"",
-    "e2e": "cypress run --browser electron --headless --spec \"cypress/e2e/Login.cy.ts\""
+    "e2e": "cypress run --browser electron --headless --spec \"cypress/e2e/productRequest.cy.ts\"",
+    "request": "cypress run --browser electron --headless --spec \"cypress/e2e/Login.cy.ts\""
     
     
   },
