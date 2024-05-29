@@ -77,89 +77,182 @@ export const requestData = data.Request[requestTypeString];
 
 const url = 'http://gerenciador-compras.docker.local:8085';
 
-export const requestTyper = RequestType.product;
+export const requestTyper = requestTypeString && requestTypeString !== " "
+    ? RequestType[requestTypeString]
+    : RequestType.product;
 
-const costCenter = CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'];
+const costCenter = requestData.costCenter && requestData.costCenter !== " "
+    ? CostCenter[requestData.costCenter]
+    : CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'];
 
-const apportionmentPercentage = faker.helpers.arrayElement(['100']);
+const apportionmentPercentage = requestData.apportionmentPercentage && requestData.apportionmentPercentage !== " "
+    ? requestData.apportionmentPercentage
+    : faker.helpers.arrayElement(['100']);
 
-const apportionmentValue = faker.helpers.arrayElement([' ']);
+const apportionmentValue = requestData.apportionmentValue && requestData.apportionmentValue !== " "
+    ? requestData.apportionmentValue
+    : faker.helpers.arrayElement([' ']);
 
-const quoteRequest = "false";
+const quoteRequest = requestData.quoteRequest && requestData.quoteRequest !== " " && requestData.quoteRequest.toLowerCase() === "true"
+    ? "true"
+    : "false";
 
-const acquiringArea = AcquiringArea.suppliesContract;
+const acquiringArea = requestData.acquiringArea && requestData.acquiringArea !== " "
+    ? AcquiringArea[requestData.acquiringArea]
+    : AcquiringArea.suppliesContract;
 
 let isComex;
-const IsComexImport = IsComexImportProduct.no;
+const IsComexImport = requestTypeString === 'product'
+    ? IsComexImportProduct
+    : IsComexImportService;
+if (requestData.isComex && requestData.isComex !== " ") {
+    const isComexString = requestData.isComex;
+    isComex = IsComexImport[isComexString]
+}
+else {
+    isComex = IsComexImport.no
+}
 
-const reasonForRequest = faker.lorem.lines(1);
+const reasonForRequest = requestData.reasonForRequest && requestData.reasonForRequest !== " "
+    ? requestData.reasonForRequest
+    : faker.lorem.lines(1);
 
-const desiredDeliveryDate = new Date().toISOString().split('T')[0];
+const desiredDeliveryDate = requestData.desiredDeliveryDate && requestData.desiredDeliveryDate !== " "
+    ? requestData.desiredDeliveryDate
+    : new Date().toISOString().split('T')[0];
 
-const localDescription = faker.lorem.lines(1);
+const localDescription = requestData.localDescription && requestData.localDescription !== " " ? requestData.localDescription : faker.lorem.lines(1);
 
-export const suggestionLinksString = SuggestionLinks.product;
+export const suggestionLinksString = requestTypeString === 'product'
+    ? SuggestionLinks.product
+    : SuggestionLinks.service;
 
-const suggestion = faker.internet.url();
+const suggestion = requestData.suggestionLinks && requestData.suggestionLinks !== " "
+    ? requestData.suggestionLinks
+    : faker.internet.url();
 
-export const observationString = ObservationOfRequest.productAndRecurringService;
+export const observationString = requestTypeString === 'product' || requestTypeString === 'recurringService'
+    ? ObservationOfRequest.productAndRecurringService
+    : ObservationOfRequest.oneOffService;
 
-const observation = faker.lorem.lines(1);
+const observation = requestData.observation && requestData.observation !== " "
+    ? requestData.observation
+    : faker.lorem.lines(1);
 
-const paymentCondition = PaymentCondition.cashPayment;
+const paymentCondition = requestData.paymentCondition && requestData.paymentCondition !== " "
+    ? PaymentCondition[requestData.paymentCondition]
+    : PaymentCondition.cashPayment;
 
-const totalValue = faker.helpers.arrayElement([1750.85, 325.90, 1025]);
+const totalValue = requestData.totalValue && requestData.totalValue !== " "
+    ? requestData.totalValue
+    : faker.helpers.arrayElement([1750.85, 325.90, 1025]);
 
-const paymentMethod = PaymentMethod.pix;
+const paymentMethod = requestData.paymentMethod && requestData.paymentMethod !== " "
+    ? PaymentMethod[requestData.paymentMethod]
+    : PaymentMethod.pix;
 
-const paymentInstallments = faker.helpers.arrayElement([3, 8]);
+const paymentInstallments = requestData.paymentInstallments && requestData.paymentInstallments !== " "
+    ? requestData.paymentInstallments
+    : faker.helpers.arrayElement([3, 8]);
 
-const paymentDetails = faker.lorem.lines(1);
+const paymentDetails = requestData.paymentDetails && requestData.paymentDetails !== " "
+    ? requestData.paymentDetails
+    : faker.lorem.lines(1);
 
-const supplier = SupplierOfRequest['05.876.012/0032-02  - PBTECH COM. E SERVIÇOS DE REVEST. CERAMICOS LTDA'];
+const supplier = requestData.supplier && requestData.supplier !== " "
+    ? SupplierOfRequest[requestData.supplier]
+    : SupplierOfRequest['05.876.012/0032-02  - PBTECH COM. E SERVIÇOS DE REVEST. CERAMICOS LTDA'];
 
-const category = ProductCategory['Brinde - Mercadoria distribuida gratuitamente para nossos clientes e que não podemos vender. Ex. Toalha, Necessaire, etc...'];
+const category = requestData.category && requestData.category !== " "
+    ? ProductCategory[requestData.category]
+    : ProductCategory['Brinde - Mercadoria distribuida gratuitamente para nossos clientes e que não podemos vender. Ex. Toalha, Necessaire, etc...'];
 
-const attachedFile = '../fixtures/attachedFile.png';
+const attachedFile = requestData.file && requestData.file !== " "
+    ? requestData.file
+    : '../fixtures/attachedFile.png';
 
+export let isSaved;
+export let IsSavedRequest;
+if (requestData.saveRequest && requestData.saveRequest !== " ") {
+    const isSavedString = requestData.saveRequest;
+    IsSavedRequest = isSavedString !== "submit" ? SaveRequestDraft : SaveRequestSubmit;
+    isSaved = IsSavedRequest[requestTypeString];
+}
+else {
+    isSaved = SaveRequestDraft[requestTypeString];
+}
 
-    const isSaved = SaveRequestDraft.product
+const nameAndDescription = requestData.nameAndDescription && requestData.nameAndDescription !== " "
+    ? requestData.nameAndDescription
+    : faker.commerce.productName();
 
-const nameAndDescription = faker.commerce.productName();
+const quantity = requestData.quantity && requestData.quantity !== " "
+    ? requestData.quantity
+    : faker.helpers.arrayElement([3, 8]);
 
-const quantity = faker.helpers.arrayElement([3, 8]);
+const color = requestData.color && requestData.color !== " "
+    ? requestData.color
+    : faker.helpers.arrayElement(['red', 'blue', 'green', 'yellow']);
 
-const color = faker.helpers.arrayElement(['red', 'blue', 'green', 'yellow']);
+const size = requestData.size && requestData.size !== " "
+    ? requestData.size
+    : faker.helpers.arrayElement(['P', 'M', 'G', 'GG']);
 
-const size = faker.helpers.arrayElement(['P', 'M', 'G', 'GG']);
+const model = requestData.model && requestData.model !== " "
+    ? requestData.model
+    : faker.helpers.arrayElement(['BASIC', 'ADVANCED']);
 
-const model = faker.helpers.arrayElement(['BASIC', 'ADVANCED']);
+const link = requestData.link && requestData.link !== " "
+    ? requestData.link
+    : faker.internet.url();
 
-const link = faker.internet.url();
+export const serviceNameString = requestTypeString === 'oneOffService'
+    ? ServiceName.oneOffService
+    : ServiceName.recurringService;
 
-export const serviceNameString = ServiceName.recurringService;
+const serviceName = requestData.serviceName && requestData.serviceName !== " "
+    ? requestData.serviceName
+    : faker.lorem.lines(1).trim();
 
-const serviceName = faker.lorem.lines(1).trim();
+const description = requestData.description && requestData.description !== " "
+    ? requestData.description
+    : faker.lorem.lines(1);
 
-const description = faker.lorem.lines(1);
+const seller = requestData.seller && requestData.seller !== " "
+    ? requestData.seller
+    : faker.person.fullName();
 
-const seller = faker.person.fullName();
+const sellerTelephone = requestData.sellerTelephone && requestData.sellerTelephone !== " "
+    ? requestData.sellerTelephone
+    : fakerBr.phone.phoneNumber();
 
-const sellerTelephone = fakerBr.phone.phoneNumber();
+const sellerEmail = requestData.sellerEmail && requestData.sellerEmail !== " "
+    ? requestData.sellerEmail
+    : faker.internet.email();
 
-const sellerEmail = faker.internet.email();
+const serviceAlreadyProvided = requestData.serviceAlreadyProvided && requestData.serviceAlreadyProvided !== " "
+    ? ServiceAlreadyProvided[requestData.serviceAlreadyProvided]
+    : ServiceAlreadyProvided.no;
 
-const serviceAlreadyProvided = ServiceAlreadyProvided.no;
+const typeOfPaymentAmount = requestData.typeOfPaymentAmount && requestData.typeOfPaymentAmount !== " "
+    ? TypeOfPaymentAmount[requestData.typeOfPaymentAmount]
+    : TypeOfPaymentAmount.variable;
 
-const typeOfPaymentAmount = TypeOfPaymentAmount.variable;
+const initialPaymentEffectiveDate = requestData.initialPaymentEffectiveDate && requestData.initialPaymentEffectiveDate !== " "
+    ? requestData.initialPaymentEffectiveDate
+    : new Date().toISOString().split('T')[0];
 
-const initialPaymentEffectiveDate = new Date().toISOString().split('T')[0];
+const finalPaymentEffectiveDate = requestData.finalPaymentEffectiveDate && requestData.finalPaymentEffectiveDate !== " "
+    ? requestData.finalPaymentEffectiveDate
+    : new Date().toISOString().split('T')[0];
 
-const finalPaymentEffectiveDate = new Date().toISOString().split('T')[0];
+const paymentRecurrence = requestData.paymentRecurrence && requestData.paymentRecurrence !== " "
+    ? PaymentRecurrence[requestData.paymentRecurrence]
+    : PaymentRecurrence.monthly;
 
-const paymentRecurrence = PaymentRecurrence.monthly;
-
-const paymentDueDate = PaymentDueDate.one;
+const paymentDueDate = requestData.paymentDueDate && requestData.paymentDueDate !== " "
+    ? PaymentDueDate[requestData.paymentDueDate]
+    : PaymentDueDate.one;
 
 
 
@@ -178,12 +271,12 @@ const request: Requests = {
     observation,
     paymentCondition,
     totalValue,
-    // paymentMethod,
+    paymentMethod,
     paymentInstallments,
     paymentDetails,
     supplier,
     attachedFile,
-    // isSaved,
+    isSaved,
 
     category,
     nameAndDescription,
@@ -201,8 +294,8 @@ const request: Requests = {
 
     serviceAlreadyProvided,
 
-    // initialPaymentEffectiveDate,
-    // finalPaymentEffectiveDate,
+    initialPaymentEffectiveDate,
+    finalPaymentEffectiveDate,
     paymentRecurrence,
     paymentDueDate,
     typeOfPaymentAmount,
@@ -562,14 +655,14 @@ export const Messages = {
         VALID_VALUE: `Por favor, forneça um número válido.`
     },
     returnMessages: {
-        fieldFilledAndMessageDisplayed: 'Lamentamos informar que ocorreu um problema no preenchimento do campo, pois a mensagem de obrigatoriedade está sendo exibida mesmo com o campo já preenchido.',
-        fieldNotFilledAndMessageNotDisplayed: 'O campo em questão não foi preenchido corretamente. No entanto, gostaríamos de ressaltar que a mensagem de obrigatoriedade não está sendo exibida conforme o esperado.',
-        sumPercentagesCorrectAndMessageDisplayed: 'A soma total das porcentagens é igual a 100%. No entanto, a mensagem que indica que a porcentagem deve ser igual a 100% é exibida.',
-        sumPercentagesIncorrectAndMessageNotDisplayed: 'Lamentamos informar que a soma das porcentagens é inferior a 100%. No entanto, a mensagem que indica que a porcentagem deve ser 100% não está sendo exibida.',
-        valueLessThanOrEqualToZeroAndMessageNotDisplayed: 'Foi observado que um valor menor ou igual a zero foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
-        valueGreaterOrThanEqualToZeroMessageNotDisplayed: 'Foi observado que um valor maior que zero foi informado, no entanto, é exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
-        differentValueOfNumbersMessageNotDisplayed: 'Foi observado que um valor diferente de número foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor numérico.',
-
+        fieldFilledAndMessageDisplayed:'Lamentamos informar que ocorreu um problema no preenchimento do campo, pois a mensagem de obrigatoriedade está sendo exibida mesmo com o campo já preenchido.',
+        fieldNotFilledAndMessageNotDisplayed:'O campo em questão não foi preenchido corretamente. No entanto, gostaríamos de ressaltar que a mensagem de obrigatoriedade não está sendo exibida conforme o esperado.',
+        sumPercentagesCorrectAndMessageDisplayed:'A soma total das porcentagens é igual a 100%. No entanto, a mensagem que indica que a porcentagem deve ser igual a 100% é exibida.',
+        sumPercentagesIncorrectAndMessageNotDisplayed:'Lamentamos informar que a soma das porcentagens é inferior a 100%. No entanto, a mensagem que indica que a porcentagem deve ser 100% não está sendo exibida.',
+        valueLessThanOrEqualToZeroAndMessageNotDisplayed:'Foi observado que um valor menor ou igual a zero foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
+        valueGreaterOrThanEqualToZeroMessageNotDisplayed:'Foi observado que um valor maior que zero foi informado, no entanto, é exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
+        differentValueOfNumbersMessageNotDisplayed:'Foi observado que um valor diferente de número foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor numérico.',
+        
     },
 
     //Por favor, forneça um número válido.
