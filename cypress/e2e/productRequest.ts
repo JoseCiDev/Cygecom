@@ -1,20 +1,13 @@
-import {
-    ConditionalWrite,
-    IsComexImportProduct,
-    IsComexImportService,
-    ObservationOfRequest,
-    QuoteRequest,
-    RequestType,
-    ServiceName,
-    SuggestionLinks,
-    Request,
-    // ProductRequest,
-    // data,
-    elements as el,
-    DataParameters,
-    faker,
-    dataParameters
-} from '../../../import';
+/// <reference types="cypress" />
+
+import { faker } from '@faker-js/faker';
+
+import { elements as el } from '../elements';
+import { env } from 'process';
+import { data } from 'cypress/types/jquery';
+import { DataParameters } from '../import';
+import { dataParameters } from '../DataParameters/dataParameters';
+
 const {
     logout,
     optionsMenu,
@@ -93,51 +86,38 @@ const {
 } = el.Supply
 
 
-describe('Testes da página de criação de solicitação de produtos', () => {
 
+
+// cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
+//     .then((result) => {
+//         assert.exists(result.success, result.error)
+//     });
+//http://192.168.0.66:9402/login
+//gecom_admin@essentia.com.br
+//admin123
+
+
+
+
+// cy.getElementAndClick([
+//     '.main-nav > :nth-child(3) > .btn',
+//     '[data-cy="dropdown-solicitacoes-novas"]',
+//     '.main-nav > :nth-child(3) > .btn',
+//     '[data-cy="dropdown-solicitacoes-novas"]',
+// ]);
+// cy.createRequest(RequestType.product);
+
+describe('Testes da página de criação de solicitação de produtos.', () => {
 
     beforeEach(function () {
 
-        // cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
-        //     .then((result) => {
-        //         assert.exists(result.success, result.error)
-        //     });
-            //http://192.168.0.66:9402/login
-            //gecom_admin@essentia.com.br
-            //admin123
-    });
+    })
 
     it(`Solicitação de produtos`, () => {
-
         cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
-
-        // cy.getElementAndClick([
-        //     '.main-nav > :nth-child(3) > .btn',
-        //     '[data-cy="dropdown-solicitacoes-novas"]',
-        //     '.main-nav > :nth-child(3) > .btn',
-        //     '[data-cy="dropdown-solicitacoes-novas"]',
-        // ]);
-        // cy.createRequest(RequestType.product);
-
     });
-})
+});
 
 
-/*
-searchPrescription
-newUserRegistration
-    VALIDACOES DE CAMPOS
-    VALIDACAO CAMPO PASSWORD
-    VALIDACAO CAMPO CNPJ
-    VALIDACAO CAMPO TELEFONE CELULAR
-    VALIDACAO CAMPO EMAIL
-    OBRIGATORIEDADE DOS CAMPOS
-    LIMITE DE CARACTERES NO CAMPOS
-    TIPO DE DADO ACEITO NOS CAMPOS
-    VALIDAR MENSAGENS DE RETORNO
-    
-    
-editNewUser
-deleteNewUser
 
-*/
+
