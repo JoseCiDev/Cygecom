@@ -116,9 +116,11 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
     it(`Solicitação de produtos`, () => {
         cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
 
-        // cy.getElementAndClick([
-        //     '.main-nav > :nth-child(3) > .btn'
-        // ]);
+        cy.wait(10000);
+
+        cy.getElementAndClick([
+            '.main-nav > :nth-child(3) > .btn'
+        ]);
     });
 });
 
