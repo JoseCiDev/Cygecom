@@ -116,18 +116,18 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
 
     it(`Solicitação de produtos`, () => {
 
-        cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
+        cy.login('http://192.168.0.66:9402', 'gecom_admin@essentia.com.br', 'admin123', messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
-        cy.visit('http://gerenciador-compras.docker.local:8085')
+        cy.visit('http://192.168.0.66:9402')
 
-        cy.get('.btn').click();
-
-        cy.getElementAndClick([
-            '.main-nav > :nth-child(3) > .btn',
-            '[data-cy="dropdown-solicitacoes-novas"]',
-        ]);
+        // cy.get('.btn').click();
+        cy.get('[data-cy="logo-gecom"]').click();
+        // cy.getElementAndClick([
+        //     '.main-nav > :nth-child(3) > .btn',
+        //     '[data-cy="dropdown-solicitacoes-novas"]',
+        // ]);
         // cy.createRequest(RequestType.product);
     });
 });
