@@ -117,7 +117,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
     it(`Solicitação de produtos`, () => {
       
         
-        // cy.url().should('include', '/login');
+        cy.visit('http://gerenciador-compras.docker.local:8085')
         cy.reload(true);
         cy.get('[data-cy="logo-gecom"]');
         // cy.createRequest(RequestType.product);
