@@ -116,7 +116,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
-
+cy.log('cy.getElementAndClick([requestMenu,newRequestSubMenu])')
         // cy.getElementAndClick([
         //     requestMenu,
         //     newRequestSubMenu
