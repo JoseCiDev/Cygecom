@@ -115,9 +115,13 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
     })
 
     it(`Solicitação de produtos`, () => {
-        cy.visit('http://gerenciador-compras.docker.local:8085/users')
+        cy.visit('http://gerenciador-compras.docker.local:8085/requests/dashboard')
+
+        cy.wait(30000);
             
         cy.log('cy.getElementAndClick([requestMenu,newRequestSubMenu])')
+
+        cy.wait(30000);
         // cy.get(requestMenu);
         // cy.createRequest(RequestType.product);
     });
