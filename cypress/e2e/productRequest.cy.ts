@@ -115,7 +115,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
     })
 
     it(`Solicitação de produtos`, () => {
-        cy.visit('http://gerenciador-compras.docker.local:8085')
+        cy.visit('http://gerenciador-compras.docker.local:8085/users')
             
         cy.log('cy.getElementAndClick([requestMenu,newRequestSubMenu])')
         // cy.get(requestMenu);
