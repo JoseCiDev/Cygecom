@@ -119,6 +119,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
         
         // cy.url().should('include', '/login');
         cy.reload(true);
+        cy.get('[data-cy="logo-gecom"]');
         // cy.createRequest(RequestType.product);
     });
 });
