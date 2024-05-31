@@ -6,11 +6,11 @@ export default defineConfig({
   defaultCommandTimeout: 10000,
   waitForAnimations: false,
   numTestsKeptInMemory: 5,
-  experimentalMemoryManagement:true,
+  experimentalMemoryManagement: true,
 
   e2e: {
+    baseUrl: 'http://localhost:1234',
     setupNodeEvents(on, config) {
-
     },
     supportFile: 'cypress/support/e2e.{js,jsx,ts,tsx}',
     specPattern: 'cypress/**/*.{js,jsx,ts,tsx}',
