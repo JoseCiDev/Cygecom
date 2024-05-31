@@ -185,7 +185,7 @@ export const elements: Elements = {
     },
 
     Request: {
-        requestMenu: '[data-cy="dropdown-solicitacoes"]',
+        requestMenu: '.main-nav > :nth-child(3) > .btn',
         newRequestSubMenu: '[data-cy="dropdown-solicitacoes-novas"]',
         myRequestSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
         requestGeneralSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
