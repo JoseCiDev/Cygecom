@@ -116,7 +116,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
 
     it(`Solicitação de produtos`, () => {
       
-        cy.visit('/login');
+        cy.visit('/requests');
         // cy.get(requestMenu);
         // cy.createRequest(RequestType.product);
     });
