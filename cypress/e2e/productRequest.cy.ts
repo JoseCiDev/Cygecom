@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import { elements as el } from '../elements';
 import { env } from 'process';
 import { data } from 'cypress/types/jquery';
-import { DataParameters } from '../import';
+import { DataParameters, RequestType } from '../import';
 import { dataParameters } from '../DataParameters/dataParameters';
 
 const {
@@ -95,7 +95,10 @@ const {
 //http://192.168.0.66:9402/login
 //gecom_admin@essentia.com.br
 //admin123
-
+// cy.login('http://192.168.0.66:9402', 'gecom_admin@essentia.com.br', 'admin123', messageContainer)
+//     .then((result) => {
+//         assert.exists(result.success, result.error)
+//     });
 
 
 
@@ -108,18 +111,24 @@ const {
 describe('Testes da página de criação de solicitação de produtos.', () => {
 
     beforeEach(function () {
-        
+
     })
 
     it(`Solicitação de produtos`, () => {
-      
-        cy.login('http://gerenciador-compras.docker.local:8085/login', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
+
+        cy.login('http://192.168.0.66:9402', 'gecom_admin@essentia.com.br', 'admin123', messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
-        cy.visit('http://gerenciador-compras.docker.local:8085/dashboard')
-        cy.wait(20000);
-        // cy.createRequest(RequestType.product);
+        cy.visit('http://192.168.0.66:9402/dashboard')
+
+        cy.get('.btn').click();
+
+        cy.getElementAndClick([
+            '.main-nav > :nth-child(3) > .btn',
+            '[data-cy="dropdown-solicitacoes-novas"]',
+        ]);
+        cy.createRequest(RequestType.product);
     });
 });
 
