@@ -124,15 +124,11 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
                 assert.exists(result.success, result.error)
             });
 
-        cy.visit('http://gerenciador-compras.docker.local:8085/requests/dashboard');
-        cy.wait(20000);
-        // cy.getElementAndClick([logoGecom])
-
-        // cy.getElementAndClick([
-        //     requestMenu,
-        //     newRequestSubMenu,
-        // ]);
-        // cy.createRequest(RequestType.product);
+        cy.getElementAndClick([
+            requestMenu,
+            newRequestSubMenu,
+        ]);
+        cy.createRequest(RequestType.product);
     });
 });
 
