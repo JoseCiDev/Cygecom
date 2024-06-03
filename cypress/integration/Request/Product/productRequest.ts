@@ -125,7 +125,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
             '.main-nav > :nth-child(3) > .btn',
             '[data-cy="dropdown-solicitacoes-novas"]',
         ]);
-        // cy.createRequest(RequestType.product);
+        cy.createRequest(dataParameters.request.requestType);
     });
 });
 
