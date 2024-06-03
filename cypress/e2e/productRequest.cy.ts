@@ -128,7 +128,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
 
         cy.getElementAndClick([
             requestMenu,
-            // newRequestSubMenu,
+            newRequestSubMenu,
         ]);
 
         cy.wait(20000);
