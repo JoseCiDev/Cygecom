@@ -111,7 +111,7 @@ const {
 describe('Testes da página de criação de solicitação de produtos.', () => {
 
     beforeEach(function () {
-        cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
+        cy.login('/', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
@@ -119,12 +119,12 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
 
     it(`Solicitação de produtos`, () => {
 
-        cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
+        cy.login('/', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
 
-        cy.visit('http://gerenciador-compras.docker.local:8085/requests/dashboard');
+        cy.visit('/requests/dashboard');
 
         // cy.getElementAndClick([
         //     requestMenu,
