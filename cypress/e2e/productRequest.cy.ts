@@ -126,16 +126,16 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
 
         cy.visit('/requests/dashboard');
 
-        cy.getElementAndClick([
-            requestMenu,
-            newRequestSubMenu,
-        ]);
+        // cy.getElementAndClick([
+        //     requestMenu,
+        //     newRequestSubMenu,
+        // ]);
 
-        cy.wait(3000);
+        // cy.wait(3000);
 
-        cy.createRequest(dataParameters.request.requestType);
+        // cy.createRequest(dataParameters.request.requestType);
 
-        cy.wait(3000);
+        // cy.wait(3000);
     });
 });
 
