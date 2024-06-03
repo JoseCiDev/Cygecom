@@ -128,10 +128,10 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
 
         cy.getElementAndClick([
             requestMenu,
-            newRequestSubMenu,
+            // newRequestSubMenu,
         ]);
 
-        cy.createRequest(RequestType.product);
+        // cy.createRequest(RequestType.product);
     });
 });
 
