@@ -131,11 +131,11 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
             newRequestSubMenu,
         ]);
 
-        cy.wait(20000);
+        cy.wait(3000);
 
         cy.createRequest(dataParameters.request.requestType);
 
-        cy.wait(20000);
+        cy.wait(3000);
     });
 });
 
