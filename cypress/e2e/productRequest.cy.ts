@@ -122,11 +122,11 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
             });
         cy.visit('http://gerenciador-compras.docker.local:8085/requests/dashboard')
 
-        // cy.get('.btn').click();
-        cy.get('[data-cy="logo-gecom"]').click();
+        cy.getElementAndClick([logoGecom])
+
         cy.getElementAndClick([
-            '.main-nav > :nth-child(3) > .btn',
-            '[data-cy="dropdown-solicitacoes-novas"]',
+            requestMenu,
+            newRequestSubMenu,
         ]);
         cy.createRequest(RequestType.product);
     });
