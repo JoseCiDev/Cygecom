@@ -131,6 +131,8 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
             // newRequestSubMenu,
         ]);
 
+        cy.wait(20000);
+
         // cy.createRequest(RequestType.product);
     });
 });
