@@ -116,67 +116,65 @@ const {
 } = el.Supply
 
 
-
-
 Cypress.Commands.add('login', (baseUrl: string, emailAccess: string, passwordAccess: string, elementError: string) => {
-    cy.session([baseUrl, emailAccess, passwordAccess], () => {
-        cy.visit(baseUrl);
 
-        cy.get(email, { timeout: 20000 })
-            .each(($input) => {
-                cy.wrap($input)
-                    .type(String(emailAccess), { log: false })
-                    .should('have.value', emailAccess, { log: false })
-                    .then(() => {
-                        checkInput($input, elementError, 'Usuário não foi inserido, porém não é apresentado mensagem ao usuário.');
-                        const emailError = validateEmail(emailAccess);
-                        if (emailError) {
-                            throw new Error(emailError);
-                        }
-                    });
-            })
+    cy.visit(baseUrl);
+   
 
-        cy.get(password, { timeout: 20000 })
-            .each(($input) => {
-                cy.wrap($input)
-                    .type(String(passwordAccess), { log: false })
-                    .should('have.value', passwordAccess, { log: false })
-                    .then(() => {
-                        checkInput($input, elementError, 'Senha não foi inserida, porém não é apresentado mensagem ao usuário.');
-                    });
-            })
+    cy.get(email, { timeout: 20000 })
+        .each(($input) => {
+            cy.wrap($input)
+                .type(String(emailAccess), { log: false })
+                .should('have.value', emailAccess, { log: false })
+                .then(() => {
+                    checkInput($input, elementError, 'Usuário não foi inserido, porém não é apresentado mensagem ao usuário.');
+                    const emailError = validateEmail(emailAccess);
+                    if (emailError) {
+                        throw new Error(emailError);
+                    }
+                });
+        })
 
-        cy.get(access)
-            .click()
-            .then(() => {
-                cy.checkValidation(emailAccess);
+    cy.get(password, { timeout: 20000 })
+        .each(($input) => {
+            cy.wrap($input)
+                .type(String(passwordAccess), { log: false })
+                .should('have.value', passwordAccess, { log: false })
+                .then(() => {
+                    checkInput($input, elementError, 'Senha não foi inserida, porém não é apresentado mensagem ao usuário.');
+                });
+        })
 
-                if (!validatePassword(passwordAccess)) {
-                    cy.get('body').then(($body) => {
-                        if ($body.find(messageContainer).length > 0) {
-                            cy.get(messageContainer).then(($modal) => {
-                                const messageModal = $modal.text().trim();
-                                if (messageModal.includes('As credenciais fornecidas não coincidem com nossos registros.')) {
-                                    throw new Error('Foi informado usuário ou senha incorretos na aplicação');
-                                }
-                                if (messageModal.includes('The password field is required.')) {
-                                    throw new Error('Foi inserida uma senha incorreta na aplicação ou não foi fornecida nenhuma senha na aplicação.');
-                                }
-                            });
-                        } else {
-                            console.log('Element not found');
-                        }
-                    });
-                }
-            });
-    }, {
-        validate() {
-            cy.request('/api/user').its('status').should('eq', 200);
-        }
-    });
+    cy.get(access)
+        .click()
+        .then(() => {
 
+            cy.checkValidation(emailAccess);
+
+            if (!validatePassword(passwordAccess)) {
+                cy.get('body').then(($body) => {
+                    if ($body.find(messageContainer).length > 0) {
+                        cy.get(messageContainer).then(($modal) => {
+                            const messageModal = $modal.text().trim();
+                            if (messageModal.includes('As credenciais fornecidas não coincidem com nossos registros.')) {
+                                throw new Error('Foi informado usuário ou senha incorretos na aplicação');
+                            }
+                            if (messageModal.includes('The password field is required.')) {
+                                throw new Error('Foi inserida uma senha incorreta na aplicação ou não foi fornecida nenhuma senha na aplicação.');
+                            }
+
+                        });
+                    } else {
+                        console.log('Element not found');
+                    }
+                });
+            }
+           
+        });
+        
     return cy.wrap({ success: 'Login realizado com sucesso.' });
 });
+
 
 
 Cypress.Commands.add('loginLogoutWithViewport', (size: Cypress.ViewportPreset | [number, number], elementAction: string, elementSubmit: string) => {

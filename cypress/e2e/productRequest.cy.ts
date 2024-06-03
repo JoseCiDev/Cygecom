@@ -123,10 +123,10 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
 
         // cy.getElementAndClick([logoGecom])
 
-        cy.getElementAndClick([
-            requestMenu,
-            newRequestSubMenu,
-        ]);
+        // cy.getElementAndClick([
+        //     requestMenu,
+        //     newRequestSubMenu,
+        // ]);
         cy.createRequest(RequestType.product);
     });
 });
