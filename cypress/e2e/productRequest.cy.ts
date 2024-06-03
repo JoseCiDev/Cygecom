@@ -119,10 +119,10 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
 
     it(`Solicitação de produtos`, () => {
 
-        // cy.login('/', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
-        //     .then((result) => {
-        //         assert.exists(result.success, result.error)
-        //     });
+        cy.login('/', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, result.error)
+            });
 
         // cy.visit('/requests/dashboard');
 
@@ -131,7 +131,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
             newRequestSubMenu,
         ]);
 
-        cy.createRequest(RequestType.product);
+        // cy.createRequest(RequestType.product);
     });
 });
 
