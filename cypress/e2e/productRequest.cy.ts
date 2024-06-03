@@ -124,7 +124,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
                 assert.exists(result.success, result.error)
             });
 
-        cy.visit('/requests/dashboard');
+        // cy.visit('/requests/dashboard');
 
         // cy.getElementAndClick([
         //     requestMenu,
