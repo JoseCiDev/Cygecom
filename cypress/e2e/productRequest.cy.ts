@@ -116,11 +116,11 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
 
     it(`Solicitação de produtos`, () => {
 
-        cy.login('http://192.168.0.66:9402', 'gecom_admin@essentia.com.br', 'admin123', messageContainer)
+        cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
-        cy.visit('http://192.168.0.66:9402')
+        cy.visit('http://gerenciador-compras.docker.local:8085')
 
         // cy.get('.btn').click();
         cy.get('[data-cy="logo-gecom"]').click();
