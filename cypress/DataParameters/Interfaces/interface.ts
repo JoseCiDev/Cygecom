@@ -159,13 +159,14 @@ export interface CheckAndThrowError<S = string> {
 export interface DataParameters<S = string> {
     env: {
         ENV: S;
+        BASE_URL_CI: S;
+        BASE_URL: S;
         EMAIL_ADMIN: S;
         PASSWORD_ADMIN: S;
         EMAIL_USER_PADRAO: S;
         PASSWORD_USER_PADRAO: S;
         EMAIL_GESTOR_USUARIO: S;
         PASSWORD_GESTOR_USUARIO: S;
-        BASE_URL: S;
         DB_NAME: S;
         DB_USER: S;
         DB_HOST: S;
@@ -177,7 +178,7 @@ export interface DataParameters<S = string> {
 
     // sizes: Array<number | [number, number] | S>;
 
-    url: S;
+    baseUrlCi: S;
 
     // Autentication: {
     //     domain;

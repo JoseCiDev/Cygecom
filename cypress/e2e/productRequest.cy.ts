@@ -87,55 +87,27 @@ const {
 
 
 
-
-// cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
-//     .then((result) => {
-//         assert.exists(result.success, result.error)
-//     });
-//http://192.168.0.66:9402/login
-//gecom_admin@essentia.com.br
-//admin123
-// cy.login('http://192.168.0.66:9402', 'gecom_admin@essentia.com.br', 'admin123', messageContainer)
-//     .then((result) => {
-//         assert.exists(result.success, result.error)
-//     });
-
-
-
-// cy.getElementAndClick([
-//     '.main-nav > :nth-child(3) > .btn',
-//     '[data-cy="dropdown-solicitacoes-novas"]',
-// ]);
-// cy.createRequest(RequestType.product);
-
-describe('Testes da página de criação de solicitação de produtos.', () => {
+describe('Testes da página de criação de solicitações.', () => {
 
     beforeEach(function () {
-        cy.login('/', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
+        cy.login(dataParameters.env.BASE_URL, dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
     })
 
-    it(`Solicitação de produtos`, () => {
+    it(`Deve criar uma solicitação de produto, serviço pontual ou serviço recorrente`, () => {
 
-        cy.login('/', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
-            .then((result) => {
-                assert.exists(result.success, result.error)
-            });
+        cy.getElementAndClick([
+            requestMenu,
+            newRequestSubMenu,
+        ]);
 
-        cy.visit('/requests/dashboard');
+        cy.wait(3000);
 
-        // cy.getElementAndClick([
-        //     requestMenu,
-        //     newRequestSubMenu,
-        // ]);
+        cy.createRequest(dataParameters.request.requestType);
 
-        // cy.wait(3000);
-
-        // cy.createRequest(dataParameters.request.requestType);
-
-        // cy.wait(3000);
+        cy.wait(3000);
     });
 });
 

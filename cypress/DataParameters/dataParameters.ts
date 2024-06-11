@@ -75,7 +75,7 @@ const dataEnvironment = Cypress.env(environment);
 export const requestTypeString = data.Request.requestType || 'product';
 export const requestData = data.Request[requestTypeString];
 
-const url = 'http://gerenciador-compras.docker.local:8085';
+const baseUrlCi = 'http://gerenciador-compras.docker.local:8085';
 
 export const requestTyper = requestTypeString && requestTypeString !== " "
     ? RequestType[requestTypeString]
@@ -318,7 +318,7 @@ export const FORMATTED_TIME: string = `${hour}:${minutes}:${seconds}`;
 
 
 export const dataParameters: DataParameters = {
-    url: url,
+    baseUrlCi: baseUrlCi,
 
     env: dataEnvironment,
 
