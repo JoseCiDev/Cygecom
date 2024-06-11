@@ -181,6 +181,8 @@ export interface DataParameters<S = string> {
     // sizes: Array<number | [number, number] | S>;
 
     baseUrlCi: S;
+    emailAdminCi: S;
+    passwordAdminCi: S;
 
     // Autentication: {
     //     domain;

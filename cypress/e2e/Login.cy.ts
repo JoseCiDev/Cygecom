@@ -90,7 +90,8 @@ export const {
 
 } = el.Supply;
 
-
+const environment = Cypress.env('ENVIRONMENT');
+const dataEnvironment = Cypress.env(environment);
 
 describe('Testes da página Login.', () => {
 
@@ -101,7 +102,7 @@ describe('Testes da página Login.', () => {
     })
 
     it('Deve efetuar o login com sucesso.', () => {
-        cy.login(dataParameters.env.BASE_URL_CI, dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+        cy.login(dataEnvironment.BASE_URL_CI, dataEnvironment.EMAIL_ADMIN_CI, dataEnvironment.PASSWORD_ADMIN_CI, messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });

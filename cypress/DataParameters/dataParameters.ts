@@ -76,6 +76,8 @@ export const requestTypeString = data.Request.requestType || 'product';
 export const requestData = data.Request[requestTypeString];
 
 const baseUrlCi = 'http://gerenciador-compras.docker.local:8085';
+const emailAdminCi = "gecom_admin@essentia.com.br";
+const passwordAdminCi = "essadmin@2023";
 
 export const requestTyper = requestTypeString && requestTypeString !== " "
     ? RequestType[requestTypeString]
@@ -319,6 +321,8 @@ export const FORMATTED_TIME: string = `${hour}:${minutes}:${seconds}`;
 
 export const dataParameters: DataParameters = {
     baseUrlCi: baseUrlCi,
+    emailAdminCi:emailAdminCi,
+    passwordAdminCi:passwordAdminCi,
 
     env: dataEnvironment,
 
