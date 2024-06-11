@@ -159,10 +159,12 @@ export interface CheckAndThrowError<S = string> {
 export interface DataParameters<S = string> {
     env: {
         ENV: S;
-        BASE_URL_CI: S;
         BASE_URL: S;
         EMAIL_ADMIN: S;
         PASSWORD_ADMIN: S;
+        BASE_URL_CI: S;
+        EMAIL_ADMIN_CI: S;
+        PASSWORD_ADMIN_CI: S;
         EMAIL_USER_PADRAO: S;
         PASSWORD_USER_PADRAO: S;
         EMAIL_GESTOR_USUARIO: S;
