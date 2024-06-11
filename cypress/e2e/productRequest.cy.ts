@@ -8,29 +8,7 @@ import { data } from 'cypress/types/jquery';
 import { DataParameters } from '../import';
 import { dataParameters } from '../DataParameters/dataParameters';
 
-
-
-
-
-
-export const {
-    email,
-    password,
-    access,
-    titleLogin,
-    messageContainer,
-
-} = el.Login;
-
-export const {
-    userProfile,
-    homeMenu,
-    logoGecom,
-    homeScreen,
-
-} = el.Start;
-
-export const {
+const {
     logout,
     optionsMenu,
     menuReduced,
@@ -40,10 +18,28 @@ export const {
     SearchRegisteredUser,
     nextPage,
     pagePrevious,
+} = el.Shared
 
-} = el.Shared;
+const {
+    titleLogin,
+    email,
+    password,
+    access,
+    messageContainer,
+} = el.Login
 
-export const {
+const {
+
+} = el.CustomCommands
+
+const {
+    userProfile,
+    homeMenu,
+    logoGecom,
+    homeScreen,
+} = el.Start
+
+const {
     registrationMenu,
     registrationMenuReduced,
     registrationUserSubMenu,
@@ -71,41 +67,43 @@ export const {
     messageRequirementName,
     messageRequirementCpfCnpj,
     messageRequiredTelephone,
-} = el.Register;
+    searchColumn,
+} = el.Register
 
-export const {
+const {
     requestMenu,
     newRequestSubMenu,
     myRequestSubMenu,
     requestGeneralSubMenu,
+} = el.Request
 
-} = el.Request;
-
-export const {
+const {
     supplyMenu,
     dashboardSubMenu,
     productSubMenu,
     serviceSubMenu,
     contractSubMenu,
+} = el.Supply
 
-} = el.Supply;
-
-const environment = Cypress.env('ENVIRONMENT');
-const dataEnvironment = Cypress.env(environment);
-
-describe('Testes da página Login.', () => {
-
-
+describe('Testes da página de criação de solicitações.', () => {
 
     beforeEach(function () {
-
-    })
-
-    it('Deve efetuar o login com sucesso.', () => {
-        cy.login('http://gerenciador-compras.docker.local:8085', 'gecom_admin@essentia.com.br', 'essadmin@2023', messageContainer)
+        cy.login('http://192.168.0.66:9402/login', 'gecom_admin@essentia.com.br', 'admin123', messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
+    })
+
+    it(`Criação de solicitações`, () => {
         
+        cy.getElementAndClick([
+            requestMenu,
+            newRequestSubMenu
+        ]);
+        // cy.createRequest(dataParameters.request.requestType);
     });
 });
+
+
+
+
