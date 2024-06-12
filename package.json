@@ -5,10 +5,10 @@
   "main": "index.ts",
   "scripts": {
     "test": "npx cypress run",
-    "cloud": "cypress run --browser chrome --record --key 1c4613ae-0a1f-4414-8cb5-4fc6ea0da5b2 --spec \"cypress/e2e/Login.ts\"",
-    "login": "cypress run --browser electron --spec \"cypress/integration/Autentication/Login.ts\"",
-    "e2e": "cypress run --browser electron --headless --spec \"cypress/e2e/*.cy.ts\"",
-    "request": "cypress run --browser electron --headless --spec \"cypress/e2e/Login.cy.ts\""
+    "cloud": "cypress run --browser chrome --record --key 6ca74aa9-70ef-423a-8b26-f28b31b3bb63 --spec \"cypress/e2e/Login.ts\"",
+    "login": "cypress run --browser electron --record --key 6ca74aa9-70ef-423a-8b26-f28b31b3bb63 --spec \"cypress/integration/Autentication/Login.ts\"",
+    "e2e": "cypress run --browser electron --record --key ${CYPRESS_RECORD_KEY} --headless --spec \"cypress/e2e/*.cy.ts\"",
+    "request": "cypress run --browser electron --headless --spec \"cypress/integration/Request/createRequest.ts\""
   },
   "author": "Cypress",
   "license": "ISC",

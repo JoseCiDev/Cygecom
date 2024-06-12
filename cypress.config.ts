@@ -1,7 +1,7 @@
 import { defineConfig } from "cypress";
 
 export default defineConfig({
-  projectId: "kserwh",
+  projectId: "r5rp3y",
   includeShadowDom: true,
   defaultCommandTimeout: 10000,
   waitForAnimations: false,
