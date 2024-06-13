@@ -1,15 +1,36 @@
 /// <reference types="cypress" />
 
 import { faker } from '@faker-js/faker';
-import { elements as el } from '../../elements';
-import { dataParameters } from '../../DataParameters/dataParameters'
-import {
-    validateEmail,
-    validatePassword,
-    checkInput,
-} from '../../utils';
 
-const {
+import { elements as el } from '../../elements';
+import { env } from 'process';
+import { data } from 'cypress/types/jquery';
+import { DataParameters } from '../../import';
+import { dataParameters } from '../../DataParameters/dataParameters';
+
+
+
+
+
+
+export const {
+    email,
+    password,
+    access,
+    titleLogin,
+    messageContainer,
+
+} = el.Login;
+
+export const {
+    userProfile,
+    homeMenu,
+    logoGecom,
+    homeScreen,
+
+} = el.Start;
+
+export const {
     logout,
     optionsMenu,
     menuReduced,
@@ -19,28 +40,10 @@ const {
     SearchRegisteredUser,
     nextPage,
     pagePrevious,
-} = el.Shared
 
-const {
-    titleLogin,
-    email,
-    password,
-    access,
-    messageContainer,
-} = el.Login
+} = el.Shared;
 
-const {
-
-} = el.CustomCommands
-
-const {
-    userProfile,
-    homeMenu,
-    logoGecom,
-    homeScreen,
-} = el.Start
-
-const {
+export const {
     registrationMenu,
     registrationMenuReduced,
     registrationUserSubMenu,
@@ -68,22 +71,27 @@ const {
     messageRequirementName,
     messageRequirementCpfCnpj,
     messageRequiredTelephone,
-} = el.Register
+} = el.Register;
 
-const {
+export const {
     requestMenu,
     newRequestSubMenu,
     myRequestSubMenu,
     requestGeneralSubMenu,
-} = el.Request
 
-const {
+} = el.Request;
+
+export const {
     supplyMenu,
     dashboardSubMenu,
     productSubMenu,
     serviceSubMenu,
     contractSubMenu,
-} = el.Supply
+
+} = el.Supply;
+
+const environment = Cypress.env('ENVIRONMENT');
+const dataEnvironment = Cypress.env(environment);
 
 describe('Testes da página Login.', () => {
 
@@ -91,12 +99,11 @@ describe('Testes da página Login.', () => {
 
     })
 
-    it('Login Test.', () => {
-        cy.login(dataParameters.env.EMAIL_ADMIN, dataParameters.env.PASSWORD_ADMIN, messageContainer)
+    it('Deve efetuar o login com sucesso.', () => {
+        cy.login(dataEnvironment.BASE_URL, dataEnvironment.EMAIL_ADMIN, dataEnvironment.PASSWORD_ADMIN, messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
-            })
-            
-    })
-    
-})
+            });
+        
+    });
+});
