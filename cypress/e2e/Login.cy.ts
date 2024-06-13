@@ -102,7 +102,7 @@ describe('Testes da página Login.', () => {
     })
 
     it('Deve efetuar o login com sucesso.', () => {
-        cy.login(dataEnvironment.BASE_URL, dataEnvironment.EMAIL_ADMIN, dataEnvironment.PASSWORD_ADMIN, messageContainer)
+        cy.login(dataEnvironment.BASE_URL_CI, dataEnvironment.EMAIL_ADMIN_CI, dataEnvironment.PASSWORD_ADMIN_CI, messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
