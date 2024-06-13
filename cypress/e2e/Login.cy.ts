@@ -95,14 +95,12 @@ const dataEnvironment = Cypress.env(environment);
 
 describe('Testes da página Login.', () => {
 
-
-
     beforeEach(function () {
 
     })
 
     it('Deve efetuar o login com sucesso.', () => {
-        cy.login(dataEnvironment.BASE_URL_CI, dataEnvironment.EMAIL_ADMIN_CI, dataEnvironment.PASSWORD_ADMIN_CI, messageContainer)
+        cy.login(dataEnvironment.BASE_URL, dataEnvironment.EMAIL_ADMIN, dataEnvironment.PASSWORD_ADMIN, messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
