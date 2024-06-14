@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npx cypress run",
     "cloud": "cypress run --browser chrome --record --key 6ca74aa9-70ef-423a-8b26-f28b31b3bb63 --spec \"cypress/e2e/Login.ts\"",
-    "e2e": "cypress run --browser electron --record --key 6ca74aa9-70ef-423a-8b26-f28b31b3bb63 --headless --spec \"cypress/e2e/*.cy.ts\"",
+    "e2e": "cypress run --browser electron  --headless --spec \"cypress/e2e/*.cy.ts\"",
     "login": "cypress run --browser electron --record --key 6ca74aa9-70ef-423a-8b26-f28b31b3bb63 --headless --spec \"cypress/integration/Autentication/*.ts\""
   },
   "author": "Cypress",
