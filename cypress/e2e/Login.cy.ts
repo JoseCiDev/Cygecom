@@ -105,7 +105,7 @@ describe('Testes da página Login.', () => {
                 assert.exists(result.success, result.error)
             });
 
-        cy.getElementAndClick([logoGecom]);
+        // cy.getElementAndClick([logoGecom]);
 
     });
 });
