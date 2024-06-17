@@ -201,8 +201,9 @@ function validateElement(messageElement, elementValue, validationMessage, return
     });
 };
 
+
 Cypress.Commands.add('createRequest', function (requestType: string) {
-cy.log('createRequest');
+
     function setApportionment() {
         const { apportionmentPercentage, apportionmentValue } = dataParameters.request;
 
@@ -232,7 +233,7 @@ cy.log('createRequest');
                     );
                 })
         }
-        else if (apportionmentPercentage && apportionmentPercentage !== " ") {
+        if (apportionmentPercentage && apportionmentPercentage !== " ") {
             cy.get(apportionmentPercentageElement)
                 .type(apportionmentPercentage.toString())
                 .then(($elementValue) => {
@@ -248,26 +249,26 @@ cy.log('createRequest');
                         Messages.returnMessages.fieldNotFilledAndMessageNotDisplayed,
                         $elementValue.val() !== ''
                     );
-                    if((Number($elementValue.val().toString()) >= 1)){
-                        validateElement(
-                            firstWarningPercentageApportionment,
-                            Number($elementValue.val().toString()),
-                            Messages.validationMessages.PERCENTAGEM_SUM,
-                            Messages.returnMessages.sumPercentagesIncorrectAndMessageNotDisplayed,
-                            Messages.returnMessages.sumPercentagesCorrectAndMessageDisplayed,
-                            Number($elementValue.val().toString()) < 100
-                        );
-                    }
-                    if((Number($elementValue.val().toString()) >= 1)){
-                        validateElement(
-                            secondWarningPercentageApportionment,
-                            Number($elementValue.val().toString()),
-                            Messages.validationMessages.PERCENTAGEM_SUM,
-                            Messages.returnMessages.sumPercentagesIncorrectAndMessageNotDisplayed,
-                            Messages.returnMessages.sumPercentagesCorrectAndMessageDisplayed,
-                            Number($elementValue.val().toString()) < 100
-                        );
-                    }
+                    // if((Number($elementValue.val().toString()) >= 1)){
+                    //     validateElement(
+                    //         firstWarningPercentageApportionment,
+                    //         Number($elementValue.val().toString()),
+                    //         Messages.validationMessages.PERCENTAGEM_SUM,
+                    //         Messages.returnMessages.sumPercentagesIncorrectAndMessageNotDisplayed,
+                    //         Messages.returnMessages.sumPercentagesCorrectAndMessageDisplayed,
+                    //         Number($elementValue.val().toString()) < 100
+                    //     );
+                    // }
+                    // if((Number($elementValue.val().toString()) >= 1)){
+                    //     validateElement(
+                    //         secondWarningPercentageApportionment,
+                    //         Number($elementValue.val().toString()),
+                    //         Messages.validationMessages.PERCENTAGEM_SUM,
+                    //         Messages.returnMessages.sumPercentagesIncorrectAndMessageNotDisplayed,
+                    //         Messages.returnMessages.sumPercentagesCorrectAndMessageDisplayed,
+                    //         Number($elementValue.val().toString()) < 100
+                    //     );
+                    // }
                     validateElement(
                         firstWarningPercentageApportionment,
                         Number($elementValue.val().toString()),
