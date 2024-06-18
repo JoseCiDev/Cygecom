@@ -2,11 +2,11 @@
 
 import { faker } from '@faker-js/faker';
 
-import { elements as el } from '../../elements';
+import { elements as el } from '../elements';
 import { env } from 'process';
 import { data } from 'cypress/types/jquery';
-import { DataParameters } from '../../import';
-import { dataParameters } from '../../DataParameters/dataParameters';
+import { DataParameters } from '../import';
+import { dataParameters } from '../DataParameters/dataParameters';
 
 const {
     logout,
@@ -98,11 +98,11 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
                 assert.exists(result.success, result.error)
             });
 
-        cy.getElementAndClick([
-            requestMenu,
-            newRequestSubMenu
-        ]);
-        cy.createRequest(dataParameters.request.requestType);
+            cy.getElementAndClick([
+                requestMenu,
+                newRequestSubMenu
+            ]);
+            cy.createRequest(dataParameters.request.requestType);
     });
 });
 

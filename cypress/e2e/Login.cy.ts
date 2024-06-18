@@ -105,12 +105,5 @@ describe('Testes da página Login.', () => {
                 assert.exists(result.success, result.error)
             });
 
-            cy.getElementAndClick([
-                '.main-nav > :nth-child(3) > .btn',
-                '[data-cy="dropdown-solicitacoes-novas"]',
-                '.main-nav > :nth-child(3) > .btn',
-                '[data-cy="dropdown-solicitacoes-novas"]',
-            ]);
-
     });
 });
