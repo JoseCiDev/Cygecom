@@ -86,6 +86,9 @@ const {
 } = el.Supply
 
 
+const environment = Cypress.env('ENVIRONMENT');
+const dataEnvironment = Cypress.env(environment);
+
 describe('Testes da página de criação de solicitação de produtos.', () => {
 
     beforeEach(function () {
@@ -93,16 +96,16 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
     })
 
     it(`Solicitação de produtos`, () => {
-        cy.login('http://192.168.0.66:9402/login', 'gecom_admin@essentia.com.br', 'admin123', messageContainer)
+        cy.login(dataEnvironment.BASE_URL_CI, dataEnvironment.EMAIL_ADMIN_CI, dataEnvironment.PASSWORD_ADMIN_CI, messageContainer)
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
 
-            cy.getElementAndClick([
-                requestMenu,
-                newRequestSubMenu
-            ]);
-            cy.log('dataParameters.request.requestType');
+        cy.getElementAndClick([
+            requestMenu,
+            newRequestSubMenu
+        ]);
+        cy.log('dataParameters.request.requestType');
     });
 });
 
