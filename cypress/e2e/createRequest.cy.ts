@@ -107,13 +107,8 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
             requestMenu,
             newRequestSubMenu
         ]);
-        // cy.createRequest(dataParameters.request.requestType);
-        cy.getElementAndClick([':nth-child(1) > .request-dashboard-requests-item-btn'])
-
-        cy.getElementAutocompleteTypeAndClick(
-            { [costCenter]: '06.354.562/0001-10 - HKM - Lab. Sólidos' },
-            highlightedOption
-        );
+        cy.createRequest(dataParameters.request.requestType);
+        
 
     });
 });

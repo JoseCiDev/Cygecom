@@ -89,9 +89,9 @@ const apportionmentValue = faker.helpers.arrayElement([' ']);
 const quoteRequest =  "true"
     
 
-const acquiringArea = AcquiringArea.suppliesContract;
+const acquiringArea = AcquiringArea.areaContract;
 
-let isComex;
+let isComex = IsComexImportProduct.no;
 const IsComexImport = IsComexImportProduct.no
   
 
@@ -121,7 +121,7 @@ const paymentInstallments = faker.helpers.arrayElement([3, 8]);
 
 const paymentDetails = faker.lorem.lines(1);
 
-const supplier = SupplierOfRequest['05.876.012/0032-02  - PBTECH COM. E SERVIÇOS DE REVEST. CERAMICOS LTDA'];
+const supplier = SupplierOfRequest['17.895.646/0001-87  - UBER DO BRASIL TECNOLOGIA LTDA'];
 
 const category = ProductCategory['Brinde - Mercadoria distribuida gratuitamente para nossos clientes e que não podemos vender. Ex. Toalha, Necessaire, etc...'];
 
