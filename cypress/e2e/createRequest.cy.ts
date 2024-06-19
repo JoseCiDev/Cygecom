@@ -105,7 +105,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
             requestMenu,
             newRequestSubMenu
         ]);
-        cy.log('dataParameters.request.requestType');
+        cy.createRequest(dataParameters.request.requestType);
     });
 });
 

@@ -79,9 +79,7 @@ const baseUrlCi = 'http://gerenciador-compras.docker.local:8085';
 const emailAdminCi = "gecom_admin@essentia.com.br";
 const passwordAdminCi = "essadmin@2023";
 
-export const requestTyper = requestTypeString && requestTypeString !== " "
-    ? RequestType[requestTypeString]
-    : RequestType.product;
+export const requestTyper = RequestType.product;
 
 const costCenter = requestData.costCenter && requestData.costCenter !== " "
     ? CostCenter[requestData.costCenter]
