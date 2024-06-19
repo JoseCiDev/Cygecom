@@ -284,8 +284,8 @@ Cypress.Commands.add('createRequest', function (requestType: string) {
 
     processAttribute({
         requestType: (attributeValue) => {
-            cy.getElementAndClick([requestType])
-            setApportionment();
+            cy.getElementAndClick([':nth-child(1) > .request-dashboard-requests-item-btn'])
+            // setApportionment();
         },
         'quoteRequest': (attributeValue) => {
             if (attributeValue === "true") {

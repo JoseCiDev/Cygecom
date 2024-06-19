@@ -73,12 +73,11 @@ const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
 
 
-
 const baseUrlCi = 'http://gerenciador-compras.docker.local:8085';
 const emailAdminCi = "gecom_admin@essentia.com.br";
 const passwordAdminCi = "essadmin@2023";
 
-export const requestTyper = RequestType.product;
+export const requestType = RequestType.product;
 
 const costCenter = CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'];
 
@@ -168,7 +167,7 @@ const paymentDueDate = PaymentDueDate.one;
 
 
 const request: Requests = {
-    requestType: requestTyper,
+    requestType: requestType,
     costCenter,
     apportionmentPercentage,
     apportionmentValue,
