@@ -289,6 +289,7 @@ cy.log(requestType);
     //     },
     //     'quoteRequest': (attributeValue) => {
     //         if (attributeValue === "true") {
+    //             cy.log(attributeValue);
     //             cy.getElementAndCheck([{ element: quoteRequest },]);
     //         }
     //     },
