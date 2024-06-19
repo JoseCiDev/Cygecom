@@ -72,189 +72,98 @@ import {
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
 
-export const requestTypeString = data.Request.requestType || 'product';
-export const requestData = data.Request[requestTypeString];
+
 
 const baseUrlCi = 'http://gerenciador-compras.docker.local:8085';
 const emailAdminCi = "gecom_admin@essentia.com.br";
 const passwordAdminCi = "essadmin@2023";
 
-export const requestTyper = requestTypeString && requestTypeString !== " "
-    ? RequestType[requestTypeString]
-    : RequestType.product;
+export const requestTyper = RequestType.product;
 
-const costCenter = requestData.costCenter && requestData.costCenter !== " "
-    ? CostCenter[requestData.costCenter]
-    : CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'];
+const costCenter = CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'];
 
-const apportionmentPercentage = requestData.apportionmentPercentage && requestData.apportionmentPercentage !== " "
-    ? requestData.apportionmentPercentage
-    : faker.helpers.arrayElement(['100']);
+const apportionmentPercentage = faker.helpers.arrayElement(['100']);
 
-const apportionmentValue = requestData.apportionmentValue && requestData.apportionmentValue !== " "
-    ? requestData.apportionmentValue
-    : faker.helpers.arrayElement([' ']);
+const apportionmentValue = faker.helpers.arrayElement([' ']);
 
-const quoteRequest = requestData.quoteRequest && requestData.quoteRequest !== " " && requestData.quoteRequest.toLowerCase() === "true"
-    ? "true"
-    : "false";
+const quoteRequest =  "true"
+    
 
-const acquiringArea = requestData.acquiringArea && requestData.acquiringArea !== " "
-    ? AcquiringArea[requestData.acquiringArea]
-    : AcquiringArea.suppliesContract;
+const acquiringArea = AcquiringArea.suppliesContract;
 
 let isComex;
-const IsComexImport = requestTypeString === 'product'
-    ? IsComexImportProduct
-    : IsComexImportService;
-if (requestData.isComex && requestData.isComex !== " ") {
-    const isComexString = requestData.isComex;
-    isComex = IsComexImport[isComexString]
-}
-else {
-    isComex = IsComexImport.no
-}
+const IsComexImport = IsComexImportProduct.no
+  
 
-const reasonForRequest = requestData.reasonForRequest && requestData.reasonForRequest !== " "
-    ? requestData.reasonForRequest
-    : faker.lorem.lines(1);
 
-const desiredDeliveryDate = requestData.desiredDeliveryDate && requestData.desiredDeliveryDate !== " "
-    ? requestData.desiredDeliveryDate
-    : new Date().toISOString().split('T')[0];
+const reasonForRequest = faker.lorem.lines(1);
 
-const localDescription = requestData.localDescription && requestData.localDescription !== " " ? requestData.localDescription : faker.lorem.lines(1);
+const desiredDeliveryDate = new Date().toISOString().split('T')[0];
 
-export const suggestionLinksString = requestTypeString === 'product'
-    ? SuggestionLinks.product
-    : SuggestionLinks.service;
+const localDescription = faker.lorem.lines(1);
 
-const suggestion = requestData.suggestionLinks && requestData.suggestionLinks !== " "
-    ? requestData.suggestionLinks
-    : faker.internet.url();
+export const suggestionLinksString = SuggestionLinks.product
+    
 
-export const observationString = requestTypeString === 'product' || requestTypeString === 'recurringService'
-    ? ObservationOfRequest.productAndRecurringService
-    : ObservationOfRequest.oneOffService;
+const suggestion = faker.internet.url();
 
-const observation = requestData.observation && requestData.observation !== " "
-    ? requestData.observation
-    : faker.lorem.lines(1);
+export const observationString = ObservationOfRequest.productAndRecurringService
 
-const paymentCondition = requestData.paymentCondition && requestData.paymentCondition !== " "
-    ? PaymentCondition[requestData.paymentCondition]
-    : PaymentCondition.cashPayment;
+const observation = faker.lorem.lines(1);
 
-const totalValue = requestData.totalValue && requestData.totalValue !== " "
-    ? requestData.totalValue
-    : faker.helpers.arrayElement([1750.85, 325.90, 1025]);
+const paymentCondition = PaymentCondition.cashPayment;
 
-const paymentMethod = requestData.paymentMethod && requestData.paymentMethod !== " "
-    ? PaymentMethod[requestData.paymentMethod]
-    : PaymentMethod.pix;
+const totalValue = faker.helpers.arrayElement([1750.85, 325.90, 1025]);
 
-const paymentInstallments = requestData.paymentInstallments && requestData.paymentInstallments !== " "
-    ? requestData.paymentInstallments
-    : faker.helpers.arrayElement([3, 8]);
+const paymentMethod = PaymentMethod.pix;
 
-const paymentDetails = requestData.paymentDetails && requestData.paymentDetails !== " "
-    ? requestData.paymentDetails
-    : faker.lorem.lines(1);
+const paymentInstallments = faker.helpers.arrayElement([3, 8]);
 
-const supplier = requestData.supplier && requestData.supplier !== " "
-    ? SupplierOfRequest[requestData.supplier]
-    : SupplierOfRequest['05.876.012/0032-02  - PBTECH COM. E SERVIÇOS DE REVEST. CERAMICOS LTDA'];
+const paymentDetails = faker.lorem.lines(1);
 
-const category = requestData.category && requestData.category !== " "
-    ? ProductCategory[requestData.category]
-    : ProductCategory['Brinde - Mercadoria distribuida gratuitamente para nossos clientes e que não podemos vender. Ex. Toalha, Necessaire, etc...'];
+const supplier = SupplierOfRequest['05.876.012/0032-02  - PBTECH COM. E SERVIÇOS DE REVEST. CERAMICOS LTDA'];
 
-const attachedFile = requestData.file && requestData.file !== " "
-    ? requestData.file
-    : '../fixtures/attachedFile.png';
+const category = ProductCategory['Brinde - Mercadoria distribuida gratuitamente para nossos clientes e que não podemos vender. Ex. Toalha, Necessaire, etc...'];
 
-export let isSaved;
-export let IsSavedRequest;
-if (requestData.saveRequest && requestData.saveRequest !== " ") {
-    const isSavedString = requestData.saveRequest;
-    IsSavedRequest = isSavedString !== "submit" ? SaveRequestDraft : SaveRequestSubmit;
-    isSaved = IsSavedRequest[requestTypeString];
-}
-else {
-    isSaved = SaveRequestDraft[requestTypeString];
-}
+const attachedFile = '../fixtures/attachedFile.png';
 
-const nameAndDescription = requestData.nameAndDescription && requestData.nameAndDescription !== " "
-    ? requestData.nameAndDescription
-    : faker.commerce.productName();
+const    isSaved = '.btn-success';
 
-const quantity = requestData.quantity && requestData.quantity !== " "
-    ? requestData.quantity
-    : faker.helpers.arrayElement([3, 8]);
 
-const color = requestData.color && requestData.color !== " "
-    ? requestData.color
-    : faker.helpers.arrayElement(['red', 'blue', 'green', 'yellow']);
+const nameAndDescription = faker.commerce.productName();
 
-const size = requestData.size && requestData.size !== " "
-    ? requestData.size
-    : faker.helpers.arrayElement(['P', 'M', 'G', 'GG']);
+const quantity = faker.helpers.arrayElement([3, 8]);
 
-const model = requestData.model && requestData.model !== " "
-    ? requestData.model
-    : faker.helpers.arrayElement(['BASIC', 'ADVANCED']);
+const color = faker.helpers.arrayElement(['red', 'blue', 'green', 'yellow']);
 
-const link = requestData.link && requestData.link !== " "
-    ? requestData.link
-    : faker.internet.url();
+const size = faker.helpers.arrayElement(['P', 'M', 'G', 'GG']);
 
-export const serviceNameString = requestTypeString === 'oneOffService'
-    ? ServiceName.oneOffService
-    : ServiceName.recurringService;
+const model = faker.helpers.arrayElement(['BASIC', 'ADVANCED']);
 
-const serviceName = requestData.serviceName && requestData.serviceName !== " "
-    ? requestData.serviceName
-    : faker.lorem.lines(1).trim();
+const link = faker.internet.url();
 
-const description = requestData.description && requestData.description !== " "
-    ? requestData.description
-    : faker.lorem.lines(1);
 
-const seller = requestData.seller && requestData.seller !== " "
-    ? requestData.seller
-    : faker.person.fullName();
+const serviceName = faker.lorem.lines(1).trim();
 
-const sellerTelephone = requestData.sellerTelephone && requestData.sellerTelephone !== " "
-    ? requestData.sellerTelephone
-    : fakerBr.phone.phoneNumber();
+const description = faker.lorem.lines(1);
 
-const sellerEmail = requestData.sellerEmail && requestData.sellerEmail !== " "
-    ? requestData.sellerEmail
-    : faker.internet.email();
+const seller = faker.person.fullName();
 
-const serviceAlreadyProvided = requestData.serviceAlreadyProvided && requestData.serviceAlreadyProvided !== " "
-    ? ServiceAlreadyProvided[requestData.serviceAlreadyProvided]
-    : ServiceAlreadyProvided.no;
+const sellerTelephone = fakerBr.phone.phoneNumber();
 
-const typeOfPaymentAmount = requestData.typeOfPaymentAmount && requestData.typeOfPaymentAmount !== " "
-    ? TypeOfPaymentAmount[requestData.typeOfPaymentAmount]
-    : TypeOfPaymentAmount.variable;
+const sellerEmail = faker.internet.email();
 
-const initialPaymentEffectiveDate = requestData.initialPaymentEffectiveDate && requestData.initialPaymentEffectiveDate !== " "
-    ? requestData.initialPaymentEffectiveDate
-    : new Date().toISOString().split('T')[0];
+const serviceAlreadyProvided = ServiceAlreadyProvided.no;
 
-const finalPaymentEffectiveDate = requestData.finalPaymentEffectiveDate && requestData.finalPaymentEffectiveDate !== " "
-    ? requestData.finalPaymentEffectiveDate
-    : new Date().toISOString().split('T')[0];
+const typeOfPaymentAmount = TypeOfPaymentAmount.variable;
 
-const paymentRecurrence = requestData.paymentRecurrence && requestData.paymentRecurrence !== " "
-    ? PaymentRecurrence[requestData.paymentRecurrence]
-    : PaymentRecurrence.monthly;
+const initialPaymentEffectiveDate = new Date().toISOString().split('T')[0];
 
-const paymentDueDate = requestData.paymentDueDate && requestData.paymentDueDate !== " "
-    ? PaymentDueDate[requestData.paymentDueDate]
-    : PaymentDueDate.one;
+const finalPaymentEffectiveDate = new Date().toISOString().split('T')[0];
+
+const paymentRecurrence = PaymentRecurrence.monthly;
+
+const paymentDueDate = PaymentDueDate.one;
 
 
 

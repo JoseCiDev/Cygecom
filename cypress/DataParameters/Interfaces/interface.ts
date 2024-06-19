@@ -78,12 +78,12 @@ export interface Request<S = string> {
     observation: S;
     paymentCondition: PaymentCondition;
     totalValue: S | number;
-    paymentMethod: ConditionalWrite;
+    paymentMethod: S;
     paymentInstallments: S | number;
     paymentDetails: S;
     supplier: SupplierOfRequest;
     attachedFile: S;
-    isSaved: Record<SaveRequestDraft, boolean> | Record<SaveRequestSubmit, boolean>;
+    isSaved: S;
 };
 export interface ProductRequest<S = string> extends Request<S> {
     category: ProductCategory;
@@ -105,8 +105,8 @@ export interface oneOffService<S = string> extends ServiceRequest<S> {
     serviceAlreadyProvided: ServiceAlreadyProvided
 }
 export interface recurringService<S = string> extends ServiceRequest<S> {
-    initialPaymentEffectiveDate: Date;
-    finalPaymentEffectiveDate: Date;
+    initialPaymentEffectiveDate: S;
+    finalPaymentEffectiveDate: S;
     paymentRecurrence: PaymentRecurrence;
     paymentDueDate: PaymentDueDate;
     typeOfPaymentAmount: TypeOfPaymentAmount;
