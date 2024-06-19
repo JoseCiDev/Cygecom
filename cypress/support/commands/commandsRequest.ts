@@ -287,232 +287,232 @@ Cypress.Commands.add('createRequest', function (requestType: string) {
             cy.getElementAndClick([':nth-child(1) > .request-dashboard-requests-item-btn'])
             // setApportionment();
         },
-        'quoteRequest': (attributeValue) => {
-            if (attributeValue === "true") {
-                cy.getElementAndCheck([{ element: quoteRequest },]);
-            }
-        },
-        'serviceName': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
-                cy.getElementAndType({
-                    [serviceNameString]: attributeValue,
-                });
-            });
-        },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'costCenter': (attributeValue) => {
-            cy.getElementAutocompleteTypeAndClick(
-                { [costCenter]: attributeValue },
-                highlightedOption
-            );
-        },
-        // //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'acquiringArea': (attributeValue) => {
-            cy.getElementAndCheck([{ element: attributeValue },]);
-        },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'isComex': (attributeValue) => {
-            cy.getElementAndCheck([{ element: attributeValue },]);
-        },
-        // //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'reasonForRequest': (attributeValue) => {
-            cy.getElementAndType({
-                [reasonForRequest]: attributeValue
-            })
-        },
-        // //vazio e nao apresentar aviso - preenchido apresentando aviso
-        // //texto menor que 20 caracteres
-        'description': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
-                cy.getElementAndType({
-                    [description]: attributeValue
-                });
-            });
-        },
-        // //vazio e nao apresentar aviso - preenchido apresentando aviso
-        // //menor que 2 caracteres
-        'desiredDeliveryDate': (attributeValue) => {
-            cy.getElementAndType({
-                [desiredDeliveryDate]: attributeValue
-            })
-        },
-        // //data menor que o dia atual e nao apresentar aviso
-        'localDescription': (attributeValue) => {
-            cy.getElementAndType({
-                [localDescription]: attributeValue
-            })
-        },
-        'suggestionLinks': (attributeValue) => {
-            cy.getElementAndType({
-                [suggestionLinksString]: attributeValue,
-            });
-        },
-        'observation': (attributeValue) => {
-            cy.getElementAndType({
-                [observationString]: attributeValue,
-            });
-        },
+    //     'quoteRequest': (attributeValue) => {
+    //         if (attributeValue === "true") {
+    //             cy.getElementAndCheck([{ element: quoteRequest },]);
+    //         }
+    //     },
+    //     'serviceName': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+    //             cy.getElementAndType({
+    //                 [serviceNameString]: attributeValue,
+    //             });
+    //         });
+    //     },
+    //     //vazio e nao apresentar aviso - preenchido apresentando aviso 
+    //     'costCenter': (attributeValue) => {
+    //         cy.getElementAutocompleteTypeAndClick(
+    //             { [costCenter]: attributeValue },
+    //             highlightedOption
+    //         );
+    //     },
+    //     // //vazio e nao apresentar aviso - preenchido apresentando aviso 
+    //     'acquiringArea': (attributeValue) => {
+    //         cy.getElementAndCheck([{ element: attributeValue },]);
+    //     },
+    //     //vazio e nao apresentar aviso - preenchido apresentando aviso 
+    //     'isComex': (attributeValue) => {
+    //         cy.getElementAndCheck([{ element: attributeValue },]);
+    //     },
+    //     // //vazio e nao apresentar aviso - preenchido apresentando aviso 
+    //     'reasonForRequest': (attributeValue) => {
+    //         cy.getElementAndType({
+    //             [reasonForRequest]: attributeValue
+    //         })
+    //     },
+    //     // //vazio e nao apresentar aviso - preenchido apresentando aviso
+    //     // //texto menor que 20 caracteres
+    //     'description': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+    //             cy.getElementAndType({
+    //                 [description]: attributeValue
+    //             });
+    //         });
+    //     },
+    //     // //vazio e nao apresentar aviso - preenchido apresentando aviso
+    //     // //menor que 2 caracteres
+    //     'desiredDeliveryDate': (attributeValue) => {
+    //         cy.getElementAndType({
+    //             [desiredDeliveryDate]: attributeValue
+    //         })
+    //     },
+    //     // //data menor que o dia atual e nao apresentar aviso
+    //     'localDescription': (attributeValue) => {
+    //         cy.getElementAndType({
+    //             [localDescription]: attributeValue
+    //         })
+    //     },
+    //     'suggestionLinks': (attributeValue) => {
+    //         cy.getElementAndType({
+    //             [suggestionLinksString]: attributeValue,
+    //         });
+    //     },
+    //     'observation': (attributeValue) => {
+    //         cy.getElementAndType({
+    //             [observationString]: attributeValue,
+    //         });
+    //     },
 
-        'typeOfPaymentAmount': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
-                cy.getElementAndCheck([{ element: attributeValue },]);
-            });
-        },
-        'paymentCondition': (attributeValue) => {
-            cy.getElementAutocompleteTypeAndClick(
-                { [paymentCondition]: attributeValue },
-                highlightedOption);
-        },
-        'totalValue': (attributeValue) => {
-            cy.getElementAndType({
-                [totalValue]: attributeValue,
-            });
-        },
-        'paymentMethod': (attributeValue) => {
-            cy.getElementAutocompleteTypeAndClick(
-                { [paymentMethod]: attributeValue },
-                highlightedOption);
-        },
-        'paymentInstallments': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product, RequestType.oneOffService], (value) => {
-                cy.getElementAndType({
-                    [paymentInstallments]: attributeValue,
-                })
-            });
-        },
+    //     'typeOfPaymentAmount': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+    //             cy.getElementAndCheck([{ element: attributeValue },]);
+    //         });
+    //     },
+    //     'paymentCondition': (attributeValue) => {
+    //         cy.getElementAutocompleteTypeAndClick(
+    //             { [paymentCondition]: attributeValue },
+    //             highlightedOption);
+    //     },
+    //     'totalValue': (attributeValue) => {
+    //         cy.getElementAndType({
+    //             [totalValue]: attributeValue,
+    //         });
+    //     },
+    //     'paymentMethod': (attributeValue) => {
+    //         cy.getElementAutocompleteTypeAndClick(
+    //             { [paymentMethod]: attributeValue },
+    //             highlightedOption);
+    //     },
+    //     'paymentInstallments': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.product, RequestType.oneOffService], (value) => {
+    //             cy.getElementAndType({
+    //                 [paymentInstallments]: attributeValue,
+    //             })
+    //         });
+    //     },
 
-        'initialPaymentEffectiveDate': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
-                cy.getElementAndType({
-                    [initialPaymentEffectiveDate]: attributeValue
-                })
-            });
-        },
-        'finalPaymentEffectiveDate': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
-                cy.getElementAndType({
-                    [finalPaymentEffectiveDate]: attributeValue
-                })
-            });
-        },
-        'paymentRecurrence': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
-                cy.getElementAutocompleteTypeAndClick(
-                    { [paymentRecurrence]: PaymentRecurrence.monthly },
-                    highlightedOption);
-            });
-        },
-        'paymentDueDate': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
-                cy.getElementAutocompleteTypeAndClick(
-                    { [paymentDueDate]: attributeValue },
-                    highlightedOption);
-            });
-        },
-        'paymentDetails': (attributeValue) => {
-            cy.getElementAndType({
-                [paymentDetails]: attributeValue,
-            })
-            cy.pause();
-        },
-        'supplier': (attributeValue) => {
-            cy.getElementAutocompleteTypeAndClick({
-                ['.select-supplier-container > .select2 > .selection > .select2-selection']: attributeValue,
-            },
-                highlightedOption
-            );
-        },
-        'category': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAutocompleteTypeAndClick({
-                    [category]: attributeValue,
-                },
-                    highlightedOption
-                )
-            });
-        },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'nameAndDescription': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAndType({
-                    [nameAndDescription]: attributeValue,
-                });
-            });
-        },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'quantity': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAndType({
-                    [quantity]: attributeValue,
-                });
-            });
-        },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'color': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAndType({
-                    [color]: attributeValue,
-                });
-            });
-        },
-        'size': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAndType({
-                    [size]: attributeValue,
-                });
-            });
+    //     'initialPaymentEffectiveDate': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+    //             cy.getElementAndType({
+    //                 [initialPaymentEffectiveDate]: attributeValue
+    //             })
+    //         });
+    //     },
+    //     'finalPaymentEffectiveDate': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+    //             cy.getElementAndType({
+    //                 [finalPaymentEffectiveDate]: attributeValue
+    //             })
+    //         });
+    //     },
+    //     'paymentRecurrence': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+    //             cy.getElementAutocompleteTypeAndClick(
+    //                 { [paymentRecurrence]: PaymentRecurrence.monthly },
+    //                 highlightedOption);
+    //         });
+    //     },
+    //     'paymentDueDate': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.recurringService], (value) => {
+    //             cy.getElementAutocompleteTypeAndClick(
+    //                 { [paymentDueDate]: attributeValue },
+    //                 highlightedOption);
+    //         });
+    //     },
+    //     'paymentDetails': (attributeValue) => {
+    //         cy.getElementAndType({
+    //             [paymentDetails]: attributeValue,
+    //         })
+    //         cy.pause();
+    //     },
+    //     'supplier': (attributeValue) => {
+    //         cy.getElementAutocompleteTypeAndClick({
+    //             ['.select-supplier-container > .select2 > .selection > .select2-selection']: attributeValue,
+    //         },
+    //             highlightedOption
+    //         );
+    //     },
+    //     'category': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+    //             cy.getElementAutocompleteTypeAndClick({
+    //                 [category]: attributeValue,
+    //             },
+    //                 highlightedOption
+    //             )
+    //         });
+    //     },
+    //     //vazio e nao apresentar aviso - preenchido apresentando aviso 
+    //     'nameAndDescription': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+    //             cy.getElementAndType({
+    //                 [nameAndDescription]: attributeValue,
+    //             });
+    //         });
+    //     },
+    //     //vazio e nao apresentar aviso - preenchido apresentando aviso 
+    //     'quantity': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+    //             cy.getElementAndType({
+    //                 [quantity]: attributeValue,
+    //             });
+    //         });
+    //     },
+    //     //vazio e nao apresentar aviso - preenchido apresentando aviso 
+    //     'color': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+    //             cy.getElementAndType({
+    //                 [color]: attributeValue,
+    //             });
+    //         });
+    //     },
+    //     'size': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+    //             cy.getElementAndType({
+    //                 [size]: attributeValue,
+    //             });
+    //         });
 
-        },
-        'model': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAndType({
-                    [model]: attributeValue,
-                });
-            });
-        },
-        'link': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
-                cy.getElementAndType({
-                    [link]: attributeValue,
-                });
-            });
-        },
-        //nao e url
-        'attachedFile': (attributeValue) => {
-            cy.insertFile(attachedFile, attributeValue);
-        },
-        // 'seller': (attributeValue) => {
-        //     handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
-        //         cy.getElementAndType({ [seller]: value });
-        //     });
-        // },
-        // 'sellerTelephone': (attributeValue) => {
-        //     handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
-        //         cy.getElementAndType({ [telephone]: attributeValue });
-        //     });
-        // },
-        // 'sellerEmail': (attributeValue) => {
-        //     handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
-        //         cy.getElementAndType({ [':nth-child(4) > .form-group > [data-cy="email"]']: attributeValue });
-        //     });
+    //     },
+    //     'model': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+    //             cy.getElementAndType({
+    //                 [model]: attributeValue,
+    //             });
+    //         });
+    //     },
+    //     'link': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
+    //             cy.getElementAndType({
+    //                 [link]: attributeValue,
+    //             });
+    //         });
+    //     },
+    //     //nao e url
+    //     'attachedFile': (attributeValue) => {
+    //         cy.insertFile(attachedFile, attributeValue);
+    //     },
+    //     // 'seller': (attributeValue) => {
+    //     //     handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+    //     //         cy.getElementAndType({ [seller]: value });
+    //     //     });
+    //     // },
+    //     // 'sellerTelephone': (attributeValue) => {
+    //     //     handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+    //     //         cy.getElementAndType({ [telephone]: attributeValue });
+    //     //     });
+    //     // },
+    //     // 'sellerEmail': (attributeValue) => {
+    //     //     handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+    //     //         cy.getElementAndType({ [':nth-child(4) > .form-group > [data-cy="email"]']: attributeValue });
+    //     //     });
 
-        // },
-        'serviceAlreadyProvided': (attributeValue) => {
-            handleRequestAttributes(attributeValue, [RequestType.oneOffService], (value) => {
-                cy.getElementAndCheck([{ element: attributeValue },]);
-            });
-        },
-        'isSaved': (attributeValue) => {
-            cy.getElementAndClick([attributeValue])
-            if (Object.values(SaveRequestSubmit).includes(isSaved)) {
-                cy.wait(1000);
-                cy.get(toAgreeModalSubmitRequest)
-                    .should('be.visible')
-                    .click({ force: true })
-            };
-        },
+    //     // },
+    //     'serviceAlreadyProvided': (attributeValue) => {
+    //         handleRequestAttributes(attributeValue, [RequestType.oneOffService], (value) => {
+    //             cy.getElementAndCheck([{ element: attributeValue },]);
+    //         });
+    //     },
+    //     'isSaved': (attributeValue) => {
+    //         cy.getElementAndClick([attributeValue])
+    //         if (Object.values(SaveRequestSubmit).includes(isSaved)) {
+    //             cy.wait(1000);
+    //             cy.get(toAgreeModalSubmitRequest)
+    //                 .should('be.visible')
+    //                 .click({ force: true })
+    //         };
+    //     },
     });
-    return cy.wrap({ success: "Processo realizado com sucesso!" });
+    // return cy.wrap({ success: "Processo realizado com sucesso!" });
 });
 
 
