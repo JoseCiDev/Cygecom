@@ -201,11 +201,11 @@ function validateElement(messageElement, elementValue, validationMessage, return
     });
 };
 
-Cypress.Commands.add('createRequeste', (requestType: RequestType): void => {
+Cypress.Commands.add('createRequeste', (requestType): void => {
     // cy.getElementAndClick([dataParameters.request.requestType])
 
     processAttribute({
-        requestType: (requestType) => {
+        requestType: (attributeValue) => {
             cy.getElementAndClick([requestType])
         }
     });
