@@ -107,7 +107,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
             requestMenu,
             newRequestSubMenu
         ]);
-        cy.createRequeste(RequestType.product);
+        cy.createRequeste(':nth-child(1) > .request-dashboard-requests-item-btn');
         
 
     });

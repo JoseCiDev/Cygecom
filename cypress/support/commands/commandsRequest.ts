@@ -554,6 +554,6 @@ elemento => #request-form > div:nth-child(6) > div:nth-child(4) > span
 
 
 
-Cypress.Commands.add('createRequeste', (): void => {
-    cy.log('teste');
+Cypress.Commands.add('createRequeste', (requeste:string): void => {
+    cy.getElementAndClick([requeste])
 });
