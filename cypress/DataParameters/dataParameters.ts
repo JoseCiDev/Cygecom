@@ -77,7 +77,7 @@ const baseUrlCi = 'http://gerenciador-compras.docker.local:8085';
 const emailAdminCi = "gecom_admin@essentia.com.br";
 const passwordAdminCi = "essadmin@2023";
 
-export const requestType = RequestType.product;
+export const requestTyper = RequestType.product;
 
 const costCenter = CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'];
 
@@ -86,14 +86,11 @@ const apportionmentPercentage = faker.helpers.arrayElement(['100']);
 const apportionmentValue = faker.helpers.arrayElement([' ']);
 
 const quoteRequest =  "true"
-    
 
 const acquiringArea = AcquiringArea.areaContract;
 
 let isComex = IsComexImportProduct.no;
 const IsComexImport = IsComexImportProduct.no
-  
-
 
 const reasonForRequest = faker.lorem.lines(1);
 
@@ -103,7 +100,6 @@ const localDescription = faker.lorem.lines(1);
 
 export const suggestionLinksString = SuggestionLinks.product
     
-
 const suggestion = faker.internet.url();
 
 export const observationString = ObservationOfRequest.productAndRecurringService
@@ -167,7 +163,7 @@ const paymentDueDate = PaymentDueDate.one;
 
 
 const request: Requests = {
-    requestType: requestType,
+    requestType: requestTyper,
     costCenter,
     apportionmentPercentage,
     apportionmentValue,
