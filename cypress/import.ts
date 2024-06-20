@@ -100,7 +100,7 @@ export {
     // requestData,
     // requestTypeString,
     dataParameters,
-    requestTyper,
+    requestType,
     suggestionLinksString,
     observationString,
     // serviceNameString,

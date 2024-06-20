@@ -48,7 +48,7 @@ import {
     suggestionLinksString,
     ServiceAlreadyProvided,
     // requestData,
-    requestTyper,
+    requestType,
     PaymentRecurrence,
     PaymentDueDate,
     SupplierOfRequest,
@@ -186,7 +186,7 @@ function processAttribute(attributes: { [K in RequestKeys]?: (attributeValue: st
     }
 };
 function handleRequestAttributes(attributeValue: string, types: RequestType[], action: (value: string) => void) {
-    if (types.includes(requestTyper)) {
+    if (types.includes(requestType)) {
         action(attributeValue);
     }
 };
@@ -201,13 +201,18 @@ function validateElement(messageElement, elementValue, validationMessage, return
     });
 };
 
-Cypress.Commands.add('createRequeste', (requestType): void => {
+Cypress.Commands.add('createRequeste', (): void => {
     // cy.getElementAndClick([dataParameters.request.requestType])
 
     processAttribute({
-        requestType: () => {
-            cy.getElementAndClick([requestType])
+        requestType: (attributeValue) => {
+            cy.getElementAndClick([attributeValue])
         }
+        //     'quoteRequest': (attributeValue) => {
+        //         if (attributeValue === "true") {
+        //             cy.getElementAndCheck([{ element: quoteRequest },]);
+        //         }
+        //     },
     });
 });
 
