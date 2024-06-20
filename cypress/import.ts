@@ -97,14 +97,14 @@ export { TypeOfPaymentAmount } from './DataParameters/Enums/typeOfPaymentAmount'
 export { PaymentRecurrence } from './DataParameters/Enums/paymentRecurrence'
 
 export {
-    // requestData,
-    // requestTypeString,
+    requestData,
+    requestTypeString,
     dataParameters,
-    requestType,
+    requestTyper,
     suggestionLinksString,
     observationString,
-    // serviceNameString,
-    // IsSavedRequest,
-    // isSaved,
+    serviceNameString,
+    IsSavedRequest,
+    isSaved,
     Messages,
 } from './DataParameters/dataParameters';
