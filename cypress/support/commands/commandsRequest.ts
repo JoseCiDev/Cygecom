@@ -555,5 +555,5 @@ elemento => #request-form > div:nth-child(6) > div:nth-child(4) > span
 
 
 Cypress.Commands.add('createRequeste', (requeste:string): void => {
-    cy.getElementAndClick([requeste])
+    cy.getElementAndClick([':nth-child(1) > .request-dashboard-requests-item-btn'])
 });
