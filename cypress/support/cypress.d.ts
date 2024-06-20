@@ -142,6 +142,12 @@ declare global {
             createRequest(requestType: string): ValidationResult;
 
             /**
+           * comando customizado para criar solicitações seja de produtos, serviços pontuais ou serviços recorrentes.
+           * @example cy.createRequeste();
+           */
+            createRequeste()
+
+            /**
            * comando customizado para ocultar/mostrar colunas selecionadas.
            * @example cy.getColumnVisibilityCommand();
            */

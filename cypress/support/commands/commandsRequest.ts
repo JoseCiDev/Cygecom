@@ -203,7 +203,7 @@ function validateElement(messageElement, elementValue, validationMessage, return
 
 
 Cypress.Commands.add('createRequest', function (requestType: string) {
-cy.log('Testes')
+    cy.log('Testes')
     // function setApportionment() {
     //     const { apportionmentPercentage, apportionmentValue } = dataParameters.request;
 
@@ -285,8 +285,8 @@ cy.log('Testes')
     // processAttribute({
     //     requestType: (attributeValue) => {
     //         cy.getElementAndClick([':nth-child(1) > .request-dashboard-requests-item-btn'])
-            // setApportionment();
-        // },
+    // setApportionment();
+    // },
     //     'quoteRequest': (attributeValue) => {
     //         if (attributeValue === "true") {
     //             cy.getElementAndCheck([{ element: quoteRequest },]);
@@ -511,8 +511,8 @@ cy.log('Testes')
     //                 .click({ force: true })
     //         };
     //     },
-    });
-    // return cy.wrap({ success: "Processo realizado com sucesso!" });
+});
+// return cy.wrap({ success: "Processo realizado com sucesso!" });
 // });
 
 
@@ -551,3 +551,11 @@ mensagem => Todos campos de rateio (R$) devem ser preenchidos.
 elemento => #request-form > div:nth-child(6) > div:nth-child(4) > span
 --------
 */
+
+
+
+
+
+Cypress.Commands.add('createRequeste', (): void => {
+    cy.log('teste');
+});
