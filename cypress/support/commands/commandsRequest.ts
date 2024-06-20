@@ -165,6 +165,7 @@ const {
     secondWarningPercentageApportionment,
     firstWarningValueApportionment,
     secondWarningValueApportionment,
+    productRequest,
 } = el.Request
 
 const {
@@ -202,87 +203,10 @@ function validateElement(messageElement, elementValue, validationMessage, return
 };
 
 
-Cypress.Commands.add('createRequest', function (requestType: string) {
-    cy.log(requestType);
-    function setApportionment() {
-        const { apportionmentPercentage, apportionmentValue } = dataParameters.request;
-
-        if (apportionmentValue && apportionmentValue !== " ") {
-            cy.get(apportionmentValueElement)
-                .type(apportionmentValue.toString())
-                .then(($element) => {
-                    const $messageModal = Cypress.$(firstWarningValueApportionment);
-                    if (isNaN(Number($element.val())) && !$messageModal.is(':visible') && $messageModal.text() === Messages.validationMessages.VALID_VALUE) {
-                        throw new Error(Messages.returnMessages.differentValueOfNumbersMessageNotDisplayed)
-                    }
-                    validateElement(
-                        firstWarningValueApportionment,
-                        $element.val(),
-                        Messages.validationMessages.VALID_VALUE,
-                        Messages.returnMessages.fieldFilledAndMessageDisplayed,
-                        Messages.returnMessages.fieldNotFilledAndMessageNotDisplayed,
-                        $element.val() === 'e' || $element.val() === '-'
-                    );
-                    validateElement(
-                        firstWarningValueApportionment,
-                        $element.val(),
-                        Messages.validationMessages.REQUIRE_FIELD,
-                        Messages.returnMessages.fieldFilledAndMessageDisplayed,
-                        Messages.returnMessages.fieldNotFilledAndMessageNotDisplayed,
-                        $element.val() === ''
-                    );
-                })
-        }
-        if (apportionmentPercentage && apportionmentPercentage !== " ") {
-            cy.get(apportionmentPercentageElement)
-                .type(apportionmentPercentage.toString())
-                .then(($elementValue) => {
-                    const $messageModal = Cypress.$(firstWarningValueApportionment);
-                    if (isNaN(Number($elementValue.val())) && !$messageModal.is(':visible') && $messageModal.text() === Messages.validationMessages.VALID_VALUE) {
-                        throw new Error(Messages.returnMessages.differentValueOfNumbersMessageNotDisplayed)
-                    }
-                    validateElement(
-                        firstWarningPercentageApportionment,
-                        $elementValue.val(),
-                        Messages.validationMessages.REQUIRE_FIELD,
-                        Messages.returnMessages.fieldFilledAndMessageDisplayed,
-                        Messages.returnMessages.fieldNotFilledAndMessageNotDisplayed,
-                        $elementValue.val() !== ''
-                    );
-                    // if((Number($elementValue.val().toString()) >= 1)){
-                    //     validateElement(
-                    //         firstWarningPercentageApportionment,
-                    //         Number($elementValue.val().toString()),
-                    //         Messages.validationMessages.PERCENTAGEM_SUM,
-                    //         Messages.returnMessages.sumPercentagesIncorrectAndMessageNotDisplayed,
-                    //         Messages.returnMessages.sumPercentagesCorrectAndMessageDisplayed,
-                    //         Number($elementValue.val().toString()) < 100
-                    //     );
-                    // }
-                    // if((Number($elementValue.val().toString()) >= 1)){
-                    //     validateElement(
-                    //         secondWarningPercentageApportionment,
-                    //         Number($elementValue.val().toString()),
-                    //         Messages.validationMessages.PERCENTAGEM_SUM,
-                    //         Messages.returnMessages.sumPercentagesIncorrectAndMessageNotDisplayed,
-                    //         Messages.returnMessages.sumPercentagesCorrectAndMessageDisplayed,
-                    //         Number($elementValue.val().toString()) < 100
-                    //     );
-                    // }
-                    validateElement(
-                        firstWarningPercentageApportionment,
-                        Number($elementValue.val().toString()),
-                        Messages.validationMessages.GREATER_THAN_ONE,
-                        Messages.returnMessages.valueLessThanOrEqualToZeroAndMessageNotDisplayed,
-                        Messages.returnMessages.valueGreaterOrThanEqualToZeroMessageNotDisplayed,
-                        Number($elementValue.val().toString()) <= 0
-                    );
-                })
-        }
-        return cy.wrap({ success: "Os avisos de obrigatoriedade são exibidos quando os campos não são preenchidos e quando são preenchidos incorretamente. Um aviso é exibido quando a porcentagem é menor que 100. Além disso, um aviso é exibido quando a porcentagem é preenchida com um valor menor ou igual a zero." });
-    }
-    cy.getElementAndClick([requestType])
-    cy.getElementAndCheck([{ element: quoteRequest },]);
+Cypress.Commands.add('createRequest', function () {
+    
+    cy.getElementAndClick([productRequest])
+    
     // processAttribute({
     //     requestType: (attributeValue) => {
     //         cy.getElementAndClick([requestType])
