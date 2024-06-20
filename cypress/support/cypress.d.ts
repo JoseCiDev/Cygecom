@@ -7,6 +7,7 @@ import {
     DateTime,
     ElementTypeAndValueOpcional,
     RequestKeys,
+    RequestType,
     TableTypesElements,
     ValidationResult
 } from '../import';
@@ -145,7 +146,7 @@ declare global {
            * comando customizado para criar solicitações seja de produtos, serviços pontuais ou serviços recorrentes.
            * @example cy.createRequeste();
            */
-            createRequeste():ValidationResult;
+            createRequeste(requestType: RequestType):ValidationResult;
 
             /**
            * comando customizado para ocultar/mostrar colunas selecionadas.

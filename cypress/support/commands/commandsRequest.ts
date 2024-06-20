@@ -201,7 +201,7 @@ function validateElement(messageElement, elementValue, validationMessage, return
     });
 };
 
-Cypress.Commands.add('createRequeste', (): void => {
+Cypress.Commands.add('createRequeste', (requestType: RequestType): void => {
     // cy.getElementAndClick([dataParameters.request.requestType])
 
     processAttribute({
@@ -210,6 +210,7 @@ Cypress.Commands.add('createRequeste', (): void => {
         }
     });
 });
+
 
 Cypress.Commands.add('createRequest', function (requestType: string) {
     cy.log('Testes')
