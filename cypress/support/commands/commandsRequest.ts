@@ -205,8 +205,8 @@ Cypress.Commands.add('createRequeste', (requestType: RequestType): void => {
     // cy.getElementAndClick([dataParameters.request.requestType])
 
     processAttribute({
-        requestType: (attributeValue) => {
-            cy.getElementAndClick([attributeValue])
+        requestType: (requestType) => {
+            cy.getElementAndClick([requestType])
         }
     });
 });
