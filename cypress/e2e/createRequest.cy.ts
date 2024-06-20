@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import { elements as el } from '../elements';
 import { env } from 'process';
 import { data } from 'cypress/types/jquery';
-import { DataParameters, RequestType } from '../import';
+import { DataParameters } from '../import';
 import { dataParameters } from '../DataParameters/dataParameters';
 
 const {
@@ -107,7 +107,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
             requestMenu,
             newRequestSubMenu
         ]);
-        cy.createRequeste(':nth-child(1) > .request-dashboard-requests-item-btn');
+        cy.createRequest(dataParameters.request.requestType);
         
 
     });
