@@ -103,10 +103,11 @@ interface Elements<S = string> {
         paymentRecurrence: S;
         paymentDueDate: S;
         toAgreeModalSubmitRequest: S;
-        firstWarningPercentageApportionment:S;
-        secondWarningPercentageApportionment:S;
-        firstWarningValueApportionment:S;
-        secondWarningValueApportionment:S;
+        firstWarningPercentageApportionment: S;
+        secondWarningPercentageApportionment: S;
+        firstWarningValueApportionment: S;
+        secondWarningValueApportionment: S;
+        productRequest: S;
     },
 
     Supply: {
@@ -185,6 +186,7 @@ export const elements: Elements = {
     },
 
     Request: {
+        productRequest: ':nth-child(1) > .request-dashboard-requests-item-btn',
         requestMenu: '.main-nav > :nth-child(3) > .btn',
         newRequestSubMenu: '[data-cy="dropdown-solicitacoes-novas"]',
         myRequestSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
@@ -225,10 +227,10 @@ export const elements: Elements = {
         paymentRecurrence: '#select2-recurrence-container',
         paymentDueDate: '#select2-contract-payday-container',
         toAgreeModalSubmitRequest: '#modal-alert-submit',
-        firstWarningPercentageApportionment:'[id="cost_center_apportionments[0][apportionment_percentage]-error"]',
-        secondWarningPercentageApportionment:'.percentage-span-warning',
-        firstWarningValueApportionment:'[id="cost_center_apportionments[0][apportionment_currency]-error"]',
-        secondWarningValueApportionment:'.currency-span-warning',
+        firstWarningPercentageApportionment: '[id="cost_center_apportionments[0][apportionment_percentage]-error"]',
+        secondWarningPercentageApportionment: '.percentage-span-warning',
+        firstWarningValueApportionment: '[id="cost_center_apportionments[0][apportionment_currency]-error"]',
+        secondWarningValueApportionment: '.currency-span-warning',
     },
 
     Supply: {

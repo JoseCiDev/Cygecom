@@ -201,6 +201,15 @@ function validateElement(messageElement, elementValue, validationMessage, return
     });
 };
 
+Cypress.Commands.add('createRequeste', (): void => {
+    // cy.getElementAndClick([dataParameters.request.requestType])
+
+    processAttribute({
+        requestType: (attributeValue) => {
+            cy.getElementAndClick([attributeValue])
+        }
+    });
+});
 
 Cypress.Commands.add('createRequest', function (requestType: string) {
     cy.log('Testes')
@@ -281,7 +290,7 @@ Cypress.Commands.add('createRequest', function (requestType: string) {
     //     }
     //     return cy.wrap({ success: "Os avisos de obrigatoriedade são exibidos quando os campos não são preenchidos e quando são preenchidos incorretamente. Um aviso é exibido quando a porcentagem é menor que 100. Além disso, um aviso é exibido quando a porcentagem é preenchida com um valor menor ou igual a zero." });
     // }
-    // cy.getElementAndClick([':nth-child(1) > .request-dashboard-requests-item-btn'])
+
     // processAttribute({
     //     requestType: (attributeValue) => {
     //         cy.getElementAndClick([':nth-child(1) > .request-dashboard-requests-item-btn'])
@@ -554,6 +563,3 @@ elemento => #request-form > div:nth-child(6) > div:nth-child(4) > span
 
 
 
-Cypress.Commands.add('createRequeste', (): void => {
-    cy.getElementAndClick([dataParameters.request.requestType])
-});
