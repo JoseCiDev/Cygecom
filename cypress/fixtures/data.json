@@ -90,7 +90,7 @@
             "costCenter": "06.354.562/0001-10 - HKM - Software e Sistemas",
             "apportionmentPercentage": "100",
             "apportionmentValue": "",
-            "quoteRequest": "false",
+            "quoteRequest": "true",
             "acquiringArea": "areaContract",
             "isComex": "yes",
             "reasonForRequest": "Automated product request testing - Reason for request.",
