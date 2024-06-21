@@ -5,8 +5,7 @@ import { faker } from '@faker-js/faker';
 import { elements as el } from '../elements';
 import { env } from 'process';
 import { data } from 'cypress/types/jquery';
-import { DataParameters, RequestType } from '../import';
-import { dataParameters } from '../DataParameters/dataParameters';
+import { DataParameters, RequestType,dataParameters } from '../import';
 
 const {
     logout,
@@ -109,6 +108,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
         ]);
 
         cy.createRequest(RequestType.product);
+
         
     });
 });

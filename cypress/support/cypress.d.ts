@@ -9,7 +9,8 @@ import {
     RequestKeys,
     RequestType,
     TableTypesElements,
-    ValidationResult
+    ValidationResult,
+    dataParameters
 } from '../import';
 
 declare global {
