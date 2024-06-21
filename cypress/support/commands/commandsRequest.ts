@@ -203,8 +203,8 @@ function validateElement(messageElement, elementValue, validationMessage, return
 };
 
 
-Cypress.Commands.add('createRequest', () => {
-    cy.getElementAndClick([dataParameters.request.requestType])
+Cypress.Commands.add('createRequest', (requestType:RequestType) => {
+    cy.getElementAndClick([requestType])
 })
 
 /*

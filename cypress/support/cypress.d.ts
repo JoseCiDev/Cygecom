@@ -140,7 +140,7 @@ declare global {
            * comando customizado para criar solicitações seja de produtos, serviços pontuais ou serviços recorrentes.
            * @example cy.createRequest();
            */
-            createRequest(): ValidationResult;
+            createRequest(requestType:RequestType): ValidationResult;
 
             /**
            * comando customizado para ocultar/mostrar colunas selecionadas.
