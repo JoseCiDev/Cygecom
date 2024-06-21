@@ -217,6 +217,13 @@ Cypress.Commands.add('createRequest', (requestType: RequestType) => {
                 cy.getElementAndCheck([{ element: quoteRequest },]);
             }
         },
+            'serviceName': (attributeValue) => {
+                handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
+                    cy.getElementAndType({
+                        [serviceNameString]: attributeValue,
+                    });
+                });
+            },
     })
 
 })
