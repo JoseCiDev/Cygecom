@@ -108,6 +108,8 @@ interface Elements<S = string> {
         firstWarningValueApportionment: S;
         secondWarningValueApportionment: S;
         productRequest: S;
+        oneOffServiceRequest: S;
+        recurringServiceRequest: S;
     },
 
     Supply: {
@@ -187,6 +189,8 @@ export const elements: Elements = {
 
     Request: {
         productRequest: ':nth-child(1) > .request-dashboard-requests-item-btn',
+        oneOffServiceRequest: ":nth-child(2) > .request-dashboard-requests-item-btn",
+        recurringServiceRequest: ":nth-child(3) > .request-dashboard-requests-item-btn",
         requestMenu: '.main-nav > :nth-child(3) > .btn',
         newRequestSubMenu: '[data-cy="dropdown-solicitacoes-novas"]',
         myRequestSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
