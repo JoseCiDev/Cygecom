@@ -212,6 +212,10 @@ Cypress.Commands.add('createRequest', (requestType: RequestType) => {
     processAttribute({
         requestType: (attributeValue) => {
             cy.getElementAndClick([requestType])
+        }, 'quoteRequest': (attributeValue) => {
+            if (attributeValue === "true") {
+                cy.getElementAndCheck([{ element: quoteRequest },]);
+            }
         },
     })
 
