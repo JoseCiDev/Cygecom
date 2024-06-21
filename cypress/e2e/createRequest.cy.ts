@@ -76,6 +76,7 @@ const {
     requestGeneralSubMenu,
     costCenter,
     highlightedOption,
+    productRequest
 } = el.Request
 
 const {
@@ -107,7 +108,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
             newRequestSubMenu
         ]);
 
-        cy.createRequest(RequestType.product);
+        cy.createRequest(productRequest);
 
         
     });
