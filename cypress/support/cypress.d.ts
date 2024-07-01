@@ -143,8 +143,6 @@ declare global {
            */
             createRequest(requestType:string): ValidationResult;
 
-            createRequeste(requestType: RequestType):ValidationResult;
-
             /**
            * comando customizado para ocultar/mostrar colunas selecionadas.
            * @example cy.getColumnVisibilityCommand();
