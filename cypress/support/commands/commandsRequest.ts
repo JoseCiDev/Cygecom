@@ -220,7 +220,15 @@ function validateElement(messageElement, elementValue, validationMessage, return
 //     })
 
 // })
+Cypress.Commands.add('createRequeste', (): void => {
+    // cy.getElementAndClick([dataParameters.request.requestType])
 
+    processAttribute({
+        requestType: (attributeValue) => {
+            cy.getElementAndClick([attributeValue])
+        }
+    })
+})
 
 Cypress.Commands.add('createRequest', (requestType: RequestType) => {
     processAttribute({
