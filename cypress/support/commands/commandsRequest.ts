@@ -56,12 +56,12 @@ import {
     SupplierElement,
     dataParameters,
     serviceNameString,
-    IsSavedRequest,
     SaveRequestDraft,
     SaveRequestSubmit,
     isSaved,
     ValidationResult,
     Messages,
+    isSavedInfo,
 } from '../../import';
 
 
@@ -487,12 +487,11 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
         },
         'isSaved': (attributeValue) => {
             cy.getElementAndClick([attributeValue])
-            if (Object.values(SaveRequestSubmit).includes(isSaved)) {
+            if (isSaved === SaveRequestSubmit[requestTypeString]) {
                 cy.wait(1000);
-                cy.get(toAgreeModalSubmitRequest)
-                    .should('be.visible')
-                    .click({ force: true })
+                cy.getElementAndClick([toAgreeModalSubmitRequest])
             };
+            cy.getElementAndClick([logoGecom])
         },
     });
     return cy.wrap({ success: "Processo realizado com sucesso!" });

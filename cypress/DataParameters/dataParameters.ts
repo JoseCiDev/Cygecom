@@ -179,7 +179,7 @@ if (requestData.saveRequest && requestData.saveRequest !== " ") {
     isSaved = IsSavedRequest[requestTypeString];
 }
 else {
-    isSaved = SaveRequestDraft[requestTypeString];
+    isSaved = SaveRequestSubmit[requestTypeString];
 }
 
 const nameAndDescription = requestData.nameAndDescription && requestData.nameAndDescription !== " "
