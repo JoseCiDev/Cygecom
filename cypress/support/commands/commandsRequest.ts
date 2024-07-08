@@ -61,7 +61,6 @@ import {
     isSaved,
     ValidationResult,
     Messages,
-    isSavedInfo,
 } from '../../import';
 
 
@@ -487,11 +486,6 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
         },
         'isSaved': (attributeValue) => {
             cy.getElementAndClick([attributeValue])
-            if (isSaved === SaveRequestSubmit[requestTypeString]) {
-                cy.wait(1000);
-                cy.getElementAndClick([toAgreeModalSubmitRequest])
-            };
-            cy.getElementAndClick([logoGecom])
         },
     });
     return cy.wrap({ success: "Processo realizado com sucesso!" });

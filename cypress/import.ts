@@ -104,7 +104,6 @@ export {
     suggestionLinksString,
     observationString,
     serviceNameString,
-    isSavedInfo,
     isSaved,
     Messages,
 } from './DataParameters/dataParameters';
