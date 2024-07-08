@@ -486,6 +486,8 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
         },
         'isSaved': (attributeValue) => {
             cy.getElementAndClick([attributeValue])
+                cy.wait(2000);
+                cy.getElementAndClick([toAgreeModalSubmitRequest])
         },
     });
     return cy.wrap({ success: "Processo realizado com sucesso!" });
