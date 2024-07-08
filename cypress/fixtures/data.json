@@ -99,7 +99,7 @@
             "suggestionLinks": "https://essentia.com.br/",
             "observation": "Automated Product Request Testing - Product Request Observations",
             "PaymentCondition": "cashPayment",
-            "totalValue": "1784,93",
+            "totalValue": "1988,00",
             "paymentMethod": "pix",
             "paymentInstallments": 3,
             "paymentDetails": "Automated Product Request Testing - Payment Details",
@@ -112,7 +112,7 @@
             "size": "G",
             "model": "Basic",
             "link": "https://essentia.com.br/",
-            "saveRequest": "draft"
+            "saveRequest": "submit"
         },
         "oneOffService": {
             "servicename": "servicoPontualTeste()",
@@ -139,7 +139,7 @@
             "sellerEmail": "oneOffService@gecom",
             "serviceAlreadyProvided": "no",
             "attachedFile": "../fixtures/attachedFile.png",
-            "saveRequest": "draft"
+            "saveRequest": "submit"
         },
         "recurringService": {
             "servicename": "servicoRecorrenteTeste()",
@@ -168,7 +168,7 @@
             "sellerTelephone": "47992145080",
             "sellerEmail": "recurringService@gecom",
             "attachedFile": "../fixtures/attachedFile.png",
-            "saveRequest": "draft"
+            "saveRequest": "submit"
         }
     }
 }
