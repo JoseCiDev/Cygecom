@@ -23,7 +23,7 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-/// <reference types="Cypress" />
+// /// <reference types="Cypress" />
 /// <reference path="../cypress.d.ts" />
 
 
@@ -203,29 +203,72 @@ function validateElement(messageElement, elementValue, validationMessage, return
 };
 
 
-// Cypress.Commands.add('createRequest', (requestType:RequestType) => {
-//     cy.getElementAndClick([requestType])
-
-// })
-
-// Cypress.Commands.add('createRequest', (requestType: RequestType) => {
-//     processAttribute({
-//         requestType: (attributeValue) => {
-//             cy.getElementAndClick([requestType])
-//         }, 'quoteRequest': (attributeValue) => {
-//             if (attributeValue === "true") {
-//                 cy.getElementAndCheck([{ element: quoteRequest },]);
-//             }
-//         },
-//     })
-
-// })
 
 
-Cypress.Commands.add('createRequest', (requestType: RequestType) => {
+Cypress.Commands.add('createRequest', function (requestType: RequestType) {
+
+    function setApportionment() {
+        const { apportionmentPercentage, apportionmentValue } = dataParameters.request;
+
+        function typeAndValidate(element, value, warningElement, validations) {
+            cy.get(element)
+                .type(value.toString())
+                .then(($element) => {
+                    const $messageModal = Cypress.$(warningElement);
+                    validations.forEach(validation => {
+                        if (validation.condition($element.val())) {
+                            validateElement(
+                                warningElement,
+                                $element.val(),
+                                validation.message,
+                                validation.successMessage,
+                                validation.failureMessage,
+                                validation.additionalCondition
+                            );
+                        }
+                    });
+                    if (isNaN(Number($element.val())) && !$messageModal.is(':visible') && $messageModal.text() === Messages.validationMessages.VALID_VALUE) {
+                        throw new Error(Messages.returnMessages.differentValueOfNumbersMessageNotDisplayed)
+                    }
+                });
+        }
+
+        if (apportionmentValue && apportionmentValue.trim()) {
+            typeAndValidate(apportionmentValueElement, apportionmentValue, firstWarningValueApportionment, [
+                {
+                    condition: val => val === 'e' || val === '-',
+                    message: Messages.validationMessages.REQUIRE_FIELD,
+                    successMessage: Messages.returnMessages.fieldFilledAndMessageDisplayed,
+                    failureMessage: Messages.returnMessages.fieldNotFilledAndMessageNotDisplayed,
+                    additionalCondition: true
+                }
+            ]);
+        } else if (apportionmentPercentage && apportionmentPercentage.trim()) {
+            typeAndValidate(apportionmentPercentageElement, apportionmentPercentage, firstWarningPercentageApportionment, [
+                {
+                    condition: val => !isNaN(Number(val)) && Number(val) >= 1,
+                    message: Messages.validationMessages.PERCENTAGEM_SUM,
+                    successMessage: Messages.returnMessages.sumPercentagesIncorrectAndMessageNotDisplayed,
+                    failureMessage: Messages.returnMessages.sumPercentagesCorrectAndMessageDisplayed,
+                    additionalCondition: val => Number(val) < 100
+                },
+                {
+                    condition: val => Number(val) <= 0,
+                    message: Messages.validationMessages.GREATER_THAN_ONE,
+                    successMessage: Messages.returnMessages.valueLessThanOrEqualToZeroAndMessageNotDisplayed,
+                    failureMessage: Messages.returnMessages.valueGreaterOrThanEqualToZeroMessageNotDisplayed,
+                    additionalCondition: true
+                }
+            ]);
+        }
+
+        return cy.wrap({ success: "Os avisos de obrigatoriedade são exibidos quando os campos não são preenchidos e quando são preenchidos incorretamente. Um aviso é exibido quando a porcentagem é menor que 100. Além disso, um aviso é exibido quando a porcentagem é preenchida com um valor menor ou igual a zero." });
+    }
+
     processAttribute({
         requestType: (attributeValue) => {
             cy.getElementAndClick([requestType])
+            setApportionment();
         },
         'quoteRequest': (attributeValue) => {
             if (attributeValue === "true") {
@@ -260,8 +303,8 @@ Cypress.Commands.add('createRequest', (requestType: RequestType) => {
                 [reasonForRequest]: attributeValue
             })
         },
-        // //vazio e nao apresentar aviso - preenchido apresentando aviso
-        // //texto menor que 20 caracteres
+        //vazio e nao apresentar aviso - preenchido apresentando aviso
+        //texto menor que 20 caracteres
         'description': (attributeValue) => {
             handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
                 cy.getElementAndType({
@@ -269,8 +312,8 @@ Cypress.Commands.add('createRequest', (requestType: RequestType) => {
                 });
             });
         },
-        // //vazio e nao apresentar aviso - preenchido apresentando aviso
-        // //menor que 2 caracteres
+        //vazio e nao apresentar aviso - preenchido apresentando aviso
+        //menor que 2 caracteres
         'desiredDeliveryDate': (attributeValue) => {
             cy.getElementAndType({
                 [desiredDeliveryDate]: attributeValue
@@ -353,10 +396,11 @@ Cypress.Commands.add('createRequest', (requestType: RequestType) => {
             cy.getElementAndType({
                 [paymentDetails]: attributeValue,
             })
+
         },
         'supplier': (attributeValue) => {
             cy.getElementAutocompleteTypeAndClick({
-                [SupplierElement[requestTypeString]]: attributeValue,
+                ['.select-supplier-container > .select2 > .selection > .select2-selection']: attributeValue,
             },
                 highlightedOption
             );
@@ -443,7 +487,6 @@ Cypress.Commands.add('createRequest', (requestType: RequestType) => {
         },
         'isSaved': (attributeValue) => {
             cy.getElementAndClick([attributeValue])
-            cy.log(isSaved);
             if (Object.values(SaveRequestSubmit).includes(isSaved)) {
                 cy.wait(1000);
                 cy.get(toAgreeModalSubmitRequest)

@@ -164,10 +164,10 @@
                             "type": "string"
                         },
                         "apportionmentPercentage": {
-                            "type": "number"
+                            "type": "string"
                         },
                         "apportionmentValue": {
-                            "type": "number"
+                            "type": "string"
                         },
                         "quoteRequest": {
                             "type": "object",
@@ -298,10 +298,10 @@
                             "type": "string"
                         },
                         "apportionmentPercentage": {
-                            "type": "number"
+                            "type": "string"
                         },
                         "apportionmentValue": {
-                            "type": "number"
+                            "type": "string"
                         },
                         "quoteRequest": {
                             "type": "object",
@@ -421,10 +421,10 @@
                             "type": "string"
                         },
                         "apportionmentPercentage": {
-                            "type": "number"
+                            "type": "string"
                         },
                         "apportionmentValue": {
-                            "type": "number"
+                            "type": "string"
                         },
                         "quoteRequest": {
                             "type": "object",
