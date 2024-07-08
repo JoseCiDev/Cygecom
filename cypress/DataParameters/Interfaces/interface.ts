@@ -66,8 +66,8 @@ import { PaymentRecurrence } from '../Enums/paymentRecurrence';
 export interface Request<S = string> {
     requestType: RequestType;
     costCenter: S;
-    apportionmentPercentage: S | number;
-    apportionmentValue: S | number;
+    apportionmentPercentage: S ;
+    apportionmentValue: S ;
     quoteRequest: S | Record<QuoteRequest, boolean>;
     acquiringArea: string;
     isComex: S | IsComexImportProduct | IsComexImportService;

@@ -7,12 +7,13 @@
     "test": "npx cypress run",
     "cloud": "cypress run --browser chrome --record --key 6ca74aa9-70ef-423a-8b26-f28b31b3bb63 --spec \"cypress/e2e/Login.ts\"",
     "e2e": "cypress run --browser electron --record --key 6ca74aa9-70ef-423a-8b26-f28b31b3bb63 --headless --spec \"cypress/e2e/*.cy.ts\"",
-    "request": "cypress run --browser electron --headless --spec \"cypress/integration/Request/createRequest.ts\""
+    "request": "cypress run --browser electron --headless --spec \"cypress/e2e/createRequest.cy.ts\""
   },
   "author": "Cypress",
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
+    "@types/cypress": "^1.1.3",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.8.10",
     "cypress": "^13.9.0",
