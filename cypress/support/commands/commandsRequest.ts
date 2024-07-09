@@ -490,5 +490,5 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
     });
     cy.getElementAndClick([toAgreeModalSubmitRequest])
     
-    return cy.wrap({ success: "Processo realizado com sucesso!" });
+    // return cy.wrap({ success: "Processo realizado com sucesso!" });
 });
