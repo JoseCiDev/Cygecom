@@ -584,8 +584,8 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
         [link]: faker.internet.url(),
     });
 
-    cy.getElementAndClick([SaveRequestSubmit.product]);
+    // cy.getElementAndClick([SaveRequestSubmit.product]);
 
-    cy.getElementAndClick([toAgreeModalSubmitRequest]);
+    // cy.getElementAndClick([toAgreeModalSubmitRequest]);
     
 })
