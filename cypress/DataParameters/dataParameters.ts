@@ -55,7 +55,7 @@ import {
     ObservationOfRequest,
     IsComexImportProduct,
     IsComexImportService,
-    elements,
+    elements as el,
     Request,
     Apportionment,
     SuggestionLinks,
@@ -171,17 +171,6 @@ const attachedFile = requestData.file && requestData.file !== " "
     ? requestData.file
     : '../fixtures/attachedFile.png';
 
-export let isSaved;
-export let IsSavedRequest;
-if (requestData.saveRequest && requestData.saveRequest !== " ") {
-    const isSavedString = requestData.saveRequest;
-    IsSavedRequest = isSavedString !== "submit" ? SaveRequestDraft : SaveRequestSubmit;
-    isSaved = IsSavedRequest[requestTypeString];
-}
-else {
-    isSaved = SaveRequestSubmit[requestTypeString];
-}
-
 const nameAndDescription = requestData.nameAndDescription && requestData.nameAndDescription !== " "
     ? requestData.nameAndDescription
     : faker.commerce.productName();
@@ -254,6 +243,16 @@ const paymentDueDate = requestData.paymentDueDate && requestData.paymentDueDate 
     ? PaymentDueDate[requestData.paymentDueDate]
     : PaymentDueDate.one;
 
+export let isSaved;
+export let IsSavedRequest;
+if (requestData.saveRequest && requestData.saveRequest !== " ") {
+    const isSavedString = requestData.saveRequest;
+    IsSavedRequest = isSavedString !== "submit" ? SaveRequestDraft : SaveRequestSubmit;
+    isSaved = IsSavedRequest[requestTypeString];
+}
+else {
+    isSaved = SaveRequestSubmit[requestTypeString];
+}
 
 
 const request: Requests = {
@@ -277,6 +276,7 @@ const request: Requests = {
     supplier,
     attachedFile,
     isSaved,
+
 
     category,
     nameAndDescription,
@@ -319,8 +319,8 @@ export const FORMATTED_TIME: string = `${hour}:${minutes}:${seconds}`;
 
 export const dataParameters: DataParameters = {
     baseUrlCi: baseUrlCi,
-    emailAdminCi:emailAdminCi,
-    passwordAdminCi:passwordAdminCi,
+    emailAdminCi: emailAdminCi,
+    passwordAdminCi: passwordAdminCi,
 
     env: dataEnvironment,
 
@@ -657,14 +657,14 @@ export const Messages = {
         VALID_VALUE: `Por favor, forneça um número válido.`
     },
     returnMessages: {
-        fieldFilledAndMessageDisplayed:'Lamentamos informar que ocorreu um problema no preenchimento do campo, pois a mensagem de obrigatoriedade está sendo exibida mesmo com o campo já preenchido.',
-        fieldNotFilledAndMessageNotDisplayed:'O campo em questão não foi preenchido corretamente. No entanto, gostaríamos de ressaltar que a mensagem de obrigatoriedade não está sendo exibida conforme o esperado.',
-        sumPercentagesCorrectAndMessageDisplayed:'A soma total das porcentagens é igual a 100%. No entanto, a mensagem que indica que a porcentagem deve ser igual a 100% é exibida.',
-        sumPercentagesIncorrectAndMessageNotDisplayed:'Lamentamos informar que a soma das porcentagens é inferior a 100%. No entanto, a mensagem que indica que a porcentagem deve ser 100% não está sendo exibida.',
-        valueLessThanOrEqualToZeroAndMessageNotDisplayed:'Foi observado que um valor menor ou igual a zero foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
-        valueGreaterOrThanEqualToZeroMessageNotDisplayed:'Foi observado que um valor maior que zero foi informado, no entanto, é exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
-        differentValueOfNumbersMessageNotDisplayed:'Foi observado que um valor diferente de número foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor numérico.',
-        
+        fieldFilledAndMessageDisplayed: 'Lamentamos informar que ocorreu um problema no preenchimento do campo, pois a mensagem de obrigatoriedade está sendo exibida mesmo com o campo já preenchido.',
+        fieldNotFilledAndMessageNotDisplayed: 'O campo em questão não foi preenchido corretamente. No entanto, gostaríamos de ressaltar que a mensagem de obrigatoriedade não está sendo exibida conforme o esperado.',
+        sumPercentagesCorrectAndMessageDisplayed: 'A soma total das porcentagens é igual a 100%. No entanto, a mensagem que indica que a porcentagem deve ser igual a 100% é exibida.',
+        sumPercentagesIncorrectAndMessageNotDisplayed: 'Lamentamos informar que a soma das porcentagens é inferior a 100%. No entanto, a mensagem que indica que a porcentagem deve ser 100% não está sendo exibida.',
+        valueLessThanOrEqualToZeroAndMessageNotDisplayed: 'Foi observado que um valor menor ou igual a zero foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
+        valueGreaterOrThanEqualToZeroMessageNotDisplayed: 'Foi observado que um valor maior que zero foi informado, no entanto, é exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
+        differentValueOfNumbersMessageNotDisplayed: 'Foi observado que um valor diferente de número foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor numérico.',
+
     },
 
     //Por favor, forneça um número válido.
