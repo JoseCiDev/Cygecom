@@ -586,10 +586,10 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
 
     cy.getElementAndClick([SaveRequestSubmit.product]);
 
-    cy.wait(5000);
+    cy.wait(2000);
 
-    cy.getElementAndClick([toAgreeModalSubmitRequest]);
-
-    cy.wait(5000);
-    
+    cy.getElementAndClick([toAgreeModalSubmitRequest]).then(() => {
+        
+        cy.get('#status-filter-btn').click();
+    });
 })
