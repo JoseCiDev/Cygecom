@@ -588,6 +588,8 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
 
     cy.wait(5000);
 
-    // cy.getElementAndClick([toAgreeModalSubmitRequest]);
+    cy.getElementAndClick([toAgreeModalSubmitRequest]);
+
+    cy.wait(5000);
     
 })
