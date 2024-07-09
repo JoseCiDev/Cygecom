@@ -586,8 +586,6 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
 
     cy.getElementAndClick([SaveRequestSubmit.product]);
 
-    cy.pause();
-
     cy.getElementAndClick([toAgreeModalSubmitRequest]);
     
 })
