@@ -589,7 +589,12 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
     cy.wait(2000);
 
     cy.getElementAndClick([toAgreeModalSubmitRequest]).then(() => {
-        
-        cy.get('#status-filter-btn').click();
+        // Aguarda a página estar completamente carregada
+        cy.window().then((win) => {
+            cy.wrap(win).its('document.readyState').should('equal', 'complete');
+        }).then(() => {
+            // Agora que a página está carregada, realiza a próxima ação
+            cy.get('#status-filter-btn').click();
+        });
     });
 })
