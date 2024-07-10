@@ -9,7 +9,7 @@ export default defineConfig({
   experimentalMemoryManagement: true,
 
   e2e: {
-    // baseUrl: 'http://gerenciador-compras.docker.local:8085',
+    baseUrl: 'http://gerenciador-compras.docker.local:8085',
     setupNodeEvents(on, config) {
       // Acessa a variável de ambiente e a armazena em uma constante
       const recordKey = config.env.CYPRESS_RECORD_KEY;

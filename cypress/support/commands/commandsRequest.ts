@@ -588,42 +588,18 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
 
     cy.wait(2000);
 
-    // Antes do teste ou no beforeEach, adicione a interceptação
-    cy.intercept('http://gerenciador-compras.docker.local:8085/_debugbar/*', (req) => {
-        req.reply({
-            statusCode: 200,
-            body: {}, // Você pode retornar um corpo vazio ou algum conteúdo mock se necessário
-        });
-    }).as('debugbarIntercept');
+    // Intercepta a primeira URL e atribui um alias
+    cy.intercept('POST', 'http://gerenciador-compras.docker.local:8085/requests/product/store').as('storeRequest');
 
-    cy.getElementAndClick([toAgreeModalSubmitRequest]).then(() => {
-        // Aguarda a página estar completamente carregada
-        cy.window().then((win) => {
-            cy.wrap(win).its('document.readyState').should('equal', 'complete');
-        }).then(() => {
-            // Agora que a página está carregada, realiza a próxima ação
-            cy.get('#status-filter-btn').click();
-        });
-    });
+    // Intercepta a segunda URL e atribui outro alias
+    cy.intercept('GET', 'http://gerenciador-compras.docker.local:8085/requests/own').as('ownRequest');
 
-    // // Antes de iniciar a ação que dispara a requisição
-    // cy.intercept('GET', '/_debugbar/open*', {
-    //     statusCode: 200,
-    //     body: {}, // Forneça um corpo de resposta simulado conforme necessário
-    // }).as('getDebugBar');
+    // Clica para salvar
+    cy.getElementAndClick([toAgreeModalSubmitRequest]);
 
-    // // Realize a ação que dispara a requisição
-    // cy.getElementAndClick([SaveRequestSubmit.product]);
+    // Espera pela conclusão das duas requisições interceptadas
+    cy.wait('@storeRequest');
+    cy.wait('@ownRequest');
 
-    // // Aguarde a interceptação para garantir que a requisição foi stubada
-    // cy.wait('@getDebugBar');
-
-    // // Continue com o teste, como clicar no botão após a página ser carregada
-    // cy.getElementAndClick([toAgreeModalSubmitRequest]).then(() => {
-    //     cy.window().then((win) => {
-    //         cy.wrap(win).its('document.readyState').should('equal', 'complete');
-    //     }).then(() => {
-    //         cy.get('#status-filter-btn').click();
-    //     });
-    // });
-})
+    cy.getElementAndClick(['#status-filter-btn']);
+});
