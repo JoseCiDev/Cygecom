@@ -601,8 +601,6 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
             [link]: faker.internet.url(),
         });
 
-       
-
         cy.get(SaveRequestSubmit.product).click().then(() => {
             cy.log('Clique no botão de salvar realizado');
         });
