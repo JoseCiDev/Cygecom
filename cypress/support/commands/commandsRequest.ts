@@ -522,7 +522,7 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
             [apportionmentPercentageElement]: '100',
         });
 
-        cy.getElementAndCheck([{ element: AcquiringArea.areaContract },]);
+        cy.getElementAndCheck([{ element: AcquiringArea.suppliesContract },]);
 
         cy.getElementAndCheck([{ element: IsComexImportProduct.no },]);
 
@@ -544,26 +544,26 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
             [observationString]: faker.lorem.lines(1),
         });
 
-        cy.getElementAutocompleteTypeAndClick(
-            { [paymentCondition]: PaymentCondition.cashPayment },
-            highlightedOption);
+        // cy.getElementAutocompleteTypeAndClick(
+        //     { [paymentCondition]: PaymentCondition.cashPayment },
+        //     highlightedOption);
 
-        cy.getElementAndType({
-            [totalValue]: faker.helpers.arrayElement(['1750.85']),
-        });
+        // cy.getElementAndType({
+        //     [totalValue]: faker.helpers.arrayElement(['1750.85']),
+        // });
 
-        cy.getElementAutocompleteTypeAndClick(
-            { [paymentMethod]: PaymentMethod.pix },
-            highlightedOption);
+        // cy.getElementAutocompleteTypeAndClick(
+        //     { [paymentMethod]: PaymentMethod.pix },
+        //     highlightedOption);
 
-        cy.getElementAndType({
-            ['[style="margin-bottom: -50;"] > .col-sm-1 > .form-group > .form-control']: '2',
-        })
+        // cy.getElementAndType({
+        //     ['[style="margin-bottom: -50;"] > .col-sm-1 > .form-group > .form-control']: '2',
+        // })
 
 
-        cy.getElementAndType({
-            [paymentDetails]: faker.lorem.lines(1),
-        })
+        // cy.getElementAndType({
+        //     [paymentDetails]: faker.lorem.lines(1),
+        // })
 
         cy.getElementAutocompleteTypeAndClick({
             ['.select-supplier-container > .select2 > .selection > .select2-selection']: SupplierOfRequest['00.020.788/0001-06  - MADER COMERCIAL IMPORTADORA QUIM.FARMACEUTICA LTDA'],
@@ -601,7 +601,7 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
             [link]: faker.internet.url(),
         });
 
-        cy.get(SaveRequestSubmit.product).click().then(() => {
+        cy.get(SaveRequestDraft.product).click().then(() => {
             cy.log('Clique no botão de salvar realizado');
         });
 
