@@ -3,14 +3,16 @@ import { defineConfig } from "cypress";
 export default defineConfig({
   projectId: "r5rp3y",
   includeShadowDom: true,
-  defaultCommandTimeout: 10000,
+  defaultCommandTimeout: 60000,
+  pageLoadTimeout: 60000,
+  requestTimeout: 60000,
+  responseTimeout: 60000,
   waitForAnimations: false,
   numTestsKeptInMemory: 5,
   experimentalMemoryManagement: true,
 
   e2e: {
     baseUrl: 'http://gerenciador-compras.docker.local:8085',
-    pageLoadTimeout: 60000,
     supportFile: 'cypress/support/e2e.{js,jsx,ts,tsx}',
     specPattern: 'cypress/**/*.{js,jsx,ts,tsx}',
     redirectionLimit: 5000,

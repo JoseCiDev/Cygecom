@@ -26,7 +26,7 @@
 // /// <reference types="Cypress" />
 /// <reference path="../cypress.d.ts" />
 
-
+import 'cypress-wait-until';
 
 import {
     ConditionalWrite,
@@ -497,120 +497,89 @@ function validateElement(messageElement, elementValue, validationMessage, return
 //     return cy.wrap({ success: "Processo realizado com sucesso!" });
 // });
 
-// Custom command to log in and get CSRF token
-Cypress.Commands.add('loginAndGetCsrfToken', () => {
-    cy.request('GET', '/login')
-        .then((response) => {
-            const $html = Cypress.$(response.body);
-            const csrfToken = $html.find('input[name=_token]').val();
-            cy.wrap(csrfToken).as('csrfToken'); // Armazena o token como um alias para uso posterior
-        });
-});
 
 Cypress.Commands.add('createRequest', function (requestType: RequestType) {
-   
 
-    
-        cy.getElementAndClick([productRequest]);
+    cy.getElementAndClick([productRequest]);
 
-        cy.getElementAutocompleteTypeAndClick(
-            { [costCenter]: CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'] },
-            highlightedOption
-        );
+    cy.getElementAutocompleteTypeAndClick(
+        { [costCenter]: CostCenter['06.354.562/0001-10 - HKM - Software e Sistemas'] },
+        highlightedOption
+    );
 
-        cy.getElementAndType({
-            [apportionmentPercentageElement]: '100',
-        });
+    cy.getElementAndType({
+        [apportionmentPercentageElement]: '100',
+    });
 
-        cy.getElementAndCheck([{ element: AcquiringArea.suppliesContract },]);
+    cy.getElementAndCheck([{ element: AcquiringArea.suppliesContract },]);
 
-        cy.getElementAndCheck([{ element: IsComexImportProduct.no },]);
+    cy.getElementAndCheck([{ element: IsComexImportProduct.no },]);
 
-        cy.getElementAndType({ [reasonForRequest]: faker.lorem.lines(1) })
+    cy.getElementAndType({ [reasonForRequest]: faker.lorem.lines(1) });
 
-        cy.getElementAndType({
-            [desiredDeliveryDate]: new Date().toISOString().split('T')[0]
-        })
+    cy.getElementAndType({
+        [desiredDeliveryDate]: new Date().toISOString().split('T')[0]
+    });
 
-        cy.getElementAndType({
-            [localDescription]: faker.lorem.lines(1)
-        })
+    cy.getElementAndType({
+        [localDescription]: faker.lorem.lines(1)
+    });
 
-        cy.getElementAndType({
-            [suggestionLinksString]: faker.internet.url(),
-        });
+    cy.getElementAndType({
+        [suggestionLinksString]: faker.internet.url(),
+    });
 
-        cy.getElementAndType({
-            [observationString]: faker.lorem.lines(1),
-        });
+    cy.getElementAndType({
+        [observationString]: faker.lorem.lines(1),
+    });
 
-        // cy.getElementAutocompleteTypeAndClick(
-        //     { [paymentCondition]: PaymentCondition.cashPayment },
-        //     highlightedOption);
+    cy.getElementAutocompleteTypeAndClick({
+        ['.select-supplier-container > .select2 > .selection > .select2-selection']: SupplierOfRequest['00.020.788/0001-06  - MADER COMERCIAL IMPORTADORA QUIM.FARMACEUTICA LTDA'],
+    },
+        highlightedOption
+    );
 
-        // cy.getElementAndType({
-        //     [totalValue]: faker.helpers.arrayElement(['1750.85']),
-        // });
+    cy.getElementAutocompleteTypeAndClick({
+        [category]: ProductCategory['Brinde - Mercadoria distribuida gratuitamente para nossos clientes e que não podemos vender. Ex. Toalha, Necessaire, etc...'],
+    },
+        highlightedOption
+    );
 
-        // cy.getElementAutocompleteTypeAndClick(
-        //     { [paymentMethod]: PaymentMethod.pix },
-        //     highlightedOption);
+    cy.getElementAndType({
+        [nameAndDescription]: faker.lorem.lines(1)
+    });
 
-        // cy.getElementAndType({
-        //     ['[style="margin-bottom: -50;"] > .col-sm-1 > .form-group > .form-control']: '2',
-        // })
+    cy.getElementAndType({
+        [quantity]: faker.helpers.arrayElement(['3']),
+    });
 
+    cy.getElementAndType({
+        [color]: faker.helpers.arrayElement(['red', 'blue', 'green', 'yellow']),
+    });
 
-        // cy.getElementAndType({
-        //     [paymentDetails]: faker.lorem.lines(1),
-        // })
+    cy.getElementAndType({
+        [size]: faker.helpers.arrayElement(['P', 'M', 'G', 'GG']),
+    });
 
-        cy.getElementAutocompleteTypeAndClick({
-            ['.select-supplier-container > .select2 > .selection > .select2-selection']: SupplierOfRequest['00.020.788/0001-06  - MADER COMERCIAL IMPORTADORA QUIM.FARMACEUTICA LTDA'],
-        },
-            highlightedOption
-        );
+    cy.getElementAndType({
+        [model]: faker.helpers.arrayElement(['BASIC', 'ADVANCED']),
+    });
 
-        cy.getElementAutocompleteTypeAndClick({
-            [category]: ProductCategory['Brinde - Mercadoria distribuida gratuitamente para nossos clientes e que não podemos vender. Ex. Toalha, Necessaire, etc...'],
-        },
-            highlightedOption
-        );
+    cy.getElementAndType({
+        [link]: faker.internet.url(),
+    });
 
-        cy.getElementAndType({
-            [nameAndDescription]: faker.lorem.lines(1)
-        });
+    cy.get(SaveRequestSubmit.product).click().then(() => {
+        cy.log('Clique no botão de salvar realizado');
+    });
 
-        cy.getElementAndType({
-            [quantity]: faker.helpers.arrayElement(['3']),
-        });
+    cy.waitUntil(() => cy.get(toAgreeModalSubmitRequest).should('be.visible'), {
+        errorMsg: 'Modal de confirmação não apareceu',
+        timeout: 10000, // Aguarda até 10 segundos
+        interval: 500 // Verifica a cada 500ms
+    }).click();
 
-        cy.getElementAndType({
-            [color]: faker.helpers.arrayElement(['red', 'blue', 'green', 'yellow']),
-        });
-
-        cy.getElementAndType({
-            [size]: faker.helpers.arrayElement(['P', 'M', 'G', 'GG']),
-        });
-
-        cy.getElementAndType({
-            [model]: faker.helpers.arrayElement(['BASIC', 'ADVANCED']),
-        });
-
-        cy.getElementAndType({
-            [link]: faker.internet.url(),
-        });
-
-        // cy.get(SaveRequestDraft.product).click().then(() => {
-        //     cy.log('Clique no botão de salvar realizado');
-        // });
-
-        // cy.wait(3000);
-
-        // cy.get(toAgreeModalSubmitRequest).click().then(() => {
-        //     cy.log('Clique no modal de confirmação realizado');
-        // });
-
-        // cy.url().should('include', '/requests/own');
-        // cy.get('[id="status-filter-btn"]').should('exist');
+    cy.waitUntil(() =>
+        cy.url().then(url => url.includes('/requests/own'))
+    );
 });
