@@ -589,24 +589,19 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
         [link]: faker.internet.url(),
     });
 
-    // Intercepta a requisição
-    cy.intercept('GET', '/api/requests/datatable', {
-        statusCode: 200,
-        body: {
-            // Dados fictícios
-        },
-    }).as('requestData');
+    cy.get(SaveRequestSubmit.product).click().then(() => {
+        cy.log('Clique no botão de salvar realizado');
+    });
 
-    // Clica no botão para salvar
-    cy.getElementAndClick([SaveRequestSubmit.product]);
+    cy.wait(3000);
 
-    // Clica para concordar no modal
-    cy.getElementAndClick([toAgreeModalSubmitRequest]);
+    cy.get(toAgreeModalSubmitRequest).click().then(() => {
+        cy.log('Clique no modal de confirmação realizado');
+    });
 
-    // Espera pela URL desejada, indicando que a navegação ocorreu
+
     cy.url().should('include', '/requests/own');
-
-    // Espera por um elemento que só é renderizado após todos os scripts e estilos serem carregados
     cy.get('[id="status-filter-btn"]').should('exist');
+
 
 });
