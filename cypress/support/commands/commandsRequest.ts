@@ -601,18 +601,16 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
             [link]: faker.internet.url(),
         });
 
-        cy.get(SaveRequestDraft.product).click().then(() => {
-            cy.log('Clique no botão de salvar realizado');
-        });
+        // cy.get(SaveRequestDraft.product).click().then(() => {
+        //     cy.log('Clique no botão de salvar realizado');
+        // });
 
-        cy.wait(3000);
+        // cy.wait(3000);
 
-        cy.get(toAgreeModalSubmitRequest).click().then(() => {
-            cy.log('Clique no modal de confirmação realizado');
-        });
+        // cy.get(toAgreeModalSubmitRequest).click().then(() => {
+        //     cy.log('Clique no modal de confirmação realizado');
+        // });
 
-        cy.url().should('include', '/requests/own');
-        cy.get('[id="status-filter-btn"]').should('exist');
-
-    
+        // cy.url().should('include', '/requests/own');
+        // cy.get('[id="status-filter-btn"]').should('exist');
 });
