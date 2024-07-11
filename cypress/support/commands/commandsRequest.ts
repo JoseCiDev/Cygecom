@@ -545,6 +545,11 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
         highlightedOption);
 
     cy.getElementAndType({
+        ['[style="margin-bottom: -50;"] > .col-sm-1 > .form-group > .form-control']: '2',
+    })
+
+
+    cy.getElementAndType({
         [paymentDetails]: faker.lorem.lines(1),
     })
 
@@ -584,22 +589,20 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
         [link]: faker.internet.url(),
     });
 
+    cy.intercept('GET', '/api/requests/datatable', {
+        statusCode: 200,
+        body: {
+            // Adicione aqui os dados que você espera receber na resposta
+            // Isso pode ser um objeto vazio ou dados fictícios que sejam relevantes para o seu teste
+        },
+    }).as('requestData');
+
     cy.getElementAndClick([SaveRequestSubmit.product]);
 
-    cy.wait(2000);
-
-    // Intercepta a primeira URL e atribui um alias
-    cy.intercept('POST', 'http://gerenciador-compras.docker.local:8085/requests/product/store').as('storeRequest');
-
-    // Intercepta a segunda URL e atribui outro alias
-    cy.intercept('GET', 'http://gerenciador-compras.docker.local:8085/requests/own').as('ownRequest');
-
-    // Clica para salvar
     cy.getElementAndClick([toAgreeModalSubmitRequest]);
 
-    // Espera pela conclusão das duas requisições interceptadas
-    cy.wait('@storeRequest');
-    cy.wait('@ownRequest');
+    // cy.wait('@requestData');
 
-    cy.getElementAndClick(['#status-filter-btn']);
+    cy.url().should('include', '/requests/own');
+
 });

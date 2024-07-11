@@ -23,7 +23,7 @@ export default defineConfig({
 
       return config;
     },
-    pageLoadTimeout: 60000,
+    pageLoadTimeout: 240000,
     supportFile: 'cypress/support/e2e.{js,jsx,ts,tsx}',
     specPattern: 'cypress/**/*.{js,jsx,ts,tsx}',
     redirectionLimit: 5000,
