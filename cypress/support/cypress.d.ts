@@ -138,10 +138,16 @@ declare global {
             getDataOnGrid(searchParameterElement?, searchParameterValue?, showRecordsQuantityElement?, showRecordsQuantityValue?, sortByColumnElement?, sortByColumnValue?, searchColumnElement?, searchColumnValue?): ValidationResult;
 
             /**
+           * comando customizado para capturar o CSRF token.
+           * @example cy.loginAndGetCsrfToken();
+           */
+            loginAndGetCsrfToken()
+
+            /**
            * comando customizado para criar solicitações seja de produtos, serviços pontuais ou serviços recorrentes.
            * @example cy.createRequest();
            */
-            createRequest(requestType:string): ValidationResult;
+            createRequest(requestType: string): ValidationResult;
 
             /**
            * comando customizado para ocultar/mostrar colunas selecionadas.

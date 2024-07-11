@@ -497,8 +497,18 @@ function validateElement(messageElement, elementValue, validationMessage, return
 //     return cy.wrap({ success: "Processo realizado com sucesso!" });
 // });
 
-Cypress.Commands.add('createRequest', function (requestType: RequestType) {
+// Custom command to log in and get CSRF token
+Cypress.Commands.add('loginAndGetCsrfToken', () => {
+    cy.request('GET', '/login')
+        .then((response) => {
+            const $html = Cypress.$(response.body);
+            const csrfToken = $html.find('input[name=_token]').val();
+            return csrfToken;
+        });
+});
 
+Cypress.Commands.add('createRequest', function (requestType: RequestType) {
+    cy.loginAndGetCsrfToken().then((csrfToken) => {
     cy.getElementAndClick([productRequest]);
 
     cy.getElementAutocompleteTypeAndClick(
@@ -599,9 +609,8 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
         cy.log('Clique no modal de confirmação realizado');
     });
 
-
     cy.url().should('include', '/requests/own');
     cy.get('[id="status-filter-btn"]').should('exist');
 
-
+});
 });
