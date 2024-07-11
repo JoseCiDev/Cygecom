@@ -10,20 +10,7 @@ export default defineConfig({
 
   e2e: {
     baseUrl: 'http://gerenciador-compras.docker.local:8085',
-    setupNodeEvents(on, config) {
-      // Acessa a variável de ambiente e a armazena em uma constante
-      const recordKey = config.env.CYPRESS_RECORD_KEY;
-
-      // Verifica se a chave de gravação existe e configura a opção de gravação
-      // dentro do objeto env para uso posterior
-      if (recordKey) {
-        config.env.recordKey = recordKey;
-        // Configurações adicionais baseadas na presença da chave de gravação
-      }
-
-      return config;
-    },
-    pageLoadTimeout: 240000,
+    pageLoadTimeout: 60000,
     supportFile: 'cypress/support/e2e.{js,jsx,ts,tsx}',
     specPattern: 'cypress/**/*.{js,jsx,ts,tsx}',
     redirectionLimit: 5000,
