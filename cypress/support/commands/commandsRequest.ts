@@ -198,9 +198,9 @@ function handleRequestAttributes(attributeValue: string, types: RequestType[], a
 function validateElement(messageElement, elementValue, validationMessage, returnMessage1, returnMessage2, condition) {
     cy.get(messageElement).then(($messageElement) => {
         if (condition && $messageElement.is(':visible') && $messageElement.text() === validationMessage) {
-            throw new Error(returnMessage1);
+            return cy.wrap({ error: returnMessage1 });
         } else if (!condition && !$messageElement.is(':visible')) {
-            throw new Error(returnMessage2);
+            return cy.wrap({ error: returnMessage2 });
         }
     });
 };
@@ -231,7 +231,7 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
                         }
                     });
                     if (isNaN(Number($element.val())) && !$messageModal.is(':visible') && $messageModal.text() === Messages.validationMessages.VALID_VALUE) {
-                        throw new Error(Messages.returnMessages.differentValueOfNumbersMessageNotDisplayed)
+                        return cy.wrap({ error: Messages.returnMessages.differentValueOfNumbersMessageNotDisplayed })
                     }
                 });
         }

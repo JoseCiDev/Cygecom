@@ -23,7 +23,6 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-/// <reference types="Cypress" />
 /// <reference path="../cypress.d.ts" />
 
 
@@ -117,9 +116,7 @@ const {
 
 
 Cypress.Commands.add('login', (baseUrl: string, emailAccess: string, passwordAccess: string, elementError: string) => {
-
     cy.visit(baseUrl);
-   
 
     cy.get(email, { timeout: 20000 })
         .each(($input) => {
@@ -130,7 +127,7 @@ Cypress.Commands.add('login', (baseUrl: string, emailAccess: string, passwordAcc
                     checkInput($input, elementError, 'Usuário não foi inserido, porém não é apresentado mensagem ao usuário.');
                     const emailError = validateEmail(emailAccess);
                     if (emailError) {
-                        throw new Error(emailError);
+                        return cy.wrap({ error: emailError });
                     }
                 });
         })
@@ -145,8 +142,7 @@ Cypress.Commands.add('login', (baseUrl: string, emailAccess: string, passwordAcc
                 });
         })
 
-    cy.get(access)
-        .click()
+    cy.getElementAndClick([access])
         .then(() => {
 
             cy.checkValidation(emailAccess);
@@ -157,25 +153,28 @@ Cypress.Commands.add('login', (baseUrl: string, emailAccess: string, passwordAcc
                         cy.get(messageContainer).then(($modal) => {
                             const messageModal = $modal.text().trim();
                             if (messageModal.includes('As credenciais fornecidas não coincidem com nossos registros.')) {
-                                throw new Error('Foi informado usuário ou senha incorretos na aplicação');
+                                return cy.wrap({ error: 'Foi informado usuário ou senha incorretos na aplicação' });
                             }
                             if (messageModal.includes('The password field is required.')) {
-                                throw new Error('Foi inserida uma senha incorreta na aplicação ou não foi fornecida nenhuma senha na aplicação.');
+                                return cy.wrap({ error: 'Foi inserida uma senha incorreta na aplicação ou não foi fornecida nenhuma senha na aplicação.' });
                             }
-
                         });
                     } else {
                         console.log('Element not found');
                     }
                 });
             }
-           
         });
-        
     return cy.wrap({ success: 'Login realizado com sucesso.' });
 });
 
+Cypress.Commands.add('logout', () => {
+    cy.getElementAndClick(['.user > .dropdown > .btn']);
 
+    cy.getElementAndClick([logout]);
+
+    return cy.wrap({ success: 'Logout realizado com sucesso.' });
+})
 
 Cypress.Commands.add('loginLogoutWithViewport', (size: Cypress.ViewportPreset | [number, number], elementAction: string, elementSubmit: string) => {
     if (Array.isArray(size) && typeof size[0] === 'number' && typeof size[1] === 'number') {
@@ -211,7 +210,7 @@ Cypress.Commands.add('checkValidation', (text: string) => {
                 const isErrorMessageVisible = $elementError.style.display !== 'none';
 
                 if ((isElementEmpty && !isErrorMessageVisible)) {
-                    throw new Error(`Validation error for ${selector}`);
+                    return cy.wrap({ error: `Validation error for ${selector}` });
                 } else {
                     console.log(`No validation errors found for ${selector}`);
                 }

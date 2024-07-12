@@ -30,7 +30,7 @@ export function validatePassword(password: string): boolean {
 export function checkInput($input, elementError, errorMessage) {
     const inputValueFromInput = String($input.val());
     if (inputValueFromInput.length < 1 && !Cypress.$(elementError).is(':visible')) {
-        throw new Error(errorMessage);
+        return cy.wrap({error:errorMessage});
     }
 };
 

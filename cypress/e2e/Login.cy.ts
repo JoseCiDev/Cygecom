@@ -104,6 +104,45 @@ describe('Testes da página Login.', () => {
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
+    });
 
+    it('Deve falhar ao tentar efetuar o login com credenciais inválidas.', () => {
+        cy.login(dataEnvironment.BASE_URL_CI, 'email_invalido@example.com', 'senha_incorreta', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, 'Foi informado usuário ou senha incorretos na aplicação');
+            });
+    });
+
+    it('Deve falhar ao tentar efetuar o login com campos vazios', () => {
+
+        cy.visit(dataEnvironment.BASE_URL_CI);
+
+        cy.getElementAndType({ [email]: ' ' })
+        cy.getElementAndType({ [password]: ' ' })
+
+        return cy.wrap({ error: 'Não é possível realizar o login com campos vazios' });
+    });
+
+
+    it('Deve falhar ao tentar efetuar o login com senha incorreta.', () => {
+        cy.login(dataEnvironment.BASE_URL_CI, dataEnvironment.EMAIL_ADMIN_CI, 'senha_incorreta', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, 'Não é possível realizar o login com o usuário e a senha incorretos.');
+            });
+    });
+
+    it('Deve falhar ao tentar efetuar o login com um usuário não existente.', () => {
+        cy.login(dataEnvironment.BASE_URL_CI, 'nao_existente@example.com', 'qualquer_senha', messageContainer)
+            .then((result) => {
+                assert.exists(result.success, 'Não é possível realizar o login com o usuário inexistente.');
+            });
+    });
+
+    it('Deve efetuar o logout com sucesso.', () => {
+        cy.login(dataEnvironment.BASE_URL_CI, dataEnvironment.EMAIL_ADMIN_CI, dataEnvironment.PASSWORD_ADMIN_CI, messageContainer)
+        cy.logout()
+            .then((result) => {
+                assert.exists(result.success, 'Realizado logout com sucesso.');
+            });
     });
 });

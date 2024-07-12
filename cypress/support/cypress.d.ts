@@ -23,6 +23,12 @@ declare global {
              */
             login(baseUrl: string, emailAccess: string, passwordAccess: string, elementError: string): ValidationResult;
 
+             /**
+             * Custom command para fazer logout.
+             * @example cy.logout()
+             */
+            logout(): ValidationResult;
+
             /**
             * comando customizado para selecinar elemento e verificar se esta visivel.
             * @example cy.getVisible()
@@ -136,12 +142,6 @@ declare global {
            * @example cy.getDataOnGrid();
            */
             getDataOnGrid(searchParameterElement?, searchParameterValue?, showRecordsQuantityElement?, showRecordsQuantityValue?, sortByColumnElement?, sortByColumnValue?, searchColumnElement?, searchColumnValue?): ValidationResult;
-
-            /**
-           * comando customizado para capturar o CSRF token.
-           * @example cy.loginAndGetCsrfToken();
-           */
-            loginAndGetCsrfToken()
 
             /**
            * comando customizado para criar solicitações seja de produtos, serviços pontuais ou serviços recorrentes.

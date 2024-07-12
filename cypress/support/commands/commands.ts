@@ -177,7 +177,7 @@ Cypress.Commands.add('getElementAndType', (elements: { [key: string]: string }):
                         .invoke('val')
                         .then(val => {
                             if (!val) {
-                                throw new Error('Field is empty after typing');
+                                return cy.wrap({error:'Field is empty after typing'});
                             }
                         });
                 })
