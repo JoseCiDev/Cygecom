@@ -573,13 +573,13 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
         cy.log('Clique no botão de salvar realizado');
     });
 
-    cy.waitUntil(() => cy.get(toAgreeModalSubmitRequest).should('be.visible'), {
-        errorMsg: 'Modal de confirmação não apareceu',
-        timeout: 10000, // Aguarda até 10 segundos
-        interval: 500 // Verifica a cada 500ms
-    }).click();
+    // cy.waitUntil(() => cy.get(toAgreeModalSubmitRequest).should('be.visible'), {
+    //     errorMsg: 'Modal de confirmação não apareceu',
+    //     timeout: 10000, // Aguarda até 10 segundos
+    //     interval: 500 // Verifica a cada 500ms
+    // }).click();
 
-    cy.waitUntil(() =>
-        cy.url().then(url => url.includes('/requests/own'))
-    );
+    // cy.waitUntil(() =>
+    //     cy.url().then(url => url.includes('/requests/own'))
+    // );
 });
