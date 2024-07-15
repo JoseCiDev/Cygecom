@@ -124,9 +124,6 @@ const {
     saveUserRegistration,
     cancelUserRegistration,
     registrationSupplierSubMenu,
-    messageRequirementName,
-    messageRequirementCpfCnpj,
-    messageRequiredTelephone,
 } = el.Register
 
 const {
@@ -169,6 +166,8 @@ const {
     firstWarningValueApportionment,
     secondWarningValueApportionment,
     productRequest,
+    errorMessageElementReasonForRequest,
+    errorMessageElementLocalDescription,
 } = el.Request
 
 const {
@@ -195,83 +194,111 @@ function handleRequestAttributes(attributeValue: string, types: RequestType[], a
     }
 };
 
-function validateElement(messageElement, elementValue, validationMessage, returnMessage1, returnMessage2, condition) {
+function validateElement({ messageElement, elementValue, validationMessage, returnMessage1, returnMessage2, condition }) {
+    const isFieldEmpty = !elementValue || elementValue.trim() === '';
     cy.get(messageElement).then(($messageElement) => {
-        if (condition && $messageElement.is(':visible') && $messageElement.text() === validationMessage) {
-            return cy.wrap({ error: returnMessage1 });
-        } else if (!condition && !$messageElement.is(':visible')) {
-            return cy.wrap({ error: returnMessage2 });
+        const isVisible = $messageElement.is(':visible');
+        const textMatches = $messageElement.text().trim() === validationMessage.trim();
+
+        if (isFieldEmpty) {
+            if (isVisible && textMatches) {
+                return;
+            } else {
+                return cy.wrap(returnMessage1);
+            }
+        } else {
+            if (condition) {
+                if (!isVisible || !textMatches) {
+                    return cy.wrap(returnMessage1);
+                }
+            } else {
+                if (isVisible && !textMatches) {
+                    return cy.wrap(returnMessage2);
+                }
+            }
         }
     });
-};
+}
 
-
+export function typeAndValidate(element, value, warningElement, validations) {
+    cy.get(element)
+        .type(value.toString())
+        .then(($element) => {
+            const elementValue = $element.val();
+            validations.forEach(({ condition, message, successMessage, failureMessage, additionalCondition }) => {
+                if (condition(elementValue)) {
+                    validateElement({
+                        messageElement: warningElement,
+                        elementValue: elementValue,
+                        validationMessage: message,
+                        returnMessage1: successMessage,
+                        returnMessage2: failureMessage,
+                        condition: additionalCondition
+                    });
+                }
+            });
+        });
+}
 
 
 Cypress.Commands.add('createRequest', function (requestType: RequestType) {
+    const MIN_PERCENTAGE = 1;
+    const MAX_PERCENTAGE = 100;
+    const MIN_VALUE = 1;
 
     function setApportionment() {
         const { apportionmentPercentage, apportionmentValue } = dataParameters.request;
 
-        function typeAndValidate(element, value, warningElement, validations) {
-            cy.get(element)
-                .type(value.toString())
-                .then(($element) => {
-                    const $messageModal = Cypress.$(warningElement);
-                    validations.forEach(validation => {
-                        if (validation.condition($element.val())) {
-                            validateElement(
-                                warningElement,
-                                $element.val(),
-                                validation.message,
-                                validation.successMessage,
-                                validation.failureMessage,
-                                validation.additionalCondition
-                            );
-                        }
-                    });
-                    if (isNaN(Number($element.val())) && !$messageModal.is(':visible') && $messageModal.text() === Messages.validationMessages.VALID_VALUE) {
-                        return cy.wrap({ error: Messages.returnMessages.differentValueOfNumbersMessageNotDisplayed })
-                    }
-                });
-        }
-
-        if (apportionmentValue && apportionmentValue.trim()) {
-            typeAndValidate(apportionmentValueElement, apportionmentValue, firstWarningValueApportionment, [
-                {
-                    condition: val => val === 'e' || val === '-',
-                    message: Messages.validationMessages.REQUIRE_FIELD,
-                    successMessage: Messages.returnMessages.fieldFilledAndMessageDisplayed,
-                    failureMessage: Messages.returnMessages.fieldNotFilledAndMessageNotDisplayed,
-                    additionalCondition: true
-                }
-            ]);
-        } else if (apportionmentPercentage && apportionmentPercentage.trim()) {
+        if (apportionmentPercentage && apportionmentPercentage.trim()) {
             typeAndValidate(apportionmentPercentageElement, apportionmentPercentage, firstWarningPercentageApportionment, [
                 {
-                    condition: val => !isNaN(Number(val)) && Number(val) >= 1,
-                    message: Messages.validationMessages.PERCENTAGEM_SUM,
-                    successMessage: Messages.returnMessages.sumPercentagesIncorrectAndMessageNotDisplayed,
-                    failureMessage: Messages.returnMessages.sumPercentagesCorrectAndMessageDisplayed,
-                    additionalCondition: val => Number(val) < 100
+                    condition: val => !isNaN(Number(val)) && Number(val) >= MIN_PERCENTAGE && Number(val) <= MAX_PERCENTAGE,
+                    message: Messages.validation.PERCENTAGE_SUM,
+                    failureMessage: Messages.return.failure.SUM_PERCENTAGES_INCORRECT_BUT_NO_MESSAGE,
+                    successMessage: Messages.return.success.PERCENTAGE_SUM_CORRECT,
+                    additionalCondition: true
                 },
                 {
-                    condition: val => Number(val) <= 0,
-                    message: Messages.validationMessages.GREATER_THAN_ONE,
-                    successMessage: Messages.returnMessages.valueLessThanOrEqualToZeroAndMessageNotDisplayed,
-                    failureMessage: Messages.returnMessages.valueGreaterOrThanEqualToZeroMessageNotDisplayed,
-                    additionalCondition: true
+                    condition: val => Number(val) < MIN_PERCENTAGE,
+                    message: Messages.validation.GREATER_THAN_ONE,
+                    failureMessage: Messages.return.failure.VALUE_LESS_THAN_OR_EQUAL_TO_ZERO_BUT_NO_MESSAGE,
+                    successMessage: Messages.return.success.FIELD_CORRECTLY_FILLED,
+                    additionalCondition: false
+                }
+            ]);
+        } else if (apportionmentValue && apportionmentValue.trim()) {
+            typeAndValidate(apportionmentValueElement, apportionmentValue, firstWarningValueApportionment, [
+                {
+                    condition: val => isNaN(Number(val)),
+                    message: Messages.validation.VALID_VALUE,
+                    failureMessage: Messages.return.failure.DIFFERENT_VALUE_THAN_NUMBER_BUT_NO_MESSAGE,
+                    successMessage: Messages.return.success.FIELD_CORRECTLY_FILLED,
+                    additionalCondition: false
+                },
+                {
+                    condition: val => !isNaN(Number(val)) && Number(val) < MIN_VALUE,
+                    message: Messages.validation.GREATER_THAN_ONE,
+                    failureMessage: Messages.return.failure.VALUE_LESS_THAN_OR_EQUAL_TO_ZERO_BUT_NO_MESSAGE,
+                    successMessage: Messages.return.success.FIELD_CORRECTLY_FILLED,
+                    additionalCondition: false
                 }
             ]);
         }
-
         return cy.wrap({ success: "Os avisos de obrigatoriedade são exibidos quando os campos não são preenchidos e quando são preenchidos incorretamente. Um aviso é exibido quando a porcentagem é menor que 100. Além disso, um aviso é exibido quando a porcentagem é preenchida com um valor menor ou igual a zero." });
     }
+
+
 
     processAttribute({
         requestType: (attributeValue) => {
             cy.getElementAndClick([requestType])
             setApportionment();
+        },
+        'costCenter': (attributeValue) => {
+            cy.getElementAutocompleteTypeAndClick(
+                { [costCenter]: attributeValue },
+                highlightedOption
+            );
         },
         'quoteRequest': (attributeValue) => {
             if (attributeValue === "true") {
@@ -285,29 +312,40 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
                 });
             });
         },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
-        'costCenter': (attributeValue) => {
-            cy.getElementAutocompleteTypeAndClick(
-                { [costCenter]: attributeValue },
-                highlightedOption
-            );
-        },
-        // //vazio e nao apresentar aviso - preenchido apresentando aviso 
+
         'acquiringArea': (attributeValue) => {
             cy.getElementAndCheck([{ element: attributeValue },]);
         },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
+
         'isComex': (attributeValue) => {
             cy.getElementAndCheck([{ element: attributeValue },]);
         },
-        // //vazio e nao apresentar aviso - preenchido apresentando aviso 
+
         'reasonForRequest': (attributeValue) => {
-            cy.getElementAndType({
-                [reasonForRequest]: attributeValue
-            })
+            const MIN_LENGTH_FOR_REASON = 20;
+            const EMPTY_LENGTH = 0;
+            const validationsForReasonForRequest = [
+                {
+                    condition: (elementValue) => elementValue.trim().length === EMPTY_LENGTH,
+                    message: 'Este campo é obrigatório.',
+                    successMessage: 'Campo não preenchido e aviso apresentado:',
+                    failureMessage: 'Campo não preenchido e aviso não apresentado: Erro',
+                    additionalCondition: false
+                },
+                {
+                    condition: (elementValue) => {
+                        const trimmedLength = elementValue.trim().length;
+                        return trimmedLength >= 1 && trimmedLength < MIN_LENGTH_FOR_REASON;
+                    },
+                    message: `Por favor, forneça ao menos ${MIN_LENGTH_FOR_REASON} caracteres.`,
+                    successMessage: 'Campo preenchido com menos de 20 caracteres e aviso apresentado:',
+                    failureMessage: 'Campo preenchido com menos de 20 caracteres e aviso não apresentado: Erro',
+                    additionalCondition: false
+                }
+            ];
+            typeAndValidate(reasonForRequest, attributeValue, errorMessageElementReasonForRequest, validationsForReasonForRequest);
         },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso
-        //texto menor que 20 caracteres
+
         'description': (attributeValue) => {
             handleRequestAttributes(attributeValue, [RequestType.oneOffService, RequestType.recurringService], (value) => {
                 cy.getElementAndType({
@@ -315,19 +353,36 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
                 });
             });
         },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso
-        //menor que 2 caracteres
+
         'desiredDeliveryDate': (attributeValue) => {
             cy.getElementAndType({
                 [desiredDeliveryDate]: attributeValue
             })
         },
-        // //data menor que o dia atual e nao apresentar aviso
+
         'localDescription': (attributeValue) => {
-            cy.getElementAndType({
-                [localDescription]: attributeValue
-            })
+            const validationsForLocalDescription = [
+                {
+                    condition: (elementValue) => !elementValue || elementValue.trim().length === 0,
+                    message: Messages.validation.REQUIRE_FIELD,
+                    successMessage: Messages.return.success.FIELD_CORRECTLY_FILLED,
+                    failureMessage: Messages.return.failure.FIELD_NOT_FILLED_BUT_NO_MESSAGE,
+                    additionalCondition: false
+                },
+                {
+                    condition: (elementValue) => {
+                        const trimmedLength = elementValue.trim().length;
+                        return trimmedLength > 0 && trimmedLength < 2;
+                    },
+                    message: Messages.validation.MIN_TWO_CHARACTERS,
+                    successMessage: Messages.return.success.FIELD_CORRECTLY_FILLED,
+                    failureMessage: Messages.return.failure.FIELD_FILLED_BUT_MESSAGE_DISPLAYED,
+                    additionalCondition: false
+                }
+            ];
+            typeAndValidate(localDescription, attributeValue, errorMessageElementLocalDescription, validationsForLocalDescription);
         },
+
         'suggestionLinks': (attributeValue) => {
             cy.getElementAndType({
                 [suggestionLinksString]: attributeValue,
@@ -417,7 +472,7 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
                 )
             });
         },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
+
         'nameAndDescription': (attributeValue) => {
             handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
                 cy.getElementAndType({
@@ -425,7 +480,7 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
                 });
             });
         },
-        //vazio e nao apresentar aviso - preenchido apresentando aviso 
+
         'quantity': (attributeValue) => {
             handleRequestAttributes(attributeValue, [RequestType.product], (value) => {
                 cy.getElementAndType({
@@ -463,7 +518,7 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
                 });
             });
         },
-        //nao e url
+
         'attachedFile': (attributeValue) => {
             cy.insertFile(attachedFile, attributeValue);
         },
@@ -494,8 +549,8 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
                 cy.wait(1000);
                 cy.waitUntil(() => cy.get(toAgreeModalSubmitRequest).should('be.visible'), {
                     errorMsg: 'Modal de confirmação não apareceu',
-                    timeout: 10000, // Aguarda até 10 segundos
-                    interval: 500 // Verifica a cada 500ms
+                    timeout: 10000,
+                    interval: 500
                 }).click()
 
                 cy.waitUntil(() =>
@@ -503,8 +558,6 @@ Cypress.Commands.add('createRequest', function (requestType: RequestType) {
                 )
             };
         }
-
     });
-
     return cy.wrap({ success: "Processo realizado com sucesso!" });
 });

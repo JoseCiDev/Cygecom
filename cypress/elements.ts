@@ -56,9 +56,6 @@ interface Elements<S = string> {
         saveUserRegistration: S;
         cancelUserRegistration: S;
         registrationSupplierSubMenu: S;
-        messageRequirementName: S;
-        messageRequirementCpfCnpj: S;
-        messageRequiredTelephone: S;
         searchColumn: S;
     },
 
@@ -110,6 +107,8 @@ interface Elements<S = string> {
         productRequest: S;
         oneOffServiceRequest: S;
         recurringServiceRequest: S;
+        errorMessageElementReasonForRequest: S;
+        errorMessageElementLocalDescription: S;
     },
 
     Supply: {
@@ -181,9 +180,6 @@ export const elements: Elements = {
         saveUserRegistration: '[data-cy="btn-submit-salvar"]',
         cancelUserRegistration: '[data-cy="btn-cancel"]',
         registrationSupplierSubMenu: '[data-cy="dropdown-cadastros-vencedores"]',
-        messageRequirementName: '#name-error',
-        messageRequirementCpfCnpj: '#cpf_cnpj-error',
-        messageRequiredTelephone: '#number-error',
         searchColumn: 'tr.search-bar',
     },
 
@@ -235,6 +231,8 @@ export const elements: Elements = {
         secondWarningPercentageApportionment: '.percentage-span-warning',
         firstWarningValueApportionment: '[id="cost_center_apportionments[0][apportionment_currency]-error"]',
         secondWarningValueApportionment: '.currency-span-warning',
+        errorMessageElementReasonForRequest: '#reason-error',
+        errorMessageElementLocalDescription: '#local-description-error',
     },
 
     Supply: {

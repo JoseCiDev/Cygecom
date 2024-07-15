@@ -68,9 +68,6 @@ export const {
     saveUserRegistration,
     cancelUserRegistration,
     registrationSupplierSubMenu,
-    messageRequirementName,
-    messageRequirementCpfCnpj,
-    messageRequiredTelephone,
 } = el.Register;
 
 export const {

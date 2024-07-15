@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import { elements as el } from '../elements';
 import { env } from 'process';
 import { data } from 'cypress/types/jquery';
-import { DataParameters, RequestType,dataParameters } from '../import';
+import { DataParameters, RequestType, dataParameters } from '../import';
 
 const {
     logout,
@@ -63,9 +63,6 @@ const {
     saveUserRegistration,
     cancelUserRegistration,
     registrationSupplierSubMenu,
-    messageRequirementName,
-    messageRequirementCpfCnpj,
-    messageRequiredTelephone,
     searchColumn,
 } = el.Register
 
@@ -91,7 +88,7 @@ const {
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
 
-describe('Testes da página de criação de solicitação de produtos.', () => {
+describe('Testes da página de criação de solicitações.', () => {
 
     beforeEach(function () {
 
@@ -107,7 +104,7 @@ describe('Testes da página de criação de solicitação de produtos.', () => {
             requestMenu,
             newRequestSubMenu
         ]);
-        cy.createRequest(productRequest); 
+        cy.createRequest(productRequest);
     });
 });
 

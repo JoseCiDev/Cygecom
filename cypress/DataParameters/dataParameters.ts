@@ -87,11 +87,11 @@ const costCenter = requestData.costCenter && requestData.costCenter !== " "
 
 const apportionmentPercentage = requestData.apportionmentPercentage && requestData.apportionmentPercentage !== " "
     ? requestData.apportionmentPercentage
-    : faker.helpers.arrayElement(['100']);
+    : faker.helpers.arrayElement([' ']);
 
 const apportionmentValue = requestData.apportionmentValue && requestData.apportionmentValue !== " "
-    ? requestData.apportionmentValue
-    : faker.helpers.arrayElement([' ']);
+    ? requestData.apportionmentPercentage
+    : faker.helpers.arrayElement(['100']);
 
 const quoteRequest = requestData.quoteRequest && requestData.quoteRequest !== " " && requestData.quoteRequest.toLowerCase() === "true"
     ? "true"
@@ -648,25 +648,29 @@ export const dataParameters: DataParameters = {
     searchColumnRecurringServiceRequests: SearchColumnRecurringServiceRequests,
 };
 
+
 export const Messages = {
-    validationMessages: {
+    validation: {
         REQUIRE_FIELD: 'Este campo é obrigatório.',
         GREATER_THAN_ONE: 'Por favor, forneça um valor maior ou igual a 1.',
-        PERCENTAGEM_SUM: 'A soma da porcentagem deve ser 100%.',
-        GREATER_THEN_CURRENT_DATE: `Por favor, forneça um valor maior ou igual a ${new Date().toISOString().split('T')[0]}`,
-        VALID_VALUE: `Por favor, forneça um número válido.`
+        PERCENTAGE_SUM: 'A soma das porcentagens deve ser igual ou menor que 100% e maior ou igual a 1%.',
+        GREATER_THAN_CURRENT_DATE: `Por favor, forneça um valor maior ou igual a ${new Date().toISOString().split('T')[0]}`,
+        VALID_VALUE: 'Por favor, forneça um número válido.',
+        MIN_TWO_CHARACTERS: 'Por favor, forneça ao menos 2 caracteres.'
     },
-    returnMessages: {
-        fieldFilledAndMessageDisplayed: 'Lamentamos informar que ocorreu um problema no preenchimento do campo, pois a mensagem de obrigatoriedade está sendo exibida mesmo com o campo já preenchido.',
-        fieldNotFilledAndMessageNotDisplayed: 'O campo em questão não foi preenchido corretamente. No entanto, gostaríamos de ressaltar que a mensagem de obrigatoriedade não está sendo exibida conforme o esperado.',
-        sumPercentagesCorrectAndMessageDisplayed: 'A soma total das porcentagens é igual a 100%. No entanto, a mensagem que indica que a porcentagem deve ser igual a 100% é exibida.',
-        sumPercentagesIncorrectAndMessageNotDisplayed: 'Lamentamos informar que a soma das porcentagens é inferior a 100%. No entanto, a mensagem que indica que a porcentagem deve ser 100% não está sendo exibida.',
-        valueLessThanOrEqualToZeroAndMessageNotDisplayed: 'Foi observado que um valor menor ou igual a zero foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
-        valueGreaterOrThanEqualToZeroMessageNotDisplayed: 'Foi observado que um valor maior que zero foi informado, no entanto, é exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
-        differentValueOfNumbersMessageNotDisplayed: 'Foi observado que um valor diferente de número foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor numérico.',
-
-    },
-
-    //Por favor, forneça um número válido.
-
+    return: {
+        failure: {
+            FIELD_FILLED_BUT_MESSAGE_DISPLAYED: 'Lamentamos informar que ocorreu um problema no preenchimento do campo, pois a mensagem de obrigatoriedade está sendo exibida mesmo com o campo já preenchido.',
+            FIELD_NOT_FILLED_BUT_NO_MESSAGE: 'O campo em questão não foi preenchido corretamente. No entanto, gostaríamos de ressaltar que a mensagem de obrigatoriedade não está sendo exibida conforme o esperado.',
+            SUM_PERCENTAGES_CORRECT_BUT_MESSAGE_DISPLAYED: 'A soma total das porcentagens é igual a 100%. No entanto, a mensagem que indica que a porcentagem deve ser igual a 100% é exibida.',
+            SUM_PERCENTAGES_INCORRECT_BUT_NO_MESSAGE: 'Lamentamos informar que a soma das porcentagens é inferior a 100%. No entanto, a mensagem que indica que a porcentagem deve ser 100% não está sendo exibida.',
+            VALUE_LESS_THAN_OR_EQUAL_TO_ZERO_BUT_NO_MESSAGE: 'Foi observado que um valor menor ou igual a zero foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
+            VALUE_GREATER_THAN_ZERO_BUT_MESSAGE_DISPLAYED: 'Foi observado que um valor maior que zero foi informado, no entanto, é exibida uma mensagem informando que é necessário fornecer um valor maior ou igual a um.',
+            DIFFERENT_VALUE_THAN_NUMBER_BUT_NO_MESSAGE: 'Foi observado que um valor diferente de número foi informado, no entanto, não foi exibida uma mensagem informando que é necessário fornecer um valor numérico.'
+        },
+        success: {
+            FIELD_CORRECTLY_FILLED: 'Campo corretamente preenchido.',
+            PERCENTAGE_SUM_CORRECT: 'A soma total das porcentagens é igual a 100%.',
+        }
+    }
 };

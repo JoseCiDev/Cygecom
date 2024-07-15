@@ -67,9 +67,6 @@ const {
     saveUserRegistration,
     cancelUserRegistration,
     registrationSupplierSubMenu,
-    messageRequirementName,
-    messageRequirementCpfCnpj,
-    messageRequiredTelephone,
     searchColumn,
 } = el.Register
 
