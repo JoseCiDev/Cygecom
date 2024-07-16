@@ -11,5 +11,5 @@
   },
   "include": [
     "**/*.ts",
-    "./support/cypress.d.ts"]
+    "./support/cypress.d.ts"],
 }

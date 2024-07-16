@@ -94,7 +94,6 @@
             "acquiringArea": "areaContract",
             "isComex": "yes",
             "reasonForRequest": "Automated product request testing - Reason for request.",
-            
             "desiredDeliveryDate": "",
             "localDescription": "Automated product request testing - Description of the product storage location.",
             "suggestionLinks": "https://essentia.com.br/",
