@@ -1,17 +1,10 @@
 /// <reference types="cypress" />
 
-import { faker } from '@faker-js/faker';
-
-import { elements as el } from '../../elements';
-import { env } from 'process';
-import { data } from 'cypress/types/jquery';
-import { DataParameters } from '../../import';
-import { dataParameters } from '../../DataParameters/dataParameters';
-
-
-
-
-
+import {
+    faker,
+    elements as el,
+    DataParameters,
+} from '../../import';
 
 export const {
     email,
@@ -101,6 +94,6 @@ describe('Testes da página Login.', () => {
             .then((result) => {
                 assert.exists(result.success, result.error)
             });
-        
+
     });
 });

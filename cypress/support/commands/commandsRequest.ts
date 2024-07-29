@@ -26,7 +26,6 @@
 // /// <reference types="Cypress" />
 /// <reference path="../cypress.d.ts" />
 
-import 'cypress-wait-until';
 
 import {
     ConditionalWrite,

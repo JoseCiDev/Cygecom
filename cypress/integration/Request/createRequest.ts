@@ -1,12 +1,11 @@
 /// <reference types="cypress" />
 
-import { faker } from '@faker-js/faker';
-
-import { elements as el } from '../../elements';
-import { env } from 'process';
-import { data } from 'cypress/types/jquery';
-import { DataParameters } from '../../import';
-import { dataParameters } from '../../DataParameters/dataParameters';
+import { 
+    DataParameters,
+    dataParameters,
+    elements as el,
+    faker,
+} from '../../import';
 
 const {
     logout,

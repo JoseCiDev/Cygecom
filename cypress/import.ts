@@ -1,9 +1,30 @@
+import * as loadash from 'lodash';
+export { loadash };
+
 import * as data from './fixtures/data.json';
 export { data };
 
-export { faker } from '@faker-js/faker'
+import * as dateFns from 'date-fns';
+export { dateFns };
 
+export { faker } from '@faker-js/faker'
 export { elements } from './elements'
+
+import { fakerBr } from '@js-brasil/fakerbr';
+export { fakerBr };
+
+export { mount } from 'cypress/react'
+
+import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
+export { Given, When, Then };
+
+import 'cypress-wait-until';
+
+export {
+    validateEmail,
+    validatePassword,
+    checkInput,
+} from './utils';
 
 export {
     Request,
@@ -33,10 +54,12 @@ export {
     IsComexImportProduct,
     IsComexImportService
 } from './DataParameters/Enums/isComexImport';
+
 export {
     SaveRequestDraft,
     SaveRequestSubmit
 } from './DataParameters/Enums/saveRequest';
+
 export { Sector } from './DataParameters/Enums/sector';
 export { UserProfile } from './DataParameters/Enums/userProfile';
 export { ApproverUser } from './DataParameters/Enums/approverUser';

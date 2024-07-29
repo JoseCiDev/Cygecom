@@ -25,9 +25,9 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 /// <reference path="../cypress.d.ts" />
 
-import { dataParameters } from '../../DataParameters/dataParameters'
-import { elements as el } from '../../elements'
 import {
+    elements as el,
+    dataParameters,
     ColumnSearchParameter,
     SearchColumnElement,
     SearchParameterElement,
@@ -194,7 +194,7 @@ Cypress.Commands.add('getColumnVisibility', (element: TableTypesElements) => {
             cy.get(`table th:contains("${elementSelector}")`, { timeout: 4000 })
                 .should('not.exist');
             if ($columnGrid.is(':visible')) {
-                return cy.wrap({error:"A coluna foi ocultada ou exibida na tela, no entanto, não houve nenhuma alteração ou ocorreu o oposto na tela."});
+                return cy.wrap({ error: "A coluna foi ocultada ou exibida na tela, no entanto, não houve nenhuma alteração ou ocorreu o oposto na tela." });
             }
         }
     }
@@ -248,7 +248,7 @@ Cypress.Commands.add('getDataOnGrid', (searchParameterElement?, searchParameterV
                                                 .invoke('val') // Use invoke('val') instead of accessing val property
                                                 .then((val) => {
                                                     if (val === '') {
-                                                        return cy.wrap({error:'Após inserir os dados, o campo fica vazio.'});
+                                                        return cy.wrap({ error: 'Após inserir os dados, o campo fica vazio.' });
                                                     }
                                                 });
                                         });
@@ -257,7 +257,7 @@ Cypress.Commands.add('getDataOnGrid', (searchParameterElement?, searchParameterV
                                             .type(value, { force: true })
                                             .then(() => {
                                                 if ($btn.val() === '') {
-                                                    return cy.wrap({error:'Após inserir os dados, o campo fica vazio.'});
+                                                    return cy.wrap({ error: 'Após inserir os dados, o campo fica vazio.' });
                                                 }
                                             });
                                     }

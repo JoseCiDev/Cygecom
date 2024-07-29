@@ -26,16 +26,13 @@
 // / <reference types="Cypress" />
 /// <reference path="../cypress.d.ts" />
 
+import { FORMATTED_DATE, FORMATTED_TIME } from '../../DataParameters/dataParameters'
 
-
-import { elements as el } from '../../elements'
-import { FORMATTED_DATE, FORMATTED_TIME, dataParameters } from '../../DataParameters/dataParameters'
-
-
-import '../commands/commandsLogin';
-import './commandsRegistration';
-import './commandsRequest';
-import { ElementTypeAndValueOpcional } from '../../import';
+import {
+    ElementTypeAndValueOpcional,
+    elements as el,
+    dataParameters
+} from '../../import';
 
 
 const {
@@ -113,7 +110,7 @@ const {
 
 
 
-Cypress.Commands.add('insertFile', (element,filePath): void => {
+Cypress.Commands.add('insertFile', (element, filePath): void => {
     cy.fixture(filePath, 'base64').then((conteudo_arquivo) => {
         const nome = filePath.split('/').pop(); // Extract the file name from the fixture path
         const mimeType = 'image/jpeg';
@@ -168,13 +165,13 @@ Cypress.Commands.add('getElementAndType', (elements: { [key: string]: string }):
                     cy.wrap($input)
                         .then(() => {
                             cy.wrap($input.first())
-                                .clear({force:true})
+                                .clear({ force: true })
                                 .type(text, { timeout: 1000 })
                         })
                         .invoke('val')
                         .then(val => {
                             if (!val) {
-                                return cy.wrap({error:'Field is empty after typing'});
+                                return cy.wrap({ error: 'Field is empty after typing' });
                             }
                         });
                 })

@@ -1,8 +1,5 @@
 /// <reference path="../../support/cypress.d.ts" />
 
-import { faker } from '@faker-js/faker';
-import * as fakerBr from 'faker-br';
-import { format } from 'date-fns';
 import {
     Request,
     ServiceRequest,
@@ -34,7 +31,8 @@ import {
     TableColumnsRequestReport,
     TableColumnsSupplierRegistration,
     TableColumnsUserRegistration,
-
+    faker,
+    dateFns,
 } from '../../import';
 
 export type ColumnEnums =

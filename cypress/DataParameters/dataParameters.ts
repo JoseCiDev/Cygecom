@@ -1,9 +1,5 @@
 /// <reference path="../support/cypress.d.ts" />
 
-import fs from 'fs';
-import { faker } from '@faker-js/faker';
-import * as fakerBr from 'faker-br';
-import { format } from 'date-fns';
 import {
     AcquiringArea,
     AllowedApprovalCostCenter,
@@ -66,8 +62,12 @@ import {
     PaymentRecurrence,
     ServiceName,
     TypeOfPaymentAmount,
-    PaymentDueDate
+    PaymentDueDate,
+    faker,
+    fakerBr,
+    dateFns
 } from '../import';
+
 
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
@@ -213,7 +213,7 @@ const seller = requestData.seller && requestData.seller !== " "
 
 const sellerTelephone = requestData.sellerTelephone && requestData.sellerTelephone !== " "
     ? requestData.sellerTelephone
-    : fakerBr.phone.phoneNumber();
+    : fakerBr.celular();
 
 const sellerEmail = requestData.sellerEmail && requestData.sellerEmail !== " "
     ? requestData.sellerEmail

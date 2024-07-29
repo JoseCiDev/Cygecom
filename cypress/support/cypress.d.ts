@@ -1,8 +1,6 @@
 // load the global Cypress types
 /// <reference types="cypress" />
 
-
-import { mount } from 'cypress/react'
 import {
     DateTime,
     ElementTypeAndValueOpcional,

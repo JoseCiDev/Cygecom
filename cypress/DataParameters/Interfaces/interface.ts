@@ -1,8 +1,5 @@
 /// <reference path="../../support/cypress.d.ts" />
 
-import { faker } from '@faker-js/faker';
-import * as fakerBr from 'faker-br';
-import { format } from 'date-fns';
 import {
     AllowedApprovalCostCenter,
     AllowedRequestCostCenter,
@@ -56,9 +53,11 @@ import {
     Requests,
     ServiceAlreadyProvided,
     PaymentDueDate,
-    TypeOfPaymentAmount
+    TypeOfPaymentAmount,
+    dateFns,
+    faker,
+    PaymentRecurrence
 } from '../../import';
-import { PaymentRecurrence } from '../Enums/paymentRecurrence';
 
 
 

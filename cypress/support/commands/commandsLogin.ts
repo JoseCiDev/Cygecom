@@ -25,16 +25,16 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 /// <reference path="../cypress.d.ts" />
 
-
-
-import { elements as el } from '../../elements'
 import {
+    elements as el,
+    dataParameters,
     validateEmail,
     validatePassword,
     checkInput,
-} from '../../utils';
-import { dataParameters } from '../../DataParameters/dataParameters';
-import _ from 'lodash';
+    loadash,
+} from '../../import'
+
+
 // import data from '../../DataParameters/dataParameters'.json';
 
 
