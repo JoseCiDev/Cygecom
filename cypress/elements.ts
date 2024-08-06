@@ -109,6 +109,7 @@ interface Elements<S = string> {
         recurringServiceRequest: S;
         errorMessageElementReasonForRequest: S;
         errorMessageElementLocalDescription: S;
+        requestNumberRequestList: S;
     },
 
     Supply: {
@@ -149,7 +150,7 @@ export const elements: Elements = {
     },
 
     Start: {
-        userProfile: '#navigation > div.user > div > button',
+        userProfile: '.user > .dropdown > .btn',
         homeMenu: '[data-cy="route-home"]',
         logoGecom: '[data-cy="logo-gecom"]',
         homeScreen: '#main',
@@ -233,6 +234,7 @@ export const elements: Elements = {
         secondWarningValueApportionment: '.currency-span-warning',
         errorMessageElementReasonForRequest: '#reason-error',
         errorMessageElementLocalDescription: '#local-description-error',
+        requestNumberRequestList:'#requests-table_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table > thead > tr > th.noColvis.sorting > input'
     },
 
     Supply: {

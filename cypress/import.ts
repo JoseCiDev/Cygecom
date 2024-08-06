@@ -1,3 +1,4 @@
+///home/jose/projetos/Cygecom/cypress/import.ts
 import * as loadash from 'lodash';
 export { loadash };
 

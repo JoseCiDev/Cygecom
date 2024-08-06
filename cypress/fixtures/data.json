@@ -112,7 +112,7 @@
             "size": "G",
             "model": "Basic",
             "link": "https://essentia.com.br/",
-            "saveRequest": "draft"
+            "saveRequest": "submit"
         },
         "oneOffService": {
             "servicename": "servicoPontualTeste()",

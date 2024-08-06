@@ -4,7 +4,11 @@
   "description": "",
   "main": "generateEnum.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx cypress run",
+    "cloud": "cypress run --browser chrome --record --key 6ca74aa9-70ef-423a-8b26-f28b31b3bb63 --spec \"cypress/e2e/Login.ts\"",
+    "e2e": "cypress run --browser electron --record --key 6ca74aa9-70ef-423a-8b26-f28b31b3bb63 --headless --spec \"cypress/e2e/*.cy.ts\"",
+    "request": "cypress run --browser electron --headless --spec \"cypress/e2e/createRequest.cy.ts\"",
+    "loginLogoutCucumber":"cypress run --browser chrome --record --key 6ca74aa9-70ef-423a-8b26-f28b31b3bb63 --headless --spec \"cypress/e2e/*.feature\""
   },
   "repository": {
     "type": "git",
@@ -18,14 +22,20 @@
   },
   "homepage": "https://github.com/JoseCiDev/Cygecom#readme",
   "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^20.1.1",
+    "@cypress/webpack-preprocessor": "^6.0.2",
     "@faker-js/faker": "^8.4.1",
     "cypress": "^13.13.1",
-    "cypress-wait-until": "^3.0.2"
+    "cypress-cucumber-preprocessor": "^4.3.1",
+    "cypress-wait-until": "^3.0.2",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.4"
   },
   "dependencies": {
-    "@badeball/cypress-cucumber-preprocessor": "^20.1.1",
     "@js-brasil/fakerbr": "^0.0.2",
     "date-fns": "^3.6.0",
-    "faker-br": "^0.4.1"
+    "faker-br": "^0.4.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }

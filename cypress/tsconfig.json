@@ -1,3 +1,4 @@
+///home/jose/projetos/Cygecom/cypress/tsconfig.json
 {
   "compilerOptions": {
     "esModuleInterop": true,

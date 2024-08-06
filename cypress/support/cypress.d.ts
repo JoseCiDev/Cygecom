@@ -19,7 +19,7 @@ declare global {
              * Custom command para fazer login.
              * @example cy.login()
              */
-            login(baseUrl: string, emailAccess: string, passwordAccess: string, elementError: string): ValidationResult;
+            login(baseUrl: string, emailAccess: string, passwordAccess: string, elementError?: string): ValidationResult;
 
              /**
              * Custom command para fazer logout.

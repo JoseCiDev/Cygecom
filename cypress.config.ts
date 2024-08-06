@@ -1,25 +1,50 @@
+///home/jose/projetos/Cygecom/cypress.config.ts
 import { defineConfig } from "cypress";
-// import createBundler from "@bahmutov/cypress-esbuild-preprocessor";
-// import { addCucumberPreprocessorPlugin } from "@badeball/cypress-cucumber-preprocessor";
-// import createEsbuildPlugin from "@bahmutov/cypress-esbuild-preprocessor/esbuild";
+import { addCucumberPreprocessorPlugin } from '@badeball/cypress-cucumber-preprocessor';
+import webpack from "@cypress/webpack-preprocessor";
 
-// async function setupNodeEvents(
-//   on: Cypress.PluginEvents,
-//   config: Cypress.PluginConfigOptions
-// ): Promise<Cypress.PluginConfigOptions> {
-//   // This is required for the preprocessor to be able to generate JSON reports after each run, and more,
-//   await addCucumberPreprocessorPlugin(on, config);
+async function setupNodeEvents(
+  on: Cypress.PluginEvents,
+  config: Cypress.PluginConfigOptions
+): Promise<Cypress.PluginConfigOptions> {
+  await addCucumberPreprocessorPlugin(on, config);
 
-//   on(
-//     "file:preprocessor",
-//     createBundler({
-//       plugins: [createEsbuildPlugin(config)],
-//     })
-//   );
+  on(
+    "file:preprocessor",
+    webpack({
+      webpackOptions: {
+        resolve: {
+          extensions: [".ts", ".js"],
+        },
+        module: {
+          rules: [
+            {
+              test: /\.ts$/,
+              exclude: [/node_modules/],
+              use: [
+                {
+                  loader: "ts-loader",
+                },
+              ],
+            },
+            {
+              test: /\.feature$/,
+              use: [
+                {
+                  loader: "@badeball/cypress-cucumber-preprocessor/webpack",
+                  options: config,
+                },
+              ],
+            },
+          ],
+        },
+      },
+    })
+  );
 
-//   // Make sure to return the config object as it might have been modified by the plugin.
-//   return config;
-// }
+  // Certifique-se de retornar o objeto de configuração, pois ele pode ter sido modificado pelo plugin.
+  return config;
+}
 
 export default defineConfig({
   projectId: "r5rp3y",
@@ -32,8 +57,8 @@ export default defineConfig({
   numTestsKeptInMemory: 5,
   experimentalMemoryManagement: true,
   e2e: {
-    // setupNodeEvents,
-    baseUrl: 'http://gerenciador-compras.docker.local:8085/login',
+    setupNodeEvents,
+    baseUrl: 'http://192.168.0.66:9402/login',
     supportFile: 'cypress/support/e2e.ts',
     specPattern: 'cypress/**/*.{js,jsx,ts,tsx,feature}',
     redirectionLimit: 5000,
@@ -58,4 +83,3 @@ export default defineConfig({
     screenshotsFolder: 'cypress/screenshots',
   },
 });
-
