@@ -57,7 +57,7 @@ export default defineConfig({
   experimentalMemoryManagement: true,
   e2e: {
     setupNodeEvents,
-    baseUrl: 'http://gerenciador-compras.docker.local:8085',
+    baseUrl: 'http://gerenciador-compras.docker.local:8085/',
     supportFile: 'cypress/support/e2e.ts',
     specPattern: '**/*.feature', 
     redirectionLimit: 5000,

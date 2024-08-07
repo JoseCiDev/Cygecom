@@ -76,7 +76,7 @@ const dataEnvironment = Cypress.env(environment);
 export const requestTypeString = data.Request.requestType || 'product';
 export const requestData = data.Request[requestTypeString];
 
-const baseUrlCi = 'http://gerenciador-compras.docker.local:8085';
+const baseUrlCi = 'http://gerenciador-compras.docker.local:8085/';
 const emailAdminCi = "gecom_admin@essentia.com.br";
 const passwordAdminCi = "essadmin@2023";
 
