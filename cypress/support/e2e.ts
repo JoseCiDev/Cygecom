@@ -5,6 +5,5 @@ import './commands/commandsRegistration';
 import './commands/commandsRequest';
 
 Cypress.on('uncaught:exception', (err, runnable) => {
-
-    return false
-})
+    return false;
+});

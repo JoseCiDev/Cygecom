@@ -1,14 +1,11 @@
-// /home/jose/projetos/Cygecom/cypress/e2e/logout.ts
-
-/// <reference types="cypress" />
-
+// /home/jose/projetos/Cygecom/cypress/e2e/login.ts
 /// <reference types="cypress" />
 
 import {
     Given, When, Then,
     elements as el,
-
-} from '../import'
+    validateEmail
+} from '../../import'
 
 export const {
     email,
@@ -88,22 +85,55 @@ export const {
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
 
-Given('que eu estou logado como administrador', () => {
+
+beforeEach(() => {
+    cy.visit('/');
+    cy.clearCookies();
+    cy.clearLocalStorage();
+});
+
+
+Given('Estou na página de login', () => {
+    cy.visit('/');
+});
+
+When('Eu insiro o usuário {string} e a senha {string}', () => {
     cy.login(
         dataEnvironment.BASE_URL_CI,
         dataEnvironment.EMAIL_ADMIN_CI,
         dataEnvironment.PASSWORD_ADMIN_CI,
+        messageContainer
     )
         .then((result) => {
             assert.exists(result.success, result.error)
         });
 });
 
-When('eu faço logout', () => {
-    cy.getElementAndClick([userProfile]);
-    cy.getElementAndClick([logout])
+Then('Eu devo ser redirecionado para a página inicial', () => {
+    cy.url().should('eq', dataEnvironment.BASE_URL_CI);
 });
 
-Then('eu devo visualizar a tela de login', () => {
-    cy.url().should('eq', dataEnvironment.BASE_URL_CI + 'login');
+Then('O nome do usuário deve ser exibido no canto superior direito', () => {
+    cy.get(userProfile).should('be.visible');
+    
+});
+
+When('eu tento fazer login com {string} e {string}', (email, password) => {
+    cy.getElementAndType({ [el.Login.email]: 'email@gecom' })
+    cy.getElementAndType({ [el.Login.password]: 'password' })
+    cy.get(access).click();
+    
+});
+
+Then('eu devo ver uma mensagem de erro {string}', (mensagemErro) => {
+    validateEmail(el.Login.email)
+    
+});
+
+When('eu tento fazer login com campos vazios', () => {
+    cy.get(el.Login.email).clear();
+    cy.get(el.Login.password).clear();
+    cy.get(access).click();
+    validateEmail(el.Login.email)
+    
 });

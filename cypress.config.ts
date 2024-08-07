@@ -42,7 +42,6 @@ async function setupNodeEvents(
     })
   );
 
-  // Certifique-se de retornar o objeto de configuração, pois ele pode ter sido modificado pelo plugin.
   return config;
 }
 
@@ -58,9 +57,9 @@ export default defineConfig({
   experimentalMemoryManagement: true,
   e2e: {
     setupNodeEvents,
-    baseUrl: 'http://192.168.0.66:9402/login',
+    baseUrl: 'http://gerenciador-compras.docker.local:8085',
     supportFile: 'cypress/support/e2e.ts',
-    specPattern: 'cypress/**/*.{js,jsx,ts,tsx,feature}',
+    specPattern: '**/*.feature', 
     redirectionLimit: 5000,
     viewportHeight: 1280,
     viewportWidth: 1024,
@@ -81,5 +80,7 @@ export default defineConfig({
     video: true,
     videosFolder: 'cypress/videos',
     screenshotsFolder: 'cypress/screenshots',
+    
   },
+  
 });

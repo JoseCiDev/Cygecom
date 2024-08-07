@@ -1,10 +1,15 @@
+// /home/jose/projetos/Cygecom/cypress/e2e/createRequest.ts
+
 /// <reference types="cypress" />
 
-import { 
+import {
     DataParameters,
+    RequestType,
     dataParameters,
-    elements as el,
     faker,
+    elements as el,
+    Given, When, Then,
+
 } from '../../import';
 
 const {
@@ -71,6 +76,10 @@ const {
     newRequestSubMenu,
     myRequestSubMenu,
     requestGeneralSubMenu,
+    costCenter,
+    highlightedOption,
+    productRequest,
+    requestNumberRequestList,
 } = el.Request
 
 const {
@@ -82,26 +91,56 @@ const {
 } = el.Supply
 
 
-describe('Testes da página de criação de solicitação de produtos.', () => {
+const environment = Cypress.env('ENVIRONMENT');
+const dataEnvironment = Cypress.env(environment);
 
-    beforeEach(function () {
+beforeEach(() => {
+    cy.visit('/');
+})
 
-    })
-
-    it(`Solicitação de produtos`, () => {
-        cy.login('http://192.168.0.66:9402/login', 'gecom_admin@essentia.com.br', 'admin123', messageContainer)
-            .then((result) => {
-                assert.exists(result.success, result.error)
-            });
-
-        cy.getElementAndClick([
-            requestMenu,
-            newRequestSubMenu
-        ]);
-        cy.createRequest(dataParameters.request.requestType);
-    });
+Given('que estou na página de login', () => {
+    cy.visit('/');
 });
 
+When('eu faço login com email {string} e senha {string}', (email, password) => {
+    cy.login(dataEnvironment.BASE_URL_CI, dataEnvironment.EMAIL_ADMIN_CI, dataEnvironment.PASSWORD_ADMIN_CI, messageContainer)
+        .then((result) => {
+            assert.exists(result.success, result.error);
+        });
+});
 
+Then('eu devo ser redirecionado para a página inicial', () => {
+    cy.url().should('include', dataEnvironment.BASE_URL_CI);
+});
 
+Given('que estou na página inicial', () => {
+    cy.url().should('include', dataEnvironment.BASE_URL_CI);
+});
+
+When('eu navego para o menu de novas solicitações', () => {
+    cy.getElementAndClick([requestMenu, newRequestSubMenu]);
+});
+
+When('eu crio uma nova solicitação de produto', () => {
+    cy.createRequest(productRequest);
+});
+
+Then('a solicitação deve ser criada com sucesso', () => {
+
+    cy.waitUntil(() =>
+        cy.get('.fade > .toast-body').should('be.visible')
+    )
+});
+
+Then('eu devo visualizar a solicitação na lista de solicitações', () => {
+    cy.waitUntil(() => cy.get('.fade > .toast-body').invoke('text').then((text) => {
+        const requestNumber = text.match(/nº (\d+)/)[1];
+        cy.get(requestNumberRequestList).type(`${requestNumber}{enter}`);
+        cy.get('#requests-table > tbody > tr > td.sorting_1').should('contain', requestNumber);
+    }), {
+        errorMsg: 'Modal de confirmação não apareceu',
+        timeout: 10000,
+        interval: 500
+    })
+});
 
