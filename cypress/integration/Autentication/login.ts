@@ -68,7 +68,6 @@ export const {
     requestMenu,
     newRequestSubMenu,
     myRequestSubMenu,
-    requestGeneralSubMenu,
 
 } = el.Request;
 
@@ -85,12 +84,6 @@ export const {
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
 
-
-beforeEach(() => {
-    cy.visit('/');
-    cy.clearCookies();
-    cy.clearLocalStorage();
-});
 
 
 Given('Estou na página de login', () => {

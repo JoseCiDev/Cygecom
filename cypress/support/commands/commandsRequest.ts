@@ -104,7 +104,6 @@ const {
     requestMenu,
     newRequestSubMenu,
     myRequestSubMenu,
-    requestGeneralSubMenu,
     costCenter,
     apportionmentPercentageElement,
     apportionmentValueElement,

@@ -30,7 +30,6 @@ export {
 export {
     Request,
     DataParameters,
-    // UserRegistration,
     ShowHideColumns,
     GetDataOnGrid,
     DateTime,

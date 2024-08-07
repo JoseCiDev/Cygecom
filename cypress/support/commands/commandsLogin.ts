@@ -73,7 +73,6 @@ const {
     requestMenu,
     newRequestSubMenu,
     myRequestSubMenu,
-    requestGeneralSubMenu,
 } = el.Request
 
 const {

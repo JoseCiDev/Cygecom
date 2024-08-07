@@ -75,7 +75,6 @@ const {
     requestMenu,
     newRequestSubMenu,
     myRequestSubMenu,
-    requestGeneralSubMenu,
     costCenter,
     highlightedOption,
     productRequest,
@@ -94,9 +93,6 @@ const {
 const environment = Cypress.env('ENVIRONMENT');
 const dataEnvironment = Cypress.env(environment);
 
-beforeEach(() => {
-    cy.visit('/');
-})
 
 Given('que estou na página de login', () => {
     cy.visit('/');

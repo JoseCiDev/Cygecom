@@ -63,7 +63,6 @@ interface Elements<S = string> {
         requestMenu: S;
         newRequestSubMenu: S;
         myRequestSubMenu: S;
-        requestGeneralSubMenu: S;
         serviceDescription: S;
         costCenter: S;
         apportionmentPercentageElement: S;
@@ -191,7 +190,6 @@ export const elements: Elements = {
         requestMenu: '.main-nav > :nth-child(3) > .btn',
         newRequestSubMenu: '[data-cy="dropdown-solicitacoes-novas"]',
         myRequestSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
-        requestGeneralSubMenu: '[data-cy="dropdown-solicitacoes-minhas"]',
         serviceDescription: '.col-sm-7 > .form-group > [data-cy="description"]',
         costCenter: '#select2-cost_center_apportionments0cost_center_id-container',
         highlightedOption: '[class="select2-results__option select2-results__option--highlighted"]',
