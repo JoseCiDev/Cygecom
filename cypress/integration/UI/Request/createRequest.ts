@@ -10,7 +10,7 @@ import {
     elements as el,
     Given, When, Then,
 
-} from '../../import';
+} from '../../../import';
 
 const {
     logout,

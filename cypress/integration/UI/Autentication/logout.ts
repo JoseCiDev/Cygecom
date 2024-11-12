@@ -8,7 +8,7 @@ import {
     Given, When, Then,
     elements as el,
 
-} from '../../import'
+} from '../../../import'
 
 export const {
     email,
