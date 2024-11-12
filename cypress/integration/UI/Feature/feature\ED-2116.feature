@@ -100,4 +100,15 @@ Feature: Gerenciamento de Solicitações de Compras
             | serviço pontual     | Parcelado  | cheque            |
             | serviço recorrente  | Antecipado | pix               |
 
-    
+    Scenario Outline: Visualizar e conferir dados de pagamento na solicitação criada
+        Given que o usuário solicitante cria uma nova solicitação de <Tipo de Solicitação>
+        And o usuário salva a solicitação como "Solicitação Salva"
+        When o usuário acessa a solicitação na lista de solicitações
+        And visualiza a solicitação salva
+        Then o usuário deve ver as informações preenchidas de pagamento
+
+        Examples:
+            | Tipo de Solicitação |
+            | Produto             |
+            | Serviço Pontual     |
+            | Serviço Recorrente  |
